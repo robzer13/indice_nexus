@@ -36,7 +36,7 @@ class MovingAverageConfig:
 DEFAULT_TICKER = "MC.PA"  # Euronext Paris ticker for LVMH
 DEFAULT_TICKERS: Sequence[str] = (
     "ASML.AS",  # ASML traded on Euronext Amsterdam
-    "TTE.PA",  # TotalEnergies traded on Euronext Paris
+    "TTE.PA",   # TotalEnergies traded on Euronext Paris
     DEFAULT_TICKER,
 )
 DEFAULT_PERIOD = "1y"
@@ -54,32 +54,17 @@ def fetch_price_history(
     interval: str = DEFAULT_INTERVAL,
     auto_adjust: bool = False,
 ) -> pd.DataFrame:
-    """Return the historical price data for the provided ticker.
-
-    Parameters
-    ----------
-    ticker:
-        Symbol to fetch. Defaults to ``MC.PA`` for LVMH.
-    period:
-        Window of historical data to download. ``"1y"`` by default.
-    interval:
-        Temporal resolution of the data. ``"1d"`` by default.
-    auto_adjust:
-        Whether to request prices adjusted for dividends and splits.
-    """
-
+    """Return the historical price data for the provided ticker."""
     ticker_client = yf.Ticker(ticker)
     history = ticker_client.history(
         period=period,
         interval=interval,
         auto_adjust=auto_adjust,
     )
-
     if history.empty:
         raise ValueError(
             "No historical data was returned. Check the ticker symbol or parameters."
         )
-
     return history
 
 
@@ -90,20 +75,7 @@ def add_moving_averages(
     sma_windows: Iterable[int],
     price_column: str = "Close",
 ) -> pd.DataFrame:
-    """Compute EMA and SMA columns for the provided DataFrame.
-
-    Parameters
-    ----------
-    data:
-        Historical price DataFrame as returned by :func:`fetch_price_history`.
-    ema_windows:
-        Iterable of window sizes for exponential moving averages.
-    sma_windows:
-        Iterable of window sizes for simple moving averages.
-    price_column:
-        Name of the column to use for the calculations.
-    """
-
+    """Compute EMA and SMA columns for the provided DataFrame."""
     if price_column not in data.columns:
         raise KeyError(
             f"Column '{price_column}' is missing from the input data: {data.columns!r}"
@@ -112,10 +84,14 @@ def add_moving_averages(
     enriched = data.copy()
 
     for window in ema_windows:
-        enriched[f"EMA_{window}"] = enriched[price_column].ewm(span=window, adjust=False).mean()
+        enriched[f"EMA_{window}"] = enriched[price_column].ewm(
+            span=window, adjust=False
+        ).mean()
 
     for window in sma_windows:
-        enriched[f"SMA_{window}"] = enriched[price_column].rolling(window=window, min_periods=window).mean()
+        enriched[f"SMA_{window}"] = enriched[price_column].rolling(
+            window=window, min_periods=window
+        ).mean()
 
     return enriched
 
@@ -128,38 +104,28 @@ def compute_indicators(
     auto_adjust: bool = False,
     config: MovingAverageConfig = DEFAULT_CONFIG,
 ) -> pd.DataFrame:
-    """Fetch the historical data and append EMA/SMA indicators.
-
-    This is a convenience wrapper that combines :func:`fetch_price_history`
-    and :func:`add_moving_averages` using the default configuration.
-    """
-
+    """Fetch the historical data and append EMA/SMA indicators."""
     history = fetch_price_history(
         ticker,
         period=period,
         interval=interval,
         auto_adjust=auto_adjust,
     )
-
     enriched_history = add_moving_averages(
         history,
         ema_windows=config.ema_windows,
         sma_windows=config.sma_windows,
     )
-
     return enriched_history
 
 
 def _latest_value(frame: pd.DataFrame, row_label: str) -> Optional[float]:
     """Return the most recent non-null value for ``row_label`` in ``frame``."""
-
     if frame.empty or row_label not in frame.index:
         return None
-
     series = frame.loc[row_label].dropna()
     if series.empty:
         return None
-
     return float(series.iloc[0])
 
 
@@ -169,7 +135,6 @@ def fetch_fundamental_metrics(
     price: Optional[float] = None,
 ) -> FundamentalMetrics:
     """Fetch fundamental indicators such as EPS, P/E, margin, leverage, dividend yield."""
-
     ticker_client = yf.Ticker(ticker)
 
     if price is None:
@@ -251,7 +216,6 @@ def compute_indicators_for_tickers(
     period, interval, auto_adjust, config:
         Same semantics as :func:`compute_indicators`.
     """
-
     results: Dict[str, Dict[str, object]] = {}
     for ticker in tickers:
         prices = compute_indicators(
@@ -263,12 +227,10 @@ def compute_indicators_for_tickers(
         )
         last_close = float(prices["Close"].iloc[-1]) if not prices.empty else None
         fundamentals = fetch_fundamental_metrics(ticker, price=last_close)
-
         results[ticker] = {
             "prices": prices,
             "fundamentals": fundamentals,
         }
-
     return results
 
 
