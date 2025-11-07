@@ -1,7 +1,7 @@
 # indice_nexus
 
 Mini-lib modulaire pour analyser des actions européennes à partir de Yahoo Finance.
-Elle se compose de quatre modules :
+Elle se compose de plusieurs modules spécialisés :
 
 - `stock_analysis.data` : téléchargement et normalisation des prix.
 - `stock_analysis.indicators` : calculs SMA/EMA en pur Python.
