@@ -15,3 +15,9 @@ sys.modules.setdefault("fastapi", fastapi_stub)
 sys.modules.setdefault("fastapi.middleware", fastapi_stub.middleware)
 sys.modules.setdefault("fastapi.middleware.cors", fastapi_stub.middleware.cors)
 sys.modules.setdefault("fastapi.testclient", fastapi_stub.testclient)
+import sys
+
+from . import pandas_stub, yfinance_stub
+
+sys.modules.setdefault("pandas", pandas_stub)
+sys.modules.setdefault("yfinance", yfinance_stub)

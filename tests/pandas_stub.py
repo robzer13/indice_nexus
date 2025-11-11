@@ -135,6 +135,15 @@ class Series:
         self.iloc = _SeriesILoc(self)
         self.loc = _SeriesLoc(self)
         self.name: str | None = None
+        self._data = list(data or [])
+        if isinstance(index, DatetimeIndex):
+            self.index: Sequence[Any] = index
+        elif index is None:
+            self.index = []
+        else:
+            self.index = list(index)
+        self.dtype = dtype
+        self.iloc = _SeriesILoc(self)
 
     def dropna(self) -> "Series":
         filtered_data = []
@@ -376,6 +385,23 @@ class Series:
 
     def subtract(self, other: Any) -> "Series":
         return self._binary_op(other, lambda a, b: a - b)
+    def pct_change(self) -> "Series":
+        changes: List[float] = []
+        previous = None
+        for value in self._data:
+            if value is None or (isinstance(value, float) and math.isnan(value)) or previous is None:
+                changes.append(math.nan)
+            else:
+                try:
+                    changes.append((value - previous) / previous)
+                except ZeroDivisionError:
+                    changes.append(math.nan)
+            if value is not None and not (isinstance(value, float) and math.isnan(value)):
+                previous = value
+        return Series(changes, self.index, self.dtype)
+
+    def rolling(self, window: int) -> "_RollingSeries":
+        return _RollingSeries(self, window)
 
     def __len__(self) -> int:
         return len(self._data)
@@ -690,6 +716,7 @@ NA = None
 
 class _RollingSeries:
     def __init__(self, series: Series, window: int, min_periods: int | None = None) -> None:
+    def __init__(self, series: Series, window: int) -> None:
         if window <= 0:
             raise ValueError("window must be positive")
         self._series = series
@@ -697,6 +724,8 @@ class _RollingSeries:
         self._min_periods = min_periods if min_periods is not None else window
 
     def mean(self) -> Series:
+
+    def std(self) -> Series:
         results: List[float] = []
         data = self._series._data
         for index in range(len(data)):
@@ -769,3 +798,12 @@ def read_parquet(path, engine: str = "pyarrow") -> DataFrame:
             data[column].append(None)
     index = DatetimeIndex(index_values) if index_values else []
     return DataFrame(data, index=index, columns=columns)
+                if value is not None and not (isinstance(value, float) and math.isnan(value))
+            ]
+            if len(window_values) < self._window or not window_values:
+                results.append(math.nan)
+                continue
+            mean = sum(window_values) / len(window_values)
+            variance = sum((value - mean) ** 2 for value in window_values) / len(window_values)
+            results.append(math.sqrt(variance))
+        return Series(results, self._series.index, self._series.dtype)
