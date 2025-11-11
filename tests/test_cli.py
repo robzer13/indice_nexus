@@ -5,6 +5,7 @@ import os
 import tempfile
 import unittest
 from datetime import datetime
+from pathlib import Path
 from unittest import mock
 
 import pandas as pd
@@ -198,6 +199,7 @@ class CLIRunnerTests(unittest.TestCase):
                 self.assertTrue(any(name.endswith("_prices.csv") for name in saved_files))
                 self.assertTrue(any(name.endswith("MANIFEST.json") for name in saved_files))
                 self.assertTrue(any(name.endswith("_scores.csv") for name in saved_files))
+
                 self.assertTrue(any(name.endswith("_report.md") for name in saved_files))
                 self.assertTrue(any(name.endswith("_report.html") for name in saved_files))
                 self.assertTrue(any(name.endswith("_equity.csv") for name in saved_files))
@@ -234,6 +236,31 @@ class CLIRunnerTests(unittest.TestCase):
                     os.environ.pop(key, None)
                 else:
                     os.environ[key] = value
+
+
+    def test_prepare_output_subdir_handles_nested_paths(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base = Path(tmpdir) / "out"
+            base.mkdir()
+            previous_cwd = os.getcwd()
+            os.chdir(tmpdir)
+            try:
+                path, rel = cli._prepare_output_subdir(base, "charts")
+                self.assertEqual(path, base / "charts")
+                if rel is not None:
+                    self.assertEqual(rel.replace("\\", "/"), "charts")
+
+                path_two, rel_two = cli._prepare_output_subdir(base, "out/charts2")
+                self.assertEqual(path_two, base / "charts2")
+                if rel_two is not None:
+                    self.assertEqual(rel_two.replace("\\", "/"), "charts2")
+
+                external = Path(tmpdir) / "external" / "plots"
+                path_three, rel_three = cli._prepare_output_subdir(base, str(external))
+                self.assertEqual(path_three, external)
+                self.assertIsNone(rel_three)
+            finally:
+                os.chdir(previous_cwd)
 
 
 class _DummyFigure:
