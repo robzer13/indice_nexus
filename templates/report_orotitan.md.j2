@@ -1,0 +1,64 @@
+# {{ title }}
+
+Generated on {{ as_of }}
+
+## Regime Weights
+
+| Module | Weight |
+| --- | ---: |
+{% for name, value in weights %}
+| {{ name }} | {{ '%.2f'|format(value) }} |
+{% endfor %}
+
+## Decisions
+
+{% if decisions %}
+| Date | Ticker | Action | Score | Size | Confidence |
+| --- | --- | --- | ---: | ---: | ---: |
+{% for decision in decisions %}
+| {{ decision.date }} | {{ decision.ticker }} | {{ decision.action }} | {{ '%.2f'|format(decision.score) }} | {{ '%.2f'|format(decision.size) }} | {{ '%.2f'|format(decision.confidence) }} |
+{% endfor %}
+{% else %}
+_No decisions available._
+{% endif %}
+
+## KPIs
+
+{% if kpis %}
+| Metric | Value |
+| --- | ---: |
+{% for name, value in kpis %}
+| {{ name }} | {{ '%.2f'|format(value) }} |
+{% endfor %}
+{% else %}
+_No KPIs supplied._
+{% endif %}
+
+{% if behavior %}
+## Behavioral Insights
+
+Score global: {{ '%.1f'|format(behavior.score) }} — Ajustement confiance: {{ '%.3f'|format(behavior.adjustment) }}
+
+{% if behavior.biases %}
+| Bias | Score | Insight |
+| --- | ---: | --- |
+{% for bias in behavior.biases %}
+| {{ bias.bias_id }} | {{ '%.2f'|format(bias.score) }} | {{ bias.rationale }} |
+{% endfor %}
+{% endif %}
+
+{% if behavior.recommendations %}
+## Self-Coaching Actions
+
+{% for rec in behavior.recommendations %}
+- {{ rec }}
+{% endfor %}
+{% endif %}
+{% endif %}
+
+## Coach Corner
+
+- Highlighted factor: {% if decisions %}{{ decisions[0].rationale }}{% else %}No recent decision to evaluate.{% endif %}
+- Recommended stance: {% if decisions %}{{ decisions[0].action }}{% else %}Monitor{% endif %}
+- Confidence snapshot: {% if decisions %}{{ '%.2f'|format(decisions[0].confidence) }}{% else %}0.00{% endif %}
+
