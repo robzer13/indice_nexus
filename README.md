@@ -189,6 +189,7 @@ La couche comportementale complète OroTitan avec la détection des biais humain
   - Streamlit → page `11_OroTitan_Behavior.py` (sliders seuil/influence, table des biais, export Markdown).
 
 Le score et l'ajustement sont visibles dans les sorties JSON (`confidence_adjustment`). Les rapports Markdown incluent désormais la table des biais et les actions d'auto-coaching.
+`stock_analysis.regimes.infer_regime` applique des seuils heuristiques (VIX ≥25 → `Stress`, CPI YoY ≥4% → `Inflation`, sinon `Normal`). `compute_score_bundle` accepte des pondérations personnalisées (`weights={'trend': 50, ...}`) et renvoie un score 0..100 avec sous-scores trend/momentum/quality/risk et notes de données manquantes.
 
 ## Persistance & rapports
 
@@ -203,6 +204,9 @@ Le score et l'ajustement sont visibles dans les sorties JSON (`confidence_adjust
 - Manifeste `{base}_MANIFEST.json` (provenance, régime détecté + pondérations, paramètres, versions, graphiques, métriques ML/backtest, timezone Europe/Paris).
 
 Les scripts `scripts/report_daily.ps1` et `scripts/nexus_daily.py` automatisent respectivement la commande complète et le rapport Nexus seul (fichier `scripts/nexus_daily.ps1` pour Windows/Task Scheduler). Le template Jinja `templates/report.md.j2` sert de base pour une mise en page personnalisée (Executive summary, score table, régime macro, visuels).
+- Manifeste `{base}_MANIFEST.json` (provenance, paramètres, versions, graphiques, métriques ML/backtest, timezone Europe/Paris).
+
+Le script `scripts/report_daily.ps1` lance la commande complète (options backtest et ML facultatives). Le template Jinja `templates/report.md.j2` sert de base pour une mise en page personnalisée (Executive summary, score table, régime macro, visuels).
 
 ## API Python
 
@@ -214,6 +218,8 @@ from stock_analysis import (
     compute_score_bundle, compute_volatility,
     evaluate_regime, infer_regime_series, compute_weights,
     generate_nexus_report, run_backtest, summarize_backtest, save_analysis,
+    compute_score_bundle, compute_volatility, infer_regime,
+    run_backtest, summarize_backtest, save_analysis,
     time_cv, walk_forward_signals, sharpe_sim, confusion,
     render_markdown, render_bt_markdown, plot_ticker,
     plot_equity_with_benchmark, plot_drawdown, plot_exposure_heatmap,

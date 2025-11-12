@@ -51,6 +51,8 @@ from .regimes import (
 from .report import build_summary_table, format_commentary, render_html, render_markdown
 from .report_nexus import generate_nexus_report
 from .report_orotitan import render_orotitan_report
+from .regimes import RegimeThresholds, infer_regime
+from .report import build_summary_table, format_commentary, render_html, render_markdown
 from .scoring import (
     compute_score_bundle,
     compute_volatility,
@@ -90,6 +92,12 @@ __all__ = [
     "build_summary_table",
     "compute_drawdown",
     "compute_macd",
+    "DEFAULT_TICKERS",
+    "analyze_tickers",
+    "attach_benchmark",
+    "download_many",
+    "compute_macd",
+    "compute_drawdown",
     "compute_moving_averages",
     "compute_rsi",
     "compute_score_bundle",
@@ -129,6 +137,27 @@ __all__ = [
     "save_price_figure",
     "save_state",
     "schedule_daily_run",
+    "FEATURES",
+    "add_ta_features",
+    "fetch_fundamentals",
+    "fetch_price_history",
+    "fetch_benchmark",
+    "format_commentary",
+    "build_summary_table",
+    "build_model",
+    "confusion",
+    "generate_signals",
+    "infer_regime",
+    "make_label_future_ret",
+    "load_cached_prices",
+    "quality_report",
+    "render_html",
+    "render_markdown",
+    "run_backtest",
+    "plot_ticker",
+    "plot_drawdown",
+    "plot_equity_with_benchmark",
+    "plot_exposure_heatmap",
     "score_momentum",
     "score_quality",
     "score_risk",
@@ -140,3 +169,17 @@ __all__ = [
     "update_orotitan_weights",
     "walk_forward_signals",
 ]
+    "save_analysis",
+    "save_figure",
+    "save_price_figure",
+    "save_backtest_figure",
+    "schedule_daily_run",
+    "store_cached_prices",
+    "RegimeThresholds",
+    "summarize_backtest",
+    "render_bt_markdown",
+    "sharpe_sim",
+    "time_cv",
+    "walk_forward_signals",
+]
+

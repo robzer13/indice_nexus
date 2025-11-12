@@ -60,6 +60,7 @@ def test_streamlit_main_runs(monkeypatch) -> None:
             "weights": {"trend": 0.35, "momentum": 0.3, "quality": 0.2, "risk": 0.15},
             "regime": "Expansion",
         },
+        "score": {"score": 60.0, "trend": 25.0, "momentum": 15.0, "quality": 12.0, "risk": 8.0},
     }
 
     monkeypatch.setattr(streamlit_app, "analyze_tickers", lambda *args, **kwargs: {"MC.PA": payload})

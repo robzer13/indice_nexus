@@ -3,17 +3,13 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Dict, Iterable, List, Mapping
+from typing import Dict, Iterable, List
 
 import pandas as pd
 
 from .indicators import compute_macd, compute_moving_averages, compute_rsi
 
 LOGGER = logging.getLogger(__name__)
-
-MAX_COMPONENTS = {"trend": 40.0, "momentum": 30.0, "quality": 20.0, "risk": 10.0}
-DEFAULT_WEIGHTS = MAX_COMPONENTS.copy()
-_MAX_WEIGHT_SUM = float(sum(DEFAULT_WEIGHTS.values()))
 
 
 def _coerce_float(value: object) -> float | None:
@@ -262,8 +258,6 @@ def compute_score_bundle(
     fundamentals: Dict[str, object] | None,
     *,
     price_column: str = "Close",
-    weights: Mapping[str, float] | None = None,
-    regime: str | None = None,
 ) -> Dict[str, object]:
     """Compute the composite scoring bundle for the provided ticker data."""
 
@@ -311,50 +305,8 @@ def compute_score_bundle(
             if value is None:
                 notes.append(f"nan: {column}")
 
-    component_map = {
-        "trend": trend_score,
-        "momentum": momentum_score,
-        "quality": quality_score,
-        "risk": risk_score,
-    }
-
-    weights_map = {**DEFAULT_WEIGHTS}
-    provided_weights = dict(weights or {})
-    if provided_weights:
-        total = sum(float(value) for value in provided_weights.values() if value is not None)
-        if 0.99 <= total <= 1.01 and _MAX_WEIGHT_SUM > 0:
-            weights_map = {
-                key: float(provided_weights.get(key, 0.0)) * _MAX_WEIGHT_SUM
-                for key in weights_map
-            }
-        else:
-            for key, value in provided_weights.items():
-                if key in weights_map:
-                    weights_map[key] = float(value)
-    if weights:
-        for key, value in weights.items():
-            if key in weights_map:
-                weights_map[key] = float(value)
-
-    weighted_total = 0.0
-    for key, raw_value in component_map.items():
-        max_value = MAX_COMPONENTS.get(key, 1.0)
-        weight = weights_map.get(key, 0.0)
-        normalised = (raw_value / max_value) if max_value else 0.0
-        weighted_total += normalised * weight
-
-    weight_sum = sum(weights_map.values())
-    total = (weighted_total / weight_sum) * 100.0 if weight_sum else 0.0
+    total = trend_score + momentum_score + quality_score + risk_score
     total = max(0.0, min(100.0, round(total, 2)))
-
-    normalised_weights = {}
-    if weight_sum:
-        normalised_weights = {
-            key: round(float(value) / weight_sum, 6) if weight_sum else 0.0
-            for key, value in weights_map.items()
-        }
-    else:
-        normalised_weights = {key: 0.0 for key in weights_map}
 
     return {
         "score": total,
@@ -364,8 +316,6 @@ def compute_score_bundle(
         "risk": round(risk_score, 2),
         "as_of": as_of,
         "notes": sorted(set(notes)),
-        "weights": normalised_weights,
-        "regime": regime,
     }
 
 

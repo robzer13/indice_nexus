@@ -14,6 +14,8 @@ try:  # pragma: no cover - optional dependency
 except Exception:  # pragma: no cover - runtime fallback for environments sans APScheduler
     BlockingScheduler = None  # type: ignore[assignment]
     CronTrigger = None  # type: ignore[assignment]
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
 from zoneinfo import ZoneInfo
 
 LOGGER = logging.getLogger(__name__)

@@ -8,12 +8,9 @@ import logging
 import math
 import os
 from datetime import datetime
-from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from time import perf_counter
 from typing import Dict, Iterable, List, Sequence
-
-from zoneinfo import ZoneInfo
 
 import pandas as pd
 
@@ -30,16 +27,7 @@ from .bt_report import (
     render_bt_markdown,
     summarize_backtest,
 )
-from .cli import orotitan_ai as orotitan_cli
-from .features import add_ta_features, make_label_future_ret
 from .io import save_analysis
-from .ml_pipeline import (
-    FEATURES,
-    confusion,
-    sharpe_sim,
-    time_cv,
-    walk_forward_signals,
-)
 from .plot import plot_ticker, save_figure as save_price_figure
 from .plot_bt import (
     plot_drawdown,
@@ -47,10 +35,6 @@ from .plot_bt import (
     plot_exposure_heatmap,
     save_figure as save_bt_figure,
 )
-from .regimes import evaluate_regime
-from .report import build_summary_table, render_html, render_markdown
-from .report_nexus import generate_nexus_report
-from .weighting import compute_weights
 from .report import build_summary_table, render_html, render_markdown
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s - %(message)s"
@@ -88,27 +72,7 @@ DEFAULT_SETTINGS: Dict[str, object] = {
     "charts_bt_dir": "bt_charts",
     "include_bt_charts": True,
     "bt_title": "Backtest Results",
-    "cache_ttl": 3600,
-    "ml_eval": False,
-    "ml_model": "xgb",
-    "ml_horizon": 5,
-    "ml_thr": 0.0,
-    "ml_retrain": 60,
-    "ml_th_proba": 0.55,
-    "workers": None,
-    "score_weights": None,
-    "serve_api": False,
-    "dashboard": False,
-    "api_host": "0.0.0.0",
-    "api_port": 8000,
-    "nexus_report": False,
-    "show_regime": False,
-    "nexus_title": "Nexus Market Report",
-    "nexus_dir": "reports",
-    "nexus_top": 10,
 }
-
-ML_WARMUP = 200
 
 ENV_KEYS = {
     "tickers": "STOCK_ANALYSIS_TICKERS",
@@ -141,125 +105,7 @@ ENV_KEYS = {
     "charts_bt_dir": "STOCK_ANALYSIS_BT_CHARTS_DIR",
     "include_bt_charts": "STOCK_ANALYSIS_BT_CHARTS",
     "bt_title": "STOCK_ANALYSIS_BT_TITLE",
-    "cache_ttl": "STOCK_ANALYSIS_CACHE_TTL",
-    "ml_eval": "STOCK_ANALYSIS_ML_EVAL",
-    "ml_model": "STOCK_ANALYSIS_ML_MODEL",
-    "ml_horizon": "STOCK_ANALYSIS_ML_HORIZON",
-    "ml_thr": "STOCK_ANALYSIS_ML_THR",
-    "ml_retrain": "STOCK_ANALYSIS_ML_RETRAIN",
-    "ml_th_proba": "STOCK_ANALYSIS_ML_TH_PROBA",
-    "workers": "STOCK_ANALYSIS_WORKERS",
-    "score_weights": "STOCK_ANALYSIS_SCORE_WEIGHTS",
-    "serve_api": "STOCK_ANALYSIS_SERVE_API",
-    "dashboard": "STOCK_ANALYSIS_DASHBOARD",
-    "api_host": "STOCK_ANALYSIS_API_HOST",
-    "api_port": "STOCK_ANALYSIS_API_PORT",
-    "nexus_report": "STOCK_ANALYSIS_NEXUS_REPORT",
-    "show_regime": "STOCK_ANALYSIS_REGIME",
-    "nexus_title": "STOCK_ANALYSIS_NEXUS_TITLE",
-    "nexus_dir": "STOCK_ANALYSIS_NEXUS_DIR",
-    "nexus_top": "STOCK_ANALYSIS_NEXUS_TOP",
 }
-
-
-def setup_logging(level: str) -> None:
-    level_name = level.upper()
-    log_level = getattr(logging, level_name, logging.INFO)
-    formatter = logging.Formatter(LOG_FORMAT)
-
-    handlers = []
-    console = logging.StreamHandler()
-    console.setFormatter(formatter)
-    handlers.append(console)
-
-    log_path = Path(os.getenv("NEXUS_LOG_FILE", "nexus.log"))
-    try:
-        file_handler = RotatingFileHandler(
-            log_path,
-            maxBytes=5_000_000,
-            backupCount=3,
-            encoding="utf-8",
-        )
-        file_handler.setFormatter(formatter)
-        handlers.append(file_handler)
-    except Exception as exc:  # pragma: no cover - filesystem/runtime errors only
-        LOGGER.warning(
-            "Unable to initialise file logging",
-            extra={"path": str(log_path)},
-            exc_info=exc,
-        )
-
-    logging.basicConfig(level=log_level, handlers=handlers, force=True)
-
-
-def _launch_api(settings: Dict[str, object]) -> int:
-    host = str(settings.get("api_host") or DEFAULT_SETTINGS["api_host"])
-    try:
-        port = int(settings.get("api_port") or DEFAULT_SETTINGS["api_port"])
-    except (TypeError, ValueError):
-        port = int(DEFAULT_SETTINGS["api_port"])
-
-    try:
-        import uvicorn  # type: ignore
-    except Exception:  # pragma: no cover - optional dependency missing at runtime
-        LOGGER.error(
-            "Uvicorn non disponible. Installez l'extra 'api' (pip install stock-analysis-nexus[api])."
-        )
-        return 1
-
-    LOGGER.info("Démarrage de l'API", extra={"host": host, "port": port})
-    config = uvicorn.Config(
-        "stock_analysis.api.app:app",
-        "stock_analysis.api:app",
-        host=host,
-        port=port,
-        log_level=str(settings.get("log_level", "info")).lower(),
-    )
-    server = uvicorn.Server(config)
-    result = server.run()
-    if isinstance(result, bool):
-        return 0 if result else 1
-    return 0
-
-
-def _launch_dashboard() -> int:
-    script_path = Path(__file__).with_name("streamlit_app.py")
-    try:
-        from streamlit.web import bootstrap  # type: ignore
-    except Exception:  # pragma: no cover - optional dependency missing at runtime
-        LOGGER.error(
-            "Streamlit non disponible. Installez l'extra 'dashboard' (pip install stock-analysis-nexus[dashboard])."
-        )
-        return 1
-
-    LOGGER.info("Lancement du dashboard Streamlit", extra={"script": str(script_path)})
-    bootstrap.run(str(script_path), "", [], {})
-    return 0
-
-
-def _parse_weight_mapping(raw: object) -> Dict[str, float] | None:
-    if raw in {None, "", "none", "None"}:
-        return None
-    if isinstance(raw, dict):
-        try:
-            return {str(key): float(value) for key, value in raw.items()}
-        except (TypeError, ValueError):
-            return None
-    mapping: Dict[str, float] = {}
-    text = str(raw)
-    for token in text.split(","):
-        if not token or "=" not in token:
-            continue
-        key, value = token.split("=", 1)
-        key = key.strip()
-        value = value.strip()
-        if not key:
-            continue
-        try:
-            mapping[key] = float(value)
-        except ValueError:
-            continue
-    return mapping or None
 
 
 def _format_number(value: object, *, precision: int = 2) -> str:
@@ -491,107 +337,6 @@ def _resolve_settings(args: argparse.Namespace) -> Dict[str, object]:
 
     bt_title = str(pick("bt_title") or DEFAULT_SETTINGS["bt_title"])
 
-    cache_ttl_raw = pick("cache_ttl")
-    if cache_ttl_raw in {None, "", "none", "None"}:
-        cache_ttl = None
-    else:
-        try:
-            cache_ttl = int(cache_ttl_raw)
-        except (TypeError, ValueError):
-            cache_ttl = int(DEFAULT_SETTINGS["cache_ttl"])
-        if cache_ttl <= 0:
-            cache_ttl = None
-
-    workers_raw = pick("workers")
-    if workers_raw in {None, "", "none", "None"}:
-        workers = None
-    else:
-        try:
-            workers = max(1, int(workers_raw))
-        except (TypeError, ValueError):
-            workers = None
-
-    ml_eval_value = pick("ml_eval")
-    ml_eval = _parse_bool(ml_eval_value) if ml_eval_value is not None else bool(DEFAULT_SETTINGS["ml_eval"])
-    ml_model = str(pick("ml_model") or DEFAULT_SETTINGS["ml_model"]).lower()
-    if ml_model not in {"logreg", "rf", "xgb"}:
-        ml_model = str(DEFAULT_SETTINGS["ml_model"]).lower()
-
-    ml_horizon_raw = pick("ml_horizon")
-    try:
-        ml_horizon = int(ml_horizon_raw) if ml_horizon_raw is not None else int(DEFAULT_SETTINGS["ml_horizon"])
-    except (TypeError, ValueError):
-        ml_horizon = int(DEFAULT_SETTINGS["ml_horizon"])
-    if ml_horizon <= 0:
-        ml_horizon = int(DEFAULT_SETTINGS["ml_horizon"])
-
-    ml_thr_raw = pick("ml_thr")
-    try:
-        ml_thr = float(ml_thr_raw) if ml_thr_raw is not None else float(DEFAULT_SETTINGS["ml_thr"])
-    except (TypeError, ValueError):
-        ml_thr = float(DEFAULT_SETTINGS["ml_thr"])
-
-    ml_retrain_raw = pick("ml_retrain")
-    try:
-        ml_retrain = int(ml_retrain_raw) if ml_retrain_raw is not None else int(DEFAULT_SETTINGS["ml_retrain"])
-    except (TypeError, ValueError):
-        ml_retrain = int(DEFAULT_SETTINGS["ml_retrain"])
-    if ml_retrain <= 0:
-        ml_retrain = int(DEFAULT_SETTINGS["ml_retrain"])
-
-    ml_th_proba_raw = pick("ml_th_proba")
-    try:
-        ml_th_proba = float(ml_th_proba_raw) if ml_th_proba_raw is not None else float(DEFAULT_SETTINGS["ml_th_proba"])
-    except (TypeError, ValueError):
-        ml_th_proba = float(DEFAULT_SETTINGS["ml_th_proba"])
-    if not math.isfinite(ml_th_proba):
-        ml_th_proba = float(DEFAULT_SETTINGS["ml_th_proba"])
-    ml_th_proba = max(0.0, min(1.0, ml_th_proba))
-
-    weights_raw = pick("score_weights")
-    score_weights = _parse_weight_mapping(weights_raw)
-
-    serve_api_value = pick("serve_api")
-    serve_api = _parse_bool(serve_api_value) if serve_api_value is not None else bool(DEFAULT_SETTINGS["serve_api"])
-
-    dashboard_value = pick("dashboard")
-    dashboard = _parse_bool(dashboard_value) if dashboard_value is not None else bool(DEFAULT_SETTINGS["dashboard"])
-
-    api_host = str(pick("api_host") or DEFAULT_SETTINGS["api_host"])
-    api_port_raw = pick("api_port")
-    try:
-        api_port = int(api_port_raw) if api_port_raw is not None else int(DEFAULT_SETTINGS["api_port"])
-    except (TypeError, ValueError):
-        api_port = int(DEFAULT_SETTINGS["api_port"])
-    if api_port <= 0:
-        api_port = int(DEFAULT_SETTINGS["api_port"])
-
-    nexus_report_value = pick("nexus_report")
-    nexus_report = (
-        _parse_bool(nexus_report_value)
-        if nexus_report_value is not None
-        else bool(DEFAULT_SETTINGS["nexus_report"])
-    )
-
-    show_regime_value = pick("show_regime")
-    show_regime = (
-        _parse_bool(show_regime_value)
-        if show_regime_value is not None
-        else bool(DEFAULT_SETTINGS["show_regime"])
-    )
-
-    nexus_title = str(pick("nexus_title") or DEFAULT_SETTINGS["nexus_title"])
-    nexus_dir_value = str(pick("nexus_dir") or DEFAULT_SETTINGS["nexus_dir"])
-    nexus_dir = nexus_dir_value.strip() or str(DEFAULT_SETTINGS["nexus_dir"])
-
-    nexus_top_raw = pick("nexus_top")
-    try:
-        nexus_top = int(nexus_top_raw) if nexus_top_raw is not None else int(DEFAULT_SETTINGS["nexus_top"])
-    except (TypeError, ValueError):
-        nexus_top = int(DEFAULT_SETTINGS["nexus_top"])
-    if nexus_top <= 0:
-        nexus_top = int(DEFAULT_SETTINGS["nexus_top"])
-
     return {
         "tickers": tickers,
         "period": period,
@@ -623,25 +368,6 @@ def _resolve_settings(args: argparse.Namespace) -> Dict[str, object]:
         "charts_bt_dir": charts_bt_dir,
         "include_bt_charts": include_bt_charts,
         "bt_title": bt_title,
-        "cache_ttl": cache_ttl,
-        "workers": workers,
-        "ml_eval": ml_eval,
-        "ml_model": ml_model,
-        "ml_horizon": ml_horizon,
-        "ml_thr": ml_thr,
-        "ml_retrain": ml_retrain,
-        "ml_th_proba": ml_th_proba,
-        "ml_warmup": ML_WARMUP,
-        "score_weights": score_weights,
-        "serve_api": serve_api,
-        "dashboard": dashboard,
-        "api_host": api_host,
-        "api_port": api_port,
-        "nexus_report": nexus_report,
-        "show_regime": show_regime,
-        "nexus_title": nexus_title,
-        "nexus_dir": nexus_dir,
-        "nexus_top": nexus_top,
     }
 
 
@@ -724,7 +450,6 @@ def _collect_scores(results: Dict[str, Dict[str, object]]) -> list[Dict[str, obj
         if not isinstance(bundle, dict):
             continue
         notes = bundle.get("notes") if isinstance(bundle.get("notes"), list) else []
-        weight_map = bundle.get("weights") if isinstance(bundle.get("weights"), dict) else {}
         rows.append(
             {
                 "Ticker": ticker,
@@ -733,10 +458,6 @@ def _collect_scores(results: Dict[str, Dict[str, object]]) -> list[Dict[str, obj
                 "Momentum": bundle.get("momentum"),
                 "Quality": bundle.get("quality"),
                 "Risk": bundle.get("risk"),
-                "TrendW": weight_map.get("trend"),
-                "MomentumW": weight_map.get("momentum"),
-                "QualityW": weight_map.get("quality"),
-                "RiskW": weight_map.get("risk"),
                 "As Of": bundle.get("as_of"),
                 "NotesCount": len(notes),
                 "Notes": notes,
@@ -758,34 +479,6 @@ def _render_scoreboard(rows: list[Dict[str, object]], top: int) -> str:
     sorted_rows = sorted(rows, key=_score_key, reverse=True)
     display_rows = sorted_rows[: max(1, top)]
 
-    headers = [
-        "Ticker",
-        "Score",
-        "Trend",
-        "Momentum",
-        "Quality",
-        "Risk",
-        "TrendW",
-        "MomentumW",
-        "QualityW",
-        "RiskW",
-        "As Of",
-        "NotesCount",
-    ]
-    widths = {}
-    for header in headers:
-        values = []
-        for row in display_rows:
-            value = row.get(header, "")
-            if header in {"TrendW", "MomentumW", "QualityW", "RiskW"}:
-                try:
-                    formatted = f"{float(value or 0.0) * 100:.1f}%"
-                except (TypeError, ValueError):
-                    formatted = "n/a"
-                values.append(formatted)
-            else:
-                values.append(str(value))
-        widths[header] = max(len(header), *(len(item) for item in values))
     headers = ["Ticker", "Score", "Trend", "Momentum", "Quality", "Risk", "As Of", "NotesCount"]
     widths = {
         header: max(len(header), *(len(str(row.get(header, ""))) for row in display_rows))
@@ -798,12 +491,6 @@ def _render_scoreboard(rows: list[Dict[str, object]], top: int) -> str:
             value = row.get(header)
             if header in {"Score", "Trend", "Momentum", "Quality", "Risk"}:
                 cells.append(f"{_format_number(value):>{widths[header]}}")
-            elif header in {"TrendW", "MomentumW", "QualityW", "RiskW"}:
-                try:
-                    formatted = f"{float(value or 0.0) * 100:.1f}%"
-                except (TypeError, ValueError):
-                    formatted = "n/a"
-                cells.append(f"{formatted:>{widths[header]}}")
             else:
                 cells.append(f"{str(value):<{widths[header]}}")
         return " | ".join(cells)
@@ -812,147 +499,6 @@ def _render_scoreboard(rows: list[Dict[str, object]], top: int) -> str:
     separator = "-+-".join("-" * widths[header] for header in headers)
     body = "\n".join(render_row(row) for row in display_rows)
     return f"{header_row}\n{separator}\n{body}"
-
-
-def _select_price_series(prices, price_column: str):
-    if prices is None or getattr(prices, "empty", True):
-        return None
-    columns = getattr(prices, "columns", [])
-    if "Adj Close" in columns:
-        return prices["Adj Close"]
-    if price_column in columns:
-        return prices[price_column]
-    if "Close" in columns:
-        return prices["Close"]
-    return None
-
-
-def _run_ml_evaluation(
-    results: Dict[str, Dict[str, object]],
-    *,
-    model: str,
-    horizon: int,
-    label_threshold: float,
-    retrain_every: int,
-    proba_threshold: float,
-    price_column: str,
-    warmup: int,
-) -> list[tuple[str, Dict[str, object]]]:
-    evaluations: list[tuple[str, Dict[str, object]]] = []
-    for ticker, payload in results.items():
-        prices = payload.get("prices")
-        if not isinstance(prices, pd.DataFrame) or getattr(prices, "empty", True):
-            LOGGER.error("ML evaluation skipped: price frame vide", extra={"ticker": ticker})
-            continue
-
-        LOGGER.info(
-            "Démarrage évaluation ML",
-            extra={
-                "ticker": ticker,
-                "model": model,
-                "horizon": horizon,
-                "label_threshold": label_threshold,
-                "retrain": retrain_every,
-                "warmup": warmup,
-            },
-        )
-
-        try:
-            feature_frame = add_ta_features(prices)
-        except Exception as exc:  # pragma: no cover - defensive logging
-            LOGGER.error("Impossible de calculer les features ML", extra={"ticker": ticker}, exc_info=exc)
-            continue
-
-        features = (
-            feature_frame[FEATURES]
-            .replace([float("inf"), float("-inf")], float("nan"))
-            .dropna()
-        )
-        if features.empty:
-            LOGGER.warning("ML features indisponibles", extra={"ticker": ticker})
-            continue
-
-        try:
-            labels = make_label_future_ret(prices, horizon=horizon, thr=label_threshold)
-        except Exception as exc:  # pragma: no cover - defensive logging
-            LOGGER.error("Impossible de créer les labels ML", extra={"ticker": ticker}, exc_info=exc)
-            continue
-
-        labels = labels.reindex(features.index)
-        valid_mask = labels.notna()
-        if not valid_mask.any():
-            LOGGER.warning("Labels ML vides", extra={"ticker": ticker})
-            continue
-
-        X = features.loc[valid_mask]
-        y = labels.loc[valid_mask].astype(int)
-        if len(X) <= warmup:
-            LOGGER.warning("Jeu ML insuffisant", extra={"ticker": ticker, "rows": len(X)})
-            continue
-
-        try:
-            auc_mean, auc_std = time_cv(X, y, model_kind=model)
-        except Exception as exc:  # pragma: no cover - evaluation failures
-            LOGGER.warning("Échec de la cross-validation ML", extra={"ticker": ticker}, exc_info=exc)
-            continue
-
-        try:
-            proba, signal = walk_forward_signals(
-                X,
-                y,
-                retrain_every=retrain_every,
-                warmup=warmup,
-                model_kind=model,
-                proba_threshold=proba_threshold,
-            )
-        except Exception as exc:  # pragma: no cover - evaluation failures
-            LOGGER.warning("Échec du walk-forward ML", extra={"ticker": ticker}, exc_info=exc)
-            continue
-
-        price_series = _select_price_series(prices, price_column)
-        if price_series is None:
-            LOGGER.warning("Impossible d'extraire la série de prix pour le Sharpe ML", extra={"ticker": ticker})
-            sharpe_value = 0.0
-        else:
-            sharpe_value = sharpe_sim(price_series.reindex(signal.index), signal)
-
-        valid_proba = proba.dropna()
-        cmatrix = confusion(y, valid_proba, 0.5)
-        positive_ratio = float(signal.dropna().mean()) if not signal.dropna().empty else 0.0
-
-        metrics: Dict[str, object] = {
-            "model": model,
-            "horizon": horizon,
-            "label_threshold": label_threshold,
-            "retrain_every": retrain_every,
-            "proba_threshold": proba_threshold,
-            "warmup": warmup,
-            "auc_mean": auc_mean,
-            "auc_std": auc_std,
-            "sharpe_ml": sharpe_value,
-            "positive_ratio": positive_ratio,
-            "confusion": cmatrix,
-            "n_samples": len(X),
-            "n_predictions": int(valid_proba.count()),
-        }
-
-        payload["ml"] = metrics
-        payload["ml_series"] = {"proba": proba, "signal": signal}
-
-        evaluations.append((ticker, metrics))
-
-        LOGGER.info(
-            "Évaluation ML terminée",
-            extra={
-                "ticker": ticker,
-                "auc": round(auc_mean, 3),
-                "auc_std": round(auc_std, 3),
-                "sharpe": round(sharpe_value, 3),
-                "positive_ratio": round(positive_ratio, 3),
-            },
-        )
-
-    return evaluations
 
 
 def _render_summary_table(rows: list[Dict[str, object]]) -> str:
@@ -1046,94 +592,9 @@ def _format_trade_entry(row: Dict[str, object]) -> str:
     pnl_display = _format_number(row.get("pnl"))
     return f"{ticker} | {entry_str} -> {exit_str} | ret={ret_display} | pnl={pnl_display}"
 
-
-def _prepare_output_subdir(base_dir: Path, raw_subdir: str) -> tuple[Path, str | None]:
-    """Normalise ``raw_subdir`` relative to ``base_dir`` when appropriate."""
-
-    subdir = (raw_subdir or "").strip()
-    if not subdir:
-        raise ValueError("Output subdirectory cannot be empty")
-
-    base_abs = base_dir.resolve()
-    candidate = Path(subdir).expanduser()
-
-    if candidate.is_absolute():
-        target_path = candidate
-    else:
-        candidate_abs = candidate.resolve()
-        try:
-            common = os.path.commonpath(
-                [os.path.normcase(str(base_abs)), os.path.normcase(str(candidate_abs))]
-            )
-        except ValueError:
-            common = ""
-
-        if common and os.path.normcase(common) == os.path.normcase(str(base_abs)):
-            target_path = candidate_abs
-        else:
-            target_path = base_abs / candidate
-
-    target_path.mkdir(parents=True, exist_ok=True)
-
-    try:
-        inside = os.path.commonpath(
-            [os.path.normcase(str(base_abs)), os.path.normcase(str(target_path.resolve()))]
-        )
-        inside = inside == os.path.normcase(str(base_abs))
-    except ValueError:
-        inside = False
-
-    relative: str | None
-    if inside:
-        relative = os.path.relpath(target_path, base_abs)
-        if relative in {".", ""}:
-            relative = ""
-    else:
-        relative = None
-
-    return target_path, relative
-
-
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Analyse technique et fondamentale de plusieurs actions.")
-    parser.set_defaults(
-        save=None,
-        report=None,
-        html=None,
-        include_charts=None,
-        bt_report=None,
-        include_bt_charts=None,
-        ml_eval=None,
-        ml_model=None,
-        ml_horizon=None,
-        ml_thr=None,
-        ml_retrain=None,
-        ml_th_proba=None,
-        serve_api=None,
-        dashboard=None,
-        api_host=None,
-        api_port=None,
-        nexus_report=None,
-        show_regime=None,
-        nexus_title=None,
-        nexus_dir=None,
-        nexus_top=None,
-        orotitan_ai=False,
-        ai_task="full",
-        ai_report=False,
-        risk_budget=None,
-        temperature=None,
-        dry_run=False,
-        json=False,
-        save_state=False,
-    )
-    parser.add_argument("--tickers", help="Liste de tickers séparés par des virgules")
-    parser.add_argument(
-        "--tickers-file",
-        dest="tickers_file",
-        help="Fichier contenant un ticker par ligne",
-    )
-    )
+    parser.set_defaults(save=None, report=None, html=None, include_charts=None, bt_report=None, include_bt_charts=None)
     parser.add_argument("--tickers", help="Liste de tickers séparés par des virgules")
     parser.add_argument("--period", help="Fenêtre de téléchargement (ex: 2y)")
     parser.add_argument("--interval", help="Granularité des données (ex: 1d)")
@@ -1155,70 +616,6 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--charts-dir", dest="charts_dir", help="Sous-répertoire pour les graphiques (par défaut: charts)")
     parser.add_argument("--no-charts", dest="include_charts", action="store_false", help="Désactive les graphiques dans le rapport")
     parser.add_argument("--benchmark", dest="benchmark", help="Indice de référence pour comparaison (ex: ^FCHI)")
-    parser.add_argument("--cache-ttl", dest="cache_ttl", type=int, help="Durée de vie du cache prix en secondes")
-    parser.add_argument("--workers", dest="workers", type=int, help="Nombre de threads pour les téléchargements")
-    parser.add_argument("--ml-eval", dest="ml_eval", action="store_true", help="Évalue la branche machine learning")
-    parser.add_argument("--no-ml-eval", dest="ml_eval", action="store_false", help=argparse.SUPPRESS)
-    parser.add_argument("--ml-model", dest="ml_model", choices=["logreg", "rf", "xgb"], help="Modèle ML à utiliser")
-    parser.add_argument("--ml-horizon", dest="ml_horizon", type=int, help="Horizon de labellisation (en jours)")
-    parser.add_argument("--ml-thr", dest="ml_thr", type=float, help="Seuil sur le rendement futur pour le label")
-    parser.add_argument("--ml-retrain", dest="ml_retrain", type=int, help="Fréquence de ré-entrainement (en jours)")
-    parser.add_argument("--ml-th-proba", dest="ml_th_proba", type=float, help="Seuil de probabilité pour le signal ML")
-    parser.add_argument("--serve-api", dest="serve_api", action="store_true", help="Démarre uniquement l'API FastAPI")
-    parser.add_argument("--dashboard", dest="dashboard", action="store_true", help="Lance le tableau de bord Streamlit")
-    parser.add_argument("--api-host", dest="api_host", help="Adresse d'écoute de l'API (par défaut 0.0.0.0)")
-    parser.add_argument("--api-port", dest="api_port", type=int, help="Port d'écoute de l'API (par défaut 8000)")
-    parser.add_argument("--nexus-report", dest="nexus_report", action="store_true", help="Génère un rapport Nexus stratégique")
-    parser.add_argument("--no-nexus-report", dest="nexus_report", action="store_false", help=argparse.SUPPRESS)
-    parser.add_argument("--regime", dest="show_regime", action="store_true", help="Affiche le régime macro détecté")
-    parser.add_argument("--no-regime", dest="show_regime", action="store_false", help=argparse.SUPPRESS)
-    parser.add_argument("--nexus-title", dest="nexus_title", help="Titre du rapport Nexus")
-    parser.add_argument("--nexus-dir", dest="nexus_dir", help="Sous-répertoire pour les rapports Nexus")
-    parser.add_argument("--nexus-top", dest="nexus_top", type=int, help="Nombre de valeurs retenues dans le rapport Nexus")
-    parser.add_argument(
-        "--score-weights",
-        dest="score_weights",
-        help="Pondérations personnalisées du score (ex: trend=50,momentum=30,quality=15,risk=5)",
-    )
-    parser.add_argument("--orotitan-ai", dest="orotitan_ai", action="store_true", help="Active le moteur OroTitan AI")
-    parser.add_argument(
-        "--ai-task",
-        dest="ai_task",
-        choices=["embed", "decide", "feedback", "report", "full"],
-        help="Étape OroTitan à exécuter (par défaut: full)",
-    )
-    parser.add_argument(
-        "--regime-weights",
-        dest="regime_weights",
-        help="JSON des pondérations de modules pour OroTitan",
-    )
-    parser.add_argument("--regime-file", dest="regime_file", help="Fichier JSON de pondérations OroTitan")
-    parser.add_argument("--feedback-file", dest="feedback_file", help="Feedback JSON pour OroTitan")
-    parser.add_argument("--report-out", dest="report_out", help="Chemin du rapport OroTitan")
-    parser.add_argument("--ai-report", dest="ai_report", action="store_true", help="Force la génération du rapport OroTitan")
-    parser.add_argument("--risk-budget", dest="risk_budget", type=float, help="Budget de risque OroTitan (0..0.5)")
-    parser.add_argument("--temperature", dest="temperature", type=float, help="Température OroTitan (0..1)")
-    parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="Exécution OroTitan sans écriture disque")
-    parser.add_argument("--json", dest="json", action="store_true", help="Affiche la sortie JSON OroTitan")
-    parser.add_argument("--behavior", dest="behavior", action="store_true", help="Active l'analyse comportementale OroTitan")
-    parser.add_argument(
-        "--behavior-threshold",
-        dest="behavior_threshold",
-        type=float,
-        help="Seuil comportemental avant ajustement de confiance",
-    )
-    parser.add_argument(
-        "--behavior-persist",
-        dest="behavior_persist",
-        help="Mode de persistance comportementale (jsonl|sqlite|none)",
-    )
-    parser.add_argument(
-        "--behavior-json",
-        dest="behavior_json",
-        action="store_true",
-        help="Affiche la synthèse comportementale au format JSON",
-    )
-    parser.add_argument("--save-state", dest="save_state", action="store_true", help="Sauvegarde l'état OroTitan AI")
     parser.add_argument("--bt", dest="bt", action="store_true", help="Active le backtest EOD")
     parser.add_argument("--no-bt", dest="bt", action="store_false", help=argparse.SUPPRESS)
     parser.add_argument(
@@ -1260,60 +657,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(list(argv) if argv is not None else None)
     settings = _resolve_settings(args)
 
-    setup_logging(settings["log_level"])
-
-    if settings.get("workers"):
-        os.environ["STOCK_DL_WORKERS"] = str(settings["workers"])
+    logging.basicConfig(level=getattr(logging, settings["log_level"], logging.INFO), format=LOG_FORMAT)
 
     LOGGER.info(
         "Configuration utilisée",
         extra={key: value for key, value in settings.items() if key != "tickers"},
     )
-
-    if getattr(args, "orotitan_ai", False):
-        if getattr(args, "ai_report", False) and getattr(args, "ai_task", "full") == "decide":
-            args.ai_task = "full"
-        try:
-            return orotitan_cli.run_from_args(args)
-        except (FileNotFoundError, ValueError) as exc:
-            LOGGER.error("OroTitan AI error: %s", exc)
-            return 2
-        except Exception as exc:  # pragma: no cover - defensive logging
-            LOGGER.error("OroTitan AI unexpected failure", exc_info=exc)
-            return 2
-
-    if settings.get("serve_api") and settings.get("dashboard"):
-        LOGGER.error("Impossible de lancer l'API et le dashboard simultanément.")
-        return 1
-
-    if settings.get("serve_api"):
-        return _launch_api(settings)
-
-    if settings.get("dashboard"):
-        return _launch_dashboard()
-
-    paris_tz = ZoneInfo("Europe/Paris")
-    regime_assessment = None
-    regime_weights = settings.get("score_weights")
-    try:
-        regime_assessment = evaluate_regime(datetime.now(paris_tz))
-        LOGGER.info(
-            "Régime macro détecté",
-            extra={
-                "regime": regime_assessment.regime,
-                "vix": regime_assessment.snapshot.vix,
-                "cpi_yoy": regime_assessment.snapshot.cpi_yoy,
-                "rate_10y": regime_assessment.snapshot.rate_10y,
-                "rate_2y": regime_assessment.snapshot.rate_2y,
-                "credit_spread": regime_assessment.snapshot.credit_spread,
-            },
-        )
-    except Exception as exc:  # pragma: no cover - runtime
-        LOGGER.warning("Impossible de déterminer le régime macro", exc_info=exc)
-
-    if (not regime_weights) and regime_assessment is not None:
-        regime_weights = compute_weights(regime_assessment.regime)
-        settings["score_weights"] = regime_weights
 
     try:
         results = analyze_tickers(
@@ -1322,11 +671,6 @@ def main(argv: Sequence[str] | None = None) -> int:
             interval=settings["interval"],
             price_column=settings["price_column"],
             gap_threshold_pct=settings["gap_threshold"],
-            use_cache=settings["cache_ttl"] is not None,
-            cache_ttl_seconds=settings["cache_ttl"],
-            score_weights=regime_weights,
-            regime=regime_assessment.regime if regime_assessment else None,
-            score_weights=settings["score_weights"],
         )
     except Exception as exc:  # pragma: no cover - runtime/network failures
         LOGGER.error(
@@ -1339,58 +683,27 @@ def main(argv: Sequence[str] | None = None) -> int:
         LOGGER.error("Aucune analyse n'a pu être menée. Vérifiez les tickers ou la connexion réseau.")
         return 1
 
-    if settings["show_regime"] and regime_assessment is not None:
-        snapshot = regime_assessment.snapshot
-        weights_str = ", ".join(
-            f"{key}:{float((regime_weights or {}).get(key, 0.0)) * 100:.1f}%"
-            for key in ("trend", "momentum", "quality", "risk")
-        )
-        print(
-            "Régime détecté : {label} | VIX={vix} CPI YoY={cpi}% T10Y={t10}% T2Y={t2}% Spread={spread}".format(
-                label=regime_assessment.regime,
-                vix=_format_number(snapshot.vix),
-                cpi=_format_number(snapshot.cpi_yoy),
-                t10=_format_number(snapshot.rate_10y),
-                t2=_format_number(snapshot.rate_2y),
-                spread=_format_number(snapshot.credit_spread),
-            )
-        )
-        print(f"Pondérations Nexus : {weights_str}")
-
-    report_output_dir = Path(settings["out_dir"]).expanduser().resolve()
+    report_output_dir = Path(settings["out_dir"])
     charts_dir_path: Path | None = None
     charts_dir_rel: str | None = None
     if settings["report"]:
         report_output_dir.mkdir(parents=True, exist_ok=True)
         if settings["include_charts"]:
-            charts_dir_path, charts_dir_rel = _prepare_output_subdir(
-                report_output_dir, str(settings["charts_dir"])
-            )
+            raw_charts_dir = Path(settings["charts_dir"])
+            charts_dir_path = raw_charts_dir if raw_charts_dir.is_absolute() else report_output_dir / raw_charts_dir
+            charts_dir_path.mkdir(parents=True, exist_ok=True)
+            try:
+                charts_dir_rel = os.path.relpath(charts_dir_path, report_output_dir)
+            except ValueError:
+                charts_dir_rel = str(charts_dir_path)
 
     score_rows = _collect_scores(results)
-    ml_results: list[tuple[str, Dict[str, object]]] = []
-    regime_manifest_payload: Dict[str, object] | None = None
-    if regime_assessment is not None:
-        regime_manifest_payload = regime_assessment.to_dict()
-        regime_manifest_payload["weights"] = regime_weights or {}
-    if settings["ml_eval"]:
-        ml_results = _run_ml_evaluation(
-            results,
-            model=settings["ml_model"],
-            horizon=settings["ml_horizon"],
-            label_threshold=settings["ml_thr"],
-            retrain_every=settings["ml_retrain"],
-            proba_threshold=settings["ml_th_proba"],
-            price_column=settings["price_column"],
-            warmup=settings["ml_warmup"],
-        )
     generated_charts: list[str] = []
     backtest_result: Dict[str, object] | None = None
     bt_generated_charts: list[str] = []
     bt_chart_references: Dict[str, str] = {}
     backtest_kpis: Dict[str, object] = {}
     backtest_drawdown = pd.DataFrame()
-    nexus_report_paths: Dict[str, str | None] = {}
     benchmark_label = settings["benchmark"].strip() or None
     benchmark_series = None
 
@@ -1398,10 +711,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     bt_charts_dir_rel: str | None = None
     if settings["bt_report"] and settings["include_bt_charts"]:
         report_output_dir.mkdir(parents=True, exist_ok=True)
-        bt_charts_dir_path, bt_charts_dir_rel = _prepare_output_subdir(
-            report_output_dir, str(settings["charts_bt_dir"])
-        )
-        if not settings["report"]:
+        raw_bt_dir = Path(settings["charts_bt_dir"])
+        bt_charts_dir_path = raw_bt_dir if raw_bt_dir.is_absolute() else report_output_dir / raw_bt_dir
+        bt_charts_dir_path.mkdir(parents=True, exist_ok=True)
+        if settings["report"]:
+            try:
+                bt_charts_dir_rel = os.path.relpath(bt_charts_dir_path, report_output_dir)
+            except ValueError:
+                bt_charts_dir_rel = str(bt_charts_dir_path)
+        else:
             bt_charts_dir_rel = str(bt_charts_dir_path)
 
     for ticker, payload in results.items():
@@ -1490,42 +808,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                     notes=notes_count,
                 )
             )
-
-        if settings["ml_eval"]:
-            ml_bundle = payload.get("ml") if isinstance(payload, dict) else None
-            if isinstance(ml_bundle, dict) and ml_bundle:
-                cmatrix = ml_bundle.get("confusion", {}) if isinstance(ml_bundle.get("confusion"), dict) else {}
-                tn = cmatrix.get("tn", 0)
-                fp = cmatrix.get("fp", 0)
-                fn = cmatrix.get("fn", 0)
-                tp = cmatrix.get("tp", 0)
-                pos_ratio = ml_bundle.get("positive_ratio", 0.0)
-                print(
-                    "[ML] {ticker} — model={model}, horizon={horizon}, thr={thr}, retrain={retrain}, th_proba={pth}".format(
-                        ticker=ticker,
-                        model=ml_bundle.get("model"),
-                        horizon=ml_bundle.get("horizon"),
-                        thr=_format_number(ml_bundle.get("label_threshold")),
-                        retrain=ml_bundle.get("retrain_every"),
-                        pth=_format_number(ml_bundle.get("proba_threshold")),
-                    )
-                )
-                print(
-                    "     CV AUC = {auc:.2f} ± {std:.2f} | Walk-forward Sharpe = {sharpe:.2f}".format(
-                        auc=ml_bundle.get("auc_mean", 0.0),
-                        std=ml_bundle.get("auc_std", 0.0),
-                        sharpe=ml_bundle.get("sharpe_ml", 0.0),
-                    )
-                )
-                print(
-                    "     Confusion(th=0.50): TN={tn} FP={fp} FN={fn} TP={tp} | Pos%={pos:.1%}".format(
-                        tn=tn,
-                        fp=fp,
-                        fn=fn,
-                        tp=tp,
-                        pos=pos_ratio,
-                    )
-                )
 
         if settings["report"] and report_section is not None:
             if settings["include_charts"] and charts_dir_path is not None:
@@ -1816,7 +1098,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 base_name=settings["base_name"],
                 format=settings["format"],
                 backtest=backtest_result,
-                regime=regime_manifest_payload,
             )
         except Exception as exc:  # pragma: no cover - disk failures are runtime only
             LOGGER.error("Échec de la sauvegarde des résultats.", exc_info=exc)
@@ -1942,70 +1223,6 @@ def main(argv: Sequence[str] | None = None) -> int:
                 LOGGER.error("Échec de la génération du rapport backtest HTML.", exc_info=exc)
                 return 1
             print(f"Rapport backtest HTML : {html_path}")
-
-    if settings["nexus_report"]:
-        if regime_assessment is None:
-            LOGGER.error("Impossible de générer le rapport Nexus sans régime macro détecté.")
-        else:
-            try:
-                nexus_weights = regime_weights or compute_weights(regime_assessment.regime)
-                nexus_output_dir = (report_output_dir / settings["nexus_dir"]).resolve()
-                paths = generate_nexus_report(
-                    results,
-                    regime_assessment,
-                    nexus_weights,
-                    output_dir=nexus_output_dir,
-                    base_name="Nexus",
-                    title=settings["nexus_title"],
-                    top_n=settings["nexus_top"],
-                    include_html=settings["html"],
-                )
-                nexus_report_paths = paths
-                if regime_manifest_payload is not None:
-                    regime_manifest_payload["report_paths"] = paths
-                print("\nRapport Nexus généré :")
-                for label, path in paths.items():
-                    if path:
-                        print(f" - {label}: {path}")
-            except Exception as exc:  # pragma: no cover - runtime failure
-                LOGGER.error("Échec de la génération du rapport Nexus.", exc_info=exc)
-
-    if settings["ml_eval"] and ml_results:
-        print("\nÉvaluation ML :")
-        for ticker, metrics in ml_results:
-            confusion_dict = metrics.get("confusion", {}) if isinstance(metrics, dict) else {}
-            tn = confusion_dict.get("tn", 0)
-            fp = confusion_dict.get("fp", 0)
-            fn = confusion_dict.get("fn", 0)
-            tp = confusion_dict.get("tp", 0)
-            sharpe_value = metrics.get("sharpe_ml", 0.0) if isinstance(metrics, dict) else 0.0
-            pos_ratio = metrics.get("positive_ratio", 0.0) if isinstance(metrics, dict) else 0.0
-            print(
-                "[ML] {ticker} — model={model}, horizon={horizon}, thr={thr}, retrain={retrain}, th_proba={pth}".format(
-                    ticker=ticker,
-                    model=metrics.get("model"),
-                    horizon=metrics.get("horizon"),
-                    thr=_format_number(metrics.get("label_threshold")),
-                    retrain=metrics.get("retrain_every"),
-                    pth=_format_number(metrics.get("proba_threshold")),
-                )
-            )
-            print(
-                "     CV AUC = {auc:.2f} ± {std:.2f} | Walk-forward Sharpe = {sharpe:.2f}".format(
-                    auc=metrics.get("auc_mean", 0.0),
-                    std=metrics.get("auc_std", 0.0),
-                    sharpe=sharpe_value,
-                )
-            )
-            print(
-                "     Confusion(th=0.50): TN={tn} FP={fp} FN={fn} TP={tp} | Pos%={pos:.1%}".format(
-                    tn=tn,
-                    fp=fp,
-                    fn=fn,
-                    tp=tp,
-                    pos=pos_ratio,
-                )
-            )
 
     if settings["score"]:
         print("\nTableau des scores (top {top}) :".format(top=settings["top"]))

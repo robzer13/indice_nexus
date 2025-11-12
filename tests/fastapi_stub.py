@@ -37,6 +37,9 @@ class FastAPI:
     def post(self, path: str, **_: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         return self._register("POST", path)
 
+    def get(self, path: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+        return self._register("GET", path)
+
     def _register(self, method: str, path: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
             self._routes.append(_Route(method, path, func))
