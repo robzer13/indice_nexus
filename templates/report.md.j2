@@ -1,0 +1,33 @@
+{{ title }}
+========================
+
+Date d'exécution : {{ run_date }}
+
+## Synthèse des scores
+
+| Ticker | Score | Trend | Momentum | Quality | Risk | As Of |
+|--------|-------|-------|----------|---------|------|-------|
+{% for row in scores %}| {{ row.Ticker }} | {{ "%.2f"|format(row.Score|default(0)) }} | {{ "%.2f"|format(row.Trend|default(0)) }} | {{ "%.2f"|format(row.Momentum|default(0)) }} | {{ "%.2f"|format(row.Quality|default(0)) }} | {{ "%.2f"|format(row.Risk|default(0)) }} | {{ row['As Of'] }} |
+{% endfor %}
+
+## Commentaires par valeur
+
+{% for entry in commentary %}### {{ entry.ticker }}
+- Score global : {{ entry.score }}
+- Points forts : {{ entry.highlights }}
+- Vigilances : {{ entry.watchouts }}
+
+{% if entry.chart %}![Graphique {{ entry.ticker }}]({{ entry.chart }})
+
+{% endif %}{% endfor %}
+
+{% if backtest %}
+## Résultats backtest
+
+- KPI : {{ backtest.kpis }}
+- Régime macro : {{ backtest.regime }}
+
+{% if backtest.charts %}{% for name, path in backtest.charts.items() %}![{{ name }}]({{ path }})
+
+{% endfor %}{% endif %}
+{% endif %}
