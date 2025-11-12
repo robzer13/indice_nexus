@@ -13,6 +13,7 @@ LOGGER = logging.getLogger(__name__)
 
 MAX_COMPONENTS = {"trend": 40.0, "momentum": 30.0, "quality": 20.0, "risk": 10.0}
 DEFAULT_WEIGHTS = MAX_COMPONENTS.copy()
+_MAX_WEIGHT_SUM = float(sum(DEFAULT_WEIGHTS.values()))
 
 
 def _coerce_float(value: object) -> float | None:
@@ -262,6 +263,7 @@ def compute_score_bundle(
     *,
     price_column: str = "Close",
     weights: Mapping[str, float] | None = None,
+    regime: str | None = None,
 ) -> Dict[str, object]:
     """Compute the composite scoring bundle for the provided ticker data."""
 
@@ -317,6 +319,18 @@ def compute_score_bundle(
     }
 
     weights_map = {**DEFAULT_WEIGHTS}
+    provided_weights = dict(weights or {})
+    if provided_weights:
+        total = sum(float(value) for value in provided_weights.values() if value is not None)
+        if 0.99 <= total <= 1.01 and _MAX_WEIGHT_SUM > 0:
+            weights_map = {
+                key: float(provided_weights.get(key, 0.0)) * _MAX_WEIGHT_SUM
+                for key in weights_map
+            }
+        else:
+            for key, value in provided_weights.items():
+                if key in weights_map:
+                    weights_map[key] = float(value)
     if weights:
         for key, value in weights.items():
             if key in weights_map:
@@ -333,6 +347,15 @@ def compute_score_bundle(
     total = (weighted_total / weight_sum) * 100.0 if weight_sum else 0.0
     total = max(0.0, min(100.0, round(total, 2)))
 
+    normalised_weights = {}
+    if weight_sum:
+        normalised_weights = {
+            key: round(float(value) / weight_sum, 6) if weight_sum else 0.0
+            for key, value in weights_map.items()
+        }
+    else:
+        normalised_weights = {key: 0.0 for key in weights_map}
+
     return {
         "score": total,
         "trend": round(trend_score, 2),
@@ -341,6 +364,8 @@ def compute_score_bundle(
         "risk": round(risk_score, 2),
         "as_of": as_of,
         "notes": sorted(set(notes)),
+        "weights": normalised_weights,
+        "regime": regime,
     }
 
 

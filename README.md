@@ -36,6 +36,8 @@ Le CLI télécharge les prix (index `Europe/Paris`), calcule SMA/EMA 7/9/20/21/5
 - `--bt` + `--bt-report` : moteur EOD (signaux `sma200_trend`, `rsi_rebound`, `macd_cross`) avec coûts, slippage, stops/take-profit, métriques (CAGR, vol annualisée, Sharpe, Calmar, max drawdown, hit-rate, payoff, exposition) et top/bottom trades.
 - `--report` / `--html` / `--charts-dir` : rapports Markdown/HTML, graphiques prix + MACD/RSI (backend matplotlib).
 - `--benchmark` : rebasing contre un indice (ex: `^FCHI`) pour le backtest et les KPI.
+- `--regime` : affiche le régime macro détecté (Stress, Inflation, Recovery, Expansion) et les pondérations Nexus appliquées.
+- `--nexus-report` : génère en plus du rapport classique un bloc stratégique Nexus (résumé macro, pondérations adaptatives, top valeurs, recommandation).
 
 Les valeurs par défaut sont surchargeables via `stock_analysis.toml` (section `[defaults]`) ou variables d'environnement `STOCK_ANALYSIS_*` (voir `__main__.py`).
 
@@ -108,6 +110,85 @@ stock-analysis `
 
 ## Régimes macro & scoring
 
+`stock_analysis.regimes.evaluate_regime` consolide VIX, inflation (CPI YoY), taux 2Y/10Y et spread crédit (cache `.cache/macro`) puis classe chaque date en quatre états : `Stress`, `Inflation`, `Recovery`, `Expansion`. `stock_analysis.weighting.compute_weights` fournit automatiquement les pondérations trend/momentum/fundamental/behavioral adaptées à chaque régime (somme = 1). `compute_score_bundle` renvoie un bundle enrichi (`score`, sous-scores, `weights`, `regime`, notes de données manquantes) utilisé par la CLI, les rapports et la persistance.
+
+## OroTitan / Nexus-grade Intelligence
+
+- `--regime` affiche le régime détecté, les indicateurs macro utilisés et la pondération Nexus appliquée.
+- `--nexus-report` ajoute au rapport classique un bloc stratégique (résumé macro, pondérations, Top N, analyse comportementale, recommandation).
+- `stock_analysis.report_nexus.generate_nexus_report` produit Markdown/HTML (`Nexus_<date>.md|html`) dans `out/reports/` par défaut.
+- `scripts/nexus_daily.py` (et `scripts/nexus_daily.ps1`) exécutent la détection macro, l'analyse pondérée, la sauvegarde et la génération du rapport Nexus à 07:15 CET via le scheduler ou une tâche Windows.
+- Le manifeste JSON inclut le régime détecté, ses pondérations et les chemins vers les rapports Nexus.
+
+## V5 OroTitan AI (Cognitive Engine)
+
+La couche "OroTitan AI" fournit un moteur cognitif complet : encodage de signaux multi-régimes, décisions explicables, feedback et reporting.
+
+### CLI
+
+```powershell
+python -m stock_analysis `
+  --orotitan-ai `
+  --ai-task decide `
+  --tickers "ASML MC.PA" `
+  --risk-budget 0.15 `
+  --temperature 0.1 `
+  --json
+```
+
+- `--ai-task` : `embed`, `decide`, `feedback`, `report` ou `full`.
+- `--regime-weights` ou `--regime-file` : pondérations personnalisées (JSON).
+- `--feedback-file` : liste d'évènements (hit/miss/neutral) pour ajuster les poids, `--save-state` persiste dans `out/state/orotitan_ai.json`.
+- `--ai-report` + `--report-out` génèrent un rapport Markdown/HTML (`render_orotitan_report`).
+- `--json` fournit une sortie machine-readable avec les décisions, embeddings, KPI et chemins de rapport.
+
+### API FastAPI
+
+```bash
+uvicorn stock_analysis.api.app:app --reload --port 8000
+```
+
+Endpoints :
+
+- `POST /ai/embed` → vecteurs OroTitan par ticker.
+- `POST /ai/decide` → décisions (BUY/SELL/HOLD), scores, facteurs et confiance.
+- `POST /ai/feedback` → applique un feedback bandit-like et renvoie les notes associées.
+- `POST /ai/report` → retourne le Markdown du rapport (et le sauvegarde si `SAVE_REPORTS=1`).
+
+### Streamlit
+
+```bash
+python -m stock_analysis --dashboard
+```
+
+Une nouvelle page "OroTitan AI" (fichier `streamlit_pages/10_OroTitan_AI.py`) permet :
+
+- saisie multi-tickers, régime manuel et pondérations JSON,
+- sliders pour `risk_budget` et `temperature`,
+- génération des décisions (tableau + export JSON),
+- génération d'un rapport Markdown téléchargeable,
+- application d'un feedback JSON.
+
+### Automatisation
+
+- `scripts/orotitan_daily.py` et `scripts/orotitan_daily.ps1` orchestrent une exécution quotidienne (`--orotitan-ai --ai-report --save-state`) à 07:20 CET.
+- L'extra `orotitan` (`pip install .[orotitan]`) ajoute l'encodage de notes via `sentence-transformers` lorsque disponible.
+
+## V6 OroTitan Behavioral Intelligence & Self-Coaching
+
+La couche comportementale complète OroTitan avec la détection des biais humains/systémiques et des recommandations d'auto-coaching.
+
+- **Score comportemental 0–100** : calculé via `orotitan_ai.behavior.indicators` + `behavior.rules.evaluate_biases`.
+- **Ajustement de confiance** : `behavior.scoring.aggregate_scores` applique ±0.25 max sur la confiance finale (`Decision.behavior` attaché à chaque sortie).
+- **Coach Corner** : `behavior.coach.build_recommendations` fournit 3–5 actions concrètes (48h) selon les biais dominants.
+- **Persistance** : JSONL par défaut (`out/behavior/behavior_records.jsonl`), option `sqlite` (`--behavior-persist sqlite`) ou `none`.
+- **Rapports** : sections "Behavioral Insights" + "Self-Coaching Actions" automatiquement ajoutées au Markdown/HTML OroTitan.
+- **Interfaces** :
+  - CLI → `python -m stock_analysis --orotitan-ai --behavior --behavior-json --tickers "MC.PA TTE.PA" --json`
+  - API → `POST /ai/behavior/analyze` (payload `{"tickers":["MC.PA"],"context":{"indicator_overrides":{"loss_hold_bias":0.6}}}`)
+  - Streamlit → page `11_OroTitan_Behavior.py` (sliders seuil/influence, table des biais, export Markdown).
+
+Le score et l'ajustement sont visibles dans les sorties JSON (`confidence_adjustment`). Les rapports Markdown incluent désormais la table des biais et les actions d'auto-coaching.
 `stock_analysis.regimes.infer_regime` applique des seuils heuristiques (VIX ≥25 → `Stress`, CPI YoY ≥4% → `Inflation`, sinon `Normal`). `compute_score_bundle` accepte des pondérations personnalisées (`weights={'trend': 50, ...}`) et renvoie un score 0..100 avec sous-scores trend/momentum/quality/risk et notes de données manquantes.
 
 ## Persistance & rapports
@@ -119,6 +200,10 @@ stock-analysis `
 - Tableau des scores (`{base}_scores.parquet|csv`).
 - Sorties ML (`{base}_ML_{ticker}_proba.{ext}`, `{base}_ML_{ticker}_signal.{ext}`) et résumé `{base}_ML_SUMMARY.json`.
 - Résultats backtest (`{base}_equity|trades|positions.parquet|csv`), KPI (`*_kpis`), drawdown (`*_drawdown`).
+- Rapport Nexus (`reports/Nexus_<date>.md|html`) lorsque `--nexus-report` ou le script dédié sont utilisés.
+- Manifeste `{base}_MANIFEST.json` (provenance, régime détecté + pondérations, paramètres, versions, graphiques, métriques ML/backtest, timezone Europe/Paris).
+
+Les scripts `scripts/report_daily.ps1` et `scripts/nexus_daily.py` automatisent respectivement la commande complète et le rapport Nexus seul (fichier `scripts/nexus_daily.ps1` pour Windows/Task Scheduler). Le template Jinja `templates/report.md.j2` sert de base pour une mise en page personnalisée (Executive summary, score table, régime macro, visuels).
 - Manifeste `{base}_MANIFEST.json` (provenance, paramètres, versions, graphiques, métriques ML/backtest, timezone Europe/Paris).
 
 Le script `scripts/report_daily.ps1` lance la commande complète (options backtest et ML facultatives). Le template Jinja `templates/report.md.j2` sert de base pour une mise en page personnalisée (Executive summary, score table, régime macro, visuels).
@@ -130,6 +215,9 @@ from stock_analysis import (
     analyze_tickers, download_many, fetch_price_history, quality_report,
     compute_moving_averages, compute_rsi, compute_macd,
     fetch_fundamentals, add_ta_features, make_label_future_ret,
+    compute_score_bundle, compute_volatility,
+    evaluate_regime, infer_regime_series, compute_weights,
+    generate_nexus_report, run_backtest, summarize_backtest, save_analysis,
     compute_score_bundle, compute_volatility, infer_regime,
     run_backtest, summarize_backtest, save_analysis,
     time_cv, walk_forward_signals, sharpe_sim, confusion,

@@ -16,6 +16,10 @@ _SUMMARY_HEADERS = [
     "Momentum",
     "Quality",
     "Risk",
+    "TrendW",
+    "MomentumW",
+    "QualityW",
+    "RiskW",
     "AsOf",
     "Dups",
     "OHLC_Anom",
@@ -84,6 +88,7 @@ def build_summary_table(results: Dict[str, Dict[str, object]]) -> List[Dict[str,
             fundamentals = {}
 
         missing_fundamentals = sum(1 for key in _FUNDAMENTAL_KEYS if fundamentals.get(key) is None)
+        weight_map = score.get("weights") if isinstance(score.get("weights"), dict) else {}
 
         row = {
             "Ticker": ticker,
@@ -92,6 +97,10 @@ def build_summary_table(results: Dict[str, Dict[str, object]]) -> List[Dict[str,
             "Momentum": score.get("momentum"),
             "Quality": score.get("quality"),
             "Risk": score.get("risk"),
+            "TrendW": weight_map.get("trend"),
+            "MomentumW": weight_map.get("momentum"),
+            "QualityW": weight_map.get("quality"),
+            "RiskW": weight_map.get("risk"),
             "AsOf": _resolve_as_of(payload),
             "Dups": _extract_count(quality, "duplicates"),
             "OHLC_Anom": _extract_count(quality, "ohlc_anomalies"),

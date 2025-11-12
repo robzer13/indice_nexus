@@ -26,6 +26,31 @@ from .plot_bt import (
     plot_exposure_heatmap,
     save_figure as _save_backtest_figure,
 )
+from .orotitan_ai import (
+    Decision,
+    FeedbackItem,
+    apply_feedback as apply_orotitan_feedback,
+    build_feature_dict,
+    decide,
+    encode_inputs,
+    encode_snapshot,
+    encode_text_optional,
+    load_state,
+    render_markdown_report as render_orotitan_markdown,
+    save_state,
+    update_weights as update_orotitan_weights,
+)
+from .regimes import (
+    MacroDataProvider,
+    MacroSnapshot,
+    RegimeAssessment,
+    RegimeThresholds,
+    evaluate_regime,
+    infer_regime_series,
+)
+from .report import build_summary_table, format_commentary, render_html, render_markdown
+from .report_nexus import generate_nexus_report
+from .report_orotitan import render_orotitan_report
 from .regimes import RegimeThresholds, infer_regime
 from .report import build_summary_table, format_commentary, render_html, render_markdown
 from .scoring import (
@@ -36,6 +61,7 @@ from .scoring import (
     score_risk,
     score_trend,
 )
+from .weighting import compute_weights
 
 try:  # pragma: no cover - optional dependency
     from .scheduler import schedule_daily_run
@@ -49,6 +75,23 @@ save_figure = save_price_figure
 
 __all__ = [
     "CANONICAL_PRICE_COLUMNS",
+    "Decision",
+    "DEFAULT_TICKERS",
+    "FeedbackItem",
+    "FEATURES",
+    "MacroDataProvider",
+    "MacroSnapshot",
+    "RegimeAssessment",
+    "RegimeThresholds",
+    "add_ta_features",
+    "analyze_tickers",
+    "attach_benchmark",
+    "apply_orotitan_feedback",
+    "build_feature_dict",
+    "build_model",
+    "build_summary_table",
+    "compute_drawdown",
+    "compute_macd",
     "DEFAULT_TICKERS",
     "analyze_tickers",
     "attach_benchmark",
@@ -59,6 +102,41 @@ __all__ = [
     "compute_rsi",
     "compute_score_bundle",
     "compute_volatility",
+    "compute_weights",
+    "confusion",
+    "decide",
+    "download_many",
+    "encode_inputs",
+    "encode_snapshot",
+    "encode_text_optional",
+    "evaluate_regime",
+    "fetch_benchmark",
+    "fetch_fundamentals",
+    "fetch_price_history",
+    "format_commentary",
+    "generate_nexus_report",
+    "generate_signals",
+    "infer_regime_series",
+    "load_cached_prices",
+    "load_state",
+    "make_label_future_ret",
+    "plot_drawdown",
+    "plot_equity_with_benchmark",
+    "plot_exposure_heatmap",
+    "plot_ticker",
+    "quality_report",
+    "render_bt_markdown",
+    "render_html",
+    "render_markdown",
+    "render_orotitan_markdown",
+    "render_orotitan_report",
+    "run_backtest",
+    "save_analysis",
+    "save_backtest_figure",
+    "save_figure",
+    "save_price_figure",
+    "save_state",
+    "schedule_daily_run",
     "FEATURES",
     "add_ta_features",
     "fetch_fundamentals",
@@ -84,6 +162,13 @@ __all__ = [
     "score_quality",
     "score_risk",
     "score_trend",
+    "sharpe_sim",
+    "store_cached_prices",
+    "summarize_backtest",
+    "time_cv",
+    "update_orotitan_weights",
+    "walk_forward_signals",
+]
     "save_analysis",
     "save_figure",
     "save_price_figure",
