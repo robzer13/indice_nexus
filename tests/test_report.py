@@ -68,8 +68,6 @@ class ReportModuleTests(unittest.TestCase):
             "risk": 4.5,
             "as_of": "2023-01-04T09:00:00+00:00",
             "notes": [],
-            "weights": {"trend": 0.4, "momentum": 0.3, "quality": 0.2, "risk": 0.1},
-            "regime": "Expansion",
         }
 
     def _build_results(self) -> dict[str, dict]:
@@ -92,8 +90,6 @@ class ReportModuleTests(unittest.TestCase):
         self.assertEqual(row["Ticker"], "AAA")
         self.assertEqual(row["MissingFundamentals"], 1)
         self.assertEqual(row["Gaps"], 1)
-        self.assertAlmostEqual(row["TrendW"], 0.4)
-        self.assertAlmostEqual(row["MomentumW"], 0.3)
 
     def test_format_commentary_range(self) -> None:
         results = self._build_results()

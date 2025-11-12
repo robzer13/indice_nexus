@@ -3,16 +3,13 @@ from __future__ import annotations
 
 import logging
 import math
-from typing import Dict, Iterable, List, Mapping
+from typing import Dict, Iterable, List
 
 import pandas as pd
 
 from .indicators import compute_macd, compute_moving_averages, compute_rsi
 
 LOGGER = logging.getLogger(__name__)
-
-MAX_COMPONENTS = {"trend": 40.0, "momentum": 30.0, "quality": 20.0, "risk": 10.0}
-DEFAULT_WEIGHTS = MAX_COMPONENTS.copy()
 
 
 def _coerce_float(value: object) -> float | None:
@@ -261,7 +258,6 @@ def compute_score_bundle(
     fundamentals: Dict[str, object] | None,
     *,
     price_column: str = "Close",
-    weights: Mapping[str, float] | None = None,
 ) -> Dict[str, object]:
     """Compute the composite scoring bundle for the provided ticker data."""
 
@@ -309,28 +305,7 @@ def compute_score_bundle(
             if value is None:
                 notes.append(f"nan: {column}")
 
-    component_map = {
-        "trend": trend_score,
-        "momentum": momentum_score,
-        "quality": quality_score,
-        "risk": risk_score,
-    }
-
-    weights_map = {**DEFAULT_WEIGHTS}
-    if weights:
-        for key, value in weights.items():
-            if key in weights_map:
-                weights_map[key] = float(value)
-
-    weighted_total = 0.0
-    for key, raw_value in component_map.items():
-        max_value = MAX_COMPONENTS.get(key, 1.0)
-        weight = weights_map.get(key, 0.0)
-        normalised = (raw_value / max_value) if max_value else 0.0
-        weighted_total += normalised * weight
-
-    weight_sum = sum(weights_map.values())
-    total = (weighted_total / weight_sum) * 100.0 if weight_sum else 0.0
+    total = trend_score + momentum_score + quality_score + risk_score
     total = max(0.0, min(100.0, round(total, 2)))
 
     return {

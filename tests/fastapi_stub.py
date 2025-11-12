@@ -1,7 +1,6 @@
 """Minimal FastAPI stub for offline unit tests."""
 from __future__ import annotations
 
-import inspect
 from types import SimpleNamespace
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
@@ -31,11 +30,8 @@ class FastAPI:
     def add_middleware(self, middleware: Any, **options: Any) -> None:
         self._middleware.append((middleware, options))
 
-    def get(self, path: str, **_: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
+    def get(self, path: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         return self._register("GET", path)
-
-    def post(self, path: str, **_: Any) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
-        return self._register("POST", path)
 
     def _register(self, method: str, path: str) -> Callable[[Callable[..., Any]], Callable[..., Any]]:
         def decorator(func: Callable[..., Any]) -> Callable[..., Any]:
@@ -72,8 +68,6 @@ class _Response:
         self._payload = payload
 
     def json(self) -> Any:
-        if hasattr(self._payload, "dict"):
-            return self._payload.dict()
         return self._payload
 
 
@@ -122,34 +116,6 @@ class TestClient:
 
         try:
             result = handler(**call_kwargs)
-        except HTTPException as exc:
-            return _Response(exc.status_code, {"detail": exc.detail})
-        except Exception as exc:  # pragma: no cover - defensive stub fallback
-            return _Response(500, {"detail": str(exc)})
-
-        return _Response(200, result)
-
-    def post(self, url: str, json: Optional[Dict[str, Any]] = None) -> _Response:
-        from urllib.parse import urlparse
-
-        parsed = urlparse(url)
-        path = parsed.path or "/"
-        body = dict(json or {})
-        try:
-            handler, path_params = self.app.resolve("POST", path)
-        except HTTPException as exc:
-            return _Response(exc.status_code, {"detail": exc.detail})
-
-        body.update(path_params)
-        annotations = getattr(handler, "__annotations__", {})
-        signature = inspect.signature(handler)
-        try:
-            if "request" in signature.parameters:
-                model = annotations.get("request")
-                payload = model(**body) if model is not None else body
-                result = handler(payload)
-            else:
-                result = handler(**body)
         except HTTPException as exc:
             return _Response(exc.status_code, {"detail": exc.detail})
         except Exception as exc:  # pragma: no cover - defensive stub fallback

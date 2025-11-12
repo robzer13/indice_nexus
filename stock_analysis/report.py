@@ -241,37 +241,6 @@ def render_markdown(
         lines.append(format_commentary(ticker, payload))
         lines.append("")
 
-        ml_bundle = payload.get("ml") if isinstance(payload, dict) else None
-        if isinstance(ml_bundle, dict) and ml_bundle:
-            lines.append("**ML Summary**")
-            lines.append("")
-            lines.append(
-                "- Modèle : {model} (horizon {horizon} j, retrain {retrain} j, seuil proba {pth})".format(
-                    model=ml_bundle.get("model", "n/a"),
-                    horizon=ml_bundle.get("horizon", "n/a"),
-                    retrain=ml_bundle.get("retrain_every", "n/a"),
-                    pth=_format_value(ml_bundle.get("proba_threshold")),
-                )
-            )
-            lines.append(
-                "- AUC moyen : {auc} ± {std} | Sharpe ML : {sharpe}".format(
-                    auc=_format_value(ml_bundle.get("auc_mean")),
-                    std=_format_value(ml_bundle.get("auc_std")),
-                    sharpe=_format_value(ml_bundle.get("sharpe_ml")),
-                )
-            )
-            conf = ml_bundle.get("confusion") if isinstance(ml_bundle.get("confusion"), dict) else {}
-            lines.append(
-                "- Confusion (0.50) : TN={tn} FP={fp} FN={fn} TP={tp} | Pos%={pos}".format(
-                    tn=conf.get("tn", 0),
-                    fp=conf.get("fp", 0),
-                    fn=conf.get("fn", 0),
-                    tp=conf.get("tp", 0),
-                    pos=_format_value(100 * ml_bundle.get("positive_ratio", 0.0)),
-                )
-            )
-            lines.append("")
-
         if include_charts:
             report_meta = payload.get("report", {}) if isinstance(payload, dict) else {}
             if isinstance(report_meta, dict):

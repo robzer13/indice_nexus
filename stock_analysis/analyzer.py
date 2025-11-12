@@ -3,9 +3,9 @@ from __future__ import annotations
 
 import logging
 from time import perf_counter
-from typing import Dict, Iterable, Mapping
+from typing import Dict, Iterable
 
-from .data import align_many, download_many, fetch_price_history, quality_report
+from .data import fetch_price_history, quality_report
 from .fundamentals import fetch_fundamentals
 from .indicators import compute_macd, compute_moving_averages, compute_rsi
 from .scoring import compute_score_bundle, compute_volatility
@@ -23,42 +23,24 @@ def analyze_tickers(
     auto_adjust: bool = False,
     price_column: str = "Close",
     gap_threshold_pct: float = 5.0,
-    use_cache: bool = True,
-    cache_ttl_seconds: int | None = None,
-    score_weights: Mapping[str, float] | None = None,
 ) -> Dict[str, Dict[str, object]]:
     """Run the complete analysis pipeline for the provided tickers."""
 
     results: Dict[str, Dict[str, object]] = {}
 
-    ticker_list = list(dict.fromkeys(tickers))
-    price_frames = download_many(
-        ticker_list,
-        period=period,
-        interval=interval,
-        auto_adjust=auto_adjust,
-        use_cache=use_cache,
-        cache_ttl_seconds=cache_ttl_seconds,
-    )
-    price_frames = align_many(price_frames)
-
-    for ticker in ticker_list:
+    for ticker in tickers:
         LOGGER.info(
             "Analysing ticker",
             extra={"ticker": ticker, "period": period, "interval": interval},
         )
         try:
             fetch_start = perf_counter()
-            prices = price_frames.get(ticker)
-            if prices is None:
-                prices = fetch_price_history(
-                    ticker,
-                    period=period,
-                    interval=interval,
-                    auto_adjust=auto_adjust,
-                    use_cache=use_cache,
-                    cache_ttl_seconds=cache_ttl_seconds,
-                )
+            prices = fetch_price_history(
+                ticker,
+                period=period,
+                interval=interval,
+                auto_adjust=auto_adjust,
+            )
             fetch_duration = (perf_counter() - fetch_start) * 1000.0
             LOGGER.info(
                 "Downloaded price history",
@@ -105,7 +87,6 @@ def analyze_tickers(
                 enriched,
                 fundamentals,
                 price_column=price_column,
-                weights=score_weights,
             )
             score_duration = (perf_counter() - score_start) * 1000.0
             LOGGER.info(

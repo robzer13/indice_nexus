@@ -62,8 +62,6 @@ class ScoringWorkflowTests(unittest.TestCase):
         self.assertGreaterEqual(bundle["momentum"], 18.0)
         self.assertGreaterEqual(bundle["score"], 50.0)
         self.assertLessEqual(len(bundle["notes"]), 2)
-        self.assertIn("weights", bundle)
-        self.assertAlmostEqual(sum(bundle["weights"].values()), 1.0, places=6)
 
     def test_downtrend_scores_low(self) -> None:
         close_values = [200.0 - index * 0.6 for index in range(240)]

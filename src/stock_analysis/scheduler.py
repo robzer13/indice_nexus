@@ -8,12 +8,8 @@ import subprocess
 import sys
 from typing import List
 
-try:  # pragma: no cover - optional dependency
-    from apscheduler.schedulers.blocking import BlockingScheduler
-    from apscheduler.triggers.cron import CronTrigger
-except Exception:  # pragma: no cover - runtime fallback for environments sans APScheduler
-    BlockingScheduler = None  # type: ignore[assignment]
-    CronTrigger = None  # type: ignore[assignment]
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
 from zoneinfo import ZoneInfo
 
 LOGGER = logging.getLogger(__name__)
@@ -49,8 +45,6 @@ def _build_cli_arguments() -> List[str]:
         price_column,
         "--score",
         "--report",
-        "--nexus-report",
-        "--regime",
         "--save",
         "--out-dir",
         out_dir,
@@ -86,10 +80,6 @@ def _run_once() -> None:
 
 
 def schedule_daily_run() -> None:
-    if BlockingScheduler is None or CronTrigger is None:  # pragma: no cover - runtime guard
-        raise RuntimeError(
-            "APScheduler n'est pas installé. Installez l'extra 'scheduler' ou la dépendance apscheduler pour utiliser le planificateur."
-        )
     scheduler = BlockingScheduler(timezone=PARIS_TZ)
     scheduler.add_job(
         _run_once,
