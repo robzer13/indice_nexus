@@ -1,0 +1,2 @@
+import Link from 'next/link';
+export default function NotFound() { return <div className="rounded-xl border border-slate-800 bg-slate-900/60 p-8"><h1 className="text-2xl font-semibold text-white">Société introuvable</h1><p className="mt-2 text-slate-400">Cette société n’existe pas dans la base active OroTitan.</p><Link href="/screener" className="mt-5 inline-flex rounded-lg border border-cyan-800 bg-cyan-950/30 px-4 py-2 text-sm text-cyan-200">Retour au screener</Link></div>; }
