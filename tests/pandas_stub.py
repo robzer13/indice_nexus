@@ -716,7 +716,6 @@ NA = None
 
 class _RollingSeries:
     def __init__(self, series: Series, window: int, min_periods: int | None = None) -> None:
-    def __init__(self, series: Series, window: int) -> None:
         if window <= 0:
             raise ValueError("window must be positive")
         self._series = series
@@ -724,8 +723,6 @@ class _RollingSeries:
         self._min_periods = min_periods if min_periods is not None else window
 
     def mean(self) -> Series:
-
-    def std(self) -> Series:
         results: List[float] = []
         data = self._series._data
         for index in range(len(data)):
