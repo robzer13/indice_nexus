@@ -1,4 +1,4 @@
-name: Screener V1 CI
+name: Screener CI
 
 on:
   pull_request:
@@ -7,6 +7,7 @@ on:
       - 'components/**'
       - 'lib/**'
       - 'tests/*.test.ts'
+      - 'migrations/**'
       - '.env.example'
       - 'package.json'
       - 'tsconfig.json'
@@ -18,17 +19,18 @@ on:
       - 'vercel.json'
       - 'schema.sql'
       - 'seed.sql'
-      - 'README_SCREENER_V1.md'
+      - 'README_SCREENER_V1*.md'
       - '.github/workflows/screener-v1-ci.yml'
   push:
     branches:
       - main
-      - feat/orotitan-screener-v1
+      - 'feat/**'
     paths:
       - 'app/**'
       - 'components/**'
       - 'lib/**'
       - 'tests/*.test.ts'
+      - 'migrations/**'
       - '.env.example'
       - 'package.json'
       - 'tsconfig.json'
@@ -40,7 +42,7 @@ on:
       - 'vercel.json'
       - 'schema.sql'
       - 'seed.sql'
-      - 'README_SCREENER_V1.md'
+      - 'README_SCREENER_V1*.md'
       - '.github/workflows/screener-v1-ci.yml'
 
 jobs:
