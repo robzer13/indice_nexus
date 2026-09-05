@@ -1,8 +1,8 @@
 {
   "name": "orotitan-screener-v1",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
-  "description": "OroTitan Screener V1 - cockpit de sociétés déjà analysées",
+  "description": "OroTitan Screener V1.1 - operational cockpit de sociétés déjà analysées",
   "engines": {
     "node": ">=22 <23"
   },
