@@ -1,5 +1,6 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
+import type { MarketPriceRow, MarketSyncRun } from '@/lib/domain/types';
 
 export interface MarketDataCompany {
   id: string;
@@ -37,4 +38,50 @@ export async function insertMarketPrice(input: {
     raw: input.raw,
   });
   if (error) throw new Error(`Unable to insert market price: ${error.message}`);
+}
+
+export async function getMarketPriceHistory(companyId: string, limit = 180): Promise<MarketPriceRow[]> {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('market_prices')
+    .select('*')
+    .eq('company_id', companyId)
+    .order('as_of', { ascending: false })
+    .limit(limit);
+  if (error) throw new Error(`Unable to load market price history: ${error.message}`);
+  return ((data ?? []) as MarketPriceRow[]).reverse();
+}
+
+export async function recordMarketSyncRun(input: {
+  startedAt: string;
+  finishedAt: string;
+  triggerSource: 'CRON' | 'ADMIN';
+  companies: number;
+  inserted: number;
+  failed: number;
+  results: unknown;
+}): Promise<void> {
+  const supabase = createServerSupabaseClient();
+  const { error } = await supabase.from('market_sync_runs').insert({
+    started_at: input.startedAt,
+    finished_at: input.finishedAt,
+    trigger_source: input.triggerSource,
+    companies: input.companies,
+    inserted: input.inserted,
+    failed: input.failed,
+    results: input.results,
+  });
+  if (error) throw new Error(`Unable to record market sync run: ${error.message}`);
+}
+
+export async function getRecentMarketSyncRuns(limit = 20): Promise<MarketSyncRun[]> {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('market_sync_runs')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (error?.code === '42P01') return [];
+  if (error) throw new Error(`Unable to load market sync runs: ${error.message}`);
+  return (data ?? []) as MarketSyncRun[];
 }
