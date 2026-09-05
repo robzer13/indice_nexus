@@ -74,6 +74,15 @@ export async function recordMarketSyncRun(input: {
   if (error) throw new Error(`Unable to record market sync run: ${error.message}`);
 }
 
+function isMissingMarketSyncRelation(error: { code?: string; message?: string } | null): boolean {
+  if (!error) return false;
+  return (
+    error.code === '42P01' ||
+    error.code === 'PGRST205' ||
+    Boolean(error.message?.includes('market_sync_runs') && error.message?.includes('schema cache'))
+  );
+}
+
 export async function getRecentMarketSyncRuns(limit = 20): Promise<MarketSyncRun[]> {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
@@ -81,7 +90,7 @@ export async function getRecentMarketSyncRuns(limit = 20): Promise<MarketSyncRun
     .select('*')
     .order('created_at', { ascending: false })
     .limit(limit);
-  if (error?.code === '42P01') return [];
+  if (isMissingMarketSyncRelation(error)) return [];
   if (error) throw new Error(`Unable to load market sync runs: ${error.message}`);
   return (data ?? []) as MarketSyncRun[];
 }
