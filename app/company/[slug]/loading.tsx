@@ -1,0 +1,1 @@
+export default function CompanyLoading() { return <div className="space-y-5"><div className="h-12 w-80 animate-pulse rounded bg-slate-800"/><div className="h-48 animate-pulse rounded-xl border border-slate-800 bg-slate-900/60"/><div className="h-64 animate-pulse rounded-xl border border-slate-800 bg-slate-900/60"/></div>; }

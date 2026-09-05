@@ -1,0 +1,1 @@
+export default function ScreenerLoading() { return <div className="space-y-4"><div className="h-10 w-72 animate-pulse rounded bg-slate-800"/><div className="h-96 animate-pulse rounded-xl border border-slate-800 bg-slate-900/60"/></div>; }
