@@ -795,12 +795,3 @@ def read_parquet(path, engine: str = "pyarrow") -> DataFrame:
             data[column].append(None)
     index = DatetimeIndex(index_values) if index_values else []
     return DataFrame(data, index=index, columns=columns)
-                if value is not None and not (isinstance(value, float) and math.isnan(value))
-            ]
-            if len(window_values) < self._window or not window_values:
-                results.append(math.nan)
-                continue
-            mean = sum(window_values) / len(window_values)
-            variance = sum((value - mean) ** 2 for value in window_values) / len(window_values)
-            results.append(math.sqrt(variance))
-        return Series(results, self._series.index, self._series.dtype)
