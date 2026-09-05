@@ -1,0 +1,2 @@
+'use client';
+export default function ErrorPage({ reset }: { error: Error & { digest?: string }; reset: () => void }) { return <div className="rounded-xl border border-rose-900/60 bg-rose-950/20 p-6"><h1 className="text-lg font-semibold text-rose-200">Erreur serveur</h1><p className="mt-2 text-sm text-rose-200/70">Les données OroTitan n’ont pas pu être chargées. Aucun nombre de remplacement n’a été généré.</p><button onClick={reset} className="mt-4 rounded-lg border border-rose-800 px-3 py-2 text-sm text-rose-100">Réessayer</button></div>; }

@@ -1,0 +1,8 @@
+import { CompanyStatusBadge } from '@/components/company-status-badge';
+import type { SnapshotHistoryRow, QuoteUnit } from '@/lib/domain/types';
+import { formatPrice } from '@/lib/domain/format-price';
+
+export function SnapshotHistory({ snapshots, currency, quoteUnit, priceDecimals }: { snapshots: SnapshotHistoryRow[]; currency: string; quoteUnit: QuoteUnit; priceDecimals: number }) {
+  if (snapshots.length === 0) return <p className="text-sm text-slate-500">Aucun snapshot historique disponible.</p>;
+  return <div className="overflow-x-auto"><table className="min-w-full text-left text-sm"><thead className="text-xs uppercase tracking-wide text-slate-500"><tr><th className="px-3 py-2">Date</th><th className="px-3 py-2">Modèle</th><th className="px-3 py-2">Statut</th><th className="px-3 py-2">Score</th><th className="px-3 py-2">FV centrale</th><th className="px-3 py-2">O90</th></tr></thead><tbody className="divide-y divide-slate-800">{snapshots.map((snapshot) => <tr key={snapshot.id}><td className="px-3 py-3 font-mono text-slate-300">{snapshot.analysis_date}</td><td className="px-3 py-3 font-mono text-xs text-slate-400">{snapshot.model_version}</td><td className="px-3 py-3"><CompanyStatusBadge status={snapshot.status} /></td><td className="px-3 py-3 font-mono text-slate-200">{snapshot.orotitan_score ?? '—'}</td><td className="px-3 py-3 font-mono text-slate-200">{formatPrice({ value: snapshot.fair_value_base, currency, quoteUnit, priceDecimals })}</td><td className="px-3 py-3 font-mono text-slate-200">{snapshot.price_o90 === null ? 'Non calibré' : formatPrice({ value: snapshot.price_o90, currency, quoteUnit, priceDecimals })}</td></tr>)}</tbody></table></div>;
+}

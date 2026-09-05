@@ -1,0 +1,63 @@
+name: Screener V1 CI
+
+on:
+  pull_request:
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'lib/**'
+      - 'tests/*.test.ts'
+      - '.env.example'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'next-env.d.ts'
+      - 'next.config.js'
+      - 'postcss.config.js'
+      - 'tailwind.config.js'
+      - 'eslint.config.mjs'
+      - 'vercel.json'
+      - 'schema.sql'
+      - 'seed.sql'
+      - 'README_SCREENER_V1.md'
+      - '.github/workflows/screener-v1-ci.yml'
+  push:
+    branches:
+      - main
+      - feat/orotitan-screener-v1
+    paths:
+      - 'app/**'
+      - 'components/**'
+      - 'lib/**'
+      - 'tests/*.test.ts'
+      - '.env.example'
+      - 'package.json'
+      - 'tsconfig.json'
+      - 'next-env.d.ts'
+      - 'next.config.js'
+      - 'postcss.config.js'
+      - 'tailwind.config.js'
+      - 'eslint.config.mjs'
+      - 'vercel.json'
+      - 'schema.sql'
+      - 'seed.sql'
+      - 'README_SCREENER_V1.md'
+      - '.github/workflows/screener-v1-ci.yml'
+
+jobs:
+  verify-screener:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Lint
+        run: npm run lint
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
+      - name: Production build
+        run: npm run build
