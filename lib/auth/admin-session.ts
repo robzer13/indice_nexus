@@ -7,7 +7,7 @@ const SESSION_SECONDS = 8 * 60 * 60;
 
 type SessionPayload = { v: 1; iat: number; exp: number };
 
-function required(name: 'ADMIN_PASSWORD' | 'ADMIN_SESSION_SECRET'): string {
+function required(name: 'ADMIN_PASSWORD'): string {
   const value = process.env[name];
   if (!value) throw new Error(`Missing required environment variable: ${name}`);
   return value;
@@ -19,10 +19,20 @@ function safeEqual(a: string, b: string): boolean {
   return timingSafeEqual(left, right);
 }
 
+function sessionSigningKey(): Buffer {
+  const dedicatedSecret = process.env.ADMIN_SESSION_SECRET?.trim();
+  if (dedicatedSecret && dedicatedSecret.length >= 32) {
+    return Buffer.from(dedicatedSecret, 'utf8');
+  }
+
+  return createHash('sha256')
+    .update('orotitan-admin-session-v1:')
+    .update(required('ADMIN_PASSWORD'))
+    .digest();
+}
+
 function sign(encodedPayload: string): string {
-  const secret = required('ADMIN_SESSION_SECRET');
-  if (secret.length < 32) throw new Error('ADMIN_SESSION_SECRET must be at least 32 characters');
-  return createHmac('sha256', secret).update(encodedPayload).digest('base64url');
+  return createHmac('sha256', sessionSigningKey()).update(encodedPayload).digest('base64url');
 }
 
 function makeToken(payload: SessionPayload): string {
