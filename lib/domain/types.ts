@@ -16,6 +16,24 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
+export interface CompanyRecord {
+  id: string;
+  slug: string;
+  ticker: string;
+  name: string;
+  exchange: string;
+  currency: string;
+  quote_unit: QuoteUnit;
+  price_decimals: number;
+  market_data_symbol: string | null;
+  market_data_multiplier: number;
+  country: string | null;
+  sector: string | null;
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface CompanyState {
   id: string;
   slug: string;
@@ -81,6 +99,28 @@ export interface SnapshotHistoryRow {
   source_title: string | null;
   notes: string | null;
   score_components: Json;
+  created_at: string;
+}
+
+export interface MarketPriceRow {
+  id: number;
+  company_id: string;
+  price: number;
+  as_of: string;
+  source: string;
+  raw: Json | null;
+  created_at: string;
+}
+
+export interface MarketSyncRun {
+  id: number;
+  started_at: string;
+  finished_at: string;
+  trigger_source: 'CRON' | 'ADMIN';
+  companies: number;
+  inserted: number;
+  failed: number;
+  results: Json;
   created_at: string;
 }
 
