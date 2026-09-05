@@ -9,7 +9,7 @@ __pycache__/
 env/
 venv/
 
-# Project outputs
+# Python project outputs
 .cache/
 out/
 charts/
@@ -19,10 +19,19 @@ build/
 dist/
 *.egg-info/
 
+# Node / Next.js
+node_modules/
+.next/
+.env.local
+.env*.local
+.vercel/
+*.log
+*.tsbuildinfo
+next-env.d.ts
+
 # IDE/editor
 .idea/
 .vscode/
 
 # Logs
 nexus.log
-
