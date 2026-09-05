@@ -181,11 +181,13 @@ export async function updateCompanyAction(formData: FormData): Promise<void> {
 export async function createSnapshotAction(formData: FormData): Promise<void> {
   const path = '/admin/snapshots/new';
   await requireAdmin(path);
+  let candidate: unknown;
   try {
-    return await insertValidatedSnapshot(snapshotCandidateFromForm(formData), path);
+    candidate = snapshotCandidateFromForm(formData);
   } catch (error) {
     redirect(errorUrl(path, error instanceof Error ? error.message : 'Données de snapshot invalides.'));
   }
+  return insertValidatedSnapshot(candidate, path);
 }
 
 export async function createSnapshotJsonAction(formData: FormData): Promise<void> {
@@ -237,13 +239,15 @@ export async function refreshPricesAction(): Promise<void> {
   const path = '/admin/prices';
   await requireAdmin(path);
 
+  let result;
   try {
-    const result = await refreshMarketPrices('ADMIN');
-    revalidatePath('/');
-    revalidatePath('/screener');
-    revalidatePath('/company', 'layout');
-    redirect(`${path}?success=${encodeURIComponent(`${result.inserted} cours inséré(s), ${result.failed} échec(s).`)}`);
+    result = await refreshMarketPrices('ADMIN');
   } catch (error) {
     redirect(errorUrl(path, error instanceof Error ? error.message : 'Rafraîchissement impossible.'));
   }
+
+  revalidatePath('/');
+  revalidatePath('/screener');
+  revalidatePath('/company', 'layout');
+  redirect(`${path}?success=${encodeURIComponent(`${result.inserted} cours inséré(s), ${result.failed} échec(s).`)}`);
 }
