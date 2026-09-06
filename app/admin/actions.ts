@@ -248,7 +248,7 @@ export async function refreshPricesAction(): Promise<void> {
 
   if (cooldownRemaining > 0) {
     const seconds = Math.ceil(cooldownRemaining / 1000);
-    redirect(`${path}?warning=${encodeURIComponent(`Quota Twelve Data protégé : réessaie dans ${seconds} s.`)}`);
+    redirect(`${path}?warning=${encodeURIComponent(`Quota fournisseur protégé : réessaie dans ${seconds} s.`)}`);
   }
 
   let result;

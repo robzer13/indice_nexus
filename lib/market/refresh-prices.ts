@@ -4,12 +4,13 @@ import {
   insertMarketPrice,
   recordMarketSyncRun,
 } from '@/lib/data/market-prices';
-import { fetchTwelveDataPrice } from '@/lib/market/twelve-data';
+import { fetchProviderPrice, type MarketPriceProvider } from '@/lib/market/provider';
 
 export interface PriceRefreshItem {
   slug: string;
   symbol: string;
   status: 'inserted' | 'failed';
+  provider?: MarketPriceProvider;
   price?: number;
   error?: string;
 }
@@ -53,7 +54,7 @@ export async function refreshMarketPrices(triggerSource: 'CRON' | 'ADMIN'): Prom
         continue;
       }
 
-      const provider = await fetchTwelveDataPrice(company.market_data_symbol);
+      const provider = await fetchProviderPrice(company.market_data_symbol);
       const normalizedPrice = provider.providerPrice * company.market_data_multiplier;
       if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
         throw new Error('Normalized price is invalid');
@@ -65,10 +66,16 @@ export async function refreshMarketPrices(triggerSource: 'CRON' | 'ADMIN'): Prom
         companyId: company.id,
         price: normalizedPrice,
         asOf: provider.fetchedAt,
-        source: 'TWELVE_DATA',
+        source: provider.provider,
         raw: provider.raw,
       });
-      results.push({ slug: company.slug, symbol: company.market_data_symbol, status: 'inserted', price: normalizedPrice });
+      results.push({
+        slug: company.slug,
+        symbol: company.market_data_symbol,
+        provider: provider.provider,
+        status: 'inserted',
+        price: normalizedPrice,
+      });
     } catch (error) {
       results.push({
         slug: company.slug,

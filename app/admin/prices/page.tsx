@@ -19,7 +19,7 @@ export default async function AdminPricesPage({ searchParams }: { searchParams: 
   const warning = typeof query.warning === 'string' ? query.warning : null;
 
   return <div className="space-y-6">
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Market data</div><h1 className="mt-2 text-3xl font-semibold text-white">Cours & synchronisations</h1><p className="mt-2 text-sm text-slate-400">Twelve Data insère de nouveaux points sans réécrire l’historique.</p></div><form action={refreshPricesAction}><RefreshPricesButton/></form></div>
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Market data</div><h1 className="mt-2 text-3xl font-semibold text-white">Cours & synchronisations</h1><p className="mt-2 text-sm text-slate-400">Collecte multi-provider : Yahoo Finance pour les marchés européens, Twelve Data pour les actions US. Chaque point reste append-only.</p></div><form action={refreshPricesAction}><RefreshPricesButton/></form></div>
     <AdminNav/>
     {error ? <div className="rounded-lg border border-rose-900 bg-rose-950/30 p-3 text-sm text-rose-200">{error}</div> : null}
     {success ? <div className="rounded-lg border border-emerald-900 bg-emerald-950/25 p-3 text-sm text-emerald-200">{success}</div> : null}
