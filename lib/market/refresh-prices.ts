@@ -27,6 +27,16 @@ export interface PriceRefreshResult {
   logError?: string;
 }
 
+function assertPlausiblePrice(nextPrice: number, previousPrice: number | null): void {
+  if (previousPrice === null || !Number.isFinite(previousPrice) || previousPrice <= 0) return;
+  const ratio = nextPrice / previousPrice;
+  if (ratio > 5 || ratio < 0.2) {
+    throw new Error(
+      `Rejected implausible market price jump: previous=${previousPrice}, candidate=${nextPrice}`,
+    );
+  }
+}
+
 export async function refreshMarketPrices(triggerSource: 'CRON' | 'ADMIN'): Promise<PriceRefreshResult> {
   const startedAt = new Date().toISOString();
   const companies = await getMarketDataCompanies();
@@ -48,6 +58,8 @@ export async function refreshMarketPrices(triggerSource: 'CRON' | 'ADMIN'): Prom
       if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
         throw new Error('Normalized price is invalid');
       }
+
+      assertPlausiblePrice(normalizedPrice, company.latest_price);
 
       await insertMarketPrice({
         companyId: company.id,
