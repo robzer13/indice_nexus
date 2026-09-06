@@ -10,11 +10,17 @@ import { ScoreBadge } from '@/components/score-badge';
 import { getDistanceO90 } from '@/lib/domain/distance';
 import { getEntryZone, type EntryZone } from '@/lib/domain/entry-zone';
 import { getFreshness } from '@/lib/domain/freshness';
+import { getFairValueUpsidePct } from '@/lib/domain/valuation-upside';
 import type { CompanyState, CompanyStatus } from '@/lib/domain/types';
 
-type SortKey = 'distance' | 'score' | 'fairValue' | 'analysisDate';
+type SortKey = 'distance' | 'score' | 'fairValueUpside' | 'analysisDate';
 type SortDirection = 'asc' | 'desc';
-type Row = CompanyState & { distance_o90_pct: number | null; entry_zone: EntryZone; stale: boolean };
+type Row = CompanyState & {
+  distance_o90_pct: number | null;
+  fair_value_upside_pct: number | null;
+  entry_zone: EntryZone;
+  stale: boolean;
+};
 
 function compareNullableNumber(a: number | null, b: number | null, direction: SortDirection): number {
   if (a === null && b === null) return 0;
@@ -26,7 +32,7 @@ function compareNullableNumber(a: number | null, b: number | null, direction: So
 function compareRow(a: Row, b: Row, key: SortKey, direction: SortDirection): number {
   if (key === 'distance') return compareNullableNumber(a.distance_o90_pct, b.distance_o90_pct, direction);
   if (key === 'score') return compareNullableNumber(a.orotitan_score, b.orotitan_score, direction);
-  if (key === 'fairValue') return compareNullableNumber(a.fair_value_base, b.fair_value_base, direction);
+  if (key === 'fairValueUpside') return compareNullableNumber(a.fair_value_upside_pct, b.fair_value_upside_pct, direction);
   const left = a.analysis_date ?? '';
   const right = b.analysis_date ?? '';
   return direction === 'asc' ? left.localeCompare(right) : right.localeCompare(left);
@@ -54,6 +60,7 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
     return {
       ...company,
       distance_o90_pct: distance,
+      fair_value_upside_pct: getFairValueUpsidePct(company.price, company.fair_value_base),
       entry_zone: getEntryZone(distance),
       stale: getFreshness(company.price_as_of).stale,
     };
@@ -113,20 +120,35 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         <NumericFilter label="Score min." value={scoreMin} onChange={setScoreMin} placeholder="ex. 80"/>
         <NumericFilter label="Distance min. %" value={distanceMin} onChange={setDistanceMin} placeholder="ex. -20"/>
         <NumericFilter label="Distance max. %" value={distanceMax} onChange={setDistanceMax} placeholder="ex. 5"/>
-        <Select label="Tri secondaire" value={secondarySort} onChange={(value) => setSecondarySort(value as typeof secondarySort)} options={[['NONE','Aucun'],['score','Score'],['distance','Distance O90'],['fairValue','Fair value'],['analysisDate','Date analyse']]}/>
-        <button onClick={() => { setSearch(''); setStatus('ALL'); setQuality('ALL'); setCountry('ALL'); setSector('ALL'); setEntryZone('ALL'); setCalibration('ALL'); setFreshness('ALL'); setScoreMin(''); setDistanceMin(''); setDistanceMax(''); }} className="self-end rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:bg-slate-800">Réinitialiser</button>
+        <Select label="Tri secondaire" value={secondarySort} onChange={(value) => setSecondarySort(value as typeof secondarySort)} options={[['NONE','Aucun'],['score','Score'],['distance','Distance O90'],['fairValueUpside','Upside FV'],['analysisDate','Date analyse']]}/>
+        <button onClick={() => {
+          setSearch('');
+          setStatus('ALL');
+          setQuality('ALL');
+          setCountry('ALL');
+          setSector('ALL');
+          setEntryZone('ALL');
+          setCalibration('ALL');
+          setFreshness('ALL');
+          setScoreMin('');
+          setDistanceMin('');
+          setDistanceMax('');
+          setSortKey('distance');
+          setSortDirection('desc');
+          setSecondarySort('score');
+        }} className="self-end rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:bg-slate-800">Réinitialiser</button>
       </div>
     </div>
 
     <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/60">
-      <table className="min-w-[1200px] w-full text-left text-sm">
+      <table className="min-w-[1320px] w-full text-left text-sm">
         <thead className="border-b border-slate-800 bg-slate-900/80 text-xs uppercase tracking-wide text-slate-500"><tr>
-          <th className="px-4 py-3">Société</th><th className="px-4 py-3">Ticker</th><th className="px-4 py-3">Statut</th><th className="px-4 py-3">Cours</th><th className="px-4 py-3"><button onClick={() => setSort('fairValue')}>Fair value{sortMark('fairValue')}</button></th><th className="px-4 py-3"><button onClick={() => setSort('score')}>Score{sortMark('score')}</button></th><th className="px-4 py-3">O90</th><th className="px-4 py-3"><button onClick={() => setSort('distance')}>Distance{sortMark('distance')}</button></th><th className="px-4 py-3">Zone</th><th className="px-4 py-3"><button onClick={() => setSort('analysisDate')}>Analyse{sortMark('analysisDate')}</button></th>
+          <th className="px-4 py-3">Société</th><th className="px-4 py-3">Ticker</th><th className="px-4 py-3">Statut</th><th className="px-4 py-3">Cours</th><th className="px-4 py-3">Fair value</th><th className="px-4 py-3"><button onClick={() => setSort('fairValueUpside')}>Upside FV{sortMark('fairValueUpside')}</button></th><th className="px-4 py-3"><button onClick={() => setSort('score')}>Score{sortMark('score')}</button></th><th className="px-4 py-3">O90</th><th className="px-4 py-3"><button onClick={() => setSort('distance')}>Distance{sortMark('distance')}</button></th><th className="px-4 py-3">Zone</th><th className="px-4 py-3"><button onClick={() => setSort('analysisDate')}>Analyse{sortMark('analysisDate')}</button></th>
         </tr></thead>
         <tbody className="divide-y divide-slate-800">{filtered.map((row) => {
           const priceProps = { currency: row.currency, quoteUnit: row.quote_unit, priceDecimals: row.price_decimals };
           return <tr key={row.id} tabIndex={0} role="link" onClick={() => router.push(`/company/${row.slug}`)} onKeyDown={(event) => { if (event.key === 'Enter') router.push(`/company/${row.slug}`); }} className="cursor-pointer transition hover:bg-slate-900/70 focus:bg-slate-900/70 focus:outline-none">
-            <td className="px-4 py-4 font-medium text-slate-100">{row.name}</td><td className="px-4 py-4 font-mono text-slate-400">{row.ticker}</td><td className="px-4 py-4"><CompanyStatusBadge status={row.status}/></td><td className="px-4 py-4 text-slate-100"><PriceDisplay value={row.price} {...priceProps}/></td><td className="px-4 py-4 text-slate-200"><PriceDisplay value={row.fair_value_base} {...priceProps}/></td><td className="px-4 py-4"><ScoreBadge score={row.orotitan_score}/></td><td className="px-4 py-4 text-slate-200">{row.price_o90 === null ? <span className="text-slate-500">Non calibré</span> : <PriceDisplay value={row.price_o90} {...priceProps}/>}</td><td className="px-4 py-4"><OroTitanDistance value={row.distance_o90_pct} compact/></td><td className="px-4 py-4"><EntryZoneBadge zone={row.entry_zone}/></td><td className="px-4 py-4 font-mono text-xs text-slate-400">{row.analysis_date ?? '—'}</td>
+            <td className="px-4 py-4 font-medium text-slate-100">{row.name}</td><td className="px-4 py-4 font-mono text-slate-400">{row.ticker}</td><td className="px-4 py-4"><CompanyStatusBadge status={row.status}/></td><td className="px-4 py-4 text-slate-100"><PriceDisplay value={row.price} {...priceProps}/></td><td className="px-4 py-4 text-slate-200"><PriceDisplay value={row.fair_value_base} {...priceProps}/></td><td className="px-4 py-4 font-mono text-xs text-slate-300">{row.fair_value_upside_pct === null ? '—' : `${row.fair_value_upside_pct >= 0 ? '+' : ''}${row.fair_value_upside_pct.toFixed(1)}%`}</td><td className="px-4 py-4"><ScoreBadge score={row.orotitan_score}/></td><td className="px-4 py-4 text-slate-200">{row.price_o90 === null ? <span className="text-slate-500">Non calibré</span> : <PriceDisplay value={row.price_o90} {...priceProps}/>}</td><td className="px-4 py-4"><OroTitanDistance value={row.distance_o90_pct} compact/></td><td className="px-4 py-4"><EntryZoneBadge zone={row.entry_zone}/></td><td className="px-4 py-4 font-mono text-xs text-slate-400">{row.analysis_date ?? '—'}</td>
           </tr>;
         })}</tbody>
       </table>
