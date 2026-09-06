@@ -9,8 +9,10 @@ import {
   verifyAdminPassword,
 } from '@/lib/auth/admin-session';
 import { createCompany, updateCompanyMetadata } from '@/lib/data/company-admin';
+import { getRecentMarketSyncRuns } from '@/lib/data/market-prices';
 import { createImmutableSnapshot } from '@/lib/data/snapshots';
 import { companyInputSchema } from '@/lib/domain/company';
+import { getMarketSyncCooldownRemainingMs } from '@/lib/domain/market-sync';
 import { DuplicateSnapshotError, snapshotInputSchema } from '@/lib/domain/snapshot';
 import { refreshMarketPrices } from '@/lib/market/refresh-prices';
 
@@ -239,6 +241,16 @@ export async function refreshPricesAction(): Promise<void> {
   const path = '/admin/prices';
   await requireAdmin(path);
 
+  const [latestRun] = await getRecentMarketSyncRuns(1);
+  const cooldownRemaining = latestRun
+    ? getMarketSyncCooldownRemainingMs(latestRun.finished_at)
+    : 0;
+
+  if (cooldownRemaining > 0) {
+    const seconds = Math.ceil(cooldownRemaining / 1000);
+    redirect(`${path}?warning=${encodeURIComponent(`Quota Twelve Data protégé : réessaie dans ${seconds} s.`)}`);
+  }
+
   let result;
   try {
     result = await refreshMarketPrices('ADMIN');
@@ -249,5 +261,13 @@ export async function refreshPricesAction(): Promise<void> {
   revalidatePath('/');
   revalidatePath('/screener');
   revalidatePath('/company', 'layout');
-  redirect(`${path}?success=${encodeURIComponent(`${result.inserted} cours inséré(s), ${result.failed} échec(s).`)}`);
+
+  const message = `${result.inserted} cours inséré(s), ${result.failed} échec(s).`;
+  if (result.failed === 0) {
+    redirect(`${path}?success=${encodeURIComponent(message)}`);
+  }
+  if (result.inserted === 0) {
+    redirect(errorUrl(path, message));
+  }
+  redirect(`${path}?warning=${encodeURIComponent(message)}`);
 }
