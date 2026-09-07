@@ -10,15 +10,15 @@ const labels: Record<CompanyStatus, string> = {
 };
 
 const classes: Record<CompanyStatus, string> = {
-  OROTITAN: 'border-emerald-400/40 bg-emerald-400/10 text-emerald-200',
-  FINALIST: 'border-cyan-400/40 bg-cyan-400/10 text-cyan-200',
-  PRICE_WAIT: 'border-amber-400/40 bg-amber-400/10 text-amber-200',
-  TIER_1: 'border-indigo-400/40 bg-indigo-400/10 text-indigo-200',
-  WATCHLIST: 'border-slate-400/30 bg-slate-400/10 text-slate-300',
-  REJECTED: 'border-rose-400/40 bg-rose-400/10 text-rose-200',
+  OROTITAN: 'border-state-success/40 bg-state-success/10 text-state-success',
+  FINALIST: 'border-state-accent/40 bg-state-accent/10 text-state-accent',
+  PRICE_WAIT: 'border-state-warning/40 bg-state-warning/10 text-state-warning',
+  TIER_1: 'border-state-info/40 bg-state-info/10 text-state-info',
+  WATCHLIST: 'border-state-neutral/35 bg-state-neutral/10 text-ink-secondary',
+  REJECTED: 'border-state-danger/40 bg-state-danger/10 text-state-danger',
 };
 
 export function CompanyStatusBadge({ status }: { status: CompanyStatus | null }) {
-  if (!status) return <span className="text-sm text-slate-500">Non renseigné</span>;
-  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold tracking-wide ${classes[status]}`}>{labels[status]}</span>;
+  if (!status) return <span className="text-xs text-ink-muted">Non renseigné</span>;
+  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide ${classes[status]}`}>{labels[status]}</span>;
 }

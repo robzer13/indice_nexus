@@ -1,14 +1,14 @@
 import { ENTRY_ZONE_LABELS, type EntryZone } from '@/lib/domain/entry-zone';
 
 const classes: Record<EntryZone, string> = {
-  AT_OR_BELOW_O90: 'border-emerald-800 bg-emerald-950/35 text-emerald-200',
-  WITHIN_5: 'border-cyan-800 bg-cyan-950/30 text-cyan-200',
-  WITHIN_10: 'border-sky-900 bg-sky-950/25 text-sky-200',
-  WITHIN_20: 'border-amber-900 bg-amber-950/25 text-amber-200',
-  ABOVE_20: 'border-slate-700 bg-slate-900 text-slate-400',
-  UNCALIBRATED: 'border-slate-800 bg-slate-950 text-slate-600',
+  AT_OR_BELOW_O90: 'border-state-success/45 bg-state-success/10 text-state-success',
+  WITHIN_5: 'border-state-accent/45 bg-state-accent/10 text-state-accent',
+  WITHIN_10: 'border-state-warning/45 bg-state-warning/10 text-state-warning',
+  WITHIN_20: 'border-amber-500/50 bg-amber-500/10 text-amber-300',
+  ABOVE_20: 'border-state-neutral/30 bg-state-neutral/10 text-ink-muted',
+  UNCALIBRATED: 'border-state-neutral/25 bg-cockpit-bg text-ink-muted',
 };
 
 export function EntryZoneBadge({ zone }: { zone: EntryZone }) {
-  return <span className={`inline-flex rounded-full border px-2 py-1 text-xs font-medium ${classes[zone]}`}>{ENTRY_ZONE_LABELS[zone]}</span>;
+  return <span className={`inline-flex rounded-full border px-2.5 py-1 text-[11px] font-semibold tracking-wide ${classes[zone]}`}>{ENTRY_ZONE_LABELS[zone]}</span>;
 }

@@ -7,6 +7,7 @@ import { EntryZoneBadge } from '@/components/entry-zone-badge';
 import { OroTitanDistance } from '@/components/orotitan-distance';
 import { PriceDisplay } from '@/components/price-display';
 import { ScoreBadge } from '@/components/score-badge';
+import { Panel } from '@/components/ui/panel';
 import { getDistanceO90 } from '@/lib/domain/distance';
 import { getEntryZone, type EntryZone } from '@/lib/domain/entry-zone';
 import { getFreshness } from '@/lib/domain/freshness';
@@ -104,10 +105,11 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
 
   const sortMark = (key: SortKey) => key === sortKey ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
 
-  return <div className="space-y-4">
-    <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-900/60 p-4">
+  return <div className="space-y-5">
+    <Panel as="section" className="space-y-4 p-4 sm:p-5">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-700/50 pb-3"><div><div className="text-xs font-semibold uppercase tracking-[0.16em] text-ink-muted">Contrôle du screener</div><p className="mt-1 text-sm text-ink-secondary">Affinez la base active sans perdre la lecture des seuils OroTitan.</p></div><span className="font-mono text-xs text-ink-muted">{filtered.length} résultat{filtered.length > 1 ? 's' : ''}</span></div>
       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <label className="text-sm text-slate-400">Recherche<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Société ou ticker" className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100"/></label>
+        <label className="text-sm font-medium text-ink-secondary">Recherche<input value={search} onChange={(event) => setSearch(event.target.value)} placeholder="Société ou ticker" className="mt-1 w-full rounded-control border border-slate-600/70 bg-cockpit-bg px-3 py-2.5 text-sm text-ink-primary placeholder:text-ink-muted hover:border-slate-500 focus:border-state-accent focus:bg-cockpit-panel"/></label>
         <Select label="Statut" value={status} onChange={(value) => setStatus(value as 'ALL' | CompanyStatus)} options={[['ALL','Tous'],['OROTITAN','OroTitan'],['FINALIST','Finalist'],['PRICE_WAIT','Price wait'],['TIER_1','Tier 1'],['WATCHLIST','Watchlist'],['REJECTED','Rejected']]}/>
         <Select label="Qualité OroTitan" value={quality} onChange={(value) => setQuality(value as typeof quality)} options={[['ALL','Toutes'],['TRUE','Structurellement OroTitan'],['FALSE','Non OroTitan'],['NULL','Non renseigné']]}/>
         <Select label="Zone d’entrée" value={entryZone} onChange={(value) => setEntryZone(value as typeof entryZone)} options={[['ALL','Toutes'],['AT_OR_BELOW_O90','O90 atteint'],['WITHIN_5','À moins de 5 %'],['WITHIN_10','À 5–10 %'],['WITHIN_20','À 10–20 %'],['ABOVE_20','À plus de 20 %'],['UNCALIBRATED','Non calibré']]}/>
@@ -116,12 +118,12 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         <Select label="Calibration O90" value={calibration} onChange={(value) => setCalibration(value as typeof calibration)} options={[['ALL','Toutes'],['CALIBRATED','Calibrées'],['UNCALIBRATED','Non calibrées']]}/>
         <Select label="Fraîcheur cours" value={freshness} onChange={(value) => setFreshness(value as typeof freshness)} options={[['ALL','Toutes'],['FRESH','Récentes'],['STALE','Périmées']]}/>
       </div>
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+      <div className="grid gap-3 border-t border-slate-700/50 pt-4 md:grid-cols-2 xl:grid-cols-5">
         <NumericFilter label="Score min." value={scoreMin} onChange={setScoreMin} placeholder="ex. 80"/>
         <NumericFilter label="Distance min. %" value={distanceMin} onChange={setDistanceMin} placeholder="ex. -20"/>
         <NumericFilter label="Distance max. %" value={distanceMax} onChange={setDistanceMax} placeholder="ex. 5"/>
         <Select label="Tri secondaire" value={secondarySort} onChange={(value) => setSecondarySort(value as typeof secondarySort)} options={[['NONE','Aucun'],['score','Score'],['distance','Distance O90'],['fairValueUpside','Upside FV'],['analysisDate','Date analyse']]}/>
-        <button onClick={() => {
+        <button type="button" onClick={() => {
           setSearch('');
           setStatus('ALL');
           setQuality('ALL');
@@ -136,32 +138,32 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
           setSortKey('distance');
           setSortDirection('desc');
           setSecondarySort('score');
-        }} className="self-end rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:bg-slate-800">Réinitialiser</button>
+        }} className="self-end rounded-control border border-state-accent/40 bg-cockpit-active px-3 py-2.5 text-sm font-semibold text-state-accent transition-colors hover:border-state-accent hover:bg-cockpit-hover">Réinitialiser</button>
       </div>
-    </div>
+    </Panel>
 
-    <div className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-950/60">
-      <table className="min-w-[1320px] w-full text-left text-sm">
-        <thead className="border-b border-slate-800 bg-slate-900/80 text-xs uppercase tracking-wide text-slate-500"><tr>
-          <th className="px-4 py-3">Société</th><th className="px-4 py-3">Ticker</th><th className="px-4 py-3">Statut</th><th className="px-4 py-3">Cours</th><th className="px-4 py-3">Fair value</th><th className="px-4 py-3"><button onClick={() => setSort('fairValueUpside')}>Upside FV{sortMark('fairValueUpside')}</button></th><th className="px-4 py-3"><button onClick={() => setSort('score')}>Score{sortMark('score')}</button></th><th className="px-4 py-3">O90</th><th className="px-4 py-3"><button onClick={() => setSort('distance')}>Distance{sortMark('distance')}</button></th><th className="px-4 py-3">Zone</th><th className="px-4 py-3"><button onClick={() => setSort('analysisDate')}>Analyse{sortMark('analysisDate')}</button></th>
+    <div className="overflow-x-auto rounded-panel border border-slate-700/60 bg-cockpit-bg shadow-panel-soft">
+      <table className="min-w-[1360px] w-full text-left text-[13px]">
+        <thead className="border-b border-slate-700/70 bg-cockpit-panel text-[11px] uppercase tracking-[0.14em] text-ink-muted"><tr>
+          <th className="w-[19%] px-4 py-3.5">Société</th><th className="px-4 py-3.5">Ticker</th><th className="px-4 py-3.5">Statut</th><th className="px-4 py-3.5">Cours</th><th className="px-4 py-3.5">Fair value</th><th className="px-4 py-3.5"><button type="button" className="rounded px-1 py-1 text-left hover:text-ink-primary" onClick={() => setSort('fairValueUpside')}>Upside FV{sortMark('fairValueUpside')}</button></th><th className="px-4 py-3.5"><button type="button" className="rounded px-1 py-1 text-left hover:text-ink-primary" onClick={() => setSort('score')}>Score{sortMark('score')}</button></th><th className="px-4 py-3.5">O90</th><th className="px-4 py-3.5"><button type="button" className="rounded px-1 py-1 text-left text-state-accent hover:text-ink-primary" onClick={() => setSort('distance')}>Distance{sortMark('distance')}</button></th><th className="px-4 py-3.5">Zone</th><th className="px-4 py-3.5"><button type="button" className="rounded px-1 py-1 text-left hover:text-ink-primary" onClick={() => setSort('analysisDate')}>Analyse{sortMark('analysisDate')}</button></th>
         </tr></thead>
-        <tbody className="divide-y divide-slate-800">{filtered.map((row) => {
+        <tbody className="divide-y divide-slate-800/70">{filtered.map((row) => {
           const priceProps = { currency: row.currency, quoteUnit: row.quote_unit, priceDecimals: row.price_decimals };
-          return <tr key={row.id} tabIndex={0} role="link" onClick={() => router.push(`/company/${row.slug}`)} onKeyDown={(event) => { if (event.key === 'Enter') router.push(`/company/${row.slug}`); }} className="cursor-pointer transition hover:bg-slate-900/70 focus:bg-slate-900/70 focus:outline-none">
-            <td className="px-4 py-4 font-medium text-slate-100">{row.name}</td><td className="px-4 py-4 font-mono text-slate-400">{row.ticker}</td><td className="px-4 py-4"><CompanyStatusBadge status={row.status}/></td><td className="px-4 py-4 text-slate-100"><PriceDisplay value={row.price} {...priceProps}/></td><td className="px-4 py-4 text-slate-200"><PriceDisplay value={row.fair_value_base} {...priceProps}/></td><td className="px-4 py-4 font-mono text-xs text-slate-300">{row.fair_value_upside_pct === null ? '—' : `${row.fair_value_upside_pct >= 0 ? '+' : ''}${row.fair_value_upside_pct.toFixed(1)}%`}</td><td className="px-4 py-4"><ScoreBadge score={row.orotitan_score}/></td><td className="px-4 py-4 text-slate-200">{row.price_o90 === null ? <span className="text-slate-500">Non calibré</span> : <PriceDisplay value={row.price_o90} {...priceProps}/>}</td><td className="px-4 py-4"><OroTitanDistance value={row.distance_o90_pct} compact/></td><td className="px-4 py-4"><EntryZoneBadge zone={row.entry_zone}/></td><td className="px-4 py-4 font-mono text-xs text-slate-400">{row.analysis_date ?? '—'}</td>
+          return <tr key={row.id} tabIndex={0} role="link" onClick={() => router.push(`/company/${row.slug}`)} onKeyDown={(event) => { if (event.key === 'Enter') router.push(`/company/${row.slug}`); }} className="cursor-pointer transition-colors duration-150 hover:bg-cockpit-hover/70 focus:bg-cockpit-active/80 focus:outline-none focus-visible:relative focus-visible:z-[1]">
+            <td className="px-4 py-3.5 font-semibold text-ink-primary">{row.name}</td><td className="px-4 py-3.5 font-mono text-xs text-ink-muted">{row.ticker}</td><td className="px-4 py-3.5"><CompanyStatusBadge status={row.status}/></td><td className="px-4 py-3.5 text-base font-semibold text-ink-primary"><PriceDisplay value={row.price} {...priceProps}/></td><td className="px-4 py-3.5 text-ink-secondary"><PriceDisplay value={row.fair_value_base} {...priceProps}/></td><td className="px-4 py-3.5 font-mono text-sm font-semibold tabular-nums"><span className={row.fair_value_upside_pct === null ? 'text-ink-muted' : row.fair_value_upside_pct >= 0 ? 'text-state-success' : 'text-state-danger'}>{row.fair_value_upside_pct === null ? '—' : `${row.fair_value_upside_pct >= 0 ? '+' : ''}${row.fair_value_upside_pct.toFixed(1)}%`}</span></td><td className="px-4 py-3.5"><ScoreBadge score={row.orotitan_score}/></td><td className="px-4 py-3.5 text-base font-semibold text-ink-primary">{row.price_o90 === null ? <span className="text-ink-muted">Non calibré</span> : <PriceDisplay value={row.price_o90} {...priceProps}/>}</td><td className="px-4 py-3.5"><OroTitanDistance value={row.distance_o90_pct} compact/></td><td className="px-4 py-3.5"><EntryZoneBadge zone={row.entry_zone}/></td><td className="px-4 py-3.5 font-mono text-xs text-ink-muted">{row.analysis_date ?? '—'}</td>
           </tr>;
         })}</tbody>
       </table>
-      {filtered.length === 0 ? <div className="p-8 text-center text-sm text-slate-500">Aucune société ne correspond aux filtres.</div> : null}
+      {filtered.length === 0 ? <div className="p-10 text-center text-sm text-ink-muted">Aucune société ne correspond aux filtres.</div> : null}
     </div>
-    <div className="text-xs text-slate-500">{filtered.length} société{filtered.length > 1 ? 's' : ''} affichée{filtered.length > 1 ? 's' : ''}. Les NULL restent hors tri numérique.</div>
+    <div className="text-xs text-ink-muted">{filtered.length} société{filtered.length > 1 ? 's' : ''} affichée{filtered.length > 1 ? 's' : ''}. Les NULL restent hors tri numérique.</div>
   </div>;
 }
 
 function Select({ label, value, onChange, options }: { label: string; value: string; onChange: (value: string) => void; options: Array<[string,string]> }) {
-  return <label className="text-sm text-slate-400">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100">{options.map(([optionValue, optionLabel]) => <option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select></label>;
+  return <label className="text-sm font-medium text-ink-secondary">{label}<select value={value} onChange={(event) => onChange(event.target.value)} className="mt-1 w-full rounded-control border border-slate-600/70 bg-cockpit-bg px-3 py-2.5 text-sm text-ink-primary hover:border-slate-500 focus:border-state-accent focus:bg-cockpit-panel">{options.map(([optionValue, optionLabel]) => <option key={optionValue} value={optionValue}>{optionLabel}</option>)}</select></label>;
 }
 
 function NumericFilter({ label, value, onChange, placeholder }: { label: string; value: string; onChange: (value: string) => void; placeholder: string }) {
-  return <label className="text-sm text-slate-400">{label}<input value={value} onChange={(event) => onChange(event.target.value)} type="number" step="0.1" placeholder={placeholder} className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100"/></label>;
+  return <label className="text-sm font-medium text-ink-secondary">{label}<input value={value} onChange={(event) => onChange(event.target.value)} type="number" step="0.1" placeholder={placeholder} className="mt-1 w-full rounded-control border border-slate-600/70 bg-cockpit-bg px-3 py-2.5 text-sm text-ink-primary placeholder:text-ink-muted hover:border-slate-500 focus:border-state-accent focus:bg-cockpit-panel"/></label>;
 }
