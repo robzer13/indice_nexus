@@ -2,6 +2,8 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useRef } from 'react';
+import type { RefObject } from 'react';
 
 type NavItem = { href: string; label: string; icon: (className: string) => React.ReactNode };
 
@@ -11,8 +13,29 @@ const navItems: NavItem[] = [
   { href: '/admin', label: 'Admin', icon: (className) => <SettingsIcon className={className} /> },
 ];
 
-export function Sidebar({ open, onClose }: { open: boolean; onClose: () => void }) {
+export function Sidebar({ open, onClose, menuButtonRef }: { open: boolean; onClose: () => void; menuButtonRef: RefObject<HTMLButtonElement | null> }) {
   const pathname = usePathname();
+  const wasOpen = useRef(false);
+
+  useEffect(() => {
+    if (open) {
+      wasOpen.current = true;
+      return;
+    }
+    if (wasOpen.current) {
+      menuButtonRef.current?.focus();
+      wasOpen.current = false;
+    }
+  }, [menuButtonRef, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose, open]);
 
   return (
     <>
