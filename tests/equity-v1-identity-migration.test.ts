@@ -77,4 +77,23 @@ test('I1 new updated_at helper has a fixed search_path', async () => {
 
   assert.match(sql, /create or replace function public\.set_orotitan_identity_updated_at\(\)/i);
   assert.match(sql, /set search_path = pg_catalog, public/i);
+  assert.match(
+    sql,
+    /revoke all on function public\.set_orotitan_identity_updated_at\(\) from public, anon, authenticated, service_role/i,
+  );
+});
+
+test('I1 validates partial schemas and deterministic mappings before accepting conflicts', async () => {
+  const sql = await readFile(migrationPath, 'utf8');
+
+  assert.match(sql, /Incompatible I1 column definition/i);
+  assert.match(sql, /Incompatible I1 primary key definition/i);
+  assert.match(sql, /Incompatible I1 foreign key or ON DELETE definition/i);
+  assert.match(sql, /Incompatible I1 unique constraint definition/i);
+  assert.match(sql, /Incompatible I1 index definition/i);
+  assert.match(sql, /Conflicting deterministic OroTitan issuer identity/i);
+  assert.match(sql, /Conflicting deterministic OroTitan security identity/i);
+  assert.match(sql, /Conflicting deterministic OroTitan dossier identity/i);
+  assert.match(sql, /Conflicting deterministic OroTitan legacy crosswalk/i);
+  assert.match(sql, /crosswalk references identities belonging to another issuer/i);
 });
