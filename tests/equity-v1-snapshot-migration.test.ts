@@ -49,6 +49,10 @@ test('I3-A contains defensive shape assertions', () => {
   assert.match(migration, /has_table_privilege/);
   assert.match(migration, /c\.conkey = array/);
   assert.match(migration, /c\.confkey = array/);
+  assert.match(migration, /i\.indkey\[0\]/);
+  assert.match(migration, /i\.indkey\[1\]/);
+  assert.match(migration, /i\.indoption\[1\] & 1/);
+  assert.doesNotMatch(migration, /i\.indkey\s*=\s*array/);
   assert.match(migration, /t\.tgfoid = 'public\.prevent_orotitan_research_snapshot_mutation\(\)'::regprocedure/);
   assert.match(migration, /research_snapshots_frozen_version_checks|research_snapshots_contract_version_check/);
 });

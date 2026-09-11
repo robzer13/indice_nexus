@@ -268,11 +268,40 @@ begin
   if not exists (
     select 1 from pg_catalog.pg_index i
     where i.indexrelid = 'public.research_snapshots_snapshot_dossier_key'::regclass
-      and i.indisunique and i.indkey = array[
-        (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'snapshot_id'),
-        (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'dossier_id')
-      ]::int2[]
+      and i.indrelid = 'public.research_snapshots'::regclass
+      and i.indisunique and i.indnkeyatts = 2 and i.indnatts = 2
+      and i.indpred is null and i.indexprs is null
+      and i.indkey[0] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'snapshot_id')
+      and i.indkey[1] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'dossier_id')
   ) then raise exception 'snapshot dossier unique index is incompatible'; end if;
+  if not exists (
+    select 1 from pg_catalog.pg_index i
+    where i.indexrelid = 'public.research_snapshots_dossier_created_at_idx'::regclass
+      and i.indrelid = 'public.research_snapshots'::regclass
+      and not i.indisunique and i.indnkeyatts = 2 and i.indnatts = 2
+      and i.indpred is null and i.indexprs is null
+      and i.indkey[0] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'dossier_id')
+      and i.indkey[1] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'created_at')
+      and (i.indoption[0] & 1) = 0 and (i.indoption[1] & 1) = 1
+  ) or not exists (
+    select 1 from pg_catalog.pg_index i
+    where i.indexrelid = 'public.research_snapshots_issuer_data_cutoff_idx'::regclass
+      and i.indrelid = 'public.research_snapshots'::regclass
+      and not i.indisunique and i.indnkeyatts = 2 and i.indnatts = 2
+      and i.indpred is null and i.indexprs is null
+      and i.indkey[0] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'issuer_id')
+      and i.indkey[1] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'data_cutoff')
+      and (i.indoption[0] & 1) = 0 and (i.indoption[1] & 1) = 1
+  ) or not exists (
+    select 1 from pg_catalog.pg_index i
+    where i.indexrelid = 'public.research_snapshots_security_data_cutoff_idx'::regclass
+      and i.indrelid = 'public.research_snapshots'::regclass
+      and not i.indisunique and i.indnkeyatts = 2 and i.indnatts = 2
+      and i.indpred is null and i.indexprs is null
+      and i.indkey[0] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'security_id')
+      and i.indkey[1] = (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'data_cutoff')
+      and (i.indoption[0] & 1) = 0 and (i.indoption[1] & 1) = 1
+  ) then raise exception 'research_snapshots query index material shape is incompatible'; end if;
   if not exists (
     select 1 from pg_catalog.pg_trigger t
     where t.tgrelid = 'public.research_snapshots'::regclass
@@ -291,6 +320,45 @@ begin
       and c.conname = 'research_snapshots_schema_version_check'
       and pg_catalog.pg_get_constraintdef(c.oid) like '%1.0.0%'
   ) then raise exception 'research_snapshots frozen version checks are incompatible'; end if;
+  if not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_report_id_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%length(report_id)%'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_version_strings_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%length(report_version)%'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_execution_mode_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%DISCOVER + ANALYZE%'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_payload_object_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%jsonb_typeof(canonical_payload)%'
+  ) then raise exception 'research_snapshots scalar check material shape is incompatible'; end if;
+  if not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_payload_lock_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''snapshot_id''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''report_id''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''issuer_id''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''security_id''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''execution_mode''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''data_lock''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%data_cutoff%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%calculation_date%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%canonical_payload ? ''versions''%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%report_version%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%method_version%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%calculation_version%'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%evidence_ledger_version%'
+  ) then raise exception 'research_snapshots payload lock check material shape is incompatible'; end if;
 end $$;
 
 comment on table public.research_snapshots is
