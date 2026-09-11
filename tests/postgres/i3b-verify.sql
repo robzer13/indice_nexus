@@ -91,7 +91,7 @@ begin
   begin perform public.persist_orotitan_research_snapshot(dossier, second_snapshot, jsonb_set(jsonb_set(payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000105"'), '{security_id}', to_jsonb(second_security::text))); exception when sqlstate '23503' then failed := true; end;
   if not failed then raise exception 'T15 security/issuer mismatch was accepted'; end if;
   failed := false;
-  begin perform public.persist_orotitan_research_snapshot(dossier, second_snapshot, (payload - 'versions')); exception when sqlstate '23502' then failed := true; end;
+  begin perform public.persist_orotitan_research_snapshot(dossier, second_snapshot, jsonb_set(payload - 'versions', '{snapshot_id}', '"90000000-0000-4000-8000-000000000106"')); exception when sqlstate '23502' then failed := true; end;
   if not failed then raise exception 'T16 malformed persistence lock was accepted'; end if;
 
   before_count := (select count(*) from public.research_snapshots); before_pointer := (select current_snapshot_id from public.research_dossiers where dossier_id = dossier);
