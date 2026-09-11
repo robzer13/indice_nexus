@@ -13,6 +13,8 @@ declare
   payload jsonb;
   base_payload jsonb;
   failed boolean;
+  actual_constraint_name text;
+  expected_constraint text;
 begin
   select issuer_id, security_id, dossier_id into first_issuer, first_security, first_dossier
   from public.legacy_company_identity_map order by legacy_company_id limit 1;
@@ -58,27 +60,28 @@ begin
   if not exists (select 1 from public.research_snapshots where snapshot_id = second_snapshot and report_id = 'report-beta') then raise exception 'T9 second snapshot missing'; end if;
 
   failed := false;
-  begin update public.research_snapshots set report_id = 'mutated' where snapshot_id = first_snapshot; exception when others then failed := true; end;
-  if not failed then raise exception 'T10 UPDATE was accepted'; end if;
+  begin update public.research_snapshots set report_id = 'mutated' where snapshot_id = first_snapshot; exception when sqlstate '55000' then failed := true; when others then failed := false; end;
+  if not failed then raise exception 'T10 UPDATE did not raise SQLSTATE 55000'; end if;
   failed := false;
-  begin delete from public.research_snapshots where snapshot_id = first_snapshot; exception when others then failed := true; end;
-  if not failed then raise exception 'T11 DELETE was accepted'; end if;
+  begin delete from public.research_snapshots where snapshot_id = first_snapshot; exception when sqlstate '55000' then failed := true; when others then failed := false; end;
+  if not failed then raise exception 'T11 DELETE did not raise SQLSTATE 55000'; end if;
 
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000010', first_dossier, second_issuer, second_security, 'report-alpha', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000010"'), '{issuer_id}', to_jsonb(second_issuer::text)), '{security_id}', to_jsonb(second_security::text)), now(); exception when others then failed := true; end;
-  if not failed then raise exception 'T12 dossier/issuer mismatch was accepted'; end if;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000010', first_dossier, second_issuer, second_security, 'report-alpha', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000010"'), '{issuer_id}', to_jsonb(second_issuer::text)), '{security_id}', to_jsonb(second_security::text)), now(); exception when others then get stacked diagnostics actual_constraint_name = CONSTRAINT_NAME; failed := actual_constraint_name = 'research_snapshots_dossier_issuer_fkey'; end;
+  if not failed then raise exception 'T12 did not fail on dossier/issuer FK'; end if;
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000011', first_dossier, first_issuer, second_security, 'report-alpha', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000011"'), '{security_id}', to_jsonb(second_security::text)), now(); exception when others then failed := true; end;
-  if not failed then raise exception 'T13 security/issuer mismatch was accepted'; end if;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000011', first_dossier, first_issuer, second_security, 'report-alpha', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000011"'), '{security_id}', to_jsonb(second_security::text)), now(); exception when others then get stacked diagnostics actual_constraint_name = CONSTRAINT_NAME; failed := actual_constraint_name = 'research_snapshots_security_issuer_fkey'; end;
+  if not failed then raise exception 'T13 did not fail on security/issuer FK'; end if;
   failed := false;
-  begin update public.research_dossiers set current_snapshot_id = second_snapshot where dossier_id = second_dossier; exception when others then failed := true; end;
-  if not failed then raise exception 'T14 cross-dossier pointer was accepted'; end if;
+  begin update public.research_dossiers set current_snapshot_id = second_snapshot where dossier_id = second_dossier; exception when others then get stacked diagnostics actual_constraint_name = CONSTRAINT_NAME; failed := actual_constraint_name = 'research_dossiers_current_snapshot_fkey'; end;
+  if not failed then raise exception 'T14 did not fail on current pointer FK'; end if;
 
+  expected_constraint := 'research_snapshots_payload_lock_check';
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000003', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"wrong"'), '{report_id}', '"report-gamma"'), now(); exception when others then failed := true; end;
-  if not failed then raise exception 'T15 JSON snapshot_id mismatch was accepted'; end if;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000003', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"wrong"'), '{report_id}', '"report-gamma"'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+    if not failed then raise exception 'T15 JSON snapshot_id mismatch was accepted'; end if;
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000004', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000004"'), '{report_id}', '"wrong-report"'), now(); exception when others then failed := true; end;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000004', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000004"'), '{report_id}', '"wrong-report"'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
   if not failed then raise exception 'T16 JSON report_id mismatch was accepted'; end if;
   failed := false;
   begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000013', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000013"'), '{issuer_id}', '"00000000-0000-4000-8000-000000000002"'), now(); exception when others then failed := true; end;
@@ -90,7 +93,7 @@ begin
   begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000015', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000015"'), '{execution_mode}', '"REFRESH"'), now(); exception when others then failed := true; end;
   if not failed then raise exception 'T16 JSON execution_mode mismatch was accepted'; end if;
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000005', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000005"'), '{report_id}', '"report-gamma"'), '{data_lock,data_cutoff}', '"2026-01-01"'), now(); exception when others then failed := true; end;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000005', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000005"'), '{report_id}', '"report-gamma"'), '{data_lock,data_cutoff}', '"2026-01-01"'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
   if not failed then raise exception 'T17 JSON date mismatch was accepted'; end if;
   failed := false;
   begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000016', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000016"'), '{report_id}', '"report-gamma"'), '{data_lock,calculation_date}', '"2026-01-01"'), now(); exception when others then failed := true; end;
@@ -108,11 +111,29 @@ begin
   begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000019', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', jsonb_set(jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000019"'), '{report_id}', '"report-gamma"'), '{versions,evidence_ledger_version}', '"wrong"'), now(); exception when others then failed := true; end;
   if not failed then raise exception 'T18 JSON evidence_ledger_version mismatch was accepted'; end if;
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000007', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000007"'), '{report_id}', '"report-gamma"') - 'versions'), now(); exception when others then failed := true; end;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000007', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000007"'), '{report_id}', '"report-gamma"') - 'versions'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
   if not failed then raise exception 'T19 missing versions object was accepted'; end if;
   failed := false;
-  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000012', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000012"'), '{report_id}', '"report-gamma"') - 'data_lock'), now(); exception when others then failed := true; end;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000012', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000012"'), '{report_id}', '"report-gamma"') - 'data_lock'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
   if not failed then raise exception 'T19 missing data_lock object was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000020', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000020"'), '{report_id}', '"report-gamma"') #- '{data_lock,data_cutoff}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing data_cutoff was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000021', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000021"'), '{report_id}', '"report-gamma"') #- '{data_lock,calculation_date}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing calculation_date was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000022', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000022"'), '{report_id}', '"report-gamma"') #- '{versions,report_version}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing report_version was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000023', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000023"'), '{report_id}', '"report-gamma"') #- '{versions,method_version}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing method_version was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000024', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000024"'), '{report_id}', '"report-gamma"') #- '{versions,calculation_version}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing calculation_version was accepted'; end if;
+  failed := false;
+  begin insert into public.research_snapshots select '90000000-0000-4000-8000-000000000025', first_dossier, first_issuer, first_security, 'report-gamma', 'ANALYZE', '2026-09-10', '2026-09-11', 'r1', 'm1', 'c1', 'e1', '04_SCREENER_SCHEMA_V1', '1.0.0', (jsonb_set(jsonb_set(base_payload, '{snapshot_id}', '"90000000-0000-4000-8000-000000000025"'), '{report_id}', '"report-gamma"') #- '{versions,evidence_ledger_version}'), now(); exception when others then get stacked diagnostics constraint_name = constraint_name; failed := constraint_name = expected_constraint; end;
+  if not failed then raise exception 'T19 missing evidence_ledger_version was accepted'; end if;
   if not failed then raise exception 'T19 missing JSON lock path was accepted'; end if;
 
   if not (select relrowsecurity from pg_class where oid = 'public.research_snapshots'::regclass) then raise exception 'T20 RLS is disabled'; end if;

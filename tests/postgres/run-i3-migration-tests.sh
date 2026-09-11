@@ -39,15 +39,32 @@ test "$before_legacy" = "$after_legacy"
 test "$before_values" = "$after_values"
 echo 'LEGACY_COUNTS_PRESERVED LEGACY_VALUES_PRESERVED I1_IDENTITY_COUNTS_PRESERVED'
 
-# T26 and atomic rollback: the incompatible table must disappear with the failed transaction.
+# T26A: incompatible pre-existing shape remains intact after fail-closed rejection.
 new_database incompatible
 psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create table public.research_snapshots (snapshot_id integer primary key);' >/dev/null
 if psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3" >/dev/null 2>&1; then
   echo 'Expected incompatible research_snapshots migration failure' >&2
   exit 1
 fi
-if psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots')" | grep -q research_snapshots; then
-  echo 'Atomic rollback left partial research_snapshots objects' >&2
+test "$(psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots')")" = 'research_snapshots'
+test "$(psql -XAt -d "$db" -c "select format_type(atttypid, atttypmod) from pg_attribute where attrelid = 'public.research_snapshots'::regclass and attname = 'snapshot_id'")" = 'integer'
+test "$(psql -XAt -d "$db" -c "select count(*) from pg_attribute where attrelid = 'public.research_snapshots'::regclass and attnum > 0 and not attisdropped")" = '1'
+if psql -XAt -d "$db" -c "select count(*) from pg_constraint where conrelid = 'public.research_dossiers'::regclass and conname = 'research_dossiers_current_snapshot_fkey'" | grep -vq '^0$'; then
+  echo 'Pre-existing shape test left pointer FK' >&2
   exit 1
 fi
-echo 'T26 incompatible-shape fail-closed and atomic rollback passed'
+
+# T26B: a late collision after table creation rolls back every I3-A object.
+new_database atomic
+apply "$db" "$i1"
+psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create table public.i3_collision_fixture (x integer, y integer); create unique index research_snapshots_snapshot_dossier_key on public.i3_collision_fixture (x, y);' >/dev/null
+if apply "$db" "$i3"; then
+  echo 'Expected late index collision validation failure' >&2
+  exit 1
+fi
+test "$(psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots')")" = ''
+test "$(psql -XAt -d "$db" -c "select to_regclass('public.i3_collision_fixture')")" = 'i3_collision_fixture'
+test "$(psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots_snapshot_dossier_key')")" = 'research_snapshots_snapshot_dossier_key'
+test "$(psql -XAt -d "$db" -c "select count(*) from pg_constraint where conname in ('research_dossiers_dossier_issuer_key', 'securities_security_issuer_key', 'research_dossiers_current_snapshot_fkey')")" = '0'
+test "$(psql -XAt -d "$db" -c "select count(*) from pg_proc where oid = 'public.prevent_orotitan_research_snapshot_mutation()'::regprocedure")" = '0'
+echo 'T26 incompatible-shape and atomic-rollback regressions passed'
