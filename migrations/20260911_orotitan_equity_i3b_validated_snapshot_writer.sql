@@ -39,7 +39,8 @@ begin
     raise exception 'research dossier does not exist: %', p_dossier_id using errcode = '23503';
   end if;
 
-  if jsonb_typeof(p_canonical_payload) <> 'object' then
+    if p_canonical_payload is null
+      or jsonb_typeof(p_canonical_payload) is distinct from 'object' then
     raise exception 'canonical payload must be a JSON object' using errcode = '22023';
   end if;
 
@@ -61,11 +62,6 @@ begin
 
   if payload_issuer_id is distinct from dossier_issuer_id then
     raise exception 'canonical payload issuer does not match dossier issuer' using errcode = '23514';
-  end if;
-
-  if current_snapshot_id is distinct from p_expected_current_snapshot_id then
-    raise exception 'canonical snapshot concurrency conflict: expected %, current %',
-      p_expected_current_snapshot_id, current_snapshot_id using errcode = '40001';
   end if;
 
   select s.* into existing_snapshot
@@ -96,6 +92,11 @@ begin
       );
     end if;
     raise exception 'snapshot_id already exists with a different identity, lock, payload, or pointer state' using errcode = '23505';
+  end if;
+
+  if current_snapshot_id is distinct from p_expected_current_snapshot_id then
+    raise exception 'canonical snapshot concurrency conflict: expected %, current %',
+      p_expected_current_snapshot_id, current_snapshot_id using errcode = '40001';
   end if;
 
   insert into public.research_snapshots (
