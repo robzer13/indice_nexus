@@ -22,6 +22,15 @@ The normal application path is:
 No stage repairs, normalizes, fills, or silently regenerates the submitted
 analytical payload.
 
+Expected returns are converted to I2 deltas using the frozen
+`price_ladder.required_return_h` hurdle before scoring. The frozen sources do
+not provide a deterministic selector when both
+`no_multiple_expansion_return` and `mature_normalization_return` are numeric;
+I3-B therefore rejects that ambiguous snapshot. If exactly one basis is
+numeric, that basis is selected. Semantic return states are preserved and
+accepted only through the corresponding frozen non-assessable/unavailable
+branches.
+
 ## Physical persistence narrowing
 
 The Phase-4 `id` definition is a non-empty string up to 256 characters. I3-A

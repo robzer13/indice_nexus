@@ -17,7 +17,7 @@ export function computeReturnComponent(primaryExpectedReturnScore: NumericScore,
 }
 
 export interface OvsInput {
-  returnComponent: NumericScore;
+  returnComponent: CanonicalScore;
   mosStatus: MosStatus;
   valuationReliability: ValuationReliability;
   scorePermission: ScorePermission;
@@ -32,6 +32,7 @@ export function computeOvs(input: OvsInput): CanonicalScore {
   if (input.investmentConclusionStatus === "NOT_CERTIFIED" || input.investmentConclusionStatus === "INSUFFICIENT_DATA") {
     return "NOT_ASSESSABLE";
   }
+  if (typeof input.returnComponent === "string") return "NOT_ASSESSABLE";
   const returnComponent = bounds(input.returnComponent);
   const cap = Math.min(MOS_CAPS[input.mosStatus], VALUATION_RELIABILITY_CAPS[input.valuationReliability]);
   return scalarOrRange(Math.min(returnComponent.min, cap), Math.min(returnComponent.max, cap));
