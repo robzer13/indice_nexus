@@ -30,6 +30,7 @@
     "lib/data/**/*.ts",
     "lib/domain/**/*.ts",
     "lib/market/**/*.ts",
+    "lib/orotitan-equity/**/*.ts",
     "lib/supabase/**/*.ts",
     "tests/*.test.ts"
   ],
