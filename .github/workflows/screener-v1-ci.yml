@@ -7,6 +7,7 @@ on:
       - 'components/**'
       - 'lib/**'
       - 'tests/*.test.ts'
+      - 'tests/postgres/**'
       - 'migrations/**'
       - '.env.example'
       - 'package.json'
@@ -30,6 +31,7 @@ on:
       - 'components/**'
       - 'lib/**'
       - 'tests/*.test.ts'
+      - 'tests/postgres/**'
       - 'migrations/**'
       - '.env.example'
       - 'package.json'
@@ -48,6 +50,18 @@ on:
 jobs:
   verify-screener:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -61,5 +75,12 @@ jobs:
         run: npm run typecheck
       - name: Tests
         run: npm test
+      - name: PostgreSQL migration tests
+        run: npm run test:postgres
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
       - name: Production build
         run: npm run build

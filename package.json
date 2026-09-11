@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"tests/*.test.ts\" --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts"
+    "test": "tsx --test tests/*.test.ts",
+    "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
