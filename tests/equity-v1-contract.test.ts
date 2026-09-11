@@ -51,6 +51,9 @@ test("C43b fractional non-five-point dimension rejected", () => invalid(valid({ 
 test("C43c reversed dimension range rejected", () => invalid(valid({ dimensions: { ...valid().dimensions, MOAT: { min: 85, max: 80 } } })));
 test("C43d non-five-point dimension range endpoint rejected", () => invalid(valid({ dimensions: { ...valid().dimensions, MOAT: { min: 80, max: 85.5 } } })));
 test("C43e reversed return range rejected", () => invalid(valid({ primaryExpectedReturnDeltaPercentagePoints: { min: 4, max: 2 } })));
+test("C43g unknown dimension range key rejected", () => invalid(valid({ dimensions: { ...valid().dimensions, MOAT: { min: 70, max: 80, unexpected: true } } })));
+test("C43h unknown expected-return range key rejected", () => invalid(valid({ primaryExpectedReturnDeltaPercentagePoints: { min: 0, max: 2, unexpected: true } })));
+test("C43i unknown deterministic score range key rejected", () => invalid(valid({ deterministic: { oqs: { min: 70, max: 80, unexpected: true } } })));
 test("C43f bounded canonical dossier is accepted and computes bounded aggregates", () => {
   const parsed = validateCanonicalContract(valid({
     dimensions: { ...valid().dimensions, MOAT: { min: 70, max: 80 } },

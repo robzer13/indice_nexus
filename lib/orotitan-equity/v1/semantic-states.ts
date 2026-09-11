@@ -14,7 +14,7 @@ export type SemanticState = z.infer<typeof semanticStateSchema>;
 export const scoreRangeSchema = z.object({
   min: z.number().finite(),
   max: z.number().finite(),
-}).refine((range) => range.min <= range.max, { message: "Score range min must be <= max" });
+}).strict().refine((range) => range.min <= range.max, { message: "Score range min must be <= max" });
 export type ScoreRange = z.infer<typeof scoreRangeSchema>;
 
 export const canonicalScoreSchema = z.union([
