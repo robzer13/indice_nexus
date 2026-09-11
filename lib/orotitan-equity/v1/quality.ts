@@ -12,7 +12,10 @@ export const DIMENSION_WEIGHTS: Readonly<Record<DimensionKey, number>> = {
   CAPITAL_ALLOCATION: 0.15, MANAGEMENT_GOVERNANCE: 0.1, RESILIENCE_RISK: 0.1,
 };
 
-export const dimensionScoreSchema = z.union([z.number().finite().min(0).max(100), semanticStateSchema]);
+const numericDimensionScoreSchema = z.number().finite().min(0).max(100).refine((score) => score % 5 === 0, {
+  message: "Dimension scores must use 5-point increments",
+});
+export const dimensionScoreSchema = z.union([numericDimensionScoreSchema, semanticStateSchema]);
 export const qualityDimensionsSchema = z.object(
   Object.fromEntries(DIMENSION_KEYS.map((key) => [key, dimensionScoreSchema])) as Record<DimensionKey, typeof dimensionScoreSchema>,
 ).strict();

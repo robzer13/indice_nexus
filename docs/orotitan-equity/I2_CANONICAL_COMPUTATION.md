@@ -20,7 +20,7 @@ WEAK_LINK_CAP = min(100, min(all seven applicable scores) + 25)
 OQS = min(OQS_RAW, WEAK_LINK_CAP)
 ```
 
-No weights are renormalized. A nonnumeric dimension therefore makes this formula unavailable and validation fails closed. `NOT_CERTIFIED` business research makes OQS `NOT_AVAILABLE`.
+No weights are renormalized. A nonnumeric dimension therefore makes this formula unavailable and validation fails closed. `NOT_CERTIFIED` business research, or `SUSPENDED` score permission, makes `OQS_RAW`, `WEAK_LINK_CAP`, and `OQS` `NOT_AVAILABLE`. Numeric dimension judgments are finite, in `[0,100]`, and divisible by 5; semantic states remain separate. OQS, OVS, and Investment Score results are not rounded to five-point increments.
 
 Expected-return scoring linearly interpolates the anchors `(-10,0)`, `(-8,10)`, `(-6,20)`, `(-4,35)`, `(-2,50)`, `(0,70)`, `(2,82)`, `(4,90)`, `(6,95)`, `(8,100)`, saturating outside the end points. With five-year score `C` and ten-year score `N`:
 
@@ -33,13 +33,13 @@ INVESTMENT_SCORE = min(INVESTMENT_RAW, OQS, OVS + 15)
 
 MOS caps are 100/90/75/55 for `ROBUST`/`ADEQUATE`/`THIN`/`NONE`. Reliability caps are 100/95/80 for `HIGH`/`MEDIUM`/`LOW`; LOW remains explicitly limited. Either cap being `NOT_ASSESSABLE` prevents numeric OVS. A non-certifiable valuation prevents OVS and the investment score while leaving OQS independent.
 
-The frozen I9 suspended-score rule is explicit: `SUSPENDED` with HIGH, MEDIUM, or LOW reliability produces OVS `NOT_AVAILABLE`; `SUSPENDED` with `NOT_ASSESSABLE` reliability produces OVS `NOT_ASSESSABLE`. Suspended investment score is always `NOT_AVAILABLE`.
+The frozen I9 suspended-score rule is explicit and valuation-reliability driven: `SUSPENDED` with HIGH, MEDIUM, or LOW reliability produces OVS `NOT_AVAILABLE`, even when MOS is `NOT_ASSESSABLE`; `SUSPENDED` with `NOT_ASSESSABLE` reliability produces OVS `NOT_ASSESSABLE`. Numeric `INVESTMENT_RAW` and `INVESTMENT_SCORE` require numeric OQS and numeric OVS, with score permission permitting scoring; OVS is never substituted for unavailable OQS. Suspended investment score is always `NOT_AVAILABLE`.
 
 ## Evidence and terminal gate
 
 MOAT and RUNWAY evidence uses `UNKNOWN`, `PLAUSIBLE`, `SUPPORTED`, `STRONGLY_SUPPORTED`, and `FALSIFIED`. `PLAUSIBLE` caps its dimension at 75 and `SUPPORTED` at 90. No unspecified ceilings are invented. Falsified evidence contradicts a positive corresponding elite judgment.
 
-OroTitan is `YES` exactly when research is fully certified, all eight dimension/valuation elite judgments are true, and material weak link is `NO`. Otherwise it is `NO`. OQS never implies this terminal judgment and there is no proximity score.
+Canonical elite gates use only `PASS`, `FAIL`, and `NOT_ASSESSABLE`; no boolean collapse is used. OroTitan is `YES` exactly when business research and the investment conclusion are both `CERTIFIED`, score permission is `ALLOWED`, valuation reliability is `HIGH`, every canonical gate is `PASS`, and moat/runway `PASS` gates have `STRONGLY_SUPPORTED` evidence. `FAIL` or `NOT_ASSESSABLE` yields `NO`. `CERTIFIED_WITH_LIMITATIONS`, `CONDITIONAL`, and MEDIUM/LOW/NOT_ASSESSABLE reliability cannot produce `YES`. OQS never implies this terminal judgment and there is no proximity score.
 
 ## Stored and deterministic boundary
 
@@ -51,7 +51,7 @@ The contract accepts optional deterministic values only as assertions. It recomp
 
 The strict Zod schemas reject coercion, unknown keys, invalid enums, nonfinite or out-of-range scores, evidence-ceiling violations, contradictory elite gates, unavailable numeric scores, incomplete quality formulas, and deterministic mismatches. No value is clamped, rounded, repaired, or converted to a sentinel.
 
-The computation and contract test suites cover the required C01–C40 matrix plus additional runway contradiction, range, suspended/unavailable, non-renormalization, correct-recomputation, and terminal mismatch cases. Floating-point assertions use an epsilon and calculations retain normal JavaScript precision.
+The computation and contract test suites cover the required C01–C53 matrix plus suspended/unavailable, I9 precedence, non-renormalization, five-point precision, evidence consistency, correct-recomputation, certification, and terminal mismatch cases. Floating-point assertions use an epsilon and calculations retain normal JavaScript precision.
 
 ## Explicit non-goals
 

@@ -47,7 +47,7 @@ export interface CanonicalComputation {
 
 export function computeCanonicalSnapshot(input: CanonicalContractInput): CanonicalComputation {
   let oqsResult: Pick<CanonicalComputation, "oqsRaw" | "weakLinkCap" | "oqs">;
-  if (input.businessResearchStatus === "NOT_CERTIFIED") {
+  if (input.businessResearchStatus === "NOT_CERTIFIED" || input.scorePermission === "SUSPENDED") {
     oqsResult = { oqsRaw: "NOT_AVAILABLE", weakLinkCap: "NOT_AVAILABLE", oqs: "NOT_AVAILABLE" };
   } else {
     oqsResult = computeOqs(input.dimensions);
@@ -61,7 +61,12 @@ export function computeCanonicalSnapshot(input: CanonicalContractInput): Canonic
   });
   const investment = computeInvestmentScore(oqsResult.oqs, ovs, input.scorePermission);
   return { ...oqsResult, fiveYearReturnScore, tenYearReturnScore, returnComponent, ovs,
-    ...investment, orotitanStatus: computeOroTitanStatus(input.eliteGates) };
+    ...investment, orotitanStatus: computeOroTitanStatus(input.eliteGates, {
+      businessResearchStatus: input.businessResearchStatus,
+      investmentConclusionStatus: input.investmentConclusionStatus,
+      scorePermission: input.scorePermission,
+      valuationReliability: input.valuationReliability,
+    }) };
 }
 
 function equivalent(left: unknown, right: unknown): boolean {
@@ -79,11 +84,17 @@ export const canonicalContractSchema = contractShape.superRefine((input, context
       context.addIssue({ code: "custom", path: ["dimensions", dimension], message: `${evidence} evidence caps ${dimension} at ${ceiling}` });
     }
   }
-  if (input.evidence.moat === "FALSIFIED" && input.eliteGates.moatElite) {
+  if (input.evidence.moat === "FALSIFIED" && input.eliteGates.moatElite === "PASS") {
     context.addIssue({ code: "custom", path: ["eliteGates", "moatElite"], message: "FALSIFIED moat evidence is incompatible with an elite gate" });
   }
-  if (input.evidence.runway === "FALSIFIED" && input.eliteGates.runwayElite) {
+  if (input.evidence.runway === "FALSIFIED" && input.eliteGates.runwayElite === "PASS") {
     context.addIssue({ code: "custom", path: ["eliteGates", "runwayElite"], message: "FALSIFIED runway evidence is incompatible with an elite gate" });
+  }
+  if (input.eliteGates.moatElite === "PASS" && input.evidence.moat !== "STRONGLY_SUPPORTED") {
+    context.addIssue({ code: "custom", path: ["eliteGates", "moatElite"], message: "PASS moat gate requires STRONGLY_SUPPORTED evidence" });
+  }
+  if (input.eliteGates.runwayElite === "PASS" && input.evidence.runway !== "STRONGLY_SUPPORTED") {
+    context.addIssue({ code: "custom", path: ["eliteGates", "runwayElite"], message: "PASS runway gate requires STRONGLY_SUPPORTED evidence" });
   }
   let computed: CanonicalComputation;
   try {
