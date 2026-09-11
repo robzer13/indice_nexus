@@ -41,6 +41,7 @@ echo 'LEGACY_COUNTS_PRESERVED LEGACY_VALUES_PRESERVED I1_IDENTITY_COUNTS_PRESERV
 
 # T26A: incompatible pre-existing shape remains intact after fail-closed rejection.
 new_database incompatible
+apply "$db" "$i1"
 psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create table public.research_snapshots (snapshot_id integer primary key);' >/dev/null
 if psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3" >/dev/null 2>&1; then
   echo 'Expected incompatible research_snapshots migration failure' >&2
@@ -66,5 +67,5 @@ test "$(psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots')")
 test "$(psql -XAt -d "$db" -c "select to_regclass('public.i3_collision_fixture')")" = 'i3_collision_fixture'
 test "$(psql -XAt -d "$db" -c "select to_regclass('public.research_snapshots_snapshot_dossier_key')")" = 'research_snapshots_snapshot_dossier_key'
 test "$(psql -XAt -d "$db" -c "select count(*) from pg_constraint where conname in ('research_dossiers_dossier_issuer_key', 'securities_security_issuer_key', 'research_dossiers_current_snapshot_fkey')")" = '0'
-test "$(psql -XAt -d "$db" -c "select count(*) from pg_proc where oid = 'public.prevent_orotitan_research_snapshot_mutation()'::regprocedure")" = '0'
+test "$(psql -XAt -d "$db" -c "select count(*) from pg_proc where oid = to_regprocedure('public.prevent_orotitan_research_snapshot_mutation()')")" = '0'
 echo 'T26 incompatible-shape and atomic-rollback regressions passed'
