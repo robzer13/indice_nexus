@@ -1,6 +1,8 @@
 -- OROTitan Equity Research V1 - I3-A canonical snapshot persistence.
 -- This migration creates an immutable structured projection, not analytical truth.
 
+begin;
+
 create table if not exists public.research_snapshots (
   snapshot_id uuid primary key,
   dossier_id uuid not null,
@@ -52,6 +54,7 @@ create table if not exists public.research_snapshots (
       and canonical_payload ? 'execution_mode'
       and jsonb_typeof(canonical_payload->'execution_mode') = 'string'
       and canonical_payload->>'execution_mode' = execution_mode
+      and canonical_payload ? 'data_lock'
       and jsonb_typeof(canonical_payload->'data_lock') = 'object'
       and (canonical_payload->'data_lock') ? 'data_cutoff'
       and jsonb_typeof(canonical_payload->'data_lock'->'data_cutoff') = 'string'
@@ -59,6 +62,7 @@ create table if not exists public.research_snapshots (
       and (canonical_payload->'data_lock') ? 'calculation_date'
       and jsonb_typeof(canonical_payload->'data_lock'->'calculation_date') = 'string'
       and canonical_payload->'data_lock'->>'calculation_date' = calculation_date::text
+      and canonical_payload ? 'versions'
       and jsonb_typeof(canonical_payload->'versions') = 'object'
       and (canonical_payload->'versions') ? 'report_version'
       and jsonb_typeof(canonical_payload->'versions'->'report_version') = 'string'
@@ -78,13 +82,13 @@ create table if not exists public.research_snapshots (
 do $$
 declare
   expected text[] := array[
-    'snapshot_id:uuid:false', 'dossier_id:uuid:false', 'issuer_id:uuid:false',
-    'security_id:uuid:false', 'report_id:text:false', 'execution_mode:text:false',
-    'data_cutoff:date:false', 'calculation_date:date:false', 'report_version:text:false',
-    'method_version:text:false', 'calculation_version:text:false',
-    'evidence_ledger_version:text:false', 'contract_version:text:false',
-    'schema_version:text:false', 'canonical_payload:jsonb:false',
-    'created_at:timestamp with time zone:false'
+    'snapshot_id:uuid:true', 'dossier_id:uuid:true', 'issuer_id:uuid:true',
+    'security_id:uuid:true', 'report_id:text:true', 'execution_mode:text:true',
+    'data_cutoff:date:true', 'calculation_date:date:true', 'report_version:text:true',
+    'method_version:text:true', 'calculation_version:text:true',
+    'evidence_ledger_version:text:true', 'contract_version:text:true',
+    'schema_version:text:true', 'canonical_payload:jsonb:true',
+    'created_at:timestamp with time zone:true'
   ];
   actual text[];
 begin
@@ -219,7 +223,77 @@ begin
   ) then
     raise exception 'research_snapshots trigger function security boundary is incompatible';
   end if;
+  if not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_dossier_issuer_fkey'
+      and c.confrelid = 'public.research_dossiers'::regclass
+      and c.conkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'dossier_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'issuer_id')
+      ]::smallint[]
+      and c.confkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'dossier_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'issuer_id')
+      ]::smallint[] and c.confdeltype = 'r'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_security_issuer_fkey'
+      and c.confrelid = 'public.securities'::regclass
+      and c.conkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'security_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'issuer_id')
+      ]::smallint[]
+      and c.confkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'security_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'issuer_id')
+      ]::smallint[] and c.confdeltype = 'r'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_dossiers'::regclass
+      and c.conname = 'research_dossiers_current_snapshot_fkey'
+      and c.confrelid = 'public.research_snapshots'::regclass
+      and c.conkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'current_snapshot_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.conrelid and attname = 'dossier_id')
+      ]::smallint[]
+      and c.confkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'snapshot_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = c.confrelid and attname = 'dossier_id')
+      ]::smallint[] and c.confdeltype = 'r'
+  ) then
+    raise exception 'research_snapshots foreign key material shape is incompatible';
+  end if;
+  if not exists (
+    select 1 from pg_catalog.pg_index i
+    where i.indexrelid = 'public.research_snapshots_snapshot_dossier_key'::regclass
+      and i.indisunique and i.indkey = array[
+        (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'snapshot_id'),
+        (select attnum from pg_catalog.pg_attribute where attrelid = i.indrelid and attname = 'dossier_id')
+      ]::int2[]
+  ) then raise exception 'snapshot dossier unique index is incompatible'; end if;
+  if not exists (
+    select 1 from pg_catalog.pg_trigger t
+    where t.tgrelid = 'public.research_snapshots'::regclass
+      and t.tgname = 'research_snapshots_prevent_mutation'
+      and t.tgfoid = 'public.prevent_orotitan_research_snapshot_mutation()'::regprocedure
+      and (t.tgtype & 1) = 1 and (t.tgtype & 2) = 2 and (t.tgtype & 24) = 24
+  ) then raise exception 'research_snapshots trigger material shape is incompatible'; end if;
+  if not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_contract_version_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%04_SCREENER_SCHEMA_V1%'
+  ) or not exists (
+    select 1 from pg_catalog.pg_constraint c
+    where c.conrelid = 'public.research_snapshots'::regclass
+      and c.conname = 'research_snapshots_schema_version_check'
+      and pg_catalog.pg_get_constraintdef(c.oid) like '%1.0.0%'
+  ) then raise exception 'research_snapshots frozen version checks are incompatible'; end if;
 end $$;
 
 comment on table public.research_snapshots is
   'Immutable structured projection/history of the certified research snapshot; not analytical truth.';
+
+commit;

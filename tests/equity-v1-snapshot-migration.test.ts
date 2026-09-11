@@ -23,6 +23,10 @@ test('I3-A locks identity, pointer, JSON, immutability, and access boundaries', 
   assert.match(migration, /research_dossiers_current_snapshot_fkey/);
   assert.match(migration, /research_snapshots_snapshot_dossier_key/);
   assert.match(migration, /research_snapshots_payload_lock_check/);
+  assert.match(migration, /canonical_payload \? 'data_lock'/);
+  assert.match(migration, /canonical_payload \? 'versions'/);
+  assert.match(migration, /snapshot_id:uuid:true/);
+  assert.match(migration, /begin;[\s\S]*commit;/i);
   assert.match(migration, /prevent_orotitan_research_snapshot_mutation/);
   assert.match(migration, /before update or delete on public\.research_snapshots/);
   assert.match(migration, /alter table public\.research_snapshots enable row level security/);
@@ -43,4 +47,8 @@ test('I3-A contains defensive shape assertions', () => {
   assert.match(migration, /pg_catalog\.pg_policy/);
   assert.match(migration, /pg_catalog\.pg_trigger/);
   assert.match(migration, /has_table_privilege/);
+  assert.match(migration, /c\.conkey = array/);
+  assert.match(migration, /c\.confkey = array/);
+  assert.match(migration, /t\.tgfoid = 'public\.prevent_orotitan_research_snapshot_mutation\(\)'::regprocedure/);
+  assert.match(migration, /research_snapshots_frozen_version_checks|research_snapshots_contract_version_check/);
 });
