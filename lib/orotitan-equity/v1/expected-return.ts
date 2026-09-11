@@ -1,3 +1,5 @@
+import type { ScoreRange } from "./semantic-states";
+
 const EXPECTED_RETURN_ANCHORS = [
   [-10, 0], [-8, 10], [-6, 20], [-4, 35], [-2, 50], [0, 70],
   [2, 82], [4, 90], [6, 95], [8, 100],
@@ -15,4 +17,9 @@ export function scoreExpectedReturnDelta(deltaPercentagePoints: number): number 
     }
   }
   throw new Error("Unreachable expected-return interval");
+}
+
+export function scoreExpectedReturnRange(delta: number | ScoreRange): number | ScoreRange {
+  if (typeof delta === "number") return scoreExpectedReturnDelta(delta);
+  return { min: scoreExpectedReturnDelta(delta.min), max: scoreExpectedReturnDelta(delta.max) };
 }
