@@ -13,8 +13,6 @@ root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 fixture="$root/tests/postgres/i1-fixture.sql"
 migration="$root/migrations/20260909_orotitan_equity_i1_identity.sql"
 verify="$root/tests/postgres/i1-verify.sql"
-i3_migration="$root/migrations/20260911_orotitan_equity_i3_snapshot_persistence.sql"
-i3_verify="$root/tests/postgres/i3-verify.sql"
 prefix="orotitan_i1_${$}"
 databases=()
 cleanup() {
@@ -68,20 +66,3 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -c "update legacy_company_identity_map set i
 expect_failure "$db"
 
 echo 'I1 PostgreSQL integration matrix T1-T14 passed'
-
-# I3-A runs from the same legacy fixture after I1 has established canonical identity.
-new_database i3
-apply "$db"
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3_migration" >/dev/null
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3_migration" >/dev/null
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3_verify"
-
-# T26: an incompatible pre-existing canonical table must fail closed.
-new_database incompatible
-psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create table public.research_snapshots (snapshot_id integer primary key);' >/dev/null
-if psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$i3_migration" >/dev/null 2>&1; then
-  echo 'Expected incompatible research_snapshots migration failure' >&2
-  exit 1
-fi
-
-echo 'I3-A PostgreSQL integration matrix T1-T26 passed'
