@@ -18,12 +18,16 @@ No stage repairs, normalizes, fills, or silently regenerates the submitted analy
 
 ## Investment-policy admission rule
 
-Analysis-capable snapshots must carry exactly:
+The execution-policy authority is:
 
 ```text
 POLICY_VERSION
 = OROTITAN_INVESTMENT_POLICY_V1.0.0
+```
 
+Analysis-capable snapshots carry the existing Phase-4 Price Ladder fields with exactly these values:
+
+```text
 price_ladder.required_return_h
 = 10.0
 
@@ -34,7 +38,7 @@ price_ladder.exceptional_return_threshold
 = 15.0
 ```
 
-The Phase-4 shape already contains these fields, so no payload-shape change is required. The validator checks the values; it does not infer or optimize them. `DISCOVER` snapshots remain exempt from analysis-only valuation requirements exactly as before.
+`POLICY_VERSION` is the authority-artifact version and is not a new Phase-4 payload field. The Phase-4 shape already contains the three policy-value fields above, so no payload-shape change is required. The validator checks the values; it does not infer or optimize them. `DISCOVER` snapshots remain exempt from analysis-only valuation requirements exactly as before.
 
 Expected returns are converted to I2 deltas using the locked `price_ladder.required_return_h` hurdle before scoring.
 
