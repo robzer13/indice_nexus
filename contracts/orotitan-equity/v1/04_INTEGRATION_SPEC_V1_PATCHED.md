@@ -122,7 +122,7 @@ The schema embeds the frozen formulas as read-only annotations. JSON Schema vali
 | OQS | ...business_quality.oqs | 0-100 | DETERMINISTICALLY RECOMPUTABLE | Server recompute; price-only delta cannot change it | Historical |
 | QUALITY_CLASS | ...business_quality.quality_class | enum | DETERMINISTIC FROM OQS when numeric | Server derive/display | Historical |
 | PRIMARY_EXPECTED_RETURN / RETURN_HORIZON | ...l3_investment_valuation.valuation.* | return / years | STORED CALCULATION OUTPUT | Refresh valuation or price-only delta as required | Historical |
-| NO_MULTIPLE_EXPANSION_RETURN / MATURE_NORMALIZATION_RETURN | ...valuation.* | return/state | STORED CALCULATION OUTPUT | Use applicable frozen basis | Historical |
+| NO_MULTIPLE_EXPANSION_RETURN / MATURE_NORMALIZATION_RETURN | ...valuation.* | return/state | STORED CALCULATION OUTPUT | N basis: valid numeric Mature Normalization first; valid numeric Same-Multiple only when Mature is legitimately NOT_ASSESSABLE / NOT_AVAILABLE; invalid or unreconciled Mature fails closed | Historical |
 | MARGIN_OF_SAFETY | ...valuation.margin_of_safety | enum | STORED JUDGMENT | Valuation refresh | Historical |
 | VALUATION_RELIABILITY | ...valuation.valuation_reliability | enum | STORED JUDGMENT | Valuation refresh | Historical |
 | MARKET_EXPECTATION_GAP | ...valuation.market_expectation_gap | enum | STORED JUDGMENT / reverse-DCF output | Valuation refresh | Historical |
@@ -130,7 +130,7 @@ The schema embeds the frozen formulas as read-only annotations. JSON Schema vali
 | INVESTMENT_RAW / INVESTMENT_SCORE | ...l3_investment_valuation.investment.* | 0-100/state | DETERMINISTICALLY RECOMPUTABLE | Server only | Historical |
 | INVESTMENT_CLASS | ...investment.investment_class | enum | DETERMINISTIC FROM INVESTMENT_SCORE when numeric | Server derive/display | Historical |
 | PRICE_FOR_REQUIRED_RETURN_H / PRICE_FOR_STRONG_RETURN / PRICE_FOR_EXCEPTIONAL_RETURN | ...valuation.price_ladder.* | price/state | STORED CALCULATION OUTPUT | Recompute with current certified fundamentals / hurdle inputs | Historical ladder snapshot |
-| REQUIRED_RETURN_H | ...valuation.price_ladder.required_return_h | % p.a. | STORED POLICY INPUT | Version with ladder assumptions | Historical |
+| REQUIRED_RETURN_H / STRONG_RETURN_THRESHOLD / EXCEPTIONAL_RETURN_THRESHOLD | ...valuation.price_ladder.* | % p.a. | STORED POLICY INPUT | Locked by `OROTITAN_INVESTMENT_POLICY_V1.0.0`: 10.0% / 12.5% / 15.0% | Historical |
 | INVESTABLE_PRICE_ZONE / STRONG_OPPORTUNITY_ZONE / POTENTIAL_OROTITAN_PRICE_ZONE | ...valuation.price_ladder.*_zone | zone/state | STORED DERIVED OUTPUT | Potential OroTitan zone only when all non-valuation gates pass | Historical |
 | POTENTIAL_OROTITAN_MAX_PRICE | ...valuation.price_ladder.potential_orotitan_max_price | price/state | DETERMINISTICALLY RECOMPUTABLE if four components available | min(P_ER,P_NO_EXPANSION,P_MOS,P_IMPLIED) | Historical |
 | OROTITAN_STATUS | ...l4_operational_state.orotitan.orotitan_status | YES/NO | DETERMINISTIC FROM GATES | Re-run terminal gate after relevant change | Historical |
@@ -171,6 +171,43 @@ INVESTMENT_SCORE
 ```
 
 OVS retains the exact frozen ΔER anchor curve, linear interpolation, `N + 15` return-component cap, MOS cap and Valuation Reliability cap. Numeric `OVS` is invalid when `VALUATION_RELIABILITY = NOT_ASSESSABLE`. `SCORE_PERMISSION = SUSPENDED` also prohibits numeric `OVS`: use `NOT_ASSESSABLE` when `VALUATION_RELIABILITY = NOT_ASSESSABLE`, otherwise use `NOT_AVAILABLE`. These states are never encoded as `0` or `null`. Numeric `INVESTMENT_SCORE` requires numeric OQS and OVS.
+
+Execution policy for V1 is versioned separately from the frozen economic methodology:
+
+```text
+POLICY_VERSION
+= OROTITAN_INVESTMENT_POLICY_V1.0.0
+
+REQUIRED_RETURN_H
+= 10.0%
+
+STRONG_RETURN_THRESHOLD
+= 12.5%
+
+EXCEPTIONAL_RETURN_THRESHOLD
+= 15.0%
+```
+
+For OVS normalization basis selection, the canonical I2 execution layer applies exactly:
+
+```text
+1. valid numeric MATURE_NORMALIZATION_RETURN
+   → N basis
+
+2. otherwise, Mature Normalization legitimately NOT_ASSESSABLE / NOT_AVAILABLE
+   + valid numeric NO_MULTIPLE_EXPANSION_RETURN
+   → Same-Multiple fallback as N basis
+
+3. otherwise
+   → preserve the applicable Mature-Normalization unavailable semantic state
+   → numeric OVS prohibited
+
+INVALID / UNRECONCILED MATURE_NORMALIZATION_RETURN
+→ FAIL CLOSED
+→ no fallback
+```
+
+This selector is neither `MIN` nor `MAX`; when both returns are valid and numeric, Mature Normalization has priority regardless of relative value. I3-B validates policy consistency and reconciles the submitted deterministic outputs against I2; it does not create a second economic selector. The Phase-4 JSON payload shape is unchanged and no `n_basis`, `selected_return`, or equivalent field is added.
 ## 9. OroTitan terminal contract
 
 `OROTITAN_STATUS` is outside scoring. The schema requires exactly ten terminal gate records:

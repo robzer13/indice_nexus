@@ -135,6 +135,8 @@ function analyzeSnapshot(overrides: Record<string, unknown> = {}): Record<string
   valuation.valuation_reliability = "HIGH";
   valuation.ovs = 65;
   priceLadder.required_return_h = 10;
+  priceLadder.strong_return_threshold = 12.5;
+  priceLadder.exceptional_return_threshold = 15;
   priceLadder.currency = "USD";
   priceLadder.investable_price_zone = "NOT_AVAILABLE";
   priceLadder.strong_opportunity_zone = "NOT_AVAILABLE";
@@ -154,9 +156,36 @@ function analyzeSnapshot(overrides: Record<string, unknown> = {}): Record<string
   return snapshot;
 }
 
+type SelectedN = number | "NOT_ASSESSABLE" | "NOT_AVAILABLE";
+
+function applyDeterministicForSelectedN(snapshot: Record<string, unknown>, selectedN: SelectedN): ReturnType<typeof computeCanonicalSnapshot> {
+  const l2 = snapshot.l2_research_fundamentals as Record<string, unknown>;
+  const quality = l2.business_quality as Record<string, unknown>;
+  const l3 = snapshot.l3_investment_valuation as Record<string, unknown>;
+  const valuation = l3.valuation as Record<string, unknown>;
+  const investment = l3.investment as Record<string, unknown>;
+  const orotitan = (snapshot.l4_operational_state as Record<string, unknown>).orotitan as Record<string, unknown>;
+  const normalizedDelta = typeof selectedN === "number" ? selectedN - 10 : selectedN;
+  const computed = computeCanonicalSnapshot({
+    dimensions: { MOAT: 80, RUNWAY: 80, RETURN_QUALITY: 80, CASH_ECONOMICS: 80, CAPITAL_ALLOCATION: 80, MANAGEMENT_GOVERNANCE: 80, RESILIENCE_RISK: 80 },
+    evidence: { moat: "STRONGLY_SUPPORTED", runway: "STRONGLY_SUPPORTED" },
+    businessResearchStatus: "CERTIFIED", investmentConclusionStatus: "CERTIFIED", scorePermission: "ALLOWED", mosStatus: "ROBUST", valuationReliability: "HIGH",
+    primaryExpectedReturnDeltaPercentagePoints: 2,
+    normalizedExpectedReturnDeltaPercentagePoints: normalizedDelta,
+    eliteGates: { researchFullyCertified: "PASS", moatElite: "PASS", runwayElite: "PASS", returnQualityElite: "PASS", cashEconomicsElite: "PASS", capitalAllocationElite: "PASS", managementGovernanceElite: "PASS", resilienceElite: "PASS", valuationElite: "PASS", materialWeakLink: "PASS" },
+  });
+  quality.oqs_raw = computed.oqsRaw; quality.weak_link_cap = computed.weakLinkCap; quality.oqs = computed.oqs;
+  valuation.ovs = computed.ovs;
+  investment.investment_raw = computed.investmentRaw;
+  investment.investment_score = computed.investmentScore;
+  if (typeof computed.investmentScore === "string") investment.investment_class = "NOT_AVAILABLE";
+  orotitan.orotitan_status = computed.orotitanStatus;
+  return computed;
+}
+
 test("I3-B vendors the exact authoritative contract bytes", () => {
   assert.equal(createHash("sha256").update(readFileSync(schemaPath)).digest("hex"), "bf407ca217553521586ba5f6002180ff6522700b4671986079ea6ed577604ede");
-  assert.equal(createHash("sha256").update(readFileSync(integrationPath)).digest("hex"), "f4d82ee65a9d653ebbb122d5fed04f90b722de8e0daa90844dc7fb1705ecf8b7");
+  assert.equal(createHash("sha256").update(readFileSync(integrationPath)).digest("hex"), "cac78e505d354a124f5fdddb726baf31ecf7f0b6b90653fe578a5c5cca9a8238");
 });
 
 test("I3-B accepts DISCOVER without analysis blocks", () => {
@@ -192,14 +221,112 @@ test("I3-B accepts a valid ANALYZE fixture and reconciles delta ER", () => {
   assert.equal((result as { ok: true; canonicalContract: { primaryExpectedReturnDeltaPercentagePoints: number } }).canonicalContract.primaryExpectedReturnDeltaPercentagePoints, 2);
 });
 
-test("I3-B rejects ambiguous N basis and deterministic mismatches", () => {
-  const bothBases = analyzeSnapshot();
-  (bothBases.l3_investment_valuation as Record<string, unknown>).valuation = { ...(bothBases.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>, mature_normalization_return: 7 };
-  assert.equal(validateResearchSnapshotForPersistence(bothBases, dossierId).ok, false);
+test("I3-B accepts both numeric N bases and gives Mature precedence when Mature is lower", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = 7;
+  const computed = applyDeterministicForSelectedN(snapshot, 7);
+  const oqsBefore = ((snapshot.l2_research_fundamentals as Record<string, unknown>).business_quality as Record<string, unknown>).oqs;
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, -3);
+  assert.equal(((snapshot.l2_research_fundamentals as Record<string, unknown>).business_quality as Record<string, unknown>).oqs, oqsBefore);
+  assert.equal(valuation.ovs, computed.ovs);
+});
 
+test("I3-B accepts both numeric N bases and gives Mature precedence when Mature is higher", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = 9;
+  applyDeterministicForSelectedN(snapshot, 9);
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, -1);
+});
+
+test("I3-B uses numeric Mature when Same-Multiple is unavailable", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = "NOT_AVAILABLE";
+  valuation.mature_normalization_return = 7;
+  applyDeterministicForSelectedN(snapshot, 7);
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, -3);
+});
+
+test("I3-B falls back to Same-Multiple when Mature is legitimately NOT_AVAILABLE", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = "NOT_AVAILABLE";
+  applyDeterministicForSelectedN(snapshot, 8);
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, -2);
+});
+
+test("I3-B falls back to Same-Multiple when Mature is legitimately NOT_ASSESSABLE", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = "NOT_ASSESSABLE";
+  applyDeterministicForSelectedN(snapshot, 8);
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, -2);
+});
+
+test("I3-B fails closed on invalid Mature even when Same-Multiple is numeric", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = "BROKEN";
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+});
+
+test("I3-B fails closed on unreconciled numeric Mature and does not fall back", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = 8;
+  valuation.mature_normalization_return = 7;
+  // Keep baseline persisted OVS/investment outputs, which reconcile to Same-Multiple 8, not Mature 7.
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "reconciliation");
+});
+
+test("I3-B preserves Mature unavailable state when both N bases are unavailable and prohibits numeric OVS", () => {
+  const snapshot = analyzeSnapshot();
+  const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+  valuation.no_multiple_expansion_return = "NOT_ASSESSABLE";
+  valuation.mature_normalization_return = "NOT_AVAILABLE";
+  const computed = applyDeterministicForSelectedN(snapshot, "NOT_AVAILABLE");
+  assert.equal(typeof computed.ovs, "string");
+  assert.equal(typeof valuation.ovs, "string");
+  const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(result.canonicalContract.normalizedExpectedReturnDeltaPercentagePoints, "NOT_AVAILABLE");
+});
+
+test("I3-B rejects deterministic mismatches independently of N selection", () => {
   const mismatch = analyzeSnapshot();
   (mismatch.l2_research_fundamentals as Record<string, unknown>).business_quality = { ...(mismatch.l2_research_fundamentals as Record<string, unknown>).business_quality as Record<string, unknown>, oqs: 1 };
   assert.equal(validateResearchSnapshotForPersistence(mismatch, dossierId).ok, false);
+});
+
+test("I3-B enforces OROTITAN_INVESTMENT_POLICY_V1.0.0 values", () => {
+  for (const [field, value] of [["required_return_h", 9], ["strong_return_threshold", 12], ["exceptional_return_threshold", 14]] as const) {
+    const snapshot = analyzeSnapshot();
+    const valuation = (snapshot.l3_investment_valuation as Record<string, unknown>).valuation as Record<string, unknown>;
+    (valuation.price_ladder as Record<string, unknown>)[field] = value;
+    const result = validateResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.equal(result.stage, "reconciliation");
+  }
 });
 
 test("I3-B accepts REFRESH and the mature-normalization N basis when it is the only applicable basis", () => {
