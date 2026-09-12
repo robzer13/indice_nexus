@@ -2,6 +2,8 @@ import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
 import { validateCanonicalContract, type CanonicalContractInput } from "./contract";
+import { assertInvestmentPolicyV1 } from "./investment-policy";
+import { selectNormalizationReturn } from "./n-basis";
 import { semanticStateSchema } from "./semantic-states";
 
 type JsonObject = Record<string, unknown>;
@@ -75,10 +77,6 @@ function readRequired(snapshot: JsonObject, path: string[]): unknown {
   return value;
 }
 
-function isNumericReturn(value: unknown): value is number | { min: number; max: number } {
-  return typeof value === "number" || (isObject(value) && typeof value.min === "number" && typeof value.max === "number");
-}
-
 function subtractH(value: unknown, hurdle: number, path: string): number | { min: number; max: number } | string {
   if (typeof value === "number") return value - hurdle;
   if (isObject(value) && typeof value.min === "number" && typeof value.max === "number") {
@@ -86,19 +84,6 @@ function subtractH(value: unknown, hurdle: number, path: string): number | { min
   }
   if (typeof value === "string" && semanticStateSchema.safeParse(value).success) return value;
   throw new Error(`${path} is not a valid return value`);
-}
-
-function selectNBasis(valuation: JsonObject): unknown {
-  const noExpansion = readRequired(valuation, ["no_multiple_expansion_return"]);
-  const matureNormalization = readRequired(valuation, ["mature_normalization_return"]);
-  if (isNumericReturn(noExpansion) && isNumericReturn(matureNormalization)) {
-    throw new Error("N basis is ambiguous: both no_multiple_expansion_return and mature_normalization_return are applicable");
-  }
-  if (isNumericReturn(noExpansion)) return noExpansion;
-  if (isNumericReturn(matureNormalization)) return matureNormalization;
-  if (typeof noExpansion === "string" && semanticStateSchema.safeParse(noExpansion).success) return noExpansion;
-  if (typeof matureNormalization === "string" && semanticStateSchema.safeParse(matureNormalization).success) return matureNormalization;
-  throw new Error("N basis is unavailable");
 }
 
 function toContractInput(snapshot: JsonObject): CanonicalContractInput {
@@ -111,9 +96,14 @@ function toContractInput(snapshot: JsonObject): CanonicalContractInput {
   const investment = readRequired(l3, ["investment"]) as JsonObject;
   const priceLadder = readRequired(valuation, ["price_ladder"]) as JsonObject;
   const requiredReturnH = readRequired(priceLadder, ["required_return_h"]);
-  if (typeof requiredReturnH !== "number" || !Number.isFinite(requiredReturnH)) throw new Error("price_ladder.required_return_h must be a finite number");
+  const strongReturnThreshold = readRequired(priceLadder, ["strong_return_threshold"]);
+  const exceptionalReturnThreshold = readRequired(priceLadder, ["exceptional_return_threshold"]);
+  assertInvestmentPolicyV1({ requiredReturnH, strongReturnThreshold, exceptionalReturnThreshold });
   const primaryReturn = readRequired(valuation, ["primary_expected_return"]);
-  const nReturn = selectNBasis(valuation);
+  const nReturn = selectNormalizationReturn({
+    noMultipleExpansionReturn: readRequired(valuation, ["no_multiple_expansion_return"]),
+    matureNormalizationReturn: readRequired(valuation, ["mature_normalization_return"]),
+  });
   const l4 = readRequired(snapshot, ["l4_operational_state"]) as JsonObject;
   const orotitan = readRequired(l4, ["orotitan"]) as JsonObject;
   const gates = readRequired(orotitan, ["orotitan_gate_results"]);
@@ -169,8 +159,8 @@ function toContractInput(snapshot: JsonObject): CanonicalContractInput {
     scorePermission: readRequired(certification, ["score_permission"]),
     mosStatus: readRequired(valuation, ["margin_of_safety"]),
     valuationReliability: readRequired(valuation, ["valuation_reliability"]),
-    primaryExpectedReturnDeltaPercentagePoints: subtractH(primaryReturn, requiredReturnH, "primary_expected_return"),
-    normalizedExpectedReturnDeltaPercentagePoints: subtractH(nReturn, requiredReturnH, "N return"),
+    primaryExpectedReturnDeltaPercentagePoints: subtractH(primaryReturn, requiredReturnH as number, "primary_expected_return"),
+    normalizedExpectedReturnDeltaPercentagePoints: subtractH(nReturn, requiredReturnH as number, "N return"),
     eliteGates,
     deterministic,
   } as CanonicalContractInput;
