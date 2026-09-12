@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-  computeInvestmentScore, computeOqs, computeOroTitanStatus, computeOvs, computeReturnComponent,
-  MOS_CAPS, scoreExpectedReturnDelta, scoreExpectedReturnRange, VALUATION_RELIABILITY_CAPS,
+  assertInvestmentPolicyV1, computeInvestmentScore, computeOqs, computeOroTitanStatus, computeOvs, computeReturnComponent,
+  MOS_CAPS, OROTITAN_INVESTMENT_POLICY_V1_0_0, scoreExpectedReturnDelta, scoreExpectedReturnRange,
+  selectNormalizationReturn, VALUATION_RELIABILITY_CAPS,
 } from "../lib/orotitan-equity/v1";
 import type { ScoreRange } from "../lib/orotitan-equity/v1";
 
@@ -89,4 +90,60 @@ test("C36a terminal requires exact certification conditions", () => {
     { ...certifiedContext, valuationReliability: "LOW" as const },
     { ...certifiedContext, valuationReliability: "NOT_ASSESSABLE" as const },
   ]) assert.equal(computeOroTitanStatus(gates(), context), "NO");
+});
+
+test("P01 investment policy V1 values are exact and ordered", () => {
+  assert.deepEqual(OROTITAN_INVESTMENT_POLICY_V1_0_0, {
+    policyVersion: "OROTITAN_INVESTMENT_POLICY_V1.0.0",
+    requiredReturnH: 10,
+    strongReturnThreshold: 12.5,
+    exceptionalReturnThreshold: 15,
+  });
+  assert.ok(OROTITAN_INVESTMENT_POLICY_V1_0_0.requiredReturnH < OROTITAN_INVESTMENT_POLICY_V1_0_0.strongReturnThreshold);
+  assert.ok(OROTITAN_INVESTMENT_POLICY_V1_0_0.strongReturnThreshold < OROTITAN_INVESTMENT_POLICY_V1_0_0.exceptionalReturnThreshold);
+  assert.doesNotThrow(() => assertInvestmentPolicyV1({ requiredReturnH: 10, strongReturnThreshold: 12.5, exceptionalReturnThreshold: 15 }));
+});
+
+test("P02 investment policy V1 fails closed on any drift", () => {
+  assert.throws(() => assertInvestmentPolicyV1({ requiredReturnH: 9.99, strongReturnThreshold: 12.5, exceptionalReturnThreshold: 15 }));
+  assert.throws(() => assertInvestmentPolicyV1({ requiredReturnH: 10, strongReturnThreshold: 12, exceptionalReturnThreshold: 15 }));
+  assert.throws(() => assertInvestmentPolicyV1({ requiredReturnH: 10, strongReturnThreshold: 12.5, exceptionalReturnThreshold: 14.9 }));
+  assert.throws(() => assertInvestmentPolicyV1({ requiredReturnH: 10, strongReturnThreshold: "12.5", exceptionalReturnThreshold: 15 }));
+});
+
+test("N01 both numeric selects Mature when Mature is above Same-Multiple", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: 9, noMultipleExpansionReturn: 8 }), 9);
+});
+
+test("N02 both numeric selects Mature when Mature is below Same-Multiple", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: 7, noMultipleExpansionReturn: 8 }), 7);
+});
+
+test("N03 numeric Mature remains primary when Same-Multiple is unavailable", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: 7, noMultipleExpansionReturn: "NOT_AVAILABLE" }), 7);
+});
+
+test("N04 Mature NOT_AVAILABLE permits numeric Same-Multiple fallback", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: "NOT_AVAILABLE", noMultipleExpansionReturn: 8 }), 8);
+});
+
+test("N05 Mature NOT_ASSESSABLE permits numeric Same-Multiple fallback", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: "NOT_ASSESSABLE", noMultipleExpansionReturn: 8 }), 8);
+});
+
+test("N06 non-fallback Mature semantic states are preserved", () => {
+  for (const state of ["UNKNOWN", "MISSING", "NOT_APPLICABLE"] as const) {
+    assert.equal(selectNormalizationReturn({ matureNormalizationReturn: state, noMultipleExpansionReturn: 8 }), state);
+  }
+});
+
+test("N07 both unavailable preserves the Mature unavailable state", () => {
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: "NOT_AVAILABLE", noMultipleExpansionReturn: "NOT_ASSESSABLE" }), "NOT_AVAILABLE");
+  assert.equal(selectNormalizationReturn({ matureNormalizationReturn: "NOT_ASSESSABLE", noMultipleExpansionReturn: "NOT_AVAILABLE" }), "NOT_ASSESSABLE");
+});
+
+test("N08 invalid Mature fails closed instead of falling back", () => {
+  assert.throws(() => selectNormalizationReturn({ matureNormalizationReturn: "BROKEN", noMultipleExpansionReturn: 8 }));
+  assert.throws(() => selectNormalizationReturn({ matureNormalizationReturn: { min: 9, max: 7 }, noMultipleExpansionReturn: 8 }));
+  assert.throws(() => selectNormalizationReturn({ matureNormalizationReturn: Number.NaN, noMultipleExpansionReturn: 8 }));
 });
