@@ -28,14 +28,11 @@ export function selectNormalizationReturn(input: {
   noMultipleExpansionReturn: unknown;
 }): NormalizationReturnValue {
   const mature = parseReturnValue(input.matureNormalizationReturn, "mature_normalization_return");
-  const sameMultiple = parseReturnValue(input.noMultipleExpansionReturn, "no_multiple_expansion_return");
 
   if (isNumericReturn(mature)) return mature;
+  if (mature !== "NOT_ASSESSABLE" && mature !== "NOT_AVAILABLE") return mature;
 
-  if (mature === "NOT_ASSESSABLE" || mature === "NOT_AVAILABLE") {
-    if (isNumericReturn(sameMultiple)) return sameMultiple;
-    return mature;
-  }
-
+  const sameMultiple = parseReturnValue(input.noMultipleExpansionReturn, "no_multiple_expansion_return");
+  if (isNumericReturn(sameMultiple)) return sameMultiple;
   return mature;
 }
