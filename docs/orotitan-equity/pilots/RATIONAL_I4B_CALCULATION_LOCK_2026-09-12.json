@@ -1,0 +1,182 @@
+{
+  "artifact": "RATIONAL_I4B_CALCULATION_LOCK_2026-09-12",
+  "canonical_snapshot": false,
+  "persistence_authorized": false,
+  "data_cutoff": "2026-09-12",
+  "reference_price": {
+    "value": 587.5,
+    "currency": "EUR",
+    "date": "2026-09-11",
+    "source_policy_status": "PROVISIONAL_RECONCILIATION_REQUIRED"
+  },
+  "identity": {
+    "issuer": "RATIONAL AG",
+    "legal_name": "RATIONAL Aktiengesellschaft",
+    "ticker": "RAA",
+    "isin": "DE0007010803",
+    "exchange": "Xetra",
+    "shares_millions": 11.37
+  },
+  "market_cap_millions_eur": 6679.875,
+  "fresh_financial_inputs": {
+    "fy2025_sales_millions_eur": 1259.558,
+    "fy2025_ebit_millions_eur": 332.6,
+    "fy2025_tax_rate": 0.256,
+    "fy2025_nopat_approx_millions_eur": 247.4544,
+    "fy2025_cfo_millions_eur": 253.1,
+    "fy2025_cash_capex_millions_eur": 33.7,
+    "fy2025_standardized_fcf_millions_eur": 219.4,
+    "fy2025_cash_cash_equivalents_and_deposits_millions_eur": 539.4,
+    "fy2025_r_and_d_millions_eur": 75.8,
+    "fy2025_company_roce": 0.367,
+    "h1_2026_sales_millions_eur": 641.5,
+    "h1_2026_ebit_millions_eur": 169.9,
+    "h1_2026_reported_ebit_margin": 0.265,
+    "h1_2026_ebit_margin_ex_tariff_refund_approx": 0.243,
+    "h1_2026_tariff_refund_millions_eur": 14.0
+  },
+  "return_quality": {
+    "operating_invested_capital_2024_proxy_millions_eur": 494.0,
+    "operating_invested_capital_2025_proxy_millions_eur": 534.0,
+    "average_operating_invested_capital_proxy_millions_eur": 514.0,
+    "standard_roic_approx": 0.4814,
+    "roiic_3y_tangible_diagnostic_range": [0.9, 1.0],
+    "interpretability": "INTERPRETABLE_WITH_LIMITATIONS",
+    "attributability": "MEDIUM"
+  },
+  "quality_dimensions": {
+    "MOAT": 90,
+    "RUNWAY": 85,
+    "RETURN_QUALITY": 85,
+    "CASH_ECONOMICS": 85,
+    "CAPITAL_ALLOCATION": 85,
+    "MANAGEMENT_GOVERNANCE": 80,
+    "RESILIENCE_RISK": 85
+  },
+  "quality_weights": {
+    "MOAT": 0.2,
+    "RUNWAY": 0.15,
+    "RETURN_QUALITY": 0.2,
+    "CASH_ECONOMICS": 0.1,
+    "CAPITAL_ALLOCATION": 0.15,
+    "MANAGEMENT_GOVERNANCE": 0.1,
+    "RESILIENCE_RISK": 0.1
+  },
+  "oqs": {
+    "raw": 85.5,
+    "weak_link_cap_pre_100_cap": 105,
+    "weak_link_cap": 100,
+    "value": 85.5,
+    "quality_class": "VERY_STRONG"
+  },
+  "valuation": {
+    "valuation_reliability": "MEDIUM",
+    "margin_of_safety": "NONE",
+    "analyst_2026e": {
+      "sales_millions_eur": 1341.42927,
+      "eps_eur": 23.6,
+      "normalized_fcf_millions_eur": 255.0
+    },
+    "dcf": {
+      "bear": {
+        "value_per_share_eur": 364.69,
+        "discount_rate": 0.09,
+        "terminal_growth": 0.02,
+        "excess_cash_millions_eur": 350
+      },
+      "base": {
+        "value_per_share_eur": 580.02,
+        "discount_rate": 0.08,
+        "terminal_growth": 0.025,
+        "excess_cash_millions_eur": 400
+      },
+      "bull": {
+        "value_per_share_eur": 722.59,
+        "discount_rate": 0.075,
+        "terminal_growth": 0.025,
+        "excess_cash_millions_eur": 450
+      }
+    },
+    "expected_return_5y": {
+      "eps_start_eur": 23.6,
+      "eps_growth_path": [0.075, 0.07, 0.065, 0.06, 0.055],
+      "ordinary_payout": 0.7,
+      "primary_terminal_pe": 24.0,
+      "normalization_terminal_pe": 23.0,
+      "same_multiple_terminal_pe": 24.9,
+      "primary": 0.0878809693,
+      "mature_normalization": 0.0794359107,
+      "same_multiple": 0.0952574989
+    },
+    "price_ladder_primary_24x": {
+      "8pct": 608.06,
+      "10pct": 557.55,
+      "12pct": 512.17,
+      "15pct": 452.41
+    },
+    "price_ladder_mature_normalization_23x": {
+      "8pct": 586.05,
+      "10pct": 537.48,
+      "12pct": 493.82,
+      "15pct": 436.34
+    }
+  },
+  "scoring_policy": {
+    "required_return_h_status": "PROVISIONAL_NOT_POLICY_LOCKED",
+    "provisional_required_return_h": 0.1,
+    "sensitivity_required_return_h": 0.12
+  },
+  "scoring_at_h_10pct": {
+    "primary_er_component_score_c": 57.8809692913,
+    "normalization_component_score_n": 49.5769330454,
+    "return_component": 54.5593547929,
+    "mos_cap": 55,
+    "valuation_reliability_cap": 95,
+    "ovs": 54.5593547929,
+    "investment_raw": 76.2178064379,
+    "investment_score": 69.5593547929,
+    "investment_class": "UNATTRACTIVE"
+  },
+  "scoring_at_h_12pct_sensitivity": {
+    "ovs": 38.3772093992,
+    "investment_score": 53.3772093992,
+    "investment_class": "UNATTRACTIVE"
+  },
+  "terminal_gate": {
+    "CERTIFICATION_GATE": "FAIL",
+    "MOAT_ELITE": "PASS",
+    "RUNWAY_ELITE": "FAIL",
+    "RETURN_QUALITY_ELITE": "FAIL",
+    "CASH_ECONOMICS_ELITE": "PASS",
+    "CAPITAL_ALLOCATION_ELITE": "FAIL",
+    "MANAGEMENT_GOVERNANCE_ELITE": "FAIL",
+    "RESILIENCE_ELITE": "PASS",
+    "MATERIAL_WEAK_LINK": "NO",
+    "MATERIAL_WEAK_LINK_GATE": "PASS",
+    "VALUATION_ELITE": "FAIL",
+    "OROTITAN_STATUS": "NO"
+  },
+  "operational_state": {
+    "business_research_status": "CERTIFIED",
+    "investment_conclusion_status": "CERTIFIED_WITH_LIMITATIONS",
+    "score_permission": "ALLOWED",
+    "dossier_readiness": "PARTIALLY_READY",
+    "opportunity_path": "PREPARED",
+    "price_ladder_status": "CURRENT_FOR_PILOT_NOT_CANONICAL",
+    "next_action": "WAIT_FOR_PRICE",
+    "potential_orotitan_price_zone": "NOT_AVAILABLE"
+  },
+  "required_before_i4c": [
+    "LOCK_CONFIGURED_REQUIRED_RETURN_H",
+    "LOCK_CANONICAL_MARKET_PRICE_SOURCE",
+    "RECONCILE_H1_2026_EXCESS_LIQUIDITY_IF_AVAILABLE",
+    "RERUN_DETERMINISTIC_I2_SCORING",
+    "MAP_TO_PATCHED_PHASE4_SCHEMA"
+  ],
+  "versions": {
+    "method_version": "OROTITAN_EQUITY_RESEARCH_V1",
+    "report_version": "RATIONAL_I4B_FRESH_v0.1",
+    "evidence_ledger_version": "RATIONAL_2026-09-12_EVIDENCE_v0.1",
+    "calculation_version": "RATIONAL_2026-09-12_CALC_v0.1"
+  }
+}
