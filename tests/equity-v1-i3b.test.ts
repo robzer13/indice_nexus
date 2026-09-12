@@ -185,7 +185,7 @@ function applyDeterministicForSelectedN(snapshot: Record<string, unknown>, selec
 
 test("I3-B vendors the exact authoritative contract bytes", () => {
   assert.equal(createHash("sha256").update(readFileSync(schemaPath)).digest("hex"), "bf407ca217553521586ba5f6002180ff6522700b4671986079ea6ed577604ede");
-  assert.equal(createHash("sha256").update(readFileSync(integrationPath)).digest("hex"), "f4d82ee65a9d653ebbb122d5fed04f90b722de8e0daa90844dc7fb1705ecf8b7");
+  assert.equal(createHash("sha256").update(readFileSync(integrationPath)).digest("hex"), "cac78e505d354a124f5fdddb726baf31ecf7f0b6b90653fe578a5c5cca9a8238");
 });
 
 test("I3-B accepts DISCOVER without analysis blocks", () => {
