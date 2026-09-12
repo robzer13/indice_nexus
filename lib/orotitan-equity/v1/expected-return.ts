@@ -1,4 +1,4 @@
-import type { ScoreRange } from "./semantic-states";
+import { semanticStateSchema, type ScoreRange, type SemanticState } from "./semantic-states";
 
 const EXPECTED_RETURN_ANCHORS = [
   [-10, 0], [-8, 10], [-6, 20], [-4, 35], [-2, 50], [0, 70],
@@ -19,7 +19,11 @@ export function scoreExpectedReturnDelta(deltaPercentagePoints: number): number 
   throw new Error("Unreachable expected-return interval");
 }
 
-export function scoreExpectedReturnRange(delta: number | ScoreRange): number | ScoreRange {
+export function scoreExpectedReturnRange(delta: number | ScoreRange | SemanticState): number | ScoreRange | SemanticState {
+  if (typeof delta === "string") {
+    if (semanticStateSchema.safeParse(delta).success) return delta as SemanticState;
+    throw new Error("Expected-return state is invalid");
+  }
   if (typeof delta === "number") return scoreExpectedReturnDelta(delta);
   return { min: scoreExpectedReturnDelta(delta.min), max: scoreExpectedReturnDelta(delta.max) };
 }

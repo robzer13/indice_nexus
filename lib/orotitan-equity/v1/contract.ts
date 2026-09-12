@@ -6,7 +6,7 @@ import {
 import { scoreExpectedReturnRange } from "./expected-return";
 import { computeOqs, moatEvidenceStateSchema, qualityDimensionsSchema, runwayEvidenceStateSchema } from "./quality";
 import { computeInvestmentScore, computeOvs, computeReturnComponent } from "./scoring";
-import { canonicalScoreSchema, scoreRangeSchema, type CanonicalScore } from "./semantic-states";
+import { canonicalScoreSchema, type CanonicalScore } from "./semantic-states";
 import { computeOroTitanStatus, eliteGatesSchema } from "./terminal-gate";
 
 const deterministicSchema = z.object({
@@ -17,6 +17,14 @@ const deterministicSchema = z.object({
   orotitanStatus: z.enum(["YES", "NO"]).optional(),
 }).strict();
 
+const expectedReturnDeltaSchema = z.union([
+  z.number().finite(),
+  z.object({ min: z.number().finite(), max: z.number().finite() }).strict().refine((range) => range.min <= range.max, {
+    message: "Expected-return delta range min must be <= max",
+  }),
+  z.enum(["UNKNOWN", "NOT_APPLICABLE", "NOT_ASSESSABLE", "MISSING", "NOT_AVAILABLE"]),
+]);
+
 const contractShape = z.object({
   dimensions: qualityDimensionsSchema,
   evidence: z.object({ moat: moatEvidenceStateSchema, runway: runwayEvidenceStateSchema }).strict(),
@@ -25,8 +33,8 @@ const contractShape = z.object({
   scorePermission: scorePermissionSchema,
   mosStatus: mosStatusSchema,
   valuationReliability: valuationReliabilitySchema,
-  primaryExpectedReturnDeltaPercentagePoints: z.union([z.number().finite(), scoreRangeSchema]),
-  normalizedExpectedReturnDeltaPercentagePoints: z.union([z.number().finite(), scoreRangeSchema]),
+  primaryExpectedReturnDeltaPercentagePoints: expectedReturnDeltaSchema,
+  normalizedExpectedReturnDeltaPercentagePoints: expectedReturnDeltaSchema,
   eliteGates: eliteGatesSchema,
   deterministic: deterministicSchema.optional(),
 }).strict();
@@ -57,7 +65,11 @@ export function computeCanonicalSnapshot(input: CanonicalContractInput): Canonic
   }
   const primaryExpectedReturnScore = scoreExpectedReturnRange(input.primaryExpectedReturnDeltaPercentagePoints);
   const normalizedExpectedReturnScore = scoreExpectedReturnRange(input.normalizedExpectedReturnDeltaPercentagePoints);
-  const returnComponent = computeReturnComponent(primaryExpectedReturnScore, normalizedExpectedReturnScore);
+  const returnComponent = typeof primaryExpectedReturnScore === "number" || typeof primaryExpectedReturnScore === "object"
+    ? typeof normalizedExpectedReturnScore === "number" || typeof normalizedExpectedReturnScore === "object"
+      ? computeReturnComponent(primaryExpectedReturnScore, normalizedExpectedReturnScore)
+      : "NOT_ASSESSABLE"
+    : "NOT_ASSESSABLE";
   const ovs = computeOvs({
     returnComponent, mosStatus: input.mosStatus, valuationReliability: input.valuationReliability,
     scorePermission: input.scorePermission, investmentConclusionStatus: input.investmentConclusionStatus,
