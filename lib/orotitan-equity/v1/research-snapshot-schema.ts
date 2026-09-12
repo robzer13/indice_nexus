@@ -23,7 +23,9 @@ export type ValidatedResearchSnapshot = {
 
 const schema = JSON.parse(readFileSync(new URL("../../../contracts/orotitan-equity/v1/04_SCREENER_SCHEMA_V1_PATCHED.json", import.meta.url), "utf8")) as JsonObject;
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
-addFormats(ajv);
+// ajv-formats types its plugin against the default Ajv class, while this contract requires the Draft 2020 implementation.
+// The runtime plugin API is compatible; bridge only the package-level type mismatch without changing validator behavior.
+addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 for (const keyword of [
   "x-orotitan-authority",
   "x-orotitan-layer-model",
