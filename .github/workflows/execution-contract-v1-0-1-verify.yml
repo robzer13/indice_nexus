@@ -1,0 +1,48 @@
+name: Execution Contract V1.0.1 Verification
+
+on:
+  push:
+    branches:
+      - feat/orotitan-execution-contract-v1-0-1
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests I2
+        run: npx tsx --test tests/equity-v1-computation.test.ts tests/equity-v1-contract.test.ts
+
+      - name: Tests I3-B
+        run: npx tsx --test tests/equity-v1-i3b.test.ts
+
+      - name: Full test suite
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Git diff check
+        run: git diff --check 68fafcb311f29e6ef04648840a76fb6748cb5dfc...HEAD
