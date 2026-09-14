@@ -1,0 +1,49 @@
+{
+  "format": "OROTITAN_CONTRACT_ARCHIVE_MULTIPART_V1",
+  "encoding": "base64",
+  "compression": "gzip",
+  "canonical_name": "01_ANALYSIS_STANDARD_V1.md",
+  "canonical_source": "project-source:01_ANALYSIS_STANDARD_V1(3).md",
+  "canonical_size_bytes": 91316,
+  "canonical_sha256": "9283a0df395d4596c93cf6cfad9644ce114b343ee80e6e0a81e8f94f15d1e3df",
+  "archive_size_bytes": 32435,
+  "archive_sha256": "5ed1a17e56143868dc922a998b863bd391de713f23756b323650ac46ef4bae7a",
+  "parts": [
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-00",
+      "size_bytes": 8000,
+      "sha256": "f17b47898fa4c81497fa5a01b446bcbcfc05d2a6755fcc81323db4ec29fc4966",
+      "blob_sha": "06279af28d220f8882b20b86b8a7709e4bf62b0f"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-01",
+      "size_bytes": 8000,
+      "sha256": "43c5ab5a3d33272b96f1f37ca047e86f69bb248199f651cf6475a30805a63a7a",
+      "blob_sha": "0adaf98ea4f4c4da8423bcfb673a3d705e2537fe"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-02",
+      "size_bytes": 8000,
+      "sha256": "2452fb2b93d3f75945e99a990ff10a49a0c84080a5d290dd58df32c098567ee7",
+      "blob_sha": "56ad4d587e4e0897282bb5f4098682e297942525"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-03",
+      "size_bytes": 8000,
+      "sha256": "ee0fcdca6090555505f1afc0b3c473f28a0e17780eb12629205a3bfe426c1587",
+      "blob_sha": "f0f54f173499c798dbd9ae414efac9f51f97d59f"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-04",
+      "size_bytes": 8000,
+      "sha256": "a2b6b130338f9874132a082ba9702fd0f3f0b97be4a961531f9ffc54364d2868",
+      "blob_sha": "be4e256b0759fdb0014188b309469b175a9d2503"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-05",
+      "size_bytes": 3248,
+      "sha256": "a51950f6a9236d034e2ad65c719b174eb3d4c4be1c182dc82071f19b08931016",
+      "blob_sha": "40294938cee058a7ee3286598f75986296d2f041"
+    }
+  ]
+}
