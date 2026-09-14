@@ -9,7 +9,7 @@ export type GithubImmutableLocator = {
   path: string;
   commit_sha: string;
   blob_sha: string;
-  locator_format?: "RAW_CANONICAL_V1" | "OROTITAN_MULTIPART_GZIP_V1";
+  locator_format?: "RAW_CANONICAL_V1" | "OROTITAN_GZIP_V1" | "OROTITAN_MULTIPART_GZIP_V1";
 };
 
 export type ContractPin = {
@@ -159,6 +159,17 @@ export async function resolveContractPin(pin: ContractPin, fetchBlob: GithubBlob
   if ((locator.locator_format ?? "RAW_CANONICAL_V1") === "RAW_CANONICAL_V1") {
     verifyBytes(locatorBytes, undefined, pin.content_sha256, "canonical contract");
     return locatorBytes;
+  }
+
+  if (locator.locator_format === "OROTITAN_GZIP_V1") {
+    let canonical: Buffer;
+    try {
+      canonical = gunzipSync(locatorBytes);
+    } catch {
+      throw new Error("gzip contract decompression failed");
+    }
+    verifyBytes(canonical, undefined, pin.content_sha256, "canonical contract");
+    return canonical;
   }
 
   if (locator.locator_format !== "OROTITAN_MULTIPART_GZIP_V1") {

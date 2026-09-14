@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { gitBlobSha1, resolveContractPin, sha256Hex, type ContractPin } from "../lib/orotitan-equity/v1/contract-pin-resolver";
+import { computeContractSetSha256 } from "../lib/orotitan-equity/v1/stage-manifest";
 
 const COMMIT = "a".repeat(40);
 const REPOSITORY = "robzer13/indice_nexus";
@@ -114,4 +115,48 @@ test("resolver fails closed on a Git blob mismatch", async () => {
     },
   };
   await assert.rejects(() => resolveContractPin(pin, fsFetcher), /git blob mismatch/);
+});
+
+test("final Contract Pin Pack V1 contains exactly 13 pins and reconciles to the Registry contract-set hash", async () => {
+  const raw = await readFile("contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json", "utf8");
+  const pack = JSON.parse(raw) as {
+    format: string;
+    version: string;
+    repository: string;
+    source_commit_sha: string;
+    contract_set_sha256: string;
+    contract_pins: Record<string, ContractPin>;
+  };
+
+  assert.equal(pack.format, "OROTITAN_CONTRACT_PIN_PACK_V1");
+  assert.equal(pack.version, "1.0");
+  assert.equal(pack.repository, REPOSITORY);
+  assert.equal(pack.source_commit_sha, "8aba7cee6a9b38204785c16976e65e9010f5d959");
+  assert.deepEqual(
+    Object.keys(pack.contract_pins).sort(),
+    [
+      "analysis_standard", "deep_dive_stage", "execution_patch", "i2", "i3b",
+      "integration_spec", "integration_stage", "investment_policy", "master_prompt",
+      "pilotage", "process", "research_stage", "screener_schema",
+    ],
+  );
+  assert.equal(
+    computeContractSetSha256(pack.contract_pins),
+    "34b009f05715bab482dbc00b02194b3714e9b2f8151872144677bb6db19f3c63",
+  );
+  assert.equal(pack.contract_set_sha256, "34b009f05715bab482dbc00b02194b3714e9b2f8151872144677bb6db19f3c63");
+  for (const pin of Object.values(pack.contract_pins)) {
+    assert.equal(pin.locator.repository, REPOSITORY);
+    assert.equal(pin.locator.commit_sha, pack.source_commit_sha);
+  }
+});
+
+test("final Contract Pin Pack V1 resolves all 13 authorities byte-for-byte", async () => {
+  const raw = await readFile("contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json", "utf8");
+  const pack = JSON.parse(raw) as { contract_pins: Record<string, ContractPin> };
+
+  for (const [logicalName, pin] of Object.entries(pack.contract_pins)) {
+    const bytes = await resolveContractPin(pin, fsFetcher);
+    assert.equal(sha256Hex(bytes), pin.content_sha256, `${logicalName} canonical hash mismatch`);
+  }
 });
