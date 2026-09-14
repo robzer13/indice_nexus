@@ -13,7 +13,8 @@
     "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"tests/*.test.ts\" --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
-    "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh"
+    "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh && bash tests/postgres/run-registry-v1-migration-tests.sh",
+    "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
