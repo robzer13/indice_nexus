@@ -1,0 +1,31 @@
+{
+  "format": "OROTITAN_CONTRACT_ARCHIVE_MULTIPART_V1",
+  "encoding": "base64",
+  "compression": "gzip",
+  "canonical_name": "OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md",
+  "canonical_source": "project-source:OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0(2).md",
+  "canonical_size_bytes": 41829,
+  "canonical_sha256": "21586e572739e2564781ce2814758d3d557c151fee5866d8c75cb0394f9b82c5",
+  "archive_size_bytes": 15614,
+  "archive_sha256": "7ac818c0a0c6f2362939678475b297e684cee24353f3e8f5c7661b623e07075b",
+  "parts": [
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-00",
+      "size_bytes": 8000,
+      "sha256": "55d40e7e16df4889d06bb7b02179b9ced41bd54da2a0c74053e0a47146e216be",
+      "blob_sha": "e057ee85447e2fdf6fa09bae03994f9fd63aa8b2"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-01",
+      "size_bytes": 8000,
+      "sha256": "5af99fb53d709ba3b9eae818fecb8cb8da8068c89339821aaa7fb2364c4a0ab8",
+      "blob_sha": "c52da8f9616aeb2af74fda529e1fdfc9a2985baa"
+    },
+    {
+      "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-02",
+      "size_bytes": 4820,
+      "sha256": "2ef19a5a8aa80adc9b1c7a2b2c476ca04697b8aec6c4ed4835700a98a337ab8b",
+      "blob_sha": "a81b28137e6abd4f67ae47f2d8ed145d9f30750b"
+    }
+  ]
+}
