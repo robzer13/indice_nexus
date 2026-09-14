@@ -79,6 +79,41 @@ export function computeContractSetSha256(contractPins: unknown): string {
   return sha256Hex(Buffer.from(`${lines.join("\n")}\n`, "utf8"));
 }
 
+const requiredFinalOutputs: Record<StageCode, readonly string[]> = {
+  RESEARCH: [
+    "RESEARCH_SOURCE_MANIFEST",
+    "EVIDENCE_LEDGER",
+    "CONFLICT_LEDGER",
+    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER",
+    "RESEARCH_GAP_REGISTER",
+    "DD_INPUT_SUFFICIENCY_RECORD",
+    "ANALYSIS_INPUT_LOCK",
+  ],
+  DEEP_DIVE: [
+    "DEEP_DIVE_REPORT",
+    "EVIDENCE_LEDGER",
+    "CONFLICT_LEDGER",
+    "CALCULATION_LEDGER",
+    "MATERIAL_ASSUMPTION_REGISTER",
+    "ANALYTICAL_BLOCK_OUTPUTS",
+    "CROSS_BLOCK_RECONCILIATION_RECORD",
+    "RED_TEAM_PREMORTEM_RECORD",
+    "VALUATION_ARTIFACT",
+    "CERTIFICATION_ARTIFACT",
+    "OROTITAN_TERMINAL_GATE_ARTIFACT",
+    "READINESS_NEXT_ACTION_ARTIFACT",
+  ],
+  INTEGRATION: [
+    "CANONICAL_SNAPSHOT_CANDIDATE",
+    "INTEGRATION_MAPPING_RECORD",
+    "SCHEMA_VALIDATION_REPORT",
+    "I2_RECONCILIATION_REPORT",
+    "HISTORY_TRANSITION_VALIDATION_REPORT",
+    "I3B_ADMISSION_REPORT",
+    "PRE_PUBLICATION_CONTROL_CARD",
+  ],
+};
+
 function contractErrors(manifest: JsonObject, context: StageManifestValidationContext): string[] {
   const errors: string[] = [];
   const exact: Array<[string, unknown, unknown]> = [
@@ -160,6 +195,21 @@ function contractErrors(manifest: JsonObject, context: StageManifestValidationCo
     }
     if (kind === "CHECKPOINT" && authorityClass === "AUTHORITATIVE_STAGE_OUTPUT") {
       errors.push("CHECKPOINT manifest cannot promote output to AUTHORITATIVE_STAGE_OUTPUT");
+    }
+  }
+
+  if (kind === "FINAL") {
+    const authoritativeTypes = new Set(
+      outputArtifacts
+        .filter(isObject)
+        .filter((output) => output.authority_class === "AUTHORITATIVE_STAGE_OUTPUT")
+        .map((output) => output.artifact_type)
+        .filter((value): value is string => typeof value === "string"),
+    );
+    for (const requiredType of requiredFinalOutputs[context.stage]) {
+      if (!authoritativeTypes.has(requiredType)) {
+        errors.push(`FINAL ${context.stage} manifest missing required authoritative output ${requiredType}`);
+      }
     }
   }
 
