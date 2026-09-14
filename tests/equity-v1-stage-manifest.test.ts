@@ -13,7 +13,6 @@ const ids = {
   issuer: "33333333-3333-4333-8333-333333333333",
   security: "44444444-4444-4444-8444-444444444444",
   dossier: "55555555-5555-4555-8555-555555555555",
-  output: "66666666-6666-4666-8666-666666666666",
 };
 
 const stageHash = "a".repeat(64);
@@ -65,53 +64,65 @@ const context: StageManifestValidationContext = {
   stageContractSha256: stageHash,
 };
 
+const requiredResearchTypes = [
+  "RESEARCH_SOURCE_MANIFEST",
+  "EVIDENCE_LEDGER",
+  "CONFLICT_LEDGER",
+  "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER",
+  "RESEARCH_GAP_REGISTER",
+  "DD_INPUT_SUFFICIENCY_RECORD",
+  "ANALYSIS_INPUT_LOCK",
+] as const;
+
+function outputArtifact(artifactType: string, index: number): Record<string, unknown> {
+  return {
+    artifact_id: `66666666-6666-4666-8666-${String(index).padStart(12, "0")}`,
+    version: 1,
+    artifact_type: artifactType,
+    content_sha256: String(index).repeat(64).slice(0, 64),
+    authority_class: "AUTHORITATIVE_STAGE_OUTPUT",
+    media_type: "application/json",
+    size_bytes: 100 + index,
+    storage_ref: {
+      backend: "PRIVATE_GITHUB",
+      repository: "robzer13/orotitan-artifacts",
+      path: `artifacts/${ids.run}/research/${artifactType}__v001.json`,
+    },
+  };
+}
+
 const validFinal = (): Record<string, unknown> => {
   const pins = structuredClone(contractPins);
-  return ({
-  manifest_schema_version: "1.0.0",
-  manifest_id: ids.manifest,
-  manifest_kind: "FINAL",
-  run_id: ids.run,
-  stage: "RESEARCH",
-  stage_revision: 1,
-  issuer_id: ids.issuer,
-  security_id: ids.security,
-  dossier_id: ids.dossier,
-  canonical_mode: "ANALYZE",
-  run_type: "INITIAL",
-  data_cutoff: "2026-09-14",
-  baseline_snapshot_id: null,
-  process_version: "1.0",
-  pilotage_contract_version: "1.0.1",
-  contract_pins: pins,
-  stage_contract: pins.research_stage,
-  contract_set_sha256: contractSetSha256,
-  input_artifacts: [],
-  output_artifacts: [
-    {
-      artifact_id: ids.output,
-      version: 1,
-      artifact_type: "ANALYSIS_INPUT_LOCK",
-      content_sha256: "1".repeat(64),
-      authority_class: "AUTHORITATIVE_STAGE_OUTPUT",
-      media_type: "application/json",
-      size_bytes: 123,
-      storage_ref: {
-        backend: "PRIVATE_GITHUB",
-        repository: "robzer13/orotitan-artifacts",
-        path: `artifacts/${ids.run}/research/ANALYSIS_INPUT_LOCK__v001.json`,
-      },
-    },
-  ],
-  stage_status: "COMPLETE",
-  contract_status_code: "COMPLETE",
-  handoff_gate: { name: "READY_FOR_DEEP_DIVE", state: "YES" },
-  critical_blockers: [],
-  open_material_limitations: [],
-  parent_manifests: [],
-  started_at: "2026-09-14T14:00:00Z",
-  completed_at: "2026-09-14T15:00:00Z",
-  });
+  return {
+    manifest_schema_version: "1.0.0",
+    manifest_id: ids.manifest,
+    manifest_kind: "FINAL",
+    run_id: ids.run,
+    stage: "RESEARCH",
+    stage_revision: 1,
+    issuer_id: ids.issuer,
+    security_id: ids.security,
+    dossier_id: ids.dossier,
+    canonical_mode: "ANALYZE",
+    run_type: "INITIAL",
+    data_cutoff: "2026-09-14",
+    baseline_snapshot_id: null,
+    process_version: "1.0",
+    pilotage_contract_version: "1.0.1",
+    contract_pins: pins,
+    stage_contract: pins.research_stage,
+    contract_set_sha256: contractSetSha256,
+    input_artifacts: [],
+    output_artifacts: requiredResearchTypes.map((type, index) => outputArtifact(type, index + 1)),
+    stage_status: "COMPLETE",
+    contract_status_code: "COMPLETE",
+    handoff_gate: { name: "READY_FOR_DEEP_DIVE", state: "YES" },
+    critical_blockers: [],
+    open_material_limitations: [],
+    parent_manifests: [],
+    started_at: "2026-09-14T14:00:00Z",
+    completed_at: "2026-09-14T15:00:00Z",
+  };
 };
 
 test("M01 valid FINAL manifest admits downstream stage", () => {
@@ -128,7 +139,7 @@ test("M02 CHECKPOINT cannot declare gate YES", () => {
   const handoff = manifest.handoff_gate as { name: string; state: string };
   handoff.state = "YES";
   const outputs = manifest.output_artifacts as Array<Record<string, unknown>>;
-  outputs[0].authority_class = "CHECKPOINT_STAGE_OUTPUT";
+  for (const output of outputs) output.authority_class = "CHECKPOINT_STAGE_OUTPUT";
   const result = validateStageManifest(manifest, context);
   assert.equal(result.ok, false);
   if (!result.ok) assert.match(result.errors.join("\n"), /CHECKPOINT manifest cannot admit/);
@@ -211,4 +222,13 @@ test("M11 SHA-256 byte verifier accepts exact bytes and rejects mismatch", () =>
   assert.deepEqual(verifyArtifactBytes(bytes, expected, bytes.byteLength), { ok: true });
   const invalid = verifyArtifactBytes(bytes, "0".repeat(64), bytes.byteLength);
   assert.equal(invalid.ok, false);
+});
+
+test("M12 FINAL Research manifest missing required output is rejected", () => {
+  const manifest = validFinal();
+  const outputs = manifest.output_artifacts as Array<Record<string, unknown>>;
+  manifest.output_artifacts = outputs.filter((output) => output.artifact_type !== "EVIDENCE_LEDGER");
+  const result = validateStageManifest(manifest, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /missing required authoritative output EVIDENCE_LEDGER/);
 });
