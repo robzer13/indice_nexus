@@ -6,4 +6,6 @@ export * from "./n-basis";
 export * from "./quality";
 export * from "./scoring";
 export * from "./semantic-states";
+export * from "./stage-manifest";
+export * from "./artifact-storage";
 export * from "./terminal-gate";
