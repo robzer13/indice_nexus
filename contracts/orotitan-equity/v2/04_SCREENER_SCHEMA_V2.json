@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:screener-contract:v2",
+  "title": "OroTitan Canonical Snapshot V2 Overlay",
+  "description": "Composed V2 overlay. The unchanged V1 core schema is validated separately after removing v2_product.",
+  "type": "object",
+  "required": ["v2_product"],
+  "properties": {
+    "v2_product": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["classification", "business_summary", "investment_thesis"],
+      "properties": {
+        "classification": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["issuer_country_code", "primary_listing_country_code", "sector", "industry_group", "business_model_primary", "economic_exposure_regions", "taxonomy_version"],
+          "properties": {
+            "issuer_country_code": {"type": "string", "pattern": "^[A-Z]{2}$"},
+            "primary_listing_country_code": {"type": "string", "pattern": "^[A-Z]{2}$"},
+            "sector": {"type": "string", "enum": ["INFORMATION_TECHNOLOGY", "COMMUNICATION_SERVICES", "FINANCIALS", "HEALTH_CARE", "INDUSTRIALS", "CONSUMER_DISCRETIONARY", "CONSUMER_STAPLES", "ENERGY", "MATERIALS", "UTILITIES", "REAL_ESTATE"]},
+            "industry_group": {"type": "string", "enum": ["SOFTWARE", "CYBERSECURITY", "SEMICONDUCTORS", "IT_SERVICES", "HARDWARE_ELECTRONICS", "DIGITAL_MARKETPLACES_CLASSIFIEDS", "MEDIA_ADVERTISING", "TELECOM", "BANKING", "INSURANCE", "ASSET_WEALTH_MANAGEMENT", "FINANCIAL_INFRASTRUCTURE_EXCHANGES", "PAYMENTS", "PHARMA_BIOTECH", "MEDICAL_DEVICES", "HEALTHCARE_SERVICES", "CAPITAL_GOODS", "AUTOMATION_ELECTRIFICATION", "TRANSPORT_LOGISTICS", "AEROSPACE_DEFENSE", "CONSTRUCTION_INFRASTRUCTURE", "BUSINESS_SERVICES", "LUXURY", "BRANDED_CONSUMER", "RETAIL_ECOMMERCE", "AUTOMOTIVE", "TRAVEL_LEISURE", "FOOD_BEVERAGE", "ENERGY", "MATERIALS_CHEMICALS", "UTILITIES", "REAL_ESTATE", "CONCESSIONS_INFRASTRUCTURE", "OTHER"]},
+            "business_model_primary": {"type": "string", "enum": ["RECURRING_SUBSCRIPTION", "USAGE_BASED", "TRANSACTION_FEE", "MARKETPLACE_CLASSIFIEDS", "PAYMENTS_TAKE_RATE", "LICENSING_ROYALTY", "DATA_INFORMATION_SERVICES", "ADVERTISING", "ASSET_MANAGEMENT_FEE", "INSURANCE_UNDERWRITING", "BANKING_SPREAD", "PRODUCT_SALES_PREMIUM", "PRODUCT_SALES_VOLUME", "CONSUMABLES_RAZOR_BLADE", "PROJECT_CONTRACTING", "AFTERMARKET_SERVICE", "CONCESSION_TOLL", "HYBRID"]},
+            "business_model_secondary": {"anyOf": [{"type": "string", "enum": ["RECURRING_SUBSCRIPTION", "USAGE_BASED", "TRANSACTION_FEE", "MARKETPLACE_CLASSIFIEDS", "PAYMENTS_TAKE_RATE", "LICENSING_ROYALTY", "DATA_INFORMATION_SERVICES", "ADVERTISING", "ASSET_MANAGEMENT_FEE", "INSURANCE_UNDERWRITING", "BANKING_SPREAD", "PRODUCT_SALES_PREMIUM", "PRODUCT_SALES_VOLUME", "CONSUMABLES_RAZOR_BLADE", "PROJECT_CONTRACTING", "AFTERMARKET_SERVICE", "CONCESSION_TOLL", "HYBRID"]}, {"type": "null"}]},
+            "economic_exposure_regions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "enum": ["NORTH_AMERICA", "LATIN_AMERICA", "UK_IRELAND", "CONTINENTAL_EUROPE", "NORDICS", "BALTICS", "GREATER_CHINA", "JAPAN_KOREA", "ASIA_PACIFIC_OTHER", "MIDDLE_EAST_AFRICA", "GLOBAL"]}},
+            "taxonomy_version": {"const": "OROTITAN_TAXONOMY_V2.0"}
+          }
+        },
+        "business_summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["business_description_short"],
+          "properties": {"business_description_short": {"type": "string", "minLength": 1, "maxLength": 450}}
+        },
+        "investment_thesis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["quality_case", "valuation_case", "key_risk"],
+          "properties": {
+            "quality_case": {"type": "string", "minLength": 1, "maxLength": 240},
+            "valuation_case": {"type": "string", "minLength": 1, "maxLength": 240},
+            "key_risk": {"type": "string", "minLength": 1, "maxLength": 240}
+          }
+        },
+        "portfolio_filters": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "pea_eligibility": {"type": "string", "enum": ["YES", "NO", "UNKNOWN"]},
+            "pea_eligibility_as_of": {"anyOf": [{"type": "string", "format": "date"}, {"type": "null"}]},
+            "pea_eligibility_source_ref": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]}
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "x-orotitan-base-schema": "urn:orotitan:equity-research:screener-contract:v1",
+  "x-orotitan-validation-mode": "COMPOSED_V1_CORE_PLUS_V2_OVERLAY",
+  "x-orotitan-scoring-authority": false
+}
