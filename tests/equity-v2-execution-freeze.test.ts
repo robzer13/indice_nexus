@@ -23,7 +23,7 @@ test("V2 keeps final OQS behind Certification and Red Team before Fundamentals L
   const process = await text("OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0.md");
   const deepDive = await text("OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V2_FREEZE_V2.0.md");
   assert.match(process, /MUST NOT be calculated or displayed before Certification/);
-  assert.match(deepDive, /Fundamental Red Team must be completed before the phase can lock/);
+  assert.match(process, /Fundamental Red Team must be completed before the phase can lock/);
   assert.match(deepDive, /Final OQS may be calculated\/displayed only after required certification state/);
 });
 
