@@ -82,7 +82,7 @@ test("V2 composed validator rejects a non-ISO issuer country", () => {
   ((snapshot.v2_product as Record<string, unknown>).classification as Record<string, unknown>).issuer_country_code = "USA";
   const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
   assert.equal(result.ok, false);
-  if (!result.ok) assert.equal(result.stage, "boundary");
+  if (!result.ok) assert.equal(result.stage, "schema");
 });
 
 test("V2 composed validator preserves V1 core schema fail-closed behavior", () => {
