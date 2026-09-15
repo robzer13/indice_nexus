@@ -74,6 +74,11 @@ function canonicalFields(row: CanonicalSnapshotRow) {
   const priceLadder = asRecord(valuation.price_ladder);
   const l4 = asRecord(payload.l4_operational_state);
   const orotitan = asRecord(l4.orotitan);
+  const v2Product = asRecord(payload.v2_product);
+  const classification = asRecord(v2Product.classification);
+  const businessSummary = asRecord(v2Product.business_summary);
+  const investmentThesis = asRecord(v2Product.investment_thesis);
+  const portfolioFilters = asRecord(v2Product.portfolio_filters);
 
   const orotitanStatus = asString(orotitan.orotitan_status);
   const nextAction = asString(l4.next_action);
@@ -93,6 +98,7 @@ function canonicalFields(row: CanonicalSnapshotRow) {
     resilienceRisk: asNumber(businessQuality.resilience_risk_score),
   };
 
+  const pea = asString(portfolioFilters.pea_eligibility);
   return {
     payload,
     dataLock,
@@ -112,6 +118,21 @@ function canonicalFields(row: CanonicalSnapshotRow) {
     referencePriceDate: asString(dataLock.reference_price_date),
     invalidation: invalidationTriggers.length > 0 ? invalidationTriggers.join('\n') : null,
     scoreComponents,
+    v2: {
+      issuerCountryCode: asString(classification.issuer_country_code),
+      primaryListingCountryCode: asString(classification.primary_listing_country_code),
+      sector: asString(classification.sector),
+      industryGroup: asString(classification.industry_group),
+      businessModelPrimary: asString(classification.business_model_primary),
+      businessModelSecondary: asString(classification.business_model_secondary),
+      economicExposureRegions: asStringArray(classification.economic_exposure_regions),
+      taxonomyVersion: asString(classification.taxonomy_version),
+      businessDescriptionShort: asString(businessSummary.business_description_short),
+      qualityCase: asString(investmentThesis.quality_case),
+      valuationCase: asString(investmentThesis.valuation_case),
+      keyRisk: asString(investmentThesis.key_risk),
+      peaEligibility: pea === 'YES' || pea === 'NO' || pea === 'UNKNOWN' ? pea : null,
+    },
   };
 }
 
@@ -130,13 +151,8 @@ function chooseDisplayedPrice(snapshot: ReturnType<typeof canonicalFields>, mark
   }
 
   if (snapshot.referencePrice !== null && referenceDate !== null) {
-    return {
-      price: snapshot.referencePrice,
-      priceAsOf: `${referenceDate}T00:00:00Z`,
-      priceSource: 'CANONICAL_REFERENCE_PRICE',
-    };
+    return { price: snapshot.referencePrice, priceAsOf: `${referenceDate}T00:00:00Z`, priceSource: 'CANONICAL_REFERENCE_PRICE' };
   }
-
   return { price: marketValue, priceAsOf: marketAsOf, priceSource: marketSource };
 }
 
@@ -161,8 +177,8 @@ function mapSnapshotHistory(row: CanonicalSnapshotRow): SnapshotHistoryRow {
     price_o90: canonical.requiredReturnPrice,
     price_o92: canonical.strongReturnPrice,
     price_o95: canonical.exceptionalReturnPrice,
-    thesis: null,
-    main_risk: null,
+    thesis: canonical.v2.qualityCase,
+    main_risk: canonical.v2.keyRisk,
     invalidation: canonical.invalidation,
     source_title: `Canonical snapshot ${row.snapshot_id}`,
     notes: [canonical.readiness, canonical.nextAction].filter(Boolean).join(' · ') || null,
@@ -187,8 +203,18 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     currency: asString(context.security.trading_currency) ?? asString(context.issuer.reporting_currency) ?? 'USD',
     quote_unit: quoteUnit,
     price_decimals: asNumber(context.security.price_decimals) ?? 2,
-    country: asString(context.security.country) ?? asString(context.issuer.country),
-    sector: asString(context.company?.sector),
+    country: canonical.v2.issuerCountryCode ?? asString(context.security.country) ?? asString(context.issuer.country),
+    sector: canonical.v2.sector ?? asString(context.company?.sector),
+    industry_group: canonical.v2.industryGroup,
+    business_model_primary: canonical.v2.businessModelPrimary,
+    business_model_secondary: canonical.v2.businessModelSecondary,
+    economic_exposure_regions: canonical.v2.economicExposureRegions,
+    taxonomy_version: canonical.v2.taxonomyVersion,
+    business_description_short: canonical.v2.businessDescriptionShort,
+    quality_case: canonical.v2.qualityCase,
+    valuation_case: canonical.v2.valuationCase,
+    key_risk: canonical.v2.keyRisk,
+    pea_eligibility: canonical.v2.peaEligibility,
     market_data_symbol: asString(context.security.market_data_symbol),
     market_data_multiplier: asNumber(context.security.market_data_multiplier) ?? 1,
     price: price.price,
@@ -210,8 +236,8 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     price_o90: canonical.requiredReturnPrice,
     price_o92: canonical.strongReturnPrice,
     price_o95: canonical.exceptionalReturnPrice,
-    thesis: null,
-    main_risk: null,
+    thesis: canonical.v2.qualityCase,
+    main_risk: canonical.v2.keyRisk,
     invalidation: canonical.invalidation,
     source_title: `Canonical snapshot ${row.snapshot_id}`,
     notes: [canonical.readiness, canonical.nextAction].filter(Boolean).join(' · ') || null,
@@ -233,10 +259,7 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const issuerIds = dossiers.map((row) => row.issuer_id).filter((value): value is string => typeof value === 'string');
 
   const [snapshotsResult, issuersResult, companiesResult, pricesResult] = await Promise.all([
-    supabase
-      .from('research_snapshots')
-      .select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at')
-      .in('snapshot_id', snapshotIds),
+    supabase.from('research_snapshots').select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at').in('snapshot_id', snapshotIds),
     supabase.from('issuers').select('*').in('issuer_id', issuerIds),
     supabase.from('companies').select('id,slug,sector').in('id', issuerIds),
     supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', issuerIds).order('as_of', { ascending: false }),
@@ -261,25 +284,15 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     if (!latestPriceByCompany.has(companyId)) latestPriceByCompany.set(companyId, row as UnknownRecord);
   }
 
-  return snapshots
-    .map((snapshot) => {
-      const issuer = issuerById.get(snapshot.issuer_id);
-      const security = securityById.get(snapshot.security_id);
-      if (!issuer || !security) return null;
-      return mapCompanyState(snapshot, {
-        issuer,
-        security,
-        company: companyById.get(snapshot.issuer_id) ?? null,
-        marketPrice: latestPriceByCompany.get(snapshot.issuer_id) ?? null,
-      });
-    })
-    .filter((row): row is CompanyState => row !== null)
-    .sort((a, b) => a.name.localeCompare(b.name));
+  return snapshots.map((snapshot) => {
+    const issuer = issuerById.get(snapshot.issuer_id);
+    const security = securityById.get(snapshot.security_id);
+    if (!issuer || !security) return null;
+    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice: latestPriceByCompany.get(snapshot.issuer_id) ?? null });
+  }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export async function getCompanyStates(): Promise<CompanyState[]> {
-  return loadPublishedCanonicalStates();
-}
+export async function getCompanyStates(): Promise<CompanyState[]> { return loadPublishedCanonicalStates(); }
 
 export async function getCompanyStateBySlug(slug: string): Promise<CompanyState | null> {
   const states = await loadPublishedCanonicalStates();
@@ -288,34 +301,18 @@ export async function getCompanyStateBySlug(slug: string): Promise<CompanyState 
 
 export async function getActiveCompanies(): Promise<ActiveCompanyOption[]> {
   const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase
-    .from('companies')
-    .select('id,slug,ticker,name,exchange')
-    .eq('active', true)
-    .order('name', { ascending: true });
+  const { data, error } = await supabase.from('companies').select('id,slug,ticker,name,exchange').eq('active', true).order('name', { ascending: true });
   if (error) throw new Error(`Unable to load companies: ${error.message}`);
   return (data ?? []) as ActiveCompanyOption[];
 }
 
 export async function getSnapshotHistory(companyId: string): Promise<SnapshotHistoryRow[]> {
   const supabase = createServerSupabaseClient();
-  const { data: dossiers, error: dossierError } = await supabase
-    .from('research_dossiers')
-    .select('dossier_id')
-    .eq('issuer_id', companyId)
-    .eq('active', true)
-    .order('created_at', { ascending: false })
-    .limit(1);
+  const { data: dossiers, error: dossierError } = await supabase.from('research_dossiers').select('dossier_id').eq('issuer_id', companyId).eq('active', true).order('created_at', { ascending: false }).limit(1);
   if (dossierError) throw new Error(`Unable to load canonical dossier history: ${dossierError.message}`);
   const dossierId = dossiers?.[0]?.dossier_id;
   if (!dossierId) return [];
-
-  const { data, error } = await supabase
-    .from('research_snapshots')
-    .select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at')
-    .eq('dossier_id', dossierId)
-    .order('calculation_date', { ascending: false })
-    .order('created_at', { ascending: false });
+  const { data, error } = await supabase.from('research_snapshots').select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at').eq('dossier_id', dossierId).order('calculation_date', { ascending: false }).order('created_at', { ascending: false });
   if (error) throw new Error(`Unable to load canonical snapshot history: ${error.message}`);
   return ((data ?? []) as CanonicalSnapshotRow[]).map(mapSnapshotHistory);
 }
