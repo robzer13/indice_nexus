@@ -13,6 +13,8 @@ from pathlib import Path
 from time import perf_counter
 from typing import Dict, Iterable, List, Sequence
 
+from zoneinfo import ZoneInfo
+
 import pandas as pd
 
 try:  # pragma: no cover - Python 3.11+ provides tomllib
@@ -28,6 +30,7 @@ from .bt_report import (
     render_bt_markdown,
     summarize_backtest,
 )
+from .cli import orotitan_ai as orotitan_cli
 from .features import add_ta_features, make_label_future_ret
 from .io import save_analysis
 from .ml_pipeline import (
@@ -44,6 +47,10 @@ from .plot_bt import (
     plot_exposure_heatmap,
     save_figure as save_bt_figure,
 )
+from .regimes import evaluate_regime
+from .report import build_summary_table, render_html, render_markdown
+from .report_nexus import generate_nexus_report
+from .weighting import compute_weights
 from .report import build_summary_table, render_html, render_markdown
 
 LOG_FORMAT = "%(asctime)s %(levelname)s %(name)s - %(message)s"
@@ -94,6 +101,11 @@ DEFAULT_SETTINGS: Dict[str, object] = {
     "dashboard": False,
     "api_host": "0.0.0.0",
     "api_port": 8000,
+    "nexus_report": False,
+    "show_regime": False,
+    "nexus_title": "Nexus Market Report",
+    "nexus_dir": "reports",
+    "nexus_top": 10,
 }
 
 ML_WARMUP = 200
@@ -142,6 +154,11 @@ ENV_KEYS = {
     "dashboard": "STOCK_ANALYSIS_DASHBOARD",
     "api_host": "STOCK_ANALYSIS_API_HOST",
     "api_port": "STOCK_ANALYSIS_API_PORT",
+    "nexus_report": "STOCK_ANALYSIS_NEXUS_REPORT",
+    "show_regime": "STOCK_ANALYSIS_REGIME",
+    "nexus_title": "STOCK_ANALYSIS_NEXUS_TITLE",
+    "nexus_dir": "STOCK_ANALYSIS_NEXUS_DIR",
+    "nexus_top": "STOCK_ANALYSIS_NEXUS_TOP",
 }
 
 
@@ -192,6 +209,7 @@ def _launch_api(settings: Dict[str, object]) -> int:
 
     LOGGER.info("Démarrage de l'API", extra={"host": host, "port": port})
     config = uvicorn.Config(
+        "stock_analysis.api.app:app",
         "stock_analysis.api:app",
         host=host,
         port=port,
@@ -548,6 +566,32 @@ def _resolve_settings(args: argparse.Namespace) -> Dict[str, object]:
     if api_port <= 0:
         api_port = int(DEFAULT_SETTINGS["api_port"])
 
+    nexus_report_value = pick("nexus_report")
+    nexus_report = (
+        _parse_bool(nexus_report_value)
+        if nexus_report_value is not None
+        else bool(DEFAULT_SETTINGS["nexus_report"])
+    )
+
+    show_regime_value = pick("show_regime")
+    show_regime = (
+        _parse_bool(show_regime_value)
+        if show_regime_value is not None
+        else bool(DEFAULT_SETTINGS["show_regime"])
+    )
+
+    nexus_title = str(pick("nexus_title") or DEFAULT_SETTINGS["nexus_title"])
+    nexus_dir_value = str(pick("nexus_dir") or DEFAULT_SETTINGS["nexus_dir"])
+    nexus_dir = nexus_dir_value.strip() or str(DEFAULT_SETTINGS["nexus_dir"])
+
+    nexus_top_raw = pick("nexus_top")
+    try:
+        nexus_top = int(nexus_top_raw) if nexus_top_raw is not None else int(DEFAULT_SETTINGS["nexus_top"])
+    except (TypeError, ValueError):
+        nexus_top = int(DEFAULT_SETTINGS["nexus_top"])
+    if nexus_top <= 0:
+        nexus_top = int(DEFAULT_SETTINGS["nexus_top"])
+
     return {
         "tickers": tickers,
         "period": period,
@@ -593,6 +637,11 @@ def _resolve_settings(args: argparse.Namespace) -> Dict[str, object]:
         "dashboard": dashboard,
         "api_host": api_host,
         "api_port": api_port,
+        "nexus_report": nexus_report,
+        "show_regime": show_regime,
+        "nexus_title": nexus_title,
+        "nexus_dir": nexus_dir,
+        "nexus_top": nexus_top,
     }
 
 
@@ -675,6 +724,7 @@ def _collect_scores(results: Dict[str, Dict[str, object]]) -> list[Dict[str, obj
         if not isinstance(bundle, dict):
             continue
         notes = bundle.get("notes") if isinstance(bundle.get("notes"), list) else []
+        weight_map = bundle.get("weights") if isinstance(bundle.get("weights"), dict) else {}
         rows.append(
             {
                 "Ticker": ticker,
@@ -683,6 +733,10 @@ def _collect_scores(results: Dict[str, Dict[str, object]]) -> list[Dict[str, obj
                 "Momentum": bundle.get("momentum"),
                 "Quality": bundle.get("quality"),
                 "Risk": bundle.get("risk"),
+                "TrendW": weight_map.get("trend"),
+                "MomentumW": weight_map.get("momentum"),
+                "QualityW": weight_map.get("quality"),
+                "RiskW": weight_map.get("risk"),
                 "As Of": bundle.get("as_of"),
                 "NotesCount": len(notes),
                 "Notes": notes,
@@ -704,6 +758,34 @@ def _render_scoreboard(rows: list[Dict[str, object]], top: int) -> str:
     sorted_rows = sorted(rows, key=_score_key, reverse=True)
     display_rows = sorted_rows[: max(1, top)]
 
+    headers = [
+        "Ticker",
+        "Score",
+        "Trend",
+        "Momentum",
+        "Quality",
+        "Risk",
+        "TrendW",
+        "MomentumW",
+        "QualityW",
+        "RiskW",
+        "As Of",
+        "NotesCount",
+    ]
+    widths = {}
+    for header in headers:
+        values = []
+        for row in display_rows:
+            value = row.get(header, "")
+            if header in {"TrendW", "MomentumW", "QualityW", "RiskW"}:
+                try:
+                    formatted = f"{float(value or 0.0) * 100:.1f}%"
+                except (TypeError, ValueError):
+                    formatted = "n/a"
+                values.append(formatted)
+            else:
+                values.append(str(value))
+        widths[header] = max(len(header), *(len(item) for item in values))
     headers = ["Ticker", "Score", "Trend", "Momentum", "Quality", "Risk", "As Of", "NotesCount"]
     widths = {
         header: max(len(header), *(len(str(row.get(header, ""))) for row in display_rows))
@@ -716,6 +798,12 @@ def _render_scoreboard(rows: list[Dict[str, object]], top: int) -> str:
             value = row.get(header)
             if header in {"Score", "Trend", "Momentum", "Quality", "Risk"}:
                 cells.append(f"{_format_number(value):>{widths[header]}}")
+            elif header in {"TrendW", "MomentumW", "QualityW", "RiskW"}:
+                try:
+                    formatted = f"{float(value or 0.0) * 100:.1f}%"
+                except (TypeError, ValueError):
+                    formatted = "n/a"
+                cells.append(f"{formatted:>{widths[header]}}")
             else:
                 cells.append(f"{str(value):<{widths[header]}}")
         return " | ".join(cells)
@@ -1025,6 +1113,26 @@ def build_parser() -> argparse.ArgumentParser:
         dashboard=None,
         api_host=None,
         api_port=None,
+        nexus_report=None,
+        show_regime=None,
+        nexus_title=None,
+        nexus_dir=None,
+        nexus_top=None,
+        orotitan_ai=False,
+        ai_task="full",
+        ai_report=False,
+        risk_budget=None,
+        temperature=None,
+        dry_run=False,
+        json=False,
+        save_state=False,
+    )
+    parser.add_argument("--tickers", help="Liste de tickers séparés par des virgules")
+    parser.add_argument(
+        "--tickers-file",
+        dest="tickers_file",
+        help="Fichier contenant un ticker par ligne",
+    )
     )
     parser.add_argument("--tickers", help="Liste de tickers séparés par des virgules")
     parser.add_argument("--period", help="Fenêtre de téléchargement (ex: 2y)")
@@ -1060,11 +1168,57 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--dashboard", dest="dashboard", action="store_true", help="Lance le tableau de bord Streamlit")
     parser.add_argument("--api-host", dest="api_host", help="Adresse d'écoute de l'API (par défaut 0.0.0.0)")
     parser.add_argument("--api-port", dest="api_port", type=int, help="Port d'écoute de l'API (par défaut 8000)")
+    parser.add_argument("--nexus-report", dest="nexus_report", action="store_true", help="Génère un rapport Nexus stratégique")
+    parser.add_argument("--no-nexus-report", dest="nexus_report", action="store_false", help=argparse.SUPPRESS)
+    parser.add_argument("--regime", dest="show_regime", action="store_true", help="Affiche le régime macro détecté")
+    parser.add_argument("--no-regime", dest="show_regime", action="store_false", help=argparse.SUPPRESS)
+    parser.add_argument("--nexus-title", dest="nexus_title", help="Titre du rapport Nexus")
+    parser.add_argument("--nexus-dir", dest="nexus_dir", help="Sous-répertoire pour les rapports Nexus")
+    parser.add_argument("--nexus-top", dest="nexus_top", type=int, help="Nombre de valeurs retenues dans le rapport Nexus")
     parser.add_argument(
         "--score-weights",
         dest="score_weights",
         help="Pondérations personnalisées du score (ex: trend=50,momentum=30,quality=15,risk=5)",
     )
+    parser.add_argument("--orotitan-ai", dest="orotitan_ai", action="store_true", help="Active le moteur OroTitan AI")
+    parser.add_argument(
+        "--ai-task",
+        dest="ai_task",
+        choices=["embed", "decide", "feedback", "report", "full"],
+        help="Étape OroTitan à exécuter (par défaut: full)",
+    )
+    parser.add_argument(
+        "--regime-weights",
+        dest="regime_weights",
+        help="JSON des pondérations de modules pour OroTitan",
+    )
+    parser.add_argument("--regime-file", dest="regime_file", help="Fichier JSON de pondérations OroTitan")
+    parser.add_argument("--feedback-file", dest="feedback_file", help="Feedback JSON pour OroTitan")
+    parser.add_argument("--report-out", dest="report_out", help="Chemin du rapport OroTitan")
+    parser.add_argument("--ai-report", dest="ai_report", action="store_true", help="Force la génération du rapport OroTitan")
+    parser.add_argument("--risk-budget", dest="risk_budget", type=float, help="Budget de risque OroTitan (0..0.5)")
+    parser.add_argument("--temperature", dest="temperature", type=float, help="Température OroTitan (0..1)")
+    parser.add_argument("--dry-run", dest="dry_run", action="store_true", help="Exécution OroTitan sans écriture disque")
+    parser.add_argument("--json", dest="json", action="store_true", help="Affiche la sortie JSON OroTitan")
+    parser.add_argument("--behavior", dest="behavior", action="store_true", help="Active l'analyse comportementale OroTitan")
+    parser.add_argument(
+        "--behavior-threshold",
+        dest="behavior_threshold",
+        type=float,
+        help="Seuil comportemental avant ajustement de confiance",
+    )
+    parser.add_argument(
+        "--behavior-persist",
+        dest="behavior_persist",
+        help="Mode de persistance comportementale (jsonl|sqlite|none)",
+    )
+    parser.add_argument(
+        "--behavior-json",
+        dest="behavior_json",
+        action="store_true",
+        help="Affiche la synthèse comportementale au format JSON",
+    )
+    parser.add_argument("--save-state", dest="save_state", action="store_true", help="Sauvegarde l'état OroTitan AI")
     parser.add_argument("--bt", dest="bt", action="store_true", help="Active le backtest EOD")
     parser.add_argument("--no-bt", dest="bt", action="store_false", help=argparse.SUPPRESS)
     parser.add_argument(
@@ -1116,6 +1270,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         extra={key: value for key, value in settings.items() if key != "tickers"},
     )
 
+    if getattr(args, "orotitan_ai", False):
+        if getattr(args, "ai_report", False) and getattr(args, "ai_task", "full") == "decide":
+            args.ai_task = "full"
+        try:
+            return orotitan_cli.run_from_args(args)
+        except (FileNotFoundError, ValueError) as exc:
+            LOGGER.error("OroTitan AI error: %s", exc)
+            return 2
+        except Exception as exc:  # pragma: no cover - defensive logging
+            LOGGER.error("OroTitan AI unexpected failure", exc_info=exc)
+            return 2
+
     if settings.get("serve_api") and settings.get("dashboard"):
         LOGGER.error("Impossible de lancer l'API et le dashboard simultanément.")
         return 1
@@ -1126,6 +1292,29 @@ def main(argv: Sequence[str] | None = None) -> int:
     if settings.get("dashboard"):
         return _launch_dashboard()
 
+    paris_tz = ZoneInfo("Europe/Paris")
+    regime_assessment = None
+    regime_weights = settings.get("score_weights")
+    try:
+        regime_assessment = evaluate_regime(datetime.now(paris_tz))
+        LOGGER.info(
+            "Régime macro détecté",
+            extra={
+                "regime": regime_assessment.regime,
+                "vix": regime_assessment.snapshot.vix,
+                "cpi_yoy": regime_assessment.snapshot.cpi_yoy,
+                "rate_10y": regime_assessment.snapshot.rate_10y,
+                "rate_2y": regime_assessment.snapshot.rate_2y,
+                "credit_spread": regime_assessment.snapshot.credit_spread,
+            },
+        )
+    except Exception as exc:  # pragma: no cover - runtime
+        LOGGER.warning("Impossible de déterminer le régime macro", exc_info=exc)
+
+    if (not regime_weights) and regime_assessment is not None:
+        regime_weights = compute_weights(regime_assessment.regime)
+        settings["score_weights"] = regime_weights
+
     try:
         results = analyze_tickers(
             settings["tickers"],
@@ -1135,6 +1324,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             gap_threshold_pct=settings["gap_threshold"],
             use_cache=settings["cache_ttl"] is not None,
             cache_ttl_seconds=settings["cache_ttl"],
+            score_weights=regime_weights,
+            regime=regime_assessment.regime if regime_assessment else None,
             score_weights=settings["score_weights"],
         )
     except Exception as exc:  # pragma: no cover - runtime/network failures
@@ -1148,6 +1339,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         LOGGER.error("Aucune analyse n'a pu être menée. Vérifiez les tickers ou la connexion réseau.")
         return 1
 
+    if settings["show_regime"] and regime_assessment is not None:
+        snapshot = regime_assessment.snapshot
+        weights_str = ", ".join(
+            f"{key}:{float((regime_weights or {}).get(key, 0.0)) * 100:.1f}%"
+            for key in ("trend", "momentum", "quality", "risk")
+        )
+        print(
+            "Régime détecté : {label} | VIX={vix} CPI YoY={cpi}% T10Y={t10}% T2Y={t2}% Spread={spread}".format(
+                label=regime_assessment.regime,
+                vix=_format_number(snapshot.vix),
+                cpi=_format_number(snapshot.cpi_yoy),
+                t10=_format_number(snapshot.rate_10y),
+                t2=_format_number(snapshot.rate_2y),
+                spread=_format_number(snapshot.credit_spread),
+            )
+        )
+        print(f"Pondérations Nexus : {weights_str}")
+
     report_output_dir = Path(settings["out_dir"]).expanduser().resolve()
     charts_dir_path: Path | None = None
     charts_dir_rel: str | None = None
@@ -1160,6 +1369,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     score_rows = _collect_scores(results)
     ml_results: list[tuple[str, Dict[str, object]]] = []
+    regime_manifest_payload: Dict[str, object] | None = None
+    if regime_assessment is not None:
+        regime_manifest_payload = regime_assessment.to_dict()
+        regime_manifest_payload["weights"] = regime_weights or {}
     if settings["ml_eval"]:
         ml_results = _run_ml_evaluation(
             results,
@@ -1177,6 +1390,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     bt_chart_references: Dict[str, str] = {}
     backtest_kpis: Dict[str, object] = {}
     backtest_drawdown = pd.DataFrame()
+    nexus_report_paths: Dict[str, str | None] = {}
     benchmark_label = settings["benchmark"].strip() or None
     benchmark_series = None
 
@@ -1602,6 +1816,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 base_name=settings["base_name"],
                 format=settings["format"],
                 backtest=backtest_result,
+                regime=regime_manifest_payload,
             )
         except Exception as exc:  # pragma: no cover - disk failures are runtime only
             LOGGER.error("Échec de la sauvegarde des résultats.", exc_info=exc)
@@ -1727,6 +1942,33 @@ def main(argv: Sequence[str] | None = None) -> int:
                 LOGGER.error("Échec de la génération du rapport backtest HTML.", exc_info=exc)
                 return 1
             print(f"Rapport backtest HTML : {html_path}")
+
+    if settings["nexus_report"]:
+        if regime_assessment is None:
+            LOGGER.error("Impossible de générer le rapport Nexus sans régime macro détecté.")
+        else:
+            try:
+                nexus_weights = regime_weights or compute_weights(regime_assessment.regime)
+                nexus_output_dir = (report_output_dir / settings["nexus_dir"]).resolve()
+                paths = generate_nexus_report(
+                    results,
+                    regime_assessment,
+                    nexus_weights,
+                    output_dir=nexus_output_dir,
+                    base_name="Nexus",
+                    title=settings["nexus_title"],
+                    top_n=settings["nexus_top"],
+                    include_html=settings["html"],
+                )
+                nexus_report_paths = paths
+                if regime_manifest_payload is not None:
+                    regime_manifest_payload["report_paths"] = paths
+                print("\nRapport Nexus généré :")
+                for label, path in paths.items():
+                    if path:
+                        print(f" - {label}: {path}")
+            except Exception as exc:  # pragma: no cover - runtime failure
+                LOGGER.error("Échec de la génération du rapport Nexus.", exc_info=exc)
 
     if settings["ml_eval"] and ml_results:
         print("\nÉvaluation ML :")
