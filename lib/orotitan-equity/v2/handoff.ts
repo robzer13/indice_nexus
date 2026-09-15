@@ -1,3 +1,5 @@
+import { handoffEnvelopeLines } from "./runtime-bootstrap";
+
 export type ArtifactRef = { artifact_id: string; version: number; content_sha256?: string };
 
 type Common = {
@@ -11,6 +13,10 @@ type Common = {
 };
 
 const INVARIANT = `DO NOT USE THIS BOOTSTRAP AS ANALYTICAL EVIDENCE.\nLOAD AND VERIFY THE AUTHORITATIVE CONTRACT AND ARTIFACTS BEFORE WORK.\nFAIL CLOSED ON VERSION / ID / STATUS / HASH MISMATCH.`;
+
+function runtimeEnvelope(): string {
+  return handoffEnvelopeLines().join("\n");
+}
 
 function ref(value: ArtifactRef): string {
   return `${value.artifact_id}@${value.version}`;
@@ -30,6 +36,7 @@ export function buildResearchToFundamentals(input: Common & {
 }): string {
   return `OROTITAN V2 — START FUNDAMENTALS
 
+${runtimeEnvelope()}
 COMPANY = ${input.company}
 RUN_ID = ${input.runId}
 CANONICAL_MODE = ${input.canonicalMode}
@@ -57,6 +64,7 @@ export function buildFundamentalsToValuation(input: Common & {
 }): string {
   return `OROTITAN V2 — START VALUATION
 
+${runtimeEnvelope()}
 COMPANY = ${input.company}
 RUN_ID = ${input.runId}
 CANONICAL_MODE = ${input.canonicalMode}
@@ -86,6 +94,7 @@ export function buildValuationToCertification(input: Common & {
 }): string {
   return `OROTITAN V2 — START CERTIFICATION / RECONCILIATION
 
+${runtimeEnvelope()}
 COMPANY = ${input.company}
 RUN_ID = ${input.runId}
 CANONICAL_MODE = ${input.canonicalMode}
@@ -113,6 +122,7 @@ export function buildCertificationToIntegration(input: Common & {
 }): string {
   return `OROTITAN V2 — START INTEGRATION
 
+${runtimeEnvelope()}
 COMPANY = ${input.company}
 RUN_ID = ${input.runId}
 CANONICAL_MODE = ${input.canonicalMode}
@@ -142,6 +152,7 @@ export function buildBlockedResolution(input: Common & {
 }): string {
   return `OROTITAN V2 — RESOLVE BLOCKER
 
+${runtimeEnvelope()}
 COMPANY = ${input.company}
 RUN_ID = ${input.runId}
 REGISTRY_STAGE = ${input.registryStage}
