@@ -54,7 +54,7 @@ export interface CompanyState {
   quality_case?: string | null;
   valuation_case?: string | null;
   key_risk?: string | null;
-  pea_eligibility?: 'YES' | 'NO' | 'UNKNOWN' | null;
+  pea_eligibility?: string | null;
   market_data_symbol: string | null;
   market_data_multiplier: number;
   price: number | null;
