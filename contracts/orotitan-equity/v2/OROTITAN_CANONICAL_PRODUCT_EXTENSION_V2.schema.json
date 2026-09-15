@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/canonical-product-extension-v2.json",
+  "title": "OroTitan Canonical Product Extension V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "classification",
+    "business_summary",
+    "investment_thesis"
+  ],
+  "properties": {
+    "classification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issuer_country_code",
+        "primary_listing_country_code",
+        "sector",
+        "industry_group",
+        "business_model_primary",
+        "economic_exposure_regions",
+        "taxonomy_version"
+      ],
+      "properties": {
+        "issuer_country_code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "primary_listing_country_code": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$"
+        },
+        "sector": {
+          "type": "string",
+          "enum": [
+            "INFORMATION_TECHNOLOGY",
+            "COMMUNICATION_SERVICES",
+            "FINANCIALS",
+            "HEALTH_CARE",
+            "INDUSTRIALS",
+            "CONSUMER_DISCRETIONARY",
+            "CONSUMER_STAPLES",
+            "ENERGY",
+            "MATERIALS",
+            "UTILITIES",
+            "REAL_ESTATE"
+          ]
+        },
+        "industry_group": {
+          "type": "string"
+        },
+        "business_model_primary": {
+          "type": "string"
+        },
+        "business_model_secondary": {
+          "type": ["string", "null"]
+        },
+        "economic_exposure_regions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "taxonomy_version": {
+          "const": "OROTITAN_TAXONOMY_V2.0"
+        }
+      }
+    },
+    "business_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_description_short"],
+      "properties": {
+        "business_description_short": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 450
+        }
+      }
+    },
+    "investment_thesis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quality_case", "valuation_case", "key_risk"],
+      "properties": {
+        "quality_case": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "valuation_case": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        },
+        "key_risk": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 240
+        }
+      }
+    },
+    "portfolio_filters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pea_eligibility": {
+          "type": "string",
+          "enum": ["YES", "NO", "UNKNOWN"]
+        },
+        "pea_eligibility_as_of": {
+          "type": ["string", "null"],
+          "format": "date"
+        },
+        "pea_eligibility_source_ref": {
+          "type": ["string", "null"]
+        }
+      }
+    }
+  },
+  "x-orotitan": {
+    "methodology_authority": false,
+    "scoring_authority": false,
+    "taxonomy_source": "OROTITAN_TAXONOMY_V2.0.json",
+    "note": "This schema freezes V2 product additions. Production activation still requires integration into the canonical screener snapshot schema and I3-B validation path."
+  }
+}
