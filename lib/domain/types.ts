@@ -75,7 +75,7 @@ export interface CompanyState {
 }
 
 export interface SnapshotHistoryRow {
-  id: number;
+  id: string;
   company_id: string;
   analysis_date: string;
   model_version: string;
