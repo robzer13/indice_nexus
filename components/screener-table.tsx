@@ -14,11 +14,7 @@ import type { CompanyState, CompanyStatus } from '@/lib/domain/types';
 
 type SortKey = 'distance' | 'score' | 'analysisDate';
 type SortDirection = 'asc' | 'desc';
-type Row = CompanyState & {
-  distance_o90_pct: number | null;
-  entry_zone: EntryZone;
-  stale: boolean;
-};
+type Row = CompanyState & { distance_o90_pct: number | null; entry_zone: EntryZone; stale: boolean };
 
 function compareNullableNumber(a: number | null, b: number | null, direction: SortDirection): number {
   if (a === null && b === null) return 0;
@@ -42,6 +38,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
   const [quality, setQuality] = useState<'ALL' | 'TRUE' | 'FALSE' | 'NULL'>('ALL');
   const [country, setCountry] = useState('ALL');
   const [sector, setSector] = useState('ALL');
+  const [industryGroup, setIndustryGroup] = useState('ALL');
+  const [businessModel, setBusinessModel] = useState('ALL');
   const [entryZone, setEntryZone] = useState<'ALL' | EntryZone>('ALL');
   const [calibration, setCalibration] = useState<'ALL' | 'CALIBRATED' | 'UNCALIBRATED'>('ALL');
   const [freshness, setFreshness] = useState<'ALL' | 'FRESH' | 'STALE'>('ALL');
@@ -54,16 +52,13 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
 
   const rows = useMemo<Row[]>(() => companies.map((company) => {
     const distance = getDistanceO90(company.price, company.price_o90);
-    return {
-      ...company,
-      distance_o90_pct: distance,
-      entry_zone: getEntryZone(distance),
-      stale: getFreshness(company.price_as_of).stale,
-    };
+    return { ...company, distance_o90_pct: distance, entry_zone: getEntryZone(distance), stale: getFreshness(company.price_as_of).stale };
   }), [companies]);
 
   const countries = useMemo(() => [...new Set(rows.map((row) => row.country).filter((value): value is string => Boolean(value)))].sort(), [rows]);
   const sectors = useMemo(() => [...new Set(rows.map((row) => row.sector).filter((value): value is string => Boolean(value)))].sort(), [rows]);
+  const industryGroups = useMemo(() => [...new Set(rows.map((row) => row.industry_group).filter((value): value is string => Boolean(value)))].sort(), [rows]);
+  const businessModels = useMemo(() => [...new Set(rows.map((row) => row.business_model_primary).filter((value): value is string => Boolean(value)))].sort(), [rows]);
 
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
@@ -77,6 +72,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
       .filter((row) => quality === 'ALL' || (quality === 'TRUE' && row.quality_orotitan === true) || (quality === 'FALSE' && row.quality_orotitan === false) || (quality === 'NULL' && row.quality_orotitan === null))
       .filter((row) => country === 'ALL' || row.country === country)
       .filter((row) => sector === 'ALL' || row.sector === sector)
+      .filter((row) => industryGroup === 'ALL' || row.industry_group === industryGroup)
+      .filter((row) => businessModel === 'ALL' || row.business_model_primary === businessModel)
       .filter((row) => entryZone === 'ALL' || row.entry_zone === entryZone)
       .filter((row) => calibration === 'ALL' || (calibration === 'CALIBRATED' && row.distance_o90_pct !== null) || (calibration === 'UNCALIBRATED' && row.distance_o90_pct === null))
       .filter((row) => freshness === 'ALL' || (freshness === 'FRESH' && !row.stale) || (freshness === 'STALE' && row.stale))
@@ -88,16 +85,12 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         if (primary !== 0 || secondarySort === 'NONE' || secondarySort === sortKey) return primary;
         return compareRow(a, b, secondarySort, 'desc');
       });
-  }, [rows, search, status, quality, country, sector, entryZone, calibration, freshness, scoreMin, distanceMin, distanceMax, sortKey, sortDirection, secondarySort]);
+  }, [rows, search, status, quality, country, sector, industryGroup, businessModel, entryZone, calibration, freshness, scoreMin, distanceMin, distanceMax, sortKey, sortDirection, secondarySort]);
 
   function setSort(next: SortKey) {
     if (next === sortKey) setSortDirection((current) => current === 'asc' ? 'desc' : 'asc');
-    else {
-      setSortKey(next);
-      setSortDirection('desc');
-    }
+    else { setSortKey(next); setSortDirection('desc'); }
   }
-
   const sortMark = (key: SortKey) => key === sortKey ? (sortDirection === 'asc' ? ' ↑' : ' ↓') : '';
 
   return <div className="space-y-4">
@@ -109,6 +102,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         <Select label="Zone d’entrée" value={entryZone} onChange={(value) => setEntryZone(value as typeof entryZone)} options={[['ALL','Toutes'],['AT_OR_BELOW_O90','Seuil H atteint'],['WITHIN_5','À moins de 5 %'],['WITHIN_10','À 5–10 %'],['WITHIN_20','À 10–20 %'],['ABOVE_20','À plus de 20 %'],['UNCALIBRATED','Non calibré']]}/>
         <Select label="Pays" value={country} onChange={setCountry} options={[['ALL','Tous'],...countries.map((value) => [value,value] as [string,string])]}/>
         <Select label="Secteur" value={sector} onChange={setSector} options={[['ALL','Tous'],...sectors.map((value) => [value,value] as [string,string])]}/>
+        <Select label="Industrie" value={industryGroup} onChange={setIndustryGroup} options={[['ALL','Toutes'],...industryGroups.map((value) => [value,value] as [string,string])]}/>
+        <Select label="Business model" value={businessModel} onChange={setBusinessModel} options={[['ALL','Tous'],...businessModels.map((value) => [value,value] as [string,string])]}/>
         <Select label="Calibration seuil H" value={calibration} onChange={(value) => setCalibration(value as typeof calibration)} options={[['ALL','Toutes'],['CALIBRATED','Calibrées'],['UNCALIBRATED','Non calibrées']]}/>
         <Select label="Fraîcheur cours" value={freshness} onChange={(value) => setFreshness(value as typeof freshness)} options={[['ALL','Toutes'],['FRESH','Récentes'],['STALE','Périmées']]}/>
       </div>
@@ -118,20 +113,9 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         <NumericFilter label="Distance max. %" value={distanceMax} onChange={setDistanceMax} placeholder="ex. 5"/>
         <Select label="Tri secondaire" value={secondarySort} onChange={(value) => setSecondarySort(value as typeof secondarySort)} options={[['NONE','Aucun'],['score','Investment'],['distance','Distance seuil H'],['analysisDate','Date analyse']]}/>
         <button onClick={() => {
-          setSearch('');
-          setStatus('ALL');
-          setQuality('ALL');
-          setCountry('ALL');
-          setSector('ALL');
-          setEntryZone('ALL');
-          setCalibration('ALL');
-          setFreshness('ALL');
-          setScoreMin('');
-          setDistanceMin('');
-          setDistanceMax('');
-          setSortKey('distance');
-          setSortDirection('desc');
-          setSecondarySort('score');
+          setSearch(''); setStatus('ALL'); setQuality('ALL'); setCountry('ALL'); setSector('ALL'); setIndustryGroup('ALL'); setBusinessModel('ALL');
+          setEntryZone('ALL'); setCalibration('ALL'); setFreshness('ALL'); setScoreMin(''); setDistanceMin(''); setDistanceMax('');
+          setSortKey('distance'); setSortDirection('desc'); setSecondarySort('score');
         }} className="self-end rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-400 hover:bg-slate-800">Réinitialiser</button>
       </div>
     </div>
