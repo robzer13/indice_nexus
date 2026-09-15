@@ -39,7 +39,7 @@ export function getCompanyDataHealth(company: CompanyState, now = new Date()): D
   }
 
   if (company.price_o90 === null) {
-    issues.push({ code: 'MISSING_O90', severity: 'warning', label: 'O90 non calibré' });
+    issues.push({ code: 'MISSING_O90', severity: 'warning', label: 'Seuil H non calibré' });
   }
 
   if (!company.market_data_symbol) {
