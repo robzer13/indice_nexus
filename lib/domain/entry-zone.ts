@@ -7,7 +7,7 @@ export type EntryZone =
   | 'UNCALIBRATED';
 
 export const ENTRY_ZONE_LABELS: Record<EntryZone, string> = {
-  AT_OR_BELOW_O90: 'O90 atteint',
+  AT_OR_BELOW_O90: 'Seuil H atteint',
   WITHIN_5: 'À moins de 5 %',
   WITHIN_10: 'À 5–10 %',
   WITHIN_20: 'À 10–20 %',
