@@ -14,18 +14,19 @@ function Delta({ value, suffix = '' }: { value: number | null; suffix?: string }
 
 export function SnapshotComparison({ snapshots, currency, quoteUnit, priceDecimals }: { snapshots: SnapshotHistoryRow[]; currency: string; quoteUnit: QuoteUnit; priceDecimals: number }) {
   if (snapshots.length < 2) {
-    return <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 text-sm text-slate-500">Aucun snapshot précédent comparable pour l’instant.</div>;
+    return <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 text-sm text-slate-500">Aucun snapshot canonique précédent comparable pour l’instant.</div>;
   }
   const current = snapshots[0];
   const previous = snapshots[1];
   const priceProps = { currency, quoteUnit, priceDecimals };
 
   return <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
-    <div className="flex flex-wrap items-center justify-between gap-2"><div><div className="text-sm font-semibold text-white">Snapshot actuel vs précédent</div><div className="mt-1 text-xs text-slate-500">{current.analysis_date} / {current.model_version} vs {previous.analysis_date} / {previous.model_version}</div></div></div>
-    <div className="mt-4 grid gap-4 sm:grid-cols-3">
-      <Compare label="OroTitan Score" current={current.orotitan_score ?? '—'} previous={previous.orotitan_score ?? '—'} change={<Delta value={delta(current.orotitan_score, previous.orotitan_score)}/>}/>
-      <Compare label="Fair value centrale" current={<PriceDisplay value={current.fair_value_base} {...priceProps}/>} previous={<PriceDisplay value={previous.fair_value_base} {...priceProps}/>} change={<Delta value={delta(current.fair_value_base, previous.fair_value_base)}/>}/>
-      <Compare label="O90" current={current.price_o90 === null ? 'Non calibré' : <PriceDisplay value={current.price_o90} {...priceProps}/>} previous={previous.price_o90 === null ? 'Non calibré' : <PriceDisplay value={previous.price_o90} {...priceProps}/>} change={<Delta value={delta(current.price_o90, previous.price_o90)}/>}/>
+    <div><div className="text-sm font-semibold text-white">Snapshot canonique actuel vs précédent</div><div className="mt-1 text-xs text-slate-500">{current.analysis_date} / {current.model_version} vs {previous.analysis_date} / {previous.model_version}</div></div>
+    <div className="mt-4 grid gap-4 sm:grid-cols-4">
+      <Compare label="OQS" current={current.business_quality_score ?? '—'} previous={previous.business_quality_score ?? '—'} change={<Delta value={delta(current.business_quality_score, previous.business_quality_score)}/>}/>
+      <Compare label="OVS" current={current.valuation_score ?? '—'} previous={previous.valuation_score ?? '—'} change={<Delta value={delta(current.valuation_score, previous.valuation_score)}/>}/>
+      <Compare label="Investment" current={current.investment_score ?? '—'} previous={previous.investment_score ?? '—'} change={<Delta value={delta(current.investment_score, previous.investment_score)}/>}/>
+      <Compare label="Seuil rendement H" current={current.price_o90 === null ? 'Non calibré' : <PriceDisplay value={current.price_o90} {...priceProps}/>} previous={previous.price_o90 === null ? 'Non calibré' : <PriceDisplay value={previous.price_o90} {...priceProps}/>} change={<Delta value={delta(current.price_o90, previous.price_o90)}/>}/>
     </div>
   </div>;
 }
