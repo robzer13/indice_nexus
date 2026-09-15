@@ -17,6 +17,12 @@ alter table public.research_snapshots
       (contract_version = '04_SCREENER_SCHEMA_V1' and schema_version = '1.0.0')
       or
       (contract_version = '04_SCREENER_SCHEMA_V2' and schema_version = '2.0.0')
+    ),
+  add constraint research_snapshots_payload_version_firewall_check
+    check (
+      (contract_version = '04_SCREENER_SCHEMA_V1' and not (canonical_payload ? 'v2_product'))
+      or
+      (contract_version = '04_SCREENER_SCHEMA_V2' and jsonb_typeof(canonical_payload->'v2_product') = 'object')
     );
 
 create or replace function public.persist_orotitan_research_snapshot_v2(
