@@ -2,8 +2,9 @@ import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
 import {
-  validateResearchSnapshotForPersistence as validateV1Snapshot,
+  validateResearchSnapshotForPersistenceAgainstSchema,
   type ResearchSnapshot,
+  type ResearchSnapshotSchemaValidator,
   type ValidationFailure,
 } from "../v1/research-snapshot-schema";
 import { validateV2ProductSemantics, type V2Product } from "./product";
@@ -23,6 +24,26 @@ const schema = JSON.parse(
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateOverlay = ajv.compile(schema);
+
+const v1CompatSchema = JSON.parse(
+  readFileSync(new URL("../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.2.json", import.meta.url), "utf8"),
+) as JsonObject;
+const v1CompatAjv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
+addFormats(v1CompatAjv as unknown as Parameters<typeof addFormats>[0]);
+for (const keyword of [
+  "x-orotitan-authority",
+  "x-orotitan-layer-model",
+  "x-orotitan-null-semantics",
+  "x-orotitan-computed-vs-stored",
+  "x-orotitan-deterministic-rules",
+  "x-orotitan-server-recomputation-policy",
+  "x-storage-precision",
+  "x-unit",
+]) v1CompatAjv.addKeyword({ keyword });
+v1CompatAjv.addSchema(v1CompatSchema);
+const validateV1CompatCore = v1CompatAjv.compile({
+  $ref: "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.2#/$defs/researchSnapshot",
+}) as ResearchSnapshotSchemaValidator;
 
 function formatAjvErrors(errors: ErrorObject[] | null | undefined): string[] {
   return (errors ?? []).map((error) => `${error.instancePath || "/"} ${error.message ?? "is invalid"}`);
@@ -44,7 +65,7 @@ export function validateV2ResearchSnapshotForPersistence(
 
   const core = { ...input };
   delete core.v2_product;
-  const base = validateV1Snapshot(core, dossierId);
+  const base = validateResearchSnapshotForPersistenceAgainstSchema(core, dossierId, validateV1CompatCore);
   if (!base.ok) return base;
 
   return {
