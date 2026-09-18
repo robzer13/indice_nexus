@@ -23,6 +23,10 @@ export type ValidatedResearchSnapshot = {
   canonicalContract: CanonicalContractInput;
 };
 
+export type ResearchSnapshotSchemaValidator = ((input: unknown) => boolean) & {
+  errors?: ErrorObject[] | null;
+};
+
 const schema = JSON.parse(readFileSync(new URL("../../../contracts/orotitan-equity/v1/04_SCREENER_SCHEMA_V1_PATCHED.json", import.meta.url), "utf8")) as JsonObject;
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
 // ajv-formats types its plugin against the default Ajv class, while this contract requires the Draft 2020 implementation.
@@ -176,8 +180,12 @@ function boundaryErrors(snapshot: JsonObject, dossierId: string): string[] {
   return errors;
 }
 
-export function validateResearchSnapshotForPersistence(input: unknown, dossierId: string): ValidationFailure | ValidatedResearchSnapshot {
-  if (!validateSchema(input)) return { ok: false, stage: "schema", errors: formatAjvErrors(validateSchema.errors) };
+export function validateResearchSnapshotForPersistenceAgainstSchema(
+  input: unknown,
+  dossierId: string,
+  schemaValidator: ResearchSnapshotSchemaValidator,
+): ValidationFailure | ValidatedResearchSnapshot {
+  if (!schemaValidator(input)) return { ok: false, stage: "schema", errors: formatAjvErrors(schemaValidator.errors) };
   const snapshot = input as JsonObject;
   const boundary = boundaryErrors(snapshot, dossierId);
   if (boundary.length > 0) return { ok: false, stage: "boundary", errors: boundary };
@@ -190,6 +198,10 @@ export function validateResearchSnapshotForPersistence(input: unknown, dossierId
   } catch (error) {
     return { ok: false, stage: "reconciliation", errors: [error instanceof Error ? error.message : "Canonical reconciliation failed"] };
   }
+}
+
+export function validateResearchSnapshotForPersistence(input: unknown, dossierId: string): ValidationFailure | ValidatedResearchSnapshot {
+  return validateResearchSnapshotForPersistenceAgainstSchema(input, dossierId, validateSchema as ResearchSnapshotSchemaValidator);
 }
 
 export { validateSchema };
