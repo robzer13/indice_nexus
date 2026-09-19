@@ -1,0 +1,3254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.3",
+  "title": "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.3",
+  "description": "V2.0.3 compatibility validation copy of the frozen V1 core. It preserves the V2.0.2 roic_trend NOT_APPLICABLE correction and additionally corrects the ROIIC representability defect by admitting NOT_INTERPRETABLE only for analytical_metrics.roiic. It does not replace or rewrite the frozen V1 authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "schema_version",
+    "l1_identity",
+    "current_snapshot",
+    "historical_snapshots",
+    "current_market_price",
+    "activation_events"
+  ],
+  "properties": {
+    "contract_version": {
+      "const": "04_SCREENER_SCHEMA_V1"
+    },
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "l1_identity": {
+      "$ref": "#/$defs/l1Identity"
+    },
+    "current_snapshot": {
+      "$ref": "#/$defs/researchSnapshot"
+    },
+    "historical_snapshots": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/researchSnapshot"
+      },
+      "description": "Append-only prior snapshots. Never overwritten by current data."
+    },
+    "current_market_price": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/marketPrice"
+        },
+        {
+          "const": "NOT_AVAILABLE"
+        }
+      ],
+      "description": "Live/refreshable market price, distinct from each snapshot's immutable RESEARCH_REFERENCE_PRICE."
+    },
+    "activation_events": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/activationEvent"
+      },
+      "description": "Market-price events only. An event is not a certified research snapshot."
+    }
+  },
+  "$defs": {
+    "specialState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NOT_APPLICABLE",
+        "NOT_ASSESSABLE",
+        "MISSING",
+        "NOT_AVAILABLE"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "dateOrState": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringOrState": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "not": {
+            "enum": [
+              "UNKNOWN",
+              "NOT_APPLICABLE",
+              "NOT_ASSESSABLE",
+              "MISSING",
+              "NOT_AVAILABLE"
+            ]
+          }
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "numericRange": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "description": "Inclusive analytical range. min <= max is enforced by the contract validator because JSON Schema cannot compare sibling numeric values portably."
+    },
+    "numberOrRangeOrState": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/numericRange"
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "nonNegativeNumberOrRangeOrState": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ]
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "scoreValue": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ]
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ],
+      "x-unit": "score points, 0-100",
+      "x-storage-precision": "at least 4 decimal places"
+    },
+    "dimensionScoreValue": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "multipleOf": 5
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "multipleOf": 5
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 100,
+              "multipleOf": 5
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ]
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ],
+      "x-unit": "score points, 0-100",
+      "description": "Stored dimension judgment. Numeric judgments preserve the frozen 5-point increment discipline."
+    },
+    "returnValue": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/numericRange"
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ],
+      "x-unit": "percentage points per annum; 12.0 means 12% p.a.",
+      "x-storage-precision": "at least 4 decimal places"
+    },
+    "priceValue": {
+      "oneOf": [
+        {
+          "type": "number",
+          "minimum": 0
+        },
+        {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number",
+              "minimum": 0
+            },
+            "max": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ]
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ],
+      "x-unit": "price per security in the associated currency",
+      "x-storage-precision": "at least 4 decimal places"
+    },
+    "issuer": {
+      "type": "object",
+      "properties": {
+        "issuer_id": {
+          "$ref": "#/$defs/id",
+          "description": "Economic issuer identity. One active candidate per issuer."
+        },
+        "legal_name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "display_name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "country": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "reporting_currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "listing_status": {
+          "$ref": "#/$defs/nonEmptyString",
+          "description": "Authoritative listing state from issuer/security normalization; no new methodological enum introduced here."
+        },
+        "candidate_episode": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "issuer_id",
+        "legal_name",
+        "display_name",
+        "country",
+        "reporting_currency",
+        "listing_status",
+        "candidate_episode"
+      ]
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "security_id": {
+          "$ref": "#/$defs/id"
+        },
+        "issuer_id": {
+          "$ref": "#/$defs/id"
+        },
+        "ticker": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "isin": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{2}[A-Z0-9]{9}[0-9]$"
+            },
+            {
+              "const": "UNKNOWN"
+            }
+          ]
+        },
+        "exchange": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "country": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "trading_currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "primary_listing": {
+          "type": "boolean"
+        },
+        "listing_status": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "security_id",
+        "issuer_id",
+        "ticker",
+        "isin",
+        "exchange",
+        "country",
+        "trading_currency",
+        "primary_listing",
+        "listing_status"
+      ]
+    },
+    "researchDossier": {
+      "type": "object",
+      "properties": {
+        "dossier_id": {
+          "$ref": "#/$defs/id"
+        },
+        "issuer_id": {
+          "$ref": "#/$defs/id"
+        },
+        "candidate_episode": {
+          "$ref": "#/$defs/id"
+        },
+        "current_snapshot_id": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "dossier_id",
+        "issuer_id",
+        "candidate_episode",
+        "current_snapshot_id"
+      ]
+    },
+    "l1Identity": {
+      "type": "object",
+      "properties": {
+        "issuer": {
+          "$ref": "#/$defs/issuer"
+        },
+        "securities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/security"
+          },
+          "minItems": 1
+        },
+        "research_dossier": {
+          "$ref": "#/$defs/researchDossier"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "issuer",
+        "securities",
+        "research_dossier"
+      ],
+      "description": "L1 IDENTITY. Issuer and security remain distinct. Multiple securities may map to one issuer."
+    },
+    "dataLock": {
+      "type": "object",
+      "properties": {
+        "data_cutoff": {
+          "$ref": "#/$defs/date",
+          "description": "PIT boundary. Mandatory for every snapshot, including history."
+        },
+        "reference_price": {
+          "$ref": "#/$defs/priceValue",
+          "description": "Immutable research reference price for this snapshot."
+        },
+        "reference_price_currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "reference_price_date": {
+          "$ref": "#/$defs/dateOrState"
+        },
+        "calculation_date": {
+          "$ref": "#/$defs/date"
+        },
+        "last_full_research_date": {
+          "$ref": "#/$defs/dateOrState"
+        },
+        "score_date": {
+          "$ref": "#/$defs/dateOrState"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "data_cutoff",
+        "reference_price",
+        "reference_price_currency",
+        "reference_price_date",
+        "calculation_date",
+        "last_full_research_date",
+        "score_date"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "reference_price": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "reference_price"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reference_price_date": {
+                "$ref": "#/$defs/date"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "versions": {
+      "type": "object",
+      "properties": {
+        "report_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "method_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "calculation_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ledger_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "method_versions": {
+          "type": "object",
+          "properties": {
+            "discovery_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "moat_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "runway_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "roic_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "fcf_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "valuation_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "certification_version": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "discovery_version",
+            "moat_version",
+            "runway_version",
+            "roic_version",
+            "fcf_version",
+            "valuation_version",
+            "certification_version"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "report_version",
+        "method_version",
+        "calculation_version",
+        "evidence_ledger_version",
+        "method_versions"
+      ]
+    },
+    "hardKillStatus": {
+      "type": "object",
+      "properties": {
+        "HK-A": {
+          "enum": [
+            "NOT_FOUND",
+            "SUSPECTED",
+            "SUPPORTED",
+            "CONFIRMED"
+          ]
+        },
+        "HK-B": {
+          "enum": [
+            "NOT_FOUND",
+            "SUSPECTED",
+            "SUPPORTED",
+            "CONFIRMED"
+          ]
+        },
+        "HK-C": {
+          "enum": [
+            "NOT_FOUND",
+            "SUSPECTED",
+            "SUPPORTED",
+            "CONFIRMED"
+          ]
+        },
+        "HK-D": {
+          "enum": [
+            "NOT_FOUND",
+            "SUSPECTED",
+            "SUPPORTED",
+            "CONFIRMED"
+          ]
+        },
+        "HK-E": {
+          "enum": [
+            "NOT_FOUND",
+            "SUSPECTED",
+            "SUPPORTED",
+            "CONFIRMED"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "HK-A",
+        "HK-B",
+        "HK-C",
+        "HK-D",
+        "HK-E"
+      ]
+    },
+    "discoveryRecord": {
+      "type": "object",
+      "properties": {
+        "discovery_status": {
+          "enum": [
+            "DEEP_DIVE_CANDIDATE",
+            "WATCH",
+            "INSUFFICIENT_DATA",
+            "REJECTED"
+          ]
+        },
+        "discovery_methods": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "S1",
+              "S2",
+              "S3",
+              "S4",
+              "S5",
+              "S6",
+              "S7",
+              "S8",
+              "S9",
+              "S10"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "archetype_hints": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "A1",
+              "A2",
+              "A3",
+              "A4",
+              "A5",
+              "A5-R",
+              "A5-S",
+              "A5-M",
+              "A6",
+              "A7",
+              "A8",
+              "A9",
+              "A10"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "attention_state": {
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "UNKNOWN"
+          ]
+        },
+        "evidence_grade": {
+          "enum": [
+            "E0 CLAIM_ONLY",
+            "E1 OBSERVABLE_ISSUER_EVIDENCE",
+            "E2 STRONG_INDEPENDENT_EVIDENCE",
+            "E3 ORTHOGONALLY_CORROBORATED",
+            "EU UNKNOWN / CONFLICTED"
+          ]
+        },
+        "data_sufficiency": {
+          "enum": [
+            "SUFFICIENT",
+            "PARTIAL_BUT_DECISIONABLE",
+            "INSUFFICIENT",
+            "CONFLICTED"
+          ]
+        },
+        "hard_kill_status": {
+          "$ref": "#/$defs/hardKillStatus"
+        },
+        "valuation_sanity": {
+          "enum": [
+            "PLAUSIBLE",
+            "STRETCHED",
+            "EXTREME",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "research_priority": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "watch_type": {
+          "enum": [
+            "WATCH - PRICE",
+            "WATCH - EVIDENCE",
+            "WATCH - TRAJECTORY",
+            "WATCH - TRANSITION",
+            "WATCH - BALANCE SHEET",
+            "WATCH - RUNWAY",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "reactivation_trigger": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "rejection_reason": {
+          "$ref": "#/$defs/stringOrState"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "discovery_status",
+        "discovery_methods",
+        "archetype_hints",
+        "attention_state",
+        "evidence_grade",
+        "data_sufficiency",
+        "hard_kill_status",
+        "valuation_sanity",
+        "research_priority",
+        "watch_type",
+        "reactivation_trigger",
+        "rejection_reason"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "discovery_status": {
+                "const": "WATCH"
+              }
+            },
+            "required": [
+              "discovery_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "watch_type": {
+                "enum": [
+                  "WATCH - PRICE",
+                  "WATCH - EVIDENCE",
+                  "WATCH - TRAJECTORY",
+                  "WATCH - TRANSITION",
+                  "WATCH - BALANCE SHEET",
+                  "WATCH - RUNWAY"
+                ]
+              },
+              "reactivation_trigger": {
+                "type": "string",
+                "minLength": 1,
+                "not": {
+                  "enum": [
+                    "UNKNOWN",
+                    "NOT_APPLICABLE",
+                    "NOT_ASSESSABLE",
+                    "MISSING",
+                    "NOT_AVAILABLE"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "discovery_status": {
+                "const": "REJECTED"
+              }
+            },
+            "required": [
+              "discovery_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "rejection_reason": {
+                "type": "string",
+                "minLength": 1,
+                "not": {
+                  "enum": [
+                    "UNKNOWN",
+                    "NOT_APPLICABLE",
+                    "NOT_ASSESSABLE",
+                    "MISSING",
+                    "NOT_AVAILABLE"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "sectorMethodResult": {
+      "type": "object",
+      "properties": {
+        "method": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "status": {
+          "enum": [
+            "APPLIED",
+            "NOT_REQUIRED",
+            "MISSING",
+            "WRONG_METHOD"
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "status",
+        "rationale",
+        "evidence_ids"
+      ]
+    },
+    "fundamentalStates": {
+      "type": "object",
+      "properties": {
+        "moat_evidence_state": {
+          "enum": [
+            "UNKNOWN",
+            "PLAUSIBLE",
+            "SUPPORTED",
+            "STRONGLY_SUPPORTED",
+            "FALSIFIED"
+          ]
+        },
+        "moat_trend": {
+          "enum": [
+            "STRENGTHENING",
+            "STABLE",
+            "ERODING",
+            "UNCLEAR"
+          ]
+        },
+        "moat_durability": {
+          "enum": [
+            "LIMITED",
+            "MODERATE",
+            "LONG",
+            "UNKNOWN"
+          ]
+        },
+        "runway_evidence_state": {
+          "enum": [
+            "UNKNOWN",
+            "PLAUSIBLE",
+            "SUPPORTED",
+            "STRONGLY_SUPPORTED"
+          ]
+        },
+        "runway_magnitude": {
+          "enum": [
+            "SMALL",
+            "MATERIAL",
+            "LARGE",
+            "UNKNOWN"
+          ]
+        },
+        "runway_horizon": {
+          "enum": [
+            "LIMITED",
+            "MODERATE",
+            "EXTENDED",
+            "UNKNOWN"
+          ]
+        },
+        "roic_trend": {
+          "enum": [
+            "IMPROVING",
+            "STABLE",
+            "DECLINING",
+            "VOLATILE",
+            "UNCLEAR",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "forensic_reliability": {
+          "enum": [
+            "CLEAN",
+            "WATCH",
+            "MATERIAL_CONCERN",
+            "FAIL",
+            "UNKNOWN"
+          ]
+        },
+        "sector_method_results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sectorMethodResult"
+          },
+          "minItems": 1
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "moat_evidence_state",
+        "moat_trend",
+        "moat_durability",
+        "runway_evidence_state",
+        "runway_magnitude",
+        "runway_horizon",
+        "roic_trend",
+        "forensic_reliability",
+        "sector_method_results"
+      ]
+    },
+    "analyticalMetrics": {
+      "type": "object",
+      "properties": {
+        "standard_roic": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "all_in_roic": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "roic_ex_goodwill": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "rd_adjusted_roic": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "roiic": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/returnValue"
+            },
+            {
+              "const": "NOT_INTERPRETABLE"
+            }
+          ],
+          "description": "V2.0.3 compatibility: preserves the frozen ROIIC analytical output NOT_INTERPRETABLE without broadening returnValue or global specialState semantics."
+        },
+        "economic_spread": {
+          "enum": [
+            "CLEARLY_POSITIVE",
+            "MARGINAL",
+            "NEGATIVE",
+            "UNKNOWN"
+          ]
+        },
+        "return_interpretability": {
+          "enum": [
+            "INTERPRETABLE",
+            "INTERPRETABLE_WITH_LIMITATIONS",
+            "NOT_INTERPRETABLE",
+            "UNKNOWN"
+          ]
+        },
+        "return_attributability": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "UNKNOWN"
+          ]
+        },
+        "standardized_fcf": {
+          "$ref": "#/$defs/numberOrRangeOrState",
+          "x-unit": "reporting currency"
+        },
+        "owner_earnings": {
+          "$ref": "#/$defs/numberOrRangeOrState",
+          "x-unit": "reporting currency"
+        },
+        "fcf_per_share": {
+          "$ref": "#/$defs/numberOrRangeOrState",
+          "x-unit": "reporting currency per share"
+        },
+        "share_count_cagr": {
+          "$ref": "#/$defs/returnValue"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "standard_roic",
+        "all_in_roic",
+        "roic_ex_goodwill",
+        "rd_adjusted_roic",
+        "roiic",
+        "economic_spread",
+        "return_interpretability",
+        "return_attributability",
+        "standardized_fcf",
+        "owner_earnings",
+        "fcf_per_share",
+        "share_count_cagr"
+      ]
+    },
+    "issueRef": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "rationale",
+        "evidence_ids",
+        "calculation_ids"
+      ]
+    },
+    "hardBlocker": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "enum": [
+            "B1",
+            "B2",
+            "B3",
+            "B4",
+            "B5",
+            "B6",
+            "B7",
+            "B8"
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "rationale",
+        "evidence_ids",
+        "calculation_ids"
+      ]
+    },
+    "certification": {
+      "type": "object",
+      "properties": {
+        "business_research_status": {
+          "enum": [
+            "CERTIFIED",
+            "CERTIFIED_WITH_LIMITATIONS",
+            "NOT_CERTIFIED",
+            "INSUFFICIENT_DATA"
+          ]
+        },
+        "investment_conclusion_status": {
+          "enum": [
+            "CERTIFIED",
+            "CERTIFIED_WITH_LIMITATIONS",
+            "NOT_CERTIFIED",
+            "INSUFFICIENT_DATA"
+          ]
+        },
+        "score_permission": {
+          "enum": [
+            "ALLOWED",
+            "CONDITIONAL",
+            "SUSPENDED"
+          ]
+        },
+        "hard_blockers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/hardBlocker"
+          },
+          "uniqueItems": true
+        },
+        "material_limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueRef"
+          }
+        },
+        "critical_unknowns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueRef"
+          }
+        },
+        "unresolved_conflicts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueRef"
+          }
+        },
+        "required_fixes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/issueRef"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "business_research_status",
+        "investment_conclusion_status",
+        "score_permission",
+        "hard_blockers",
+        "material_limitations",
+        "critical_unknowns",
+        "unresolved_conflicts",
+        "required_fixes"
+      ]
+    },
+    "businessQuality": {
+      "type": "object",
+      "properties": {
+        "moat_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "runway_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "return_quality_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "cash_economics_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "capital_allocation_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "management_governance_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "resilience_risk_score": {
+          "$ref": "#/$defs/dimensionScoreValue"
+        },
+        "oqs_raw": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "weak_link_cap": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "oqs": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "quality_class": {
+          "enum": [
+            "EXCEPTIONAL",
+            "VERY_STRONG",
+            "GOOD",
+            "MIXED / ADEQUATE",
+            "WEAK / MATERIALLY_DEFICIENT",
+            "STRUCTURALLY_POOR",
+            "NOT_AVAILABLE"
+          ]
+        },
+        "dimension_evidence_ids": {
+          "type": "object",
+          "properties": {
+            "MOAT": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "RUNWAY": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "RETURN_QUALITY": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "CASH_ECONOMICS": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "CAPITAL_ALLOCATION": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "MANAGEMENT_GOVERNANCE": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            },
+            "RESILIENCE_RISK": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/id"
+              },
+              "uniqueItems": true
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "MOAT",
+            "RUNWAY",
+            "RETURN_QUALITY",
+            "CASH_ECONOMICS",
+            "CAPITAL_ALLOCATION",
+            "MANAGEMENT_GOVERNANCE",
+            "RESILIENCE_RISK"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "moat_score",
+        "runway_score",
+        "return_quality_score",
+        "cash_economics_score",
+        "capital_allocation_score",
+        "management_governance_score",
+        "resilience_risk_score",
+        "oqs_raw",
+        "weak_link_cap",
+        "oqs",
+        "quality_class",
+        "dimension_evidence_ids"
+      ]
+    },
+    "priceZone": {
+      "type": "object",
+      "properties": {
+        "min_price": {
+          "type": "number",
+          "minimum": 0
+        },
+        "max_price": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "basis": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "max_price",
+        "currency",
+        "basis"
+      ]
+    },
+    "priceZoneOrState": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/priceZone"
+        },
+        {
+          "enum": [
+            "NOT_AVAILABLE",
+            "NOT_ASSESSABLE",
+            "UNKNOWN",
+            "MISSING"
+          ]
+        }
+      ]
+    },
+    "potentialPriceZone": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/priceZone"
+        },
+        {
+          "const": "NOT_AVAILABLE"
+        }
+      ]
+    },
+    "priceLadder": {
+      "type": "object",
+      "properties": {
+        "valuation_date": {
+          "$ref": "#/$defs/date"
+        },
+        "data_cutoff": {
+          "$ref": "#/$defs/date"
+        },
+        "reference_price": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "required_return_h": {
+          "type": "number",
+          "x-unit": "percentage points p.a."
+        },
+        "strong_return_threshold": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "exceptional_return_threshold": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "price_for_required_return_h": {
+          "$ref": "#/$defs/priceValue"
+        },
+        "price_for_strong_return": {
+          "$ref": "#/$defs/priceValue"
+        },
+        "price_for_exceptional_return": {
+          "$ref": "#/$defs/priceValue"
+        },
+        "investable_price_zone": {
+          "$ref": "#/$defs/priceZoneOrState"
+        },
+        "strong_opportunity_zone": {
+          "$ref": "#/$defs/priceZoneOrState"
+        },
+        "potential_orotitan_price_zone": {
+          "$ref": "#/$defs/potentialPriceZone"
+        },
+        "potential_orotitan_max_price": {
+          "$ref": "#/$defs/priceValue"
+        },
+        "potential_orotitan_components": {
+          "type": "object",
+          "properties": {
+            "p_er": {
+              "$ref": "#/$defs/priceValue"
+            },
+            "p_no_expansion": {
+              "$ref": "#/$defs/priceValue"
+            },
+            "p_mos": {
+              "$ref": "#/$defs/priceValue"
+            },
+            "p_implied": {
+              "$ref": "#/$defs/priceValue"
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "p_er",
+            "p_no_expansion",
+            "p_mos",
+            "p_implied"
+          ]
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "assumptions_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "method_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "calculation_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "valuation_date",
+        "data_cutoff",
+        "reference_price",
+        "currency",
+        "required_return_h",
+        "strong_return_threshold",
+        "exceptional_return_threshold",
+        "price_for_required_return_h",
+        "price_for_strong_return",
+        "price_for_exceptional_return",
+        "investable_price_zone",
+        "strong_opportunity_zone",
+        "potential_orotitan_price_zone",
+        "potential_orotitan_max_price",
+        "potential_orotitan_components",
+        "assumptions",
+        "assumptions_version",
+        "method_version",
+        "calculation_version"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "potential_orotitan_price_zone": {
+                "const": "NOT_AVAILABLE"
+              }
+            },
+            "required": [
+              "potential_orotitan_price_zone"
+            ]
+          },
+          "then": {
+            "properties": {
+              "potential_orotitan_max_price": {
+                "const": "NOT_AVAILABLE"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "valuation": {
+      "type": "object",
+      "properties": {
+        "primary_expected_return": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "return_horizon": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "$ref": "#/$defs/specialState"
+            }
+          ],
+          "x-unit": "years"
+        },
+        "no_multiple_expansion_return": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "mature_normalization_return": {
+          "$ref": "#/$defs/returnValue"
+        },
+        "margin_of_safety": {
+          "enum": [
+            "ROBUST",
+            "ADEQUATE",
+            "THIN",
+            "NONE",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "valuation_reliability": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "market_expectation_gap": {
+          "enum": [
+            "BELOW_FUNDAMENTAL_CASE",
+            "ALIGNED",
+            "ABOVE_FUNDAMENTAL_CASE",
+            "FAR_ABOVE_FUNDAMENTAL_CASE",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "ovs": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "price_ladder": {
+          "$ref": "#/$defs/priceLadder"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "primary_expected_return",
+        "return_horizon",
+        "no_multiple_expansion_return",
+        "mature_normalization_return",
+        "margin_of_safety",
+        "valuation_reliability",
+        "market_expectation_gap",
+        "ovs",
+        "price_ladder"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "valuation_reliability": {
+                "const": "NOT_ASSESSABLE"
+              }
+            },
+            "required": [
+              "valuation_reliability"
+            ]
+          },
+          "then": {
+            "properties": {
+              "ovs": {
+                "const": "NOT_ASSESSABLE"
+              },
+              "margin_of_safety": {
+                "const": "NOT_ASSESSABLE"
+              },
+              "market_expectation_gap": {
+                "const": "NOT_ASSESSABLE"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "investment": {
+      "type": "object",
+      "properties": {
+        "investment_raw": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "investment_score": {
+          "$ref": "#/$defs/scoreValue"
+        },
+        "investment_class": {
+          "enum": [
+            "EXCEPTIONAL",
+            "ATTRACTIVE",
+            "ADEQUATE",
+            "UNATTRACTIVE",
+            "POOR",
+            "NOT_AVAILABLE"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "investment_raw",
+        "investment_score",
+        "investment_class"
+      ]
+    },
+    "gateResult": {
+      "type": "object",
+      "properties": {
+        "gate": {
+          "enum": [
+            "CERTIFICATION_GATE",
+            "MOAT_ELITE",
+            "RUNWAY_ELITE",
+            "RETURN_QUALITY_ELITE",
+            "CASH_ECONOMICS_ELITE",
+            "CAPITAL_ALLOCATION_ELITE",
+            "MANAGEMENT_GOVERNANCE_ELITE",
+            "RESILIENCE_ELITE",
+            "MATERIAL_WEAK_LINK_GATE",
+            "VALUATION_ELITE"
+          ]
+        },
+        "state": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "gate",
+        "state",
+        "rationale",
+        "evidence_ids"
+      ]
+    },
+    "orotitanGap": {
+      "type": "object",
+      "properties": {
+        "gap_code": {
+          "enum": [
+            "RESEARCH_NOT_FULLY_CERTIFIED",
+            "MOAT_NOT_ELITE",
+            "RUNWAY_NOT_ELITE",
+            "RETURN_QUALITY_NOT_ELITE",
+            "CASH_ECONOMICS_NOT_ELITE",
+            "CAPITAL_ALLOCATION_NOT_ELITE",
+            "MANAGEMENT_GOVERNANCE_NOT_ELITE",
+            "RESILIENCE_NOT_ELITE",
+            "VALUATION_NOT_ELITE",
+            "MATERIAL_WEAK_LINK_PRESENT"
+          ]
+        },
+        "rationale": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "material_evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "gap_code",
+        "rationale",
+        "material_evidence_ids"
+      ]
+    },
+    "orotitan": {
+      "type": "object",
+      "properties": {
+        "orotitan_status": {
+          "enum": [
+            "YES",
+            "NO"
+          ]
+        },
+        "orotitan_gate_results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/gateResult"
+          },
+          "minItems": 10,
+          "maxItems": 10,
+          "allOf": [
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "CERTIFICATION_GATE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "MOAT_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "RUNWAY_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "RETURN_QUALITY_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "CASH_ECONOMICS_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "CAPITAL_ALLOCATION_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "MANAGEMENT_GOVERNANCE_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "RESILIENCE_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "MATERIAL_WEAK_LINK_GATE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            },
+            {
+              "contains": {
+                "type": "object",
+                "properties": {
+                  "gate": {
+                    "const": "VALUATION_ELITE"
+                  }
+                },
+                "required": [
+                  "gate"
+                ]
+              },
+              "minContains": 1,
+              "maxContains": 1
+            }
+          ]
+        },
+        "orotitan_gaps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/orotitanGap"
+          }
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "orotitan_status",
+        "orotitan_gate_results",
+        "orotitan_gaps"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "orotitan_status": {
+                "const": "YES"
+              }
+            },
+            "required": [
+              "orotitan_status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "orotitan_gate_results": {
+                "allOf": [
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "CERTIFICATION_GATE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "MOAT_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "RUNWAY_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "RETURN_QUALITY_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "CASH_ECONOMICS_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "CAPITAL_ALLOCATION_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "MANAGEMENT_GOVERNANCE_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "RESILIENCE_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "MATERIAL_WEAK_LINK_GATE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  },
+                  {
+                    "contains": {
+                      "type": "object",
+                      "properties": {
+                        "gate": {
+                          "const": "VALUATION_ELITE"
+                        },
+                        "state": {
+                          "const": "PASS"
+                        }
+                      },
+                      "required": [
+                        "gate",
+                        "state"
+                      ]
+                    },
+                    "minContains": 1,
+                    "maxContains": 1
+                  }
+                ]
+              },
+              "orotitan_gaps": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "operationalState": {
+      "type": "object",
+      "properties": {
+        "dossier_readiness": {
+          "enum": [
+            "READY",
+            "PARTIALLY_READY",
+            "NOT_READY"
+          ]
+        },
+        "opportunity_path": {
+          "enum": [
+            "DIRECT",
+            "PREPARED"
+          ]
+        },
+        "next_action": {
+          "enum": [
+            "INVESTABLE_NOW",
+            "WAIT_FOR_PRICE",
+            "WAIT_FOR_EVIDENCE",
+            "REFRESH_REQUIRED",
+            "REJECT"
+          ]
+        },
+        "price_ladder_status": {
+          "enum": [
+            "CURRENT",
+            "REFRESH_REQUIRED",
+            "INVALIDATED",
+            "NOT_BUILT"
+          ]
+        },
+        "thesis_invalidation_triggers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "activation_check_required": {
+          "type": "boolean"
+        },
+        "refresh_class": {
+          "enum": [
+            "PRICE_ONLY_DELTA",
+            "ROUTINE_FUNDAMENTAL_DELTA",
+            "FULL_REFRESH_REQUIRED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "orotitan": {
+          "$ref": "#/$defs/orotitan"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "dossier_readiness",
+        "opportunity_path",
+        "next_action",
+        "price_ladder_status",
+        "thesis_invalidation_triggers",
+        "activation_check_required",
+        "refresh_class",
+        "orotitan"
+      ]
+    },
+    "l2ResearchFundamentals": {
+      "type": "object",
+      "properties": {
+        "discovery_record": {
+          "$ref": "#/$defs/discoveryRecord"
+        },
+        "fundamental_states": {
+          "$ref": "#/$defs/fundamentalStates"
+        },
+        "analytical_metrics": {
+          "$ref": "#/$defs/analyticalMetrics"
+        },
+        "certification": {
+          "$ref": "#/$defs/certification"
+        },
+        "business_quality": {
+          "$ref": "#/$defs/businessQuality"
+        }
+      },
+      "additionalProperties": false
+    },
+    "l3InvestmentValuation": {
+      "type": "object",
+      "properties": {
+        "valuation": {
+          "$ref": "#/$defs/valuation"
+        },
+        "investment": {
+          "$ref": "#/$defs/investment"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "valuation",
+        "investment"
+      ]
+    },
+    "traceability": {
+      "type": "object",
+      "properties": {
+        "report_id": {
+          "$ref": "#/$defs/id"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "report_id",
+        "evidence_ids",
+        "calculation_ids"
+      ]
+    },
+    "researchSnapshot": {
+      "type": "object",
+      "properties": {
+        "snapshot_id": {
+          "$ref": "#/$defs/id"
+        },
+        "report_id": {
+          "$ref": "#/$defs/id"
+        },
+        "issuer_id": {
+          "$ref": "#/$defs/id"
+        },
+        "security_id": {
+          "$ref": "#/$defs/id"
+        },
+        "execution_mode": {
+          "enum": [
+            "DISCOVER",
+            "ANALYZE",
+            "DISCOVER + ANALYZE",
+            "REFRESH",
+            "ACTIVATION CHECK"
+          ]
+        },
+        "data_lock": {
+          "$ref": "#/$defs/dataLock"
+        },
+        "versions": {
+          "$ref": "#/$defs/versions"
+        },
+        "l2_research_fundamentals": {
+          "$ref": "#/$defs/l2ResearchFundamentals"
+        },
+        "l3_investment_valuation": {
+          "$ref": "#/$defs/l3InvestmentValuation"
+        },
+        "l4_operational_state": {
+          "$ref": "#/$defs/operationalState"
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceability"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "snapshot_id",
+        "report_id",
+        "issuer_id",
+        "security_id",
+        "execution_mode",
+        "data_lock",
+        "versions",
+        "l2_research_fundamentals",
+        "traceability"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "execution_mode": {
+                "const": "DISCOVER"
+              }
+            },
+            "required": [
+              "execution_mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "required": [
+                  "discovery_record"
+                ],
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "fundamental_states"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "analytical_metrics"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "certification"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "business_quality"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "l3_investment_valuation"
+                  ]
+                },
+                {
+                  "required": [
+                    "l4_operational_state"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution_mode": {
+                "enum": [
+                  "ANALYZE",
+                  "DISCOVER + ANALYZE",
+                  "REFRESH",
+                  "ACTIVATION CHECK"
+                ]
+              }
+            },
+            "required": [
+              "execution_mode"
+            ]
+          },
+          "then": {
+            "required": [
+              "l3_investment_valuation",
+              "l4_operational_state"
+            ],
+            "properties": {
+              "l2_research_fundamentals": {
+                "required": [
+                  "fundamental_states",
+                  "analytical_metrics",
+                  "certification",
+                  "business_quality"
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "certification": {
+                    "properties": {
+                      "score_permission": {
+                        "const": "SUSPENDED"
+                      }
+                    },
+                    "required": [
+                      "score_permission"
+                    ]
+                  }
+                },
+                "required": [
+                  "certification"
+                ]
+              }
+            },
+            "required": [
+              "l2_research_fundamentals"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "business_quality": {
+                    "properties": {
+                      "oqs_raw": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "weak_link_cap": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "oqs": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "quality_class": {
+                        "const": "NOT_AVAILABLE"
+                      }
+                    }
+                  }
+                }
+              },
+              "l3_investment_valuation": {
+                "properties": {
+                  "investment": {
+                    "properties": {
+                      "investment_raw": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "investment_score": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "investment_class": {
+                        "const": "NOT_AVAILABLE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "allOf": [
+              {
+                "properties": {
+                  "l2_research_fundamentals": {
+                    "properties": {
+                      "certification": {
+                        "properties": {
+                          "score_permission": {
+                            "const": "SUSPENDED"
+                          }
+                        },
+                        "required": [
+                          "score_permission"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "certification"
+                    ]
+                  }
+                },
+                "required": [
+                  "l2_research_fundamentals"
+                ]
+              },
+              {
+                "properties": {
+                  "l3_investment_valuation": {
+                    "properties": {
+                      "valuation": {
+                        "properties": {
+                          "valuation_reliability": {
+                            "enum": [
+                              "HIGH",
+                              "MEDIUM",
+                              "LOW"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "valuation_reliability"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "valuation"
+                    ]
+                  }
+                },
+                "required": [
+                  "l3_investment_valuation"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "ovs": {
+                        "const": "NOT_AVAILABLE"
+                      }
+                    },
+                    "required": [
+                      "ovs"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "allOf": [
+              {
+                "properties": {
+                  "l2_research_fundamentals": {
+                    "properties": {
+                      "certification": {
+                        "properties": {
+                          "score_permission": {
+                            "const": "SUSPENDED"
+                          }
+                        },
+                        "required": [
+                          "score_permission"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "certification"
+                    ]
+                  }
+                },
+                "required": [
+                  "l2_research_fundamentals"
+                ]
+              },
+              {
+                "properties": {
+                  "l3_investment_valuation": {
+                    "properties": {
+                      "valuation": {
+                        "properties": {
+                          "valuation_reliability": {
+                            "const": "NOT_ASSESSABLE"
+                          }
+                        },
+                        "required": [
+                          "valuation_reliability"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "valuation"
+                    ]
+                  }
+                },
+                "required": [
+                  "l3_investment_valuation"
+                ]
+              }
+            ]
+          },
+          "then": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "ovs": {
+                        "const": "NOT_ASSESSABLE"
+                      }
+                    },
+                    "required": [
+                      "ovs"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "certification": {
+                    "properties": {
+                      "business_research_status": {
+                        "const": "NOT_CERTIFIED"
+                      }
+                    },
+                    "required": [
+                      "business_research_status"
+                    ]
+                  }
+                },
+                "required": [
+                  "certification"
+                ]
+              }
+            },
+            "required": [
+              "l2_research_fundamentals"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "business_quality": {
+                    "properties": {
+                      "oqs": {
+                        "const": "NOT_AVAILABLE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "valuation_reliability": {
+                        "const": "NOT_ASSESSABLE"
+                      }
+                    },
+                    "required": [
+                      "valuation_reliability"
+                    ]
+                  }
+                },
+                "required": [
+                  "valuation"
+                ]
+              }
+            },
+            "required": [
+              "l3_investment_valuation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "investment": {
+                    "properties": {
+                      "investment_raw": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "investment_score": {
+                        "const": "NOT_AVAILABLE"
+                      },
+                      "investment_class": {
+                        "const": "NOT_AVAILABLE"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "investment": {
+                    "properties": {
+                      "investment_score": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "investment_score"
+                    ]
+                  }
+                },
+                "required": [
+                  "investment"
+                ]
+              }
+            },
+            "required": [
+              "l3_investment_valuation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "business_quality": {
+                    "properties": {
+                      "oqs": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "oqs"
+                    ]
+                  }
+                },
+                "required": [
+                  "business_quality"
+                ]
+              },
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "ovs": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "ovs"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l4_operational_state": {
+                "properties": {
+                  "orotitan": {
+                    "properties": {
+                      "orotitan_status": {
+                        "const": "YES"
+                      }
+                    },
+                    "required": [
+                      "orotitan_status"
+                    ]
+                  }
+                },
+                "required": [
+                  "orotitan"
+                ]
+              }
+            },
+            "required": [
+              "l4_operational_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l2_research_fundamentals": {
+                "properties": {
+                  "certification": {
+                    "properties": {
+                      "business_research_status": {
+                        "const": "CERTIFIED"
+                      },
+                      "investment_conclusion_status": {
+                        "const": "CERTIFIED"
+                      },
+                      "score_permission": {
+                        "const": "ALLOWED"
+                      }
+                    },
+                    "required": [
+                      "business_research_status",
+                      "investment_conclusion_status",
+                      "score_permission"
+                    ]
+                  }
+                }
+              },
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "valuation_reliability": {
+                        "const": "HIGH"
+                      }
+                    },
+                    "required": [
+                      "valuation_reliability"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "properties": {
+                      "price_ladder": {
+                        "properties": {
+                          "potential_orotitan_price_zone": {
+                            "type": "object"
+                          }
+                        },
+                        "required": [
+                          "potential_orotitan_price_zone"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "price_ladder"
+                    ]
+                  }
+                },
+                "required": [
+                  "valuation"
+                ]
+              }
+            },
+            "required": [
+              "l3_investment_valuation"
+            ]
+          },
+          "then": {
+            "properties": {
+              "l4_operational_state": {
+                "properties": {
+                  "orotitan": {
+                    "properties": {
+                      "orotitan_gate_results": {
+                        "allOf": [
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "CERTIFICATION_GATE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "MOAT_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "RUNWAY_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "RETURN_QUALITY_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "CASH_ECONOMICS_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "CAPITAL_ALLOCATION_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "MANAGEMENT_GOVERNANCE_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "RESILIENCE_ELITE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          },
+                          {
+                            "contains": {
+                              "type": "object",
+                              "properties": {
+                                "gate": {
+                                  "const": "MATERIAL_WEAK_LINK_GATE"
+                                },
+                                "state": {
+                                  "const": "PASS"
+                                }
+                              },
+                              "required": [
+                                "gate",
+                                "state"
+                              ]
+                            },
+                            "minContains": 1,
+                            "maxContains": 1
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "l4_operational_state": {
+                "properties": {
+                  "dossier_readiness": {
+                    "const": "READY"
+                  }
+                },
+                "required": [
+                  "dossier_readiness"
+                ]
+              }
+            },
+            "required": [
+              "l4_operational_state"
+            ]
+          },
+          "then": {
+            "properties": {
+              "data_lock": {
+                "properties": {
+                  "last_full_research_date": {
+                    "$ref": "#/$defs/date"
+                  }
+                }
+              },
+              "l2_research_fundamentals": {
+                "properties": {
+                  "certification": {
+                    "properties": {
+                      "business_research_status": {
+                        "enum": [
+                          "CERTIFIED",
+                          "CERTIFIED_WITH_LIMITATIONS"
+                        ]
+                      },
+                      "hard_blockers": {
+                        "maxItems": 0
+                      },
+                      "critical_unknowns": {
+                        "maxItems": 0
+                      }
+                    },
+                    "required": [
+                      "business_research_status",
+                      "hard_blockers",
+                      "critical_unknowns"
+                    ]
+                  }
+                }
+              },
+              "l4_operational_state": {
+                "properties": {
+                  "price_ladder_status": {
+                    "const": "CURRENT"
+                  }
+                }
+              },
+              "l3_investment_valuation": {
+                "properties": {
+                  "valuation": {
+                    "required": [
+                      "price_ladder"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "marketPrice": {
+      "type": "object",
+      "properties": {
+        "security_id": {
+          "$ref": "#/$defs/id"
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "as_of": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source_reference": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "security_id",
+        "price",
+        "currency",
+        "as_of",
+        "source_reference"
+      ]
+    },
+    "activationEvent": {
+      "type": "object",
+      "properties": {
+        "event_id": {
+          "$ref": "#/$defs/id"
+        },
+        "security_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_snapshot_id": {
+          "$ref": "#/$defs/id"
+        },
+        "detected_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "market_price": {
+          "type": "number",
+          "minimum": 0
+        },
+        "currency": {
+          "$ref": "#/$defs/currency"
+        },
+        "crossed_zone": {
+          "enum": [
+            "INVESTABLE_PRICE_ZONE",
+            "STRONG_OPPORTUNITY_ZONE",
+            "POTENTIAL_OROTITAN_PRICE_ZONE"
+          ]
+        },
+        "activation_check_required": {
+          "const": true
+        },
+        "market_event_is_certified_snapshot": {
+          "const": false
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "event_id",
+        "security_id",
+        "source_snapshot_id",
+        "detected_at",
+        "market_price",
+        "currency",
+        "crossed_zone",
+        "activation_check_required",
+        "market_event_is_certified_snapshot"
+      ]
+    }
+  },
+  "x-orotitan-authority": {
+    "research_freeze": "RESEARCH FREEZE V1.0",
+    "discovery_playbook": "01_DISCOVERY_PLAYBOOK_V1.md",
+    "analysis_standard": "01_ANALYSIS_STANDARD_V1.md",
+    "master_prompt": "02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md",
+    "master_prompt_sha256": "d3b44f0645f766d504a0b937736520048a054e533df59366c90554e5345a0dab",
+    "phase3_regression": "03_VALIDATION_REGRESSION_V1.md"
+  },
+  "x-orotitan-layer-model": {
+    "L1": "IDENTITY",
+    "L2": "RESEARCH / FUNDAMENTALS",
+    "L3": "INVESTMENT / VALUATION",
+    "L4": "OPERATIONAL STATE"
+  },
+  "x-orotitan-null-semantics": {
+    "policy": "Semantic nulls are not encoded as 0 or empty string. V1 uses explicit state tokens where a value can be unavailable or methodologically inapplicable.",
+    "states": [
+      "UNKNOWN",
+      "NOT_APPLICABLE",
+      "NOT_ASSESSABLE",
+      "MISSING",
+      "NOT_AVAILABLE"
+    ],
+    "json_null": "Not used for canonical semantic fields in V1; optional whole objects are omitted rather than set to null."
+  },
+  "x-orotitan-computed-vs-stored": {
+    "STORED_FROM_RESEARCH": [
+      "dimension judgments",
+      "MOAT/RUNWAY/ROIC/FORENSIC states",
+      "certification judgments",
+      "Elite gate judgments and rationale",
+      "readiness",
+      "opportunity path",
+      "next action"
+    ],
+    "DETERMINISTICALLY_RECOMPUTABLE": [
+      "OQS_RAW",
+      "WEAK_LINK_CAP",
+      "OQS",
+      "OVS",
+      "INVESTMENT_RAW",
+      "INVESTMENT_SCORE",
+      "OROTITAN_STATUS from terminal gates",
+      "POTENTIAL_OROTITAN_MAX_PRICE when components are available"
+    ]
+  },
+  "x-orotitan-deterministic-rules": {
+    "OQS_RAW": "0.20*MOAT_SCORE + 0.15*RUNWAY_SCORE + 0.20*RETURN_QUALITY_SCORE + 0.10*CASH_ECONOMICS_SCORE + 0.15*CAPITAL_ALLOCATION_SCORE + 0.10*MANAGEMENT_GOVERNANCE_SCORE + 0.10*RESILIENCE_RISK_SCORE",
+    "WEAK_LINK_CAP": "min(applicable dimension scores) + 25, capped at 100",
+    "OQS": "min(OQS_RAW, WEAK_LINK_CAP)",
+    "OVS_ANCHORS_DELTA_ER_PP": [
+      [
+        -10,
+        0
+      ],
+      [
+        -8,
+        10
+      ],
+      [
+        -6,
+        20
+      ],
+      [
+        -4,
+        35
+      ],
+      [
+        -2,
+        50
+      ],
+      [
+        0,
+        70
+      ],
+      [
+        2,
+        82
+      ],
+      [
+        4,
+        90
+      ],
+      [
+        6,
+        95
+      ],
+      [
+        8,
+        100
+      ]
+    ],
+    "OVS_INTERPOLATION": "linear between anchors; <=-10pp maps 0; >=+8pp maps 100",
+    "RETURN_COMPONENT": "min(0.60*C + 0.40*N, N + 15)",
+    "MOS_CAPS": {
+      "ROBUST": 100,
+      "ADEQUATE": 90,
+      "THIN": 75,
+      "NONE": 55,
+      "NOT_ASSESSABLE": "no OVS"
+    },
+    "VALUATION_RELIABILITY_CAPS": {
+      "HIGH": 100,
+      "MEDIUM": 95,
+      "LOW": 80,
+      "NOT_ASSESSABLE": "no OVS"
+    },
+    "OVS": "min(RETURN_COMPONENT, MOS_CAP, VALUATION_RELIABILITY_CAP)",
+    "INVESTMENT_RAW": "0.70*OQS + 0.30*OVS",
+    "INVESTMENT_SCORE": "min(INVESTMENT_RAW, OQS, OVS + 15)",
+    "OROTITAN_STATUS": "YES iff full certification and every Elite gate passes and MATERIAL_WEAK_LINK_GATE passes (meaning MATERIAL_WEAK_LINK = NO)",
+    "POTENTIAL_OROTITAN_MAX_PRICE": "min(P_ER, P_NO_EXPANSION, P_MOS, P_IMPLIED) when all non-valuation OroTitan gates pass and valuation reliability is HIGH"
+  },
+  "x-orotitan-server-recomputation-policy": "Deterministic formulas must have one canonical server-side implementation semantically identical to the frozen Master Prompt. Frontends may display results but must not implement divergent scoring logic."
+}
