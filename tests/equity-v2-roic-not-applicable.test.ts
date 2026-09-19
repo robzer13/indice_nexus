@@ -366,3 +366,200 @@ test("V2 I3-B persistence boundary preserves exact ROIIC NOT_INTERPRETABLE", asy
   assert.equal(called, true);
   assert.equal(result.status, "INSERTED");
 });
+
+
+const compatV203Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.3.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
+const compatV204Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.4.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
+
+function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string, Record<string, unknown>> {
+  return schemaObject.$defs as Record<string, Record<string, unknown>>;
+}
+
+function metricProperties(schemaObject: Record<string, unknown>): Record<string, unknown> {
+  const defs = schemaDefinitions(schemaObject);
+  return (defs.analyticalMetrics.properties as Record<string, unknown>);
+}
+
+function deterministicContract(result: ReturnType<typeof validateV2ResearchSnapshotForPersistence>): Record<string, unknown> {
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (!result.ok) throw new Error("validation unexpectedly failed");
+  return result.canonicalContract.deterministic as Record<string, unknown>;
+}
+
+function assertI2DeterministicEqual(
+  left: ReturnType<typeof validateV2ResearchSnapshotForPersistence>,
+  right: ReturnType<typeof validateV2ResearchSnapshotForPersistence>,
+): void {
+  const a = deterministicContract(left);
+  const b = deterministicContract(right);
+  for (const key of ["oqsRaw", "weakLinkCap", "oqs", "ovs", "investmentRaw", "investmentScore", "orotitanStatus"]) {
+    assert.deepEqual(a[key], b[key], `I2 deterministic output changed: ${key}`);
+  }
+}
+
+test("V2.0.4 schema is a strict field-local additive successor to V2.0.3", () => {
+  const expected = JSON.parse(JSON.stringify(compatV203Schema)) as Record<string, unknown>;
+  expected.$id = "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.4";
+  expected.title = "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.4";
+  expected.description = compatV204Schema.description;
+
+  const expectedMetrics = metricProperties(expected);
+  const actualMetrics = metricProperties(compatV204Schema);
+  expectedMetrics.standard_roic = actualMetrics.standard_roic;
+
+  assert.deepEqual(compatV204Schema, expected);
+  assert.deepEqual(schemaDefinitions(compatV204Schema).specialState, schemaDefinitions(compatV203Schema).specialState);
+  assert.deepEqual(schemaDefinitions(compatV204Schema).returnValue, schemaDefinitions(compatV203Schema).returnValue);
+  assert.deepEqual(actualMetrics.roiic, metricProperties(compatV203Schema).roiic);
+});
+
+test("V2.0.4 STANDARD_ROIC compatibility preserves all pre-existing returnValue forms", () => {
+  const values: unknown[] = [
+    12.5,
+    { min: 8, max: 14 },
+    "UNKNOWN",
+    "NOT_APPLICABLE",
+    "NOT_ASSESSABLE",
+    "MISSING",
+    "NOT_AVAILABLE",
+  ];
+  for (const value of values) {
+    const snapshot = v2Analyze("STABLE");
+    analyticalMetrics(snapshot).standard_roic = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : JSON.stringify(value) + ": " + result.errors.join(" | "));
+  }
+});
+
+test("V2.0.4 admits and preserves canonical STANDARD_ROIC NOT_INTERPRETABLE", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).standard_roic = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  assert.equal(analyticalMetrics(snapshot).standard_roic, "NOT_INTERPRETABLE");
+  if (result.ok) assert.equal(analyticalMetrics(result.snapshot).standard_roic, "NOT_INTERPRETABLE");
+});
+
+test("V2.0.4 simultaneous STANDARD_ROIC and ROIIC NOT_INTERPRETABLE are preserved exactly", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).standard_roic = "NOT_INTERPRETABLE";
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) {
+    assert.equal(analyticalMetrics(result.snapshot).standard_roic, "NOT_INTERPRETABLE");
+    assert.equal(analyticalMetrics(result.snapshot).roiic, "NOT_INTERPRETABLE");
+  }
+});
+
+test("V2.0.4 keeps arbitrary STANDARD_ROIC strings invalid", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).standard_roic = "BROKEN";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.4 keeps arbitrary ROIIC strings invalid", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roiic = "BROKEN";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("frozen V1 still rejects STANDARD_ROIC NOT_INTERPRETABLE", () => {
+  const core = analyzeCore("STABLE");
+  analyticalMetrics(core).standard_roic = "NOT_INTERPRETABLE";
+  const result = validateResearchSnapshotForPersistence(core, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.4 NOT_INTERPRETABLE remains invalid outside STANDARD_ROIC and ROIIC", () => {
+  const cases: Array<[string, (snapshot: Record<string, unknown>) => void]> = [
+    ["all_in_roic", (snapshot) => { analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE"; }],
+    ["roic_ex_goodwill", (snapshot) => { analyticalMetrics(snapshot).roic_ex_goodwill = "NOT_INTERPRETABLE"; }],
+    ["rd_adjusted_roic", (snapshot) => { analyticalMetrics(snapshot).rd_adjusted_roic = "NOT_INTERPRETABLE"; }],
+    ["share_count_cagr", (snapshot) => { analyticalMetrics(snapshot).share_count_cagr = "NOT_INTERPRETABLE"; }],
+    ["primary_expected_return", (snapshot) => {
+      const l3 = snapshot.l3_investment_valuation as Record<string, unknown>;
+      (l3.valuation as Record<string, unknown>).primary_expected_return = "NOT_INTERPRETABLE";
+    }],
+    ["moat_score", (snapshot) => {
+      const l2 = snapshot.l2_research_fundamentals as Record<string, unknown>;
+      (l2.business_quality as Record<string, unknown>).moat_score = "NOT_INTERPRETABLE";
+    }],
+  ];
+
+  for (const [label, mutate] of cases) {
+    const snapshot = v2Analyze("STABLE");
+    mutate(snapshot);
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, false, `${label} unexpectedly admitted NOT_INTERPRETABLE`);
+    if (!result.ok) assert.equal(result.stage, "schema");
+  }
+});
+
+test("V2.0.4 STANDARD_ROIC compatibility does not change I2 deterministic outputs", () => {
+  const numericSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(numericSnapshot).standard_roic = 12;
+  const notInterpretableSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(notInterpretableSnapshot).standard_roic = "NOT_INTERPRETABLE";
+  const numeric = validateV2ResearchSnapshotForPersistence(numericSnapshot, dossierId);
+  const notInterpretable = validateV2ResearchSnapshotForPersistence(notInterpretableSnapshot, dossierId);
+  assertI2DeterministicEqual(numeric, notInterpretable);
+});
+
+test("V2.0.4 ROIIC regression does not change I2 deterministic outputs", () => {
+  const numericSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(numericSnapshot).roiic = 12;
+  const notInterpretableSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(notInterpretableSnapshot).roiic = "NOT_INTERPRETABLE";
+  const numeric = validateV2ResearchSnapshotForPersistence(numericSnapshot, dossierId);
+  const notInterpretable = validateV2ResearchSnapshotForPersistence(notInterpretableSnapshot, dossierId);
+  assertI2DeterministicEqual(numeric, notInterpretable);
+});
+
+test("V2 I3-B boundary preserves simultaneous STANDARD_ROIC and ROIIC NOT_INTERPRETABLE", async () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).standard_roic = "NOT_INTERPRETABLE";
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      const persisted = analyticalMetrics(args.p_canonical_payload as Record<string, unknown>);
+      assert.equal(persisted.standard_roic, "NOT_INTERPRETABLE");
+      assert.equal(persisted.roiic, "NOT_INTERPRETABLE");
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
+
+test("V2.0.4 additive compatibility requires no historical payload rewrite", () => {
+  const v2Historical = v2Analyze("STABLE");
+  analyticalMetrics(v2Historical).standard_roic = 12;
+  analyticalMetrics(v2Historical).roiic = 10;
+  assert.equal(validateV2ResearchSnapshotForPersistence(v2Historical, dossierId).ok, true);
+
+  const v1Historical = analyzeCore("STABLE");
+  analyticalMetrics(v1Historical).standard_roic = 12;
+  analyticalMetrics(v1Historical).roiic = 10;
+  assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
+});
