@@ -282,3 +282,87 @@ test("insurance overlay uses NOT_APPLICABLE without issuer-specific code", () =>
   assert.equal(classification.business_model_primary, "INSURANCE_UNDERWRITING");
   assert.equal(validateV2ResearchSnapshotForPersistence(snapshot, dossierId).ok, true);
 });
+
+
+function analyticalMetrics(snapshot: Record<string, unknown>): Record<string, unknown> {
+  return ((snapshot.l2_research_fundamentals as Record<string, unknown>).analytical_metrics) as Record<string, unknown>;
+}
+
+test("V2.0.3 ROIIC compatibility preserves all pre-existing returnValue forms", () => {
+  const values: unknown[] = [
+    12.5,
+    { min: 8, max: 14 },
+    "UNKNOWN",
+    "NOT_APPLICABLE",
+    "NOT_ASSESSABLE",
+    "MISSING",
+    "NOT_AVAILABLE",
+  ];
+  for (const value of values) {
+    const snapshot = v2Analyze("STABLE");
+    analyticalMetrics(snapshot).roiic = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : JSON.stringify(value) + ": " + result.errors.join(" | "));
+  }
+});
+
+test("V2.0.3 admits and preserves canonical ROIIC NOT_INTERPRETABLE", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  assert.equal(analyticalMetrics(snapshot).roiic, "NOT_INTERPRETABLE");
+  if (result.ok) assert.equal(analyticalMetrics(result.snapshot).roiic, "NOT_INTERPRETABLE");
+});
+
+test("V2.0.3 keeps arbitrary ROIIC strings invalid", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roiic = "BROKEN";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("frozen V1 validator remains unchanged and rejects ROIIC NOT_INTERPRETABLE", () => {
+  const core = analyzeCore("STABLE");
+  analyticalMetrics(core).roiic = "NOT_INTERPRETABLE";
+  const result = validateResearchSnapshotForPersistence(core, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("ROIIC NOT_INTERPRETABLE compatibility does not change I2 deterministic reconciliation", () => {
+  const numericSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(numericSnapshot).roiic = 12;
+  const notInterpretableSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(notInterpretableSnapshot).roiic = "NOT_INTERPRETABLE";
+  const numeric = validateV2ResearchSnapshotForPersistence(numericSnapshot, dossierId);
+  const notInterpretable = validateV2ResearchSnapshotForPersistence(notInterpretableSnapshot, dossierId);
+  assert.equal(numeric.ok, true, numeric.ok ? "" : numeric.errors.join(" | "));
+  assert.equal(notInterpretable.ok, true, notInterpretable.ok ? "" : notInterpretable.errors.join(" | "));
+  if (numeric.ok && notInterpretable.ok) assert.deepEqual(notInterpretable.canonicalContract, numeric.canonicalContract);
+});
+
+test("V2 I3-B persistence boundary preserves exact ROIIC NOT_INTERPRETABLE", async () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      assert.equal(analyticalMetrics(args.p_canonical_payload as Record<string, unknown>).roiic, "NOT_INTERPRETABLE");
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
