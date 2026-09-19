@@ -26,7 +26,7 @@ addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateOverlay = ajv.compile(schema);
 
 const v1CompatSchema = JSON.parse(
-  readFileSync(new URL("../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.2.json", import.meta.url), "utf8"),
+  readFileSync(new URL("../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.3.json", import.meta.url), "utf8"),
 ) as JsonObject;
 const v1CompatAjv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
 addFormats(v1CompatAjv as unknown as Parameters<typeof addFormats>[0]);
@@ -42,7 +42,7 @@ for (const keyword of [
 ]) v1CompatAjv.addKeyword({ keyword });
 v1CompatAjv.addSchema(v1CompatSchema);
 const validateV1CompatCore = v1CompatAjv.compile({
-  $ref: "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.2#/$defs/researchSnapshot",
+  $ref: "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.3#/$defs/researchSnapshot",
 }) as ResearchSnapshotSchemaValidator;
 
 function formatAjvErrors(errors: ErrorObject[] | null | undefined): string[] {
