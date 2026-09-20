@@ -4,11 +4,11 @@ export const V2_FROZEN_CONTRACT_SET_SHA256 =
 export const V2_COMPATIBILITY_SEMANTIC_BASE = {
   authorityName: "OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.9",
   authorityVersion: "2.0.9",
-  authoritySha256: "bfd5190fe561a12b95041b667a7be4c09c6ac903e1f0914dcec89d9250c72a81",
+  authoritySha256: "5caf10e16c895abb23ee73fa8d9f0da99664c0699d0a84d3a7f68b7a082946bc",
   schemaName: "04_SCREENER_SCHEMA_V1_COMPAT_V2.0.9",
   schemaVersion: "2.0.9",
-  schemaSha256: "26a5e255508564fa7abff1615a5eaa45de95dd0f4f5ebffb65128f5c669c9a50",
-  validatorSha256: "78dd1d6e34b231a73ed490f39cfdc514d771e5d41f4276920824e7ba9b53386d",
+  schemaSha256: "edda338d50d3efcd98c21f463f3c4990dc42a1d1d71de5cd38be61788c0dd84d",
+  validatorSha256: "c119257c6201e4a5c13cfb9085e1479e5fa238d7300c1f1c3cd588f260fd017b",
 } as const;
 
 export type CompatibilitySemanticProjection = {
