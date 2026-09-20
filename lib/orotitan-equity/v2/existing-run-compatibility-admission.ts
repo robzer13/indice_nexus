@@ -2,13 +2,13 @@ export const V2_FROZEN_CONTRACT_SET_SHA256 =
   "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
 
 export const V2_COMPATIBILITY_SEMANTIC_BASE = {
-  authorityName: "OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.9",
-  authorityVersion: "2.0.9",
-  authoritySha256: "5caf10e16c895abb23ee73fa8d9f0da99664c0699d0a84d3a7f68b7a082946bc",
-  schemaName: "04_SCREENER_SCHEMA_V1_COMPAT_V2.0.9",
-  schemaVersion: "2.0.9",
-  schemaSha256: "edda338d50d3efcd98c21f463f3c4990dc42a1d1d71de5cd38be61788c0dd84d",
-  validatorSha256: "c119257c6201e4a5c13cfb9085e1479e5fa238d7300c1f1c3cd588f260fd017b",
+  authorityName: "OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.10",
+  authorityVersion: "2.0.10",
+  authoritySha256: "c48fb66625b0e86980a47167a3f3e5fee10a0a2a5ec97ea00c7545f2f3171ccd",
+  schemaName: "04_SCREENER_SCHEMA_V1_COMPAT_V2.0.10",
+  schemaVersion: "2.0.10",
+  schemaSha256: "44a958454b2a6d32ca681fc9980cab4f5c8fa9ce8fa938b247e5be336279d2f7",
+  validatorSha256: "596e12b7283b4d08d18e650cd7f59a3ef2c45eb1e06b1a74feef4c6ae558f03a",
 } as const;
 
 export type CompatibilitySemanticProjection = {
@@ -75,6 +75,7 @@ const authorizedSemanticRules = new Set([
   "l2_research_fundamentals.fundamental_states.roic_trend\u0000UNKNOWN",
   "l2_research_fundamentals.analytical_metrics.roic_ex_goodwill\u0000NOT_INTERPRETABLE",
   "l2_research_fundamentals.analytical_metrics.rd_adjusted_roic\u0000NOT_INTERPRETABLE",
+  "l2_research_fundamentals.analytical_metrics.all_in_roic\u0000NOT_INTERPRETABLE",
 ]);
 
 const RETURN_HORIZON_FIELD =
