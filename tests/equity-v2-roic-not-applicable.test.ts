@@ -507,10 +507,9 @@ test("frozen V1 still rejects STANDARD_ROIC NOT_INTERPRETABLE", () => {
   if (!result.ok) assert.equal(result.stage, "schema");
 });
 
-test("V2.0.6 NOT_INTERPRETABLE remains invalid outside authorized return fields", () => {
+test("V2.0.9 NOT_INTERPRETABLE remains invalid outside authorized return fields", () => {
   const cases: Array<[string, (snapshot: Record<string, unknown>) => void]> = [
     ["all_in_roic", (snapshot) => { analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE"; }],
-    ["rd_adjusted_roic", (snapshot) => { analyticalMetrics(snapshot).rd_adjusted_roic = "NOT_INTERPRETABLE"; }],
     ["share_count_cagr", (snapshot) => { analyticalMetrics(snapshot).share_count_cagr = "NOT_INTERPRETABLE"; }],
     ["primary_expected_return", (snapshot) => {
       const l3 = snapshot.l3_investment_valuation as Record<string, unknown>;
