@@ -32,6 +32,11 @@ function base(): ExistingRunCompatibilityAdmissionInput {
         targetValue: "NOT_INTERPRETABLE",
       },
       {
+        targetField: "l2_research_fundamentals.analytical_metrics.rd_adjusted_roic",
+        sourceValue: "NOT_INTERPRETABLE",
+        targetValue: "NOT_INTERPRETABLE",
+      },
+      {
         targetField: "l3_investment_valuation.valuation.return_horizon",
         sourceValue: 4.7835616438356166,
         targetValue: 4.7835616438356166,
@@ -54,13 +59,13 @@ function sha256(path: string): string {
   return createHash("sha256").update(readFileSync(new URL(path, import.meta.url))).digest("hex");
 }
 
-test("V2.0.8 semantic base uses exact V2.0.8 authority/schema/validator bytes", () => {
+test("V2.0.9 semantic base uses exact V2.0.9 authority/schema/validator bytes", () => {
   assert.equal(
-    sha256("../contracts/orotitan-equity/v2/OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.8.md"),
+    sha256("../contracts/orotitan-equity/v2/OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.9.md"),
     V2_COMPATIBILITY_SEMANTIC_BASE.authoritySha256,
   );
   assert.equal(
-    sha256("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.8.json"),
+    sha256("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.9.json"),
     V2_COMPATIBILITY_SEMANTIC_BASE.schemaSha256,
   );
   assert.equal(
@@ -102,7 +107,7 @@ test("TEST D Integration absent but Integration artifacts exist is rejected", ()
   if (!result.admitted) assert.ok(result.failures.includes("PRE_INTEGRATION_ARTIFACTS_ALREADY_EXIST"));
 });
 
-test("TEST E valid existing Integration checkpoint routes through V2.0.8-compatible path", () => {
+test("TEST E valid existing Integration checkpoint routes through V2.0.9-compatible path", () => {
   const input = base();
   input.runStatus = "BLOCKED";
   input.currentStage = "INTEGRATION";
@@ -193,13 +198,14 @@ test("TEST L compatibility admission requiring analytical mutation is rejected",
   if (!result.admitted) assert.ok(result.failures.includes("ANALYTICAL_ARTIFACT_MUTATION_REQUIRED"));
 });
 
-test("all V2.0.2-V2.0.8 field-local semantic rules remain admissible without broadening", () => {
+test("all V2.0.2-V2.0.9 field-local semantic rules remain admissible without broadening", () => {
   const rules = [
     ["l2_research_fundamentals.fundamental_states.roic_trend", "NOT_APPLICABLE"],
     ["l2_research_fundamentals.analytical_metrics.roiic", "NOT_INTERPRETABLE"],
     ["l2_research_fundamentals.analytical_metrics.standard_roic", "NOT_INTERPRETABLE"],
     ["l2_research_fundamentals.fundamental_states.roic_trend", "UNKNOWN"],
     ["l2_research_fundamentals.analytical_metrics.roic_ex_goodwill", "NOT_INTERPRETABLE"],
+    ["l2_research_fundamentals.analytical_metrics.rd_adjusted_roic", "NOT_INTERPRETABLE"],
   ] as const;
 
   for (const [targetField, value] of rules) {
@@ -276,4 +282,40 @@ test("V2.0.8 rejects NaN return_horizon without coercing it", () => {
   const result = evaluateExistingRunCompatibilityAdmission(input);
   assert.equal(result.admitted, false);
   if (!result.admitted) assert.ok(result.failures.includes("SEMANTIC_COERCION_FORBIDDEN"));
+});
+
+
+test("V2.0.9 admits exact RD_ADJUSTED_ROIC NOT_INTERPRETABLE for a durable blocked Integration checkpoint", () => {
+  const input = base();
+  input.runStatus = "BLOCKED";
+  input.currentStage = "INTEGRATION";
+  input.integrationStage = {
+    lifecycleStatus: "BLOCKED",
+    activeManifestKind: "CHECKPOINT",
+    activeManifestDurable: true,
+    sameStageRevision: true,
+  };
+  input.semanticProjections = [{
+    targetField: "l2_research_fundamentals.analytical_metrics.rd_adjusted_roic",
+    sourceValue: "NOT_INTERPRETABLE",
+    targetValue: "NOT_INTERPRETABLE",
+  }];
+  const result = evaluateExistingRunCompatibilityAdmission(input);
+  assert.deepEqual(result, {
+    admitted: true,
+    route: "EXISTING_INTEGRATION_CHECKPOINT",
+    failures: [],
+  });
+});
+
+test("V2.0.9 still rejects NOT_INTERPRETABLE for unrelated returnValue fields", () => {
+  const input = base();
+  input.semanticProjections = [{
+    targetField: "l2_research_fundamentals.analytical_metrics.all_in_roic",
+    sourceValue: "NOT_INTERPRETABLE",
+    targetValue: "NOT_INTERPRETABLE",
+  }];
+  const result = evaluateExistingRunCompatibilityAdmission(input);
+  assert.equal(result.admitted, false);
+  if (!result.admitted) assert.ok(result.failures.includes("SEMANTIC_RULE_NOT_AUTHORIZED"));
 });
