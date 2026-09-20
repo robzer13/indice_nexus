@@ -363,3 +363,5 @@ test("adversarial timing and basis failures fail closed", () => {
     expectCode(x, "DILUTION_DOUBLE_COUNT_UNRESOLVED");
   }
 });
+
+// DCF timing verification gate: the active Contract Set metadata is frozen only after this suite is green.
