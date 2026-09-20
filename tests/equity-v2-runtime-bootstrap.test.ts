@@ -269,7 +269,7 @@ test("all downstream handoffs inherit the runtime authority envelope", () => {
     researchFinalManifest: { artifact_id: "30000000-0000-4000-8000-000000000001", version: 1 },
     researchInputs: [],
   });
-  assert.match(prompt, /RUNTIME_BOOTSTRAP_VERSION = 2\.0\.1/);
+  assert.match(prompt, /RUNTIME_BOOTSTRAP_VERSION = 2\.0\.2/);
   assert.match(prompt, /RUNTIME_BOOTSTRAP_SHA256 = [0-9a-f]{64}/);
   assert.match(prompt, /CONTRACT_SET_SHA256 = d933717b/);
   assert.match(prompt, /PRODUCTION_PROJECT_REF = cugpgtzygqqlxetyeven/);
