@@ -133,7 +133,7 @@ test("run creation idempotency is deterministic and cutoff-sensitive", () => {
 
 test("same-cutoff DCF methodology successor is INITIAL lineage, never RUN_TYPE=SUCCESSOR", () => {
   const parent = {
-    runId: "1d9969cf-a632-4068-ba49-2b707f2ac0ad",
+    runId: "20000000-0000-4000-8000-000000000099",
     stateVersion: 7,
     runStatus: "ACTIVE",
     currentStage: "DEEP_DIVE",
@@ -165,7 +165,7 @@ test("same-cutoff DCF methodology successor is INITIAL lineage, never RUN_TYPE=S
 
 test("same-cutoff successor fails closed on parent CAS, identity, baseline and Contract Set mismatch", () => {
   const parent = {
-    runId: "1d9969cf-a632-4068-ba49-2b707f2ac0ad",
+    runId: "20000000-0000-4000-8000-000000000099",
     stateVersion: 7,
     runStatus: "ACTIVE",
     currentStage: "DEEP_DIVE",
