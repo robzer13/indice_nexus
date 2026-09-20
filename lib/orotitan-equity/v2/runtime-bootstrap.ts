@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import runtimeBootstrapJson from "../../../contracts/orotitan-equity/v2/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V2.0.1.json";
+import runtimeBootstrapJson from "../../../contracts/orotitan-equity/v2/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V2.0.2.json";
 import contractPinPackJson from "../../../contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json";
 
-export const OROTITAN_RUNTIME_BOOTSTRAP_VERSION = "2.0.1" as const;
+export const OROTITAN_RUNTIME_BOOTSTRAP_VERSION = "2.0.2" as const;
 export const OROTITAN_VERSION = "2.0" as const;
 
 export type RuntimeEnvironmentObservation = {
@@ -31,7 +31,7 @@ export type CreateRunRpcArgs = {
   p_canonical_mode: "ANALYZE";
   p_run_type: V2RunType;
   p_data_cutoff: string;
-  p_parent_run_id: null;
+  p_parent_run_id: string | null;
   p_baseline_snapshot_id: string | null;
   p_process_version: string;
   p_pilotage_contract_version: string;
@@ -76,7 +76,7 @@ export type RunContextV2 = {
   format: "OROTITAN_RUN_CONTEXT_V2";
   contextVersion: "2.0.1";
   orotitanVersion: "2.0";
-  runtimeBootstrapVersion: "2.0.1";
+  runtimeBootstrapVersion: "2.0.2";
   runtimeBootstrapCanonicalSha256: string;
   contractSetSha256: string;
   productionProjectRef: string;
@@ -143,8 +143,11 @@ export function assertRuntimeBootstrapIntegrity(): void {
   }
   if (runtimeBootstrap.authority_boundary.contract_set_sha256 !== activeContractPinPack.contract_set_sha256
       || runtimeBootstrap.authority_boundary.contract_pin_pack_version !== activeContractPinPack.version
-      || runtimeBootstrap.authority_boundary.contract_pin_pack_modified !== false
-      || runtimeBootstrap.authority_boundary.analytical_methodology_modified !== false) {
+      || runtimeBootstrap.authority_boundary.contract_pin_pack_modified !== true
+      || runtimeBootstrap.authority_boundary.analytical_methodology_modified !== true
+      || activeContractPinPack.version !== "2.0.1"
+      || activeContractPinPack.contract_pins.dcf_timing.name !== "OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0"
+      || activeContractPinPack.contract_pins.dcf_timing.version !== "1.0") {
     throw new RuntimeBootstrapError("RUNTIME_AUTHORITY_MISMATCH", "runtime bootstrap does not reconcile to the active Contract Pin Pack V2");
   }
   if (activeContractPinPack.contract_pins.process.version !== "2.0"
@@ -250,6 +253,133 @@ export function buildRunCreationPlan(input: {
       p_contract_set_sha256: activeContractPinPack.contract_set_sha256,
       p_request_fingerprint_sha256: requestFingerprint,
     },
+  };
+}
+
+
+export type SameCutoffSuccessorParentObservation = {
+  runId: string;
+  stateVersion: number;
+  runStatus: string;
+  currentStage: string | null;
+  runType: V2RunType;
+  dataCutoff: string;
+  baselineSnapshotId: string | null;
+  contractSetSha256: string;
+  issuerId: string;
+  securityId: string;
+  dossierId: string;
+  publishedAt: string | null;
+  cancelledAt: string | null;
+};
+
+export type SameCutoffSuccessorPlan = RunCreationPlan & {
+  parentRunId: string;
+  expectedParentStateVersion: number;
+  replayReason: "DCF_TIMING_METHODOLOGY_REPLAY";
+  firstRegistryStage: "RESEARCH";
+  firstAnalyticalPhase: "VALUATION";
+};
+
+export function buildSameCutoffMethodologySuccessorPlan(input: {
+  environment: RuntimeEnvironmentObservation;
+  identity: ResolvedCompanyIdentity;
+  parent: SameCutoffSuccessorParentObservation;
+  expectedParentStateVersion: number;
+}): SameCutoffSuccessorPlan {
+  assertProductionEnvironment(input.environment);
+
+  const { parent, identity } = input;
+  if (parent.stateVersion !== input.expectedParentStateVersion) {
+    throw new RuntimeBootstrapError("PARENT_CAS_MISMATCH", "parent state_version changed");
+  }
+  if (parent.runStatus !== "ACTIVE" || parent.currentStage !== "DEEP_DIVE") {
+    throw new RuntimeBootstrapError(
+      "PARENT_RUN_STATE_NOT_ADMISSIBLE",
+      "same-cutoff timing replay requires an active DEEP_DIVE parent",
+    );
+  }
+  if (parent.publishedAt !== null || parent.cancelledAt !== null) {
+    throw new RuntimeBootstrapError(
+      "PARENT_RUN_TERMINAL",
+      "published/cancelled parent is not admitted by this replay route",
+    );
+  }
+  if (
+    parent.issuerId !== identity.issuerId ||
+    parent.securityId !== identity.securityId ||
+    parent.dossierId !== identity.dossierId
+  ) {
+    throw new RuntimeBootstrapError("PARENT_IDENTITY_MISMATCH", "successor identity must equal parent identity");
+  }
+  if (parent.baselineSnapshotId !== null || identity.currentSnapshotId !== null) {
+    throw new RuntimeBootstrapError(
+      "SUCCESSOR_BASELINE_ROUTE_MISMATCH",
+      "this controlled route is only for an unpublished parent with no canonical snapshot",
+    );
+  }
+  if (parent.runType !== "INITIAL") {
+    throw new RuntimeBootstrapError(
+      "SUCCESSOR_RUN_TYPE_MISMATCH",
+      "no-snapshot controlled successor must remain legal RUN_TYPE=INITIAL",
+    );
+  }
+  if (parent.contractSetSha256 === activeContractPinPack.contract_set_sha256) {
+    throw new RuntimeBootstrapError(
+      "NO_CONTRACT_MIGRATION",
+      "controlled successor requires a different frozen Contract Set",
+    );
+  }
+
+  const descriptor = {
+    runtime_bootstrap_version: OROTITAN_RUNTIME_BOOTSTRAP_VERSION,
+    replay_reason: "DCF_TIMING_METHODOLOGY_REPLAY",
+    issuer_id: identity.issuerId,
+    entry_path: "IMPOSED_COMPANY",
+    canonical_mode: "ANALYZE",
+    run_type: "INITIAL",
+    data_cutoff: parent.dataCutoff,
+    parent_run_id: parent.runId,
+    baseline_snapshot_id: null,
+    process_version: activeContractPinPack.contract_pins.process.version,
+    pilotage_contract_version: activeContractPinPack.contract_pins.pilotage.version,
+    contract_set_sha256: activeContractPinPack.contract_set_sha256,
+  } as const;
+  const requestFingerprint = sha256Text(canonicalJson(descriptor as unknown as JsonValue));
+  const creationIdempotencyKey = `orotitan:v2:successor:dcf-timing:${requestFingerprint}`;
+
+  return {
+    company: identity.company,
+    companyCommandName: identity.companyCommandName,
+    issuerId: identity.issuerId,
+    securityId: identity.securityId,
+    dossierId: identity.dossierId,
+    runType: "INITIAL",
+    baselineSnapshotId: null,
+    baselineContractVersion: null,
+    dataCutoff: parent.dataCutoff,
+    requiresIdentityBinding: true,
+    rpc: "create_orotitan_run",
+    rpcArgs: {
+      p_creation_idempotency_key: creationIdempotencyKey,
+      p_issuer_id: identity.issuerId,
+      p_entry_path: "IMPOSED_COMPANY",
+      p_canonical_mode: "ANALYZE",
+      p_run_type: "INITIAL",
+      p_data_cutoff: parent.dataCutoff,
+      p_parent_run_id: parent.runId,
+      p_baseline_snapshot_id: null,
+      p_process_version: activeContractPinPack.contract_pins.process.version,
+      p_pilotage_contract_version: activeContractPinPack.contract_pins.pilotage.version,
+      p_contract_pins: activeContractPinPack.contract_pins,
+      p_contract_set_sha256: activeContractPinPack.contract_set_sha256,
+      p_request_fingerprint_sha256: requestFingerprint,
+    },
+    parentRunId: parent.runId,
+    expectedParentStateVersion: input.expectedParentStateVersion,
+    replayReason: "DCF_TIMING_METHODOLOGY_REPLAY",
+    firstRegistryStage: "RESEARCH",
+    firstAnalyticalPhase: "VALUATION",
   };
 }
 
