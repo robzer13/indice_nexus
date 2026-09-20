@@ -386,6 +386,9 @@ const compatV208Schema = JSON.parse(
 const compatV209Schema = JSON.parse(
   readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.9.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
+const compatV210Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.10.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
 
 function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string, Record<string, unknown>> {
   return schemaObject.$defs as Record<string, Record<string, unknown>>;
@@ -507,9 +510,8 @@ test("frozen V1 still rejects STANDARD_ROIC NOT_INTERPRETABLE", () => {
   if (!result.ok) assert.equal(result.stage, "schema");
 });
 
-test("V2.0.9 NOT_INTERPRETABLE remains invalid outside authorized return fields", () => {
+test("V2.0.10 NOT_INTERPRETABLE remains invalid outside authorized return fields", () => {
   const cases: Array<[string, (snapshot: Record<string, unknown>) => void]> = [
-    ["all_in_roic", (snapshot) => { analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE"; }],
     ["share_count_cagr", (snapshot) => { analyticalMetrics(snapshot).share_count_cagr = "NOT_INTERPRETABLE"; }],
     ["primary_expected_return", (snapshot) => {
       const l3 = snapshot.l3_investment_valuation as Record<string, unknown>;
@@ -983,18 +985,12 @@ test("V2.0.9 admits and preserves canonical RD_ADJUSTED_ROIC NOT_INTERPRETABLE",
   if (result.ok) assert.equal(analyticalMetrics(result.snapshot).rd_adjusted_roic, "NOT_INTERPRETABLE");
 });
 
-test("V2.0.9 keeps arbitrary RD_ADJUSTED_ROIC strings invalid and does not broaden all_in_roic", () => {
+test("V2.0.10 preserves the V2.0.9 rule that arbitrary RD_ADJUSTED_ROIC strings remain invalid", () => {
   const broken = v2Analyze("STABLE");
   analyticalMetrics(broken).rd_adjusted_roic = "BROKEN";
   const brokenResult = validateV2ResearchSnapshotForPersistence(broken, dossierId);
   assert.equal(brokenResult.ok, false);
   if (!brokenResult.ok) assert.equal(brokenResult.stage, "schema");
-
-  const unauthorized = v2Analyze("STABLE");
-  analyticalMetrics(unauthorized).all_in_roic = "NOT_INTERPRETABLE";
-  const unauthorizedResult = validateV2ResearchSnapshotForPersistence(unauthorized, dossierId);
-  assert.equal(unauthorizedResult.ok, false);
-  if (!unauthorizedResult.ok) assert.equal(unauthorizedResult.stage, "schema");
 });
 
 test("frozen V1 still rejects RD_ADJUSTED_ROIC NOT_INTERPRETABLE", () => {
@@ -1053,5 +1049,115 @@ test("V2.0.9 simultaneously preserves RD_ADJUSTED_ROIC and ROIIC NOT_INTERPRETAB
     assert.equal(analyticalMetrics(result.snapshot).rd_adjusted_roic, "NOT_INTERPRETABLE");
     assert.equal(analyticalMetrics(result.snapshot).roiic, "NOT_INTERPRETABLE");
     assert.equal(valuationFields(result.snapshot).return_horizon, 4.7835616438356166);
+  }
+});
+
+
+test("V2.0.10 schema is a strict field-local additive successor to V2.0.9", () => {
+  const expected = JSON.parse(JSON.stringify(compatV209Schema)) as Record<string, unknown>;
+  expected.$id = "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.10";
+  expected.title = "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.10";
+  expected.description = compatV210Schema.description;
+
+  const expectedMetrics = metricProperties(expected);
+  const actualMetrics = metricProperties(compatV210Schema);
+  expectedMetrics.all_in_roic = actualMetrics.all_in_roic;
+
+  assert.deepEqual(compatV210Schema, expected);
+  assert.deepEqual(schemaDefinitions(compatV210Schema).specialState, schemaDefinitions(compatV209Schema).specialState);
+  assert.deepEqual(schemaDefinitions(compatV210Schema).returnValue, schemaDefinitions(compatV209Schema).returnValue);
+  assert.deepEqual(actualMetrics.rd_adjusted_roic, metricProperties(compatV209Schema).rd_adjusted_roic);
+  assert.deepEqual(fundamentalStateProperties(compatV210Schema), fundamentalStateProperties(compatV209Schema));
+  assert.deepEqual(valuationProperties(compatV210Schema), valuationProperties(compatV209Schema));
+});
+
+test("V2.0.10 ALL_IN_ROIC compatibility preserves all pre-existing returnValue forms", () => {
+  const values: unknown[] = [12.5, { min: 8, max: 14 }, "UNKNOWN", "NOT_APPLICABLE", "NOT_ASSESSABLE", "MISSING", "NOT_AVAILABLE"];
+  for (const value of values) {
+    const snapshot = v2Analyze("STABLE");
+    analyticalMetrics(snapshot).all_in_roic = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : JSON.stringify(value) + ": " + result.errors.join(" | "));
+  }
+});
+
+test("V2.0.10 admits and preserves canonical ALL_IN_ROIC NOT_INTERPRETABLE", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  assert.equal(analyticalMetrics(snapshot).all_in_roic, "NOT_INTERPRETABLE");
+  if (result.ok) assert.equal(analyticalMetrics(result.snapshot).all_in_roic, "NOT_INTERPRETABLE");
+});
+
+test("V2.0.10 keeps arbitrary ALL_IN_ROIC strings invalid", () => {
+  for (const value of ["BROKEN", "NOT_INTERPRETABLE_BROKEN", "12.5"]) {
+    const snapshot = v2Analyze("STABLE");
+    analyticalMetrics(snapshot).all_in_roic = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, false, value);
+    if (!result.ok) assert.equal(result.stage, "schema");
+  }
+});
+
+test("frozen V1 still rejects ALL_IN_ROIC NOT_INTERPRETABLE", () => {
+  const core = analyzeCore("STABLE");
+  analyticalMetrics(core).all_in_roic = "NOT_INTERPRETABLE";
+  const result = validateResearchSnapshotForPersistence(core, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.10 ALL_IN_ROIC compatibility does not change I2 deterministic outputs", () => {
+  const numericSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(numericSnapshot).all_in_roic = 12;
+  const notInterpretableSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(notInterpretableSnapshot).all_in_roic = "NOT_INTERPRETABLE";
+  const numeric = validateV2ResearchSnapshotForPersistence(numericSnapshot, dossierId);
+  const notInterpretable = validateV2ResearchSnapshotForPersistence(notInterpretableSnapshot, dossierId);
+  assertI2DeterministicEqual(numeric, notInterpretable);
+});
+
+test("V2 I3-B boundary preserves exact ALL_IN_ROIC NOT_INTERPRETABLE without coercion", async () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE";
+  analyticalMetrics(snapshot).rd_adjusted_roic = "NOT_APPLICABLE";
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      const persisted = analyticalMetrics(args.p_canonical_payload as Record<string, unknown>);
+      assert.equal(persisted.all_in_roic, "NOT_INTERPRETABLE");
+      assert.equal(persisted.rd_adjusted_roic, "NOT_APPLICABLE");
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
+
+test("V2.0.10 admits ALL_IN_ROIC NOT_INTERPRETABLE while unrelated returnValue fields remain closed", () => {
+  const allowed = v2Analyze("STABLE");
+  analyticalMetrics(allowed).all_in_roic = "NOT_INTERPRETABLE";
+  assert.equal(validateV2ResearchSnapshotForPersistence(allowed, dossierId).ok, true);
+
+  for (const mutate of [
+    (snapshot: Record<string, unknown>) => { analyticalMetrics(snapshot).share_count_cagr = "NOT_INTERPRETABLE"; },
+    (snapshot: Record<string, unknown>) => { valuationFields(snapshot).primary_expected_return = "NOT_INTERPRETABLE"; },
+  ]) {
+    const snapshot = v2Analyze("STABLE");
+    mutate(snapshot);
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.equal(result.stage, "schema");
   }
 });
