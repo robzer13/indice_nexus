@@ -374,6 +374,9 @@ const compatV203Schema = JSON.parse(
 const compatV204Schema = JSON.parse(
   readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.4.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
+const compatV205Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.5.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
 
 function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string, Record<string, unknown>> {
   return schemaObject.$defs as Record<string, Record<string, unknown>>;
@@ -382,6 +385,11 @@ function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string
 function metricProperties(schemaObject: Record<string, unknown>): Record<string, unknown> {
   const defs = schemaDefinitions(schemaObject);
   return (defs.analyticalMetrics.properties as Record<string, unknown>);
+}
+
+function fundamentalStateProperties(schemaObject: Record<string, unknown>): Record<string, unknown> {
+  const defs = schemaDefinitions(schemaObject);
+  return (defs.fundamentalStates.properties as Record<string, unknown>);
 }
 
 function deterministicContract(result: ReturnType<typeof validateV2ResearchSnapshotForPersistence>): Record<string, unknown> {
@@ -561,5 +569,106 @@ test("V2.0.4 additive compatibility requires no historical payload rewrite", () 
   const v1Historical = analyzeCore("STABLE");
   analyticalMetrics(v1Historical).standard_roic = 12;
   analyticalMetrics(v1Historical).roiic = 10;
+  assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
+});
+
+
+test("V2.0.5 schema is a strict field-local additive successor to V2.0.4", () => {
+  const expected = JSON.parse(JSON.stringify(compatV204Schema)) as Record<string, unknown>;
+  expected.$id = "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.5";
+  expected.title = "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.5";
+  expected.description = compatV205Schema.description;
+
+  const expectedFundamentals = fundamentalStateProperties(expected);
+  const actualFundamentals = fundamentalStateProperties(compatV205Schema);
+  expectedFundamentals.roic_trend = actualFundamentals.roic_trend;
+
+  assert.deepEqual(compatV205Schema, expected);
+  assert.deepEqual(schemaDefinitions(compatV205Schema).specialState, schemaDefinitions(compatV204Schema).specialState);
+  assert.deepEqual(schemaDefinitions(compatV205Schema).returnValue, schemaDefinitions(compatV204Schema).returnValue);
+  assert.deepEqual(metricProperties(compatV205Schema).standard_roic, metricProperties(compatV204Schema).standard_roic);
+  assert.deepEqual(metricProperties(compatV205Schema).roiic, metricProperties(compatV204Schema).roiic);
+});
+
+test("V2.0.5 admits and preserves canonical ROIC_TREND UNKNOWN", () => {
+  const snapshot = v2Analyze("UNKNOWN");
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  assert.equal(fundamentalStates(snapshot).roic_trend, "UNKNOWN");
+  if (result.ok) assert.equal(fundamentalStates(result.snapshot).roic_trend, "UNKNOWN");
+});
+
+test("V2.0.5 preserves UNKNOWN and UNCLEAR as distinct ROIC_TREND states", () => {
+  const unknown = v2Analyze("UNKNOWN");
+  const unclear = v2Analyze("UNCLEAR");
+  const unknownResult = validateV2ResearchSnapshotForPersistence(unknown, dossierId);
+  const unclearResult = validateV2ResearchSnapshotForPersistence(unclear, dossierId);
+  assert.equal(unknownResult.ok, true, unknownResult.ok ? "" : unknownResult.errors.join(" | "));
+  assert.equal(unclearResult.ok, true, unclearResult.ok ? "" : unclearResult.errors.join(" | "));
+  if (unknownResult.ok && unclearResult.ok) {
+    assert.equal(fundamentalStates(unknownResult.snapshot).roic_trend, "UNKNOWN");
+    assert.equal(fundamentalStates(unclearResult.snapshot).roic_trend, "UNCLEAR");
+    assert.notEqual(
+      fundamentalStates(unknownResult.snapshot).roic_trend,
+      fundamentalStates(unclearResult.snapshot).roic_trend,
+    );
+  }
+});
+
+test("V2.0.5 retains ROIC_TREND NOT_APPLICABLE compatibility", () => {
+  const result = validateV2ResearchSnapshotForPersistence(v2Analyze("NOT_APPLICABLE"), dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) assert.equal(fundamentalStates(result.snapshot).roic_trend, "NOT_APPLICABLE");
+});
+
+test("V2.0.5 keeps arbitrary ROIC_TREND strings invalid", () => {
+  const result = validateV2ResearchSnapshotForPersistence(v2Analyze("BROKEN"), dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("frozen V1 validator remains unchanged and rejects ROIC_TREND UNKNOWN", () => {
+  const result = validateResearchSnapshotForPersistence(analyzeCore("UNKNOWN"), dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.5 ROIC_TREND UNKNOWN compatibility does not change I2 deterministic outputs", () => {
+  const stable = validateV2ResearchSnapshotForPersistence(v2Analyze("STABLE"), dossierId);
+  const unknown = validateV2ResearchSnapshotForPersistence(v2Analyze("UNKNOWN"), dossierId);
+  assertI2DeterministicEqual(stable, unknown);
+});
+
+test("V2 I3-B persistence boundary preserves exact ROIC_TREND UNKNOWN without coercion", async () => {
+  const snapshot = v2Analyze("UNKNOWN");
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      assert.equal(
+        fundamentalStates(args.p_canonical_payload as Record<string, unknown>).roic_trend,
+        "UNKNOWN",
+      );
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
+
+test("V2.0.5 compatibility requires no historical payload rewrite", () => {
+  const v2Historical = v2Analyze("STABLE");
+  assert.equal(validateV2ResearchSnapshotForPersistence(v2Historical, dossierId).ok, true);
+
+  const v1Historical = analyzeCore("STABLE");
   assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
 });
