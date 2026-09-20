@@ -200,8 +200,8 @@ begin
     and not (
       new.active_manifest_artifact_id is not null
       and new.active_manifest_version is not null
-      and a.manifest_artifact_id = new.active_manifest_artifact_id
-      and a.manifest_version = new.active_manifest_version
+      and a.manifest_artifact_id is not distinct from new.active_manifest_artifact_id
+      and a.manifest_version is not distinct from new.active_manifest_version
     );
 
   return new;
