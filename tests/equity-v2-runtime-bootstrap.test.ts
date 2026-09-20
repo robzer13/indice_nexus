@@ -65,7 +65,7 @@ function persisted(plan: ReturnType<typeof buildRunCreationPlan>): PersistedRunO
 test("runtime bootstrap reconciles to the active V2 Contract Pin Pack", () => {
   assert.doesNotThrow(() => assertRuntimeBootstrapIntegrity());
   assert.equal(runtimeBootstrap.authority_boundary.contract_set_sha256, activeContractPinPack.contract_set_sha256);
-  assert.equal(Object.keys(activeContractPinPack.contract_pins).length, 13);
+  assert.equal(Object.keys(activeContractPinPack.contract_pins).length, 14);
   assert.match(runtimeBootstrapCanonicalSha256, /^[0-9a-f]{64}$/);
 });
 
@@ -115,8 +115,8 @@ test("run creation plan carries exact V2 authority and controlled RPC arguments"
   assert.equal(plan.rpcArgs.p_entry_path, "IMPOSED_COMPANY");
   assert.equal(plan.rpcArgs.p_canonical_mode, "ANALYZE");
   assert.equal(plan.rpcArgs.p_baseline_snapshot_id, refreshIdentity.currentSnapshotId);
-  assert.equal(plan.rpcArgs.p_contract_set_sha256, "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e");
-  assert.equal(Object.keys(plan.rpcArgs.p_contract_pins).length, 13);
+  assert.equal(plan.rpcArgs.p_contract_set_sha256, "d933717b9da01e8565a3e8116ff77582ffa7ded109649ec370a0f7839eecc71a");
+  assert.equal(Object.keys(plan.rpcArgs.p_contract_pins).length, 14);
   assert.match(plan.rpcArgs.p_request_fingerprint_sha256, /^[0-9a-f]{64}$/);
   assert.ok(plan.rpcArgs.p_creation_idempotency_key.endsWith(plan.rpcArgs.p_request_fingerprint_sha256));
 });
@@ -128,6 +128,89 @@ test("run creation idempotency is deterministic and cutoff-sensitive", () => {
   assert.equal(a.rpcArgs.p_creation_idempotency_key, b.rpcArgs.p_creation_idempotency_key);
   assert.equal(a.rpcArgs.p_request_fingerprint_sha256, b.rpcArgs.p_request_fingerprint_sha256);
   assert.notEqual(a.rpcArgs.p_request_fingerprint_sha256, c.rpcArgs.p_request_fingerprint_sha256);
+});
+
+test("same-cutoff DCF methodology successor is INITIAL lineage, never RUN_TYPE=SUCCESSOR", () => {
+  const parent = {
+    runId: "1d9969cf-a632-4068-ba49-2b707f2ac0ad",
+    stateVersion: 7,
+    runStatus: "ACTIVE",
+    currentStage: "DEEP_DIVE",
+    runType: "INITIAL" as const,
+    dataCutoff: "2026-09-19",
+    baselineSnapshotId: null,
+    contractSetSha256: "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+    issuerId: initialIdentity.issuerId,
+    securityId: initialIdentity.securityId,
+    dossierId: initialIdentity.dossierId,
+    publishedAt: null,
+    cancelledAt: null,
+  };
+  const plan = buildSameCutoffMethodologySuccessorPlan({
+    environment,
+    identity: initialIdentity,
+    parent,
+    expectedParentStateVersion: 7,
+  });
+  assert.equal(plan.runType, "INITIAL");
+  assert.equal(plan.rpcArgs.p_run_type, "INITIAL");
+  assert.equal(plan.rpcArgs.p_parent_run_id, parent.runId);
+  assert.equal(plan.rpcArgs.p_baseline_snapshot_id, null);
+  assert.equal(plan.dataCutoff, parent.dataCutoff);
+  assert.equal(plan.firstRegistryStage, "RESEARCH");
+  assert.equal(plan.firstAnalyticalPhase, "VALUATION");
+  assert.equal(plan.rpcArgs.p_contract_set_sha256, "d933717b9da01e8565a3e8116ff77582ffa7ded109649ec370a0f7839eecc71a");
+});
+
+test("same-cutoff successor fails closed on parent CAS, identity, baseline and Contract Set mismatch", () => {
+  const parent = {
+    runId: "1d9969cf-a632-4068-ba49-2b707f2ac0ad",
+    stateVersion: 7,
+    runStatus: "ACTIVE",
+    currentStage: "DEEP_DIVE",
+    runType: "INITIAL" as const,
+    dataCutoff: "2026-09-19",
+    baselineSnapshotId: null,
+    contractSetSha256: "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+    issuerId: initialIdentity.issuerId,
+    securityId: initialIdentity.securityId,
+    dossierId: initialIdentity.dossierId,
+    publishedAt: null,
+    cancelledAt: null,
+  };
+  assert.throws(
+    () => buildSameCutoffMethodologySuccessorPlan({
+      environment, identity: initialIdentity, parent, expectedParentStateVersion: 6,
+    }),
+    /PARENT_CAS_MISMATCH/,
+  );
+  assert.throws(
+    () => buildSameCutoffMethodologySuccessorPlan({
+      environment,
+      identity: { ...initialIdentity, issuerId: "10000000-0000-4000-8000-000000000009" },
+      parent,
+      expectedParentStateVersion: 7,
+    }),
+    /PARENT_IDENTITY_MISMATCH/,
+  );
+  assert.throws(
+    () => buildSameCutoffMethodologySuccessorPlan({
+      environment,
+      identity: { ...initialIdentity, currentSnapshotId: "10000000-0000-4000-8000-000000000010", currentSnapshotContractVersion: "x" },
+      parent,
+      expectedParentStateVersion: 7,
+    }),
+    /SUCCESSOR_BASELINE_ROUTE_MISMATCH/,
+  );
+  assert.throws(
+    () => buildSameCutoffMethodologySuccessorPlan({
+      environment,
+      identity: initialIdentity,
+      parent: { ...parent, contractSetSha256: activeContractPinPack.contract_set_sha256 },
+      expectedParentStateVersion: 7,
+    }),
+    /NO_CONTRACT_MIGRATION/,
+  );
 });
 
 test("INITIAL requires explicit identity binding while REFRESH derives identity from baseline", () => {
@@ -167,7 +250,7 @@ test("Research bootstrap is emitted only from a persisted RUN_CONTEXT_V2", () =>
   const context = buildRunContextV2(plan, persisted(plan));
   const prompt = buildResearchStartPrompt(context);
   assert.ok(prompt.startsWith("OROTITAN V2 — START RESEARCH"));
-  assert.match(prompt, /CONTRACT_SET_SHA256 = 1116ca12/);
+  assert.match(prompt, /CONTRACT_SET_SHA256 = d933717b/);
   assert.match(prompt, /PRODUCTION_PROJECT_REF = cugpgtzygqqlxetyeven/);
   assert.match(prompt, /RUN_TYPE = REFRESH/);
   assert.match(prompt, /PUBLICATION_AUTHORIZED = NO/);
@@ -188,7 +271,7 @@ test("all downstream handoffs inherit the runtime authority envelope", () => {
   });
   assert.match(prompt, /RUNTIME_BOOTSTRAP_VERSION = 2\.0\.1/);
   assert.match(prompt, /RUNTIME_BOOTSTRAP_SHA256 = [0-9a-f]{64}/);
-  assert.match(prompt, /CONTRACT_SET_SHA256 = 1116ca12/);
+  assert.match(prompt, /CONTRACT_SET_SHA256 = d933717b/);
   assert.match(prompt, /PRODUCTION_PROJECT_REF = cugpgtzygqqlxetyeven/);
 });
 
