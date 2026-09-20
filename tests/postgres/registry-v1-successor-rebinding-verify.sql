@@ -466,6 +466,7 @@ begin
   exception when others then rejected := true; end;
   if not rejected then raise exception 'TEST 11 failed'; end if;
 
+  m := gen_random_uuid();
   select run_id into r from pg_temp.v17_create_run('T12W','DEEP_DIVE');
   a := pg_temp.v17_artifact(gen_random_uuid(),1,'WITHDRAWN_A','c','v17/withdrawn.json');
   regs := jsonb_build_array(a);
@@ -478,6 +479,7 @@ begin
   exception when others then rejected := true; end;
   if not rejected then raise exception 'TEST 12 WITHDRAWN failed'; end if;
 
+  m := gen_random_uuid();
   select run_id into r from pg_temp.v17_create_run('T12M','DEEP_DIVE');
   a := pg_temp.v17_artifact(gen_random_uuid(),1,'MISSING_A','d','v17/missing.json');
   regs := jsonb_build_array(a);
