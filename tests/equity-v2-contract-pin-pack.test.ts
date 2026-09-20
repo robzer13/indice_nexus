@@ -7,7 +7,8 @@ import { computeContractSetSha256 } from "../lib/orotitan-equity/v1/stage-manife
 const REPOSITORY = "robzer13/indice_nexus";
 const V2_SOURCE_COMMIT = "86b227a75275cf4aaec6ef61ea2a27e87e2bfec7";
 const V1_SOURCE_COMMIT = "8aba7cee6a9b38204785c16976e65e9010f5d959";
-const V2_SET_SHA = "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
+const DCF_SOURCE_COMMIT = "003660a6b5984402d2a0cb8bc99fba6cdda9470b";
+const V2_SET_SHA = "d933717b9da01e8565a3e8116ff77582ffa7ded109649ec370a0f7839eecc71a";
 const V2_KEYS = ["process", "pilotage", "research_stage", "deep_dive_stage", "integration_stage", "integration_spec", "screener_schema"];
 const V1_REUSED_KEYS = ["analysis_standard", "master_prompt", "investment_policy", "execution_patch", "i2", "i3b"];
 
@@ -19,16 +20,16 @@ async function loadPack(path: string): Promise<{ format: string; version: string
   return JSON.parse(await readFile(path, "utf8"));
 }
 
-test("Contract Pin Pack V2 contains exactly the frozen 13 logical Registry pins", async () => {
+test("Contract Pin Pack V2.0.1 contains exactly the frozen 14 logical Registry pins", async () => {
   const pack = await loadPack("contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json");
   assert.equal(pack.format, "OROTITAN_CONTRACT_PIN_PACK_V2");
-  assert.equal(pack.version, "2.0");
+  assert.equal(pack.version, "2.0.1");
   assert.equal(pack.repository, REPOSITORY);
-  assert.equal(pack.source_commit_sha, V2_SOURCE_COMMIT);
+  assert.equal(pack.source_commit_sha, DCF_SOURCE_COMMIT);
   assert.deepEqual(
     Object.keys(pack.contract_pins).sort(),
     [
-      "analysis_standard", "deep_dive_stage", "execution_patch", "i2", "i3b",
+      "analysis_standard", "dcf_timing", "deep_dive_stage", "execution_patch", "i2", "i3b",
       "integration_spec", "integration_stage", "investment_policy", "master_prompt",
       "pilotage", "process", "research_stage", "screener_schema",
     ],
@@ -52,6 +53,16 @@ test("V2 successor pins resolve from the exact green immutable source commit", a
   }
 });
 
+test("DCF timing authority resolves byte-for-byte from its immutable freeze commit", async () => {
+  const pack = await loadPack("contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json");
+  const pin = pack.contract_pins.dcf_timing;
+  assert.equal(pin.locator.repository, REPOSITORY);
+  assert.equal(pin.locator.commit_sha, DCF_SOURCE_COMMIT);
+  const bytes = await resolveContractPin(pin, fsFetcher);
+  assert.equal(sha256Hex(bytes), pin.content_sha256);
+  assert.equal(pin.content_sha256, "e4f316fd15f9e1e07683dcc1fe1dbb89c0bcdd938724cf118ef24d213dada771");
+});
+
 test("unchanged analytical authorities are reused byte-for-byte under their original V1 immutable pins", async () => {
   const v2 = await loadPack("contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json");
   const v1 = await loadPack("contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json");
@@ -63,7 +74,7 @@ test("unchanged analytical authorities are reused byte-for-byte under their orig
   }
 });
 
-test("all 13 V2 run authorities resolve byte-for-byte and no V1 run pin object is mutated", async () => {
+test("all 14 V2 run authorities resolve byte-for-byte and no V1 run pin object is mutated", async () => {
   const v2 = await loadPack("contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json");
   const v1 = await loadPack("contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json");
   for (const [key, pin] of Object.entries(v2.contract_pins)) {
