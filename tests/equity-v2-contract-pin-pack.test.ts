@@ -7,7 +7,8 @@ import { computeContractSetSha256 } from "../lib/orotitan-equity/v1/stage-manife
 const REPOSITORY = "robzer13/indice_nexus";
 const V2_SOURCE_COMMIT = "86b227a75275cf4aaec6ef61ea2a27e87e2bfec7";
 const V1_SOURCE_COMMIT = "8aba7cee6a9b38204785c16976e65e9010f5d959";
-const V2_SET_SHA = "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
+const DCF_SOURCE_COMMIT = "003660a6b5984402d2a0cb8bc99fba6cdda9470b";
+const V2_SET_SHA = "d933717b9da01e8565a3e8116ff77582ffa7ded109649ec370a0f7839eecc71a";
 const V2_KEYS = ["process", "pilotage", "research_stage", "deep_dive_stage", "integration_stage", "integration_spec", "screener_schema"];
 const V1_REUSED_KEYS = ["analysis_standard", "master_prompt", "investment_policy", "execution_patch", "i2", "i3b"];
 
