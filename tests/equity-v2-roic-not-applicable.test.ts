@@ -377,6 +377,9 @@ const compatV204Schema = JSON.parse(
 const compatV205Schema = JSON.parse(
   readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.5.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
+const compatV206Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.6.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
 
 function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string, Record<string, unknown>> {
   return schemaObject.$defs as Record<string, Record<string, unknown>>;
@@ -488,10 +491,9 @@ test("frozen V1 still rejects STANDARD_ROIC NOT_INTERPRETABLE", () => {
   if (!result.ok) assert.equal(result.stage, "schema");
 });
 
-test("V2.0.4 NOT_INTERPRETABLE remains invalid outside STANDARD_ROIC and ROIIC", () => {
+test("V2.0.6 NOT_INTERPRETABLE remains invalid outside authorized return fields", () => {
   const cases: Array<[string, (snapshot: Record<string, unknown>) => void]> = [
     ["all_in_roic", (snapshot) => { analyticalMetrics(snapshot).all_in_roic = "NOT_INTERPRETABLE"; }],
-    ["roic_ex_goodwill", (snapshot) => { analyticalMetrics(snapshot).roic_ex_goodwill = "NOT_INTERPRETABLE"; }],
     ["rd_adjusted_roic", (snapshot) => { analyticalMetrics(snapshot).rd_adjusted_roic = "NOT_INTERPRETABLE"; }],
     ["share_count_cagr", (snapshot) => { analyticalMetrics(snapshot).share_count_cagr = "NOT_INTERPRETABLE"; }],
     ["primary_expected_return", (snapshot) => {
@@ -670,5 +672,131 @@ test("V2.0.5 compatibility requires no historical payload rewrite", () => {
   assert.equal(validateV2ResearchSnapshotForPersistence(v2Historical, dossierId).ok, true);
 
   const v1Historical = analyzeCore("STABLE");
+  assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
+});
+
+
+test("V2.0.6 schema is a strict field-local additive successor to V2.0.5", () => {
+  const expected = JSON.parse(JSON.stringify(compatV205Schema)) as Record<string, unknown>;
+  expected.$id = "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.6";
+  expected.title = "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.6";
+  expected.description = compatV206Schema.description;
+
+  const expectedMetrics = metricProperties(expected);
+  const actualMetrics = metricProperties(compatV206Schema);
+  expectedMetrics.roic_ex_goodwill = actualMetrics.roic_ex_goodwill;
+
+  assert.deepEqual(compatV206Schema, expected);
+  assert.deepEqual(schemaDefinitions(compatV206Schema).specialState, schemaDefinitions(compatV205Schema).specialState);
+  assert.deepEqual(schemaDefinitions(compatV206Schema).returnValue, schemaDefinitions(compatV205Schema).returnValue);
+  assert.deepEqual(actualMetrics.standard_roic, metricProperties(compatV205Schema).standard_roic);
+  assert.deepEqual(actualMetrics.roiic, metricProperties(compatV205Schema).roiic);
+  assert.deepEqual(fundamentalStateProperties(compatV206Schema).roic_trend, fundamentalStateProperties(compatV205Schema).roic_trend);
+  assert.deepEqual(metricProperties(compatV205Schema).roic_ex_goodwill, { $ref: "#/$defs/returnValue" });
+});
+
+test("V2.0.6 ROIC_EX_GOODWILL compatibility preserves all pre-existing returnValue forms", () => {
+  const values: unknown[] = [
+    12.5,
+    { min: 8, max: 14 },
+    "UNKNOWN",
+    "NOT_APPLICABLE",
+    "NOT_ASSESSABLE",
+    "MISSING",
+    "NOT_AVAILABLE",
+  ];
+  for (const value of values) {
+    const snapshot = v2Analyze("STABLE");
+    analyticalMetrics(snapshot).roic_ex_goodwill = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : JSON.stringify(value) + ": " + result.errors.join(" | "));
+  }
+});
+
+test("V2.0.6 admits and preserves canonical ROIC_EX_GOODWILL NOT_INTERPRETABLE", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roic_ex_goodwill = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  assert.equal(analyticalMetrics(snapshot).roic_ex_goodwill, "NOT_INTERPRETABLE");
+  if (result.ok) assert.equal(analyticalMetrics(result.snapshot).roic_ex_goodwill, "NOT_INTERPRETABLE");
+});
+
+test("V2.0.6 keeps arbitrary ROIC_EX_GOODWILL strings invalid", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roic_ex_goodwill = "BROKEN";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("frozen V1 still rejects ROIC_EX_GOODWILL NOT_INTERPRETABLE", () => {
+  const core = analyzeCore("STABLE");
+  analyticalMetrics(core).roic_ex_goodwill = "NOT_INTERPRETABLE";
+  const result = validateResearchSnapshotForPersistence(core, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.6 ROIC_EX_GOODWILL compatibility does not change I2 deterministic outputs", () => {
+  const numericSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(numericSnapshot).roic_ex_goodwill = 12;
+  const notInterpretableSnapshot = v2Analyze("STABLE");
+  analyticalMetrics(notInterpretableSnapshot).roic_ex_goodwill = "NOT_INTERPRETABLE";
+  const numeric = validateV2ResearchSnapshotForPersistence(numericSnapshot, dossierId);
+  const notInterpretable = validateV2ResearchSnapshotForPersistence(notInterpretableSnapshot, dossierId);
+  assertI2DeterministicEqual(numeric, notInterpretable);
+});
+
+test("V2 I3-B persistence boundary preserves exact ROIC_EX_GOODWILL NOT_INTERPRETABLE without coercion", async () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roic_ex_goodwill = "NOT_INTERPRETABLE";
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      assert.equal(
+        analyticalMetrics(args.p_canonical_payload as Record<string, unknown>).roic_ex_goodwill,
+        "NOT_INTERPRETABLE",
+      );
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
+
+test("V2.0.6 simultaneous STANDARD_ROIC, ROIC_EX_GOODWILL and ROIIC NOT_INTERPRETABLE are preserved exactly", () => {
+  const snapshot = v2Analyze("UNKNOWN");
+  analyticalMetrics(snapshot).standard_roic = "NOT_INTERPRETABLE";
+  analyticalMetrics(snapshot).roic_ex_goodwill = "NOT_INTERPRETABLE";
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) {
+    const metrics = analyticalMetrics(result.snapshot);
+    assert.equal(metrics.standard_roic, "NOT_INTERPRETABLE");
+    assert.equal(metrics.roic_ex_goodwill, "NOT_INTERPRETABLE");
+    assert.equal(metrics.roiic, "NOT_INTERPRETABLE");
+    assert.equal(fundamentalStates(result.snapshot).roic_trend, "UNKNOWN");
+  }
+});
+
+test("V2.0.6 compatibility requires no historical payload rewrite", () => {
+  const v2Historical = v2Analyze("STABLE");
+  analyticalMetrics(v2Historical).roic_ex_goodwill = 12;
+  assert.equal(validateV2ResearchSnapshotForPersistence(v2Historical, dossierId).ok, true);
+
+  const v1Historical = analyzeCore("STABLE");
+  analyticalMetrics(v1Historical).roic_ex_goodwill = 12;
   assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
 });
