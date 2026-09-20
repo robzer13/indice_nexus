@@ -39,7 +39,7 @@ $$;
 create or replace function pg_temp.v17_ref(p_registration jsonb)
 returns jsonb
 language sql
-as $
+as $$
   select jsonb_build_object(
     'artifact_id',p_registration->>'artifact_id',
     'version',(p_registration->>'version')::integer,
@@ -49,7 +49,7 @@ as $
     'media_type',p_registration->>'media_type',
     'size_bytes',(p_registration->>'size_bytes')::bigint
   );
-$;
+$$;
 
 create or replace function pg_temp.v17_manifest_registration(
   p_manifest jsonb,
@@ -62,7 +62,7 @@ create or replace function pg_temp.v17_manifest_registration(
 )
 returns jsonb
 language plpgsql
-as $
+as $$
 declare
   v_text text := p_manifest::text;
   v_bytes bytea := convert_to(v_text,'UTF8');
@@ -111,7 +111,7 @@ begin
     )
   );
 end;
-$;
+$$;
 
 create or replace function pg_temp.v17_pins()
 returns jsonb
