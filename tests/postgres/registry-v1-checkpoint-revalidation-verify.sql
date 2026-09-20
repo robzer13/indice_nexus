@@ -44,6 +44,75 @@ as $$
   );
 $$;
 
+create or replace function pg_temp.reval_manifest_registration(
+  p_artifact_id uuid,
+  p_version integer,
+  p_manifest jsonb,
+  p_path text
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+  v_text text := p_manifest::text;
+  v_bytes bytea := convert_to(v_text, 'UTF8');
+  v_size bigint := octet_length(v_bytes);
+  v_sha256 text := encode(extensions.digest(v_bytes, 'sha256'), 'hex');
+  v_blob text;
+  v_commit text := repeat('c', 40);
+  v_repo text := 'robzer13/real-orotitan';
+begin
+  v_blob := encode(
+    extensions.digest(
+      convert_to('blob ' || v_size::text, 'UTF8') || decode('00','hex') || v_bytes,
+      'sha1'
+    ),
+    'hex'
+  );
+  return jsonb_build_object(
+    'artifact_id', p_artifact_id,
+    'version', p_version,
+    'artifact_type', 'DEEP_DIVE_STAGE_MANIFEST',
+    'logical_name', 'deep_dive_stage_manifest',
+    'authority_class', 'CHECKPOINT_STAGE_OUTPUT',
+    'artifact_status', 'SEALED',
+    'authority_state', 'CHECKPOINT',
+    'availability_state', 'AVAILABLE',
+    'media_type', 'application/json',
+    'size_bytes', v_size,
+    'content_sha256', v_sha256,
+    'storage_backend', 'PRIVATE_GITHUB',
+    'storage_uri', 'github://' || v_repo || '@' || v_commit || '/' || p_path,
+    'github_repository', v_repo,
+    'github_path', p_path,
+    'github_commit_sha', v_commit,
+    'github_blob_sha', v_blob,
+    'persistence_receipt', jsonb_build_object(
+      'receipt_schema_version','1.0',
+      'verification_method','PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1',
+      'storage_backend','PRIVATE_GITHUB',
+      'github_repository',v_repo,
+      'github_path',p_path,
+      'github_commit_sha',v_commit,
+      'github_blob_sha',v_blob,
+      'commit_path_resolved',true,
+      'verified_content_base64',encode(v_bytes,'base64'),
+      'verified_at','2026-09-20T12:00:00Z'
+    )
+  );
+end;
+$$;
+
+create temporary table reval_manifest_receipts (
+  run_id uuid not null,
+  manifest_id uuid not null,
+  manifest_version integer not null,
+  registered_sha256 text not null,
+  actual_sha256 text not null,
+  receipt jsonb not null,
+  primary key (run_id, manifest_id, manifest_version)
+);
+
 create or replace function pg_temp.reval_contract_pins()
 returns jsonb
 language plpgsql
@@ -247,11 +316,25 @@ begin
     'completed_at',null
   );
 
-  v_manifest_reg := pg_temp.reval_artifact_registration(
-    p_manifest_id,p_manifest_version,'DEEP_DIVE_STAGE_MANIFEST',
-    case when p_manifest_version = 1 then 'e' else 'f' end,
+  v_manifest_reg := pg_temp.reval_manifest_registration(
+    p_manifest_id,
+    p_manifest_version,
+    v_manifest,
     'deep_dive/checkpoint-manifest-v' || p_manifest_version || '.json'
   );
+
+  insert into reval_manifest_receipts(
+    run_id,manifest_id,manifest_version,registered_sha256,actual_sha256,receipt
+  ) values (
+    p_run_id,p_manifest_id,p_manifest_version,
+    v_manifest_reg->>'content_sha256',
+    v_manifest_reg->>'content_sha256',
+    v_manifest_reg->'persistence_receipt'
+  )
+  on conflict (run_id,manifest_id,manifest_version) do update
+    set registered_sha256=excluded.registered_sha256,
+        actual_sha256=excluded.actual_sha256,
+        receipt=excluded.receipt;
 
   select state_version into v_run_state from public.orotitan_runs where run_id=p_run_id;
   select state_version into v_stage_state from public.orotitan_run_stages where run_id=p_run_id and stage_code='DEEP_DIVE';
@@ -260,6 +343,61 @@ begin
     p_run_id,'DEEP_DIVE',v_run_state,v_stage_state,
     v_manifest,v_manifest_reg,p_output_regs,v_edges,
     'IN_PROGRESS',p_idempotency_key,p_fingerprint,'DEEP_DIVE_WORKER'
+  );
+end;
+$$;
+
+create or replace function pg_temp.revalidate_outputs(
+  p_run_id uuid,
+  p_stage_code text,
+  p_expected_run_state_version bigint,
+  p_expected_stage_state_version bigint,
+  p_expected_manifest_artifact_id uuid,
+  p_expected_manifest_version integer,
+  p_expected_manifest_sha256 text,
+  p_target_artifacts jsonb,
+  p_idempotency_key text,
+  p_request_fingerprint_sha256 text
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+  v_actual_sha text;
+  v_receipt jsonb;
+begin
+  select actual_sha256,receipt
+    into v_actual_sha,v_receipt
+  from reval_manifest_receipts
+  where run_id=p_run_id
+    and manifest_id=p_expected_manifest_artifact_id
+    and manifest_version=p_expected_manifest_version;
+
+  -- Negative tests for wrong run/stage/manifest must reach the canonical RPC,
+  -- not fail in this test-only receipt adapter.
+  if not found then
+    select actual_sha256,receipt
+      into v_actual_sha,v_receipt
+    from reval_manifest_receipts
+    order by manifest_version desc
+    limit 1;
+  end if;
+  if not found then
+    raise exception 'test manifest receipt missing';
+  end if;
+  return public.revalidate_orotitan_checkpoint_outputs(
+    p_run_id,
+    p_stage_code,
+    p_expected_run_state_version,
+    p_expected_stage_state_version,
+    p_expected_manifest_artifact_id,
+    p_expected_manifest_version,
+    p_expected_manifest_sha256,
+    v_actual_sha,
+    v_receipt,
+    p_target_artifacts,
+    p_idempotency_key,
+    p_request_fingerprint_sha256
   );
 end;
 $$;
@@ -365,7 +503,7 @@ $$;
 do $$
 declare
   v_oid oid;
-  v_signature text := 'revalidate_orotitan_checkpoint_outputs(uuid,text,bigint,bigint,uuid,integer,text,jsonb,text,text)';
+  v_signature text := 'revalidate_orotitan_checkpoint_outputs(uuid,text,bigint,bigint,uuid,integer,text,text,jsonb,jsonb,text,text)';
   v_prosecdef boolean;
   v_config text[];
 begin
@@ -470,47 +608,47 @@ begin
   v_bad_refs := jsonb_build_array(v_refs->0,pg_temp.reval_artifact_ref(v_extra));
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_bad_refs,'reval:E',repeat('8',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_bad_refs,'reval:E',repeat('8',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'E absent successor artifact accepted'; end if;
 
   -- F: wrong run.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(gen_random_uuid(),'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:F',repeat('9',64));
+    perform pg_temp.revalidate_outputs(gen_random_uuid(),'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:F',repeat('9',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'F wrong run accepted'; end if;
 
   -- G: wrong stage.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'RESEARCH',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:G',repeat('a',64));
+    perform pg_temp.revalidate_outputs(v_run,'RESEARCH',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:G',repeat('a',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'G wrong stage accepted'; end if;
 
   -- H: wrong active manifest.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,gen_random_uuid(),2,v_manifest_hash,v_refs,'reval:H',repeat('b',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,gen_random_uuid(),2,v_manifest_hash,v_refs,'reval:H',repeat('b',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'H wrong active manifest accepted'; end if;
 
   -- I: stale run state version.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state-1,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:I',repeat('c',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state-1,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:I',repeat('c',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'I stale run state accepted'; end if;
 
   -- J: stale stage state version.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state-1,v_manifest,2,v_manifest_hash,v_refs,'reval:J',repeat('d',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state-1,v_manifest,2,v_manifest_hash,v_refs,'reval:J',repeat('d',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'J stale stage state accepted'; end if;
 
   -- M: exact legal repair succeeds once.
-  v_result := public.revalidate_orotitan_checkpoint_outputs(
+  v_result := pg_temp.revalidate_outputs(
     v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,
     'reval:M',repeat('e',64)
   );
@@ -520,7 +658,7 @@ begin
   if (select state_version from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE') <> v_stage_state+1 then raise exception 'M stage state version not incremented exactly once'; end if;
 
   -- M replay: same request is idempotent even with original CAS values.
-  v_replay := public.revalidate_orotitan_checkpoint_outputs(
+  v_replay := pg_temp.revalidate_outputs(
     v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,
     'reval:M',repeat('e',64)
   );
@@ -530,7 +668,7 @@ begin
   -- N: same idempotency key, different fingerprint fails.
   v_rejected := false;
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:M',repeat('f',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:M',repeat('f',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'N conflicting idempotency fingerprint accepted'; end if;
 
@@ -551,7 +689,7 @@ begin
   select state_version into v_run_state from public.orotitan_runs where run_id=v_run;
   select state_version into v_stage_state from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE';
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:K',repeat('1',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:K',repeat('1',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'K INVALIDATED target accepted'; end if;
 end $$;
@@ -566,10 +704,169 @@ begin
   select state_version into v_run_state from public.orotitan_runs where run_id=v_run;
   select state_version into v_stage_state from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE';
   begin
-    perform public.revalidate_orotitan_checkpoint_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:L',repeat('2',64));
+    perform pg_temp.revalidate_outputs(v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,'reval:L',repeat('2',64));
   exception when others then v_rejected := true; end;
   if not v_rejected then raise exception 'L NON_AUTHORITATIVE target accepted'; end if;
 end $$;
+
+
+-- P. Exact existing ID/version with size mismatch fails closed.
+do $$
+declare
+  v_run uuid; v_manifest uuid; v_refs jsonb; v_manifest_hash text;
+  v_run_state bigint; v_stage_state bigint; v_bad_refs jsonb; v_rejected boolean := false;
+begin
+  select d.run_id,d.manifest_id,d.output_refs,d.manifest_sha256
+    into v_run,v_manifest,v_refs,v_manifest_hash
+  from pg_temp.reval_prepare_defect('P',1) d;
+  select state_version into v_run_state from public.orotitan_runs where run_id=v_run;
+  select state_version into v_stage_state from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE';
+  v_bad_refs := jsonb_set(v_refs,'{0,size_bytes}',to_jsonb(((v_refs->0->>'size_bytes')::bigint + 1)));
+  begin
+    perform pg_temp.revalidate_outputs(
+      v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_bad_refs,
+      'reval:P',repeat('3',64)
+    );
+  exception when others then v_rejected := true; end;
+  if not v_rejected then raise exception 'P exact reused artifact size mismatch accepted'; end if;
+end $$;
+
+-- Q. Unavailable artifact fails closed.
+do $$
+declare
+  v_run uuid; v_manifest uuid; v_refs jsonb; v_manifest_hash text;
+  v_run_state bigint; v_stage_state bigint; v_rejected boolean := false;
+begin
+  select d.run_id,d.manifest_id,d.output_refs,d.manifest_sha256
+    into v_run,v_manifest,v_refs,v_manifest_hash
+  from pg_temp.reval_prepare_defect('Q',1) d;
+  update public.orotitan_artifacts
+     set availability_state='MISSING'
+   where artifact_id=(v_refs->0->>'artifact_id')::uuid
+     and version=(v_refs->0->>'version')::integer;
+  select state_version into v_run_state from public.orotitan_runs where run_id=v_run;
+  select state_version into v_stage_state from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE';
+  begin
+    perform pg_temp.revalidate_outputs(
+      v_run,'DEEP_DIVE',v_run_state,v_stage_state,v_manifest,2,v_manifest_hash,v_refs,
+      'reval:Q',repeat('4',64)
+    );
+  exception when others then v_rejected := true; end;
+  if not v_rejected then raise exception 'Q unavailable target accepted'; end if;
+end $$;
+
+-- R. TotalEnergies defect-shape regression:
+-- predecessor CHECKPOINT -> successor CHECKPOINT, 6 intended successor outputs,
+-- 4 exact reused predecessor outputs + 2 new/current outputs.
+do $
+declare
+  v_run uuid; v_issuer uuid; v_security uuid; v_dossier uuid; v_pins jsonb; v_hash text;
+  v_manifest uuid := gen_random_uuid();
+  r1 jsonb; r2 jsonb; r3 jsonb; r4 jsonb;
+  drop1 jsonb; drop2 jsonb; new1 jsonb; new2 jsonb;
+  regs1 jsonb; regs2 jsonb; v_refs jsonb; v_manifest_hash text;
+  v_run_state bigint; v_stage_state bigint;
+begin
+  select x.run_id,x.issuer_id,x.security_id,x.dossier_id,x.pins,x.contract_hash
+    into v_run,v_issuer,v_security,v_dossier,v_pins,v_hash
+  from pg_temp.reval_create_dd_run('TOTALENERGIES_SHAPE') x;
+
+  r1 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'EVIDENCE_LEDGER','1','deep_dive/te/evidence-ledger.json');
+  r2 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'CALCULATION_LEDGER','2','deep_dive/te/calculation-ledger.json');
+  r3 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'MATERIAL_ASSUMPTION_REGISTER','3','deep_dive/te/material-assumptions.json');
+  r4 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'VALUATION_ARTIFACT','4','deep_dive/te/valuation-artifact.json');
+  drop1 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'PREDECESSOR_ONLY_A','5','deep_dive/te/predecessor-only-a.json');
+  drop2 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'PREDECESSOR_ONLY_B','6','deep_dive/te/predecessor-only-b.json');
+  regs1 := jsonb_build_array(r1,r2,r3,r4,drop1,drop2);
+
+  perform pg_temp.reval_checkpoint(
+    v_run,v_issuer,v_security,v_dossier,v_pins,v_hash,
+    v_manifest,1,regs1,null,
+    'te-shape:m1',repeat('1',64)
+  );
+
+  new1 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'VALUATION_LOCK','7','deep_dive/te/valuation-lock.json');
+  new2 := pg_temp.reval_artifact_registration(gen_random_uuid(),1,'VALUATION_FULL_PRECISION_INPUTS','8','deep_dive/te/full-precision-inputs.json');
+  regs2 := jsonb_build_array(r1,r2,r3,r4,new1,new2);
+
+  perform pg_temp.reval_checkpoint(
+    v_run,v_issuer,v_security,v_dossier,v_pins,v_hash,
+    v_manifest,2,regs2,1,
+    'te-shape:m2',repeat('2',64)
+  );
+
+  if (select count(*) from public.orotitan_artifacts a
+      join jsonb_array_elements(regs2) x
+        on a.artifact_id=(x->>'artifact_id')::uuid and a.version=(x->>'version')::integer
+      where a.run_id=v_run and a.authority_state='CHECKPOINT'
+        and a.manifest_artifact_id=v_manifest and a.manifest_version=2) <> 6 then
+    raise exception 'TOTALENERGIES shape canonical successor did not bind 6/6';
+  end if;
+
+  -- Reproduce the historical defect: only the four exact reused outputs become
+  -- predecessor-bound/superseded while the two new outputs remain current.
+  update public.orotitan_artifacts
+     set authority_state='SUPERSEDED',
+         manifest_artifact_id=v_manifest,
+         manifest_version=1
+   where run_id=v_run
+     and artifact_id in (
+       (r1->>'artifact_id')::uuid,(r2->>'artifact_id')::uuid,
+       (r3->>'artifact_id')::uuid,(r4->>'artifact_id')::uuid
+     );
+
+  v_refs := pg_temp.reval_output_refs(v_run,v_manifest,2);
+  if jsonb_array_length(v_refs) <> 6 then
+    raise exception 'TOTALENERGIES shape active manifest output refs are not exactly 6';
+  end if;
+
+  select content_sha256 into v_manifest_hash
+  from public.orotitan_artifacts
+  where artifact_id=v_manifest and version=2;
+  select state_version into v_run_state
+  from public.orotitan_runs where run_id=v_run;
+  select state_version into v_stage_state
+  from public.orotitan_run_stages where run_id=v_run and stage_code='DEEP_DIVE';
+
+  perform pg_temp.revalidate_outputs(
+    v_run,'DEEP_DIVE',v_run_state,v_stage_state,
+    v_manifest,2,v_manifest_hash,v_refs,
+    'te-shape:repair',repeat('3',64)
+  );
+
+  if (select count(*) from public.orotitan_artifacts a
+      join jsonb_array_elements(v_refs) x
+        on a.artifact_id=(x->>'artifact_id')::uuid and a.version=(x->>'version')::integer
+      where a.run_id=v_run
+        and a.authority_state='CHECKPOINT'
+        and a.manifest_artifact_id=v_manifest
+        and a.manifest_version=2) <> 6 then
+    raise exception 'TOTALENERGIES shape repair authority closure is not 6/6';
+  end if;
+
+  if exists (
+    select 1 from public.orotitan_artifacts a
+    join jsonb_array_elements(v_refs) x
+      on a.artifact_id=(x->>'artifact_id')::uuid and a.version=(x->>'version')::integer
+    where a.authority_state='SUPERSEDED'
+  ) then
+    raise exception 'TOTALENERGIES shape intended successor output remains SUPERSEDED';
+  end if;
+
+  if (select count(*) from public.orotitan_artifacts
+      where artifact_id in ((drop1->>'artifact_id')::uuid,(drop2->>'artifact_id')::uuid)
+        and authority_state='SUPERSEDED'
+        and manifest_artifact_id=v_manifest
+        and manifest_version=1) <> 2 then
+    raise exception 'TOTALENERGIES shape predecessor-only outputs not superseded';
+  end if;
+
+  if (select count(*) from public.orotitan_artifact_edges
+      where child_run_id=v_run and child_artifact_id=v_manifest and child_version=2
+        and relation_type='CONSUMES') <> 6 then
+    raise exception 'TOTALENERGIES shape successor manifest refs not exact';
+  end if;
+end $;
 
 select jsonb_build_object(
   'A_new_outputs','PASS',
@@ -587,6 +884,9 @@ select jsonb_build_object(
   'M_idempotent_replay','PASS',
   'N_idempotency_conflict_reject','PASS',
   'O_history_preserved','PASS',
+  'P_size_mismatch_reject','PASS',
+  'Q_unavailable_reject','PASS',
+  'R_totalenergies_shape','PASS',
   'critical_invariant','PASS',
   'result','PASS'
 ) as orotitan_checkpoint_revalidation_regression;
