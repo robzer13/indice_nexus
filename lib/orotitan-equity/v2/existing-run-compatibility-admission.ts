@@ -2,19 +2,19 @@ export const V2_FROZEN_CONTRACT_SET_SHA256 =
   "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
 
 export const V2_COMPATIBILITY_SEMANTIC_BASE = {
-  authorityName: "OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.6",
-  authorityVersion: "2.0.6",
-  authoritySha256: "b14aefb834d655bcf7be82a1a1403e45b60af092dc1ed77ed0228f9511597240",
-  schemaName: "04_SCREENER_SCHEMA_V1_COMPAT_V2.0.6",
-  schemaVersion: "2.0.6",
-  schemaSha256: "e6276b31f0d9485d27e7878fef30a1677f22532a7e6f553f989c3e047651cf5f",
-  validatorSha256: "07bc0fbad3f307a5236bb314fa0c5ad0018c0d597acdc629d860a443718c0a49",
+  authorityName: "OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.8",
+  authorityVersion: "2.0.8",
+  authoritySha256: "98e18f96cef730e6c2b45e16ad0e105498a8b639befa93d762c76def2fbc18fe",
+  schemaName: "04_SCREENER_SCHEMA_V1_COMPAT_V2.0.8",
+  schemaVersion: "2.0.8",
+  schemaSha256: "30ffb6648845bdafebe282ccdca3c6a33ff9e0ca8dd926fe61a3186a9ab6426c",
+  validatorSha256: "16957bec96f973833660c114b794814802f8cd500f91e92a127432b57de18fcb",
 } as const;
 
 export type CompatibilitySemanticProjection = {
   targetField: string;
-  sourceValue: string;
-  targetValue: string;
+  sourceValue: string | number;
+  targetValue: string | number;
 };
 
 export type IntegrationCheckpointState = {
@@ -76,6 +76,35 @@ const authorizedSemanticRules = new Set([
   "l2_research_fundamentals.analytical_metrics.roic_ex_goodwill\u0000NOT_INTERPRETABLE",
 ]);
 
+const RETURN_HORIZON_FIELD =
+  "l3_investment_valuation.valuation.return_horizon";
+
+function isAuthorizedSemanticProjection(
+  projection: CompatibilitySemanticProjection,
+): boolean {
+  if (projection.targetField === RETURN_HORIZON_FIELD) {
+    return (
+      typeof projection.sourceValue === "number" &&
+      typeof projection.targetValue === "number" &&
+      Number.isFinite(projection.sourceValue) &&
+      Number.isFinite(projection.targetValue) &&
+      projection.sourceValue > 0 &&
+      projection.targetValue > 0 &&
+      projection.sourceValue === projection.targetValue
+    );
+  }
+
+  if (
+    typeof projection.sourceValue !== "string" ||
+    typeof projection.targetValue !== "string"
+  ) {
+    return false;
+  }
+
+  const key = `${projection.targetField}\u0000${projection.targetValue}`;
+  return authorizedSemanticRules.has(key);
+}
+
 function reject(failures: string[]): ExistingRunCompatibilityAdmissionResult {
   return { admitted: false, route: null, failures };
 }
@@ -114,12 +143,10 @@ function validateCommon(
       failures.push("SEMANTIC_COERCION_FORBIDDEN");
       continue;
     }
-    const key = `${projection.targetField}\u0000${projection.targetValue}`;
-    if (!authorizedSemanticRules.has(key)) {
+    if (!isAuthorizedSemanticProjection(projection)) {
       failures.push("SEMANTIC_RULE_NOT_AUTHORIZED");
     }
   }
-
   return [...new Set(failures)];
 }
 
