@@ -36,6 +36,12 @@ declare
   v_desired_authority_state text := p_artifact->>'authority_state';
   v_expected_artifact_status text := coalesce(p_artifact->>'artifact_status', 'SEALED');
   v_expected_availability_state text := coalesce(p_artifact->>'availability_state', 'AVAILABLE');
+  v_expected_github_repository text := case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_repository' end;
+  v_expected_github_path text := case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_path' end;
+  v_expected_github_commit_sha text := case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_commit_sha' end;
+  v_expected_github_blob_sha text := case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_blob_sha' end;
+  v_expected_supabase_bucket text := case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_bucket' end;
+  v_expected_supabase_object_path text := case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_object_path' end;
 begin
   if jsonb_typeof(p_artifact) <> 'object' then
     raise exception 'artifact registration must be an object' using errcode = '22023';
@@ -88,12 +94,12 @@ begin
       p_artifact->>'content_sha256',
       v_backend,
       p_artifact->>'storage_uri',
-      case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_repository' end,
-      case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_path' end,
-      case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_commit_sha' end,
-      case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_blob_sha' end,
-      case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_bucket' end,
-      case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_object_path' end,
+      v_expected_github_repository,
+      v_expected_github_path,
+      v_expected_github_commit_sha,
+      v_expected_github_blob_sha,
+      v_expected_supabase_bucket,
+      v_expected_supabase_object_path,
       p_manifest_artifact_id,
       p_manifest_version
     );
@@ -122,12 +128,12 @@ begin
          or v_existing.content_sha256 is distinct from p_artifact->>'content_sha256'
          or v_existing.storage_backend is distinct from v_backend
          or v_existing.storage_uri is distinct from p_artifact->>'storage_uri'
-         or v_existing.github_repository is distinct from case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_repository' end
-         or v_existing.github_path is distinct from case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_path' end
-         or v_existing.github_commit_sha is distinct from case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_commit_sha' end
-         or v_existing.github_blob_sha is distinct from case when v_backend = 'PRIVATE_GITHUB' then p_artifact->>'github_blob_sha' end
-         or v_existing.supabase_bucket is distinct from case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_bucket' end
-         or v_existing.supabase_object_path is distinct from case when v_backend = 'SUPABASE_STORAGE' then p_artifact->>'supabase_object_path' end then
+         or v_existing.github_repository is distinct from v_expected_github_repository
+         or v_existing.github_path is distinct from v_expected_github_path
+         or v_existing.github_commit_sha is distinct from v_expected_github_commit_sha
+         or v_existing.github_blob_sha is distinct from v_expected_github_blob_sha
+         or v_existing.supabase_bucket is distinct from v_expected_supabase_bucket
+         or v_existing.supabase_object_path is distinct from v_expected_supabase_object_path then
         raise exception 'ARTIFACT_REGISTRATION_CONFLICT: existing immutable artifact registration differs'
           using errcode = '23514';
       end if;
