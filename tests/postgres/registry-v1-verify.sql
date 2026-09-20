@@ -49,6 +49,66 @@ as $$
   );
 $$;
 
+create or replace function pg_temp.registry_manifest_registration(
+  p_artifact_id uuid,
+  p_manifest jsonb,
+  p_authority_class text,
+  p_authority_state text,
+  p_path text
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+  v_text text := p_manifest::text;
+  v_bytes bytea := convert_to(v_text, 'UTF8');
+  v_size bigint := octet_length(v_bytes);
+  v_sha256 text := encode(extensions.digest(v_bytes, 'sha256'), 'hex');
+  v_blob text;
+  v_commit text := repeat('c', 40);
+  v_repo text := 'robzer13/real-orotitan';
+begin
+  v_blob := encode(
+    extensions.digest(
+      convert_to('blob ' || v_size::text, 'UTF8') || decode('00','hex') || v_bytes,
+      'sha1'
+    ),
+    'hex'
+  );
+  return jsonb_build_object(
+    'artifact_id', p_artifact_id,
+    'version', 1,
+    'artifact_type', 'RESEARCH_STAGE_MANIFEST',
+    'logical_name', 'research_stage_manifest',
+    'authority_class', p_authority_class,
+    'artifact_status', 'SEALED',
+    'authority_state', p_authority_state,
+    'availability_state', 'AVAILABLE',
+    'media_type', 'application/json',
+    'size_bytes', v_size,
+    'content_sha256', v_sha256,
+    'storage_backend', 'PRIVATE_GITHUB',
+    'storage_uri', 'github://' || v_repo || '@' || v_commit || '/' || p_path,
+    'github_repository', v_repo,
+    'github_path', p_path,
+    'github_commit_sha', v_commit,
+    'github_blob_sha', v_blob,
+    'persistence_receipt', jsonb_build_object(
+      'receipt_schema_version','1.0',
+      'verification_method','PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1',
+      'storage_backend','PRIVATE_GITHUB',
+      'github_repository',v_repo,
+      'github_path',p_path,
+      'github_commit_sha',v_commit,
+      'github_blob_sha',v_blob,
+      'commit_path_resolved',true,
+      'verified_content_base64',encode(v_bytes,'base64'),
+      'verified_at','2026-09-20T12:00:00Z'
+    )
+  );
+end;
+$$;
+
 -- ---------------------------------------------------------------------------
 -- Structural / privilege guards.
 -- ---------------------------------------------------------------------------
@@ -347,8 +407,12 @@ begin
     'started_at','2026-09-14T14:00:00Z',
     'completed_at',null
   );
-  v_manifest_reg := pg_temp.registry_artifact_registration(
-    v_checkpoint_manifest,'RESEARCH_STAGE_MANIFEST','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT','5','research/checkpoint-manifest.json'
+  v_manifest_reg := pg_temp.registry_manifest_registration(
+    v_checkpoint_manifest,
+    v_manifest,
+    'CHECKPOINT_STAGE_OUTPUT',
+    'CHECKPOINT',
+    'research/checkpoint-manifest.json'
   );
 
   select state_version into v_run_state from public.orotitan_runs where run_id=v_run;
@@ -436,8 +500,12 @@ begin
     'started_at','2026-09-14T14:00:00Z',
     'completed_at','2026-09-14T15:00:00Z'
   );
-  v_manifest_reg := pg_temp.registry_artifact_registration(
-    v_final_manifest,'RESEARCH_STAGE_MANIFEST','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE','f','research/final-manifest.json'
+  v_manifest_reg := pg_temp.registry_manifest_registration(
+    v_final_manifest,
+    v_manifest,
+    'AUTHORITATIVE_STAGE_OUTPUT',
+    'AUTHORITATIVE',
+    'research/final-manifest.json'
   );
 
   select state_version into v_run_state from public.orotitan_runs where run_id=v_run;

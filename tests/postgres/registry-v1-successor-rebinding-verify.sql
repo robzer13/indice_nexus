@@ -51,6 +51,68 @@ as $$
   );
 $$;
 
+create or replace function pg_temp.v17_manifest_registration(
+  p_manifest jsonb,
+  p_manifest_id uuid,
+  p_version integer,
+  p_artifact_type text,
+  p_path text,
+  p_authority_class text,
+  p_authority_state text
+)
+returns jsonb
+language plpgsql
+as $$
+declare
+  v_text text := p_manifest::text;
+  v_bytes bytea := convert_to(v_text,'UTF8');
+  v_size bigint := octet_length(v_bytes);
+  v_sha text := encode(extensions.digest(v_bytes,'sha256'),'hex');
+  v_blob text;
+  v_commit text := repeat('c',40);
+  v_repo text := 'robzer13/real-orotitan';
+begin
+  v_blob := encode(
+    extensions.digest(
+      convert_to('blob ' || v_size::text,'UTF8') || decode('00','hex') || v_bytes,
+      'sha1'
+    ),
+    'hex'
+  );
+  return jsonb_build_object(
+    'artifact_id',p_manifest_id,
+    'version',p_version,
+    'artifact_type',p_artifact_type,
+    'logical_name',lower(p_artifact_type),
+    'authority_class',p_authority_class,
+    'artifact_status','SEALED',
+    'authority_state',p_authority_state,
+    'availability_state','AVAILABLE',
+    'media_type','application/json',
+    'size_bytes',v_size,
+    'content_sha256',v_sha,
+    'storage_backend','PRIVATE_GITHUB',
+    'storage_uri','github://' || v_repo || '@' || v_commit || '/' || p_path,
+    'github_repository',v_repo,
+    'github_path',p_path,
+    'github_commit_sha',v_commit,
+    'github_blob_sha',v_blob,
+    'persistence_receipt',jsonb_build_object(
+      'receipt_schema_version','1.0',
+      'verification_method','PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1',
+      'storage_backend','PRIVATE_GITHUB',
+      'github_repository',v_repo,
+      'github_path',p_path,
+      'github_commit_sha',v_commit,
+      'github_blob_sha',v_blob,
+      'commit_path_resolved',true,
+      'verified_content_base64',encode(v_bytes,'base64'),
+      'verified_at','2026-09-20T12:00:00Z'
+    )
+  );
+end;
+$$;
+
 create or replace function pg_temp.v17_pins()
 returns jsonb
 language plpgsql
@@ -322,9 +384,8 @@ begin
     case when p_predecessor_version is null then null else p_manifest_id end,
     p_predecessor_version
   );
-  v_manifest_reg := pg_temp.v17_artifact(
-    p_manifest_id,p_manifest_version,'DEEP_DIVE_STAGE_MANIFEST',
-    case when p_manifest_version % 2 = 0 then 'e' else 'f' end,
+  v_manifest_reg := pg_temp.v17_manifest_registration(
+    v_manifest,p_manifest_id,p_manifest_version,'DEEP_DIVE_STAGE_MANIFEST',
     'v17/' || p_run_id || '/checkpoint-' || p_manifest_version || '.json',
     'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT'
   );
@@ -424,7 +485,7 @@ begin
 
   -- TEST 8 wrong run: exact artifact from r1 cannot bind into r2.
   manifest := pg_temp.v17_manifest(r2,'DEEP_DIVE','CHECKPOINT',1,m2,jsonb_build_array(a),null,null);
-  manifest_reg := pg_temp.v17_artifact(m2,1,'DEEP_DIVE_STAGE_MANIFEST','9','v17/wrong-run-manifest.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT');
+  manifest_reg := pg_temp.v17_manifest_registration(manifest,m2,1,'DEEP_DIVE_STAGE_MANIFEST','v17/wrong-run-manifest.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT');
   rejected := false;
   begin
     perform public.orotitan_register_manifest_bundle(r2,'DEEP_DIVE',manifest,manifest_reg,jsonb_build_array(a),'[]'::jsonb);
@@ -440,7 +501,7 @@ begin
 
   -- TEST 10 artifact not explicitly in successor manifest.
   manifest := pg_temp.v17_manifest(r1,'DEEP_DIVE','CHECKPOINT',1,m2,jsonb_build_array(a),null,null);
-  manifest_reg := pg_temp.v17_artifact(m2,1,'DEEP_DIVE_STAGE_MANIFEST','a','v17/absent-manifest.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT');
+  manifest_reg := pg_temp.v17_manifest_registration(manifest,m2,1,'DEEP_DIVE_STAGE_MANIFEST','v17/absent-manifest.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT');
   bad := pg_temp.v17_artifact(gen_random_uuid(),1,'EXTRA','a','v17/extra.json');
   rejected := false;
   begin
@@ -509,7 +570,11 @@ begin
     (select state_version-1 from public.orotitan_runs where run_id=r),
     (select state_version-1 from public.orotitan_run_stages where run_id=r and stage_code='DEEP_DIVE'),
     pg_temp.v17_manifest(r,'DEEP_DIVE','CHECKPOINT',1,m,regs,null,null),
-    pg_temp.v17_artifact(m,1,'DEEP_DIVE_STAGE_MANIFEST','f','v17/' || r || '/checkpoint-1.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT'),
+    pg_temp.v17_manifest_registration(
+      pg_temp.v17_manifest(r,'DEEP_DIVE','CHECKPOINT',1,m,regs,null,null),
+      m,1,'DEEP_DIVE_STAGE_MANIFEST','v17/' || r || '/checkpoint-1.json',
+      'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT'
+    ),
     regs,pg_temp.v17_edges(r,m,1,regs,null,null),
     'IN_PROGRESS','v17:t15',repeat('f',64),'SYSTEM'
   );
@@ -524,7 +589,11 @@ begin
       (select state_version from public.orotitan_runs where run_id=r),
       (select state_version from public.orotitan_run_stages where run_id=r and stage_code='DEEP_DIVE'),
       pg_temp.v17_manifest(r,'DEEP_DIVE','CHECKPOINT',1,m,regs,null,null),
-      pg_temp.v17_artifact(m,1,'DEEP_DIVE_STAGE_MANIFEST','f','v17/' || r || '/checkpoint-1.json','CHECKPOINT_STAGE_OUTPUT','CHECKPOINT'),
+      pg_temp.v17_manifest_registration(
+      pg_temp.v17_manifest(r,'DEEP_DIVE','CHECKPOINT',1,m,regs,null,null),
+      m,1,'DEEP_DIVE_STAGE_MANIFEST','v17/' || r || '/checkpoint-1.json',
+      'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT'
+    ),
       regs,pg_temp.v17_edges(r,m,1,regs,null,null),
       'IN_PROGRESS','v17:t15',repeat('0',64),'SYSTEM'
     );
@@ -563,7 +632,7 @@ begin
   regs1 := jsonb_build_array(snap,map1,schema_r,i2,hist,i3b,prepub);
 
   manifest1 := pg_temp.v17_manifest(r,'INTEGRATION','FINAL',1,m,regs1,null,null);
-  mreg1 := pg_temp.v17_artifact(m,1,'INTEGRATION_STAGE_MANIFEST','8','v17/final/manifest-v1.json','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE');
+  mreg1 := pg_temp.v17_manifest_registration(manifest1,m,1,'INTEGRATION_STAGE_MANIFEST','v17/final/manifest-v1.json','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE');
   edges1 := pg_temp.v17_edges(r,m,1,regs1,null,null);
   select state_version into run_v from public.orotitan_runs where run_id=r;
   select state_version into stage_v from public.orotitan_run_stages where run_id=r and stage_code='INTEGRATION';
@@ -617,7 +686,7 @@ begin
   map2 := pg_temp.v17_artifact((map1->>'artifact_id')::uuid,2,'INTEGRATION_MAPPING_RECORD','9','v17/final/mapping-v2.json','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE');
   regs2 := jsonb_build_array(snap,map2,schema_r,i2,hist,i3b,prepub);
   manifest2 := pg_temp.v17_manifest(r,'INTEGRATION','FINAL',2,m,regs2,m,1);
-  mreg2 := pg_temp.v17_artifact(m,2,'INTEGRATION_STAGE_MANIFEST','a','v17/final/manifest-v2.json','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE');
+  mreg2 := pg_temp.v17_manifest_registration(manifest2,m,2,'INTEGRATION_STAGE_MANIFEST','v17/final/manifest-v2.json','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE');
   edges2 := pg_temp.v17_edges(r,m,2,regs2,m,1);
 
   select state_version into run_v from public.orotitan_runs where run_id=r;
