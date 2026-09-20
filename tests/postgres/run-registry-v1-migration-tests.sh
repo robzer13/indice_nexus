@@ -18,6 +18,7 @@ registry6="$root/migrations/20260920_orotitan_registry_v1_6_checkpoint_output_re
 registry7="$root/migrations/20260920_orotitan_registry_v1_7_final_output_rebinding.sql"
 registry8="$root/migrations/20260920_orotitan_registry_v1_8_manifest_persistence_receipt_integrity.sql"
 registry9="$root/migrations/20260920203621_orotitan_registry_bundle_persistence_integrity.sql"
+registry10="$root/migrations/20260920_orotitan_registry_v1_9_attestation_idempotency_fix.sql"
 verify="$root/tests/postgres/registry-v1-verify.sql"
 revalidation_verify="$root/tests/postgres/registry-v1-checkpoint-revalidation-verify.sql"
 successor_rebinding_verify="$root/tests/postgres/registry-v1-successor-rebinding-verify.sql"
@@ -71,6 +72,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$manifest_receipt_verify"
 # Preserve the historical V1.8 semantic frontier above, then apply exactly one
 # generated forward migration and run the bundle-wide receipt closure matrix.
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry9" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry10" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$bundle_receipt_verify"
 
 # The operational matrix is registry-only and must still leave legacy and
@@ -78,4 +80,4 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$bundle_receipt_verify"
 test "$legacy_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(c)::text, ',' order by c.id) from companies c)||(select string_agg(row_to_json(s)::text, ',' order by s.id) from snapshots s)||(select string_agg(row_to_json(p)::text, ',' order by p.id) from market_prices p)||(select string_agg(row_to_json(r)::text, ',' order by r.id) from market_sync_runs r))")"
 test "$identity_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(i)::text, ',' order by i.issuer_id) from issuers i)||(select string_agg(row_to_json(s)::text, ',' order by s.security_id) from securities s)||(select string_agg(row_to_json(d)::text, ',' order by d.dossier_id) from research_dossiers d)||(select string_agg(row_to_json(m)::text, ',' order by m.legacy_company_id) from legacy_company_identity_map m))")"
 
-echo 'Registry V1.6/V1.7/V1.8 + forward bundle persistence PostgreSQL 17 regression: PASS ALL'
+echo 'Registry V1.6/V1.7/V1.8 + forward bundle persistence + V1.9 attestation fix PostgreSQL 17 regression: PASS ALL'
