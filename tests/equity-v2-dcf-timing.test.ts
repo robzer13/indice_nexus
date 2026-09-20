@@ -161,81 +161,6 @@ function expectCode(input: DcfTimingInput, code: string): void {
   );
 }
 
-// Independent implementation B: no Date object and no production helper reuse.
-// Gregorian civil dates are converted to an integer ordinal via a days-from-civil algorithm.
-function civilOrdinal(iso: string): number {
-  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso);
-  assert.ok(m, `invalid oracle date ${iso}`);
-  let y = Number(m[1]);
-  const month = Number(m[2]);
-  const day = Number(m[3]);
-  assert.ok(month >= 1 && month <= 12);
-  assert.ok(day >= 1 && day <= 31);
-  y -= month <= 2 ? 1 : 0;
-  const era = Math.floor(y / 400);
-  const yoe = y - era * 400;
-  const mp = month + (month > 2 ? -3 : 9);
-  const doy = Math.floor((153 * mp + 2) / 5) + day - 1;
-  const doe =
-    yoe * 365 +
-    Math.floor(yoe / 4) -
-    Math.floor(yoe / 100) +
-    doy;
-  return era * 146097 + doe;
-}
-
-function independentOracle(input: DcfTimingInput): DcfTimingOutput {
-  assert.equal(input.dataCutoff, input.valuationDate);
-  assert.equal(input.periodTiming, "END_OF_PERIOD");
-  assert.equal(input.yearFractionConvention, "ACT/365F");
-  assert.equal(input.fiscalCalendarResolved, true);
-  assert.equal(input.historicalOutputCalibration, false);
-
-  const requiredRateBasis =
-    input.cashFlowBasis === "FCFF" ? "WACC" : "COST_OF_EQUITY";
-  assert.equal(input.discountRateBasis, requiredRateBasis);
-
-  const origin = civilOrdinal(input.valuationDate);
-  const yearFractions = input.cashFlows.map(
-    (flow) => (civilOrdinal(flow.paymentDate) - origin) / 365,
-  );
-  const pvCashFlows = input.cashFlows.map(
-    (flow, i) => flow.amount / Math.pow(1 + input.discountRate, yearFractions[i]),
-  );
-
-  const terminalValue =
-    input.terminal.nextPeriodCashFlow /
-    (input.discountRate - input.terminal.growthRate);
-  const pvTerminalValue =
-    terminalValue /
-    Math.pow(
-      1 + input.discountRate,
-      yearFractions[yearFractions.length - 1],
-    );
-  const dcf =
-    pvCashFlows.reduce((sum, value) => sum + value, 0) + pvTerminalValue;
-
-  const enterpriseValue = input.cashFlowBasis === "FCFF" ? dcf : null;
-  const equityValue =
-    input.cashFlowBasis === "FCFF"
-      ? dcf + (input.evToEquityBridge?.netEquityBridgeAdjustment ?? Number.NaN)
-      : dcf;
-
-  return {
-    timeOrigin: input.valuationDate,
-    valuationDate: input.valuationDate,
-    yearFractionConvention: "ACT/365F",
-    yearFractions,
-    discountExponents: [...yearFractions],
-    pvCashFlows,
-    terminalValue,
-    pvTerminalValue,
-    enterpriseValue,
-    equityValue,
-    perShareValue: equityValue / input.economicShareCount.count,
-  };
-}
-
 test("R1 FCFF reference vector is exact within frozen tolerance", () => {
   const out = computeDcfTiming(r1());
   close(out.yearFractions[0], 0.2821917808219178, "R1 t1");
@@ -273,7 +198,7 @@ test("R3 Owner Earnings uses ACT/365F across leap-year numerator", () => {
 test("independent implementation equivalence on all reference vectors", () => {
   for (const [name, input] of [["R1", r1()], ["R2", r2()], ["R3", r3()]] as const) {
     const a = computeDcfTiming(input);
-    const b = independentOracle(input);
+    const b = independentDcfTimingOracle(input);
     assert.equal(a.timeOrigin, b.timeOrigin, name);
     assert.equal(a.enterpriseValue, b.enterpriseValue, name);
     for (let i = 0; i < a.yearFractions.length; i += 1) {
