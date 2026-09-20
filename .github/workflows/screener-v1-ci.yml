@@ -82,5 +82,12 @@ jobs:
           PGPORT: 5432
           PGUSER: postgres
           PGPASSWORD: postgres
+      - name: V3 Registry admission regression
+        run: bash tests/postgres/run-v3-contract-admission-tests.sh
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
       - name: Production build
         run: npm run build
