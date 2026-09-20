@@ -90,7 +90,8 @@
     "docs/orotitan-equity/REGISTRY_LIVE_MIGRATION_RUNBOOK_V1.md",
     "contracts/orotitan-equity/v2/OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0.md",
     "contracts/orotitan-equity/v2/OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V2_FREEZE_V2.0.md",
-    "contracts/orotitan-equity/v2/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md"
+    "contracts/orotitan-equity/v2/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md",
+    "contracts/orotitan-equity/v2/runtime/OROTITAN_RUNTIME_PATCH_V2.0.2.md"
   ],
   "controlled_successor": {
     "supported_reason": "DCF_TIMING_METHODOLOGY_REPLAY",
