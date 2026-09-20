@@ -183,8 +183,14 @@
   "generation_evidence": {
     "source_hash_report": "OROTITAN_DCF_TIMING_AUTHORITY_V1",
     "regression_suite": "tests/equity-v2-dcf-timing.test.ts",
-    "regression_status": "PENDING_MERGE_GATE",
-    "independent_implementation_equivalence": "PENDING_MERGE_GATE"
+    "independent_implementation": "tests/dcf-timing-independent-oracle.ts",
+    "regression_status": "PASS",
+    "independent_implementation_equivalence": "PASS",
+    "unresolved_policy_branches": 0,
+    "ci_workflow": "Screener CI",
+    "ci_run_id": 35536969143,
+    "ci_run_number": 217,
+    "verified_head_sha": "826e1c977ccd2dc125cb1ff55da0e778c4e5a1fc"
   },
   "scope_boundary": {
     "creates_live_run": false,
