@@ -1,9 +1,9 @@
 {
   "format": "OROTITAN_CONTRACT_PIN_PACK_V2",
-  "version": "2.0",
+  "version": "2.0.1",
   "repository": "robzer13/indice_nexus",
-  "source_commit_sha": "86b227a75275cf4aaec6ef61ea2a27e87e2bfec7",
-  "contract_set_sha256": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+  "source_commit_sha": "003660a6b5984402d2a0cb8bc99fba6cdda9470b",
+  "contract_set_sha256": "d933717b9da01e8565a3e8116ff77582ffa7ded109649ec370a0f7839eecc71a",
   "contract_pins": {
     "process": {
       "name": "OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0",
@@ -166,17 +166,29 @@
         "blob_sha": "65f5c0c013362fdd7ba64a8975a8d25b74d408d6",
         "locator_format": "RAW_CANONICAL_V1"
       }
+    },
+    "dcf_timing": {
+      "name": "OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0",
+      "version": "1.0",
+      "content_sha256": "e4f316fd15f9e1e07683dcc1fe1dbb89c0bcdd938724cf118ef24d213dada771",
+      "locator": {
+        "backend": "GITHUB_IMMUTABLE",
+        "repository": "robzer13/indice_nexus",
+        "path": "contracts/orotitan-equity/v2/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md",
+        "commit_sha": "003660a6b5984402d2a0cb8bc99fba6cdda9470b",
+        "blob_sha": "1cf9e847af3fa83ffde64b1b9856c1d4697bdf79"
+      }
     }
   },
   "generation_evidence": {
-    "ci_run_id": 34952398657,
-    "ci_run_number": 141,
-    "ci_conclusion": "success",
-    "source_hash_report": "OROTITAN_V2_PIN_SOURCE_HASHES"
+    "source_hash_report": "OROTITAN_DCF_TIMING_AUTHORITY_V1",
+    "regression_suite": "tests/equity-v2-dcf-timing.test.ts",
+    "regression_status": "PENDING_MERGE_GATE",
+    "independent_implementation_equivalence": "PENDING_MERGE_GATE"
   },
   "scope_boundary": {
     "creates_live_run": false,
     "publishes_canonical_snapshot": false,
-    "mutates_production_registry": false
+    "mutates_existing_run_contract_set": false
   }
 }
