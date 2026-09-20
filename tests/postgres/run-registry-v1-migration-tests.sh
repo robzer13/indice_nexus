@@ -15,8 +15,10 @@ registry3="$root/migrations/20260914_orotitan_registry_v1_3_rpcs.sql"
 registry4="$root/migrations/20260914_orotitan_registry_v1_4_manifest_authority.sql"
 registry5="$root/migrations/20260914_orotitan_registry_v1_5_contract_pin_guards.sql"
 registry6="$root/migrations/20260920_orotitan_registry_v1_6_checkpoint_output_revalidation.sql"
+registry7="$root/migrations/20260920_orotitan_registry_v1_7_final_output_rebinding.sql"
 verify="$root/tests/postgres/registry-v1-verify.sql"
 revalidation_verify="$root/tests/postgres/registry-v1-checkpoint-revalidation-verify.sql"
+successor_rebinding_verify="$root/tests/postgres/registry-v1-successor-rebinding-verify.sql"
 database="orotitan_registry_v1_$$"
 cleanup() { dropdb --if-exists --force "$database" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
@@ -37,7 +39,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$i3" >/dev/null
 legacy_before="$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(c)::text, ',' order by c.id) from companies c)||(select string_agg(row_to_json(s)::text, ',' order by s.id) from snapshots s)||(select string_agg(row_to_json(p)::text, ',' order by p.id) from market_prices p)||(select string_agg(row_to_json(r)::text, ',' order by r.id) from market_sync_runs r))")"
 identity_before="$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(i)::text, ',' order by i.issuer_id) from issuers i)||(select string_agg(row_to_json(s)::text, ',' order by s.security_id) from securities s)||(select string_agg(row_to_json(d)::text, ',' order by d.dossier_id) from research_dossiers d)||(select string_agg(row_to_json(m)::text, ',' order by m.legacy_company_id) from legacy_company_identity_map m))")"
 
-for migration in "$registry1" "$registry2" "$registry3" "$registry4" "$registry5" "$registry6"; do
+for migration in "$registry1" "$registry2" "$registry3" "$registry4" "$registry5" "$registry6" "$registry7"; do
   psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$migration" >/dev/null
 done
 
@@ -48,6 +50,7 @@ test "$identity_before" = "$(psql -XAt -d "$database" -c "select md5((select str
 
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$revalidation_verify"
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_rebinding_verify"
 
 # The operational matrix is registry-only and must still leave legacy and
 # canonical identity rows byte-equivalent at the row-json level.
