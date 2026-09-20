@@ -758,7 +758,7 @@ end $$;
 -- R. TotalEnergies defect-shape regression:
 -- predecessor CHECKPOINT -> successor CHECKPOINT, 6 intended successor outputs,
 -- 4 exact reused predecessor outputs + 2 new/current outputs.
-do $
+do $$
 declare
   v_run uuid; v_issuer uuid; v_security uuid; v_dossier uuid; v_pins jsonb; v_hash text;
   v_manifest uuid := gen_random_uuid();
@@ -866,7 +866,7 @@ begin
         and relation_type='CONSUMES') <> 6 then
     raise exception 'TOTALENERGIES shape successor manifest refs not exact';
   end if;
-end $;
+end $$;
 
 select jsonb_build_object(
   'A_new_outputs','PASS',
