@@ -4,9 +4,9 @@ import test from "node:test";
 import {
   computeDcfTiming,
   type DcfTimingInput,
-  type DcfTimingOutput,
   DcfTimingError,
 } from "../lib/orotitan-equity/v2/dcf-timing";
+import { independentDcfTimingOracle } from "./dcf-timing-independent-oracle";
 
 const relTol = (expected: number) => 1e-12 * Math.max(1, Math.abs(expected));
 
