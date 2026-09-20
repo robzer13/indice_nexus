@@ -41,7 +41,7 @@ node - "$root" > "$sql_file" <<'NODE'
 const fs = require("node:fs");
 const path = require("node:path");
 const root = process.argv[2];
-const v2 = JSON.parse(fs.readFileSync(path.join(root, "contracts/orotitan-equity/v2/contract-pin-pack/OROTITAN_CONTRACT_PIN_PACK_V2.json"), "utf8"));
+const v2 = JSON.parse(fs.readFileSync(path.join(root, "contracts/orotitan-equity/v2/contract-pin-pack-v2/OROTITAN_CONTRACT_PIN_PACK_V2.json"), "utf8"));
 const v3 = JSON.parse(fs.readFileSync(path.join(root, "contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3.json"), "utf8"));
 const q = (obj) => JSON.stringify(obj).replaceAll("$pins$", "$pins_escaped$");
 process.stdout.write(String.raw`\set ON_ERROR_STOP on
