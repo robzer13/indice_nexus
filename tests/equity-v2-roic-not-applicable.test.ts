@@ -380,6 +380,9 @@ const compatV205Schema = JSON.parse(
 const compatV206Schema = JSON.parse(
   readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.6.json", import.meta.url), "utf8"),
 ) as Record<string, unknown>;
+const compatV208Schema = JSON.parse(
+  readFileSync(new URL("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.8.json", import.meta.url), "utf8"),
+) as Record<string, unknown>;
 
 function schemaDefinitions(schemaObject: Record<string, unknown>): Record<string, Record<string, unknown>> {
   return schemaObject.$defs as Record<string, Record<string, unknown>>;
@@ -393,6 +396,16 @@ function metricProperties(schemaObject: Record<string, unknown>): Record<string,
 function fundamentalStateProperties(schemaObject: Record<string, unknown>): Record<string, unknown> {
   const defs = schemaDefinitions(schemaObject);
   return (defs.fundamentalStates.properties as Record<string, unknown>);
+}
+
+function valuationProperties(schemaObject: Record<string, unknown>): Record<string, unknown> {
+  const defs = schemaDefinitions(schemaObject);
+  return defs.valuation.properties as Record<string, unknown>;
+}
+
+function valuationFields(snapshot: Record<string, unknown>): Record<string, unknown> {
+  const l3 = snapshot.l3_investment_valuation as Record<string, unknown>;
+  return l3.valuation as Record<string, unknown>;
 }
 
 function deterministicContract(result: ReturnType<typeof validateV2ResearchSnapshotForPersistence>): Record<string, unknown> {
@@ -799,4 +812,134 @@ test("V2.0.6 compatibility requires no historical payload rewrite", () => {
   const v1Historical = analyzeCore("STABLE");
   analyticalMetrics(v1Historical).roic_ex_goodwill = 12;
   assert.equal(validateResearchSnapshotForPersistence(v1Historical, dossierId).ok, true);
+});
+
+
+test("V2.0.8 schema is a strict field-local additive successor to V2.0.6", () => {
+  const expected = JSON.parse(JSON.stringify(compatV206Schema)) as Record<string, unknown>;
+  expected.$id = "urn:orotitan:equity-research:screener-contract:v1-v2-compat-2.0.8";
+  expected.title = "OroTitan Equity Research V1 Core Compatibility Schema for V2.0.8";
+  expected.description = compatV208Schema.description;
+
+  const expectedValuation = valuationProperties(expected);
+  const actualValuation = valuationProperties(compatV208Schema);
+  expectedValuation.return_horizon = actualValuation.return_horizon;
+
+  assert.deepEqual(compatV208Schema, expected);
+  assert.deepEqual(schemaDefinitions(compatV208Schema).specialState, schemaDefinitions(compatV206Schema).specialState);
+  assert.deepEqual(schemaDefinitions(compatV208Schema).returnValue, schemaDefinitions(compatV206Schema).returnValue);
+  assert.deepEqual(metricProperties(compatV208Schema), metricProperties(compatV206Schema));
+  assert.deepEqual(fundamentalStateProperties(compatV208Schema), fundamentalStateProperties(compatV206Schema));
+});
+
+test("V2.0.8 preserves ordinary integer return horizons", () => {
+  for (const value of [1, 3, 5, 10]) {
+    const snapshot = v2Analyze("STABLE");
+    valuationFields(snapshot).return_horizon = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : `${value}: ${result.errors.join(" | ")}`);
+    if (result.ok) assert.equal(valuationFields(result.snapshot).return_horizon, value);
+  }
+});
+
+test("V2.0.8 admits exact positive fractional return horizons", () => {
+  for (const value of [0.25, 0.5, 1.5, 4.7835616438356166, 9.999999]) {
+    const snapshot = v2Analyze("STABLE");
+    valuationFields(snapshot).return_horizon = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : `${value}: ${result.errors.join(" | ")}`);
+    if (result.ok) assert.equal(valuationFields(result.snapshot).return_horizon, value);
+  }
+});
+
+test("V2.0.8 rejects zero, negative, non-finite, string and malformed return horizons", () => {
+  const invalidValues: unknown[] = [
+    0,
+    -0.25,
+    Number.NaN,
+    Number.POSITIVE_INFINITY,
+    "4.7835616438356166",
+    { value: 4.7835616438356166 },
+  ];
+  for (const value of invalidValues) {
+    const snapshot = v2Analyze("STABLE");
+    valuationFields(snapshot).return_horizon = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, false, `unexpectedly admitted ${String(value)}`);
+    if (!result.ok) assert.equal(result.stage, "schema");
+  }
+});
+
+test("V2.0.8 retains all pre-existing return_horizon special states", () => {
+  for (const value of ["UNKNOWN", "NOT_APPLICABLE", "NOT_ASSESSABLE", "MISSING", "NOT_AVAILABLE"]) {
+    const snapshot = v2Analyze("STABLE");
+    valuationFields(snapshot).return_horizon = value;
+    const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+    assert.equal(result.ok, true, result.ok ? "" : `${value}: ${result.errors.join(" | ")}`);
+  }
+});
+
+test("frozen V1 validator remains unchanged and rejects fractional return_horizon", () => {
+  const core = analyzeCore("STABLE");
+  valuationFields(core).return_horizon = 4.7835616438356166;
+  const result = validateResearchSnapshotForPersistence(core, dossierId);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
+});
+
+test("V2.0.8 fractional return_horizon round-trips through JSON without semantic loss", () => {
+  const value = 4.7835616438356166;
+  const serialized = JSON.stringify({ return_horizon: value });
+  const reparsed = JSON.parse(serialized) as { return_horizon: number };
+  assert.equal(serialized, '{"return_horizon":4.7835616438356166}');
+  assert.equal(reparsed.return_horizon, value);
+});
+
+test("V2.0.8 return_horizon compatibility does not change I2 deterministic outputs", () => {
+  const integerSnapshot = v2Analyze("STABLE");
+  valuationFields(integerSnapshot).return_horizon = 5;
+  const fractionalSnapshot = v2Analyze("STABLE");
+  valuationFields(fractionalSnapshot).return_horizon = 4.7835616438356166;
+  const integerResult = validateV2ResearchSnapshotForPersistence(integerSnapshot, dossierId);
+  const fractionalResult = validateV2ResearchSnapshotForPersistence(fractionalSnapshot, dossierId);
+  assertI2DeterministicEqual(integerResult, fractionalResult);
+});
+
+test("V2 I3-B boundary preserves exact fractional return_horizon without coercion", async () => {
+  const snapshot = v2Analyze("STABLE");
+  valuationFields(snapshot).return_horizon = 4.7835616438356166;
+  let called = false;
+  const result = await persistValidatedV2ResearchSnapshot(
+    { dossierId, expectedCurrentSnapshotId: null, canonicalPayload: snapshot },
+    async (args) => {
+      called = true;
+      assert.equal(
+        valuationFields(args.p_canonical_payload as Record<string, unknown>).return_horizon,
+        4.7835616438356166,
+      );
+      return {
+        data: {
+          status: "INSERTED",
+          dossier_id: dossierId,
+          snapshot_id: snapshot.snapshot_id,
+          current_snapshot_id: snapshot.snapshot_id,
+        },
+        error: null,
+      };
+    },
+  );
+  assert.equal(called, true);
+  assert.equal(result.status, "INSERTED");
+});
+
+test("V2.0.8 simultaneously preserves ROIIC NOT_INTERPRETABLE and fractional return_horizon", () => {
+  const snapshot = v2Analyze("STABLE");
+  analyticalMetrics(snapshot).roiic = "NOT_INTERPRETABLE";
+  valuationFields(snapshot).return_horizon = 4.7835616438356166;
+  const result = validateV2ResearchSnapshotForPersistence(snapshot, dossierId);
+  assert.equal(result.ok, true, result.ok ? "" : result.errors.join(" | "));
+  if (result.ok) {
+    assert.equal(analyticalMetrics(result.snapshot).roiic, "NOT_INTERPRETABLE");
+    assert.equal(valuationFields(result.snapshot).return_horizon, 4.7835616438356166);
+  }
 });

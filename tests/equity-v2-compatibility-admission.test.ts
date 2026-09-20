@@ -25,11 +25,18 @@ function base(): ExistingRunCompatibilityAdmissionInput {
     publicationAuthorizationExists: false,
     publicationEventCount: 0,
     currentSnapshotStateCompatible: true,
-    semanticProjections: [{
-      targetField: "l2_research_fundamentals.analytical_metrics.roiic",
-      sourceValue: "NOT_INTERPRETABLE",
-      targetValue: "NOT_INTERPRETABLE",
-    }],
+    semanticProjections: [
+      {
+        targetField: "l2_research_fundamentals.analytical_metrics.roiic",
+        sourceValue: "NOT_INTERPRETABLE",
+        targetValue: "NOT_INTERPRETABLE",
+      },
+      {
+        targetField: "l3_investment_valuation.valuation.return_horizon",
+        sourceValue: 4.7835616438356166,
+        targetValue: 4.7835616438356166,
+      },
+    ],
     semanticLoss: "NONE",
     analyticalArtifactMutationRequired: false,
     contractPinMutationRequired: false,
@@ -47,13 +54,13 @@ function sha256(path: string): string {
   return createHash("sha256").update(readFileSync(new URL(path, import.meta.url))).digest("hex");
 }
 
-test("V2.0.7 semantic base reuses exact deployed V2.0.6 authority/schema/validator bytes", () => {
+test("V2.0.8 semantic base uses exact V2.0.8 authority/schema/validator bytes", () => {
   assert.equal(
-    sha256("../contracts/orotitan-equity/v2/OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.6.md"),
+    sha256("../contracts/orotitan-equity/v2/OROTITAN_CANONICAL_SEMANTIC_COMPATIBILITY_PATCH_V2.0.8.md"),
     V2_COMPATIBILITY_SEMANTIC_BASE.authoritySha256,
   );
   assert.equal(
-    sha256("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.6.json"),
+    sha256("../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.8.json"),
     V2_COMPATIBILITY_SEMANTIC_BASE.schemaSha256,
   );
   assert.equal(
@@ -95,7 +102,7 @@ test("TEST D Integration absent but Integration artifacts exist is rejected", ()
   if (!result.admitted) assert.ok(result.failures.includes("PRE_INTEGRATION_ARTIFACTS_ALREADY_EXIST"));
 });
 
-test("TEST E valid existing Integration checkpoint routes through V2.0.6-compatible path", () => {
+test("TEST E valid existing Integration checkpoint routes through V2.0.8-compatible path", () => {
   const input = base();
   input.runStatus = "BLOCKED";
   input.currentStage = "INTEGRATION";
@@ -136,11 +143,13 @@ test("TEST G Contract Set mismatch is rejected", () => {
   if (!result.admitted) assert.ok(result.failures.includes("CONTRACT_SET_MISMATCH"));
 });
 
-test("TEST H ROIIC NOT_INTERPRETABLE under exact authorized field is lossless", () => {
+test("TEST H ROIIC NOT_INTERPRETABLE and fractional return_horizon are lossless", () => {
   const input = base();
   const result = evaluateExistingRunCompatibilityAdmission(input);
   assert.equal(result.admitted, true);
-  assert.equal(input.semanticProjections[0].sourceValue, input.semanticProjections[0].targetValue);
+  for (const projection of input.semanticProjections) {
+    assert.equal(projection.sourceValue, projection.targetValue);
+  }
   assert.equal(input.semanticLoss, "NONE");
 });
 
@@ -184,7 +193,7 @@ test("TEST L compatibility admission requiring analytical mutation is rejected",
   if (!result.admitted) assert.ok(result.failures.includes("ANALYTICAL_ARTIFACT_MUTATION_REQUIRED"));
 });
 
-test("all V2.0.2-V2.0.6 field-local semantic rules remain admissible without broadening", () => {
+test("all V2.0.2-V2.0.8 field-local semantic rules remain admissible without broadening", () => {
   const rules = [
     ["l2_research_fundamentals.fundamental_states.roic_trend", "NOT_APPLICABLE"],
     ["l2_research_fundamentals.analytical_metrics.roiic", "NOT_INTERPRETABLE"],
@@ -226,4 +235,45 @@ test("hash/regression/pin/semantic safety controls each fail closed", () => {
     assert.equal(result.admitted, false, String(key));
     if (!result.admitted) assert.ok(result.failures.includes(reason), String(key));
   }
+});
+
+
+test("V2.0.8 admits exact positive finite fractional return_horizon semantics", () => {
+  for (const value of [0.25, 0.5, 1.5, 4.7835616438356166, 9.999999]) {
+    const input = base();
+    input.semanticProjections = [{
+      targetField: "l3_investment_valuation.valuation.return_horizon",
+      sourceValue: value,
+      targetValue: value,
+    }];
+    const result = evaluateExistingRunCompatibilityAdmission(input);
+    assert.equal(result.admitted, true, String(value));
+  }
+});
+
+test("V2.0.8 rejects invalid numeric and string return_horizon compatibility projections", () => {
+  const cases: Array<string | number> = [0, -1, Infinity, "4.7835616438356166"];
+  for (const value of cases) {
+    const input = base();
+    input.semanticProjections = [{
+      targetField: "l3_investment_valuation.valuation.return_horizon",
+      sourceValue: value,
+      targetValue: value,
+    }];
+    const result = evaluateExistingRunCompatibilityAdmission(input);
+    assert.equal(result.admitted, false, String(value));
+    if (!result.admitted) assert.ok(result.failures.includes("SEMANTIC_RULE_NOT_AUTHORIZED"), String(value));
+  }
+});
+
+test("V2.0.8 rejects NaN return_horizon without coercing it", () => {
+  const input = base();
+  input.semanticProjections = [{
+    targetField: "l3_investment_valuation.valuation.return_horizon",
+    sourceValue: Number.NaN,
+    targetValue: Number.NaN,
+  }];
+  const result = evaluateExistingRunCompatibilityAdmission(input);
+  assert.equal(result.admitted, false);
+  if (!result.admitted) assert.ok(result.failures.includes("SEMANTIC_COERCION_FORBIDDEN"));
 });
