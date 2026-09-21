@@ -24,13 +24,16 @@ function clone<T>(value: T): T {
 function r1(): DcfTimingInput {
   return {
     dataCutoff: "2026-09-19",
+    timeOrigin: "2026-09-19",
     valuationDate: "2026-09-19",
     calculationDate: "2026-09-20",
     hasNumericReferencePrice: true,
     referencePriceDate: "2026-09-18",
+    referencePriceStalenessResolved: true,
     periodTiming: "END_OF_PERIOD",
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
+    fiscalYearMismatchResolved: true,
     historicalOutputCalibration: false,
     cashFlowBasis: "FCFF",
     discountRateBasis: "WACC",
@@ -72,13 +75,16 @@ function r1(): DcfTimingInput {
 function r2(): DcfTimingInput {
   return {
     dataCutoff: "2027-01-15",
+    timeOrigin: "2027-01-15",
     valuationDate: "2027-01-15",
     calculationDate: "2027-01-16",
     hasNumericReferencePrice: true,
     referencePriceDate: "2027-01-15",
+    referencePriceStalenessResolved: true,
     periodTiming: "END_OF_PERIOD",
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
+    fiscalYearMismatchResolved: true,
     historicalOutputCalibration: false,
     cashFlowBasis: "FCFE",
     discountRateBasis: "COST_OF_EQUITY",
@@ -116,13 +122,16 @@ function r2(): DcfTimingInput {
 function r3(): DcfTimingInput {
   return {
     dataCutoff: "2027-12-31",
+    timeOrigin: "2027-12-31",
     valuationDate: "2027-12-31",
     calculationDate: "2028-01-02",
     hasNumericReferencePrice: false,
     referencePriceDate: null,
+    referencePriceStalenessResolved: true,
     periodTiming: "END_OF_PERIOD",
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
+    fiscalYearMismatchResolved: true,
     historicalOutputCalibration: false,
     cashFlowBasis: "OWNER_EARNINGS",
     ownerEarningsBasisSupported: true,
@@ -222,6 +231,11 @@ test("calculation date never changes DCF timing or value", () => {
 test("adversarial timing and basis failures fail closed", () => {
   {
     const x = r1();
+    x.timeOrigin = "2026-09-18";
+    expectCode(x, "DCF_TIME_ORIGIN_MISMATCH");
+  }
+  {
+    const x = r1();
     x.valuationDate = "2026-09-18";
     expectCode(x, "VALUATION_DATE_DATA_CUTOFF_MISMATCH");
   }
@@ -234,6 +248,11 @@ test("adversarial timing and basis failures fail closed", () => {
     const x = r1();
     x.referencePriceDate = null;
     expectCode(x, "REFERENCE_PRICE_DATE_MISSING");
+  }
+  {
+    const x = r1();
+    x.referencePriceStalenessResolved = false;
+    expectCode(x, "REFERENCE_PRICE_STALENESS_UNRESOLVED");
   }
   {
     const x = r1();
@@ -320,6 +339,11 @@ test("adversarial timing and basis failures fail closed", () => {
     const x = r1();
     x.fiscalCalendarResolved = false;
     expectCode(x, "FISCAL_PERIOD_DATE_UNRESOLVED");
+  }
+  {
+    const x = r1();
+    x.fiscalYearMismatchResolved = false;
+    expectCode(x, "FISCAL_YEAR_MISMATCH_UNRESOLVED");
   }
   {
     const x = r1();
