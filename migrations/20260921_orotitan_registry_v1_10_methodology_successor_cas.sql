@@ -236,7 +236,7 @@ begin
     raise exception 'SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH: pins do not reconcile to active set'
       using errcode = '23514';
   end if;
-  if jsonb_object_length(p_contract_pins) <> 14
+  if (select count(*) from jsonb_object_keys(p_contract_pins)) <> 14
      or p_contract_pins #>> '{dcf_timing,name}' <> 'OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0'
      or p_contract_pins #>> '{dcf_timing,version}' <> '1.0'
      or p_contract_pins #>> '{dcf_timing,content_sha256}' <> '9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee'
