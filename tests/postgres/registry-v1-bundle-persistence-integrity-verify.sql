@@ -163,6 +163,7 @@ declare
   v_event_id uuid := gen_random_uuid();
   v_payload jsonb;
   v_fingerprint text;
+  v_candidate jsonb;
   v_registration jsonb;
 begin
   v_blob := encode(
@@ -173,6 +174,32 @@ begin
     'hex'
   );
   v_uri := 'github://' || p_repository || '@' || v_commit || '/' || p_path;
+
+  -- V1.11 establishes the immutable Registry expectation first, without
+  -- granting analytical authority. The attestation then reconciles the
+  -- independent GitHub reread against this staged metadata.
+  v_candidate := jsonb_build_object(
+    'artifact_id',p_artifact_id,
+    'version',p_version,
+    'artifact_type',p_artifact_type,
+    'logical_name',p_logical_name,
+    'authority_class',p_authority_class,
+    'artifact_status','SEALED',
+    'authority_state',p_authority_state,
+    'availability_state','AVAILABLE',
+    'media_type','application/json',
+    'size_bytes',v_size,
+    'content_sha256',v_sha,
+    'storage_backend','PRIVATE_GITHUB',
+    'storage_uri',v_uri,
+    'github_repository',p_repository,
+    'github_path',p_path,
+    'github_commit_sha',v_commit,
+    'github_blob_sha',v_blob
+  );
+  perform public.stage_orotitan_persistence_candidate(
+    p_run_id,p_stage,v_candidate
+  );
 
   v_payload := jsonb_build_object(
     'attestation_schema_version','1.0',
@@ -713,7 +740,11 @@ begin
     );
   exception when others then rejected := true; end;
   if not rejected then raise exception 'BPI stale CAS accepted'; end if;
-  if exists (select 1 from public.orotitan_artifacts where run_id=r and stage_code='INTEGRATION')
+  if exists (
+       select 1 from public.orotitan_artifacts
+       where run_id=r and stage_code='INTEGRATION'
+         and authority_state <> 'NON_AUTHORITATIVE'
+     )
      or (select active_manifest_artifact_id from public.orotitan_run_stages where run_id=r and stage_code='INTEGRATION') is not null then
     raise exception 'BPI stale CAS caused partial authority transition';
   end if;
