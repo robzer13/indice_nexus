@@ -2,8 +2,8 @@
   "format": "OROTITAN_CONTRACT_PIN_PACK_V3",
   "version": "3.0.1",
   "repository": "robzer13/indice_nexus",
-  "source_commit_sha": "0ad5f9d2427de4b69ab277360e8d0439a45e1600",
-  "contract_set_sha256": "b13a3a121dc97c3482d90d4085a40340a3be25927a2dca04d44c4d62efbd6866",
+  "source_commit_sha": "1f63baf3c5ae03e5e0a0f90a2794a0f358398c5c",
+  "contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
   "contract_pins": {
     "process": {
       "name": "OROTITAN_EXECUTION_PROCESS_V3_FREEZE_V3.0",
@@ -166,13 +166,13 @@
     "dcf_timing": {
       "name": "OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0",
       "version": "1.0",
-      "content_sha256": "bda8a994ad4b8aa4ba7e001114a87297a08b3af4b8ac8e9a5962d536c5ba540a",
+      "content_sha256": "9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee",
       "locator": {
         "backend": "GITHUB_IMMUTABLE",
         "repository": "robzer13/indice_nexus",
         "path": "contracts/orotitan-equity/v3/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md",
-        "commit_sha": "0ad5f9d2427de4b69ab277360e8d0439a45e1600",
-        "blob_sha": "bccfa548245056645191f0c1ef5b5b3be228d3c7"
+        "commit_sha": "1f63baf3c5ae03e5e0a0f90a2794a0f358398c5c",
+        "blob_sha": "4316d8e574151882ae25f83c3f7b97f8bad48cd3"
       }
     }
   },
