@@ -33,9 +33,12 @@ export function independentDcfTimingOracle(
   input: DcfTimingInput,
 ): DcfTimingOutput {
   assert.equal(input.dataCutoff, input.valuationDate);
+  assert.equal(input.timeOrigin, input.valuationDate);
   assert.equal(input.periodTiming, "END_OF_PERIOD");
   assert.equal(input.yearFractionConvention, "ACT/365F");
   assert.equal(input.fiscalCalendarResolved, true);
+  assert.equal(input.fiscalYearMismatchResolved, true);
+  if (input.hasNumericReferencePrice) assert.equal(input.referencePriceStalenessResolved, true);
   assert.equal(input.historicalOutputCalibration, false);
 
   const requiredRateBasis =
@@ -73,7 +76,7 @@ export function independentDcfTimingOracle(
       : dcfPresentValue;
 
   return {
-    timeOrigin: input.valuationDate,
+    timeOrigin: input.timeOrigin,
     valuationDate: input.valuationDate,
     yearFractionConvention: "ACT/365F",
     yearFractions,
