@@ -184,7 +184,7 @@ begin
           return;
         end if;
         if v_existing.authority_state = 'NON_AUTHORITATIVE'
-           and p_artifact->>'artifact_type' = 'STAGE_MANIFEST' then
+           and p_artifact->>'artifact_type' like '%_STAGE_MANIFEST' then
           update public.orotitan_artifacts
           set authority_state = v_desired_authority_state
           where artifact_id = v_existing.artifact_id
