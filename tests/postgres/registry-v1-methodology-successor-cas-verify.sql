@@ -24,6 +24,7 @@ declare
   v_parent_id uuid := '31000000-0000-4000-8000-000000000001';
   v_identity record;
   v_old_pins jsonb;
+  v_old_hash text;
   v_new_pins jsonb;
   v_new_hash text;
   v_result jsonb;
@@ -44,13 +45,14 @@ begin
     raise exception 'test fixture requires one dossier without current snapshot';
   end if;
 
-  v_old_pins := jsonb_build_object(
-    'process', jsonb_build_object(
-      'name','OLD_PROCESS',
-      'version','2.0',
-      'content_sha256',repeat('1',64)
-    )
-  );
+  v_old_pins := '{"process":{"name":"OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0","version":"2.0","content_sha256":"ec3031ec901a93e7b88a18ea8b1368a2271a60d6274b54dce68bbec70a59dc57","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"b69c61383fbc12780df0b727552db5dd780f4661"}},"pilotage":{"name":"OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V2_FREEZE_V2.0","version":"2.0","content_sha256":"1b2b526b2199a4a487b75e0f0ea496180964c4d5949f792275caf5379b67d97a","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"4e605c2c14d5eaab80c84fd8173e69b963fe1963"}},"research_stage":{"name":"OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0","version":"2.0","content_sha256":"cdd62f087ff8f8dc97f0c16586d634001f2cef1c44f9e4540e087778cdaa7a01","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"4b49d4ab670717d844ff0ed3c925a2004c043dfa"}},"deep_dive_stage":{"name":"OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V2_FREEZE_V2.0","version":"2.0","content_sha256":"3abfbccb0dca915f07af306b43657e73027bc40d6899d94e6af6d5e80fa3a293","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"ef100df9d2efbd27605e6df801b48caeadd73275"}},"integration_stage":{"name":"OROTITAN_INTEGRATION_STAGE_CONTRACT_V2_FREEZE_V2.0","version":"2.0","content_sha256":"74e1a3954ac3db42ccb9daa9fdc16a156eb6d7fc42f26ec522ba550451b841d0","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_INTEGRATION_STAGE_CONTRACT_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"7cd29e1535bfacc125da3583e8ea5c108a35351e"}},"analysis_standard":{"name":"01_ANALYSIS_STANDARD_V1","version":"1.0","content_sha256":"9283a0df395d4596c93cf6cfad9644ce114b343ee80e6e0a81e8f94f15d1e3df","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.archive.json","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"4702be68ca6f08138add2b10773140572fdd1c71","locator_format":"OROTITAN_MULTIPART_GZIP_V1"}},"master_prompt":{"name":"02_OROTITAN_MASTER_PROMPT_V1_PATCHED","version":"1.0","content_sha256":"d3b44f0645f766d504a0b937736520048a054e533df59366c90554e5345a0dab","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.archive.json","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"d63b60bc0c2974b2fcdb8fd4751a5b84d1f3c01a","locator_format":"OROTITAN_MULTIPART_GZIP_V1"}},"investment_policy":{"name":"OROTITAN_INVESTMENT_POLICY_V1.0.0","version":"1.0.0","content_sha256":"66cc29ccaccf4ccf65f58c2959bf95bcf676e67567aa1dd57863b2cb9a2936c8","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/OROTITAN_INVESTMENT_POLICY_V1.0.0.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"fd0121bbb14e35370ddd700d9e9845eaf1ec9f75","locator_format":"RAW_CANONICAL_V1"}},"execution_patch":{"name":"OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1","version":"1.0.1","content_sha256":"6e45f39c03e79c34911850c84904b36f3d95266288a5528127a59d0b8d675973","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"449bb43b664eae9d8c9fd98440e5511c6fbf4be3","locator_format":"RAW_CANONICAL_V1"}},"integration_spec":{"name":"04_INTEGRATION_SPEC_V2","version":"2.0","content_sha256":"475aa3255c7b4160de18fac7e59f7a02e062380de7a7b7948b5e081ad12929fd","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/04_INTEGRATION_SPEC_V2.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"383fe1247555cc15ab7fa4217ec2210b128e2e58"}},"screener_schema":{"name":"04_SCREENER_SCHEMA_V2","version":"2.0.0","content_sha256":"29d79f6f32da710971b351dfa4be4b181bdf48d03030a0e25e96fd9a6d3e3f20","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V2.json","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"bfd346d7ab3f2c9836f9a4a710d7a8b171fd6be0"}},"i2":{"name":"I2_CANONICAL_COMPUTATION","version":"1.0","content_sha256":"fa5f6c10851182660c8b11526266620556cc01d5e8b42c769819cbbcf3d3ed35","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"docs/orotitan-equity/I2_CANONICAL_COMPUTATION.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"93633adec3409144fcb03d5ec7b17ecfe22ff736","locator_format":"RAW_CANONICAL_V1"}},"i3b":{"name":"I3B_VALIDATED_SNAPSHOT_WRITER","version":"1.0","content_sha256":"7db0ca33867200087ba39716ba1618150cc057e975ede4b4075d403e7d3ccb25","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"docs/orotitan-equity/I3B_VALIDATED_SNAPSHOT_WRITER.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"65f5c0c013362fdd7ba64a8975a8d25b74d408d6","locator_format":"RAW_CANONICAL_V1"}}}'::jsonb;
+  if not public.orotitan_contract_pins_complete(v_old_pins) then
+    raise exception 'historical V2 Contract Set fixture is incomplete';
+  end if;
+  v_old_hash := public.orotitan_contract_set_sha256(v_old_pins);
+  if v_old_hash <> '1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e' then
+    raise exception 'historical V2 Contract Set fixture mismatch: %', v_old_hash;
+  end if;
 
   v_new_pins := '{"process":{"name":"OROTITAN_EXECUTION_PROCESS_V3_FREEZE_V3.0","version":"3.0","content_sha256":"8bf1817d4a3d3655b386e452b54eb50be1025ce56d4933bd1cbb5f0ef8c04dd7","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/OROTITAN_EXECUTION_PROCESS_V3_FREEZE_V3.0.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"11e3ae0acd6fa0645572e778aef6e51fcf70ddc6"}},"pilotage":{"name":"OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_FREEZE_V3.0","version":"3.0","content_sha256":"724d74ec82c5908f4d5d3c8a8062e64bfa19ced9abadee634ffd353e2ad21fa9","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_FREEZE_V3.0.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"9aaa2a2f87af1e00d7880ee97926db4662afcbcb"}},"research_stage":{"name":"OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0","version":"2.0","content_sha256":"cdd62f087ff8f8dc97f0c16586d634001f2cef1c44f9e4540e087778cdaa7a01","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v2/OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0.md","commit_sha":"86b227a75275cf4aaec6ef61ea2a27e87e2bfec7","blob_sha":"4b49d4ab670717d844ff0ed3c925a2004c043dfa"}},"deep_dive_stage":{"name":"OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V3_FREEZE_V3.0","version":"3.0","content_sha256":"f52932630702d4249d47da370604899c07d7aad9046fbd616945cdfccf2dbd16","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V3_FREEZE_V3.0.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"0cbf3c8ecc08b6b947152345f7a1532163d993c1"}},"integration_stage":{"name":"OROTITAN_INTEGRATION_STAGE_CONTRACT_V3_FREEZE_V3.0","version":"3.0","content_sha256":"09534d88e3ac4d37cfa0f55b7e762692cd198b7baff424ed169396bdd6851759","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/OROTITAN_INTEGRATION_STAGE_CONTRACT_V3_FREEZE_V3.0.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"4ca5214238b1ff08a4da12dec8a89e942ac905a0"}},"analysis_standard":{"name":"OROTITAN_ECONOMIC_SHARE_COUNT_METHODOLOGY_V1_FREEZE_V1.0","version":"1.0","content_sha256":"538b70a975d00b8bfc9c3abf705d5efd425852516680d499db13d8c2ac17174f","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/01_ANALYSIS_STANDARD_V1_1_ECONOMIC_SHARE_COUNT_PATCH.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"bfd034c6a650bb2bd0db1ad3cb3d4476aa9ca66e"}},"master_prompt":{"name":"02_OROTITAN_MASTER_PROMPT_V1_1_ECONOMIC_SHARE_COUNT_PATCH","version":"1.1","content_sha256":"2447ad836d9507eb82db884b1bdb1e0062d1512526d12afa4593339ce51dd0df","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/02_OROTITAN_MASTER_PROMPT_V1_1_ECONOMIC_SHARE_COUNT_PATCH.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"b04ad374b79ed958a29dcb5b3d9943d394ece190"}},"investment_policy":{"name":"OROTITAN_INVESTMENT_POLICY_V1.0.0","version":"1.0.0","content_sha256":"66cc29ccaccf4ccf65f58c2959bf95bcf676e67567aa1dd57863b2cb9a2936c8","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/OROTITAN_INVESTMENT_POLICY_V1.0.0.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"fd0121bbb14e35370ddd700d9e9845eaf1ec9f75","locator_format":"RAW_CANONICAL_V1"}},"execution_patch":{"name":"OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1","version":"1.0.1","content_sha256":"6e45f39c03e79c34911850c84904b36f3d95266288a5528127a59d0b8d675973","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v1/OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1.md","commit_sha":"8aba7cee6a9b38204785c16976e65e9010f5d959","blob_sha":"449bb43b664eae9d8c9fd98440e5511c6fbf4be3","locator_format":"RAW_CANONICAL_V1"}},"integration_spec":{"name":"04_INTEGRATION_SPEC_V3","version":"3.0","content_sha256":"2ab3923f18973cad469510c13906a0641275f2d112c43cbdf7a9047975395e39","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/04_INTEGRATION_SPEC_V3.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"45bb894b3081d4cdbe464fb668d8176752085931"}},"screener_schema":{"name":"04_SCREENER_SCHEMA_V3","version":"3.0.0","content_sha256":"372a4e162b8f5d510661ae6ffadb6347c28fedce62779cf2ac08da3425ae4890","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/04_SCREENER_SCHEMA_V3.json","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"a53e8506bfd4dd348c8ffd46282e46da341aa0ca"}},"i2":{"name":"I2_CANONICAL_COMPUTATION_V1.1","version":"1.1","content_sha256":"ebf4d0e23784aaf67fb48f1bd372ebe1bd8efdbef9dafbeb8ecee6b9f4082b00","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"docs/orotitan-equity/I2_CANONICAL_COMPUTATION_V1.1.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"e145448c1f1d901527a6fe9b62309a0f4159a25a"}},"i3b":{"name":"I3B_VALIDATED_SNAPSHOT_WRITER_V1.1","version":"1.1","content_sha256":"fbb803f5ee26d056bcaf9b1e67ee2c2d4b59bbc5ff637ceceee667e053eacd60","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"docs/orotitan-equity/I3B_VALIDATED_SNAPSHOT_WRITER_V1.1.md","commit_sha":"26e3b55cc933990ad5fd5e0a847b537cc5ddb739","blob_sha":"6fe5b719d83e21b50568d007a4fba9df4e5fd0e0"}},"dcf_timing":{"name":"OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0","version":"1.0","content_sha256":"9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee","locator":{"backend":"GITHUB_IMMUTABLE","repository":"robzer13/indice_nexus","path":"contracts/orotitan-equity/v3/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md","commit_sha":"1f63baf3c5ae03e5e0a0f90a2794a0f358398c5c","blob_sha":"4316d8e574151882ae25f83c3f7b97f8bad48cd3"}}}'::jsonb;
   v_new_hash := public.orotitan_contract_set_sha256(v_new_pins);
@@ -94,7 +96,7 @@ begin
     '2.0',
     '2.0',
     v_old_pins,
-    repeat('1',64),
+    v_old_hash,
     7
   );
 
@@ -115,7 +117,7 @@ begin
     7,
     'ACTIVE',
     'DEEP_DIVE',
-    repeat('1',64),
+    v_old_hash,
     v_identity.security_id,
     v_identity.dossier_id
   );
@@ -152,7 +154,7 @@ begin
     7,
     'ACTIVE',
     'DEEP_DIVE',
-    repeat('1',64),
+    v_old_hash,
     v_identity.security_id,
     v_identity.dossier_id
   )->>'run_id')::uuid <> v_child.run_id then
@@ -182,7 +184,7 @@ begin
       7,
       'ACTIVE',
       'DEEP_DIVE',
-      repeat('1',64),
+      v_old_hash,
       v_identity.security_id,
       v_identity.dossier_id
     );
@@ -220,7 +222,7 @@ begin
       9,
       'ACTIVE',
       'DEEP_DIVE',
-      repeat('1',64),
+      v_old_hash,
       v_identity.security_id,
       v_identity.dossier_id
     );
@@ -254,7 +256,7 @@ begin
       9,
       'ACTIVE',
       'DEEP_DIVE',
-      repeat('1',64),
+      v_old_hash,
       v_identity.security_id,
       v_identity.dossier_id
     );
@@ -325,7 +327,7 @@ begin
       9,
       'ACTIVE',
       'DEEP_DIVE',
-      repeat('1',64),
+      v_old_hash,
       v_identity.security_id,
       v_identity.dossier_id
     );
