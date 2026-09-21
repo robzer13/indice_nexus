@@ -299,6 +299,121 @@ begin
     raise exception 'generic parent-link successor bypass did not fail closed';
   end if;
 
+  -- Exact top-level Contract Set cardinality remains 14. These malformed
+  -- variants must be rejected by the controlled successor RPC.
+  v_failed := false;
+  begin
+    perform public.create_orotitan_methodology_successor_run(
+      'test:successor:contract-set:13-pins',
+      v_identity.issuer_id,
+      'IMPOSED_COMPANY',
+      'ANALYZE',
+      'INITIAL',
+      '2026-09-19',
+      v_parent_id,
+      null,
+      '3.0',
+      '3.0',
+      v_new_pins - 'dcf_timing',
+      v_new_hash,
+      repeat('1',64),
+      9,
+      'ACTIVE',
+      'DEEP_DIVE',
+      v_old_hash,
+      v_identity.security_id,
+      v_identity.dossier_id
+    );
+  exception when check_violation then
+    if position('SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH' in sqlerrm)>0 then
+      v_failed := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_failed then
+    raise exception '13-pin Contract Set was admitted';
+  end if;
+
+  v_failed := false;
+  begin
+    perform public.create_orotitan_methodology_successor_run(
+      'test:successor:contract-set:15-pins',
+      v_identity.issuer_id,
+      'IMPOSED_COMPANY',
+      'ANALYZE',
+      'INITIAL',
+      '2026-09-19',
+      v_parent_id,
+      null,
+      '3.0',
+      '3.0',
+      v_new_pins || jsonb_build_object(
+        'unexpected_pin',
+        jsonb_build_object(
+          'name','UNEXPECTED_PIN',
+          'version','1.0',
+          'content_sha256',repeat('9',64)
+        )
+      ),
+      v_new_hash,
+      repeat('2',64),
+      9,
+      'ACTIVE',
+      'DEEP_DIVE',
+      v_old_hash,
+      v_identity.security_id,
+      v_identity.dossier_id
+    );
+  exception when check_violation then
+    if position('SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH' in sqlerrm)>0 then
+      v_failed := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_failed then
+    raise exception '15-pin Contract Set was admitted';
+  end if;
+
+  v_failed := false;
+  begin
+    perform public.create_orotitan_methodology_successor_run(
+      'test:successor:contract-set:pin-hash-mismatch',
+      v_identity.issuer_id,
+      'IMPOSED_COMPANY',
+      'ANALYZE',
+      'INITIAL',
+      '2026-09-19',
+      v_parent_id,
+      null,
+      '3.0',
+      '3.0',
+      jsonb_set(
+        v_new_pins,
+        '{dcf_timing,content_sha256}',
+        to_jsonb(repeat('0',64))
+      ),
+      v_new_hash,
+      repeat('3',64),
+      9,
+      'ACTIVE',
+      'DEEP_DIVE',
+      v_old_hash,
+      v_identity.security_id,
+      v_identity.dossier_id
+    );
+  exception when check_violation then
+    if position('SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH' in sqlerrm)>0 then
+      v_failed := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_failed then
+    raise exception 'pin hash mismatch was admitted';
+  end if;
+
   v_alt_pins := jsonb_build_object(
     'process', jsonb_build_object(
       'name','ALTERNATE_PROCESS',
