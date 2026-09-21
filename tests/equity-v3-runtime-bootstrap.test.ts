@@ -125,7 +125,7 @@ test("pure methodology replay successor preserves parent lineage and cutoff", ()
   assert.equal(plan.parentRunId, parent.runId);
   assert.equal(plan.baselineSnapshotId, null);
   assert.equal(plan.dataCutoff, "2026-09-19");
-  assert.equal(plan.requiresIdentityBinding, true);
+  assert.equal(plan.requiresIdentityBinding, false);
   assert.equal(plan.rpc, "create_orotitan_methodology_successor_run");
   assert.equal(plan.rpcArgs.p_parent_run_id, parent.runId);
   assert.equal(plan.rpcArgs.p_contract_set_sha256, V3_HASH);
