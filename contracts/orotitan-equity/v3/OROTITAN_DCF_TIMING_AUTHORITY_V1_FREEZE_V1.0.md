@@ -40,6 +40,7 @@ TIME_ORIGIN
 VALUATION_DATE
 REFERENCE_PRICE_DATE
 CASH_FLOW_DATES[]
+FIRST_FORECAST_FISCAL_PERIOD_START_DATE
 YEAR_FRACTION_CONVENTION
 DISCOUNT_EXPONENTS[]
 STUB_STATUS
@@ -147,15 +148,33 @@ INTERMEDIATE_ROUNDING_AS_INPUT
 
 ## 6. STUB_PERIODS
 
-The first forecast interval always begins at `VALUATION_DATE`.
+The first DCF forecast interval always begins at `VALUATION_DATE`.
 
-If the next forecast fiscal-period end is not one full modeled period after `VALUATION_DATE`, the first interval is a stub.
+The engine must also receive the exact issuer fiscal-period start corresponding to the first forecast payment date:
+
+```text
+FIRST_FORECAST_FISCAL_PERIOD_START_DATE
+```
+
+The stub classification is derived, never analyst-selected:
+
+```text
+IF FIRST_FORECAST_FISCAL_PERIOD_START_DATE = VALUATION_DATE
+→ STUB_STATUS = FULL_PERIOD
+
+IF FIRST_FORECAST_FISCAL_PERIOD_START_DATE < VALUATION_DATE < CASH_FLOW_DATE_1
+→ STUB_STATUS = STUB
+
+OTHERWISE
+→ FAIL
+```
 
 Canonical rule:
 
 ```text
 FIRST_FORECAST_PERIOD_START = VALUATION_DATE
-FIRST_FORECAST_CASH_FLOW = cash flow economically attributable only to the post-origin stub
+STUB_STATUS = deterministically derived from issuer fiscal-period start
+FIRST_FORECAST_CASH_FLOW = cash flow economically attributable only to the post-origin forecast interval
 AUTOMATIC PRORATION OF A FULL-YEAR CASH FLOW = FORBIDDEN
 SILENT OMISSION OF THE STUB = FORBIDDEN
 ```
@@ -167,6 +186,7 @@ Subsequent forecast intervals must begin on the preceding forecast payment date.
 Fail states:
 
 ```text
+STUB_CLASSIFICATION_UNRESOLVED
 STUB_CASH_FLOW_UNSUPPORTED
 STUB_FULL_YEAR_AUTOPRORATION_FORBIDDEN
 FORECAST_PERIOD_CHAIN_BROKEN
@@ -311,6 +331,8 @@ All values below are synthetic controls. They are not company evidence and must 
 
 ```text
 VALUATION_DATE = 2026-09-19
+FIRST_FORECAST_FISCAL_PERIOD_START_DATE = 2026-01-01
+STUB_STATUS = STUB
 CF1 = 100.0 at 2026-12-31
 CF2 = 120.0 at 2027-12-31
 WACC = 0.10
@@ -333,6 +355,8 @@ PER_SHARE_VALUE = 161.6139506897223
 
 ```text
 VALUATION_DATE = 2027-01-15
+FIRST_FORECAST_FISCAL_PERIOD_START_DATE = 2026-07-01
+STUB_STATUS = STUB
 CF1 = 40.0 at 2027-06-30
 CF2 = 55.0 at 2028-06-30
 COST_OF_EQUITY = 0.12
@@ -353,6 +377,8 @@ PER_SHARE_VALUE = 112.03977285167723
 
 ```text
 VALUATION_DATE = 2027-12-31
+FIRST_FORECAST_FISCAL_PERIOD_START_DATE = 2027-12-31
+STUB_STATUS = FULL_PERIOD
 CF1 = 30.0 at 2028-12-31
 COST_OF_EQUITY = 0.09
 TERMINAL_G = 0.025
@@ -395,6 +421,9 @@ T21 R1 exact reference outputs -> PASS
 T22 R2 exact reference outputs -> PASS
 T23 R3 exact reference outputs -> PASS
 T24 two independent implementations -> numerically equivalent
+T25 first fiscal-period start before valuation date -> STUB
+T26 first fiscal-period start equal valuation date -> FULL_PERIOD
+T27 first fiscal-period start after valuation date -> FAIL
 ```
 
 Required final state:
