@@ -177,8 +177,8 @@
     }
   },
   "generation_evidence": {
-    "methodology_regression": "PENDING_BRANCH_CI",
-    "independent_implementation_equivalence": "PENDING_BRANCH_CI",
+    "methodology_regression": "PASS",
+    "independent_implementation_equivalence": "PASS",
     "authority_conflict_audit": "PASS",
     "source_hash_verification": "PASS",
     "unresolved_policy_branches": 0,
