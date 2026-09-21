@@ -34,6 +34,7 @@ function r1(): DcfTimingInput {
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
     fiscalYearMismatchResolved: true,
+    firstForecastFiscalPeriodStartDate: "2026-01-01",
     historicalOutputCalibration: false,
     cashFlowBasis: "FCFF",
     discountRateBasis: "WACC",
@@ -85,6 +86,7 @@ function r2(): DcfTimingInput {
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
     fiscalYearMismatchResolved: true,
+    firstForecastFiscalPeriodStartDate: "2026-07-01",
     historicalOutputCalibration: false,
     cashFlowBasis: "FCFE",
     discountRateBasis: "COST_OF_EQUITY",
@@ -132,6 +134,7 @@ function r3(): DcfTimingInput {
     yearFractionConvention: "ACT/365F",
     fiscalCalendarResolved: true,
     fiscalYearMismatchResolved: true,
+    firstForecastFiscalPeriodStartDate: "2027-12-31",
     historicalOutputCalibration: false,
     cashFlowBasis: "OWNER_EARNINGS",
     ownerEarningsBasisSupported: true,
@@ -181,6 +184,7 @@ test("R1 FCFF reference vector is exact within frozen tolerance", () => {
   close(out.enterpriseValue ?? Number.NaN, 1766.1395068972229, "R1 EV");
   close(out.equityValue, 1616.1395068972229, "R1 equity");
   close(out.perShareValue, 161.6139506897223, "R1 per share");
+  assert.equal(out.stubStatus, "STUB");
 });
 
 test("R2 FCFE reference vector is exact within frozen tolerance", () => {
@@ -193,6 +197,7 @@ test("R2 FCFE reference vector is exact within frozen tolerance", () => {
   close(out.pvTerminalValue, 475.582546157807, "R2 PV TV");
   close(out.equityValue, 560.1988642583862, "R2 equity");
   close(out.perShareValue, 112.03977285167723, "R2 per share");
+  assert.equal(out.stubStatus, "STUB");
 });
 
 test("R3 Owner Earnings uses ACT/365F across leap-year numerator", () => {
@@ -202,6 +207,7 @@ test("R3 Owner Earnings uses ACT/365F across leap-year numerator", () => {
   close(out.terminalValue, 473.076923076923, "R3 TV");
   close(out.pvTerminalValue, 433.91306536667577, "R3 PV TV");
   close(out.equityValue, 461.42950365822105, "R3 equity");
+  assert.equal(out.stubStatus, "FULL_PERIOD");
 });
 
 test("independent implementation equivalence on all reference vectors", () => {
@@ -345,6 +351,11 @@ test("adversarial timing and basis failures fail closed", () => {
     const x = r1();
     x.fiscalYearMismatchResolved = false;
     expectCode(x, "FISCAL_YEAR_MISMATCH_UNRESOLVED");
+  }
+  {
+    const x = r1();
+    x.firstForecastFiscalPeriodStartDate = "2026-10-01";
+    expectCode(x, "STUB_CLASSIFICATION_UNRESOLVED");
   }
   {
     const x = r1();
