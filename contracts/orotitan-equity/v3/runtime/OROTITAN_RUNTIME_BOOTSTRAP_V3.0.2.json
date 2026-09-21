@@ -10,7 +10,7 @@
     "contract_pin_pack_modified": true,
     "contract_pin_pack_path": "contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_1.json",
     "contract_pin_pack_version": "3.0.1",
-    "contract_set_sha256": "b13a3a121dc97c3482d90d4085a40340a3be25927a2dca04d44c4d62efbd6866",
+    "contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
     "prior_v3_contract_set_sha256": "8d9596911b98d8c2125e5a0a19997f1620cc9034efc99bf8b5a763450bf9c0cf",
     "historical_run_rebinding": false
   },
