@@ -194,18 +194,13 @@ begin
     'commit_path_resolved',true,
     'verified_at',v_verified_at
   );
-  v_fingerprint := encode(
-    extensions.digest(convert_to(v_payload::text,'UTF8'),'sha256'),
-    'hex'
-  );
-
-  insert into public.orotitan_run_events(
-    event_id,run_id,stage_code,event_type,idempotency_key,
-    request_fingerprint_sha256,actor_type,payload,created_at
-  ) values (
-    v_event_id,p_run_id,p_stage,'PERSISTENCE_ATTESTED',
-    'bpi:attest:'||v_event_id::text,
-    v_fingerprint,'SYSTEM',v_payload,v_verified_at
+  -- Exercise the production management-plane attestation helper rather than
+  -- synthesizing the event directly. This catches runtime expression defects
+  -- in the attestation boundary itself.
+  v_event_id := public.attest_orotitan_persistence_locator(
+    p_run_id,
+    p_stage,
+    v_payload
   );
 
   v_registration := jsonb_build_object(
