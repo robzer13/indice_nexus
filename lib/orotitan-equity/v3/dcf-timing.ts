@@ -30,6 +30,7 @@ export type DcfTimingInput = {
   yearFractionConvention: "ACT/365F" | string;
   fiscalCalendarResolved: boolean;
   fiscalYearMismatchResolved: boolean;
+  firstForecastFiscalPeriodStartDate: string;
   historicalOutputCalibration: boolean;
   cashFlowBasis: DcfCashFlowBasis;
   ownerEarningsBasisSupported?: boolean;
@@ -59,6 +60,7 @@ export type DcfTimingOutput = {
   timeOrigin: string;
   valuationDate: string;
   yearFractionConvention: "ACT/365F";
+  stubStatus: "STUB" | "FULL_PERIOD";
   yearFractions: number[];
   discountExponents: number[];
   pvCashFlows: number[];
@@ -214,6 +216,23 @@ export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
   if (input.cashFlows.length === 0) {
     fail("CASH_FLOW_SCHEDULE_EMPTY", "at least one forecast cash flow is required");
   }
+
+  parseIsoCivilDate(input.firstForecastFiscalPeriodStartDate, "STUB_CLASSIFICATION_UNRESOLVED");
+  const firstPaymentDate = input.cashFlows[0].paymentDate;
+  parseIsoCivilDate(firstPaymentDate);
+  if (
+    compareDates(input.firstForecastFiscalPeriodStartDate, input.valuationDate) > 0 ||
+    compareDates(input.firstForecastFiscalPeriodStartDate, firstPaymentDate) >= 0
+  ) {
+    fail(
+      "STUB_CLASSIFICATION_UNRESOLVED",
+      "first forecast fiscal-period start must be on/before VALUATION_DATE and before first payment date",
+    );
+  }
+  const stubStatus: "STUB" | "FULL_PERIOD" =
+    input.firstForecastFiscalPeriodStartDate === input.valuationDate
+      ? "FULL_PERIOD"
+      : "STUB";
 
   const yearFractions: number[] = [];
   const pvCashFlows: number[] = [];
@@ -375,6 +394,7 @@ export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
     timeOrigin: input.timeOrigin,
     valuationDate: input.valuationDate,
     yearFractionConvention: "ACT/365F",
+    stubStatus,
     yearFractions,
     discountExponents: [...yearFractions],
     pvCashFlows,
