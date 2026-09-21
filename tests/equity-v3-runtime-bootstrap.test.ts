@@ -21,7 +21,7 @@ import {
   assertRuntimeBootstrapIntegrity as assertV2RuntimeBootstrapIntegrity,
 } from "../lib/orotitan-equity/v2/runtime-bootstrap";
 
-const V3_HASH = "b13a3a121dc97c3482d90d4085a40340a3be25927a2dca04d44c4d62efbd6866";
+const V3_HASH = "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c";
 const PRIOR_V3_HASH = "8d9596911b98d8c2125e5a0a19997f1620cc9034efc99bf8b5a763450bf9c0cf";
 const V2_HASH = "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
 
@@ -199,7 +199,7 @@ test("Research replay bootstrap carries V3 runtime and pinned Research contract"
   const prompt = buildResearchStartPrompt(context);
   assert.ok(prompt.startsWith("OROTITAN V3 — START RESEARCH"));
   assert.match(prompt, /PARENT_RUN_ID = 2fc2bb73-86d1-48b2-b9c3-e219b4757416/);
-  assert.match(prompt, /CONTRACT_SET_SHA256 = b13a3a12/);
+  assert.match(prompt, /CONTRACT_SET_SHA256 = 257c2873/);
   assert.match(prompt, /EXPECTED_STAGE_CONTRACT = OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2\.0/);
   assert.match(prompt, /DATA_CUTOFF = 2026-09-19/);
   assert.match(prompt, /PUBLICATION_AUTHORIZED = NO/);
