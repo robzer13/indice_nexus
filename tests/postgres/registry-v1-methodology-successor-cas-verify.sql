@@ -164,7 +164,33 @@ begin
     end if;
   end;
   if not v_failed then raise exception 'illegal successor run_type did not fail closed'; end if;
+
+  v_failed := false;
+  begin
+    perform public.create_orotitan_run(
+      'test:successor:generic-bypass',
+      v_identity.issuer_id,
+      'IMPOSED_COMPANY',
+      'ANALYZE',
+      'INITIAL',
+      '2026-09-19',
+      v_parent_id,
+      null,
+      '3.0',
+      '3.0',
+      v_new_pins,
+      v_new_hash,
+      repeat('e',64)
+    );
+  exception when check_violation then
+    if position('PARENT_LINK_REQUIRES_CONTROLLED_SUCCESSOR_RPC' in sqlerrm)>0 then
+      v_failed := true;
+    else
+      raise;
+    end if;
+  end;
+  if not v_failed then raise exception 'generic parent-link successor bypass did not fail closed'; end if;
 end;
-$$;
+$;
 
 select 'methodology successor transactional CAS regression: PASS' as result;
