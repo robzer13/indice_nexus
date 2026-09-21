@@ -20,13 +20,16 @@ export type DcfCashFlow = {
 
 export type DcfTimingInput = {
   dataCutoff: string;
+  timeOrigin: string;
   valuationDate: string;
   calculationDate: string;
   hasNumericReferencePrice: boolean;
   referencePriceDate: string | null;
+  referencePriceStalenessResolved: boolean;
   periodTiming: "END_OF_PERIOD" | "MIDPOINT" | "BEGINNING_OF_PERIOD";
   yearFractionConvention: "ACT/365F" | string;
   fiscalCalendarResolved: boolean;
+  fiscalYearMismatchResolved: boolean;
   historicalOutputCalibration: boolean;
   cashFlowBasis: DcfCashFlowBasis;
   ownerEarningsBasisSupported?: boolean;
@@ -112,8 +115,16 @@ function expectedDiscountRateBasis(cashFlowBasis: DcfCashFlowBasis): DcfDiscount
 
 export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
   parseIsoCivilDate(input.dataCutoff);
+  parseIsoCivilDate(input.timeOrigin);
   parseIsoCivilDate(input.valuationDate);
   parseIsoCivilDate(input.calculationDate);
+
+  if (input.timeOrigin !== input.valuationDate) {
+    fail(
+      "DCF_TIME_ORIGIN_MISMATCH",
+      "TIME_ORIGIN must equal VALUATION_DATE",
+    );
+  }
 
   if (input.valuationDate !== input.dataCutoff) {
     fail(
@@ -131,6 +142,12 @@ export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
       fail(
         "REFERENCE_PRICE_AFTER_VALUATION_DATE",
         "REFERENCE_PRICE_DATE must not be after VALUATION_DATE",
+      );
+    }
+    if (input.referencePriceStalenessResolved !== true) {
+      fail(
+        "REFERENCE_PRICE_STALENESS_UNRESOLVED",
+        "numeric reference price requires staleness/admission to be resolved by governing point-in-time rules",
       );
     }
   } else if (input.referencePriceDate !== null) {
@@ -154,6 +171,12 @@ export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
   }
   if (!input.fiscalCalendarResolved) {
     fail("FISCAL_PERIOD_DATE_UNRESOLVED", "exact issuer fiscal-period dates are required");
+  }
+  if (input.fiscalYearMismatchResolved !== true) {
+    fail(
+      "FISCAL_YEAR_MISMATCH_UNRESOLVED",
+      "issuer fiscal-year/calendar mismatch treatment must be explicitly resolved",
+    );
   }
   if (input.historicalOutputCalibration) {
     fail(
@@ -349,7 +372,7 @@ export function computeDcfTiming(input: DcfTimingInput): DcfTimingOutput {
   }
 
   return {
-    timeOrigin: input.valuationDate,
+    timeOrigin: input.timeOrigin,
     valuationDate: input.valuationDate,
     yearFractionConvention: "ACT/365F",
     yearFractions,
