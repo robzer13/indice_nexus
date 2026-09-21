@@ -300,7 +300,7 @@ function buildPlan(input: {
     baselineContractVersion: input.baselineContractVersion,
     dataCutoff: input.dataCutoff,
     creationReason: input.creationReason,
-    requiresIdentityBinding: input.runType === "INITIAL",
+    requiresIdentityBinding: input.creationReason === "METHODOLOGY_REPLAY_SUCCESSOR" ? false : input.runType === "INITIAL",
     rpc: input.creationReason === "METHODOLOGY_REPLAY_SUCCESSOR"
       ? "create_orotitan_methodology_successor_run"
       : "create_orotitan_run",
