@@ -21,7 +21,8 @@ import {
   assertRuntimeBootstrapIntegrity as assertV2RuntimeBootstrapIntegrity,
 } from "../lib/orotitan-equity/v2/runtime-bootstrap";
 
-const V3_HASH = "8d9596911b98d8c2125e5a0a19997f1620cc9034efc99bf8b5a763450bf9c0cf";
+const V3_HASH = "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c";
+const PRIOR_V3_HASH = "8d9596911b98d8c2125e5a0a19997f1620cc9034efc99bf8b5a763450bf9c0cf";
 const V2_HASH = "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e";
 
 const environment: RuntimeEnvironmentObservation = {
@@ -48,6 +49,11 @@ const parent = {
   dossierId: identity.dossierId,
   dataCutoff: "2026-09-19",
   contractSetSha256: V2_HASH,
+  stateVersion: 7,
+  runStatus: "ACTIVE",
+  currentStage: "DEEP_DIVE",
+  publishedAt: null,
+  cancelledAt: null,
 };
 
 function persisted(plan: ReturnType<typeof buildMethodologyReplaySuccessorPlan>): PersistedRunObservation {
@@ -70,12 +76,13 @@ function persisted(plan: ReturnType<typeof buildMethodologyReplaySuccessorPlan>)
   };
 }
 
-test("V3 runtime reconciles exactly to the frozen 13-pin Contract Set", () => {
+test("V3 runtime reconciles exactly to the frozen 14-pin DCF timing Contract Set", () => {
   assert.doesNotThrow(() => assertRuntimeBootstrapIntegrity());
   assert.equal(activeContractPinPack.contract_set_sha256, V3_HASH);
   assert.equal(activeContractSetComputedSha256, V3_HASH);
   assert.equal(runtimeBootstrap.authority_boundary.contract_set_sha256, V3_HASH);
-  assert.equal(Object.keys(activeContractPinPack.contract_pins).length, 13);
+  assert.equal(Object.keys(activeContractPinPack.contract_pins).length, 14);
+  assert.equal(activeContractPinPack.contract_pins.dcf_timing.version, "1.0");
 });
 
 test("all frozen V3 pin bytes still match their content SHA-256", () => {
@@ -86,9 +93,12 @@ test("all frozen V3 pin bytes still match their content SHA-256", () => {
   }
 });
 
-test("V2 runtime and Contract Set remain unchanged for existing runs", () => {
+test("V2 runtime and prior V3 Contract Sets remain immutable historical authorities", () => {
   assert.doesNotThrow(() => assertV2RuntimeBootstrapIntegrity());
   assert.equal(v2ContractPinPack.contract_set_sha256, V2_HASH);
+  const priorV3 = JSON.parse(readFileSync(new URL("../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3.json", import.meta.url), "utf8"));
+  assert.equal(priorV3.contract_set_sha256, PRIOR_V3_HASH);
+  assert.equal(Object.keys(priorV3.contract_pins).length, 13);
 });
 
 test("production environment remains exact allowlist", () => {
@@ -115,9 +125,14 @@ test("pure methodology replay successor preserves parent lineage and cutoff", ()
   assert.equal(plan.parentRunId, parent.runId);
   assert.equal(plan.baselineSnapshotId, null);
   assert.equal(plan.dataCutoff, "2026-09-19");
-  assert.equal(plan.requiresIdentityBinding, true);
+  assert.equal(plan.requiresIdentityBinding, false);
+  assert.equal(plan.rpc, "create_orotitan_methodology_successor_run");
   assert.equal(plan.rpcArgs.p_parent_run_id, parent.runId);
   assert.equal(plan.rpcArgs.p_contract_set_sha256, V3_HASH);
+  assert.equal(plan.rpcArgs.p_expected_parent_state_version, 7);
+  assert.equal(plan.rpcArgs.p_expected_parent_run_status, "ACTIVE");
+  assert.equal(plan.rpcArgs.p_expected_parent_current_stage, "DEEP_DIVE");
+  assert.equal(plan.rpcArgs.p_expected_parent_contract_set_sha256, V2_HASH);
 });
 
 test("successor admission fails closed on identity or baseline mismatch", () => {
@@ -136,6 +151,25 @@ test("successor admission fails closed on identity or baseline mismatch", () => 
       parent,
     }),
     /SUCCESSOR_BASELINE_MISMATCH/,
+  );
+});
+
+test("successor CAS planning fails closed on parent status, stage and state version", () => {
+  assert.throws(
+    () => buildMethodologyReplaySuccessorPlan({ environment, identity, parent: { ...parent, stateVersion: 0 } }),
+    /SUCCESSOR_PARENT_STATE_VERSION_MISMATCH/,
+  );
+  assert.throws(
+    () => buildMethodologyReplaySuccessorPlan({ environment, identity, parent: { ...parent, runStatus: "BLOCKED" } }),
+    /SUCCESSOR_PARENT_STATUS_MISMATCH/,
+  );
+  assert.throws(
+    () => buildMethodologyReplaySuccessorPlan({ environment, identity, parent: { ...parent, currentStage: "RESEARCH" } }),
+    /SUCCESSOR_PARENT_STAGE_MISMATCH/,
+  );
+  assert.throws(
+    () => buildMethodologyReplaySuccessorPlan({ environment, identity, parent: { ...parent, publishedAt: "2026-09-20T00:00:00Z" } }),
+    /SUCCESSOR_PARENT_TERMINAL/,
   );
 });
 
@@ -165,8 +199,11 @@ test("Research replay bootstrap carries V3 runtime and pinned Research contract"
   const prompt = buildResearchStartPrompt(context);
   assert.ok(prompt.startsWith("OROTITAN V3 — START RESEARCH"));
   assert.match(prompt, /PARENT_RUN_ID = 2fc2bb73-86d1-48b2-b9c3-e219b4757416/);
-  assert.match(prompt, /CONTRACT_SET_SHA256 = 8d959691/);
+  assert.match(prompt, /CONTRACT_SET_SHA256 = 257c2873/);
   assert.match(prompt, /EXPECTED_STAGE_CONTRACT = OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2\.0/);
   assert.match(prompt, /DATA_CUTOFF = 2026-09-19/);
   assert.match(prompt, /PUBLICATION_AUTHORIZED = NO/);
+  assert.match(prompt, /SUCCESSOR_PARENT_CAS = TRANSACTIONAL_REQUIRED/);
+  assert.match(prompt, /RESEARCH_SCOPE = SAME_CUTOFF_NON_VALUATION_REVALIDATION_ONLY/);
+  assert.match(prompt, /FIRST_ANALYTICAL_PHASE = VALUATION_AFTER_REVALIDATION/);
 });
