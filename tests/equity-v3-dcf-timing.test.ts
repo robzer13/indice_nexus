@@ -237,6 +237,7 @@ test("adversarial timing and basis failures fail closed", () => {
   {
     const x = r1();
     x.valuationDate = "2026-09-18";
+    x.timeOrigin = "2026-09-18";
     expectCode(x, "VALUATION_DATE_DATA_CUTOFF_MISMATCH");
   }
   {
