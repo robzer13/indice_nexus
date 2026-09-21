@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import runtimeBootstrapJson from "../../../contracts/orotitan-equity/v3/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V3.0.1.json";
-import contractPinPackJson from "../../../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3.json";
+import runtimeBootstrapJson from "../../../contracts/orotitan-equity/v3/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V3.0.2.json";
+import contractPinPackJson from "../../../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_1.json";
 
-export const OROTITAN_RUNTIME_BOOTSTRAP_VERSION = "3.0.1" as const;
+export const OROTITAN_RUNTIME_BOOTSTRAP_VERSION = "3.0.2" as const;
 export const OROTITAN_VERSION = "3.0" as const;
 
 export type RuntimeEnvironmentObservation = {
@@ -31,6 +31,11 @@ export type HistoricalParentObservation = {
   dossierId: string;
   dataCutoff: string;
   contractSetSha256: string;
+  stateVersion: number;
+  runStatus: string;
+  currentStage: string | null;
+  publishedAt: string | null;
+  cancelledAt: string | null;
 };
 
 export type CreateRunRpcArgs = {
@@ -47,6 +52,12 @@ export type CreateRunRpcArgs = {
   p_contract_pins: typeof contractPinPackJson.contract_pins;
   p_contract_set_sha256: string;
   p_request_fingerprint_sha256: string;
+  p_expected_parent_state_version?: number;
+  p_expected_parent_run_status?: string;
+  p_expected_parent_current_stage?: string;
+  p_expected_parent_contract_set_sha256?: string;
+  p_expected_parent_security_id?: string;
+  p_expected_parent_dossier_id?: string;
 };
 
 export type RunCreationPlan = {
@@ -62,7 +73,7 @@ export type RunCreationPlan = {
   dataCutoff: string;
   creationReason: "NORMAL" | "METHODOLOGY_REPLAY_SUCCESSOR";
   requiresIdentityBinding: boolean;
-  rpc: "create_orotitan_run";
+  rpc: "create_orotitan_run" | "create_orotitan_methodology_successor_run";
   rpcArgs: CreateRunRpcArgs;
 };
 
@@ -86,9 +97,9 @@ export type PersistedRunObservation = {
 
 export type RunContextV3 = {
   format: "OROTITAN_RUN_CONTEXT_V3";
-  contextVersion: "3.0.1";
+  contextVersion: "3.0.2";
   orotitanVersion: "3.0";
-  runtimeBootstrapVersion: "3.0.1";
+  runtimeBootstrapVersion: "3.0.2";
   runtimeBootstrapCanonicalSha256: string;
   contractSetSha256: string;
   productionProjectRef: string;
@@ -171,8 +182,9 @@ export function assertRuntimeBootstrapIntegrity(): void {
     runtimeBootstrap.authority_boundary.contract_set_sha256 !== activeContractPinPack.contract_set_sha256 ||
     activeContractSetComputedSha256 !== activeContractPinPack.contract_set_sha256 ||
     runtimeBootstrap.authority_boundary.contract_pin_pack_version !== activeContractPinPack.version ||
-    runtimeBootstrap.authority_boundary.contract_pin_pack_modified !== false ||
-    runtimeBootstrap.authority_boundary.analytical_methodology_modified !== false
+    runtimeBootstrap.authority_boundary.contract_pin_pack_modified !== true ||
+    runtimeBootstrap.authority_boundary.analytical_methodology_modified !== true ||
+    runtimeBootstrap.authority_boundary.methodology_delta !== "DCF_TIMING_ONLY"
   ) {
     throw new RuntimeBootstrapError(
       "RUNTIME_AUTHORITY_MISMATCH",
@@ -185,13 +197,14 @@ export function assertRuntimeBootstrapIntegrity(): void {
     activeContractPinPack.contract_pins.pilotage.version !== "3.0" ||
     activeContractPinPack.contract_pins.research_stage.version !== "2.0" ||
     activeContractPinPack.contract_pins.deep_dive_stage.version !== "3.0" ||
-    activeContractPinPack.contract_pins.integration_stage.version !== "3.0"
+    activeContractPinPack.contract_pins.integration_stage.version !== "3.0" ||
+    activeContractPinPack.contract_pins.dcf_timing.version !== "1.0"
   ) {
     throw new RuntimeBootstrapError("RUNTIME_AUTHORITY_MISMATCH", "V3 stage authority composition is not exact");
   }
 
-  if (Object.keys(activeContractPinPack.contract_pins).length !== 13) {
-    throw new RuntimeBootstrapError("RUNTIME_AUTHORITY_MISMATCH", "V3 Contract Set must contain exactly 13 logical pins");
+  if (Object.keys(activeContractPinPack.contract_pins).length !== 14) {
+    throw new RuntimeBootstrapError("RUNTIME_AUTHORITY_MISMATCH", "V3.0.1 Contract Set must contain exactly 14 logical pins");
   }
 }
 
@@ -247,6 +260,7 @@ function buildPlan(input: {
   baselineContractVersion: string | null;
   dataCutoff: string;
   creationReason: "NORMAL" | "METHODOLOGY_REPLAY_SUCCESSOR";
+  parentObservation?: HistoricalParentObservation;
 }): RunCreationPlan {
   assertProductionEnvironment(input.environment);
   assertIsoDate(input.dataCutoff);
@@ -266,6 +280,10 @@ function buildPlan(input: {
     pilotage_contract_version: activeContractPinPack.contract_pins.pilotage.version,
     contract_set_sha256: activeContractPinPack.contract_set_sha256,
     creation_reason: input.creationReason,
+    parent_expected_state_version: input.parentObservation?.stateVersion ?? null,
+    parent_expected_run_status: input.parentObservation?.runStatus ?? null,
+    parent_expected_current_stage: input.parentObservation?.currentStage ?? null,
+    parent_expected_contract_set_sha256: input.parentObservation?.contractSetSha256 ?? null,
   } as const;
   const requestFingerprint = sha256Text(canonicalJson(descriptor as unknown as JsonValue));
   const creationIdempotencyKey = `orotitan:v3:create:${requestFingerprint}`;
@@ -283,7 +301,9 @@ function buildPlan(input: {
     dataCutoff: input.dataCutoff,
     creationReason: input.creationReason,
     requiresIdentityBinding: input.runType === "INITIAL",
-    rpc: "create_orotitan_run",
+    rpc: input.creationReason === "METHODOLOGY_REPLAY_SUCCESSOR"
+      ? "create_orotitan_methodology_successor_run"
+      : "create_orotitan_run",
     rpcArgs: {
       p_creation_idempotency_key: creationIdempotencyKey,
       p_issuer_id: input.identity.issuerId,
@@ -298,6 +318,16 @@ function buildPlan(input: {
       p_contract_pins: activeContractPinPack.contract_pins,
       p_contract_set_sha256: activeContractPinPack.contract_set_sha256,
       p_request_fingerprint_sha256: requestFingerprint,
+      ...(input.parentObservation
+        ? {
+            p_expected_parent_state_version: input.parentObservation.stateVersion,
+            p_expected_parent_run_status: input.parentObservation.runStatus,
+            p_expected_parent_current_stage: input.parentObservation.currentStage ?? "",
+            p_expected_parent_contract_set_sha256: input.parentObservation.contractSetSha256,
+            p_expected_parent_security_id: input.parentObservation.securityId,
+            p_expected_parent_dossier_id: input.parentObservation.dossierId,
+          }
+        : {}),
     },
   };
 }
@@ -341,8 +371,20 @@ export function buildMethodologyReplaySuccessorPlan(input: {
       "pure INITIAL methodology replay requires no canonical baseline snapshot",
     );
   }
+  if (!Number.isInteger(input.parent.stateVersion) || input.parent.stateVersion < 1) {
+    throw new RuntimeBootstrapError("SUCCESSOR_PARENT_STATE_VERSION_MISMATCH", "parent state_version must be a positive integer");
+  }
+  if (input.parent.runStatus !== "ACTIVE") {
+    throw new RuntimeBootstrapError("SUCCESSOR_PARENT_STATUS_MISMATCH", "methodology replay requires ACTIVE parent");
+  }
+  if (input.parent.currentStage !== "DEEP_DIVE") {
+    throw new RuntimeBootstrapError("SUCCESSOR_PARENT_STAGE_MISMATCH", "methodology replay requires parent at DEEP_DIVE");
+  }
+  if (input.parent.publishedAt !== null || input.parent.cancelledAt !== null) {
+    throw new RuntimeBootstrapError("SUCCESSOR_PARENT_TERMINAL", "published/cancelled parent is not admissible for this route");
+  }
   if (input.parent.contractSetSha256 === activeContractPinPack.contract_set_sha256) {
-    throw new RuntimeBootstrapError("SUCCESSOR_NOT_REQUIRED", "parent is already pinned to the active V3 Contract Set");
+    throw new RuntimeBootstrapError("SUCCESSOR_NOT_REQUIRED", "parent is already pinned to the active V3.0.1 Contract Set");
   }
 
   return buildPlan({
@@ -354,6 +396,7 @@ export function buildMethodologyReplaySuccessorPlan(input: {
     baselineContractVersion: null,
     dataCutoff: input.parent.dataCutoff,
     creationReason: "METHODOLOGY_REPLAY_SUCCESSOR",
+    parentObservation: input.parent,
   });
 }
 
@@ -482,7 +525,10 @@ export function buildResearchStartPrompt(context: RunContextV3): string {
   const baseline = context.baselineSnapshotId ?? "NULL";
   const parent = context.parentRunId ?? "NULL";
   const researchPin = activeContractPinPack.contract_pins.research_stage;
-  return `OROTITAN V3 — START RESEARCH\n\n${handoffEnvelopeLines().join("\n")}\nCOMPANY = ${context.company}\nRUN_ID = ${context.runId}\nPARENT_RUN_ID = ${parent}\nCANONICAL_MODE = ${context.canonicalMode}\nRUN_TYPE = ${context.runType}\nREGISTRY_STAGE = RESEARCH\nEXECUTION_PHASE = RESEARCH\nDATA_CUTOFF = ${context.dataCutoff}\nBASELINE_SNAPSHOT_ID = ${baseline}\nEXPECTED_STAGE_CONTRACT = ${researchPin.name}\nEXPECTED_STAGE_CONTRACT_VERSION = ${researchPin.version}\nPUBLICATION_AUTHORIZED = NO\n\nBefore any external research, verify the exact production environment, persisted RUN_ID, parent lineage where present, identity, DATA_CUTOFF, baseline and V3 Contract Pin Pack against the Registry. WRONG_ENVIRONMENT or any version / ID / hash mismatch is a hard stop. Start RESEARCH only through the controlled Registry path. Research remains evidence production under the pinned Research Stage Contract. Do not perform Valuation or construct an economic-share-count bound in this bootstrap.\n\nDO NOT USE THIS BOOTSTRAP AS ANALYTICAL EVIDENCE.\nFAIL CLOSED ON VERSION / ID / STATUS / HASH MISMATCH.`;
+  const successorCas = context.parentRunId
+    ? "\nSUCCESSOR_PARENT_CAS = TRANSACTIONAL_REQUIRED\nRESEARCH_SCOPE = SAME_CUTOFF_NON_VALUATION_REVALIDATION_ONLY\nFIRST_ANALYTICAL_PHASE = VALUATION_AFTER_REVALIDATION"
+    : "";
+  return `OROTITAN V3 — START RESEARCH\n\n${handoffEnvelopeLines().join("\n")}\nCOMPANY = ${context.company}\nRUN_ID = ${context.runId}\nPARENT_RUN_ID = ${parent}\nCANONICAL_MODE = ${context.canonicalMode}\nRUN_TYPE = ${context.runType}\nREGISTRY_STAGE = RESEARCH\nEXECUTION_PHASE = RESEARCH\nDATA_CUTOFF = ${context.dataCutoff}\nBASELINE_SNAPSHOT_ID = ${baseline}\nEXPECTED_STAGE_CONTRACT = ${researchPin.name}\nEXPECTED_STAGE_CONTRACT_VERSION = ${researchPin.version}\nPUBLICATION_AUTHORIZED = NO${successorCas}\n\nBefore any external research, verify the exact production environment, persisted RUN_ID, parent lineage where present, identity, DATA_CUTOFF, baseline and V3 Contract Pin Pack against the Registry. WRONG_ENVIRONMENT or any version / ID / hash mismatch is a hard stop. Start RESEARCH only through the controlled Registry path. For a methodology-replay successor, Research is limited to exact same-cutoff revalidation and must not introduce post-cutoff evidence or new fundamental judgment. For an ordinary run, Research remains evidence production under the pinned Research Stage Contract. Do not perform Valuation or construct an economic-share-count bound in this bootstrap.\n\nDO NOT USE THIS BOOTSTRAP AS ANALYTICAL EVIDENCE.\nFAIL CLOSED ON VERSION / ID / STATUS / HASH MISMATCH.`;
 }
 
 export function renderPreflightCard(context: RunContextV3): string {
