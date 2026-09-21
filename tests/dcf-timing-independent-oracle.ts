@@ -38,9 +38,9 @@ export function independentDcfTimingOracle(
   assert.equal(input.yearFractionConvention, "ACT/365F");
   assert.equal(input.fiscalCalendarResolved, true);
   assert.equal(input.fiscalYearMismatchResolved, true);
-  const fiscalStart = dayNumber(input.firstForecastFiscalPeriodStartDate);
-  const valuationDay = dayNumber(input.valuationDate);
-  const firstPaymentDay = dayNumber(input.cashFlows[0].paymentDate);
+  const fiscalStart = civilOrdinal(input.firstForecastFiscalPeriodStartDate);
+  const valuationDay = civilOrdinal(input.valuationDate);
+  const firstPaymentDay = civilOrdinal(input.cashFlows[0].paymentDate);
   assert.ok(fiscalStart <= valuationDay);
   assert.ok(fiscalStart < firstPaymentDay);
   const stubStatus = fiscalStart === valuationDay ? "FULL_PERIOD" : "STUB";
