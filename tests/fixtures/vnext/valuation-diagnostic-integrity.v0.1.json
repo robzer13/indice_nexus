@@ -1,0 +1,3336 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "both-numeric-mature-precedence",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Valuation diagnostics reconcile numerically and preserve the mature-normalization precedence rule."
+      },
+      "expected": {
+        "finalizable": true,
+        "selectedNBasis": "MATURE_NORMALIZATION_RETURN",
+        "numericOvsPermittedByNSelection": true,
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "legitimate-mature-na-same-multiple-fallback",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NOT_ASSESSABLE",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Required mature-normalization work was performed, but a defensible numeric mature-state return cannot be estimated.",
+            "evidenceIds": [
+              "E-MN-NA"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [],
+          "rationale": "Mature normalization is legitimately not assessable after required work."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "A valid same-multiple diagnostic is used only because mature normalization is legitimately non-numeric."
+      },
+      "expected": {
+        "finalizable": true,
+        "selectedNBasis": "NO_MULTIPLE_EXPANSION_RETURN",
+        "numericOvsPermittedByNSelection": true
+      }
+    },
+    {
+      "id": "invalid-mature-fails-closed",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "INVALID",
+          "validityReconciled": {
+            "state": "NO",
+            "rationale": "Mature normalization contains a basis mismatch and unresolved critical assumption.",
+            "evidenceIds": [
+              "E-MN-BAD"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-BAD"
+          ],
+          "rationale": "Mature normalization exists but is invalid; fallback is prohibited."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Invalid mature normalization must fail closed rather than falling back."
+      },
+      "expected": {
+        "finalizable": false,
+        "selectedNBasis": "INVALID",
+        "numericOvsPermittedByNSelection": false,
+        "containsValidation": [
+          "MATURE_NORMALIZATION_INVALID_FAIL_CLOSED",
+          "N_SELECTION_INVALID_FAIL_CLOSED"
+        ]
+      }
+    },
+    {
+      "id": "no-numeric-n-diagnostic",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NOT_AVAILABLE",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "The mature-normalization diagnostic was attempted but the required numeric input is unavailable.",
+            "evidenceIds": [
+              "E-MN-NAV"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [],
+          "rationale": "Mature normalization is not available."
+        },
+        "sameMultiple": {
+          "state": "NOT_AVAILABLE",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "The same-multiple cross-check cannot be produced on the available basis.",
+            "evidenceIds": [
+              "E-SM-NAV"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [],
+          "rationale": "Same-multiple return is not available."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [],
+        "valuationReliability": "NOT_ASSESSABLE",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "No valid numeric N diagnostic is available; numeric OVS must remain prohibited."
+      },
+      "expected": {
+        "finalizable": true,
+        "selectedNBasis": "NOT_AVAILABLE",
+        "numericOvsPermittedByNSelection": false,
+        "containsLimitation": [
+          "N_SELECTION_NOT_AVAILABLE",
+          "VALUATION_RELIABILITY_NOT_ASSESSABLE"
+        ]
+      }
+    },
+    {
+      "id": "reverse-dcf-underdetermined",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "REVENUE_GROWTH",
+            "TERMINAL_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Reverse DCF is underdetermined because multiple material variables are solved simultaneously."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "REVERSE_DCF_MUST_SOLVE_ONE_MATERIAL_VARIABLE"
+      }
+    },
+    {
+      "id": "expected-return-not-exact-irr",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "NO",
+            "rationale": "Interim dividends are modeled but exact IRR is not used.",
+            "evidenceIds": [
+              "E-ER-NOIRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": true,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Expected return is incorrectly assembled by arithmetic addition rather than exact IRR."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "INTERIM_CASH_FLOWS_REQUIRE_EXACT_IRR",
+          "NAIVE_EXPECTED_RETURN_ADDITION_FORBIDDEN"
+        ]
+      }
+    },
+    {
+      "id": "unsupported-ten-year-horizon",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": true,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "The 10-year horizon exceeds defensible economic visibility.",
+            "evidenceIds": [
+              "E-ER-10Y-BAD"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "A 10-year expected return is produced without economic-horizon support."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "TEN_YEAR_EXPECTED_RETURN_REQUIRES_ECONOMIC_HORIZON_SUPPORT"
+      }
+    },
+    {
+      "id": "normalized-multiple-comparability-failure",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "NO",
+          "rationale": "Peer/historical multiple comparison lacks comparable leverage and business mix.",
+          "evidenceIds": [
+            "E-MULT-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Normalized multiple cross-check lacks economic comparability."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "NORMALIZED_MULTIPLE_REQUIRES_COMPARABILITY"
+      }
+    },
+    {
+      "id": "cyclical-without-mid-cycle-normalization",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": true,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Peak-cycle earnings are used without mid-cycle normalization.",
+          "evidenceIds": [
+            "E-MID-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Cyclical valuation lacks required mid-cycle normalization."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "CYCLICAL_VALUATION_REQUIRES_MID_CYCLE_NORMALIZATION"
+      }
+    },
+    {
+      "id": "valuation-math-monotonicity-failure",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "FAIL",
+            "calculationIds": [
+              "C-MONO-BAD"
+            ],
+            "rationale": "Increasing the discount rate increased DCF value, violating monotonicity."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "A deterministic valuation monotonicity check fails."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "REQUIRED_MATH_CHECK_NOT_PASS:MONOTONICITY_DISCOUNT_RATE"
+      }
+    },
+    {
+      "id": "too-many-sensitivity-variables",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [
+          "GROWTH",
+          "MARGIN",
+          "ROIIC",
+          "DISCOUNT_RATE",
+          "TERMINAL_GROWTH"
+        ],
+        "valuationReliability": "HIGH",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Sensitivity output lists more than the frozen 2-4 dominant variables."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "VALUE_MOST_SENSITIVE_TO_REQUIRES_TWO_TO_FOUR_VARIABLES"
+      }
+    },
+    {
+      "id": "valuation-reliability-not-assessable",
+      "input": {
+        "valuationAssumptionIntegrityPassed": true,
+        "matureNormalization": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Mature-normalization calculation, definition, basis and critical assumptions are reconciled.",
+            "evidenceIds": [
+              "E-MN-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-MN-1"
+          ],
+          "rationale": "Mature-normalization return is numeric and valid."
+        },
+        "sameMultiple": {
+          "state": "NUMERIC_VALID",
+          "validityReconciled": {
+            "state": "YES",
+            "rationale": "Same-multiple calculation is a valid diagnostic cross-check.",
+            "evidenceIds": [
+              "E-SM-VALID"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-SM-1"
+          ],
+          "rationale": "Same-multiple return is numeric and valid."
+        },
+        "reverseDcf": {
+          "state": "COMPLETE",
+          "solvedVariables": [
+            "TERMINAL_FCF_MARGIN"
+          ],
+          "translatedToBusinessEconomics": {
+            "state": "YES",
+            "rationale": "Solved variable is translated into implied margin and reinvestment economics.",
+            "evidenceIds": [
+              "E-RDCF-BIZ"
+            ],
+            "assumptionIds": []
+          },
+          "comparedWithFrozenFundamentals": {
+            "state": "YES",
+            "rationale": "Implied expectations are compared against frozen fundamentals.",
+            "evidenceIds": [
+              "E-RDCF-CMP"
+            ],
+            "assumptionIds": []
+          },
+          "calculationIds": [
+            "C-RDCF-1"
+          ],
+          "rationale": "Reverse DCF solves one material variable while holding the remaining fundamental variables locked."
+        },
+        "expectedReturn": {
+          "state": "NUMERIC_VALID",
+          "calculationIds": [
+            "C-ER-1"
+          ],
+          "interimCashFlowsModeled": true,
+          "exactIrrUsed": {
+            "state": "YES",
+            "rationale": "Exact shareholder IRR is used for modeled interim distributions and terminal value.",
+            "evidenceIds": [
+              "E-ER-IRR"
+            ],
+            "assumptionIds": []
+          },
+          "returnDecompositionReconciled": {
+            "state": "YES",
+            "rationale": "Fundamental growth, share-count effect, distributions and valuation change reconcile geometrically.",
+            "evidenceIds": [
+              "E-ER-DEC"
+            ],
+            "assumptionIds": []
+          },
+          "naiveArithmeticAdditionUsed": false,
+          "fiveYearDefensible": true,
+          "fiveYearProduced": true,
+          "tenYearProduced": false,
+          "tenYearHorizonSupported": {
+            "state": "NO",
+            "rationale": "A 10-year return is not produced because the economic horizon does not support that precision.",
+            "evidenceIds": [
+              "E-ER-10Y"
+            ],
+            "assumptionIds": []
+          },
+          "rationale": "Expected return uses exact shareholder cash flows and IRR."
+        },
+        "normalizedMultipleCrossCheckUsed": true,
+        "normalizedMultipleComparabilityEstablished": {
+          "state": "YES",
+          "rationale": "Cross-check multiples are comparable on growth, margin, return, leverage, mix and accounting.",
+          "evidenceIds": [
+            "E-MULT-COMP"
+          ],
+          "assumptionIds": []
+        },
+        "cyclicalNormalizationRequired": false,
+        "midCycleNormalizationEstablished": {
+          "state": "NO",
+          "rationale": "Mid-cycle normalization is not required for this non-cyclical fixture.",
+          "evidenceIds": [
+            "E-MIDCYCLE-NA"
+          ],
+          "assumptionIds": []
+        },
+        "marginOfSafetyInputsComplete": {
+          "state": "YES",
+          "rationale": "MOS considers central/bear outcomes, expected return, normalization return, hurdle headroom, terminal dependence, sensitivity and reliability.",
+          "evidenceIds": [
+            "E-MOS"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesSameFundamentals": {
+          "state": "YES",
+          "rationale": "Price Ladder is solved on the same frozen fundamentals as valuation.",
+          "evidenceIds": [
+            "E-PL-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "priceLadderUsesConfiguredReturnLevels": {
+          "state": "YES",
+          "rationale": "Price Ladder uses configured investor return levels, not universal truths.",
+          "evidenceIds": [
+            "E-PL-RET"
+          ],
+          "assumptionIds": []
+        },
+        "valueMostSensitiveTo": [],
+        "valuationReliability": "NOT_ASSESSABLE",
+        "terminalValueUsed": true,
+        "mathChecks": [
+          {
+            "check": "MARKET_CAP_IDENTITY",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MARKET_CAP_IDENTITY"
+            ],
+            "rationale": "MARKET_CAP_IDENTITY reconciles deterministically."
+          },
+          {
+            "check": "EV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EV_BRIDGE"
+            ],
+            "rationale": "EV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "FCF_YIELD",
+            "state": "PASS",
+            "calculationIds": [
+              "C-FCF_YIELD"
+            ],
+            "rationale": "FCF_YIELD reconciles deterministically."
+          },
+          {
+            "check": "PE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PE"
+            ],
+            "rationale": "PE reconciles deterministically."
+          },
+          {
+            "check": "CAGR",
+            "state": "PASS",
+            "calculationIds": [
+              "C-CAGR"
+            ],
+            "rationale": "CAGR reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_REVENUE_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_REVENUE_BRIDGE"
+            ],
+            "rationale": "TERMINAL_REVENUE_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "TERMINAL_METRIC_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-TERMINAL_METRIC_BRIDGE"
+            ],
+            "rationale": "TERMINAL_METRIC_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "PV_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-PV_BRIDGE"
+            ],
+            "rationale": "PV_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "EQUITY_BRIDGE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-EQUITY_BRIDGE"
+            ],
+            "rationale": "EQUITY_BRIDGE reconciles deterministically."
+          },
+          {
+            "check": "VALUE_PER_SHARE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-VALUE_PER_SHARE"
+            ],
+            "rationale": "VALUE_PER_SHARE reconciles deterministically."
+          },
+          {
+            "check": "IRR_EXACT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-IRR_EXACT"
+            ],
+            "rationale": "IRR_EXACT reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DISCOUNT_RATE",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DISCOUNT_RATE"
+            ],
+            "rationale": "MONOTONICITY_DISCOUNT_RATE reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_TERMINAL_GROWTH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_TERMINAL_GROWTH"
+            ],
+            "rationale": "MONOTONICITY_TERMINAL_GROWTH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_CASH",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_CASH"
+            ],
+            "rationale": "MONOTONICITY_CASH reconciles deterministically."
+          },
+          {
+            "check": "MONOTONICITY_DEBT",
+            "state": "PASS",
+            "calculationIds": [
+              "C-MONOTONICITY_DEBT"
+            ],
+            "rationale": "MONOTONICITY_DEBT reconciles deterministically."
+          }
+        ],
+        "counterEvidenceIds": [
+          "CE-VDI-1"
+        ],
+        "rationale": "Business analysis can remain high quality while valuation reliability is legitimately not assessable."
+      },
+      "expected": {
+        "finalizable": true,
+        "selectedNBasis": "MATURE_NORMALIZATION_RETURN",
+        "numericOvsPermittedByNSelection": false,
+        "containsLimitation": "VALUATION_RELIABILITY_NOT_ASSESSABLE"
+      }
+    }
+  ]
+}
