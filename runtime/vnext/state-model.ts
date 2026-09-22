@@ -127,21 +127,85 @@ export const ANALYTICAL_TRANSITIONS: Readonly<
 
 export const EVIDENCE_TRANSITIONS: Readonly<
   Record<EvidenceState, readonly EvidenceState[]>
-> = Object.fromEntries(
-  EVIDENCE_STATES.map((from) => [
-    from,
-    EVIDENCE_STATES.filter((to) => to !== from),
-  ]),
-) as Record<EvidenceState, readonly EvidenceState[]>;
+> = {
+  UNKNOWN: [
+    "SUFFICIENT",
+    "PARTIAL_BUT_DECISIONABLE",
+    "INSUFFICIENT",
+    "CONFLICTED",
+  ],
+  SUFFICIENT: [
+    "UNKNOWN",
+    "PARTIAL_BUT_DECISIONABLE",
+    "INSUFFICIENT",
+    "CONFLICTED",
+  ],
+  PARTIAL_BUT_DECISIONABLE: [
+    "UNKNOWN",
+    "SUFFICIENT",
+    "INSUFFICIENT",
+    "CONFLICTED",
+  ],
+  INSUFFICIENT: [
+    "UNKNOWN",
+    "SUFFICIENT",
+    "PARTIAL_BUT_DECISIONABLE",
+    "CONFLICTED",
+  ],
+  CONFLICTED: [
+    "UNKNOWN",
+    "SUFFICIENT",
+    "PARTIAL_BUT_DECISIONABLE",
+    "INSUFFICIENT",
+  ],
+};
 
 export const PRICE_CONDITION_TRANSITIONS: Readonly<
   Record<PriceCondition, readonly PriceCondition[]>
-> = Object.fromEntries(
-  PRICE_CONDITIONS.map((from) => [
-    from,
-    PRICE_CONDITIONS.filter((to) => to !== from),
-  ]),
-) as Record<PriceCondition, readonly PriceCondition[]>;
+> = {
+  UNKNOWN: [
+    "NOT_ASSESSABLE",
+    "ABOVE_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_STRONG_RETURN_PRICE",
+    "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE",
+  ],
+  NOT_ASSESSABLE: [
+    "UNKNOWN",
+    "ABOVE_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_STRONG_RETURN_PRICE",
+    "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE",
+  ],
+  ABOVE_REQUIRED_RETURN_PRICE: [
+    "UNKNOWN",
+    "NOT_ASSESSABLE",
+    "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_STRONG_RETURN_PRICE",
+    "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE",
+  ],
+  AT_OR_BELOW_REQUIRED_RETURN_PRICE: [
+    "UNKNOWN",
+    "NOT_ASSESSABLE",
+    "ABOVE_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_STRONG_RETURN_PRICE",
+    "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE",
+  ],
+  AT_OR_BELOW_STRONG_RETURN_PRICE: [
+    "UNKNOWN",
+    "NOT_ASSESSABLE",
+    "ABOVE_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE",
+  ],
+  AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE: [
+    "UNKNOWN",
+    "NOT_ASSESSABLE",
+    "ABOVE_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+    "AT_OR_BELOW_STRONG_RETURN_PRICE",
+  ],
+};
 
 export const DECISION_TRANSITIONS: Readonly<
   Record<DecisionState, readonly DecisionState[]>
