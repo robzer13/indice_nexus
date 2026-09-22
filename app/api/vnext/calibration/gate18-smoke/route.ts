@@ -84,7 +84,7 @@ export async function GET(request: Request) {
         inputTokens: tokenOrNull(result.totalUsage.inputTokens),
         outputTokens: tokenOrNull(result.totalUsage.outputTokens),
         reasoningTokens: tokenOrNull(
-          result.totalUsage.reasoningTokens,
+          result.usage.outputTokenDetails.reasoningTokens,
         ),
         totalTokens: tokenOrNull(result.totalUsage.totalTokens),
         finishReason: result.finishReason ?? null,
