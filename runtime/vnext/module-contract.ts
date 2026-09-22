@@ -139,7 +139,7 @@ export function validateModuleContract(
     };
   }
 
-  const contract = value as VNextModuleContract;
+  const contract = value as unknown as VNextModuleContract;
   const errors: string[] = [];
 
   if (contract.dependencies.module_ids.includes(contract.module_id)) {
