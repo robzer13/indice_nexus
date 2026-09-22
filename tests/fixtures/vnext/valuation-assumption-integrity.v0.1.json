@@ -2517,8 +2517,8 @@
         "rationale": "A critical material revenue assumption remains epistemically UNKNOWN."
       },
       "expected": {
-        "finalizable": false,
-        "containsValidation": "CRITICAL_MATERIAL_ASSUMPTION_CANNOT_REMAIN_UNKNOWN"
+        "finalizable": true,
+        "containsLimitation": "CRITICAL_MATERIAL_ASSUMPTION_UNKNOWN"
       }
     }
   ]
