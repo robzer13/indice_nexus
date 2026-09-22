@@ -191,6 +191,78 @@ test("depth consumption must reference only triggers from the exact decision", (
   );
 });
 
+test("depth consumption must preserve the complete exact trigger set", () => {
+  const decision = resolveAnalyticalDepth(
+    fixtures.cases[1].context as AnalyticalDepthContext,
+  );
+
+  const record: AnalyticalDepthConsumptionRecord = {
+    runId: "RUN-004",
+    stageCode: "DEEP_DIVE",
+    moduleId: "VALUATION_DIAGNOSTIC_INTEGRITY",
+    executionId: "EXEC-004",
+    selectedDepth: "DEPTH_2",
+    triggerCodes: ["SIGNIFICANT_UNCERTAINTY"],
+    secondAnalystExecuted: false,
+    reconciliationArtifactId: null,
+    providerRequestIds: [],
+  };
+
+  assert.throws(
+    () => assertValidAnalyticalDepthConsumption(decision, record),
+    /VNEXT_DEPTH_TRACE_MISSING_DECISION_TRIGGER/,
+  );
+});
+
+test("depth consumption rejects duplicate trigger provenance", () => {
+  const decision = resolveAnalyticalDepth(
+    fixtures.cases[3].context as AnalyticalDepthContext,
+  );
+
+  const record: AnalyticalDepthConsumptionRecord = {
+    runId: "RUN-005",
+    stageCode: "DEEP_DIVE",
+    moduleId: "RETURN_NORMALIZATION",
+    executionId: "EXEC-005",
+    selectedDepth: "DEPTH_3",
+    triggerCodes: [
+      "MARGINAL_RETURN_UNCERTAIN",
+      "MARGINAL_RETURN_UNCERTAIN",
+    ],
+    secondAnalystExecuted: false,
+    reconciliationArtifactId: null,
+    providerRequestIds: [],
+  };
+
+  assert.throws(
+    () => assertValidAnalyticalDepthConsumption(decision, record),
+    /VNEXT_DEPTH_TRACE_DUPLICATE_TRIGGER_CODE/,
+  );
+});
+
+test("second-analyst reconciliation artifact id cannot be blank", () => {
+  const decision = resolveAnalyticalDepth(
+    fixtures.cases[3].context as AnalyticalDepthContext,
+  );
+
+  const record: AnalyticalDepthConsumptionRecord = {
+    runId: "RUN-006",
+    stageCode: "DEEP_DIVE",
+    moduleId: "RETURN_NORMALIZATION",
+    executionId: "EXEC-006",
+    selectedDepth: "DEPTH_3",
+    triggerCodes: ["MARGINAL_RETURN_UNCERTAIN"],
+    secondAnalystExecuted: true,
+    reconciliationArtifactId: "   ",
+    providerRequestIds: [],
+  };
+
+  assert.throws(
+    () => assertValidAnalyticalDepthConsumption(decision, record),
+    /VNEXT_DEPTH_TRACE_RECONCILIATION_ARTIFACT_ID_REQUIRED/,
+  );
+});
+
 test("adaptive depth policy is provider-neutral and does not require Azure", async () => {
   const source = await import("node:fs/promises").then((fs) =>
     fs.readFile(
