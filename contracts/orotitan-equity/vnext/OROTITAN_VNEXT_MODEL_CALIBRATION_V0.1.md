@@ -301,6 +301,15 @@ AI GATEWAY SMOKE
 
 DETERMINISTIC ASSURANCE
 = tests/vnext-model-calibration.test.ts
+
+RAW CALIBRATION EVIDENCE MODEL
+= runtime/vnext/model-calibration-evidence.ts
+
+RAW EVIDENCE TESTS
+= tests/vnext-model-calibration-evidence.test.ts
+
+FIRST REAL SMOKE ATTEMPT
+= calibration/vnext/OROTITAN_GATE18_SMOKE_ATTEMPT_001.json
 ```
 
 ## 13. Gate 18 progression
@@ -372,3 +381,94 @@ deterministic CI
 +
 separate freeze artifact
 ```
+
+
+## 16. First real provider-admission attempt
+
+A real preview invocation was executed after the preview protection boundary was
+successfully crossed.
+
+Observed sequence:
+
+```text
+PROTECTED PREVIEW
+-> SHARE BYPASS ACCEPTED
+-> GATE 18 ROUTE REACHED
+-> VERCEL AI GATEWAY REACHED
+-> HTTP 403 customer_verification_required
+```
+
+Vercel AI Gateway rejected the request before a physical model generation was
+confirmed because the OROTITAN team does not currently have a valid credit card
+on file.
+
+Classification:
+
+```text
+EXTERNAL_BILLING_VERIFICATION_REQUIRED
+!= MODEL QUALITY FAILURE
+!= ANALYTICAL METHODOLOGY FAILURE
+!= SHADOW RUNNER FAILURE
+```
+
+Therefore:
+
+```text
+VALID PHYSICAL MODEL GENERATIONS = 0
+VALID QUALITY OBSERVATIONS = 0
+MODEL WINNER = NONE
+ROUTING CHANGE = NONE
+```
+
+A retry without an external billing/provider-access change is not expected to
+produce new calibration evidence.
+
+## 17. Raw evidence law
+
+Every future real calibration call must produce a traceable engineering receipt
+before it can enter quality adjudication.
+
+The raw receipt model records:
+
+```text
+case / company / source run / DATA_CUTOFF
+module identity
+physical model identity
+repetition
+prompt identity + version + SHA-256
+generation schema identity + version + SHA-256
+evidence packet SHA-256
+execution / provider request identity
+schema + semantic validation state
+latency
+token usage
+retry count
+cost + provenance when available
+finish reason
+response SHA-256
+```
+
+Quality adjudication is a separate artifact bound to the exact execution.
+
+It records raw counts such as:
+
+```text
+critical / material / minor factual errors
+unsupported material claims
+required findings covered
+material conflicts detected
+material counter-evidence handled
+critical decision error
+supporting evidence references
+```
+
+Gate 18 v0.1 deliberately does not convert those observations into:
+
+```text
+COMPOSITE MODEL SCORE
+RANK
+WINNER
+TIER PROMOTION
+```
+
+Those decisions require later explicit calibration authority.
