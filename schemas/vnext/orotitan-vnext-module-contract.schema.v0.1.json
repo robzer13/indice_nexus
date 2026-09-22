@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/orotitan-vnext-module-contract.v0.1.json",
+  "title": "OroTitan VNext Module Contract V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_contract_schema_version",
+    "module_id",
+    "module_version",
+    "module_kind",
+    "stage_code",
+    "purpose",
+    "authority",
+    "inputs",
+    "dependencies",
+    "execution",
+    "outputs",
+    "uncertainty",
+    "recovery",
+    "environment"
+  ],
+  "properties": {
+    "module_contract_schema_version": {
+      "const": "0.1.0"
+    },
+    "module_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[A-Z0-9_]+$"
+    },
+    "module_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "module_kind": {
+      "enum": [
+        "RESEARCH",
+        "ANALYTICAL",
+        "DETERMINISTIC",
+        "CERTIFICATION",
+        "INTEGRATION",
+        "ASSURANCE"
+      ]
+    },
+    "stage_code": {
+      "enum": [
+        "RESEARCH",
+        "DEEP_DIVE",
+        "INTEGRATION"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reads",
+        "writes",
+        "judgment_authority",
+        "deterministic_authority",
+        "forbidden_actions"
+      ],
+      "properties": {
+        "reads": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "writes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "judgment_authority": {
+          "type": "boolean"
+        },
+        "deterministic_authority": {
+          "type": "boolean"
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_artifact_types",
+        "required_exact_references",
+        "required_stage_state",
+        "required_contract_pins",
+        "data_cutoff_policy"
+      ],
+      "properties": {
+        "required_artifact_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "required_exact_references": {
+          "const": true
+        },
+        "required_stage_state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "required_contract_pins": {
+          "const": true
+        },
+        "data_cutoff_policy": {
+          "const": "INHERIT_RUN_DATA_CUTOFF"
+        }
+      }
+    },
+    "dependencies": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_ids",
+        "dependency_mode"
+      ],
+      "properties": {
+        "module_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z0-9_]+$"
+          },
+          "uniqueItems": true
+        },
+        "dependency_mode": {
+          "enum": [
+            "ALL_DECLARED",
+            "PINNED_CONTRACT",
+            "ANALYST_IMPACT_JUDGMENT"
+          ]
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status_authority",
+        "status_vocabulary",
+        "can_parallelize",
+        "checkpoint_policy",
+        "retry_policy",
+        "fail_closed"
+      ],
+      "properties": {
+        "status_authority": {
+          "enum": [
+            "STAGE_STATE_MODEL",
+            "DEEP_DIVE_BLOCK_LIFECYCLE",
+            "PINNED_CONTRACT",
+            "TECHNICAL_DIAGNOSTIC"
+          ]
+        },
+        "status_vocabulary": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "can_parallelize": {
+          "type": "boolean"
+        },
+        "checkpoint_policy": {
+          "enum": [
+            "STAGE_CHECKPOINT",
+            "MODULE_ARTIFACT_ONLY",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "retry_policy": {
+          "enum": [
+            "IDEMPOTENT_SAME_REQUEST",
+            "NO_RETRY",
+            "PINNED_CONTRACT"
+          ]
+        },
+        "fail_closed": {
+          "const": true
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_types",
+        "authority_class",
+        "persistence_required",
+        "hash_required"
+      ],
+      "properties": {
+        "artifact_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "authority_class": {
+          "enum": [
+            "AUTHORITATIVE_STAGE_OUTPUT",
+            "SUPPORTING_EXECUTION_ARTIFACT",
+            "TECHNICAL_ASSURANCE"
+          ]
+        },
+        "persistence_required": {
+          "type": "boolean"
+        },
+        "hash_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unknown_policy",
+        "not_applicable_policy",
+        "missing_policy",
+        "assumption_policy"
+      ],
+      "properties": {
+        "unknown_policy": {
+          "const": "PRESERVE_EXPLICIT"
+        },
+        "not_applicable_policy": {
+          "const": "REQUIRE_SEMANTIC_REASON"
+        },
+        "missing_policy": {
+          "const": "PRESERVE_AND_BLOCK_WHEN_REQUIRED"
+        },
+        "assumption_policy": {
+          "const": "EXPLICIT_TRACEABLE_NEVER_FABRICATE_TO_COMPLETE"
+        }
+      }
+    },
+    "recovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "recoverable_failures",
+        "reopen_triggers",
+        "recovery_action"
+      ],
+      "properties": {
+        "recoverable_failures": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "reopen_triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "recovery_action": {
+          "enum": [
+            "RETRY",
+            "RESUME_STAGE",
+            "REOPEN_STAGE",
+            "SUCCESSOR_RUN",
+            "PINNED_CONTRACT"
+          ]
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allowed_environment",
+        "allowed_supabase_project_ref",
+        "production_write_allowed"
+      ],
+      "properties": {
+        "allowed_environment": {
+          "const": "VNEXT_SHADOW"
+        },
+        "allowed_supabase_project_ref": {
+          "const": "awgsurdyvsyolcgpnygh"
+        },
+        "production_write_allowed": {
+          "const": false
+        }
+      }
+    }
+  }
+}
