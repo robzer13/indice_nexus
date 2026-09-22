@@ -204,35 +204,62 @@ Required effects:
 stage_revision += 1
 lifecycle_status -> IN_PROGRESS or BLOCKED
 handoff_gate_state -> NOT_EVALUATED
-prior FINAL manifest preserved
-prior output artifacts preserved
+active_manifest_* -> NULL
+completed_at -> NULL
+prior FINAL manifest artifact remains immutable historical evidence
+prior output artifacts remain immutable historical evidence
 downstream eligibility invalidated
 STAGE_REOPENED event appended
 run.current_stage -> reopened stage
+run.run_status -> ACTIVE when target lifecycle = IN_PROGRESS
+run.run_status -> BLOCKED when target lifecycle = BLOCKED
 ```
 
-If downstream work had already started from the superseded upstream FINAL manifest:
+If downstream stages exist, they are invalidated deterministically.
+
+For a Research reopen:
 
 ```text
-downstream stage -> BLOCKED
+DEEP_DIVE -> BLOCKED
+INTEGRATION -> BLOCKED
+```
+
+For a Deep Dive reopen:
+
+```text
+INTEGRATION -> BLOCKED
+```
+
+Each invalidated downstream stage receives:
+
+```text
 contract_status_code -> UPSTREAM_STAGE_REOPENED
-```
-
-If the run was READY_TO_PUBLISH:
-
-```text
-READY_TO_PUBLISH -> BLOCKED
+handoff_gate_state -> NOT_EVALUATED
+active_manifest_* -> NULL
+completed_at -> NULL
+stage_revision += 1 only when the invalidated stage had been COMPLETE
 ```
 
 A PUBLISHED or CANCELLED run cannot reopen.
 
-## 9. Pause and block semantics
+## 9. Pause, checkpoint and resume semantics
 
 PAUSED means execution is intentionally suspended and can resume without resolving a blocker.
 
 BLOCKED means an explicit condition prevents legal progression.
 
-A paused or blocked stage should have a recoverable CHECKPOINT manifest when material work or accepted source inputs must survive conversational loss.
+Operational rules:
+
+```text
+CHECKPOINT target lifecycle may be IN_PROGRESS | PAUSED | BLOCKED
+CHECKPOINT always sets active_manifest_kind = CHECKPOINT
+CHECKPOINT maps run status to ACTIVE | PAUSED | BLOCKED respectively
+PAUSE requires current stage lifecycle = IN_PROGRESS
+PAUSE requires active_manifest_kind = CHECKPOINT
+RESUME requires lifecycle in {PAUSED, BLOCKED}
+RESUME requires active_manifest_kind = CHECKPOINT
+RESUME -> stage IN_PROGRESS + run ACTIVE
+```
 
 Neither PAUSED nor BLOCKED can admit a downstream stage.
 
@@ -269,9 +296,9 @@ GO PUBLISH
 Legal outcomes:
 
 ```text
-success     -> run_status = PUBLISHED
-recoverable failure -> run_status = BLOCKED
-non-recoverable cancellation requires explicit cancellation path
+success             -> run_status = PUBLISHED
+recoverable failure -> run_status remains READY_TO_PUBLISH
+non-recoverable failure -> run_status = BLOCKED
 ```
 
 VNext shadow execution has publication authority disabled.
@@ -353,6 +380,7 @@ Material state changes must append the corresponding event:
 ```text
 RUN_CREATED
 STAGE_STARTED
+STAGE_CHECKPOINTED
 STAGE_PAUSED
 STAGE_RESUMED
 BLOCKER_OPENED
@@ -396,15 +424,19 @@ G6-13 Integration FINAL + COMPLETE + YES is necessary for READY_TO_PUBLISH
 G6-14 publication requires explicit authorization
 G6-15 reopen increments revision
 G6-16 reopen resets gate to NOT_EVALUATED
-G6-17 reopen preserves historical FINAL manifest
-G6-18 upstream reopen blocks downstream work based on superseded manifest
-G6-19 READY_TO_PUBLISH upstream reopen -> BLOCKED
+G6-17 reopen clears active manifest pointer but preserves historical FINAL artifact
+G6-18 upstream reopen blocks and invalidates downstream stages deterministically
+G6-19 reopen maps run status to ACTIVE or BLOCKED from target lifecycle
 G6-20 stale state version fails closed
 G6-21 idempotency conflict fails closed
 G6-22 stage and run terminal guards enforced
 G6-23 VNext production-project ref rejected
 G6-24 VNext shadow-project ref accepted
 G6-25 model vocabulary equals frozen Registry V1.11 vocabulary
+G6-26 pause requires CHECKPOINT
+G6-27 resume requires CHECKPOINT
+G6-28 recoverable publish failure remains READY_TO_PUBLISH
+G6-29 non-recoverable publish failure becomes BLOCKED
 ```
 
 Gate 6 passes only when the machine-readable model and deterministic tests implement this contract without production mutation.
