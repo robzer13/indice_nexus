@@ -2,7 +2,7 @@ name: Gate 18 Model Smoke
 
 on:
   pull_request:
-    types: [labeled]
+    types: [edited]
 
 permissions:
   contents: read
@@ -12,7 +12,7 @@ jobs:
   gate18-model-smoke:
     if: >-
       github.event.pull_request.head.ref == 'gate18-real-model-calibration' &&
-      github.event.label.name == 'gate18-smoke'
+      endsWith(github.event.pull_request.title, ' [gate18-smoke]')
     runs-on: ubuntu-latest
     steps:
       - name: Mint GitHub OIDC token
