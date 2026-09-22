@@ -41,7 +41,7 @@ for (const fixture of fixtures.cases) {
 
     if ("requiredTrigger" in fixture.expected) {
       assert.equal(
-        codes.includes(fixture.expected.requiredTrigger),
+        codes.includes(\n          fixture.expected.requiredTrigger as DepthTriggerCode,\n        ),
         true,
       );
     }
