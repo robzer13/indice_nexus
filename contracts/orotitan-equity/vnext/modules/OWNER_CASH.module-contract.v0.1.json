@@ -1,0 +1,107 @@
+{
+  "module_contract_schema_version": "0.1.0",
+  "module_id": "OWNER_CASH",
+  "module_version": "0.1.0",
+  "module_kind": "ANALYTICAL",
+  "stage_code": "DEEP_DIVE",
+  "purpose": "Validate the economic cash architecture from Standardized FCF to Owner Earnings and per-share cash, preserving maintenance-investment uncertainty, double-counting firewalls, dilution treatment, working-capital discipline, and sector-valid substitutes without creating a cash-economics score.",
+  "authority": {
+    "reads": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "FINANCIAL_FACTS",
+      "RETURN_NORMALIZATION_ARTIFACT",
+      "CAPITAL_SEASONING_ARTIFACT"
+    ],
+    "writes": [
+      "OWNER_CASH_ARTIFACT"
+    ],
+    "judgment_authority": true,
+    "deterministic_authority": true,
+    "forbidden_actions": [
+      "CHANGE_CASH_ECONOMICS_SCORE",
+      "DERIVE_CASH_ECONOMICS_ELITE",
+      "INVENT_MAINTENANCE_CAPEX_FROM_D_AND_A",
+      "DOUBLE_COUNT_MAINTENANCE_REINVESTMENT",
+      "DOUBLE_COUNT_WORKING_CAPITAL",
+      "DOUBLE_COUNT_SBC",
+      "TREAT_TEMPORARY_WORKING_CAPITAL_AS_STRUCTURAL_OWNER_CASH",
+      "SUBTRACT_ACQUISITIONS_FROM_STANDARDIZED_FCF_BY_DEFAULT",
+      "TREAT_NON_CASH_AS_NON_ECONOMIC_BY_DEFAULT",
+      "SILENTLY_COERCE_UNKNOWN",
+      "WRITE_PRODUCTION"
+    ]
+  },
+  "inputs": {
+    "required_artifact_types": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "FINANCIAL_FACTS"
+    ],
+    "required_exact_references": true,
+    "required_stage_state": "IN_PROGRESS",
+    "required_contract_pins": true,
+    "data_cutoff_policy": "INHERIT_RUN_DATA_CUTOFF"
+  },
+  "dependencies": {
+    "module_ids": [
+      "RETURN_NORMALIZATION",
+      "CAPITAL_SEASONING"
+    ],
+    "dependency_mode": "ANALYST_IMPACT_JUDGMENT"
+  },
+  "execution": {
+    "status_authority": "DEEP_DIVE_BLOCK_LIFECYCLE",
+    "status_vocabulary": [
+      "INSUFFICIENT",
+      "IN_PROGRESS",
+      "PROVISIONALLY_STABLE",
+      "LOCKED"
+    ],
+    "can_parallelize": false,
+    "checkpoint_policy": "MODULE_ARTIFACT_ONLY",
+    "retry_policy": "IDEMPOTENT_SAME_REQUEST",
+    "fail_closed": true
+  },
+  "outputs": {
+    "artifact_types": [
+      "OWNER_CASH_ARTIFACT"
+    ],
+    "authority_class": "SUPPORTING_EXECUTION_ARTIFACT",
+    "persistence_required": true,
+    "hash_required": true
+  },
+  "uncertainty": {
+    "unknown_policy": "PRESERVE_EXPLICIT",
+    "not_applicable_policy": "REQUIRE_SEMANTIC_REASON",
+    "missing_policy": "PRESERVE_AND_BLOCK_WHEN_REQUIRED",
+    "assumption_policy": "EXPLICIT_TRACEABLE_NEVER_FABRICATE_TO_COMPLETE"
+  },
+  "recovery": {
+    "recoverable_failures": [
+      "MISSING_MAINTENANCE_EVIDENCE",
+      "CASH_BRIDGE_RECONCILIATION_FAILED",
+      "SBC_DOUBLE_COUNT_DETECTED",
+      "WORKING_CAPITAL_DOUBLE_COUNT_DETECTED",
+      "SECTOR_CASH_FRAMEWORK_MISSING",
+      "SCHEMA_VALIDATION_FAILED"
+    ],
+    "reopen_triggers": [
+      "MAINTENANCE_REQUIREMENT_CHANGED",
+      "WORKING_CAPITAL_TREATMENT_CHANGED",
+      "SBC_DILUTION_TREATMENT_CHANGED",
+      "LEASE_CASH_TREATMENT_CHANGED",
+      "ACQUISITION_CASH_TREATMENT_CHANGED",
+      "DEFERRED_MAINTENANCE_CHANGED",
+      "FINANCIAL_FACTS_CHANGED"
+    ],
+    "recovery_action": "REOPEN_STAGE"
+  },
+  "environment": {
+    "allowed_environment": "VNEXT_SHADOW",
+    "allowed_supabase_project_ref": "awgsurdyvsyolcgpnygh",
+    "production_write_allowed": false
+  }
+}
