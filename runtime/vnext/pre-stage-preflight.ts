@@ -1,4 +1,4 @@
-import type { RunStatus, StageLifecycleStatus } from "./state-machine";
+import type { RunStatus, StageLifecycle } from "./state-machine";
 
 export const PREFLIGHT_SCOPES = [
   "RESEARCH",
@@ -48,7 +48,7 @@ export interface PreflightStageRecord {
   stageContractName: string;
   stageContractVersion: string;
   stageContractSha256: string;
-  lifecycleStatus: StageLifecycleStatus;
+  lifecycleStatus: StageLifecycle;
   handoffGateName:
     | "READY_FOR_DEEP_DIVE"
     | "READY_FOR_INTEGRATION"
@@ -113,7 +113,7 @@ export interface ResolvedUpstreamManifest extends ExpectedUpstreamManifest {
     | "NON_AUTHORITATIVE";
   availabilityState: "AVAILABLE" | "WITHDRAWN" | "MISSING";
   manifestKind: "CHECKPOINT" | "FINAL";
-  stageLifecycleStatus: StageLifecycleStatus;
+  stageLifecycleStatus: StageLifecycle;
   handoffGateState: "NOT_EVALUATED" | "YES" | "NO";
   durableLocatorAvailable: boolean;
 }
@@ -246,7 +246,7 @@ function requiresSecurity(scope: PreflightScope): boolean {
 
 function admissibleLifecycle(
   scope: PreflightScope,
-  status: StageLifecycleStatus,
+  status: StageLifecycle,
 ): boolean {
   if (
     scope === "FUNDAMENTALS" ||
