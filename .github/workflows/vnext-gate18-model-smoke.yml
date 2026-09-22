@@ -1,40 +1,88 @@
-name: Gate 18 Model Smoke
+name: Gate 18 Provider Calibration
 
 on:
-  pull_request:
-    types: [edited]
+  workflow_dispatch:
+    inputs:
+      operation:
+        description: Gate 18 operation
+        required: true
+        type: choice
+        options:
+          - provider-preflight
+          - model-smoke
 
 permissions:
   contents: read
+  id-token: write
 
 jobs:
-  gate18-model-smoke:
-    if: >-
-      github.event.pull_request.head.ref == 'gate18-real-model-calibration' &&
-      contains(github.event.pull_request.title, '[gate18-share:')
+  provider-preflight:
+    if: inputs.operation == 'provider-preflight'
     runs-on: ubuntu-latest
     steps:
-      - name: Invoke protected Vercel preview smoke
+      - name: Mint GitHub OIDC token
+        uses: actions/github-script@v7
+        id: oidc
+        with:
+          script: |
+            const token = await core.getIDToken();
+            core.setSecret(token);
+            core.setOutput('token', token);
+
+      - name: Inspect provider credential presence safely
         env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          SMOKE_BASE_URL: https://orotitan-vnext-pilotage-git-gate18-real-model-c-f36b8f-orotitan.vercel.app/api/vnext/calibration/gate18-smoke?run=gate18-smoke-v0-1
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          PREFLIGHT_URL: https://orotitan-vnext-pilotage-git-gate18-real-model-c-f36b8f-orotitan.vercel.app/api/vnext/calibration/provider-preflight
         run: |
           set -euo pipefail
 
-          share_token="${PR_TITLE##*\[gate18-share:}"
-          share_token="${share_token%%\]*}"
+          status="$(curl -sS             -o gate18-provider-preflight.json             -w '%{http_code}'             -H "x-vercel-trusted-oidc-idp-token: $OIDC_TOKEN"             "$PREFLIGHT_URL")"
 
-          if [ -z "$share_token" ] || [ "$share_token" = "$PR_TITLE" ]; then
-            echo "Gate 18 share token marker missing"
+          echo "HTTP_STATUS=$status"
+
+          if [ "$status" != "200" ]; then
+            cat gate18-provider-preflight.json || true
             exit 1
           fi
 
-          echo "::add-mask::$share_token"
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(
+            fs.readFileSync('gate18-provider-preflight.json', 'utf8')
+          );
 
-          cookie_jar="$(mktemp)"
-          trap 'rm -f "$cookie_jar"' EXIT
+          if (
+            payload.gate !== 18 ||
+            payload.status !== 'PROVIDER_PREFLIGHT' ||
+            payload.previewOnly !== true
+          ) {
+            throw new Error('GATE18_PROVIDER_PREFLIGHT_INVALID');
+          }
 
-          status="$(curl -sS -L             --max-redirs 10             -c "$cookie_jar"             -b "$cookie_jar"             -o gate18-smoke.json             -w '%{http_code}'             "${SMOKE_BASE_URL}&_vercel_share=${share_token}")"
+          console.log(JSON.stringify(payload, null, 2));
+          NODE
+
+  model-smoke:
+    if: inputs.operation == 'model-smoke'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mint GitHub OIDC token
+        uses: actions/github-script@v7
+        id: oidc
+        with:
+          script: |
+            const token = await core.getIDToken();
+            core.setSecret(token);
+            core.setOutput('token', token);
+
+      - name: Invoke protected Vercel preview smoke
+        env:
+          OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
+          SMOKE_URL: https://orotitan-vnext-pilotage-git-gate18-real-model-c-f36b8f-orotitan.vercel.app/api/vnext/calibration/gate18-smoke?run=gate18-smoke-v0-1
+        run: |
+          set -euo pipefail
+
+          status="$(curl -sS             -o gate18-smoke.json             -w '%{http_code}'             -H "x-vercel-trusted-oidc-idp-token: $OIDC_TOKEN"             "$SMOKE_URL")"
 
           echo "HTTP_STATUS=$status"
 
@@ -72,6 +120,7 @@ jobs:
             if (!expected.delete(receipt.label)) {
               throw new Error('GATE18_SMOKE_MODEL_SET_INVALID');
             }
+
             if (receipt.schemaValid !== true) {
               throw new Error('GATE18_SMOKE_SCHEMA_INVALID');
             }
@@ -87,73 +136,20 @@ jobs:
             calibrationOnly: payload.calibrationOnly,
             publicationAuthority: payload.publicationAuthority,
             modelWinnerSelected: payload.modelWinnerSelected,
-            receipts: payload.receipts.map((r) => ({
-              label: r.label,
-              modelId: r.modelId,
-              intendedTier: r.intendedTier,
-              requestedReasoning: r.requestedReasoning,
-              schemaValid: r.schemaValid,
-              latencyMs: r.latencyMs,
-              inputTokens: r.inputTokens,
-              outputTokens: r.outputTokens,
-              reasoningTokens: r.reasoningTokens,
-              totalTokens: r.totalTokens,
-              finishReason: r.finishReason,
+            receipts: payload.receipts.map((receipt) => ({
+              label: receipt.label,
+              modelId: receipt.modelId,
+              intendedTier: receipt.intendedTier,
+              requestedReasoning: receipt.requestedReasoning,
+              schemaValid: receipt.schemaValid,
+              latencyMs: receipt.latencyMs,
+              inputTokens: receipt.inputTokens,
+              outputTokens: receipt.outputTokens,
+              reasoningTokens: receipt.reasoningTokens,
+              totalTokens: receipt.totalTokens,
+              finishReason: receipt.finishReason,
             })),
           };
 
           console.log(JSON.stringify(safe, null, 2));
-          NODE
-
-
-  gate18-provider-preflight:
-    if: >-
-      github.event.pull_request.head.ref == 'gate18-real-model-calibration' &&
-      contains(github.event.pull_request.title, '[gate18-preflight:')
-    runs-on: ubuntu-latest
-    steps:
-      - name: Inspect provider credential presence safely
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-          PREFLIGHT_BASE_URL: https://orotitan-vnext-pilotage-git-gate18-real-model-c-f36b8f-orotitan.vercel.app/api/vnext/calibration/provider-preflight
-        run: |
-          set -euo pipefail
-
-          share_token="${PR_TITLE##*\[gate18-preflight:}"
-          share_token="${share_token%%\]*}"
-
-          if [ -z "$share_token" ] || [ "$share_token" = "$PR_TITLE" ]; then
-            echo "Gate 18 preflight share token marker missing"
-            exit 1
-          fi
-
-          echo "::add-mask::$share_token"
-
-          cookie_jar="$(mktemp)"
-          trap 'rm -f "$cookie_jar"' EXIT
-
-          status="$(curl -sS -L             --max-redirs 10             -c "$cookie_jar"             -b "$cookie_jar"             -o gate18-provider-preflight.json             -w '%{http_code}'             "${PREFLIGHT_BASE_URL}?_vercel_share=${share_token}")"
-
-          echo "HTTP_STATUS=$status"
-
-          if [ "$status" != "200" ]; then
-            cat gate18-provider-preflight.json || true
-            exit 1
-          fi
-
-          node - <<'NODE'
-          const fs = require('fs');
-          const payload = JSON.parse(
-            fs.readFileSync('gate18-provider-preflight.json', 'utf8')
-          );
-
-          if (
-            payload.gate !== 18 ||
-            payload.status !== 'PROVIDER_PREFLIGHT' ||
-            payload.previewOnly !== true
-          ) {
-            throw new Error('GATE18_PROVIDER_PREFLIGHT_INVALID');
-          }
-
-          console.log(JSON.stringify(payload, null, 2));
           NODE
