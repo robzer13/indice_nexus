@@ -318,16 +318,6 @@ function evaluateCohort(
     );
   }
 
-  if (
-    cohort.proposedSeasoningState !== "SEASONED" &&
-    cohort.returnEvidenceIds.length > 0 &&
-    cohort.matureReturnEvidenceEstablished.state !== "YES"
-  ) {
-    validationCodes.push(
-      "UNSEASONED_RETURN_EVIDENCE_CANNOT_BE_TREATED_AS_MATURE",
-    );
-  }
-
   const sequence = [
     cohort.committed,
     cohort.deployed,
