@@ -1,0 +1,701 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "ordinary-industrial-clean",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material driver of invested capital or growth.",
+          "evidenceIds": [
+            "E-ACQ-1"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "NORMAL_POSITIVE",
+        "headlineMeasures": [
+          "STANDARD_ROIC",
+          "ROIIC"
+        ],
+        "diagnosticMeasures": [],
+        "specialMeasures": [],
+        "alternativeEconomicsEvidenceIds": [],
+        "roiic": {
+          "attempted": true,
+          "deltaIcState": "POSITIVE",
+          "deltaIcMaterial": {
+            "state": "YES",
+            "rationale": "Incremental invested capital is positive and material.",
+            "evidenceIds": [
+              "E-R1"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "YES",
+            "rationale": "The comparison uses a stable perimeter.",
+            "evidenceIds": [
+              "E-R2"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "YES",
+            "rationale": "No unexplained major M&A contaminates the window.",
+            "evidenceIds": [
+              "E-R3"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No major divestiture contaminates the window.",
+            "evidenceIds": [
+              "E-R4"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No major accounting reclassification contaminates the window.",
+            "evidenceIds": [
+              "E-R5"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "YES",
+            "rationale": "Investment and profit periods are economically linked.",
+            "evidenceIds": [
+              "E-R6"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "YES",
+            "rationale": "NOPAT is normalized across the comparison.",
+            "evidenceIds": [
+              "E-R7"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": 3
+        },
+        "rAndD": {
+          "adjustmentUsed": false,
+          "materialRecurringMultiPeriod": {
+            "state": "NO",
+            "rationale": "R&D capitalization is not required for the selected comparison.",
+            "evidenceIds": [
+              "E-RND-1"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "NO",
+            "rationale": "Expensing does not materially distort the selected comparison.",
+            "evidenceIds": [
+              "E-RND-2"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": false,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": false
+        },
+        "dataQuality": "HIGH",
+        "attributability": "HIGH",
+        "statedInterpretability": "INTERPRETABLE",
+        "rationale": "Standard ROIC and 3-year ROIIC are economically interpretable on a stable industrial perimeter."
+      },
+      "expected": {
+        "finalizable": true,
+        "roiicInterpretability": "INTERPRETABLE",
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "serial-acquirer-all-in-and-cohort",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "YES",
+          "rationale": "Acquisition capital is a material growth and allocation engine.",
+          "evidenceIds": [
+            "E-ACQ-2"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "NORMAL_POSITIVE",
+        "headlineMeasures": [
+          "STANDARD_ROIC",
+          "ALL_IN_ROIC"
+        ],
+        "diagnosticMeasures": [
+          "ROIC_EX_GOODWILL"
+        ],
+        "specialMeasures": [
+          "ACQUISITION_COHORT_RETURN"
+        ],
+        "alternativeEconomicsEvidenceIds": [],
+        "roiic": {
+          "attempted": false,
+          "deltaIcState": "UNKNOWN",
+          "deltaIcMaterial": {
+            "state": "UNKNOWN",
+            "rationale": "Organic incremental capital cannot be isolated cleanly from acquisition capital.",
+            "evidenceIds": [
+              "E-R8"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "UNKNOWN",
+            "rationale": "Perimeter changes materially through acquisitions.",
+            "evidenceIds": [
+              "E-R9"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "NO",
+            "rationale": "Major M&A is present and is analyzed through the acquisition ledger.",
+            "evidenceIds": [
+              "E-R10"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No major divestiture affects the selected period.",
+            "evidenceIds": [
+              "E-R11"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No major accounting reclassification affects the period.",
+            "evidenceIds": [
+              "E-R12"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "UNKNOWN",
+            "rationale": "Attribution is handled by acquisition cohorts instead of aggregate ROIIC.",
+            "evidenceIds": [
+              "E-R13"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "YES",
+            "rationale": "NOPAT is normalized.",
+            "evidenceIds": [
+              "E-R14"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": null
+        },
+        "rAndD": {
+          "adjustmentUsed": false,
+          "materialRecurringMultiPeriod": {
+            "state": "NO",
+            "rationale": "R&D adjustment is not required.",
+            "evidenceIds": [
+              "E-RND-3"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "NO",
+            "rationale": "R&D expensing is not the primary distortion.",
+            "evidenceIds": [
+              "E-RND-4"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": false,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": false
+        },
+        "dataQuality": "HIGH",
+        "attributability": "MEDIUM",
+        "statedInterpretability": "INTERPRETABLE_WITH_LIMITATIONS",
+        "rationale": "Material acquisition capital requires All-In ROIC and acquisition cohort returns; ex-goodwill remains diagnostic only."
+      },
+      "expected": {
+        "finalizable": true,
+        "roiicInterpretability": "UNKNOWN",
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "near-zero-invested-capital",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not material.",
+          "evidenceIds": [
+            "E-ACQ-3"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "NEAR_ZERO",
+        "headlineMeasures": [
+          "ALTERNATIVE_ECONOMICS"
+        ],
+        "diagnosticMeasures": [
+          "STANDARD_ROIC"
+        ],
+        "specialMeasures": [],
+        "alternativeEconomicsEvidenceIds": [
+          "E-ALT-1",
+          "E-ALT-2"
+        ],
+        "roiic": {
+          "attempted": false,
+          "deltaIcState": "UNKNOWN",
+          "deltaIcMaterial": {
+            "state": "UNKNOWN",
+            "rationale": "Aggregate invested-capital changes are not an interpretable denominator.",
+            "evidenceIds": [
+              "E-R15"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "YES",
+            "rationale": "Perimeter is stable.",
+            "evidenceIds": [
+              "E-R16"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "YES",
+            "rationale": "No major M&A affects the period.",
+            "evidenceIds": [
+              "E-R17"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No major divestiture affects the period.",
+            "evidenceIds": [
+              "E-R18"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No major reclassification affects the period.",
+            "evidenceIds": [
+              "E-R19"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "UNKNOWN",
+            "rationale": "The denominator is not suitable for aggregate ROIIC.",
+            "evidenceIds": [
+              "E-R20"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "YES",
+            "rationale": "NOPAT is normalized.",
+            "evidenceIds": [
+              "E-R21"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": null
+        },
+        "rAndD": {
+          "adjustmentUsed": false,
+          "materialRecurringMultiPeriod": {
+            "state": "NO",
+            "rationale": "No R&D adjustment is required.",
+            "evidenceIds": [
+              "E-RND-5"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "NO",
+            "rationale": "No material R&D comparison distortion is identified.",
+            "evidenceIds": [
+              "E-RND-6"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": false,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": false
+        },
+        "dataQuality": "HIGH",
+        "attributability": "HIGH",
+        "statedInterpretability": "NOT_INTERPRETABLE",
+        "rationale": "Near-zero invested capital makes ROIC denominator-driven; alternative economics are used instead."
+      },
+      "expected": {
+        "finalizable": true,
+        "roiicInterpretability": "UNKNOWN",
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "roiic-near-zero-delta-invalid-headline",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not material.",
+          "evidenceIds": [
+            "E-ACQ-4"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "NORMAL_POSITIVE",
+        "headlineMeasures": [
+          "STANDARD_ROIC",
+          "ROIIC"
+        ],
+        "diagnosticMeasures": [],
+        "specialMeasures": [],
+        "alternativeEconomicsEvidenceIds": [],
+        "roiic": {
+          "attempted": true,
+          "deltaIcState": "NEAR_ZERO",
+          "deltaIcMaterial": {
+            "state": "NO",
+            "rationale": "Incremental invested capital is too small for a stable ratio.",
+            "evidenceIds": [
+              "E-R22"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "YES",
+            "rationale": "Perimeter is stable.",
+            "evidenceIds": [
+              "E-R23"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "YES",
+            "rationale": "No major M&A affects the period.",
+            "evidenceIds": [
+              "E-R24"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No major divestiture affects the period.",
+            "evidenceIds": [
+              "E-R25"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No major reclassification affects the period.",
+            "evidenceIds": [
+              "E-R26"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "YES",
+            "rationale": "Periods are linked.",
+            "evidenceIds": [
+              "E-R27"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "YES",
+            "rationale": "NOPAT is normalized.",
+            "evidenceIds": [
+              "E-R28"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": 3
+        },
+        "rAndD": {
+          "adjustmentUsed": false,
+          "materialRecurringMultiPeriod": {
+            "state": "NO",
+            "rationale": "No R&D adjustment is required.",
+            "evidenceIds": [
+              "E-RND-7"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "NO",
+            "rationale": "No material R&D comparison distortion is identified.",
+            "evidenceIds": [
+              "E-RND-8"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": false,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": false
+        },
+        "dataQuality": "HIGH",
+        "attributability": "HIGH",
+        "statedInterpretability": "INTERPRETABLE_WITH_LIMITATIONS",
+        "rationale": "The aggregate ROIIC calculation is unstable because delta invested capital is near zero."
+      },
+      "expected": {
+        "finalizable": false,
+        "roiicInterpretability": "NOT_INTERPRETABLE",
+        "validationCodes": [
+          "ROIIC_NOT_INTERPRETABLE_CANNOT_BE_HEADLINE"
+        ]
+      }
+    },
+    {
+      "id": "rnd-adjustment-symmetry-failure",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not material.",
+          "evidenceIds": [
+            "E-ACQ-5"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "NORMAL_POSITIVE",
+        "headlineMeasures": [
+          "STANDARD_ROIC"
+        ],
+        "diagnosticMeasures": [
+          "R_AND_D_ADJUSTED_ROIC"
+        ],
+        "specialMeasures": [],
+        "alternativeEconomicsEvidenceIds": [],
+        "roiic": {
+          "attempted": false,
+          "deltaIcState": "UNKNOWN",
+          "deltaIcMaterial": {
+            "state": "UNKNOWN",
+            "rationale": "ROIIC is not attempted in this fixture.",
+            "evidenceIds": [
+              "E-R29"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "YES",
+            "rationale": "Perimeter is stable.",
+            "evidenceIds": [
+              "E-R30"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "YES",
+            "rationale": "No major M&A affects the period.",
+            "evidenceIds": [
+              "E-R31"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No divestiture affects the period.",
+            "evidenceIds": [
+              "E-R32"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No reclassification affects the period.",
+            "evidenceIds": [
+              "E-R33"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "YES",
+            "rationale": "Periods are linked.",
+            "evidenceIds": [
+              "E-R34"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "YES",
+            "rationale": "NOPAT is normalized.",
+            "evidenceIds": [
+              "E-R35"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": null
+        },
+        "rAndD": {
+          "adjustmentUsed": true,
+          "materialRecurringMultiPeriod": {
+            "state": "YES",
+            "rationale": "R&D is material, recurring and multi-period.",
+            "evidenceIds": [
+              "E-RND-9"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "YES",
+            "rationale": "Expensing materially distorts economic comparison.",
+            "evidenceIds": [
+              "E-RND-10"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": true,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": true
+        },
+        "dataQuality": "HIGH",
+        "attributability": "HIGH",
+        "statedInterpretability": "INTERPRETABLE_WITH_LIMITATIONS",
+        "rationale": "The R&D adjustment is conceptually warranted but numerator/denominator symmetry is broken."
+      },
+      "expected": {
+        "finalizable": false,
+        "roiicInterpretability": "UNKNOWN",
+        "validationCodes": [
+          "RND_ADD_BACK_REQUIRES_ASSET_AND_AMORTIZATION_SYMMETRY"
+        ]
+      }
+    },
+    {
+      "id": "sector-substitute-framework",
+      "input": {
+        "frameworkApplicability": "INDUSTRIAL_NOT_APPLICABLE",
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Industrial acquisition-capital treatment is not the governing return framework.",
+          "evidenceIds": [
+            "E-ACQ-6"
+          ],
+          "assumptionIds": []
+        },
+        "investedCapitalCondition": "UNKNOWN",
+        "headlineMeasures": [
+          "SECTOR_VALID_RETURN_FRAMEWORK"
+        ],
+        "diagnosticMeasures": [],
+        "specialMeasures": [],
+        "alternativeEconomicsEvidenceIds": [],
+        "roiic": {
+          "attempted": false,
+          "deltaIcState": "UNKNOWN",
+          "deltaIcMaterial": {
+            "state": "UNKNOWN",
+            "rationale": "Industrial ROIIC is not the selected sector-valid framework.",
+            "evidenceIds": [
+              "E-R36"
+            ],
+            "assumptionIds": []
+          },
+          "samePerimeter": {
+            "state": "UNKNOWN",
+            "rationale": "Industrial perimeter tests are not the governing return framework.",
+            "evidenceIds": [
+              "E-R37"
+            ],
+            "assumptionIds": []
+          },
+          "noUnexplainedMajorMna": {
+            "state": "YES",
+            "rationale": "No unexplained M&A issue is identified.",
+            "evidenceIds": [
+              "E-R38"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorDivestiture": {
+            "state": "YES",
+            "rationale": "No major divestiture issue is identified.",
+            "evidenceIds": [
+              "E-R39"
+            ],
+            "assumptionIds": []
+          },
+          "noMajorAccountingReclassification": {
+            "state": "YES",
+            "rationale": "No major accounting reclassification is identified.",
+            "evidenceIds": [
+              "E-R40"
+            ],
+            "assumptionIds": []
+          },
+          "investmentAndProfitPeriodsLinked": {
+            "state": "UNKNOWN",
+            "rationale": "Industrial investment/profit linkage is not the governing framework.",
+            "evidenceIds": [
+              "E-R41"
+            ],
+            "assumptionIds": []
+          },
+          "nopatNormalized": {
+            "state": "UNKNOWN",
+            "rationale": "Industrial NOPAT is not the governing numerator.",
+            "evidenceIds": [
+              "E-R42"
+            ],
+            "assumptionIds": []
+          },
+          "primaryWindowYears": null
+        },
+        "rAndD": {
+          "adjustmentUsed": false,
+          "materialRecurringMultiPeriod": {
+            "state": "NO",
+            "rationale": "R&D adjustment is not applicable to the selected framework.",
+            "evidenceIds": [
+              "E-RND-11"
+            ],
+            "assumptionIds": []
+          },
+          "expensingDistortsComparison": {
+            "state": "NO",
+            "rationale": "R&D expensing is not the governing comparison issue.",
+            "evidenceIds": [
+              "E-RND-12"
+            ],
+            "assumptionIds": []
+          },
+          "currentRndAddedBack": false,
+          "denominatorRndAssetIncluded": false,
+          "amortizationIncluded": false
+        },
+        "dataQuality": "HIGH",
+        "attributability": "HIGH",
+        "statedInterpretability": "INTERPRETABLE",
+        "rationale": "Industrial ROIC is not applicable; a sector-valid return framework is used instead."
+      },
+      "expected": {
+        "finalizable": true,
+        "roiicInterpretability": "UNKNOWN",
+        "validationCodes": []
+      }
+    }
+  ]
+}
