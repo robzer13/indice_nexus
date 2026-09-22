@@ -1,22 +1,30 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import {
   HANDOFF_GATE_BY_STAGE,
+  RUN_STATUSES,
+  STAGE_LIFECYCLES,
   assertDownstreamAdmission,
   assertExpectedStateVersion,
   assertHandoffGateName,
   assertIdempotencyFingerprint,
+  assertPauseAllowed,
   assertPublicationAuthorized,
   assertReadyToPublish,
+  assertResumeAllowed,
   assertRunTransition,
   assertStageMutable,
   assertStageTransition,
+  downstreamStateAfterUpstreamReopen,
   isLegalRunTransition,
   isLegalStageTransition,
   isTerminalRunStatus,
   nextReopenedStageState,
-  runStatusAfterUpstreamReopen,
+  runStatusAfterPublishResult,
+  runStatusAfterStageReopen,
+  runStatusForCheckpoint,
   type RunStatus,
   type StageLifecycle,
   type StageState,
@@ -31,8 +39,6 @@ const RUN_LEGAL: Record<RunStatus, readonly RunStatus[]> = {
   PUBLISHED: [],
   CANCELLED: [],
 };
-
-const RUN_STATUSES = Object.keys(RUN_LEGAL) as RunStatus[];
 
 test("G6-01/G6-02 run transition matrix is exact", () => {
   for (const from of RUN_STATUSES) {
@@ -65,11 +71,9 @@ const STAGE_LEGAL: Record<StageLifecycle, readonly StageLifecycle[]> = {
   COMPLETE: [],
 };
 
-const STAGE_STATUSES = Object.keys(STAGE_LEGAL) as StageLifecycle[];
-
 test("G6-05 normal stage transition matrix is exact", () => {
-  for (const from of STAGE_STATUSES) {
-    for (const to of STAGE_STATUSES) {
+  for (const from of STAGE_LIFECYCLES) {
+    for (const to of STAGE_LIFECYCLES) {
       assert.equal(
         isLegalStageTransition(from, to, "NORMAL"),
         STAGE_LEGAL[from].includes(to),
@@ -195,28 +199,57 @@ test("G6-14 publication requires READY_TO_PUBLISH plus explicit authorization", 
   assert.throws(() => assertPublicationAuthorized("ACTIVE", true));
 });
 
-test("G6-15/G6-16 reopen increments revision and resets handoff", () => {
+test("G6-15/G6-16 reopen increments revision resets gate and clears active manifest", () => {
   const reopened = nextReopenedStageState(completeDeepDive, "IN_PROGRESS");
   assert.equal(reopened.stageRevision, 2);
   assert.equal(reopened.lifecycle, "IN_PROGRESS");
   assert.equal(reopened.handoff, "NOT_EVALUATED");
-  assert.equal(reopened.manifestKind, "FINAL");
+  assert.equal(reopened.manifestKind, null);
+  assert.equal(reopened.contractStatusCode, null);
 });
 
-test("G6-17 reopen preserves prior FINAL identity in pure transition output", () => {
+test("G6-17 blocked reopen clears active manifest and records reopen blocker", () => {
   const reopened = nextReopenedStageState(completeResearch, "BLOCKED");
-  assert.equal(reopened.manifestKind, "FINAL");
+  assert.equal(reopened.manifestKind, null);
   assert.equal(reopened.stageCode, "RESEARCH");
+  assert.equal(reopened.contractStatusCode, "REOPENED_BLOCKED");
+  assert.equal(reopened.criticalBlockerCount, 1);
 });
 
-test("G6-19 READY_TO_PUBLISH becomes BLOCKED on upstream reopen", () => {
+test("G6-18 upstream reopen blocks and invalidates downstream state", () => {
+  const invalidated = downstreamStateAfterUpstreamReopen(completeIntegration);
+  assert.equal(invalidated.lifecycle, "BLOCKED");
+  assert.equal(invalidated.handoff, "NOT_EVALUATED");
+  assert.equal(invalidated.manifestKind, null);
+  assert.equal(invalidated.contractStatusCode, "UPSTREAM_STAGE_REOPENED");
+  assert.equal(invalidated.stageRevision, 2);
+
+  const alreadyBlocked = downstreamStateAfterUpstreamReopen({
+    ...completeDeepDive,
+    lifecycle: "BLOCKED",
+    handoff: "NOT_EVALUATED",
+    manifestKind: "CHECKPOINT",
+    stageRevision: 3,
+  });
+  assert.equal(alreadyBlocked.stageRevision, 3);
+  assert.equal(alreadyBlocked.manifestKind, null);
+});
+
+test("G6-19 reopen maps run status from target lifecycle", () => {
   assert.equal(
-    runStatusAfterUpstreamReopen("READY_TO_PUBLISH"),
+    runStatusAfterStageReopen("READY_TO_PUBLISH", "IN_PROGRESS"),
+    "ACTIVE",
+  );
+  assert.equal(
+    runStatusAfterStageReopen("ACTIVE", "BLOCKED"),
     "BLOCKED",
   );
-  assert.equal(runStatusAfterUpstreamReopen("ACTIVE"), "ACTIVE");
-  assert.throws(() => runStatusAfterUpstreamReopen("PUBLISHED"));
-  assert.throws(() => runStatusAfterUpstreamReopen("CANCELLED"));
+  assert.throws(() =>
+    runStatusAfterStageReopen("PUBLISHED", "IN_PROGRESS"),
+  );
+  assert.throws(() =>
+    runStatusAfterStageReopen("CANCELLED", "BLOCKED"),
+  );
 });
 
 test("G6-20 optimistic concurrency fails closed", () => {
@@ -233,23 +266,92 @@ test("G6-21 conflicting idempotency fingerprint fails closed", () => {
   );
 });
 
-test("G6-22 active run permits stage mutation", () => {
+test("G6-22 active non-terminal runs permit stage mutation", () => {
   assert.doesNotThrow(() => assertStageMutable("ACTIVE"));
   assert.doesNotThrow(() => assertStageMutable("BLOCKED"));
 });
 
-test("G6-25 stage-specific handoff gate vocabulary is exact", () => {
-  assert.deepEqual(HANDOFF_GATE_BY_STAGE, {
-    RESEARCH: "READY_FOR_DEEP_DIVE",
-    DEEP_DIVE: "READY_FOR_INTEGRATION",
-    INTEGRATION: "READY_TO_PUBLISH",
-  });
+test("G6-25 machine-readable vocabulary matches runtime vocabulary", () => {
+  const model = JSON.parse(
+    readFileSync(
+      "schemas/vnext/orotitan-vnext-state-model.v0.1.json",
+      "utf8",
+    ),
+  ) as {
+    run_statuses: string[];
+    stage_lifecycle: string[];
+    handoff_gate_by_stage: Record<string, string>;
+  };
 
+  assert.deepEqual(model.run_statuses, RUN_STATUSES);
+  assert.deepEqual(model.stage_lifecycle, STAGE_LIFECYCLES);
+  assert.deepEqual(model.handoff_gate_by_stage, HANDOFF_GATE_BY_STAGE);
+});
+
+test("G6-26 pause requires IN_PROGRESS plus CHECKPOINT", () => {
   assert.doesNotThrow(() =>
-    assertHandoffGateName("RESEARCH", "READY_FOR_DEEP_DIVE"),
+    assertPauseAllowed({
+      stageCode: "RESEARCH",
+      lifecycle: "IN_PROGRESS",
+      handoff: "NOT_EVALUATED",
+      manifestKind: "CHECKPOINT",
+      stageRevision: 1,
+    }),
   );
+
   assert.throws(() =>
-    assertHandoffGateName("RESEARCH", "READY_FOR_INTEGRATION"),
+    assertPauseAllowed({
+      stageCode: "RESEARCH",
+      lifecycle: "IN_PROGRESS",
+      handoff: "NOT_EVALUATED",
+      manifestKind: null,
+      stageRevision: 1,
+    }),
+  );
+});
+
+test("G6-27 resume requires PAUSED or BLOCKED plus CHECKPOINT", () => {
+  for (const lifecycle of ["PAUSED", "BLOCKED"] as const) {
+    assert.doesNotThrow(() =>
+      assertResumeAllowed({
+        stageCode: "RESEARCH",
+        lifecycle,
+        handoff: "NOT_EVALUATED",
+        manifestKind: "CHECKPOINT",
+        stageRevision: 1,
+      }),
+    );
+  }
+
+  assert.throws(() =>
+    assertResumeAllowed({
+      stageCode: "RESEARCH",
+      lifecycle: "PAUSED",
+      handoff: "NOT_EVALUATED",
+      manifestKind: null,
+      stageRevision: 1,
+    }),
+  );
+});
+
+test("checkpoint lifecycle maps to the Registry V1.11 run status", () => {
+  assert.equal(runStatusForCheckpoint("IN_PROGRESS"), "ACTIVE");
+  assert.equal(runStatusForCheckpoint("PAUSED"), "PAUSED");
+  assert.equal(runStatusForCheckpoint("BLOCKED"), "BLOCKED");
+});
+
+test("G6-28/G6-29 publish result mapping matches Registry V1.11", () => {
+  assert.equal(
+    runStatusAfterPublishResult("SUCCEEDED", false),
+    "PUBLISHED",
+  );
+  assert.equal(
+    runStatusAfterPublishResult("FAILED", true),
+    "READY_TO_PUBLISH",
+  );
+  assert.equal(
+    runStatusAfterPublishResult("FAILED", false),
+    "BLOCKED",
   );
 });
 
