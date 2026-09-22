@@ -1,0 +1,57 @@
+name: VNext CI
+
+on:
+  push:
+    branches:
+      - vnext
+  pull_request:
+    branches:
+      - vnext
+
+jobs:
+  verify-vnext:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Validate VNext baseline manifest
+        run: node -e "JSON.parse(require('fs').readFileSync('contracts/orotitan-equity/vnext/VNEXT_SHADOW_BASELINE_MANIFEST_V0.1.json','utf8')); console.log('VNext manifest JSON: PASS')"
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit and contract tests
+        run: npm test
+
+      - name: PostgreSQL migration tests
+        run: npm run test:postgres
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+
+      - name: Production build
+        run: npm run build
