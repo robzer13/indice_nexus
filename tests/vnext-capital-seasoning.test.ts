@@ -41,7 +41,10 @@ for (const fixture of fixtures.cases) {
       );
     }
 
-    if ("containsValidation" in fixture.expected) {
+    if (
+      "containsValidation" in fixture.expected &&
+      typeof fixture.expected.containsValidation === "string"
+    ) {
       assert.equal(
         output.validationCodes.includes(
           fixture.expected.containsValidation,
@@ -86,23 +89,31 @@ test("sequence conflicts fail closed", () => {
     fixtures.cases[1].input,
   ) as CapitalSeasoningInput;
 
-  base.cohorts[0] = {
-    ...base.cohorts[0],
-    deployed: {
-      state: "NO",
-      rationale: "Capital is not deployed.",
-      evidenceIds: ["E-NO-DEPLOY"],
-      assumptionIds: [],
-    },
-    inService: {
-      state: "YES",
-      rationale: "Conflicting evidence claims asset is in service.",
-      evidenceIds: ["E-IN-SERVICE"],
-      assumptionIds: [],
-    },
+  const original = base.cohorts[0];
+  assert.ok(original);
+
+  const conflicted: CapitalSeasoningInput = {
+    ...base,
+    cohorts: [
+      {
+        ...original,
+        deployed: {
+          state: "NO",
+          rationale: "Capital is not deployed.",
+          evidenceIds: ["E-NO-DEPLOY"],
+          assumptionIds: [],
+        },
+        inService: {
+          state: "YES",
+          rationale: "Conflicting evidence claims asset is in service.",
+          evidenceIds: ["E-IN-SERVICE"],
+          assumptionIds: [],
+        },
+      },
+    ],
   };
 
-  const output = evaluateCapitalSeasoning(base);
+  const output = evaluateCapitalSeasoning(conflicted);
 
   assert.equal(output.finalizable, false);
   assert.equal(
