@@ -1,0 +1,191 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "all-three-hold",
+      "input": {
+        "weakLinkId": "WL-001",
+        "title": "Customer concentration can impair per-share compounding",
+        "sourceBlockIds": [
+          "BUSINESS_MODEL",
+          "RISK_RESILIENCE"
+        ],
+        "materiality": {
+          "state": "YES",
+          "rationale": "A loss of the largest customer would materially reduce revenue and operating leverage.",
+          "evidenceIds": [
+            "E-101"
+          ],
+          "contradictingEvidenceIds": [
+            "E-102"
+          ],
+          "assumptionIds": []
+        },
+        "causality": {
+          "state": "YES",
+          "rationale": "Customer loss transmits through revenue concentration into lower contribution profit and reinvestment capacity.",
+          "evidenceIds": [
+            "E-103"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "unresolvedness": {
+          "state": "YES",
+          "rationale": "Diversification evidence is insufficient to reduce the residual exposure below materiality.",
+          "evidenceIds": [
+            "E-104"
+          ],
+          "contradictingEvidenceIds": [
+            "E-105"
+          ],
+          "assumptionIds": [
+            "A-007"
+          ]
+        },
+        "executionConfidence": "HIGH",
+        "overallRationale": "The concentration risk has a material causal transmission mechanism and remains insufficiently mitigated."
+      },
+      "expected": {
+        "materialWeakLink": "YES",
+        "terminalSignal": "OROTITAN_STATUS_NO_REQUIRED"
+      }
+    },
+    {
+      "id": "generic-risk-without-causality",
+      "input": {
+        "weakLinkId": "WL-002",
+        "title": "Competition",
+        "sourceBlockIds": [
+          "MOAT_PROOF"
+        ],
+        "materiality": {
+          "state": "YES",
+          "rationale": "Competitive pressure could be financially material if it occurred.",
+          "evidenceIds": [
+            "E-201"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "causality": {
+          "state": "NO",
+          "rationale": "No evidence-backed transmission mechanism from a specific competitive change to thesis damage has been established.",
+          "evidenceIds": [
+            "E-202"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "unresolvedness": {
+          "state": "UNKNOWN",
+          "rationale": "Residual risk cannot be assessed because the causal mechanism is not established.",
+          "evidenceIds": [
+            "E-203"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "executionConfidence": "MEDIUM",
+        "overallRationale": "A generic risk label cannot qualify as a material weak link without an identifiable causal mechanism."
+      },
+      "expected": {
+        "materialWeakLink": "NO",
+        "terminalSignal": "NO_TERMINAL_SIGNAL"
+      }
+    },
+    {
+      "id": "unknown-preserved",
+      "input": {
+        "weakLinkId": "WL-003",
+        "title": "Maintenance capital intensity may be understated",
+        "sourceBlockIds": [
+          "OWNER_CASH"
+        ],
+        "materiality": {
+          "state": "YES",
+          "rationale": "A higher maintenance requirement could materially reduce owner cash.",
+          "evidenceIds": [
+            "E-301"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": [
+            "A-301"
+          ]
+        },
+        "causality": {
+          "state": "YES",
+          "rationale": "Higher maintenance capex directly lowers distributable owner cash and valuation support.",
+          "evidenceIds": [
+            "E-302"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "unresolvedness": {
+          "state": "UNKNOWN",
+          "rationale": "Available disclosures do not separate maintenance and growth capex sufficiently.",
+          "evidenceIds": [
+            "E-303"
+          ],
+          "contradictingEvidenceIds": [
+            "E-304"
+          ],
+          "assumptionIds": []
+        },
+        "executionConfidence": "LOW",
+        "overallRationale": "Materiality and causality are supported but unresolvedness cannot yet be determined."
+      },
+      "expected": {
+        "materialWeakLink": "UNKNOWN",
+        "terminalSignal": "UNRESOLVED"
+      }
+    },
+    {
+      "id": "mitigated-risk",
+      "input": {
+        "weakLinkId": "WL-004",
+        "title": "Refinancing concentration",
+        "sourceBlockIds": [
+          "RISK_RESILIENCE",
+          "FINANCING_CONSISTENCY"
+        ],
+        "materiality": {
+          "state": "YES",
+          "rationale": "A refinancing failure could materially impair per-share value.",
+          "evidenceIds": [
+            "E-401"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "causality": {
+          "state": "YES",
+          "rationale": "Refinancing failure would increase funding cost and constrain reinvestment.",
+          "evidenceIds": [
+            "E-402"
+          ],
+          "contradictingEvidenceIds": [],
+          "assumptionIds": []
+        },
+        "unresolvedness": {
+          "state": "NO",
+          "rationale": "Committed liquidity and laddered maturities reduce the residual risk below materiality.",
+          "evidenceIds": [
+            "E-403"
+          ],
+          "contradictingEvidenceIds": [
+            "E-404"
+          ],
+          "assumptionIds": []
+        },
+        "executionConfidence": "HIGH",
+        "overallRationale": "The mechanism is real but current mitigation resolves it below material weak-link status."
+      },
+      "expected": {
+        "materialWeakLink": "NO",
+        "terminalSignal": "NO_TERMINAL_SIGNAL"
+      }
+    }
+  ]
+}
