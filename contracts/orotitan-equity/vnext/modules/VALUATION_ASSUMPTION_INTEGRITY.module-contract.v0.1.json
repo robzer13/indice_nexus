@@ -1,0 +1,121 @@
+{
+  "module_contract_schema_version": "0.1.0",
+  "module_id": "VALUATION_ASSUMPTION_INTEGRITY",
+  "module_version": "0.1.0",
+  "module_kind": "ANALYTICAL",
+  "stage_code": "DEEP_DIVE",
+  "purpose": "Validate traceability and cross-block economic consistency of material valuation assumptions without judging intrinsic value, expected return, valuation reliability, or valuation attractiveness.",
+  "authority": {
+    "reads": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "RUNWAY_BLOCK_OUTPUT",
+      "MOAT_BLOCK_OUTPUT",
+      "RETURN_NORMALIZATION_ARTIFACT",
+      "OWNER_CASH_ARTIFACT",
+      "FINANCING_CONSISTENCY_ARTIFACT"
+    ],
+    "writes": [
+      "VALUATION_ASSUMPTION_INTEGRITY_ARTIFACT"
+    ],
+    "judgment_authority": true,
+    "deterministic_authority": true,
+    "forbidden_actions": [
+      "CALCULATE_INTRINSIC_VALUE",
+      "CALCULATE_OVS",
+      "CALCULATE_INVESTMENT_SCORE",
+      "DETERMINE_VALUATION_ELITE",
+      "DETERMINE_VALUATION_RELIABILITY",
+      "INVENT_VALUATION_ASSUMPTION",
+      "SILENTLY_COERCE_UNKNOWN",
+      "USE_OWNER_EARNINGS_DCF_WHEN_OWNER_EARNINGS_UNKNOWN",
+      "DISCOUNT_FCFF_AT_COST_OF_EQUITY",
+      "DISCOUNT_EQUITY_CASH_FLOW_AT_WACC",
+      "TREAT_RUNWAY_HORIZON_AS_MECHANICAL_FORECAST_YEARS",
+      "ALLOW_GROWTH_WITHOUT_REINVESTMENT_CONSISTENCY",
+      "DOUBLE_COUNT_MARGIN_EXPANSION",
+      "DOUBLE_COUNT_OPTIONALITY",
+      "ASSUME_BUYBACKS_WITHOUT_FINANCING_SUPPORT",
+      "ALLOW_UNTRACEABLE_MATERIAL_ASSUMPTION",
+      "WRITE_PRODUCTION"
+    ]
+  },
+  "inputs": {
+    "required_artifact_types": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "RETURN_NORMALIZATION_ARTIFACT",
+      "OWNER_CASH_ARTIFACT",
+      "FINANCING_CONSISTENCY_ARTIFACT"
+    ],
+    "required_exact_references": true,
+    "required_stage_state": "IN_PROGRESS",
+    "required_contract_pins": true,
+    "data_cutoff_policy": "INHERIT_RUN_DATA_CUTOFF"
+  },
+  "dependencies": {
+    "module_ids": [
+      "RETURN_NORMALIZATION",
+      "OWNER_CASH",
+      "FINANCING_CONSISTENCY"
+    ],
+    "dependency_mode": "ANALYST_IMPACT_JUDGMENT"
+  },
+  "execution": {
+    "status_authority": "DEEP_DIVE_BLOCK_LIFECYCLE",
+    "status_vocabulary": [
+      "INSUFFICIENT",
+      "IN_PROGRESS",
+      "PROVISIONALLY_STABLE",
+      "LOCKED"
+    ],
+    "can_parallelize": false,
+    "checkpoint_policy": "MODULE_ARTIFACT_ONLY",
+    "retry_policy": "IDEMPOTENT_SAME_REQUEST",
+    "fail_closed": true
+  },
+  "outputs": {
+    "artifact_types": [
+      "VALUATION_ASSUMPTION_INTEGRITY_ARTIFACT"
+    ],
+    "authority_class": "SUPPORTING_EXECUTION_ARTIFACT",
+    "persistence_required": true,
+    "hash_required": true
+  },
+  "uncertainty": {
+    "unknown_policy": "PRESERVE_EXPLICIT",
+    "not_applicable_policy": "REQUIRE_SEMANTIC_REASON",
+    "missing_policy": "PRESERVE_AND_BLOCK_WHEN_REQUIRED",
+    "assumption_policy": "EXPLICIT_TRACEABLE_NEVER_FABRICATE_TO_COMPLETE"
+  },
+  "recovery": {
+    "recoverable_failures": [
+      "VALUATION_BASIS_MISMATCH",
+      "UNTRACEABLE_MATERIAL_ASSUMPTION",
+      "CROSS_BLOCK_ASSUMPTION_CONTRADICTION",
+      "TERMINAL_ECONOMICS_INCONSISTENT",
+      "SHARE_COUNT_ASSUMPTION_INCONSISTENT",
+      "PLACEHOLDER_IN_MATERIAL_ASSUMPTION",
+      "SCHEMA_VALIDATION_FAILED"
+    ],
+    "reopen_triggers": [
+      "VALUATION_BASIS_CHANGED",
+      "RUNWAY_CHANGED",
+      "MOAT_TREND_CHANGED",
+      "RETURN_NORMALIZATION_CHANGED",
+      "OWNER_CASH_CHANGED",
+      "FINANCING_CONSISTENCY_CHANGED",
+      "SHARE_COUNT_CHANGED",
+      "TERMINAL_ECONOMICS_CHANGED",
+      "MATERIAL_ASSUMPTION_CHANGED"
+    ],
+    "recovery_action": "REOPEN_STAGE"
+  },
+  "environment": {
+    "allowed_environment": "VNEXT_SHADOW",
+    "allowed_supabase_project_ref": "awgsurdyvsyolcgpnygh",
+    "production_write_allowed": false
+  }
+}
