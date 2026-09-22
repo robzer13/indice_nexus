@@ -82,12 +82,15 @@ export interface ValuationAssumptionIntegrityInput {
   fadeCauseEstablished: TraceableAssessment;
 
   reinvestmentConsistencyEstablished: TraceableAssessment;
+  highGrowthHighDistributionLowCapitalNeedCombinationPresent: boolean;
   highGrowthHighDistributionLowCapitalNeedSupported: TraceableAssessment;
 
+  materialMarginChangeAssumed: boolean;
   marginDriversEstablished: TraceableAssessment;
   marginExpansionDoubleCountedInTerminalValue: boolean;
 
   shareCountBridgeEstablished: TraceableAssessment;
+  buybacksAssumedOrExecuted: boolean;
   buybacksSupportedByFinancingBridge: TraceableAssessment;
 
   terminalGrowthReinvestmentReturnReconciled: TraceableAssessment;
@@ -396,6 +399,7 @@ export function evaluateValuationAssumptionIntegrity(
   }
 
   if (
+    input.highGrowthHighDistributionLowCapitalNeedCombinationPresent &&
     input.highGrowthHighDistributionLowCapitalNeedSupported.state !==
       "YES"
   ) {
@@ -404,7 +408,10 @@ export function evaluateValuationAssumptionIntegrity(
     );
   }
 
-  if (input.marginDriversEstablished.state !== "YES") {
+  if (
+    input.materialMarginChangeAssumed &&
+    input.marginDriversEstablished.state !== "YES"
+  ) {
     validationCodes.push("MARGIN_DRIVER_DECOMPOSITION_REQUIRED");
   }
 
@@ -418,7 +425,10 @@ export function evaluateValuationAssumptionIntegrity(
     validationCodes.push("FUTURE_SHARE_COUNT_BRIDGE_REQUIRED");
   }
 
-  if (input.buybacksSupportedByFinancingBridge.state !== "YES") {
+  if (
+    input.buybacksAssumedOrExecuted &&
+    input.buybacksSupportedByFinancingBridge.state !== "YES"
+  ) {
     validationCodes.push(
       "BUYBACK_ASSUMPTIONS_REQUIRE_FINANCING_SUPPORT",
     );
