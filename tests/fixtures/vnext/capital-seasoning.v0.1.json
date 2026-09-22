@@ -1,0 +1,572 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "committed-not-deployed",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-1",
+            "capitalType": "CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-1-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Capital is formally committed.",
+              "evidenceIds": [
+                "C1-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "NO",
+              "rationale": "Capital has not yet been deployed.",
+              "evidenceIds": [
+                "C1-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "NO",
+              "rationale": "Asset is not in service.",
+              "evidenceIds": [
+                "C1-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "NO",
+              "rationale": "Utilization has not started.",
+              "evidenceIds": [
+                "C1-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "NO",
+              "rationale": "Stabilization has not started.",
+              "evidenceIds": [
+                "C1-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "NO",
+              "rationale": "No mature return evidence exists.",
+              "evidenceIds": [
+                "C1-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "HIGH",
+            "proposedSeasoningState": "COMMITTED",
+            "returnEvidenceIds": [
+              "C-1-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-1 is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "Material committed capital is not yet deployed."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "UNSEASONED",
+        "state": "COMMITTED",
+        "returnEvidenceUse": "UNSEASONED_DO_NOT_JUDGE"
+      }
+    },
+    {
+      "id": "ramping-cohort",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-2",
+            "capitalType": "CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-2-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Capital was committed.",
+              "evidenceIds": [
+                "C2-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Capital was deployed.",
+              "evidenceIds": [
+                "C2-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "YES",
+              "rationale": "Asset is in service.",
+              "evidenceIds": [
+                "C2-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "YES",
+              "rationale": "Utilization has begun materially.",
+              "evidenceIds": [
+                "C2-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "NO",
+              "rationale": "Operations have not stabilized.",
+              "evidenceIds": [
+                "C2-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "NO",
+              "rationale": "Return evidence is not mature.",
+              "evidenceIds": [
+                "C2-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "MEDIUM",
+            "proposedSeasoningState": "RAMPING",
+            "returnEvidenceIds": [
+              "C-2-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-2 is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "The asset is operating but still ramping."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "UNSEASONED",
+        "state": "RAMPING",
+        "returnEvidenceUse": "UNSEASONED_DO_NOT_JUDGE"
+      }
+    },
+    {
+      "id": "seasoned-cohort",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-3",
+            "capitalType": "ACQUISITION_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-3-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Capital was committed.",
+              "evidenceIds": [
+                "C3-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Capital was deployed.",
+              "evidenceIds": [
+                "C3-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "YES",
+              "rationale": "Business is in service.",
+              "evidenceIds": [
+                "C3-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "YES",
+              "rationale": "Utilization/integration is established.",
+              "evidenceIds": [
+                "C3-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "YES",
+              "rationale": "Operations are stabilized.",
+              "evidenceIds": [
+                "C3-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "YES",
+              "rationale": "Mature cohort return evidence exists.",
+              "evidenceIds": [
+                "C3-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "MEDIUM",
+            "proposedSeasoningState": "SEASONED",
+            "returnEvidenceIds": [
+              "C-3-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-3 is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "The acquisition cohort has matured sufficiently for return judgment."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "FULLY_SEASONED",
+        "state": "SEASONED",
+        "returnEvidenceUse": "MATURE_RETURN_EVIDENCE_ALLOWED"
+      }
+    },
+    {
+      "id": "mixed-seasoning",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-4A",
+            "capitalType": "CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-4A-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Committed.",
+              "evidenceIds": [
+                "C4A-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Deployed.",
+              "evidenceIds": [
+                "C4A-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "YES",
+              "rationale": "In service.",
+              "evidenceIds": [
+                "C4A-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "YES",
+              "rationale": "Utilization established.",
+              "evidenceIds": [
+                "C4A-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "YES",
+              "rationale": "Stabilized.",
+              "evidenceIds": [
+                "C4A-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "YES",
+              "rationale": "Mature returns observed.",
+              "evidenceIds": [
+                "C4A-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "LOW",
+            "proposedSeasoningState": "SEASONED",
+            "returnEvidenceIds": [
+              "C-4A-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-4A is classified from traceable deployment and maturation evidence."
+          },
+          {
+            "cohortId": "C-4B",
+            "capitalType": "CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-4B-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Committed.",
+              "evidenceIds": [
+                "C4B-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Deployed.",
+              "evidenceIds": [
+                "C4B-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "NO",
+              "rationale": "Not yet in service.",
+              "evidenceIds": [
+                "C4B-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "NO",
+              "rationale": "No utilization.",
+              "evidenceIds": [
+                "C4B-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "NO",
+              "rationale": "Not stabilized.",
+              "evidenceIds": [
+                "C4B-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "NO",
+              "rationale": "No mature returns.",
+              "evidenceIds": [
+                "C4B-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "HIGH",
+            "proposedSeasoningState": "DEPLOYED",
+            "returnEvidenceIds": [
+              "C-4B-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-4B is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "Portfolio contains both seasoned and recently deployed material cohorts."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "MIXED_SEASONING"
+      }
+    },
+    {
+      "id": "unsupported-seasoned",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-5",
+            "capitalType": "R_AND_D",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Material capital cohort.",
+              "evidenceIds": [
+                "C-5-M"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Committed.",
+              "evidenceIds": [
+                "C5-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Deployed.",
+              "evidenceIds": [
+                "C5-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "YES",
+              "rationale": "In service.",
+              "evidenceIds": [
+                "C5-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "YES",
+              "rationale": "Utilization established.",
+              "evidenceIds": [
+                "C5-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "NO",
+              "rationale": "Not yet stabilized.",
+              "evidenceIds": [
+                "C5-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "NO",
+              "rationale": "Mature return evidence absent.",
+              "evidenceIds": [
+                "C5-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "HIGH",
+            "proposedSeasoningState": "SEASONED",
+            "returnEvidenceIds": [
+              "C-5-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-5 is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "A long-lag R&D cohort is incorrectly proposed as seasoned."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "PROPOSED_SEASONING_STATE_NOT_SUPPORTED_BY_EVIDENCE"
+      }
+    },
+    {
+      "id": "unknown-preserved",
+      "input": {
+        "applicable": true,
+        "cohorts": [
+          {
+            "cohortId": "C-6",
+            "capitalType": "IMPLEMENTATION",
+            "materiality": {
+              "state": "UNKNOWN",
+              "rationale": "Materiality remains uncertain pending segmentation.",
+              "evidenceIds": [
+                "C6-MU"
+              ],
+              "assumptionIds": []
+            },
+            "committed": {
+              "state": "YES",
+              "rationale": "Committed.",
+              "evidenceIds": [
+                "C6-A"
+              ],
+              "assumptionIds": []
+            },
+            "deployed": {
+              "state": "YES",
+              "rationale": "Deployed.",
+              "evidenceIds": [
+                "C6-B"
+              ],
+              "assumptionIds": []
+            },
+            "inService": {
+              "state": "UNKNOWN",
+              "rationale": "In-service status is unclear.",
+              "evidenceIds": [
+                "C6-C"
+              ],
+              "assumptionIds": []
+            },
+            "utilizationEstablished": {
+              "state": "UNKNOWN",
+              "rationale": "Utilization is unclear.",
+              "evidenceIds": [
+                "C6-D"
+              ],
+              "assumptionIds": []
+            },
+            "stabilizationEstablished": {
+              "state": "UNKNOWN",
+              "rationale": "Stabilization is unclear.",
+              "evidenceIds": [
+                "C6-E"
+              ],
+              "assumptionIds": []
+            },
+            "matureReturnEvidenceEstablished": {
+              "state": "UNKNOWN",
+              "rationale": "Mature return evidence is unclear.",
+              "evidenceIds": [
+                "C6-F"
+              ],
+              "assumptionIds": []
+            },
+            "investmentLag": "UNKNOWN",
+            "proposedSeasoningState": "UNKNOWN",
+            "returnEvidenceIds": [
+              "C-6-RET"
+            ],
+            "counterEvidenceIds": [],
+            "rationale": "Capital cohort C-6 is classified from traceable deployment and maturation evidence."
+          }
+        ],
+        "rationale": "Insufficient evidence preserves an explicit unknown seasoning state."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "UNKNOWN",
+        "state": "UNKNOWN",
+        "returnEvidenceUse": "UNKNOWN"
+      }
+    },
+    {
+      "id": "not-applicable",
+      "input": {
+        "applicable": false,
+        "cohorts": [],
+        "rationale": "No material capital cohort requires seasoning analysis."
+      },
+      "expected": {
+        "finalizable": true,
+        "portfolioSeasoningState": "NOT_APPLICABLE"
+      }
+    }
+  ]
+}
