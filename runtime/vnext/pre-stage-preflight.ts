@@ -131,6 +131,9 @@ export interface PreStagePreflightRequest {
   expectedProcessVersion: string;
   expectedPilotageContractVersion: string;
   expectedContractSetSha256: string;
+  expectedStageContractName: string;
+  expectedStageContractVersion: string;
+  expectedStageContractSha256: string;
 
   run: PreflightRunRecord;
   stage: PreflightStageRecord;
@@ -157,6 +160,9 @@ export type PreflightFailureCode =
   | "STAGE_STATE_VERSION_STALE"
   | "STAGE_CODE_MISMATCH"
   | "STAGE_LIFECYCLE_NOT_ADMISSIBLE"
+  | "STAGE_CONTRACT_NAME_MISMATCH"
+  | "STAGE_CONTRACT_VERSION_MISMATCH"
+  | "STAGE_CONTRACT_HASH_MISMATCH"
   | "IDENTITY_ISSUER_MISMATCH"
   | "IDENTITY_SECURITY_MISMATCH"
   | "IDENTITY_SECURITY_REQUIRED"
@@ -318,6 +324,33 @@ function validateRunAndStage(
       failures,
       "STAGE_LIFECYCLE_NOT_ADMISSIBLE",
       "scope=" + request.scope + " lifecycle=" + stage.lifecycleStatus,
+    );
+  }
+
+  if (stage.stageContractName !== request.expectedStageContractName) {
+    fail(
+      failures,
+      "STAGE_CONTRACT_NAME_MISMATCH",
+      "expected=" + request.expectedStageContractName + " actual=" + stage.stageContractName,
+    );
+  }
+
+  if (stage.stageContractVersion !== request.expectedStageContractVersion) {
+    fail(
+      failures,
+      "STAGE_CONTRACT_VERSION_MISMATCH",
+      "expected=" + request.expectedStageContractVersion + " actual=" + stage.stageContractVersion,
+    );
+  }
+
+  if (
+    !SHA256_RE.test(stage.stageContractSha256) ||
+    stage.stageContractSha256 !== request.expectedStageContractSha256
+  ) {
+    fail(
+      failures,
+      "STAGE_CONTRACT_HASH_MISMATCH",
+      "expected=" + request.expectedStageContractSha256 + " actual=" + stage.stageContractSha256,
     );
   }
 
