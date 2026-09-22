@@ -67,7 +67,9 @@ test("Gate 15 P0 dependency graph is forward-only in the frozen suite order", ()
   );
 
   for (const contract of contracts) {
-    const currentIndex = order.get(contract.module_id);
+    const currentIndex = order.get(
+      contract.module_id as (typeof VNEXT_P0_MODULE_ORDER)[number],
+    );
     assert.notEqual(currentIndex, undefined);
 
     for (const dependency of contract.dependencies.module_ids) {
