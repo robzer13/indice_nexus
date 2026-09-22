@@ -149,3 +149,46 @@ test("Gate 18 candidate contract forbids premature routing freeze", () => {
   assert.match(contract, /NO ROUTING WINNER/);
   assert.match(contract, /GATE 18[\s\S]*IN PROGRESS[\s\S]*NOT FROZEN/);
 });
+
+
+test("Gate 18 public pilot manifest contains provenance only, never private packet content", () => {
+  for (const company of pilotJson.companies) {
+    for (const artifact of [
+      company.evidence_ledger,
+      company.conflict_ledger,
+    ]) {
+      assert.deepEqual(
+        Object.keys(artifact).sort(),
+        [
+          "artifact_id",
+          "commit_sha",
+          "path",
+          "repository",
+          "sha256",
+          "version",
+        ],
+      );
+    }
+  }
+
+  const serialized = JSON.stringify(pilotJson);
+
+  assert.equal(serialized.includes('"items":'), false);
+  assert.equal(serialized.includes('"conflicts":['), false);
+  assert.equal(serialized.includes('"value":'), false);
+});
+
+test("Gate 18 retained workflow contains no Vercel share token transport", () => {
+  const workflow = readFileSync(
+    ".github/workflows/vnext-gate18-model-smoke.yml",
+    "utf8",
+  );
+
+  assert.equal(workflow.includes("_vercel_share"), false);
+  assert.equal(workflow.includes("gate18-share:"), false);
+  assert.match(
+    workflow,
+    /x-vercel-trusted-oidc-idp-token/,
+  );
+  assert.match(workflow, /workflow_dispatch/);
+});
