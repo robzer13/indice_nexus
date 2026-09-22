@@ -274,11 +274,13 @@ test("Gate 9 pins the stage contract independently from resolved contract lookup
 
 test("Gate 9 rejects missing or stale contract locators", () => {
   const request = validRequest("RESEARCH");
-  request.resolvedContracts[0] = {
-    ...request.resolvedContracts[0],
-    version: "0.9",
-    durableLocatorAvailable: false,
-  };
+  request.resolvedContracts = [
+    {
+      ...request.resolvedContracts[0],
+      version: "0.9",
+      durableLocatorAvailable: false,
+    },
+  ];
 
   const codes = failureCodes(request);
   assert.ok(codes.includes("CONTRACT_VERSION_MISMATCH"));
@@ -311,15 +313,17 @@ test("Gate 9 rejects an upstream manifest with stale bytes or locator", () => {
 
 test("Gate 9 rejects stale, invalidated, unavailable or relocated artifacts", () => {
   const request = validRequest("VALUATION");
-  request.resolvedArtifacts[0] = {
-    ...request.resolvedArtifacts[0],
-    version: 3,
-    contentSha256: HASH_B,
-    artifactStatus: "INVALIDATED",
-    authorityState: "SUPERSEDED",
-    availabilityState: "MISSING",
-    durableLocatorAvailable: false,
-  };
+  request.resolvedArtifacts = [
+    {
+      ...request.resolvedArtifacts[0],
+      version: 3,
+      contentSha256: HASH_B,
+      artifactStatus: "INVALIDATED",
+      authorityState: "SUPERSEDED",
+      availabilityState: "MISSING",
+      durableLocatorAvailable: false,
+    },
+  ];
 
   const codes = failureCodes(request);
   assert.ok(codes.includes("ARTIFACT_VERSION_MISMATCH"));
