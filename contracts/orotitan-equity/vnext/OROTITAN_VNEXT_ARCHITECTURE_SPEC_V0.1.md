@@ -1,10 +1,10 @@
 # OROTITAN_VNEXT_ARCHITECTURE_SPEC_V0.1
 
 **Project:** OroTitan Equity Research  
-**Status:** CANDIDATE FOR GATE 7  
+**Status:** FROZEN — GATE 7 PASS  
 **Methodology change:** NO  
 **Depends on:** `OROTITAN_VNEXT_STATE_MODEL_V0.1`  
-**Gate 6 reference commit:** `0e094199eb577bd205f03379a3878e41d6a00559`
+**Gate 6 reference commit:** `233578cd329c997ed98981426782966593d7aa69`
 
 ## 0. Purpose
 
@@ -765,3 +765,70 @@ PROSE SPEC
 ```
 
 all agree, with no production mutation.
+
+
+---
+
+## 21. Gate 7 implementation authority
+
+The prose architecture is paired with the following machine-enforced artifacts:
+
+```text
+schemas/vnext/orotitan-vnext-module-contract.schema.v0.1.json
+  -> Module Contract structural authority
+
+runtime/vnext/module-contract.ts
+  -> runtime schema + cross-field invariant validation
+
+tests/vnext-module-contract.test.ts
+  -> deterministic architecture boundary tests
+
+runtime/vnext/environment.ts
+  -> hard VNEXT_SHADOW environment boundary
+
+runtime/vnext/state-machine.ts
+  -> Registry run/stage transition authority
+
+runtime/vnext/state-model.ts
+  -> orthogonal Gate 6 state-vector authority
+```
+
+Runtime Module Contract validation additionally enforces:
+
+```text
+SELF DEPENDENCY                         = FORBIDDEN
+DEEP_DIVE_BLOCK_LIFECYCLE              = DEEP_DIVE ONLY
+DEEP_DIVE EXECUTION VOCABULARY         = EXACT FROZEN VOCABULARY
+AUTHORITATIVE STAGE OUTPUT             = PERSISTENCE + HASH REQUIRED
+DETERMINISTIC MODULE JUDGMENT          = FORBIDDEN
+DETERMINISTIC MODULE AUTHORITY FLAG    = REQUIRED
+RESEARCH MODULE KIND                   = RESEARCH STAGE
+ANALYTICAL / CERTIFICATION MODULE KIND = DEEP_DIVE STAGE
+INTEGRATION MODULE KIND                = INTEGRATION STAGE
+PRODUCTION ENVIRONMENT / WRITE         = SCHEMA-REJECTED
+```
+
+These checks constrain execution architecture only. They do not create analytical scoring rules.
+
+## 22. Gate 7 freeze record
+
+```text
+GATE                              = 7
+RESULT                            = PASS
+PROSE_SPEC                        = PASS
+MODULE_CONTRACT_JSON_SCHEMA       = PASS
+RUNTIME_MODULE_VALIDATION         = PASS
+DETERMINISTIC_MODULE_TESTS        = PASS
+GATE_6_DEPENDENCY                 = FROZEN / PASS
+ENVIRONMENT_FIREWALL              = PASS
+UNKNOWN_DISCIPLINE                = PRESERVED
+RECOVERY_ARCHITECTURE             = DEFINED
+PUBLICATION_IN_SHADOW             = FORBIDDEN
+CI_VALIDATION_HEAD                = c6e7e3185f7e9bb5db44757ab76e6d382664df0f
+CI_RUN                            = 29
+PRODUCTION_MUTATION               = NONE
+SHADOW_DB_MUTATION                = NONE
+ANALYTICAL_METHODOLOGY_CHANGE     = NONE
+```
+
+V0.1 is now the conceptual VNext architecture authority for subsequent implementation gates. Changes require an explicit new version; silent semantic mutation is forbidden.
