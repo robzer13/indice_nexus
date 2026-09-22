@@ -431,6 +431,26 @@ If the Azure Student subscription cannot expose a usable deployment, this is rec
 
 Another provider may then implement `AnalyticalModelProvider` without changing the Gate 7 architecture.
 
+## 13.1 Azure quota-request status
+
+As of 2026-09-22:
+
+```text
+SUBSCRIPTION CLASS          = Azure for Students
+TARGET MODEL                = gpt-5.6-sol
+TARGET DEPLOYMENT TYPE      = Global Standard
+TARGET REGION               = Switzerland North
+CURRENT QUOTA BEFORE REQUEST= 0 kTPM
+REQUESTED TOTAL QUOTA       = 10 kTPM
+REQUEST STATUS              = SUBMITTED / PENDING MICROSOFT ALLOCATION
+```
+
+Microsoft's quota-request confirmation states that requests are typically processed the next business day and may take up to two business days, with no guarantee of approval.
+
+This is an external-capacity dependency only. It does not change the Gate 13 provider contract, model-selection neutrality, or deterministic CI state.
+
+If the request is denied or remains unavailable, Gate 13 may use another Azure model/deployment that satisfies the same capability probe. Such a substitution must be explicit and does not select that model as a permanent OroTitan routing winner.
+
 ## 14. Out of scope
 
 Gate 13 does not:
