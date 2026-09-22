@@ -374,15 +374,8 @@ function evaluateCohort(
     capitalType: cohort.capitalType,
     materiality: cohort.materiality.state,
     investmentLag: cohort.investmentLag,
-    seasoningState:
-      cohort.proposedSeasoningState === "UNKNOWN"
-        ? supportedState
-        : cohort.proposedSeasoningState,
-    returnEvidenceUse: deriveReturnEvidenceUse(
-      cohort.proposedSeasoningState === "UNKNOWN"
-        ? supportedState
-        : cohort.proposedSeasoningState,
-    ),
+    seasoningState: supportedState,
+    returnEvidenceUse: deriveReturnEvidenceUse(supportedState),
     validationCodes: uniqueSorted(validationCodes),
     evidenceIds,
     counterEvidenceIds: uniqueSorted(
