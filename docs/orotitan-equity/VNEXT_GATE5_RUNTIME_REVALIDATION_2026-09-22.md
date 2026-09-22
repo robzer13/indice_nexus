@@ -15,3 +15,5 @@ Expected runtime invariants:
 
 Gate 5 passes only if the fresh deployment is READY and runtime access to the
 shadow Supabase project succeeds without API-key errors.
+
+Second runtime revalidation triggered after replacement of the shadow server secret in Vercel.
