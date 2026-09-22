@@ -472,3 +472,70 @@ TIER PROMOTION
 ```
 
 Those decisions require later explicit calibration authority.
+
+
+## 18. Private evidence transport boundary
+
+The implementation repository `robzer13/indice_nexus` is public.
+
+The source artifact repository `robzer13/real-orotitan` is private.
+
+Therefore Gate 18 explicitly forbids:
+
+```text
+COPY PRIVATE EVIDENCE_LEDGER CONTENT INTO indice_nexus
+COPY PRIVATE CONFLICT_LEDGER CONTENT INTO indice_nexus
+COMMIT PRIVATE SOURCE EXCERPTS INTO A PUBLIC FIXTURE
+COMMIT GITHUB / PROVIDER / VERCEL ACCESS TOKENS
+PASS A V2 FINAL CONCLUSION AS A SUBSTITUTE FOR PRIVATE EVIDENCE
+```
+
+The public pilot manifest may contain only non-secret provenance metadata
+required to identify and integrity-check the pinned source artifacts:
+
+```text
+artifact id
+version
+SHA-256
+private repository name
+private path
+immutable commit SHA
+SOURCE_RUN_ID
+DATA_CUTOFF
+```
+
+A real company-level calibration run therefore requires an authorized private
+evidence transport that:
+
+```text
+reads the exact pinned private artifact
+verifies its SHA-256 before inference
+keeps credentials server-side
+does not write the private packet to the public repository
+does not expose packet contents in CI logs
+does not mutate the source artifact
+does not load V2 final conclusions into the model request
+```
+
+No such credential may be invented, embedded or inferred by Gate 18.
+
+## 19. Preview-protection transport
+
+The temporary share-link bypass used to diagnose the first real smoke attempt
+was a one-time diagnostic path.
+
+Because `indice_nexus` is public, Gate 18 does not retain a workflow that
+carries a Vercel share token through public PR metadata.
+
+The retained workflow uses:
+
+```text
+GitHub OIDC
+-> Vercel Trusted Source
+-> protected preview
+```
+
+and requires the Vercel project to authorize GitHub Actions as a Trusted
+Source before it can invoke protected calibration routes.
+
+This transport decision changes no analytical methodology.
