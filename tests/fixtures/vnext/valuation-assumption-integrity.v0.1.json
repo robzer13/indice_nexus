@@ -1,0 +1,2525 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "clean-fcff-wacc-assumptions",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Material valuation assumptions are traceable, basis-matched and cross-block consistent with runway, returns, owner cash, financing and terminal economics."
+      },
+      "expected": {
+        "finalizable": true,
+        "validationCodes": [],
+        "limitations": []
+      }
+    },
+    {
+      "id": "fcff-cost-of-equity-mismatch",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "COST_OF_EQUITY",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "FCFF is incorrectly discounted at cost of equity."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "FCFF_MUST_BE_DISCOUNTED_AT_WACC"
+      }
+    },
+    {
+      "id": "owner-earnings-unknown-precise-dcf",
+      "input": {
+        "cashFlowBasis": "OWNER_EARNINGS",
+        "discountRateBasis": "COST_OF_EQUITY",
+        "ownerEarningsState": "UNKNOWN",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "A precise Owner Earnings DCF is attempted despite Owner Earnings remaining UNKNOWN."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "OWNER_EARNINGS_UNKNOWN_CANNOT_SUPPORT_PRECISE_OWNER_EARNINGS_DCF"
+      }
+    },
+    {
+      "id": "top-down-cagr-and-mechanical-runway-horizon",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": true,
+        "runwayHorizonMechanicallyMappedToForecastYears": true,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Forecast years and revenue growth are mechanically imposed rather than derived from frozen causal drivers."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "FREE_STANDING_REVENUE_CAGR_WITHOUT_DRIVER_SUPPORT_FORBIDDEN",
+          "RUNWAY_HORIZON_CANNOT_MECHANICALLY_SET_FORECAST_YEARS"
+        ]
+      }
+    },
+    {
+      "id": "growth-distribution-reinvestment-conflict",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "NO",
+          "rationale": "High growth is not reconciled to reinvestment and marginal return.",
+          "evidenceIds": [
+            "E-VAL-REINV-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": true,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario assumes high growth and distributions with low capital need without economic support.",
+          "evidenceIds": [
+            "E-VAL-HG-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Growth, distributions and capital needs are internally inconsistent."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "GROWTH_REINVESTMENT_MARGINAL_RETURN_MUST_RECONCILE",
+          "HIGH_GROWTH_HIGH_DISTRIBUTION_LOW_CAPITAL_NEEDS_SUPPORT"
+        ]
+      }
+    },
+    {
+      "id": "margin-and-optionality-double-count",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": true,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": true,
+        "optionalityDoubleCountedInTerminalValue": true,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Margin improvement and optionality are rewarded in both operating forecast and terminal valuation."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "MARGIN_EXPANSION_DOUBLE_COUNTED_IN_TERMINAL_VALUE",
+          "OPTIONALITY_DOUBLE_COUNTED_BETWEEN_BASE_AND_TERMINAL"
+        ]
+      }
+    },
+    {
+      "id": "terminal-economics-conflict",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "NO",
+          "rationale": "Terminal growth is not reconciled to terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-TERM-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "NO",
+          "rationale": "Terminal margins and returns remain inconsistent with a mature state.",
+          "evidenceIds": [
+            "E-MAT-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": true,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Terminal economics preserve permanent excess returns despite an eroding moat and unreconciled reinvestment."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "TERMINAL_GROWTH_REINVESTMENT_RETURN_MUST_RECONCILE",
+          "TERMINAL_ECONOMICS_MUST_BE_CONSISTENT_WITH_MATURITY",
+          "ERODING_MOAT_CANNOT_SUPPORT_PERMANENT_EXCESS_RETURNS_WITHOUT_FADE"
+        ]
+      }
+    },
+    {
+      "id": "future-mna-unsupported",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "YES",
+          "rationale": "Future acquisition deployment is a material component of valuation.",
+          "evidenceIds": [
+            "E-MNA-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "Target pool, deployable capital, organizational capacity and demonstrated returns do not jointly support the assumed M&A value.",
+          "evidenceIds": [
+            "E-MNA-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Material future M&A value is assumed without the frozen support chain."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_FUTURE_MNA_REQUIRES_TARGET_POOL_CAPITAL_CAPACITY_AND_RETURN_SUPPORT"
+      }
+    },
+    {
+      "id": "assumption-leakage-and-critical-placeholder",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "TBD",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [
+          "A-TERM-1"
+        ],
+        "unresolvedCriticalPlaceholders": [
+          "terminal_return_on_new_capital=TBD"
+        ],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "A critical terminal assumption contains a placeholder and is also narrated as fact."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "PLACEHOLDER_IN_MATERIAL_ASSUMPTION",
+          "ASSUMPTION_LEAKAGE_INTO_FACTUAL_NARRATIVE",
+          "CRITICAL_PLACEHOLDER_BLOCKS_VALUATION_ASSUMPTION_INTEGRITY"
+        ]
+      }
+    },
+    {
+      "id": "unsupported-default-scenario-probabilities",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": true,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "Bear/Base/Bull probabilities are assigned mechanically without defended support."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "UNSUPPORTED_DEFAULT_SCENARIO_PROBABILITIES_FORBIDDEN"
+      }
+    },
+    {
+      "id": "non-critical-placeholder-preserved-as-limitation",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "denominator / penetration / share / price-mix driver set",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Bottom-up revenue architecture derived from the frozen runway and business-driver chain.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [
+          "minor_cross_check_metric=UNKNOWN"
+        ],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "A non-critical unresolved cross-check remains explicitly UNKNOWN and limited."
+      },
+      "expected": {
+        "finalizable": true,
+        "containsLimitation": "NON_CRITICAL_PLACEHOLDER_MUST_REMAIN_UNKNOWN_LIMITATION"
+      }
+    },
+    {
+      "id": "critical-material-assumption-unknown",
+      "input": {
+        "cashFlowBasis": "FCFF",
+        "discountRateBasis": "WACC",
+        "ownerEarningsState": "RANGE",
+        "fundamentalDriverChainEstablished": {
+          "state": "YES",
+          "rationale": "Forecast is built from runway driver through denominator, penetration/share, price/mix, operating economics, reinvestment and cash.",
+          "evidenceIds": [
+            "E-VAL-DRIVER"
+          ],
+          "assumptionIds": []
+        },
+        "freeStandingRevenueCagrUsedWithoutDriverSupport": false,
+        "runwayHorizonMechanicallyMappedToForecastYears": false,
+        "fadeCauseEstablished": {
+          "state": "YES",
+          "rationale": "The explicit-to-fade transition has a causal fade driver rather than a mechanical horizon mapping.",
+          "evidenceIds": [
+            "E-VAL-FADE"
+          ],
+          "assumptionIds": []
+        },
+        "reinvestmentConsistencyEstablished": {
+          "state": "YES",
+          "rationale": "Growth, reinvestment rate and expected marginal return are reconciled.",
+          "evidenceIds": [
+            "E-VAL-REINV"
+          ],
+          "assumptionIds": []
+        },
+        "highGrowthHighDistributionLowCapitalNeedCombinationPresent": false,
+        "highGrowthHighDistributionLowCapitalNeedSupported": {
+          "state": "NO",
+          "rationale": "The scenario does not assume the contradictory high-growth/high-distribution/low-capital combination.",
+          "evidenceIds": [
+            "E-VAL-HG"
+          ],
+          "assumptionIds": []
+        },
+        "materialMarginChangeAssumed": true,
+        "marginDriversEstablished": {
+          "state": "YES",
+          "rationale": "Material margin change is decomposed into price/mix, scale, operating leverage, competition, capacity and input-cost drivers.",
+          "evidenceIds": [
+            "E-VAL-MARGIN"
+          ],
+          "assumptionIds": []
+        },
+        "marginExpansionDoubleCountedInTerminalValue": false,
+        "shareCountBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Future economic shares reconcile opening shares, issuance, SBC, acquisition shares and buybacks.",
+          "evidenceIds": [
+            "E-VAL-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": false,
+        "buybacksSupportedByFinancingBridge": {
+          "state": "NO",
+          "rationale": "No buybacks are assumed in the valuation case.",
+          "evidenceIds": [
+            "E-VAL-BB"
+          ],
+          "assumptionIds": []
+        },
+        "terminalGrowthReinvestmentReturnReconciled": {
+          "state": "YES",
+          "rationale": "Terminal growth reconciles with terminal reinvestment and return on new capital.",
+          "evidenceIds": [
+            "E-VAL-TERM"
+          ],
+          "assumptionIds": []
+        },
+        "terminalEconomicsConsistentWithMaturity": {
+          "state": "YES",
+          "rationale": "Terminal margin, growth and return assumptions reflect a mature economic state.",
+          "evidenceIds": [
+            "E-VAL-MATURITY"
+          ],
+          "assumptionIds": []
+        },
+        "erodingMoatWithPermanentExcessReturnsWithoutFade": false,
+        "discountRateReproducibleAndCurrencyConsistent": {
+          "state": "YES",
+          "rationale": "The economic discount rate is reproducible and consistent with the valuation currency.",
+          "evidenceIds": [
+            "E-VAL-DR"
+          ],
+          "assumptionIds": []
+        },
+        "economicDiscountRateSeparatedFromInvestorRequiredReturn": {
+          "state": "YES",
+          "rationale": "Economic discount rate is used for valuation while investor required return remains a separate Price Ladder policy input.",
+          "evidenceIds": [
+            "E-VAL-HURDLE"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaMaterial": {
+          "state": "NO",
+          "rationale": "Future M&A is not a material value driver in the base valuation.",
+          "evidenceIds": [
+            "E-VAL-MNA-M"
+          ],
+          "assumptionIds": []
+        },
+        "futureMnaSupportedByTargetPoolCapitalCapacityAndReturns": {
+          "state": "NO",
+          "rationale": "No future M&A value is included, so acquisition-support assumptions are not invoked.",
+          "evidenceIds": [
+            "E-VAL-MNA-S"
+          ],
+          "assumptionIds": []
+        },
+        "optionalityIncludedInBase": false,
+        "optionalityDoubleCountedInTerminalValue": false,
+        "scenarioAssumptionsCausal": {
+          "state": "YES",
+          "rationale": "Bear, Base and Bull scenarios are expressed through causal business variables rather than arbitrary percentage labels.",
+          "evidenceIds": [
+            "E-VAL-SCEN"
+          ],
+          "assumptionIds": []
+        },
+        "defaultScenarioProbabilitiesUsedWithoutSupport": false,
+        "materialAssumptions": [
+          {
+            "assumptionId": "A-REV-1",
+            "variable": "FUNDAMENTAL_REVENUE_DRIVERS",
+            "valueOrRange": "UNKNOWN",
+            "epistemicType": "UNKNOWN",
+            "sourceOrRationale": "Revenue-driver magnitude remains unresolved at the current data cutoff.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "BASE",
+              "BEAR",
+              "BULL"
+            ],
+            "evidenceIds": [
+              "E-A-REV"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-WACC-1",
+            "variable": "ECONOMIC_DISCOUNT_RATE",
+            "valueOrRange": "8.2%-9.0%",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Currency-consistent cost-of-capital estimate built from reproducible market inputs.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "SENSITIVITY"
+            ],
+            "evidenceIds": [
+              "E-A-WACC"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-TERM-1",
+            "variable": "TERMINAL_GROWTH",
+            "valueOrRange": "2.0%-2.5%",
+            "epistemicType": "ASSUMPTION",
+            "sourceOrRationale": "Mature-state growth assumption reconciled to terminal reinvestment and return on new capital.",
+            "sensitivity": "HIGH",
+            "usedIn": [
+              "DCF",
+              "TERMINAL_VALUE"
+            ],
+            "evidenceIds": [
+              "E-A-TERM"
+            ],
+            "isCritical": true
+          },
+          {
+            "assumptionId": "A-SHARES-1",
+            "variable": "FUTURE_ECONOMIC_SHARES",
+            "valueOrRange": "opening shares + gross issuance + SBC + acquisition shares - buybacks",
+            "epistemicType": "ESTIMATE",
+            "sourceOrRationale": "Share-count bridge follows the frozen economic-share architecture.",
+            "sensitivity": "MEDIUM",
+            "usedIn": [
+              "PER_SHARE_VALUE",
+              "EXPECTED_RETURN"
+            ],
+            "evidenceIds": [
+              "E-A-SHARES"
+            ],
+            "isCritical": true
+          }
+        ],
+        "assumptionIdsLeakedIntoFactualNarrative": [],
+        "unresolvedCriticalPlaceholders": [],
+        "unresolvedNonCriticalPlaceholders": [],
+        "counterEvidenceIds": [
+          "CE-VAL-1"
+        ],
+        "rationale": "A critical material revenue assumption remains epistemically UNKNOWN."
+      },
+      "expected": {
+        "finalizable": true,
+        "containsLimitation": "CRITICAL_MATERIAL_ASSUMPTION_UNKNOWN"
+      }
+    }
+  ]
+}
