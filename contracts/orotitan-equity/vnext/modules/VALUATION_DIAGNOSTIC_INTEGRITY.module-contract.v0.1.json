@@ -1,0 +1,113 @@
+{
+  "module_contract_schema_version": "0.1.0",
+  "module_id": "VALUATION_DIAGNOSTIC_INTEGRITY",
+  "module_version": "0.1.0",
+  "module_kind": "ANALYTICAL",
+  "stage_code": "DEEP_DIVE",
+  "purpose": "Validate deterministic valuation diagnostics, mature-normalization precedence/fallback, reverse-DCF discipline, expected-return arithmetic, margin-of-safety inputs, sensitivity focus, price-ladder consistency and mathematical integrity without creating or changing valuation scores.",
+  "authority": {
+    "reads": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "VALUATION_ASSUMPTION_INTEGRITY_ARTIFACT",
+      "OWNER_CASH_ARTIFACT",
+      "FINANCING_CONSISTENCY_ARTIFACT",
+      "VALUATION_ARTIFACT"
+    ],
+    "writes": [
+      "VALUATION_DIAGNOSTIC_INTEGRITY_ARTIFACT"
+    ],
+    "judgment_authority": true,
+    "deterministic_authority": true,
+    "forbidden_actions": [
+      "CHANGE_OVS_FORMULA",
+      "CHANGE_OVS_ANCHORS",
+      "CHANGE_INVESTMENT_SCORE",
+      "DETERMINE_VALUATION_ELITE",
+      "INVENT_MATURE_NORMALIZATION_RESULT",
+      "FALLBACK_FROM_INVALID_MATURE_NORMALIZATION",
+      "SELECT_MIN_MAX_OR_AVERAGE_OF_N_DIAGNOSTICS",
+      "SOLVE_MULTIPLE_REVERSE_DCF_VARIABLES_WITHOUT_IDENTIFICATION",
+      "USE_NAIVE_EXPECTED_RETURN_ADDITION",
+      "INVENT_SCENARIO_PROBABILITIES",
+      "TYPE_MANUAL_SCORE_OVERRIDE",
+      "SILENTLY_COERCE_NOT_ASSESSABLE",
+      "WRITE_PRODUCTION"
+    ]
+  },
+  "inputs": {
+    "required_artifact_types": [
+      "EVIDENCE_LEDGER",
+      "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER",
+      "VALUATION_ASSUMPTION_INTEGRITY_ARTIFACT",
+      "VALUATION_ARTIFACT"
+    ],
+    "required_exact_references": true,
+    "required_stage_state": "IN_PROGRESS",
+    "required_contract_pins": true,
+    "data_cutoff_policy": "INHERIT_RUN_DATA_CUTOFF"
+  },
+  "dependencies": {
+    "module_ids": [
+      "VALUATION_ASSUMPTION_INTEGRITY"
+    ],
+    "dependency_mode": "ANALYST_IMPACT_JUDGMENT"
+  },
+  "execution": {
+    "status_authority": "DEEP_DIVE_BLOCK_LIFECYCLE",
+    "status_vocabulary": [
+      "INSUFFICIENT",
+      "IN_PROGRESS",
+      "PROVISIONALLY_STABLE",
+      "LOCKED"
+    ],
+    "can_parallelize": false,
+    "checkpoint_policy": "MODULE_ARTIFACT_ONLY",
+    "retry_policy": "IDEMPOTENT_SAME_REQUEST",
+    "fail_closed": true
+  },
+  "outputs": {
+    "artifact_types": [
+      "VALUATION_DIAGNOSTIC_INTEGRITY_ARTIFACT"
+    ],
+    "authority_class": "SUPPORTING_EXECUTION_ARTIFACT",
+    "persistence_required": true,
+    "hash_required": true
+  },
+  "uncertainty": {
+    "unknown_policy": "PRESERVE_EXPLICIT",
+    "not_applicable_policy": "REQUIRE_SEMANTIC_REASON",
+    "missing_policy": "PRESERVE_AND_BLOCK_WHEN_REQUIRED",
+    "assumption_policy": "EXPLICIT_TRACEABLE_NEVER_FABRICATE_TO_COMPLETE"
+  },
+  "recovery": {
+    "recoverable_failures": [
+      "MATURE_NORMALIZATION_INVALID",
+      "N_SELECTION_RULE_VIOLATION",
+      "REVERSE_DCF_UNDERDETERMINED",
+      "EXPECTED_RETURN_ARITHMETIC_INVALID",
+      "VALUATION_MATH_RECONCILIATION_FAILED",
+      "VALUATION_MONOTONICITY_FAILED",
+      "PRICE_LADDER_INCONSISTENT",
+      "SCHEMA_VALIDATION_FAILED"
+    ],
+    "reopen_triggers": [
+      "VALUATION_ASSUMPTIONS_CHANGED",
+      "VALUATION_CALCULATIONS_CHANGED",
+      "MATURE_NORMALIZATION_CHANGED",
+      "SAME_MULTIPLE_TEST_CHANGED",
+      "REVERSE_DCF_CHANGED",
+      "EXPECTED_RETURN_CHANGED",
+      "PRICE_LADDER_CHANGED",
+      "VALUATION_RELIABILITY_CHANGED"
+    ],
+    "recovery_action": "REOPEN_STAGE"
+  },
+  "environment": {
+    "allowed_environment": "VNEXT_SHADOW",
+    "allowed_supabase_project_ref": "awgsurdyvsyolcgpnygh",
+    "production_write_allowed": false
+  }
+}
