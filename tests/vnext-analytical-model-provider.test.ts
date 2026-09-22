@@ -383,3 +383,27 @@ test("Gate 13 provider contract is replaceable and not Azure-specific", async ()
   const result = await alternative.invokeStructured(request());
   assert.equal(result.providerId, "SYNTHETIC_ALTERNATIVE");
 });
+
+
+test("Gate 13 provider layer has no Registry, Supabase, state-machine or publication dependency", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { resolve } = await import("node:path");
+
+  for (const relativePath of [
+    "runtime/vnext/analytical-model-provider.ts",
+    "runtime/vnext/azure-provider.ts",
+  ]) {
+    const source = readFileSync(
+      resolve(process.cwd(), relativePath),
+      "utf8",
+    );
+
+    assert.doesNotMatch(source, /from\s+["'][^"']*supabase/i);
+    assert.doesNotMatch(source, /from\s+["'][^"']*state-machine/i);
+    assert.doesNotMatch(source, /from\s+["'][^"']*run-controller/i);
+    assert.doesNotMatch(source, /from\s+["'][^"']*post-stage/i);
+    assert.doesNotMatch(source, /from\s+["'][^"']*publication/i);
+    assert.doesNotMatch(source, /SUPABASE_SERVICE_ROLE_KEY/);
+    assert.doesNotMatch(source, /OROTITAN_PUBLICATION_ENABLED/);
+  }
+});
