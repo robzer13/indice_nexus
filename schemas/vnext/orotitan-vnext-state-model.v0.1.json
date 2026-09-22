@@ -129,5 +129,71 @@
     "expected_project_ref": "awgsurdyvsyolcgpnygh",
     "forbidden_project_ref": "cugpgtzygqqlxetyeven",
     "publication_enabled": false
+  },
+  "checkpoint": {
+    "allowed_target_lifecycle": [
+      "IN_PROGRESS",
+      "PAUSED",
+      "BLOCKED"
+    ],
+    "active_manifest_kind": "CHECKPOINT",
+    "run_status_by_target_lifecycle": {
+      "IN_PROGRESS": "ACTIVE",
+      "PAUSED": "PAUSED",
+      "BLOCKED": "BLOCKED"
+    }
+  },
+  "pause": {
+    "required_current_lifecycle": "IN_PROGRESS",
+    "required_active_manifest_kind": "CHECKPOINT",
+    "target_lifecycle": "PAUSED",
+    "target_run_status": "PAUSED"
+  },
+  "resume": {
+    "allowed_current_lifecycle": [
+      "PAUSED",
+      "BLOCKED"
+    ],
+    "required_active_manifest_kind": "CHECKPOINT",
+    "target_lifecycle": "IN_PROGRESS",
+    "target_run_status": "ACTIVE"
+  },
+  "reopen": {
+    "required_current_lifecycle": "COMPLETE",
+    "allowed_target_lifecycle": [
+      "IN_PROGRESS",
+      "BLOCKED"
+    ],
+    "stage_revision_increment": 1,
+    "handoff_after": "NOT_EVALUATED",
+    "active_manifest_after": null,
+    "completed_at_after": null,
+    "run_status_by_target_lifecycle": {
+      "IN_PROGRESS": "ACTIVE",
+      "BLOCKED": "BLOCKED"
+    },
+    "downstream_invalidation": {
+      "RESEARCH": [
+        "DEEP_DIVE",
+        "INTEGRATION"
+      ],
+      "DEEP_DIVE": [
+        "INTEGRATION"
+      ],
+      "INTEGRATION": []
+    },
+    "downstream_effect": {
+      "lifecycle": "BLOCKED",
+      "contract_status_code": "UPSTREAM_STAGE_REOPENED",
+      "handoff": "NOT_EVALUATED",
+      "active_manifest": null,
+      "completed_at": null,
+      "increment_revision_if_previously_complete": true
+    }
+  },
+  "publication_result": {
+    "SUCCEEDED": "PUBLISHED",
+    "FAILED_RECOVERABLE": "READY_TO_PUBLISH",
+    "FAILED_NON_RECOVERABLE": "BLOCKED"
   }
 }
