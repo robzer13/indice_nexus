@@ -131,3 +131,55 @@ test("Gate 12 package scripts keep unit, contract and PostgreSQL assurance wired
   assert.equal(packageJson.scripts?.typecheck, "tsc --noEmit");
   assert.match(packageJson.scripts?.lint ?? "", /--max-warnings=0/);
 });
+
+
+test("Gate 12 GitHub ruleset desired state blocks assurance bypass", () => {
+  const ruleset = JSON.parse(
+    readFileSync(
+      resolve(
+        process.cwd(),
+        "contracts/orotitan-equity/vnext/VNEXT_GITHUB_RULESET_DESIRED_STATE_V0.1.json",
+      ),
+      "utf8",
+    ),
+  ) as {
+    enforcement: string;
+    bypass_actors: unknown[];
+    target: { include: string[] };
+    rules: {
+      require_pull_request_before_merging: {
+        enabled: boolean;
+      };
+      require_status_checks_before_merging: {
+        enabled: boolean;
+        required_checks: string[];
+        require_branches_to_be_up_to_date: boolean;
+      };
+      block_force_pushes: boolean;
+      block_deletions: boolean;
+    };
+  };
+
+  assert.equal(ruleset.enforcement, "ACTIVE");
+  assert.deepEqual(ruleset.bypass_actors, []);
+  assert.deepEqual(ruleset.target.include, ["refs/heads/vnext"]);
+  assert.equal(
+    ruleset.rules.require_pull_request_before_merging.enabled,
+    true,
+  );
+  assert.equal(
+    ruleset.rules.require_status_checks_before_merging.enabled,
+    true,
+  );
+  assert.deepEqual(
+    ruleset.rules.require_status_checks_before_merging.required_checks,
+    ["verify-vnext"],
+  );
+  assert.equal(
+    ruleset.rules.require_status_checks_before_merging
+      .require_branches_to_be_up_to_date,
+    true,
+  );
+  assert.equal(ruleset.rules.block_force_pushes, true);
+  assert.equal(ruleset.rules.block_deletions, true);
+});
