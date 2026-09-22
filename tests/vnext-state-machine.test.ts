@@ -271,6 +271,21 @@ test("G6-22 active non-terminal runs permit stage mutation", () => {
   assert.doesNotThrow(() => assertStageMutable("BLOCKED"));
 });
 
+test("stage-specific handoff gate names are exact", () => {
+  assert.doesNotThrow(() =>
+    assertHandoffGateName("RESEARCH", "READY_FOR_DEEP_DIVE"),
+  );
+  assert.doesNotThrow(() =>
+    assertHandoffGateName("DEEP_DIVE", "READY_FOR_INTEGRATION"),
+  );
+  assert.doesNotThrow(() =>
+    assertHandoffGateName("INTEGRATION", "READY_TO_PUBLISH"),
+  );
+  assert.throws(() =>
+    assertHandoffGateName("RESEARCH", "READY_FOR_INTEGRATION"),
+  );
+});
+
 test("G6-25 machine-readable vocabulary matches runtime vocabulary", () => {
   const model = JSON.parse(
     readFileSync(
