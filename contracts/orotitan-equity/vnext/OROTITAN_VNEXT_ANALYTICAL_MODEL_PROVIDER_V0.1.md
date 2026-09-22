@@ -442,14 +442,16 @@ TARGET DEPLOYMENT TYPE      = Global Standard
 TARGET REGION               = Switzerland North
 CURRENT QUOTA BEFORE REQUEST= 0 kTPM
 REQUESTED TOTAL QUOTA       = 10 kTPM
-REQUEST STATUS              = SUBMITTED / PENDING MICROSOFT ALLOCATION
+REQUEST STATUS              = DENIED BY MICROSOFT QUOTA PROCESS
 ```
 
-Microsoft's quota-request confirmation states that requests are typically processed the next business day and may take up to two business days, with no guarantee of approval.
+Microsoft denied the Global Standard quota-increase request for the current subscription. The denial message directed Free Trial-class customers toward a Pay-As-You-Go upgrade path.
 
-This is an external-capacity dependency only. It does not change the Gate 13 provider contract, model-selection neutrality, or deterministic CI state.
+This is recorded as an external subscription/quota limitation, not an analytical-methodology failure. No subscription upgrade is authorized by this contract.
 
-If the request is denied or remains unavailable, Gate 13 may use another Azure model/deployment that satisfies the same capability probe. Such a substitution must be explicit and does not select that model as a permanent OroTitan routing winner.
+Gate 13 must now first probe whether any Azure OpenAI model already has non-zero preallocated Global Standard quota on the existing subscription. If one exists and satisfies the same Responses + strict structured-output capability probe, it may be used for the live smoke test. Such a substitution must be explicit and does not select that model as a permanent OroTitan routing winner.
+
+If no compatible Azure OpenAI deployment is available under the existing subscription, the Azure live-call acceptance items remain unavailable and the provider-neutral boundary must be validated through another authorized provider adapter rather than silently weakening the Gate.
 
 ## 14. Out of scope
 
