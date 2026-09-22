@@ -7,8 +7,10 @@ import {
   assertValidAnalyticalDepthConsumption,
   deriveMinimumAnalyticalDepth,
   resolveAnalyticalDepth,
+  type AnalyticalDepth,
   type AnalyticalDepthContext,
   type AnalyticalDepthConsumptionRecord,
+  type DepthTriggerCode,
 } from "../runtime/vnext/adaptive-analytical-depth";
 
 for (const fixture of fixtures.cases) {
@@ -16,7 +18,7 @@ for (const fixture of fixtures.cases) {
     const decision = resolveAnalyticalDepth(
       fixture.context as AnalyticalDepthContext,
       "requestedDepth" in fixture
-        ? fixture.requestedDepth
+        ? (fixture.requestedDepth as AnalyticalDepth)
         : undefined,
     );
 
@@ -41,7 +43,9 @@ for (const fixture of fixtures.cases) {
 
     if ("requiredTrigger" in fixture.expected) {
       assert.equal(
-        codes.includes(\n          fixture.expected.requiredTrigger as DepthTriggerCode,\n        ),
+        codes.includes(
+          fixture.expected.requiredTrigger as DepthTriggerCode,
+        ),
         true,
       );
     }
