@@ -1,7 +1,7 @@
 # OROTITAN_VNEXT_STATE_MODEL_V0.1
 
 **Project:** OroTitan Equity Research  
-**Status:** CANDIDATE FOR GATE 6  
+**Status:** FROZEN — GATE 6 PASS  
 **Methodology change:** NO  
 **Scope:** orchestration state, stage state, admission, reopening, publication boundary
 
@@ -693,3 +693,26 @@ G6-42 state-vector schema validates the eight dimensions
 ```
 
 Gate 6 is complete only when both the Registry state-machine tests and orthogonal state-model tests pass in VNext CI.
+
+
+---
+
+## 22. Gate 6 freeze record
+
+```text
+GATE                              = 6
+RESULT                            = PASS
+STATE_MACHINE_TESTS               = PASS
+ORTHOGONAL_STATE_TESTS            = PASS
+STATE_VECTOR_SCHEMA_TESTS         = PASS
+TYPECHECK                         = PASS
+POSTGRES_NON_REGRESSION           = PASS
+PRODUCTION_BUILD                  = PASS
+CI_RUN                            = 25
+CI_HEAD_SHA                       = d7e8fddd5de3f5de773d0e11f0d9047258206e54
+PRODUCTION_MUTATION               = NONE
+SHADOW_DB_MUTATION                = NONE
+PUBLICATION_AUTHORITY_CHANGE      = NONE
+```
+
+This V0.1 state model is frozen as the Gate 6 authority for subsequent VNext architecture work. Any semantic change requires a new version rather than silent modification.
