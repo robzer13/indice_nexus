@@ -29,6 +29,7 @@ export type StageState = {
   manifestKind: ManifestKind | null;
   stageRevision: number;
   criticalBlockerCount?: number;
+  contractStatusCode?: string | null;
 };
 
 export type ReadyToPublishGuards = {
@@ -39,7 +40,27 @@ export type ReadyToPublishGuards = {
   noPublicationBlocker: boolean;
 };
 
-const RUN_TRANSITIONS: Record<RunStatus, readonly RunStatus[]> = {
+export type PublishResult = "SUCCEEDED" | "FAILED";
+
+export const RUN_STATUSES: readonly RunStatus[] = [
+  "CREATED",
+  "ACTIVE",
+  "PAUSED",
+  "BLOCKED",
+  "READY_TO_PUBLISH",
+  "PUBLISHED",
+  "CANCELLED",
+];
+
+export const STAGE_LIFECYCLES: readonly StageLifecycle[] = [
+  "NOT_STARTED",
+  "IN_PROGRESS",
+  "PAUSED",
+  "BLOCKED",
+  "COMPLETE",
+];
+
+export const RUN_TRANSITIONS: Record<RunStatus, readonly RunStatus[]> = {
   CREATED: ["ACTIVE", "PAUSED", "BLOCKED", "CANCELLED"],
   ACTIVE: ["PAUSED", "BLOCKED", "READY_TO_PUBLISH", "CANCELLED"],
   PAUSED: ["ACTIVE", "BLOCKED", "CANCELLED"],
@@ -49,7 +70,7 @@ const RUN_TRANSITIONS: Record<RunStatus, readonly RunStatus[]> = {
   CANCELLED: [],
 };
 
-const NORMAL_STAGE_TRANSITIONS: Record<
+export const NORMAL_STAGE_TRANSITIONS: Record<
   StageLifecycle,
   readonly StageLifecycle[]
 > = {
@@ -230,6 +251,41 @@ export function assertPublicationAuthorized(
   }
 }
 
+export function assertPauseAllowed(stage: StageState): void {
+  if (stage.lifecycle !== "IN_PROGRESS") {
+    throw new Error(
+      `VNEXT_PAUSE_REQUIRES_IN_PROGRESS: ${stage.lifecycle}`,
+    );
+  }
+
+  if (stage.manifestKind !== "CHECKPOINT") {
+    throw new Error("VNEXT_PAUSE_REQUIRES_CHECKPOINT");
+  }
+}
+
+export function assertResumeAllowed(stage: StageState): void {
+  if (stage.lifecycle !== "PAUSED" && stage.lifecycle !== "BLOCKED") {
+    throw new Error(
+      `VNEXT_RESUME_REQUIRES_PAUSED_OR_BLOCKED: ${stage.lifecycle}`,
+    );
+  }
+
+  if (stage.manifestKind !== "CHECKPOINT") {
+    throw new Error("VNEXT_RESUME_REQUIRES_CHECKPOINT");
+  }
+}
+
+export function runStatusForCheckpoint(
+  targetLifecycle: Extract<
+    StageLifecycle,
+    "IN_PROGRESS" | "PAUSED" | "BLOCKED"
+  >,
+): Extract<RunStatus, "ACTIVE" | "PAUSED" | "BLOCKED"> {
+  if (targetLifecycle === "PAUSED") return "PAUSED";
+  if (targetLifecycle === "BLOCKED") return "BLOCKED";
+  return "ACTIVE";
+}
+
 export function nextReopenedStageState(
   prior: StageState,
   targetLifecycle: Extract<StageLifecycle, "IN_PROGRESS" | "BLOCKED">,
@@ -246,16 +302,51 @@ export function nextReopenedStageState(
     ...prior,
     lifecycle: targetLifecycle,
     handoff: "NOT_EVALUATED",
+    manifestKind: null,
     stageRevision: prior.stageRevision + 1,
+    criticalBlockerCount:
+      targetLifecycle === "BLOCKED"
+        ? Math.max(prior.criticalBlockerCount ?? 0, 1)
+        : 0,
+    contractStatusCode:
+      targetLifecycle === "BLOCKED" ? "REOPENED_BLOCKED" : null,
   };
 }
 
-export function runStatusAfterUpstreamReopen(status: RunStatus): RunStatus {
-  if (isTerminalRunStatus(status)) {
+export function downstreamStateAfterUpstreamReopen(
+  prior: StageState,
+): StageState {
+  return {
+    ...prior,
+    lifecycle: "BLOCKED",
+    handoff: "NOT_EVALUATED",
+    manifestKind: null,
+    stageRevision:
+      prior.lifecycle === "COMPLETE"
+        ? prior.stageRevision + 1
+        : prior.stageRevision,
+    criticalBlockerCount: Math.max(prior.criticalBlockerCount ?? 0, 1),
+    contractStatusCode: "UPSTREAM_STAGE_REOPENED",
+  };
+}
+
+export function runStatusAfterStageReopen(
+  currentStatus: RunStatus,
+  targetLifecycle: Extract<StageLifecycle, "IN_PROGRESS" | "BLOCKED">,
+): Extract<RunStatus, "ACTIVE" | "BLOCKED"> {
+  if (isTerminalRunStatus(currentStatus)) {
     throw new Error(
-      `VNEXT_TERMINAL_RUN_REOPEN_FORBIDDEN: ${status}`,
+      `VNEXT_TERMINAL_RUN_REOPEN_FORBIDDEN: ${currentStatus}`,
     );
   }
 
-  return status === "READY_TO_PUBLISH" ? "BLOCKED" : status;
+  return targetLifecycle === "BLOCKED" ? "BLOCKED" : "ACTIVE";
+}
+
+export function runStatusAfterPublishResult(
+  result: PublishResult,
+  recoverable: boolean,
+): Extract<RunStatus, "PUBLISHED" | "READY_TO_PUBLISH" | "BLOCKED"> {
+  if (result === "SUCCEEDED") return "PUBLISHED";
+  return recoverable ? "READY_TO_PUBLISH" : "BLOCKED";
 }
