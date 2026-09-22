@@ -6,6 +6,16 @@ export const AUDIT_CORPUS_VNEXT_V1_SIZE = 33 as const;
 const SHA256_PATTERN = /^[a-f0-9]{64}$/;
 const DATE_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
+const DIVERGENCE_KEYS = [
+  "CHANGE_ID",
+  "V2_STATE",
+  "VNEXT_STATE",
+  "CAUSE",
+  "MODULE",
+  "EVIDENCE",
+  "ECONOMIC_INTERPRETATION",
+] as const;
+
 export interface ProductionFingerprint {
   research_dossiers: number;
   research_snapshots: number;
@@ -400,6 +410,16 @@ function assertV2Baseline(
 function assertDivergence(
   change: ShadowDivergence,
 ): void {
+  const keys = Object.keys(change).sort();
+  const expectedKeys = [...DIVERGENCE_KEYS].sort();
+
+  if (
+    keys.length !== expectedKeys.length ||
+    keys.some((key, index) => key !== expectedKeys[index])
+  ) {
+    throw new Error("VNEXT_SHADOW_CHANGE_FIELD_SET_INVALID");
+  }
+
   assertNonBlank(
     change.CHANGE_ID,
     "VNEXT_SHADOW_CHANGE_ID_REQUIRED",
@@ -540,6 +560,20 @@ export async function runVNextShadowComparison<
   };
 }
 
+function fingerprintsEqual(
+  left: ProductionFingerprint,
+  right: ProductionFingerprint,
+): boolean {
+  return (
+    left.research_dossiers === right.research_dossiers &&
+    left.research_snapshots === right.research_snapshots &&
+    left.orotitan_runs === right.orotitan_runs &&
+    left.orotitan_artifacts === right.orotitan_artifacts &&
+    left.dossier_pointer_sha256 === right.dossier_pointer_sha256 &&
+    left.snapshots_sha256 === right.snapshots_sha256
+  );
+}
+
 export function assertProductionBaselineMatchesCorpus(
   manifest: AuditCorpusManifest,
   observed: ProductionFingerprint,
@@ -550,8 +584,10 @@ export function assertProductionBaselineMatchesCorpus(
   );
 
   if (
-    JSON.stringify(observed) !==
-    JSON.stringify(manifest.production_before_fingerprint)
+    !fingerprintsEqual(
+      observed,
+      manifest.production_before_fingerprint,
+    )
   ) {
     throw new Error(
       "VNEXT_SHADOW_PRODUCTION_BASELINE_DRIFT",
@@ -566,7 +602,7 @@ export function assertNoProductionMutation(
   assertFingerprint(before, "VNEXT_SHADOW_PRODUCTION_BEFORE");
   assertFingerprint(after, "VNEXT_SHADOW_PRODUCTION_AFTER");
 
-  if (JSON.stringify(before) !== JSON.stringify(after)) {
+  if (!fingerprintsEqual(before, after)) {
     throw new Error("VNEXT_SHADOW_PRODUCTION_POLLUTION_DETECTED");
   }
 }
