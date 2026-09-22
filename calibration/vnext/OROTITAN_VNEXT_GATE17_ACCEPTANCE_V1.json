@@ -1,0 +1,69 @@
+{
+  "format": "OROTITAN_VNEXT_GATE17_ACCEPTANCE_V1",
+  "version": "1.0.0",
+  "gate": 17,
+  "result": "PASS",
+  "observed_at_utc": "2026-09-22T19:19:18.066571Z",
+  "implementation": {
+    "pull_request": 62,
+    "implementation_head_sha": "a4e96aaef09a4c5139c06f372e959e6761b44b0c",
+    "implementation_merge_sha": "be916177ca8b921315d8132bc189774888b3f555",
+    "verify_vnext": "SUCCESS",
+    "verify_screener": "SUCCESS"
+  },
+  "corpus": {
+    "id": "AUDIT_CORPUS_VNEXT_V1",
+    "expected_members": 33,
+    "pinned_members": 33,
+    "live_source_runs_found": 33,
+    "issuer_matches": 33,
+    "data_cutoff_matches": 33,
+    "research_complete": 33,
+    "deep_dive_complete": 33,
+    "integration_complete": 33,
+    "runs_with_artifacts": 33,
+    "runs_with_research_artifacts": 33,
+    "runs_with_deep_dive_artifacts": 33
+  },
+  "runner_assurance": {
+    "exact_corpus_attempted": 33,
+    "exact_corpus_completed": 33,
+    "exact_corpus_failed": 0,
+    "deterministic_executor": true,
+    "synthetic_comparison_layer": true,
+    "anti_answer_leakage_order_tested": true,
+    "physical_model_calibration_executed": false,
+    "physical_model_calibration_gate": 18
+  },
+  "production_before": {
+    "research_dossiers": 48,
+    "research_snapshots": 34,
+    "orotitan_runs": 53,
+    "orotitan_artifacts": 2205,
+    "dossier_pointer_sha256": "af5d55f8000b8b336141fad27c91a3b5ab07c58a07e20bdd9dfa3d532fb63da8",
+    "snapshots_sha256": "43b04dddd9dc266681924e6096d00e87b7c0320120cf60af47df0bb65958a63d"
+  },
+  "production_after": {
+    "research_dossiers": 48,
+    "research_snapshots": 34,
+    "orotitan_runs": 53,
+    "orotitan_artifacts": 2205,
+    "dossier_pointer_sha256": "af5d55f8000b8b336141fad27c91a3b5ab07c58a07e20bdd9dfa3d532fb63da8",
+    "snapshots_sha256": "43b04dddd9dc266681924e6096d00e87b7c0320120cf60af47df0bb65958a63d"
+  },
+  "shadow_after": {
+    "project_ref": "awgsurdyvsyolcgpnygh",
+    "research_dossiers": 0,
+    "research_snapshots": 0,
+    "orotitan_runs": 0,
+    "orotitan_artifacts": 0
+  },
+  "invariants": {
+    "production_unchanged": true,
+    "canonical_snapshot_pointer_unchanged": true,
+    "production_registry_pollution": false,
+    "shadow_publication_authorized": false,
+    "methodology_change": false,
+    "real_model_comparison_claimed": false
+  }
+}
