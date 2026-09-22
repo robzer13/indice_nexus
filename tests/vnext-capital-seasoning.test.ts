@@ -9,6 +9,7 @@ import {
   deriveReturnEvidenceUse,
   deriveSupportedSeasoningState,
   evaluateCapitalSeasoning,
+  type CapitalCohortInput,
   type CapitalSeasoningInput,
 } from "../runtime/vnext/modules/capital-seasoning";
 import { assertValidModuleContract } from "../runtime/vnext/module-contract";
@@ -52,7 +53,7 @@ for (const fixture of fixtures.cases) {
 }
 
 test("state derivation uses operating evidence rather than an elapsed-time threshold", () => {
-  const cohort = fixtures.cases[1].input.cohorts[0] as any;
+  const cohort = fixtures.cases[1].input.cohorts[0] as CapitalCohortInput;
   assert.equal(deriveSupportedSeasoningState(cohort), "RAMPING");
 });
 
