@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/state-model-v0.1.schema.json",
+  "title": "OroTitan VNext State Model v0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "runtime_state",
+    "stage_state",
+    "analytical_state",
+    "evidence_state",
+    "valuation_reliability",
+    "price_condition",
+    "decision_state",
+    "audit_status"
+  ],
+  "properties": {
+    "runtime_state": {
+      "enum": [
+        "IDLE",
+        "READY",
+        "RUNNING",
+        "PAUSED",
+        "BLOCKED",
+        "RECOVERING",
+        "FAILED",
+        "COMPLETE"
+      ]
+    },
+    "stage_state": {
+      "enum": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "PAUSED",
+        "BLOCKED",
+        "COMPLETE"
+      ]
+    },
+    "analytical_state": {
+      "enum": [
+        "INSUFFICIENT",
+        "IN_PROGRESS",
+        "PROVISIONALLY_STABLE",
+        "LOCKED"
+      ]
+    },
+    "evidence_state": {
+      "enum": [
+        "UNKNOWN",
+        "SUFFICIENT",
+        "PARTIAL_BUT_DECISIONABLE",
+        "INSUFFICIENT",
+        "CONFLICTED"
+      ]
+    },
+    "valuation_reliability": {
+      "enum": [
+        "UNKNOWN",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "NOT_ASSESSABLE"
+      ]
+    },
+    "price_condition": {
+      "enum": [
+        "UNKNOWN",
+        "NOT_ASSESSABLE",
+        "ABOVE_REQUIRED_RETURN_PRICE",
+        "AT_OR_BELOW_REQUIRED_RETURN_PRICE",
+        "AT_OR_BELOW_STRONG_RETURN_PRICE",
+        "AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE"
+      ]
+    },
+    "decision_state": {
+      "enum": [
+        "UNKNOWN",
+        "INVESTABLE_NOW",
+        "WAIT_FOR_PRICE",
+        "WAIT_FOR_EVIDENCE",
+        "REFRESH_REQUIRED",
+        "REJECT"
+      ]
+    },
+    "audit_status": {
+      "enum": [
+        "NOT_RUN",
+        "IN_PROGRESS",
+        "PASS",
+        "FAIL",
+        "STALE"
+      ]
+    }
+  }
+}
