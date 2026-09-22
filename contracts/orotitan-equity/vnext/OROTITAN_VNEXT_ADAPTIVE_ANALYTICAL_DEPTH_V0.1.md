@@ -140,10 +140,9 @@ PROVIDER_REQUEST_IDS[]
 The trace validator requires:
 
 - selected depth matches the exact deterministic decision;
-- at least one exact trigger is recorded;
-- trigger codes belong to that exact decision;
+- the complete trigger set from that exact decision is recorded, with no omission, unauthorized code or duplicate;
 - second analyst is used only when eligible;
-- second analyst execution has a reconciliation artifact;
+- second analyst execution has a non-blank reconciliation artifact identifier;
 - no reconciliation artifact exists without a second-analyst execution.
 
 ## 6. Provider neutrality
@@ -232,7 +231,8 @@ manual deeper request traceability
 DEPTH_3 second-analyst eligibility
 mandatory reconciliation when second analyst runs
 trace/depth identity
-exact trigger provenance
+complete exact trigger provenance
+non-blank reconciliation identity
 provider neutrality
 no Azure dependency
 ```
