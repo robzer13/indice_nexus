@@ -370,10 +370,26 @@ export function assertValidAnalyticalDepthConsumption(
     );
   }
 
+  const recordedTriggerCodes = new Set(record.triggerCodes);
+
+  if (recordedTriggerCodes.size !== record.triggerCodes.length) {
+    throw new Error(
+      "VNEXT_DEPTH_TRACE_DUPLICATE_TRIGGER_CODE",
+    );
+  }
+
   for (const code of record.triggerCodes) {
     if (!decisionTriggerCodes.has(code)) {
       throw new Error(
         "VNEXT_DEPTH_TRACE_UNAUTHORIZED_TRIGGER_CODE",
+      );
+    }
+  }
+
+  for (const code of decisionTriggerCodes) {
+    if (!recordedTriggerCodes.has(code)) {
+      throw new Error(
+        "VNEXT_DEPTH_TRACE_MISSING_DECISION_TRIGGER",
       );
     }
   }
@@ -393,6 +409,16 @@ export function assertValidAnalyticalDepthConsumption(
   ) {
     throw new Error(
       "VNEXT_DEPTH_TRACE_RECONCILIATION_REQUIRED",
+    );
+  }
+
+  if (
+    record.secondAnalystExecuted &&
+    record.reconciliationArtifactId !== null
+  ) {
+    assertNonBlank(
+      record.reconciliationArtifactId,
+      "VNEXT_DEPTH_TRACE_RECONCILIATION_ARTIFACT_ID_REQUIRED",
     );
   }
 
