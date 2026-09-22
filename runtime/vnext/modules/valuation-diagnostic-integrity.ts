@@ -466,6 +466,11 @@ export function evaluateValuationDiagnosticIntegrity(
 
   if (selectedNBasis === "INVALID") {
     validationCodes.push("N_SELECTION_INVALID_FAIL_CLOSED");
+  } else if (
+    selectedNBasis === "NOT_ASSESSABLE" ||
+    selectedNBasis === "NOT_AVAILABLE"
+  ) {
+    limitations.push(`N_SELECTION_${selectedNBasis}`);
   }
 
   if (
