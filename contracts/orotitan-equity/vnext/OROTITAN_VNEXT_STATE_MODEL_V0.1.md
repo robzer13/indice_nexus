@@ -440,3 +440,256 @@ G6-29 non-recoverable publish failure becomes BLOCKED
 ```
 
 Gate 6 passes only when the machine-readable model and deterministic tests implement this contract without production mutation.
+
+
+---
+
+## 18. Orthogonal VNext state vector
+
+The Registry state machine above remains the persistent orchestration authority.
+
+VNext additionally exposes eight orthogonal state dimensions so that technical execution, analytical uncertainty, price conditions, decisions and assurance cannot collapse into one overloaded status:
+
+```text
+RUNTIME_STATE
+STAGE_STATE
+ANALYTICAL_STATE
+EVIDENCE_STATE
+VALUATION_RELIABILITY
+PRICE_CONDITION
+DECISION_STATE
+AUDIT_STATUS
+```
+
+These dimensions are not substitutes for the frozen V1 analytical contracts. They are a normalized VNext execution/read-model layer.
+
+### 18.1 RUNTIME_STATE
+
+```text
+IDLE
+READY
+RUNNING
+PAUSED
+BLOCKED
+RECOVERING
+FAILED
+COMPLETE
+```
+
+Legal transitions:
+
+```text
+IDLE       -> READY
+READY      -> RUNNING | BLOCKED
+RUNNING    -> PAUSED | BLOCKED | RECOVERING | FAILED | COMPLETE
+PAUSED     -> READY | RUNNING | BLOCKED
+BLOCKED    -> READY | RECOVERING | FAILED
+RECOVERING -> READY | RUNNING | BLOCKED | FAILED
+FAILED     -> RECOVERING
+COMPLETE   -> READY
+```
+
+This state is technical only. `RUNTIME_STATE = BLOCKED` never means `DECISION_STATE = REJECT`.
+
+### 18.2 STAGE_STATE
+
+This is an alias of the frozen stage lifecycle vocabulary:
+
+```text
+NOT_STARTED
+IN_PROGRESS
+PAUSED
+BLOCKED
+COMPLETE
+```
+
+Its legal transitions are exactly those in section 3. `COMPLETE -> IN_PROGRESS` requires controlled reopen.
+
+### 18.3 ANALYTICAL_STATE
+
+This preserves the frozen execution-metadata vocabulary for analytical blocks:
+
+```text
+INSUFFICIENT
+IN_PROGRESS
+PROVISIONALLY_STABLE
+LOCKED
+```
+
+Legal transitions:
+
+```text
+INSUFFICIENT         -> IN_PROGRESS
+IN_PROGRESS          -> INSUFFICIENT | PROVISIONALLY_STABLE | LOCKED
+PROVISIONALLY_STABLE -> INSUFFICIENT | IN_PROGRESS | LOCKED
+LOCKED               -> IN_PROGRESS | INSUFFICIENT only through controlled reopen
+```
+
+`LOCKED != CERTIFIED`.
+
+### 18.4 EVIDENCE_STATE
+
+```text
+UNKNOWN
+SUFFICIENT
+PARTIAL_BUT_DECISIONABLE
+INSUFFICIENT
+CONFLICTED
+```
+
+The four assessed values preserve the frozen Data Sufficiency vocabulary. `UNKNOWN` is a pre-evaluation sentinel only and is non-punitive.
+
+Any evidence state may move to any different evidence state when new evidence, contradiction, withdrawal, basis repair or point-in-time refresh changes the evidence set.
+
+### 18.5 VALUATION_RELIABILITY
+
+Canonical analytical values remain:
+
+```text
+HIGH
+MEDIUM
+LOW
+NOT_ASSESSABLE
+```
+
+VNext additionally permits:
+
+```text
+UNKNOWN
+```
+
+only as a pre-evaluation or explicitly invalidated execution sentinel. It is not a new V1 canonical valuation output.
+
+Legal transitions:
+
+```text
+UNKNOWN -> HIGH | MEDIUM | LOW | NOT_ASSESSABLE
+ASSESSED VALUE -> any different assessed value
+ASSESSED VALUE -> UNKNOWN only through explicit invalidation
+```
+
+A high-quality business may legitimately have `VALUATION_RELIABILITY = NOT_ASSESSABLE`.
+
+### 18.6 PRICE_CONDITION
+
+```text
+UNKNOWN
+NOT_ASSESSABLE
+ABOVE_REQUIRED_RETURN_PRICE
+AT_OR_BELOW_REQUIRED_RETURN_PRICE
+AT_OR_BELOW_STRONG_RETURN_PRICE
+AT_OR_BELOW_EXCEPTIONAL_RETURN_PRICE
+```
+
+This is a factual market-price-to-Price-Ladder state, not an investment recommendation.
+
+Any value may move to any different value when market price or a validated valuation ladder changes.
+
+If `VALUATION_RELIABILITY = NOT_ASSESSABLE`, a priced return-zone condition is invalid.
+
+### 18.7 DECISION_STATE
+
+VNext normalizes the frozen `NEXT_ACTION` vocabulary as:
+
+```text
+UNKNOWN
+INVESTABLE_NOW
+WAIT_FOR_PRICE
+WAIT_FOR_EVIDENCE
+REFRESH_REQUIRED
+REJECT
+```
+
+`UNKNOWN` is a pre-decision sentinel only.
+
+All non-REJECT decisions may be revised when validated evidence, valuation, price or refresh state changes.
+
+`REJECT` retains causal memory. It may transition only to `REFRESH_REQUIRED`, and only when the frozen rejection-reopen doctrine is satisfied:
+
+```text
+REVERSIBILITY = YES
++
+NEW MATERIAL EVIDENCE
+DIRECTLY ADDRESSES
+REJECTION_REASON
+```
+
+Direct `REJECT -> INVESTABLE_NOW` is illegal.
+
+### 18.8 AUDIT_STATUS
+
+```text
+NOT_RUN
+IN_PROGRESS
+PASS
+FAIL
+STALE
+```
+
+Legal transitions:
+
+```text
+NOT_RUN     -> IN_PROGRESS
+IN_PROGRESS -> PASS | FAIL
+PASS        -> STALE
+FAIL        -> IN_PROGRESS
+STALE       -> IN_PROGRESS
+```
+
+Audit status is deterministic assurance metadata. It is not Certification and not business quality.
+
+## 19. Cross-state invariants
+
+The following invariants are deterministic in VNext v0.1:
+
+1. Technical blockage does not imply analytical rejection.
+2. Evidence `UNKNOWN`, `INSUFFICIENT` or `CONFLICTED` is not a business-quality penalty.
+3. `VALUATION_RELIABILITY = NOT_ASSESSABLE` does not imply weak business quality.
+4. `INVESTABLE_NOW` requires decisionable evidence, assessable valuation and price support at or below an applicable return threshold.
+5. Price alone cannot repair a causal `REJECT`.
+6. `AUDIT_STATUS = PASS` does not mean Certification.
+7. `ANALYTICAL_STATE = LOCKED` does not mean Certification.
+8. Any guarded reopen is explicit and testable.
+9. No state dimension is inferred from chat memory.
+10. No VNext state authorizes production publication while shadow mode is active.
+
+## 20. Machine-readable implementation
+
+```text
+runtime/vnext/state-machine.ts
+  -> frozen Registry/run/stage transition model
+
+runtime/vnext/state-model.ts
+  -> orthogonal eight-domain VNext state vector
+
+schemas/vnext/state-model-v0.1.schema.json
+  -> machine-readable state-vector vocabulary
+
+tests/vnext-state-machine.test.ts
+  -> Registry/run/stage deterministic transition tests
+
+tests/vnext-state-model.test.ts
+  -> orthogonal state-domain transition and invariant tests
+```
+
+## 21. Gate 6 extended acceptance matrix
+
+In addition to G6-01 through G6-29:
+
+```text
+G6-30 eight orthogonal state domains exist
+G6-31 runtime blockage is independent from investment decision
+G6-32 frozen stage lifecycle is preserved exactly
+G6-33 frozen analytical execution states are preserved exactly
+G6-34 UNKNOWN evidence is non-punitive
+G6-35 evidence sufficiency may improve or deteriorate
+G6-36 valuation reliability preserves HIGH / MEDIUM / LOW / NOT_ASSESSABLE
+G6-37 valuation UNKNOWN is execution-only and requires explicit invalidation after assessment
+G6-38 price condition is separate from decision state
+G6-39 REJECT causal reopen requires explicit authorization
+G6-40 audit PASS must become STALE before rerun
+G6-41 INVESTABLE_NOW cross-state prerequisites are deterministically validated
+G6-42 state-vector schema validates the eight dimensions
+```
+
+Gate 6 is complete only when both the Registry state-machine tests and orthogonal state-model tests pass in VNext CI.
