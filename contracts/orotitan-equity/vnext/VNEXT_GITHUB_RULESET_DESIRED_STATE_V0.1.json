@@ -1,0 +1,35 @@
+{
+  "spec_version": "0.1.0",
+  "name": "OroTitan VNext Deterministic Assurance",
+  "target": {
+    "type": "branch",
+    "include": [
+      "refs/heads/vnext"
+    ],
+    "exclude": []
+  },
+  "enforcement": "ACTIVE",
+  "bypass_actors": [],
+  "rules": {
+    "require_pull_request_before_merging": {
+      "enabled": true,
+      "required_approving_review_count": 0
+    },
+    "require_status_checks_before_merging": {
+      "enabled": true,
+      "required_checks": [
+        "verify-vnext"
+      ],
+      "require_branches_to_be_up_to_date": true
+    },
+    "block_force_pushes": true,
+    "block_deletions": true
+  },
+  "rationale": [
+    "No change may enter vnext without a pull request.",
+    "The verify-vnext deterministic assurance job must pass before merge.",
+    "The PR head must be tested against an up-to-date vnext base.",
+    "History protection forbids force pushes and branch deletion.",
+    "No bypass actor is part of the VNext desired state."
+  ]
+}
