@@ -144,7 +144,7 @@ USED_IN
 
 Assumption IDs are unique and exact.
 
-Critical material assumptions may not remain epistemically UNKNOWN at finalization.
+Critical material assumptions may remain epistemically `UNKNOWN` only as an explicit limitation. They may not be fabricated into a point/range or silently converted to fact; downstream valuation certification must treat the unresolved critical input accordingly.
 
 ## 12. Assumption leakage / placeholders
 
@@ -248,6 +248,7 @@ P0-7-15 causal scenarios / no unsupported default probabilities PASS
 P0-7-16 Material Assumption Register identity                   PASS
 P0-7-17 assumption leakage blocked                              PASS
 P0-7-18 critical placeholders blocked                           PASS
+P0-7-18A critical assumption UNKNOWN preserved explicitly       PASS
 P0-7-19 no valuation-score/reliability authority                PASS
 P0-7-20 no provider/Azure dependency                            PASS
 P0-7-21 deterministic CI                                        PENDING
