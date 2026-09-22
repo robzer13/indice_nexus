@@ -34,7 +34,8 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Validate VNext baseline manifest
-        run: node -e "JSON.parse(require('fs').readFileSync('contracts/orotitan-equity/vnext/VNEXT_SHADOW_BASELINE_MANIFEST_V0.1.json','utf8')); console.log('VNext manifest JSON: PASS')"
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('contracts/orotitan-equity/vnext/VNEXT_SHADOW_BASELINE_MANIFEST_V0.1.json','utf8')); console.log('VNext manifest JSON: PASS')"
 
       - name: Lint
         run: npm run lint
