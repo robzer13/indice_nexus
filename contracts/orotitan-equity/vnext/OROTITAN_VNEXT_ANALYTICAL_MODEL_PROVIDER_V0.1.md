@@ -123,10 +123,10 @@ Passing Gate 13 with one Azure deployment does **not** select that physical mode
 The broadened calibration universe is versioned separately at:
 
 ```text
-calibration/vnext/OROTITAN_MODEL_CANDIDATE_UNIVERSE_V0.1.md
+calibration/vnext/OROTITAN_MODEL_ROUTING_ARCHITECTURE_V0.2.md
 ```
 
-That candidate universe includes multiple provider families and functional tiers. Physical model selection is explicitly deferred to later OroTitan calibration.
+That v0.2 candidate architecture defines the expanded multi-provider competition, functional tiers, routing inputs, budget-governor semantics, error taxonomy and benchmark protocol. Physical model selection is explicitly deferred to later OroTitan calibration.
 
 For Gate 13:
 
