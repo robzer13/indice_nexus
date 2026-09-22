@@ -114,6 +114,31 @@ The key is accepted only from server-side environment configuration.
 
 No key is returned in receipts or successful output.
 
+
+
+## 2.1 Model-selection neutrality
+
+Passing Gate 13 with one Azure deployment does **not** select that physical model as the permanent OroTitan analytical model.
+
+The broadened calibration universe is versioned separately at:
+
+```text
+calibration/vnext/OROTITAN_MODEL_CANDIDATE_UNIVERSE_V0.1.md
+```
+
+That candidate universe includes multiple provider families and functional tiers. Physical model selection is explicitly deferred to later OroTitan calibration.
+
+For Gate 13:
+
+```text
+LIVE AZURE MODEL
+= ADAPTER / CAPABILITY PROOF
+!= ROUTING POLICY FREEZE
+!= BEST-MODEL DECLARATION
+```
+
+GPT-5.6 Sol High may serve as a reference-quality baseline for difficult reasoning modules, but Gate 13 does not declare it ground truth or the permanent winner.
+
 ## 3. Strict structured output
 
 Every Azure analytical call in this adapter uses:
@@ -380,7 +405,7 @@ G13-21 live cost receipt traceable                     PENDING
 
 ## 13. Gate condition
 
-Gate 13 remains pending until one real Azure deployment call is executed with a model actually available to the user's Azure subscription.
+Gate 13 remains pending until one real Azure deployment call is executed with a model actually available to the user's Azure subscription. The model used for this smoke test is a capability probe only; permanent model routing remains outside Gate 13.
 
 The live evidence must show:
 
