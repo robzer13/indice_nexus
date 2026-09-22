@@ -1,0 +1,99 @@
+{
+  "module_contract_schema_version": "0.1.0",
+  "module_id": "DECISION_STATE_ARCHITECTURE",
+  "module_version": "0.1.0",
+  "module_kind": "ANALYTICAL",
+  "stage_code": "DEEP_DIVE",
+  "purpose": "Validate and transmit the canonical NEXT_ACTION decision state without inventing new decision methodology or allowing a deterministic engine to replace analyst judgment.",
+  "authority": {
+    "reads": [
+      "CERTIFICATION_STATE",
+      "VALUATION_STATE",
+      "DOSSIER_READINESS_STATE",
+      "PRICE_LADDER_STATE",
+      "EVIDENCE_STATE",
+      "THESIS_INVALIDATION_STATE"
+    ],
+    "writes": [
+      "DECISION_STATE_ARCHITECTURE_ARTIFACT"
+    ],
+    "judgment_authority": true,
+    "deterministic_authority": true,
+    "forbidden_actions": [
+      "CHANGE_CANONICAL_NEXT_ACTION_VOCABULARY",
+      "DERIVE_INVESTMENT_DECISION_FROM_SCORE_ALONE",
+      "DERIVE_OROTITAN_STATUS",
+      "OVERRIDE_CERTIFICATION",
+      "OVERRIDE_INVESTMENT_POLICY",
+      "SILENTLY_COERCE_UNKNOWN",
+      "INVENT_DECISION_PRIORITY_WHEN_MULTIPLE_STATES_REMAIN_PLAUSIBLE",
+      "WRITE_PRODUCTION"
+    ]
+  },
+  "inputs": {
+    "required_artifact_types": [
+      "CERTIFICATION_STATE",
+      "VALUATION_STATE",
+      "DOSSIER_READINESS_STATE",
+      "EVIDENCE_STATE"
+    ],
+    "required_exact_references": true,
+    "required_stage_state": "IN_PROGRESS",
+    "required_contract_pins": true,
+    "data_cutoff_policy": "INHERIT_RUN_DATA_CUTOFF"
+  },
+  "dependencies": {
+    "module_ids": [
+      "WEAK_LINK_TAXONOMY"
+    ],
+    "dependency_mode": "ANALYST_IMPACT_JUDGMENT"
+  },
+  "execution": {
+    "status_authority": "DEEP_DIVE_BLOCK_LIFECYCLE",
+    "status_vocabulary": [
+      "INSUFFICIENT",
+      "IN_PROGRESS",
+      "PROVISIONALLY_STABLE",
+      "LOCKED"
+    ],
+    "can_parallelize": false,
+    "checkpoint_policy": "MODULE_ARTIFACT_ONLY",
+    "retry_policy": "IDEMPOTENT_SAME_REQUEST",
+    "fail_closed": true
+  },
+  "outputs": {
+    "artifact_types": [
+      "DECISION_STATE_ARCHITECTURE_ARTIFACT"
+    ],
+    "authority_class": "SUPPORTING_EXECUTION_ARTIFACT",
+    "persistence_required": true,
+    "hash_required": true
+  },
+  "uncertainty": {
+    "unknown_policy": "PRESERVE_EXPLICIT",
+    "not_applicable_policy": "REQUIRE_SEMANTIC_REASON",
+    "missing_policy": "PRESERVE_AND_BLOCK_WHEN_REQUIRED",
+    "assumption_policy": "EXPLICIT_TRACEABLE_NEVER_FABRICATE_TO_COMPLETE"
+  },
+  "recovery": {
+    "recoverable_failures": [
+      "MISSING_EXACT_REFERENCE",
+      "DECISION_BASIS_INCOMPLETE",
+      "SCHEMA_VALIDATION_FAILED"
+    ],
+    "reopen_triggers": [
+      "CERTIFICATION_CHANGED",
+      "VALUATION_CHANGED",
+      "PRICE_LADDER_CHANGED",
+      "MATERIAL_EVIDENCE_CHANGED",
+      "THESIS_INVALIDATION_CHANGED",
+      "WEAK_LINK_CHANGED"
+    ],
+    "recovery_action": "REOPEN_STAGE"
+  },
+  "environment": {
+    "allowed_environment": "VNEXT_SHADOW",
+    "allowed_supabase_project_ref": "awgsurdyvsyolcgpnygh",
+    "production_write_allowed": false
+  }
+}
