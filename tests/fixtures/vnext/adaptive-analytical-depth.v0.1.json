@@ -1,0 +1,180 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "simple-depth-1",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_1",
+        "selectedDepth": "DEPTH_1",
+        "triggerCodes": [
+          "BASELINE_SIMPLE"
+        ],
+        "secondAnalystEligible": false
+      }
+    },
+    {
+      "id": "significant-uncertainty-depth-2",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "MEDIUM",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 2,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "MEDIUM",
+        "decisionBoundarySensitivity": "MEDIUM",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_2",
+        "selectedDepth": "DEPTH_2",
+        "triggerCodes": [
+          "SIGNIFICANT_UNCERTAINTY",
+          "EXECUTION_CONFIDENCE_MEDIUM",
+          "DECISION_BOUNDARY_MEDIUM_SENSITIVITY"
+        ],
+        "secondAnalystEligible": false
+      }
+    },
+    {
+      "id": "material-weak-link-depth-3",
+      "context": {
+        "materialWeakLink": "YES",
+        "weakLinkUnresolved": true,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 1,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_3",
+        "selectedDepth": "DEPTH_3",
+        "requiredTrigger": "MATERIAL_WEAK_LINK",
+        "secondAnalystEligible": true
+      }
+    },
+    {
+      "id": "marginal-return-uncertain-depth-3",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": true,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_3",
+        "selectedDepth": "DEPTH_3",
+        "requiredTrigger": "MARGINAL_RETURN_UNCERTAIN",
+        "secondAnalystEligible": true
+      }
+    },
+    {
+      "id": "low-valuation-reliability-depth-3",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "LOW",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_3",
+        "selectedDepth": "DEPTH_3",
+        "requiredTrigger": "VALUATION_RELIABILITY_LOW",
+        "secondAnalystEligible": true
+      }
+    },
+    {
+      "id": "material-conflict-depth-3",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 1,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_3",
+        "selectedDepth": "DEPTH_3",
+        "requiredTrigger": "MATERIAL_SOURCE_CONFLICT",
+        "secondAnalystEligible": true
+      }
+    },
+    {
+      "id": "decision-boundary-depth-3",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "HIGH",
+        "materialCounterevidenceRisk": true
+      },
+      "expected": {
+        "minimumDepth": "DEPTH_3",
+        "selectedDepth": "DEPTH_3",
+        "requiredTrigger": "DECISION_BOUNDARY_HIGH_SENSITIVITY",
+        "secondAnalystEligible": true
+      }
+    },
+    {
+      "id": "manual-deeper-request",
+      "context": {
+        "materialWeakLink": "NO",
+        "weakLinkUnresolved": false,
+        "marginalReturnUncertain": false,
+        "valuationReliability": "HIGH",
+        "materialSourceConflictCount": 0,
+        "significantUncertaintyCount": 0,
+        "criticalUnknownCount": 0,
+        "executionConfidence": "HIGH",
+        "decisionBoundarySensitivity": "LOW",
+        "materialCounterevidenceRisk": false
+      },
+      "requestedDepth": "DEPTH_2",
+      "expected": {
+        "minimumDepth": "DEPTH_1",
+        "selectedDepth": "DEPTH_2",
+        "requiredTrigger": "MANUAL_DEEPER_REQUEST",
+        "secondAnalystEligible": false
+      }
+    }
+  ]
+}
