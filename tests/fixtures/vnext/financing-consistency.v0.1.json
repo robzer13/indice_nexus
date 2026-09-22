@@ -1,0 +1,1846 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "clean-financing-bridge",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Financing sources, cash uses, debt, leases and shareholder distributions reconcile without unsupported funding assumptions."
+      },
+      "expected": {
+        "finalizable": true,
+        "validationCodes": [],
+        "limitations": []
+      }
+    },
+    {
+      "id": "supplier-finance-debt-like-reconciliation",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "YES",
+          "rationale": "Supplier finance is material and has financing substance.",
+          "evidenceIds": [
+            "E-SF-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "NO",
+          "rationale": "Debt-like supplier-finance obligations are still embedded in operating payables without consistent CFO/EV treatment.",
+          "evidenceIds": [
+            "E-SF-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material supplier finance is not reconciled as debt-like financing."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_SUPPLIER_FINANCE_REQUIRES_DEBT_LIKE_RECONCILIATION"
+      }
+    },
+    {
+      "id": "factoring-financing-transfer",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "YES",
+          "rationale": "Receivable sales are material.",
+          "evidenceIds": [
+            "E-FAC-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "NO",
+          "rationale": "The CFO benefit from receivable sales is not reconciled as a financing transfer.",
+          "evidenceIds": [
+            "E-FAC-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material factoring inflates CFO without financing-transfer reconciliation."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_FACTORING_REQUIRES_FINANCING_TRANSFER_RECONCILIATION"
+      }
+    },
+    {
+      "id": "lease-treatment-asymmetry",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "NO",
+          "rationale": "Lease principal/cash treatment is inconsistent with ROIC and EV conventions.",
+          "evidenceIds": [
+            "E-LEASE-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material lease treatment is asymmetric across cash, ROIC and EV."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_LEASES_REQUIRE_CASH_ROIC_EV_CONSISTENCY"
+      }
+    },
+    {
+      "id": "buyback-without-funding-bridge",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "NO",
+          "rationale": "Planned buybacks exceed demonstrated economically available cash and lack a funding bridge.",
+          "evidenceIds": [
+            "E-BB-NO-FUND"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "NO",
+          "rationale": "Gross repurchases are not reconciled to net share-count change.",
+          "evidenceIds": [
+            "E-BB-NO-SHARES"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Buybacks are assumed without a valid financing or share-count bridge."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "BUYBACKS_REQUIRE_FINANCING_BRIDGE",
+          "BUYBACKS_REQUIRE_SHARE_COUNT_RECONCILIATION"
+        ]
+      }
+    },
+    {
+      "id": "dividend-retained-capital-conflict",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "NO",
+          "rationale": "Distributions conflict with required reinvestment and retained-capital needs.",
+          "evidenceIds": [
+            "E-DIV-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Dividend assumptions are inconsistent with retained-capital requirements."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "DIVIDENDS_MUST_RECONCILE_WITH_RETAINED_CAPITAL_NEEDS"
+      }
+    },
+    {
+      "id": "acquisition-funding-unresolved",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "YES",
+          "rationale": "Acquisition funding is material.",
+          "evidenceIds": [
+            "E-ACQF-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "UNKNOWN",
+          "rationale": "Funding mix between cash, debt and equity is not yet resolved.",
+          "evidenceIds": [
+            "E-ACQF-UNK"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material acquisition funding lacks a resolved financing bridge."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_ACQUISITION_FUNDING_REQUIRES_BRIDGE"
+      }
+    },
+    {
+      "id": "equity-issuance-share-count",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "YES",
+          "rationale": "Equity issuance is material.",
+          "evidenceIds": [
+            "E-EQ-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "NO",
+          "rationale": "Issued shares are omitted from the economic share-count bridge.",
+          "evidenceIds": [
+            "E-EQ-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material equity financing is not reflected in economic shares."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_EQUITY_ISSUANCE_REQUIRES_ECONOMIC_SHARE_RECONCILIATION"
+      }
+    },
+    {
+      "id": "supplier-finance-materiality-unknown",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "UNKNOWN",
+          "rationale": "Supplier-finance materiality cannot yet be determined from disclosed payable detail.",
+          "evidenceIds": [
+            "E-SF-UNK"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Supplier-finance materiality remains explicit UNKNOWN while the rest of the financing bridge reconciles."
+      },
+      "expected": {
+        "finalizable": true,
+        "containsLimitation": "SUPPLIER_FINANCE_MATERIALITY_UNKNOWN"
+      }
+    },
+    {
+      "id": "asset-sale-operating-cash-misclassification",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "YES",
+          "rationale": "FCF generated, financing sources and capital uses reconcile across the multi-year cash bridge.",
+          "evidenceIds": [
+            "E-FIN-BRIDGE"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "YES",
+          "rationale": "Asset-sale proceeds are material.",
+          "evidenceIds": [
+            "E-AS-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "NO",
+          "rationale": "Material asset-sale proceeds are included in recurring operating cash generation.",
+          "evidenceIds": [
+            "E-AS-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "Material asset sales are misclassified as operating cash."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_ASSET_SALES_MUST_REMAIN_SEPARATE_FROM_OPERATING_CASH"
+      }
+    },
+    {
+      "id": "capital-allocation-cash-bridge-failure",
+      "input": {
+        "capitalAllocationCashBridgeReconciled": {
+          "state": "NO",
+          "rationale": "Sources and uses do not reconcile across FCF, financing and capital deployment.",
+          "evidenceIds": [
+            "E-BRIDGE-BAD"
+          ],
+          "assumptionIds": []
+        },
+        "netCashDebtBridgeReconciled": {
+          "state": "YES",
+          "rationale": "Opening and closing net cash/debt reconcile with debt issuance, repayment and cash movement.",
+          "evidenceIds": [
+            "E-FIN-NETDEBT"
+          ],
+          "assumptionIds": []
+        },
+        "debtFundingMaterial": {
+          "state": "YES",
+          "rationale": "Debt funding is material.",
+          "evidenceIds": [
+            "E-FIN-DEBT-M"
+          ],
+          "assumptionIds": []
+        },
+        "debtCashInterestEvTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Debt, cash interest and EV treatment are consistent.",
+          "evidenceIds": [
+            "E-FIN-DEBT-R"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceMaterial": {
+          "state": "NO",
+          "rationale": "Equity issuance is not material.",
+          "evidenceIds": [
+            "E-FIN-EQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "equityIssuanceReflectedInEconomicShares": {
+          "state": "YES",
+          "rationale": "Any equity issuance is reflected in economic shares.",
+          "evidenceIds": [
+            "E-FIN-EQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceMaterial": {
+          "state": "NO",
+          "rationale": "Supplier finance is not material.",
+          "evidenceIds": [
+            "E-FIN-SF-M"
+          ],
+          "assumptionIds": []
+        },
+        "supplierFinanceDebtLikeTreatmentReconciled": {
+          "state": "YES",
+          "rationale": "Supplier-finance review is reconciled consistently.",
+          "evidenceIds": [
+            "E-FIN-SF-R"
+          ],
+          "assumptionIds": []
+        },
+        "factoringMaterial": {
+          "state": "NO",
+          "rationale": "Factoring is not material.",
+          "evidenceIds": [
+            "E-FIN-FAC-M"
+          ],
+          "assumptionIds": []
+        },
+        "factoringFinancingTransferReconciled": {
+          "state": "YES",
+          "rationale": "Factoring review does not identify unreconciled financing transfer.",
+          "evidenceIds": [
+            "E-FIN-FAC-R"
+          ],
+          "assumptionIds": []
+        },
+        "leasesMaterial": {
+          "state": "YES",
+          "rationale": "Lease obligations are material.",
+          "evidenceIds": [
+            "E-FIN-LEASE-M"
+          ],
+          "assumptionIds": []
+        },
+        "leaseCashRoicEvTreatmentConsistent": {
+          "state": "YES",
+          "rationale": "Lease cash, ROIC and EV treatments are symmetric.",
+          "evidenceIds": [
+            "E-FIN-LEASE-R"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition funding is not material.",
+          "evidenceIds": [
+            "E-FIN-ACQ-M"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Any acquisition funding is reconciled.",
+          "evidenceIds": [
+            "E-FIN-ACQ-R"
+          ],
+          "assumptionIds": []
+        },
+        "buybacksAssumedOrExecuted": true,
+        "buybackFundingBridgeEstablished": {
+          "state": "YES",
+          "rationale": "Buybacks are funded by economically available cash within the financing bridge.",
+          "evidenceIds": [
+            "E-FIN-BB-F"
+          ],
+          "assumptionIds": []
+        },
+        "buybackShareCountEffectReconciled": {
+          "state": "YES",
+          "rationale": "Repurchases reconcile to net economic share-count change.",
+          "evidenceIds": [
+            "E-FIN-BB-S"
+          ],
+          "assumptionIds": []
+        },
+        "dividendsAssumedOrExecuted": true,
+        "dividendsConsistentWithRetainedCapitalNeeds": {
+          "state": "YES",
+          "rationale": "Dividends remain consistent with required retained capital and reinvestment.",
+          "evidenceIds": [
+            "E-FIN-DIV"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesMaterial": {
+          "state": "NO",
+          "rationale": "Asset sales are not material.",
+          "evidenceIds": [
+            "E-FIN-AS-M"
+          ],
+          "assumptionIds": []
+        },
+        "assetSalesKeptSeparateFromOperatingCash": {
+          "state": "YES",
+          "rationale": "Any asset-sale proceeds remain outside operating cash generation.",
+          "evidenceIds": [
+            "E-FIN-AS-R"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-FIN-1"
+        ],
+        "rationale": "The capital-allocation cash bridge does not reconcile."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "CAPITAL_ALLOCATION_CASH_BRIDGE_MUST_RECONCILE"
+      }
+    }
+  ]
+}
