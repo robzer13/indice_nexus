@@ -251,15 +251,6 @@ function validateMaterialAssumptions(
     }
 
     if (
-      assumption.epistemicType === "UNKNOWN" &&
-      assumption.isCritical
-    ) {
-      validationCodes.push(
-        "CRITICAL_MATERIAL_ASSUMPTION_CANNOT_REMAIN_UNKNOWN",
-      );
-    }
-
-    if (
       containsPlaceholder(assumption.valueOrRange) ||
       containsPlaceholder(assumption.sourceOrRationale)
     ) {
@@ -331,7 +322,13 @@ export function evaluateValuationAssumptionIntegrity(
   const validationCodes = validateMaterialAssumptions(
     input.materialAssumptions,
   );
-  const limitations: string[] = [];
+  const limitations: string[] = input.materialAssumptions
+    .filter(
+      (assumption) =>
+        assumption.epistemicType === "UNKNOWN" &&
+        assumption.isCritical,
+    )
+    .map(() => "CRITICAL_MATERIAL_ASSUMPTION_UNKNOWN");
 
   if (
     input.cashFlowBasis === "FCFF" &&
