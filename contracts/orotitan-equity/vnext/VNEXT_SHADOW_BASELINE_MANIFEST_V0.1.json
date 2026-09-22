@@ -1,0 +1,154 @@
+{
+  "format": "OROTITAN_VNEXT_SHADOW_BASELINE_MANIFEST_V0_1",
+  "status": "FROZEN_SHADOW_BASELINE",
+  "frozen_at_date": "2026-09-22",
+  "repository": "robzer13/indice_nexus",
+  "production_freeze": {
+    "tag": "orotitan-production-pre-vnext-2026-09-22",
+    "commit_sha": "5442172d98b19078e2c46d187b697efbbedfae73",
+    "production_supabase_project_ref": "cugpgtzygqqlxetyeven",
+    "production_project_name": "orotitan-screener",
+    "production_region": "eu-west-3",
+    "published_canonical_dossiers": 33,
+    "v2_canonical_snapshots": 33,
+    "active_runtime": "V3.0.2",
+    "active_runtime_contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
+    "v2_contract_set_sha256": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e"
+  },
+  "shadow": {
+    "branch": "vnext",
+    "supabase_project_ref": "awgsurdyvsyolcgpnygh",
+    "project_name": "orotitan-vnext-shadow",
+    "region": "eu-west-3",
+    "data_policy": "EMPTY_NO_PRODUCTION_ROWS",
+    "public_table_count": 14,
+    "public_function_count": 40,
+    "public_view_count": 2,
+    "public_trigger_count": 16,
+    "structural_fingerprint": {
+      "columns_md5": "e793565aa952adc7fefb32c2f45fc4c8",
+      "constraints_md5": "15f7965425079f787b970df7f81579c9",
+      "indexes_md5": "80ab7179b4e1815ed264b554a2907d5e",
+      "functions_normalized_lf_md5": "3a65df8ca8a407de54383657553ba85d",
+      "views_md5": "d891eda4d4971a64d9ef354a4b50e4c8",
+      "triggers_md5": "e8a0b0b08c9495385d10f1321b6b537a",
+      "rls_md5": "817383608a66195f7e398a57d671822e",
+      "runtime_role_privileges_md5": "cf6922d03f282f8e85f7016102a0f5ff"
+    },
+    "production_structural_parity": "PASS",
+    "security_advisor_baseline": {
+      "rls_enabled_no_policy": 14,
+      "mutable_search_path_legacy_functions": [
+        "set_companies_updated_at",
+        "reject_snapshot_mutation",
+        "reject_market_sync_run_mutation"
+      ]
+    },
+    "row_counts": {
+      "companies": 0,
+      "issuers": 0,
+      "securities": 0,
+      "research_dossiers": 0,
+      "research_snapshots": 0,
+      "orotitan_runs": 0,
+      "orotitan_run_stages": 0,
+      "orotitan_artifacts": 0,
+      "orotitan_artifact_edges": 0,
+      "orotitan_run_events": 0
+    }
+  },
+  "bootstrap_exceptions": [
+    {
+      "source": "migrations/20260912_orotitan_equity_i4a_identity_completion.sql",
+      "source_blob_sha": "955ffcb405d2df9f4d05aaa552cb946fa814d172",
+      "action": "REPLACED_BY_EMPTY_SHADOW_NOOP",
+      "reason": "Production-specific data migration requires exactly eight historical legacy-mapped issuers and creates no schema objects."
+    },
+    {
+      "source": "fresh_supabase_default_service_role_grants",
+      "action": "NARROWED_TO_PRODUCTION_PARITY",
+      "implementation": "migrations/vnext/0002_shadow_production_privilege_parity.sql",
+      "reason": "Fresh project defaults were broader than live production grants."
+    }
+  ],
+  "source_objects": [
+    [
+      "schema.sql",
+      "bfd70b9e137545239329d06718252d8a2d448fcd"
+    ],
+    [
+      "migrations/20260909_orotitan_equity_i1_identity.sql",
+      "442ba7c866147ac961603e02c1e8de41650f8df5"
+    ],
+    [
+      "migrations/20260911_orotitan_equity_i3_snapshot_persistence.sql",
+      "d2b03327bf6cba4cc19f81da9faad8c5de591a33"
+    ],
+    [
+      "migrations/20260911_orotitan_equity_i3b_validated_snapshot_writer.sql",
+      "2331f6f1dec79950309fe31bac3a2bee76d4dc71"
+    ],
+    [
+      "migrations/20260912_orotitan_equity_i4a_identity_completion.sql",
+      "955ffcb405d2df9f4d05aaa552cb946fa814d172"
+    ],
+    [
+      "migrations/20260914_orotitan_registry_v1_1_core.sql",
+      "76734de6a46be33ea406d9d0351a4d9eeecfcf67"
+    ],
+    [
+      "migrations/20260914_orotitan_registry_v1_2_guards_rls.sql",
+      "30dbecaa48c41a162fb2dbade2eb990c0db52e10"
+    ],
+    [
+      "migrations/20260914_orotitan_registry_v1_3_rpcs.sql",
+      "94a166a4c872727f2f1e9e22d025ef54285226ac"
+    ],
+    [
+      "migrations/20260914_orotitan_registry_v1_4_manifest_authority.sql",
+      "171dcfa4173a75f05eec43d3ef98a1d12a952570"
+    ],
+    [
+      "migrations/20260914_orotitan_registry_v1_5_contract_pin_guards.sql",
+      "b02736c6c107ca0d2d618bd54a41fdb8bd633b68"
+    ],
+    [
+      "migrations/20260915_orotitan_v2_canonical_snapshot_writer.sql",
+      "5055b76ef77cb786b6326540be760cf37b4968db"
+    ],
+    [
+      "migrations/20260920_orotitan_registry_v1_6_checkpoint_output_revalidation.sql",
+      "e64f635d043482f7f9a1dd695bd3a412f0087ffa"
+    ],
+    [
+      "migrations/20260920_orotitan_registry_v1_7_final_output_rebinding.sql",
+      "4d61d4765e27681b4bec3583133c10d08a8e0684"
+    ],
+    [
+      "migrations/20260920_orotitan_registry_v1_8_manifest_persistence_receipt_integrity.sql",
+      "a5ff07afe47a5f9582069bb88c067109eeb6a61b"
+    ],
+    [
+      "migrations/20260920203621_orotitan_registry_bundle_persistence_integrity.sql",
+      "69e585f177a99710665f51acd76760f42ba8a0a7"
+    ],
+    [
+      "migrations/20260920_orotitan_registry_v1_9_attestation_idempotency_fix.sql",
+      "3350eda9025e4083872ed9670b1d27806d61b4b0"
+    ],
+    [
+      "migrations/20260921_orotitan_registry_v1_10_methodology_successor_cas.sql",
+      "cea46f5e14e39c0f7fef18986cfeabe9b6ae6d0e"
+    ],
+    [
+      "migrations/20260921_orotitan_registry_v1_11_persistence_attestation_authority_repair.sql",
+      "10617cbe983deea26acc91d1682955a7fe764622"
+    ]
+  ],
+  "invariants": {
+    "production_mutated": false,
+    "production_data_copied": false,
+    "shadow_publication_authorized": false,
+    "shadow_registry_rows_created": false
+  }
+}
