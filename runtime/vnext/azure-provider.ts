@@ -421,7 +421,7 @@ export class AzureProvider implements AnalyticalModelProvider {
 }
 
 export function createAzureProviderFromEnv(
-  env: NodeJS.ProcessEnv = process.env,
+  env: Readonly<Record<string, string | undefined>> = process.env,
   fetchImpl: FetchLike = fetch,
 ): AzureProvider {
   const required = (name: string): string => {
