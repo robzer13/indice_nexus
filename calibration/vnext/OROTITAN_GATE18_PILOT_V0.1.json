@@ -1,0 +1,118 @@
+{
+  "format": "OROTITAN_GATE18_PILOT_V0.1",
+  "status": "CALIBRATION_CANDIDATE_NOT_FROZEN",
+  "sample_size": 5,
+  "selection_rationale": "Diversified functional pilot only; not statistical validation and not a model-routing freeze.",
+  "companies": [
+    {
+      "role": "SIMPLE_CLEAN_COMPOUNDER",
+      "display_name": "RATIONAL AG",
+      "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+      "data_cutoff": "2026-09-19",
+      "evidence_ledger": {
+        "artifact_id": "c0ad45a4-fae2-4374-844d-08e43a7e8a66",
+        "version": 1,
+        "sha256": "b3b94cb48f2aab55b2339c16d594ec645e40d18df8089ebfb1ed09c106735ff1",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "bec39baf8b8663060bfa3f38296cda4c9c8836d6",
+        "path": "artifacts/orotitan-equity/runs/46890dc8-af5f-4cc4-9333-ba2b2c510ff5/research/EVIDENCE_LEDGER__c0ad45a4-fae2-4374-844d-08e43a7e8a66__v001.json"
+      },
+      "conflict_ledger": {
+        "artifact_id": "940930d7-1c7f-4c48-afd3-b6e0c637acf6",
+        "version": 1,
+        "sha256": "e670395a412bc620f127fb708ab80bf7c267f8c478ae1c7ee1b6b4aec97961fa",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "bec39baf8b8663060bfa3f38296cda4c9c8836d6",
+        "path": "artifacts/orotitan-equity/runs/46890dc8-af5f-4cc4-9333-ba2b2c510ff5/research/CONFLICT_LEDGER__940930d7-1c7f-4c48-afd3-b6e0c637acf6__v001.json"
+      }
+    },
+    {
+      "role": "SERIAL_ACQUIRER",
+      "display_name": "Constellation Software",
+      "source_run_id": "adcaafd1-1586-49df-84b9-4879b2a36b4d",
+      "data_cutoff": "2026-09-19",
+      "evidence_ledger": {
+        "artifact_id": "37db4382-c311-4bab-8ce1-645bc6a6a6bb",
+        "version": 3,
+        "sha256": "b8f09a799f99835962d70ab1093328136851638e4180a485e5be36c6974da909",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "567355c7956d3c9e4aee04466354648e89d09415",
+        "path": "artifacts/orotitan-equity/runs/adcaafd1-1586-49df-84b9-4879b2a36b4d/research/EVIDENCE_LEDGER__37db4382-c311-4bab-8ce1-645bc6a6a6bb__v003.json"
+      },
+      "conflict_ledger": {
+        "artifact_id": "7bb6b8d9-6c39-4087-96c7-1702c0d3b28a",
+        "version": 3,
+        "sha256": "7496a3574e051611f2eeb05ba792ef0b615d93d7bf82722b9bbb072e541d0ac9",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "567355c7956d3c9e4aee04466354648e89d09415",
+        "path": "artifacts/orotitan-equity/runs/adcaafd1-1586-49df-84b9-4879b2a36b4d/research/CONFLICT_LEDGER__7bb6b8d9-6c39-4087-96c7-1702c0d3b28a__v003.json"
+      }
+    },
+    {
+      "role": "CYCLICAL_SEGMENTED",
+      "display_name": "STMicroelectronics",
+      "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+      "data_cutoff": "2026-09-15",
+      "evidence_ledger": {
+        "artifact_id": "dc37be98-9b01-42de-a650-4b4ebb634808",
+        "version": 3,
+        "sha256": "e223082e884a58f8677442a90ee400224892cd2bd7adb7df4f41e6095b9facd7",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "23399e73b333b993b60b41942940ced3c262caa7",
+        "path": "artifacts/orotitan-equity/runs/36d27c22-a5f1-40fb-9689-dd8aa3d450d1/research/EVIDENCE_LEDGER__dc37be98-9b01-42de-a650-4b4ebb634808__v003.json"
+      },
+      "conflict_ledger": {
+        "artifact_id": "a4aceb36-c5c7-42cd-b927-8cb0bfa97381",
+        "version": 1,
+        "sha256": "6f4e1530677c26da56cd8976ddfc8df6aa71a81d3e732bb29200a309701938e2",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "23399e73b333b993b60b41942940ced3c262caa7",
+        "path": "artifacts/orotitan-equity/runs/36d27c22-a5f1-40fb-9689-dd8aa3d450d1/research/CONFLICT_LEDGER__a4aceb36-c5c7-42cd-b927-8cb0bfa97381__v001.json"
+      }
+    },
+    {
+      "role": "ACCOUNTING_HEAVY",
+      "display_name": "Brookfield Corporation",
+      "source_run_id": "b765650c-477a-4d34-9143-55db296f6000",
+      "data_cutoff": "2026-09-19",
+      "evidence_ledger": {
+        "artifact_id": "2a73f9ac-02ec-5b17-a666-2f10c23ecdf7",
+        "version": 1,
+        "sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "fa29b7b8a078aa7f84b6d32d8d0c9b9a0905e632",
+        "path": "artifacts/orotitan-equity/runs/b765650c-477a-4d34-9143-55db296f6000/research/EVIDENCE_LEDGER__2a73f9ac-02ec-5b17-a666-2f10c23ecdf7__v001.json"
+      },
+      "conflict_ledger": {
+        "artifact_id": "4fc3a70c-c125-5da1-9c87-7c3bd00f9eb1",
+        "version": 1,
+        "sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "df0882eb0c3cb46e2f62b926b7fe5168f93d2ce1",
+        "path": "artifacts/orotitan-equity/runs/b765650c-477a-4d34-9143-55db296f6000/research/CONFLICT_LEDGER__4fc3a70c-c125-5da1-9c87-7c3bd00f9eb1__v001.json"
+      }
+    },
+    {
+      "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "display_name": "Adyen",
+      "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+      "data_cutoff": "2026-09-19",
+      "evidence_ledger": {
+        "artifact_id": "0696b985-9c19-40fb-b348-cd4502ab17a7",
+        "version": 1,
+        "sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "579eb2b81df91bb8e33bff8fccd3092cf1a405c1",
+        "path": "artifacts/orotitan-equity/runs/a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf/research/EVIDENCE_LEDGER__0696b985-9c19-40fb-b348-cd4502ab17a7__v001.json"
+      },
+      "conflict_ledger": {
+        "artifact_id": "b3bb9cd7-bb5c-4995-b8f6-e0f86b2221c1",
+        "version": 1,
+        "sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+        "repository": "robzer13/real-orotitan",
+        "commit_sha": "579eb2b81df91bb8e33bff8fccd3092cf1a405c1",
+        "path": "artifacts/orotitan-equity/runs/a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf/research/CONFLICT_LEDGER__b3bb9cd7-bb5c-4995-b8f6-e0f86b2221c1__v001.json"
+      }
+    }
+  ]
+}

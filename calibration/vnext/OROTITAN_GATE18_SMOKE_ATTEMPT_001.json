@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_SMOKE_ATTEMPT",
+  "version": "1.0.0",
+  "attempt_id": "G18-SMOKE-001",
+  "observed_at_utc": "2026-09-22T23:26:35Z",
+  "gate": 18,
+  "calibration_status": "BLOCKED_EXTERNAL_PROVIDER_ADMISSION",
+  "branch": "gate18-real-model-calibration",
+  "route_deployment": {
+    "project": "orotitan-vnext-pilotage",
+    "deployment_id": "dpl_J5KZNbSpLLBgYneEnapbcpH5865Y",
+    "deployment_commit_sha": "3fbca22f1560081b2188178056acfac4f488c3c1",
+    "environment": "preview",
+    "deployment_state": "READY"
+  },
+  "invocation": {
+    "mechanism": "PROTECTED_PREVIEW_TEMPORARY_SHARE_BYPASS",
+    "github_workflow": "Gate 18 Model Smoke",
+    "workflow_run_id": 35797425783,
+    "workflow_job_id": 106979843494,
+    "route_http_status": 500,
+    "preview_protection_bypassed": true
+  },
+  "gateway": {
+    "reached": true,
+    "endpoint": "https://ai-gateway.vercel.sh/v4/ai/language-model",
+    "inner_status_code": 403,
+    "error_type": "customer_verification_required",
+    "reason": "Vercel AI Gateway requires a valid credit card on file before servicing requests."
+  },
+  "candidates_requested": [
+    "openai/gpt-5.6-luna",
+    "openai/gpt-5.6-terra",
+    "openai/gpt-5.6-sol",
+    "openai/gpt-6-astra"
+  ],
+  "result": {
+    "physical_model_generation_confirmed": false,
+    "schema_receipts_valid": 0,
+    "analytical_quality_observations": 0,
+    "winner_selected": false,
+    "routing_policy_changed": false,
+    "methodology_changed": false
+  },
+  "classification": {
+    "code": "EXTERNAL_BILLING_VERIFICATION_REQUIRED",
+    "analytical_methodology_failure": false,
+    "runner_failure": false,
+    "model_quality_failure": false,
+    "retry_without_external_change_expected_to_help": false
+  }
+}
