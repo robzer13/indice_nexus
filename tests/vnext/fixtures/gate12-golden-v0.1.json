@@ -1,0 +1,54 @@
+{
+  "fixture_schema_version": "0.1.0",
+  "name": "OROTITAN_VNEXT_GATE12_GOLDEN_V0.1",
+  "frozen_runtime": {
+    "run_statuses": [
+      "CREATED",
+      "ACTIVE",
+      "PAUSED",
+      "BLOCKED",
+      "READY_TO_PUBLISH",
+      "PUBLISHED",
+      "CANCELLED"
+    ],
+    "stage_lifecycles": [
+      "NOT_STARTED",
+      "IN_PROGRESS",
+      "PAUSED",
+      "BLOCKED",
+      "COMPLETE"
+    ],
+    "handoff_gate_by_stage": {
+      "RESEARCH": "READY_FOR_DEEP_DIVE",
+      "DEEP_DIVE": "READY_FOR_INTEGRATION",
+      "INTEGRATION": "READY_TO_PUBLISH"
+    },
+    "recovery_classes": [
+      "AUTO_RETRY",
+      "DETERMINISTIC_AUTO_REPAIR",
+      "VERIFIABLE_RECOVERY",
+      "HUMAN_REQUIRED"
+    ],
+    "environment": {
+      "shadow_project_ref": "awgsurdyvsyolcgpnygh",
+      "production_project_ref": "cugpgtzygqqlxetyeven",
+      "publication_enabled": false
+    }
+  },
+  "hash_fixture": {
+    "exact_utf8_text": "{\"artifact_id\":\"golden-artifact\",\"version\":1,\"status\":\"SEALED\"}\n",
+    "sha256": "e659042c08bfb3c7c52055f30dee6a89ef9e85c2c200c341c0d3f65cb8c69e0c"
+  },
+  "required_assurance_files": [
+    "tests/vnext-state-machine.test.ts",
+    "tests/vnext-state-model-schema.test.ts",
+    "tests/vnext-module-contract.test.ts",
+    "tests/vnext-environment-boundary.test.ts",
+    "tests/vnext-run-controller.test.ts",
+    "tests/vnext-pre-stage-preflight.test.ts",
+    "tests/vnext-post-stage-certification.test.ts",
+    "tests/vnext-recovery-engine.test.ts",
+    "schemas/vnext/state-model-v0.1.schema.json",
+    "schemas/vnext/orotitan-vnext-module-contract.schema.v0.1.json"
+  ]
+}
