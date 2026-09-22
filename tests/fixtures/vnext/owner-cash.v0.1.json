@@ -1,0 +1,2151 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "industrial-point-resolved",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "The industrial cash bridge preserves reported FCF, Standardized FCF and Owner Earnings as distinct measures and resolves material maintenance requirements."
+      },
+      "expected": {
+        "finalizable": true,
+        "validationCodes": [],
+        "limitations": []
+      }
+    },
+    {
+      "id": "range-maintenance-uncertainty",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "RANGE",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is material.",
+              "evidenceIds": [
+                "E-RANGE-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "UNKNOWN",
+              "rationale": "The split between maintenance and growth product engineering remains uncertain.",
+              "evidenceIds": [
+                "E-RANGE-INT-U"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "Owner Earnings is represented as a range because maintenance intangible investment remains uncertain."
+      },
+      "expected": {
+        "finalizable": true,
+        "containsLimitation": "OWNER_EARNINGS_RANGE_REFLECTS_MAINTENANCE_UNCERTAINTY"
+      }
+    },
+    {
+      "id": "point-with-unresolved-maintenance",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is material.",
+              "evidenceIds": [
+                "E-RANGE-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "UNKNOWN",
+              "rationale": "The split between maintenance and growth product engineering remains uncertain.",
+              "evidenceIds": [
+                "E-RANGE-INT-U"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "A point estimate is proposed despite unresolved material maintenance investment."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "OWNER_EARNINGS_POINT_REQUIRES_RESOLVED_MAINTENANCE"
+      }
+    },
+    {
+      "id": "temporary-working-capital-not-structural",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "YES",
+          "rationale": "Cash conversion includes a temporary inventory liquidation and stretched-payables benefit.",
+          "evidenceIds": [
+            "E-WC-TEMP"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": true,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "Temporary working-capital benefit is incorrectly treated as structural Owner Earnings."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "TEMPORARY_WORKING_CAPITAL_CANNOT_BE_STRUCTURAL_OWNER_CASH"
+      }
+    },
+    {
+      "id": "sbc-double-penalty",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 2,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "SBC is counted through the economic compensation cost and again as a full second dilution penalty."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "SBC_DOUBLE_PENALTY_FORBIDDEN"
+      }
+    },
+    {
+      "id": "serial-acquirer-cash-separation",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "YES",
+          "rationale": "Acquisition deployment is a material capital-allocation engine.",
+          "evidenceIds": [
+            "E-ACQ-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": true,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "NO",
+          "rationale": "Organic cash and acquisition deployment are not separated.",
+          "evidenceIds": [
+            "E-ACQ-NO-SEP"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "A serial-acquirer cash bridge incorrectly subtracts acquisitions from Standardized FCF and fails to separate organic cash economics."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": [
+          "ACQUISITIONS_NOT_SUBTRACTED_FROM_STANDARDIZED_FCF_BY_DEFAULT",
+          "MATERIAL_ACQUISITION_CAPITAL_REQUIRES_ORGANIC_CASH_SEPARATION"
+        ]
+      }
+    },
+    {
+      "id": "sector-distributable-capital",
+      "input": {
+        "cashFramework": "SECTOR_DISTRIBUTABLE_CAPITAL",
+        "reportedFcfPresent": false,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "NO",
+          "rationale": "Issuer industrial FCF is not the governing measure.",
+          "evidenceIds": [
+            "E-SEC-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": false,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "NO",
+          "rationale": "Industrial Standardized FCF is not the sector-valid headline.",
+          "evidenceIds": [
+            "E-SEC-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "NO",
+          "rationale": "Industrial Owner Earnings is not the sector-valid headline.",
+          "evidenceIds": [
+            "E-SEC-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "NOT_APPLICABLE",
+        "maintenanceComponents": [],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No industrial working-capital owner-cash treatment is applied.",
+          "evidenceIds": [
+            "E-SEC-WC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "Industrial deferred-maintenance treatment is not the governing sector issue.",
+          "evidenceIds": [
+            "E-SEC-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "NO",
+          "rationale": "Industrial Owner Earnings is not the selected sector framework.",
+          "evidenceIds": [
+            "E-SEC-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No separate material recurring-adjustment issue is identified.",
+          "evidenceIds": [
+            "E-SEC-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Material economic costs remain retained in the sector-valid capital-generation framework.",
+          "evidenceIds": [
+            "E-SEC-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "NO",
+          "rationale": "SBC is not material to this fixture.",
+          "evidenceIds": [
+            "E-SEC-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "Any compensation cost remains economically recognized.",
+          "evidenceIds": [
+            "E-SEC-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 0,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not material in this fixture.",
+          "evidenceIds": [
+            "E-SEC-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "No acquisition-cash mixing issue is present.",
+          "evidenceIds": [
+            "E-SEC-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": false,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "NO",
+          "rationale": "No industrial FCF/share output is produced.",
+          "evidenceIds": [
+            "E-SEC-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "YES",
+          "rationale": "The sector-valid distributable-capital framework is established.",
+          "evidenceIds": [
+            "E-SEC-FRAME"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [],
+        "rationale": "Industrial FCF and Owner Earnings are not headline measures; a sector-valid distributable-capital framework is used."
+      },
+      "expected": {
+        "finalizable": true,
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "deferred-maintenance-omitted",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": false,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "YES",
+          "rationale": "A material catch-up maintenance requirement is identified.",
+          "evidenceIds": [
+            "E-DM-MAT"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "NO",
+          "rationale": "The current owner-cash estimate does not reflect the catch-up requirement.",
+          "evidenceIds": [
+            "E-DM-NOT"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "Material deferred maintenance is omitted from Owner Earnings."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "MATERIAL_DEFERRED_MAINTENANCE_MUST_BE_REFLECTED"
+      }
+    },
+    {
+      "id": "working-capital-double-count",
+      "input": {
+        "cashFramework": "INDUSTRIAL_FCF_OWNER_EARNINGS",
+        "reportedFcfPresent": true,
+        "reportedFcfSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Issuer-reported FCF is retained as a separate measure.",
+          "evidenceIds": [
+            "E-CASH-RF"
+          ],
+          "assumptionIds": []
+        },
+        "standardizedFcfPresent": true,
+        "standardizedFcfUsesCfoMinusCashCapex": {
+          "state": "YES",
+          "rationale": "Standardized FCF uses CFO minus total cash capex under the frozen convention.",
+          "evidenceIds": [
+            "E-CASH-SF"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsSeparatedFromStandardizedFcf": {
+          "state": "YES",
+          "rationale": "Owner Earnings is separately constructed from normalized operating cash generation less maintenance reinvestment.",
+          "evidenceIds": [
+            "E-CASH-OE"
+          ],
+          "assumptionIds": []
+        },
+        "ownerEarningsForm": "POINT",
+        "maintenanceComponents": [
+          {
+            "component": "PHYSICAL_CAPEX",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Physical maintenance capex is material.",
+              "evidenceIds": [
+                "E-M-PHYS-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Physical maintenance requirement is supported by replacement and asset evidence.",
+              "evidenceIds": [
+                "E-M-PHYS-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "INTANGIBLE_INVESTMENT",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Maintenance software and product engineering are material.",
+              "evidenceIds": [
+                "E-M-INT-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Maintenance intangible investment is explicitly reflected.",
+              "evidenceIds": [
+                "E-M-INT-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "WORKING_CAPITAL",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Necessary working capital is material.",
+              "evidenceIds": [
+                "E-M-WC-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Necessary working-capital reinvestment is reflected without double counting CFO movements.",
+              "evidenceIds": [
+                "E-M-WC-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "LEASE_CASH",
+            "materiality": {
+              "state": "NO",
+              "rationale": "Lease cash is not material to the owner-cash bridge.",
+              "evidenceIds": [
+                "E-M-LEASE-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Lease presentation is nevertheless reconciled consistently.",
+              "evidenceIds": [
+                "E-M-LEASE-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "RECURRING_RESTRUCTURING",
+            "materiality": {
+              "state": "NO",
+              "rationale": "No material recurring restructuring burden is identified.",
+              "evidenceIds": [
+                "E-M-RES-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Recurring-adjustment review is complete.",
+              "evidenceIds": [
+                "E-M-RES-T"
+              ],
+              "assumptionIds": []
+            }
+          },
+          {
+            "component": "ECONOMIC_CASH_TAXES",
+            "materiality": {
+              "state": "YES",
+              "rationale": "Economic cash taxes are material.",
+              "evidenceIds": [
+                "E-M-TAX-M"
+              ],
+              "assumptionIds": []
+            },
+            "treatmentResolved": {
+              "state": "YES",
+              "rationale": "Normalized economic cash taxes are reflected.",
+              "evidenceIds": [
+                "E-M-TAX-T"
+              ],
+              "assumptionIds": []
+            }
+          }
+        ],
+        "maintenanceDoubleCountedAgainstTotalCapexFcf": false,
+        "workingCapitalDoubleCountedOutsideCfo": true,
+        "temporaryWorkingCapitalBenefit": {
+          "state": "NO",
+          "rationale": "No temporary working-capital release is being treated as structural cash generation.",
+          "evidenceIds": [
+            "E-CASH-TWC"
+          ],
+          "assumptionIds": []
+        },
+        "temporaryWorkingCapitalTreatedAsStructuralOwnerCash": false,
+        "deferredMaintenanceMaterial": {
+          "state": "NO",
+          "rationale": "No material deferred-maintenance condition is identified.",
+          "evidenceIds": [
+            "E-CASH-DM"
+          ],
+          "assumptionIds": []
+        },
+        "deferredMaintenanceReflectedInOwnerCash": {
+          "state": "YES",
+          "rationale": "Deferred-maintenance review is reflected in the owner-cash conclusion.",
+          "evidenceIds": [
+            "E-CASH-DMR"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsMaterial": {
+          "state": "NO",
+          "rationale": "No material recurring adjustment burden remains outside normalized cash economics.",
+          "evidenceIds": [
+            "E-CASH-RA"
+          ],
+          "assumptionIds": []
+        },
+        "recurringAdjustmentsRetainedAsEconomicCost": {
+          "state": "YES",
+          "rationale": "Recurring economic costs are retained where applicable.",
+          "evidenceIds": [
+            "E-CASH-RAC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcMaterial": {
+          "state": "YES",
+          "rationale": "SBC is a material compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBC"
+          ],
+          "assumptionIds": []
+        },
+        "sbcEconomicCostRecognized": {
+          "state": "YES",
+          "rationale": "SBC is recognized once as an economic compensation cost.",
+          "evidenceIds": [
+            "E-CASH-SBCR"
+          ],
+          "assumptionIds": []
+        },
+        "sbcPenaltyCount": 1,
+        "acquisitionCapitalMaterial": {
+          "state": "NO",
+          "rationale": "Acquisition capital is not a material cash-allocation engine.",
+          "evidenceIds": [
+            "E-CASH-ACQ"
+          ],
+          "assumptionIds": []
+        },
+        "acquisitionsSubtractedFromStandardizedFcf": false,
+        "organicCashSeparatedFromAcquisitionDeployment": {
+          "state": "YES",
+          "rationale": "Organic cash economics are shown separately from any acquisition deployment.",
+          "evidenceIds": [
+            "E-CASH-ACQS"
+          ],
+          "assumptionIds": []
+        },
+        "perShareCashProduced": true,
+        "perShareUsesEconomicDilutedShares": {
+          "state": "YES",
+          "rationale": "Per-share cash uses economic diluted shares.",
+          "evidenceIds": [
+            "E-CASH-PS"
+          ],
+          "assumptionIds": []
+        },
+        "sectorDistributableCapitalFrameworkEstablished": {
+          "state": "NO",
+          "rationale": "A sector distributable-capital substitute is not required for this industrial company.",
+          "evidenceIds": [
+            "E-CASH-SECTOR"
+          ],
+          "assumptionIds": []
+        },
+        "counterEvidenceIds": [
+          "CE-CASH-1"
+        ],
+        "rationale": "Working-capital movement already embedded in CFO is subtracted again."
+      },
+      "expected": {
+        "finalizable": false,
+        "containsValidation": "WORKING_CAPITAL_DOUBLE_COUNTED"
+      }
+    }
+  ]
+}
