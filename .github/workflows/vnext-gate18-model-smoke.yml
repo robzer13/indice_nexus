@@ -104,3 +104,56 @@ jobs:
 
           console.log(JSON.stringify(safe, null, 2));
           NODE
+
+
+  gate18-provider-preflight:
+    if: >-
+      github.event.pull_request.head.ref == 'gate18-real-model-calibration' &&
+      contains(github.event.pull_request.title, '[gate18-preflight:')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Inspect provider credential presence safely
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PREFLIGHT_BASE_URL: https://orotitan-vnext-pilotage-git-gate18-real-model-c-f36b8f-orotitan.vercel.app/api/vnext/calibration/provider-preflight
+        run: |
+          set -euo pipefail
+
+          share_token="${PR_TITLE##*\[gate18-preflight:}"
+          share_token="${share_token%%\]*}"
+
+          if [ -z "$share_token" ] || [ "$share_token" = "$PR_TITLE" ]; then
+            echo "Gate 18 preflight share token marker missing"
+            exit 1
+          fi
+
+          echo "::add-mask::$share_token"
+
+          cookie_jar="$(mktemp)"
+          trap 'rm -f "$cookie_jar"' EXIT
+
+          status="$(curl -sS -L             --max-redirs 10             -c "$cookie_jar"             -b "$cookie_jar"             -o gate18-provider-preflight.json             -w '%{http_code}'             "${PREFLIGHT_BASE_URL}?_vercel_share=${share_token}")"
+
+          echo "HTTP_STATUS=$status"
+
+          if [ "$status" != "200" ]; then
+            cat gate18-provider-preflight.json || true
+            exit 1
+          fi
+
+          node - <<'NODE'
+          const fs = require('fs');
+          const payload = JSON.parse(
+            fs.readFileSync('gate18-provider-preflight.json', 'utf8')
+          );
+
+          if (
+            payload.gate !== 18 ||
+            payload.status !== 'PROVIDER_PREFLIGHT' ||
+            payload.previewOnly !== true
+          ) {
+            throw new Error('GATE18_PROVIDER_PREFLIGHT_INVALID');
+          }
+
+          console.log(JSON.stringify(payload, null, 2));
+          NODE
