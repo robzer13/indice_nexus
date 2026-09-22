@@ -1,7 +1,7 @@
 # OROTITAN_VNEXT_GITHUB_ASSURANCE_V0.1
 
 **Project:** OroTitan Equity Research  
-**Status:** CANDIDATE - ENFORCEMENT PENDING  
+**Status:** FROZEN — GATE 12 PASS  
 **Methodology change:** NO  
 **Depends on:** Gates 6 through 11  
 **Runtime dependency:** NONE  
@@ -238,22 +238,53 @@ G12-12 publication/environment invariants present      PASS
 G12-13 state-machine invariants present                PASS
 G12-14 assurance self-check prevents silent CI erosion PASS
 G12-15 ruleset desired state versioned                 PASS
-G12-16 ruleset ACTIVE on vnext                         PENDING
-G12-17 pull request required                           PENDING
-G12-18 verify-vnext required before merge              PENDING
-G12-19 up-to-date branch required                      PENDING
-G12-20 force-push/deletion protection                  PENDING
-G12-21 bypass list empty                               PENDING
+G12-16 ruleset ACTIVE on vnext                         PASS
+G12-17 pull request required                           PASS
+G12-18 verify-vnext required before merge              PASS
+G12-19 up-to-date branch required                      PASS
+G12-20 force-push/deletion protection                  PASS
+G12-21 bypass list empty                               PASS
 ```
 
 ## 10. Gate condition
 
-Gate 12 remains `PENDING` until the live GitHub ruleset is applied and independently reread from GitHub.
+The live repository ruleset was independently reread from GitHub after activation.
 
-The repository-side assurance implementation may be green before then, but that alone does not satisfy:
+Observed live state:
 
 ```text
-NO MERGE VNext IF DETERMINISTIC ASSURANCE FAILS
+RULESET_ID                         = 23819680
+NAME                               = OroTitan VNext Deterministic Assurance
+ENFORCEMENT                        = active
+TARGET                             = refs/heads/vnext
+BYPASS_ACTORS                      = []
+PULL_REQUEST_REQUIRED              = YES
+REQUIRED_APPROVALS                 = 0
+VERIFY_VNEXT_REQUIRED              = YES
+VERIFY_VNEXT_INTEGRATION_ID        = 15368
+STRICT_UP_TO_DATE_POLICY           = YES
+BRANCH_DELETION_BLOCKED            = YES
+FORCE_PUSH_BLOCKED                 = YES
+COPILOT_EXTRA_APPROVAL             = NO
+```
+
+Live proof PR:
+
+```text
+PR                                 = #44
+HEAD_BRANCH                        = gate12-ruleset-proof-20260922
+BASE_BRANCH                        = vnext
+PROOF_HEAD_SHA                     = 1d68926247d9ac9c580f9d1c743b44f4dff1586d
+WHILE verify-vnext IN_PROGRESS     = mergeable_state: blocked
+AFTER verify-vnext SUCCESS         = mergeable_state: clean
+CI_RUN                             = 53
+CI_RESULT                          = SUCCESS
+```
+
+This demonstrates the control objective:
+
+```text
+NO MERGE VNext IF DETERMINISTIC ASSURANCE FAILS OR IS PENDING
 ```
 
 ## 11. Out of scope
@@ -265,3 +296,24 @@ Gate 12 does not:
 - mutate Supabase;
 - change production publication authority;
 - replace runtime deterministic checks.
+
+
+## 12. Freeze record
+
+```text
+GATE                              = 12
+RESULT                            = PASS
+LIVE_RULESET_ID                   = 23819680
+PROOF_PR                          = 44
+PROOF_PR_REQUIRED_CHECK           = verify-vnext
+PROOF_PR_BLOCKED_WHILE_PENDING    = YES
+PROOF_PR_CLEAN_AFTER_SUCCESS      = YES
+VALIDATED_PROOF_HEAD              = 1d68926247d9ac9c580f9d1c743b44f4dff1586d
+PROOF_CI_RUN                      = 53
+PROOF_CI_RESULT                   = SUCCESS
+PRODUCTION_MUTATION               = NONE
+SHADOW_DB_MUTATION                = NONE
+ANALYTICAL_METHODOLOGY_CHANGE     = NONE
+```
+
+V0.1 is frozen as the Gate 12 GitHub merge-assurance authority.
