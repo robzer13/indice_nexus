@@ -1,7 +1,7 @@
 # OROTITAN_VNEXT_RUN_CONTROLLER_V0.1
 
 **Project:** OroTitan Equity Research  
-**Status:** CANDIDATE FOR GATE 8  
+**Status:** FROZEN — GATE 8 PASS  
 **Methodology change:** NO  
 **Depends on:** Gate 6 State Model + Gate 7 Architecture  
 **AI dependency:** NONE
@@ -264,3 +264,30 @@ Gate 8 does not implement:
 - production promotion.
 
 These remain later gates.
+
+
+---
+
+## 16. Gate 8 freeze record
+
+```text
+GATE                              = 8
+RESULT                            = PASS
+DETERMINISTIC_CONTROLLER          = PASS
+FAKE_RUN_WITHOUT_CHATGPT          = PASS
+READ_DECIDE_CAS_REREAD            = PASS
+IDEMPOTENCY                       = PASS
+OPTIMISTIC_CONCURRENCY            = PASS
+CAS_RACE_TEST                     = PASS
+REREAD_VERIFICATION               = PASS
+SHADOW_PUBLICATION_FIREWALL       = PASS
+READY_TO_PUBLISH_IN_SHADOW        = PASS
+VERCEL_WORKFLOWS_PROVIDER_BOUNDARY= DEFINED
+AI_DEPENDENCY                     = NONE
+CI_VALIDATION_HEAD                = 535c10ed23608eb809695d26d2f37073027fb911
+CI_RUN                            = 33
+PRODUCTION_MUTATION               = NONE
+SHADOW_DB_MUTATION                = NONE
+```
+
+V0.1 is frozen as the Gate 8 deterministic run-controller authority. Any behavioral change requires an explicit new version; silent semantic mutation is forbidden.
