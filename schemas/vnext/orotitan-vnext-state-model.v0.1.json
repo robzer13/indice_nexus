@@ -1,0 +1,133 @@
+{
+  "schema_version": "0.1.0",
+  "contract": "OROTITAN_VNEXT_STATE_MODEL_V0.1",
+  "methodology_change": false,
+  "run_statuses": [
+    "CREATED",
+    "ACTIVE",
+    "PAUSED",
+    "BLOCKED",
+    "READY_TO_PUBLISH",
+    "PUBLISHED",
+    "CANCELLED"
+  ],
+  "run_transitions": {
+    "CREATED": [
+      "ACTIVE",
+      "PAUSED",
+      "BLOCKED",
+      "CANCELLED"
+    ],
+    "ACTIVE": [
+      "PAUSED",
+      "BLOCKED",
+      "READY_TO_PUBLISH",
+      "CANCELLED"
+    ],
+    "PAUSED": [
+      "ACTIVE",
+      "BLOCKED",
+      "CANCELLED"
+    ],
+    "BLOCKED": [
+      "ACTIVE",
+      "PAUSED",
+      "CANCELLED"
+    ],
+    "READY_TO_PUBLISH": [
+      "PUBLISHED",
+      "BLOCKED",
+      "CANCELLED"
+    ],
+    "PUBLISHED": [],
+    "CANCELLED": []
+  },
+  "stage_codes": [
+    "RESEARCH",
+    "DEEP_DIVE",
+    "INTEGRATION"
+  ],
+  "stage_lifecycle": [
+    "NOT_STARTED",
+    "IN_PROGRESS",
+    "PAUSED",
+    "BLOCKED",
+    "COMPLETE"
+  ],
+  "stage_transitions_normal": {
+    "NOT_STARTED": [
+      "IN_PROGRESS"
+    ],
+    "IN_PROGRESS": [
+      "PAUSED",
+      "BLOCKED",
+      "COMPLETE"
+    ],
+    "PAUSED": [
+      "IN_PROGRESS",
+      "BLOCKED"
+    ],
+    "BLOCKED": [
+      "IN_PROGRESS",
+      "PAUSED"
+    ],
+    "COMPLETE": []
+  },
+  "stage_reopen_transition": {
+    "from": "COMPLETE",
+    "to": [
+      "IN_PROGRESS",
+      "BLOCKED"
+    ]
+  },
+  "handoff_states": [
+    "NOT_EVALUATED",
+    "YES",
+    "NO"
+  ],
+  "handoff_gate_by_stage": {
+    "RESEARCH": "READY_FOR_DEEP_DIVE",
+    "DEEP_DIVE": "READY_FOR_INTEGRATION",
+    "INTEGRATION": "READY_TO_PUBLISH"
+  },
+  "manifest_kinds": [
+    "CHECKPOINT",
+    "FINAL"
+  ],
+  "downstream_admission": {
+    "DEEP_DIVE": {
+      "upstream_stage": "RESEARCH",
+      "required_lifecycle": "COMPLETE",
+      "required_handoff": "YES",
+      "required_manifest_kind": "FINAL"
+    },
+    "INTEGRATION": {
+      "upstream_stage": "DEEP_DIVE",
+      "required_lifecycle": "COMPLETE",
+      "required_handoff": "YES",
+      "required_manifest_kind": "FINAL"
+    }
+  },
+  "ready_to_publish": {
+    "stage": "INTEGRATION",
+    "required_lifecycle": "COMPLETE",
+    "required_handoff": "YES",
+    "required_manifest_kind": "FINAL",
+    "additional_guards": [
+      "SNAPSHOT_CANDIDATE_RESOLVED",
+      "SCHEMA_VALIDATION_PASS",
+      "I2_RECONCILIATION_PASS",
+      "I3B_ADMISSION_PASS",
+      "NO_PUBLICATION_BLOCKER"
+    ]
+  },
+  "terminal_run_statuses": [
+    "PUBLISHED",
+    "CANCELLED"
+  ],
+  "shadow": {
+    "expected_project_ref": "awgsurdyvsyolcgpnygh",
+    "forbidden_project_ref": "cugpgtzygqqlxetyeven",
+    "publication_enabled": false
+  }
+}
