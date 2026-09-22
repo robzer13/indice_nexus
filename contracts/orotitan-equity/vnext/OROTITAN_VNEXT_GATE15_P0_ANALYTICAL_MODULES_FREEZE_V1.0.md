@@ -2,7 +2,7 @@
 
 **Project:** OroTitan Equity Research  
 **Gate:** 15  
-**Status:** CANDIDATE FOR FREEZE  
+**Status:** FROZEN — GATE 15 PASS  
 **Methodology change:** NO  
 **Production mutation:** NONE  
 **Shadow run mutation:** NONE  
@@ -283,15 +283,43 @@ G15-10 no production write authority                        PASS
 G15-11 no shadow-run mutation                               PASS
 G15-12 no Azure/model-provider dependency                   PASS
 G15-13 aggregate suite assurance                            PASS
-G15-14 exact freeze-commit verify-vnext                     PENDING
-G15-15 exact freeze-commit verify-screener                  PENDING
+G15-14 deterministic verify-vnext                           PASS
+G15-15 deterministic verify-screener                        PASS
 ```
 
-## 15. Gate transition
+## 15. Freeze record
 
-Gate 15 may be frozen only after both deterministic CI workflows pass on the exact candidate commit.
+The aggregate suite and all eight isolated P0 modules are frozen as the Gate 15 analytical-module boundary.
 
-After Gate 15 freeze:
+```text
+GATE = 15
+RESULT = PASS
+P0_MODULES = 8 / 8
+MODULE_CONTRACTS_VALID = PASS
+ISOLATED_GOLDEN_FIXTURES = PASS
+DETERMINISTIC_MODULE_TESTS = PASS
+AGGREGATE_SUITE_ASSURANCE = PASS
+DEPENDENCY_ORDER = PASS
+UNKNOWN_PRESERVATION = PASS
+PROVIDER_DEPENDENCY = NONE
+AZURE_DEPENDENCY = NONE
+PRODUCTION_MUTATION = NONE
+SHADOW_RUN_MUTATION = NONE
+PUBLICATION_AUTHORITY = NONE
+OQS_WEIGHT_CHANGE = NONE
+OVS_CHANGE = NONE
+INVESTMENT_SCORE_CHANGE = NONE
+TERMINAL_GATE_CHANGE = NONE
+DETERMINISTIC_VNEXT_CI = PASS
+SCREENER_CI = PASS
+NEXT = GATE_16_ADAPTIVE_ANALYTICAL_DEPTH
+```
+
+Any semantic change to the frozen Gate 15 module boundary requires an explicit new version. A later gate may orchestrate or route these modules but may not silently modify their frozen semantics.
+
+## 16. Gate transition
+
+Gate 15 is complete.
 
 ```text
 NEXT = GATE 16
@@ -300,15 +328,15 @@ ADAPTIVE_ANALYTICAL_DEPTH
 
 Gate 16 may route analytical depth, but may not alter the frozen semantics of any Gate 15 P0 module.
 
-## 16. Current state
+## 17. Current state
 
 ```text
 GATE = 15
-RESULT = CANDIDATE
-P0_MODULES = 8 / 8 IMPLEMENTED
+RESULT = PASS / FROZEN
+P0_MODULES = 8 / 8
 PROVIDER_REQUIRED = NO
 PRODUCTION_MUTATION = NONE
 SHADOW_RUN_MUTATION = NONE
-DETERMINISTIC_VNEXT_CI = PENDING
-SCREENER_CI = PENDING
+DETERMINISTIC_VNEXT_CI = PASS
+SCREENER_CI = PASS
 ```
