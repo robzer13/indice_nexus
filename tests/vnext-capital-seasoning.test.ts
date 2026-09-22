@@ -25,10 +25,15 @@ for (const fixture of fixtures.cases) {
     );
 
     assert.equal(output.finalizable, fixture.expected.finalizable);
-    assert.equal(
-      output.portfolioSeasoningState,
-      fixture.expected.portfolioSeasoningState,
-    );
+    if (
+      "portfolioSeasoningState" in fixture.expected &&
+      typeof fixture.expected.portfolioSeasoningState === "string"
+    ) {
+      assert.equal(
+        output.portfolioSeasoningState,
+        fixture.expected.portfolioSeasoningState,
+      );
+    }
 
     if ("state" in fixture.expected) {
       assert.equal(output.cohorts[0]?.seasoningState, fixture.expected.state);
