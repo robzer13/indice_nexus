@@ -86,7 +86,7 @@ export interface ManifestOutputRef extends ManifestArtifactRef {
 export interface FinalStageManifestBody {
   manifestSchemaVersion: string;
   manifestId: string;
-  manifestKind: "FINAL";
+  manifestKind: "CHECKPOINT" | "FINAL";
   runId: string;
   stage: StageCode;
   stageRevision: number;
@@ -106,10 +106,10 @@ export interface FinalStageManifestBody {
   contractSetSha256: string;
   inputArtifacts: readonly ManifestArtifactRef[];
   outputArtifacts: readonly ManifestOutputRef[];
-  stageStatus: "COMPLETE";
+  stageStatus: "IN_PROGRESS" | "PAUSED" | "BLOCKED" | "COMPLETE";
   handoffGate: {
     name: string;
-    state: "YES";
+    state: "NOT_EVALUATED" | "YES" | "NO";
   };
   criticalBlockers: readonly string[];
   parentManifests: readonly ManifestArtifactRef[];
@@ -138,8 +138,10 @@ export interface FinalizationLineageEdge {
 }
 
 export interface RequiredLineageEdge {
+  childRunId?: string;
   childArtifactId: string;
   childVersion: number;
+  parentRunId?: string;
   parentArtifactId: string;
   parentVersion: number;
   relationType: LineageRelation;
@@ -185,6 +187,7 @@ export type PostStageCertificationFailureCode =
   | "OUTPUT_LOCATOR_MISSING"
   | "OUTPUT_SCHEMA_INVALID"
   | "MANIFEST_SCHEMA_UNSUPPORTED"
+  | "MANIFEST_NOT_FINAL"
   | "MANIFEST_ID_MISMATCH"
   | "MANIFEST_ARTIFACT_TYPE_MISMATCH"
   | "MANIFEST_RUN_MISMATCH"
@@ -219,7 +222,9 @@ export type PostStageCertificationFailureCode =
   | "FRESH_REREAD_STAGE_NOT_COMPLETE"
   | "FRESH_REREAD_HANDOFF_NOT_YES"
   | "FRESH_REREAD_MANIFEST_POINTER_MISMATCH"
-  | "FRESH_REREAD_STAGE_VERSION_MISMATCH";
+  | "FRESH_REREAD_STAGE_VERSION_MISMATCH"
+  | "FRESH_REREAD_OUTPUT_REGISTRATION_MISSING"
+  | "FRESH_REREAD_MANIFEST_REGISTRATION_MISSING";
 
 export interface PostStageCertificationFailure {
   code: PostStageCertificationFailureCode;
@@ -234,6 +239,7 @@ export interface PostStageCertificationReport {
 export interface PostFinalizeContext {
   run: FinalizationRunState;
   stage: FinalizationStageState;
+  registeredArtifacts: readonly FinalizationArtifact[];
 }
 
 export interface PostStageCertificationStore {
@@ -250,6 +256,9 @@ export interface PostStageCertificationStore {
     manifestArtifactId: string;
     manifestVersion: number;
     handoffGateName: string;
+    outputs: readonly FinalizationArtifact[];
+    manifestArtifact: FinalizationArtifact;
+    lineageEdges: readonly FinalizationLineageEdge[];
   }): Promise<void>;
 }
 
@@ -299,10 +308,10 @@ function requiredLineageKey(
   edge: RequiredLineageEdge,
 ): string {
   return [
-    runId,
+    edge.childRunId ?? runId,
     edge.childArtifactId,
     edge.childVersion,
-    runId,
+    edge.parentRunId ?? runId,
     edge.parentArtifactId,
     edge.parentVersion,
     edge.relationType,
@@ -548,6 +557,14 @@ function validateManifest(
       failures,
       "MANIFEST_SCHEMA_UNSUPPORTED",
       "schema=" + body.manifestSchemaVersion,
+    );
+  }
+
+  if (body.manifestKind !== "FINAL") {
+    fail(
+      failures,
+      "MANIFEST_NOT_FINAL",
+      "kind=" + body.manifestKind,
     );
   }
 
@@ -996,6 +1013,40 @@ function verifyFreshReread(
     );
   }
 
+  const registeredKeys = new Set(
+    after.registeredArtifacts.map(
+      (artifact) =>
+        artifact.runId + ":" + artifact.artifactId + ":" + artifact.version,
+    ),
+  );
+
+  for (const output of request.outputs) {
+    const key =
+      output.runId + ":" + output.artifactId + ":" + output.version;
+    if (!registeredKeys.has(key)) {
+      fail(
+        failures,
+        "FRESH_REREAD_OUTPUT_REGISTRATION_MISSING",
+        "artifact=" + key,
+      );
+    }
+  }
+
+  const manifestKey =
+    request.manifest.artifact.runId +
+    ":" +
+    request.manifest.artifact.artifactId +
+    ":" +
+    request.manifest.artifact.version;
+
+  if (!registeredKeys.has(manifestKey)) {
+    fail(
+      failures,
+      "FRESH_REREAD_MANIFEST_REGISTRATION_MISSING",
+      "artifact=" + manifestKey,
+    );
+  }
+
   return failures;
 }
 
@@ -1028,6 +1079,9 @@ export async function executeCertifiedStageFinalization(
     manifestArtifactId: request.manifest.artifact.artifactId,
     manifestVersion: request.manifest.artifact.version,
     handoffGateName: HANDOFF_GATE_BY_STAGE[request.stageCode],
+    outputs: request.outputs,
+    manifestArtifact: request.manifest.artifact,
+    lineageEdges: request.lineageEdges,
   });
 
   const after = await store.readContext(request.runId, request.stageCode);
