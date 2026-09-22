@@ -1,0 +1,562 @@
+{
+  "schema_version": "0.1.0",
+  "cases": [
+    {
+      "id": "investable-now",
+      "input": {
+        "proposedDecisionState": "INVESTABLE_NOW",
+        "investmentPolicySatisfied": {
+          "state": "YES",
+          "rationale": "Configured investment policy is satisfied.",
+          "evidenceIds": [
+            "E-IP-1"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "YES",
+          "rationale": "Required certification conditions are satisfied.",
+          "evidenceIds": [
+            "E-CERT-1"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "YES",
+          "rationale": "The dossier is decision-ready.",
+          "evidenceIds": [
+            "E-BIZ-1"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "YES",
+          "rationale": "Current valuation is adequate under the configured policy.",
+          "evidenceIds": [
+            "E-VAL-1"
+          ],
+          "assumptionIds": [
+            "A-VAL-1"
+          ]
+        },
+        "materialEconomicUncertainty": {
+          "state": "NO",
+          "rationale": "No unresolved material economic uncertainty blocks the decision.",
+          "evidenceIds": [
+            "E-EVID-1"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "YES",
+          "rationale": "The dossier and valuation basis are current enough for a decision.",
+          "evidenceIds": [
+            "E-CUR-1"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "NO",
+          "rationale": "No structural economics failure is established.",
+          "evidenceIds": [
+            "E-STR-1"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "NO",
+          "rationale": "No thesis-breaking evidence is established.",
+          "evidenceIds": [
+            "E-TH-1"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "The setup satisfies policy and certification requirements and is current and decisionable."
+      },
+      "expected": {
+        "finalizable": true,
+        "eligibleCanonicalStates": [
+          "INVESTABLE_NOW"
+        ],
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "wait-for-price",
+      "input": {
+        "proposedDecisionState": "WAIT_FOR_PRICE",
+        "investmentPolicySatisfied": {
+          "state": "NO",
+          "rationale": "The configured return requirement is not satisfied at the current price.",
+          "evidenceIds": [
+            "E-IP-2"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "YES",
+          "rationale": "The business and investment work is certified for a price decision.",
+          "evidenceIds": [
+            "E-CERT-2"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "YES",
+          "rationale": "The business dossier is prepared.",
+          "evidenceIds": [
+            "E-BIZ-2"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "NO",
+          "rationale": "Current valuation is inadequate.",
+          "evidenceIds": [
+            "E-VAL-2"
+          ],
+          "assumptionIds": [
+            "A-VAL-2"
+          ]
+        },
+        "materialEconomicUncertainty": {
+          "state": "NO",
+          "rationale": "No material evidence gap blocks the price conclusion.",
+          "evidenceIds": [
+            "E-EVID-2"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "YES",
+          "rationale": "The dossier and Price Ladder are current.",
+          "evidenceIds": [
+            "E-CUR-2"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "NO",
+          "rationale": "Structural economics remain acceptable.",
+          "evidenceIds": [
+            "E-STR-2"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "NO",
+          "rationale": "No thesis-breaking evidence is present.",
+          "evidenceIds": [
+            "E-TH-2"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "The business is prepared, but the current valuation is inadequate."
+      },
+      "expected": {
+        "finalizable": true,
+        "eligibleCanonicalStates": [
+          "WAIT_FOR_PRICE"
+        ],
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "wait-for-evidence",
+      "input": {
+        "proposedDecisionState": "WAIT_FOR_EVIDENCE",
+        "investmentPolicySatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "Policy satisfaction cannot be resolved until the material uncertainty is closed.",
+          "evidenceIds": [
+            "E-IP-3"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "NO",
+          "rationale": "Certification cannot complete while the material uncertainty remains.",
+          "evidenceIds": [
+            "E-CERT-3"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "NO",
+          "rationale": "The dossier is not yet decision-ready.",
+          "evidenceIds": [
+            "E-BIZ-3"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "UNKNOWN",
+          "rationale": "Valuation may be attractive but reliability is not sufficient.",
+          "evidenceIds": [
+            "E-VAL-3"
+          ],
+          "assumptionIds": [
+            "A-VAL-3"
+          ]
+        },
+        "materialEconomicUncertainty": {
+          "state": "YES",
+          "rationale": "A material economic uncertainty prevents a decision.",
+          "evidenceIds": [
+            "E-EVID-3"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "YES",
+          "rationale": "The available dossier is current, but not sufficient to decide.",
+          "evidenceIds": [
+            "E-CUR-3"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "NO",
+          "rationale": "No structural failure is established.",
+          "evidenceIds": [
+            "E-STR-3"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "NO",
+          "rationale": "No thesis-breaking evidence is established.",
+          "evidenceIds": [
+            "E-TH-3"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "A material economic uncertainty blocks the investment decision."
+      },
+      "expected": {
+        "finalizable": true,
+        "eligibleCanonicalStates": [
+          "WAIT_FOR_EVIDENCE"
+        ],
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "refresh-required",
+      "input": {
+        "proposedDecisionState": "REFRESH_REQUIRED",
+        "investmentPolicySatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "The old dossier cannot support a current policy conclusion.",
+          "evidenceIds": [
+            "E-IP-4"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "Current certification cannot be relied on until refresh.",
+          "evidenceIds": [
+            "E-CERT-4"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "UNKNOWN",
+          "rationale": "Preparedness must be reassessed after refresh.",
+          "evidenceIds": [
+            "E-BIZ-4"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "UNKNOWN",
+          "rationale": "The old valuation basis cannot support a current decision.",
+          "evidenceIds": [
+            "E-VAL-4"
+          ],
+          "assumptionIds": [
+            "A-VAL-4"
+          ]
+        },
+        "materialEconomicUncertainty": {
+          "state": "NO",
+          "rationale": "The blocker is staleness rather than a newly identified economic uncertainty.",
+          "evidenceIds": [
+            "E-EVID-4"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "NO",
+          "rationale": "The old dossier or Price Ladder cannot support a current decision.",
+          "evidenceIds": [
+            "E-CUR-4"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "NO",
+          "rationale": "No structural failure has been established from current evidence.",
+          "evidenceIds": [
+            "E-STR-4"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "NO",
+          "rationale": "No thesis-breaking evidence has been established.",
+          "evidenceIds": [
+            "E-TH-4"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "Current persisted decision support is stale and must be refreshed."
+      },
+      "expected": {
+        "finalizable": true,
+        "eligibleCanonicalStates": [
+          "REFRESH_REQUIRED"
+        ],
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "reject",
+      "input": {
+        "proposedDecisionState": "REJECT",
+        "investmentPolicySatisfied": {
+          "state": "NO",
+          "rationale": "The structural economics do not satisfy the investment philosophy.",
+          "evidenceIds": [
+            "E-IP-5"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "YES",
+          "rationale": "The negative structural conclusion is sufficiently certified.",
+          "evidenceIds": [
+            "E-CERT-5"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "NO",
+          "rationale": "The dossier is not a prepared opportunity because the thesis fails structurally.",
+          "evidenceIds": [
+            "E-BIZ-5"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "YES",
+          "rationale": "Price may appear attractive, but price cannot repair structural failure.",
+          "evidenceIds": [
+            "E-VAL-5"
+          ],
+          "assumptionIds": []
+        },
+        "materialEconomicUncertainty": {
+          "state": "NO",
+          "rationale": "The negative conclusion is not driven by unresolved uncertainty.",
+          "evidenceIds": [
+            "E-EVID-5"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "YES",
+          "rationale": "The evidence base is current enough to support rejection.",
+          "evidenceIds": [
+            "E-CUR-5"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "YES",
+          "rationale": "Structural economics fail the investment philosophy.",
+          "evidenceIds": [
+            "E-STR-5"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "NO",
+          "rationale": "The rejection is structural rather than caused by one thesis-breaking event.",
+          "evidenceIds": [
+            "E-TH-5"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "Structural economics fail the investment philosophy."
+      },
+      "expected": {
+        "finalizable": true,
+        "eligibleCanonicalStates": [
+          "REJECT"
+        ],
+        "validationCodes": []
+      }
+    },
+    {
+      "id": "ambiguous-reject-and-refresh",
+      "input": {
+        "proposedDecisionState": "REJECT",
+        "investmentPolicySatisfied": {
+          "state": "NO",
+          "rationale": "Known structural evidence fails the policy.",
+          "evidenceIds": [
+            "E-IP-6"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "Certification status is stale after a material event.",
+          "evidenceIds": [
+            "E-CERT-6"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "NO",
+          "rationale": "The dossier is not prepared.",
+          "evidenceIds": [
+            "E-BIZ-6"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "UNKNOWN",
+          "rationale": "The old valuation basis is stale.",
+          "evidenceIds": [
+            "E-VAL-6"
+          ],
+          "assumptionIds": []
+        },
+        "materialEconomicUncertainty": {
+          "state": "NO",
+          "rationale": "The known issue is structural, not merely uncertain.",
+          "evidenceIds": [
+            "E-EVID-6"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "NO",
+          "rationale": "The existing dossier cannot support a current full decision without refresh.",
+          "evidenceIds": [
+            "E-CUR-6"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "YES",
+          "rationale": "Current evidence indicates structural failure.",
+          "evidenceIds": [
+            "E-STR-6"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "YES",
+          "rationale": "A thesis-breaking event is documented.",
+          "evidenceIds": [
+            "E-TH-6"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "Both rejection evidence and stale decision support are present, so deterministic priority must not be invented."
+      },
+      "expected": {
+        "finalizable": false,
+        "eligibleCanonicalStates": [
+          "REFRESH_REQUIRED",
+          "REJECT"
+        ],
+        "validationCodes": [
+          "MULTIPLE_CANONICAL_STATES_REQUIRE_ANALYST_RESOLUTION"
+        ]
+      }
+    },
+    {
+      "id": "unknown-not-final",
+      "input": {
+        "proposedDecisionState": "UNKNOWN",
+        "investmentPolicySatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "Policy satisfaction is not yet determined.",
+          "evidenceIds": [
+            "E-IP-7"
+          ],
+          "assumptionIds": []
+        },
+        "certificationRequirementsSatisfied": {
+          "state": "UNKNOWN",
+          "rationale": "Certification is not yet determined.",
+          "evidenceIds": [
+            "E-CERT-7"
+          ],
+          "assumptionIds": []
+        },
+        "businessPrepared": {
+          "state": "UNKNOWN",
+          "rationale": "Preparedness is still under analysis.",
+          "evidenceIds": [
+            "E-BIZ-7"
+          ],
+          "assumptionIds": []
+        },
+        "valuationAdequate": {
+          "state": "UNKNOWN",
+          "rationale": "Valuation conclusion is not yet determined.",
+          "evidenceIds": [
+            "E-VAL-7"
+          ],
+          "assumptionIds": []
+        },
+        "materialEconomicUncertainty": {
+          "state": "UNKNOWN",
+          "rationale": "Material uncertainty status remains under analysis.",
+          "evidenceIds": [
+            "E-EVID-7"
+          ],
+          "assumptionIds": []
+        },
+        "currentDecisionSupport": {
+          "state": "UNKNOWN",
+          "rationale": "Current-support status is not yet established.",
+          "evidenceIds": [
+            "E-CUR-7"
+          ],
+          "assumptionIds": []
+        },
+        "structuralEconomicsFail": {
+          "state": "UNKNOWN",
+          "rationale": "Structural failure is not yet established.",
+          "evidenceIds": [
+            "E-STR-7"
+          ],
+          "assumptionIds": []
+        },
+        "thesisBreakingEvidence": {
+          "state": "UNKNOWN",
+          "rationale": "Thesis-breaking evidence status is not yet established.",
+          "evidenceIds": [
+            "E-TH-7"
+          ],
+          "assumptionIds": []
+        },
+        "rationale": "The decision state remains explicitly unknown while required analysis is incomplete."
+      },
+      "expected": {
+        "finalizable": false,
+        "eligibleCanonicalStates": [],
+        "validationCodes": [
+          "DECISION_NOT_YET_FINAL"
+        ]
+      }
+    }
+  ]
+}
