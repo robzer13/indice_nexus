@@ -1,0 +1,698 @@
+import { createHash, randomUUID } from "node:crypto";
+import {
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import { basename, dirname, join, resolve } from "node:path";
+
+import { generateText, Output } from "ai";
+
+import pilotJson from "../calibration/vnext/OROTITAN_GATE18_PILOT_V0.1.json";
+import {
+  GATE18_MODEL_CANDIDATES,
+} from "../runtime/vnext/model-calibration";
+import {
+  assertValidGate18EngineeringReceipt,
+  type Gate18EngineeringReceipt,
+} from "../runtime/vnext/model-calibration-evidence";
+import {
+  GATE18_PHASE_B_GENERATION_SCHEMA_ID,
+  GATE18_PHASE_B_GENERATION_SCHEMA_VERSION,
+  GATE18_PHASE_B_MAX_OUTPUT_TOKENS,
+  GATE18_PHASE_B_MODULE_ID,
+  GATE18_PHASE_B_PROMPT_TEMPLATE_ID,
+  GATE18_PHASE_B_PROMPT_TEMPLATE_VERSION,
+  GATE18_PHASE_B_SYSTEM_PROMPT,
+  assertGate18PhaseBSemantics,
+  buildGate18PhaseBModelInput,
+  buildVerifiedGate18EvidencePacket,
+  gate18PhaseBGenerationSchemaSha256,
+  gate18PhaseBOutputSchema,
+  gate18PhaseBPromptTemplateSha256,
+  type Gate18ArtifactPin,
+  type Gate18PhaseBOutput,
+  type Gate18PilotCompany,
+} from "../runtime/vnext/model-calibration-pilot";
+
+interface CliOptions {
+  caseSelector: string;
+  privateRepoRoot: string;
+  outputDir: string;
+  execute: boolean;
+  maxCaseSpendUsd: number | null;
+}
+
+interface ModelPricing {
+  input: number;
+  output: number;
+}
+
+interface SafeFailure {
+  label: string;
+  modelId: string;
+  error: string;
+}
+
+const DEFAULT_OUTPUT_DIR =
+  "calibration/vnext/private-runs";
+
+function sha256Hex(value: string): string {
+  return createHash("sha256").update(value, "utf8").digest("hex");
+}
+
+function parseArgs(argv: readonly string[]): CliOptions {
+  let caseSelector = "";
+  let privateRepoRoot = "";
+  let outputDir = DEFAULT_OUTPUT_DIR;
+  let execute = false;
+  let maxCaseSpendUsd: number | null = null;
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const arg = argv[index];
+
+    if (arg === "--case") {
+      caseSelector = argv[++index] ?? "";
+      continue;
+    }
+    if (arg === "--private-repo-root") {
+      privateRepoRoot = argv[++index] ?? "";
+      continue;
+    }
+    if (arg === "--output-dir") {
+      outputDir = argv[++index] ?? "";
+      continue;
+    }
+    if (arg === "--max-case-spend-usd") {
+      const raw = argv[++index] ?? "";
+      const parsed = Number(raw);
+      if (!Number.isFinite(parsed) || parsed <= 0) {
+        throw new Error(
+          "VNEXT_GATE18_PHASE_B_MAX_CASE_SPEND_INVALID",
+        );
+      }
+      maxCaseSpendUsd = parsed;
+      continue;
+    }
+    if (arg === "--execute") {
+      execute = true;
+      continue;
+    }
+
+    throw new Error(
+      `VNEXT_GATE18_PHASE_B_UNKNOWN_ARG:${arg}`,
+    );
+  }
+
+  if (caseSelector.trim().length === 0) {
+    throw new Error("VNEXT_GATE18_PHASE_B_CASE_REQUIRED");
+  }
+  if (privateRepoRoot.trim().length === 0) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_PRIVATE_REPO_ROOT_REQUIRED",
+    );
+  }
+  if (outputDir.trim().length === 0) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_OUTPUT_DIR_REQUIRED",
+    );
+  }
+  if (execute && maxCaseSpendUsd === null) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_EXECUTION_SPEND_CAP_REQUIRED",
+    );
+  }
+
+  return {
+    caseSelector,
+    privateRepoRoot: resolve(privateRepoRoot),
+    outputDir: resolve(outputDir),
+    execute,
+    maxCaseSpendUsd,
+  };
+}
+
+function findCompany(selector: string): Gate18PilotCompany {
+  const normalized = selector.trim().toLowerCase();
+
+  const matches = pilotJson.companies.filter((company) => {
+    return (
+      company.display_name.toLowerCase() === normalized ||
+      company.role.toLowerCase() === normalized ||
+      company.source_run_id.toLowerCase() === normalized
+    );
+  });
+
+  if (matches.length !== 1) {
+    throw new Error(
+      matches.length === 0
+        ? "VNEXT_GATE18_PHASE_B_CASE_NOT_FOUND"
+        : "VNEXT_GATE18_PHASE_B_CASE_AMBIGUOUS",
+    );
+  }
+
+  return matches[0] as Gate18PilotCompany;
+}
+
+function artifactReader(
+  privateRepoRoot: string,
+): (pin: Gate18ArtifactPin) => Uint8Array {
+  return (pin) => {
+    const absolute = resolve(privateRepoRoot, pin.path);
+    const rootPrefix = privateRepoRoot.endsWith("/")
+      ? privateRepoRoot
+      : `${privateRepoRoot}/`;
+
+    const normalizedAbsolute = absolute.replaceAll("\\", "/");
+    const normalizedRoot = privateRepoRoot.replaceAll("\\", "/");
+    const normalizedPrefix = normalizedRoot.endsWith("/")
+      ? normalizedRoot
+      : `${normalizedRoot}/`;
+
+    if (!normalizedAbsolute.startsWith(normalizedPrefix)) {
+      throw new Error(
+        "VNEXT_GATE18_PHASE_B_PRIVATE_PATH_ESCAPE",
+      );
+    }
+
+    return readFileSync(absolute);
+  };
+}
+
+function asRecord(
+  value: unknown,
+): Record<string, unknown> | null {
+  if (
+    value === null ||
+    typeof value !== "object" ||
+    Array.isArray(value)
+  ) {
+    return null;
+  }
+  return value as Record<string, unknown>;
+}
+
+function parseGatewayCost(
+  providerMetadata: unknown,
+): number | null {
+  const root = asRecord(providerMetadata);
+  const gateway = asRecord(root?.gateway);
+  const raw = gateway?.gatewayCost;
+
+  if (typeof raw === "number" && Number.isFinite(raw)) {
+    return raw;
+  }
+  if (typeof raw === "string") {
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  }
+
+  return null;
+}
+
+function providerRequestId(
+  providerMetadata: unknown,
+): string | null {
+  const root = asRecord(providerMetadata);
+  const gateway = asRecord(root?.gateway);
+  const routing = asRecord(gateway?.routing);
+  const attempts = routing?.modelAttempts;
+
+  if (!Array.isArray(attempts)) {
+    return null;
+  }
+
+  for (const modelAttempt of attempts) {
+    const providers = asRecord(modelAttempt)?.providerAttempts;
+    if (!Array.isArray(providers)) {
+      continue;
+    }
+
+    for (const providerAttempt of providers) {
+      const id = asRecord(providerAttempt)?.providerRequestId;
+      if (typeof id === "string" && id.length > 0) {
+        return id;
+      }
+    }
+  }
+
+  return null;
+}
+
+function safeError(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return "UNKNOWN_ERROR";
+  }
+
+  return error.message
+    .replace(/[\r\n\t]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 500);
+}
+
+async function loadPricing(): Promise<
+  ReadonlyMap<string, ModelPricing>
+> {
+  const response = await fetch(
+    "https://ai-gateway.vercel.sh/v1/models",
+  );
+
+  if (!response.ok) {
+    throw new Error(
+      `VNEXT_GATE18_PHASE_B_PRICE_CATALOG_HTTP_${response.status}`,
+    );
+  }
+
+  const payload = (await response.json()) as {
+    data?: Array<{
+      id?: string;
+      pricing?: {
+        input?: string;
+        output?: string;
+      };
+    }>;
+  };
+
+  if (!Array.isArray(payload.data)) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_PRICE_CATALOG_INVALID",
+    );
+  }
+
+  const pricing = new Map<string, ModelPricing>();
+
+  for (const model of payload.data) {
+    if (
+      typeof model.id !== "string" ||
+      typeof model.pricing?.input !== "string" ||
+      typeof model.pricing?.output !== "string"
+    ) {
+      continue;
+    }
+
+    const input = Number(model.pricing.input);
+    const output = Number(model.pricing.output);
+
+    if (
+      Number.isFinite(input) &&
+      input >= 0 &&
+      Number.isFinite(output) &&
+      output >= 0
+    ) {
+      pricing.set(model.id, { input, output });
+    }
+  }
+
+  return pricing;
+}
+
+function conservativeCaseCostCeiling(
+  input: string,
+  pricing: ReadonlyMap<string, ModelPricing>,
+): {
+  approximateInputTokenCeiling: number;
+  perModel: Array<{
+    label: string;
+    modelId: string;
+    costCeilingUsd: number;
+  }>;
+  totalCostCeilingUsd: number;
+} {
+  // Deliberately conservative for English/JSON: assume at most
+  // two UTF-16 code units per input token, then price the full
+  // output-token allowance. This is an execution guard, not a
+  // methodology or permanent budget rule.
+  const approximateInputTokenCeiling = Math.ceil(
+    input.length / 2,
+  );
+
+  const perModel = GATE18_MODEL_CANDIDATES.map(
+    (candidate) => {
+      const modelPricing = pricing.get(candidate.modelId);
+      if (!modelPricing) {
+        throw new Error(
+          `VNEXT_GATE18_PHASE_B_PRICING_MISSING:${candidate.modelId}`,
+        );
+      }
+
+      const inferenceCeiling =
+        approximateInputTokenCeiling *
+          modelPricing.input +
+        GATE18_PHASE_B_MAX_OUTPUT_TOKENS *
+          modelPricing.output;
+
+      // Reserve one tenth of a cent for gateway/reporting
+      // overhead per call. Current observed smoke overhead was
+      // lower, but execution fails closed if the aggregate cap
+      // cannot absorb this reserve.
+      const costCeilingUsd = inferenceCeiling + 0.001;
+
+      return {
+        label: candidate.label,
+        modelId: candidate.modelId,
+        costCeilingUsd,
+      };
+    },
+  );
+
+  return {
+    approximateInputTokenCeiling,
+    perModel,
+    totalCostCeilingUsd: perModel.reduce(
+      (sum, item) => sum + item.costCeilingUsd,
+      0,
+    ),
+  };
+}
+
+function writePrivateResult(
+  outputDir: string,
+  caseId: string,
+  payload: unknown,
+): string {
+  mkdirSync(outputDir, { recursive: true });
+
+  const stamp = new Date()
+    .toISOString()
+    .replaceAll(":", "")
+    .replaceAll(".", "");
+  const safeCase = caseId.replace(/[^A-Za-z0-9_-]+/g, "_");
+  const path = join(
+    outputDir,
+    `${stamp}__${safeCase}.json`,
+  );
+
+  writeFileSync(
+    path,
+    `${JSON.stringify(payload, null, 2)}\n`,
+    "utf8",
+  );
+
+  return path;
+}
+
+async function main(): Promise<void> {
+  const options = parseArgs(process.argv.slice(2));
+  const company = findCompany(options.caseSelector);
+
+  const verified = buildVerifiedGate18EvidencePacket(
+    company,
+    artifactReader(options.privateRepoRoot),
+  );
+
+  const modelInput = buildGate18PhaseBModelInput(
+    verified.packet,
+  );
+  const pricing = await loadPricing();
+  const ceiling = conservativeCaseCostCeiling(
+    modelInput,
+    pricing,
+  );
+
+  const dryRunSummary = {
+    gate: 18,
+    phase: "B_COMPANY_CALIBRATION",
+    mode: options.execute ? "EXECUTE" : "DRY_RUN",
+    publicationAuthority: false,
+    productionMutation: false,
+    modelWinnerSelected: false,
+    case: {
+      caseId: verified.packet.case_id,
+      displayName: verified.packet.display_name,
+      role: verified.packet.role,
+      sourceRunId: verified.packet.source_run_id,
+      dataCutoff: verified.packet.data_cutoff,
+    },
+    packet: {
+      evidenceItems: verified.packet.evidence_items.length,
+      conflicts: verified.packet.conflicts.length,
+      packetSha256: verified.packetSha256,
+      evidenceLedgerSha256:
+        verified.evidenceLedgerSha256,
+      conflictLedgerSha256:
+        verified.conflictLedgerSha256,
+      serializedChars: JSON.stringify(verified.packet).length,
+    },
+    prompt: {
+      moduleId: GATE18_PHASE_B_MODULE_ID,
+      promptTemplateId:
+        GATE18_PHASE_B_PROMPT_TEMPLATE_ID,
+      promptTemplateVersion:
+        GATE18_PHASE_B_PROMPT_TEMPLATE_VERSION,
+      promptTemplateSha256:
+        gate18PhaseBPromptTemplateSha256(),
+      generationSchemaId:
+        GATE18_PHASE_B_GENERATION_SCHEMA_ID,
+      generationSchemaVersion:
+        GATE18_PHASE_B_GENERATION_SCHEMA_VERSION,
+      generationSchemaSha256:
+        gate18PhaseBGenerationSchemaSha256(),
+      maxOutputTokens:
+        GATE18_PHASE_B_MAX_OUTPUT_TOKENS,
+    },
+    conservativeCostGuard: ceiling,
+    explicitSpendCapUsd: options.maxCaseSpendUsd,
+  };
+
+  if (!options.execute) {
+    console.log(JSON.stringify(dryRunSummary, null, 2));
+    return;
+  }
+
+  if (
+    !process.env.VERCEL_OIDC_TOKEN ||
+    process.env.VERCEL_OIDC_TOKEN.trim().length === 0
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_VERCEL_OIDC_TOKEN_REQUIRED",
+    );
+  }
+
+  if (
+    options.maxCaseSpendUsd === null ||
+    ceiling.totalCostCeilingUsd >
+      options.maxCaseSpendUsd
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_CONSERVATIVE_COST_CEILING_EXCEEDS_CAP",
+    );
+  }
+
+  const executions: Array<{
+    engineering: Gate18EngineeringReceipt;
+    output: Gate18PhaseBOutput;
+    providerMetadata: unknown;
+  }> = [];
+  const failures: SafeFailure[] = [];
+  let observedGatewayCostUsd = 0;
+
+  for (const candidate of GATE18_MODEL_CANDIDATES) {
+    if (
+      observedGatewayCostUsd >=
+      options.maxCaseSpendUsd
+    ) {
+      failures.push({
+        label: candidate.label,
+        modelId: candidate.modelId,
+        error:
+          "VNEXT_GATE18_PHASE_B_OBSERVED_SPEND_CAP_REACHED",
+      });
+      break;
+    }
+
+    const startedAt = performance.now();
+
+    try {
+      const result = await generateText({
+        model: candidate.modelId,
+        reasoning: candidate.reasoning,
+        output: Output.object({
+          name: "orotitan_gate18_phase_b_evidence_audit",
+          description:
+            "OroTitan Gate 18 assisted evidence-audit calibration output.",
+          schema: gate18PhaseBOutputSchema,
+        }),
+        system: GATE18_PHASE_B_SYSTEM_PROMPT,
+        prompt: modelInput,
+        maxOutputTokens:
+          GATE18_PHASE_B_MAX_OUTPUT_TOKENS,
+        providerOptions: {
+          gateway: {
+            tags: [
+              "project:orotitan",
+              "gate:18",
+              "phase:b-company-calibration",
+              `case:${company.source_run_id}`,
+              `model:${candidate.label.toLowerCase()}`,
+            ],
+          },
+        },
+      });
+
+      let semanticValid = true;
+      try {
+        assertGate18PhaseBSemantics(
+          verified.packet,
+          result.output,
+        );
+      } catch {
+        semanticValid = false;
+      }
+
+      const gatewayCost = parseGatewayCost(
+        result.providerMetadata,
+      );
+
+      if (gatewayCost === null) {
+        throw new Error(
+          "VNEXT_GATE18_PHASE_B_GATEWAY_COST_MISSING",
+        );
+      }
+
+      observedGatewayCostUsd += gatewayCost;
+
+      const outputJson = JSON.stringify(result.output);
+      const receipt: Gate18EngineeringReceipt = {
+        invocation: {
+          caseId: company.source_run_id,
+          displayName: company.display_name,
+          sourceRunId: company.source_run_id,
+          dataCutoff: company.data_cutoff,
+          moduleId: GATE18_PHASE_B_MODULE_ID,
+          modelLabel: candidate.label,
+          modelId: candidate.modelId,
+          repetition: 1,
+          promptTemplateId:
+            GATE18_PHASE_B_PROMPT_TEMPLATE_ID,
+          promptTemplateVersion:
+            GATE18_PHASE_B_PROMPT_TEMPLATE_VERSION,
+          promptTemplateSha256:
+            gate18PhaseBPromptTemplateSha256(),
+          generationSchemaId:
+            GATE18_PHASE_B_GENERATION_SCHEMA_ID,
+          generationSchemaVersion:
+            GATE18_PHASE_B_GENERATION_SCHEMA_VERSION,
+          generationSchemaSha256:
+            gate18PhaseBGenerationSchemaSha256(),
+          evidencePacketSha256:
+            verified.packetSha256,
+        },
+        executionId: randomUUID(),
+        providerRequestId: providerRequestId(
+          result.providerMetadata,
+        ),
+        schemaValid: true,
+        semanticValid,
+        latencyMs: Math.round(
+          performance.now() - startedAt,
+        ),
+        inputTokens:
+          result.totalUsage.inputTokens ?? null,
+        cachedInputTokens: null,
+        outputTokens:
+          result.totalUsage.outputTokens ?? null,
+        reasoningTokens:
+          result.usage.outputTokenDetails
+            .reasoningTokens ?? null,
+        totalTokens:
+          result.totalUsage.totalTokens ?? null,
+        retryCount: 0,
+        estimatedCostUsd: gatewayCost,
+        costProvenance:
+          "VERCEL_AI_GATEWAY_PROVIDER_METADATA.gatewayCost",
+        finishReason: result.finishReason ?? null,
+        responseSha256: sha256Hex(outputJson),
+      };
+
+      assertValidGate18EngineeringReceipt(receipt);
+
+      executions.push({
+        engineering: receipt,
+        output: result.output,
+        providerMetadata:
+          result.providerMetadata ?? null,
+      });
+    } catch (error) {
+      failures.push({
+        label: candidate.label,
+        modelId: candidate.modelId,
+        error: safeError(error),
+      });
+    }
+  }
+
+  const payload = {
+    format:
+      "OROTITAN_GATE18_PHASE_B_PRIVATE_RUN_V0.1",
+    privateArtifact: true,
+    publicationAuthority: false,
+    productionMutation: false,
+    modelWinnerSelected: false,
+    createdAt: new Date().toISOString(),
+    dryRunSummary,
+    observedGatewayCostUsd,
+    executions,
+    failures,
+  };
+
+  const outputPath = writePrivateResult(
+    options.outputDir,
+    company.source_run_id,
+    payload,
+  );
+
+  console.log(
+    JSON.stringify(
+      {
+        gate: 18,
+        phase: "B_COMPANY_CALIBRATION",
+        status:
+          failures.length === 0 &&
+          executions.length ===
+            GATE18_MODEL_CANDIDATES.length
+            ? "COMPLETE"
+            : "PARTIAL_OR_FAILED",
+        displayName: company.display_name,
+        modelsCompleted: executions.length,
+        failures: failures.map((failure) => ({
+          label: failure.label,
+          modelId: failure.modelId,
+          error: failure.error,
+        })),
+        observedGatewayCostUsd,
+        outputFile: join(
+          basename(dirname(outputPath)),
+          basename(outputPath),
+        ),
+        outputIsPrivateAndGitignored: true,
+      },
+      null,
+      2,
+    ),
+  );
+
+  if (
+    failures.length > 0 ||
+    executions.length !==
+      GATE18_MODEL_CANDIDATES.length
+  ) {
+    process.exitCode = 1;
+  }
+}
+
+void main().catch((error: unknown) => {
+  console.error(
+    JSON.stringify(
+      {
+        gate: 18,
+        phase: "B_COMPANY_CALIBRATION",
+        status: "FAILED_CLOSED",
+        error: safeError(error),
+      },
+      null,
+      2,
+    ),
+  );
+  process.exitCode = 1;
+});
