@@ -1,0 +1,92 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_TARGETED_CONTRAST_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-ADYEN-TERRA-CONTRAST-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "synthesis_file": "calibration/vnext/OROTITAN_GATE18_PHASE_B_LUNA_FIVE_COMPANY_SYNTHESIS_V1.md",
+    "synthesis_merge_sha": "0505762e3809f3b16203317783d425142ca07601",
+    "luna_sweep_engineering_valid_rate": "5/5",
+    "luna_sweep_comparison_admissible_rate": "3/5",
+    "targeted_failure_mode": "EVIDENCE_ROLE_AND_COUNTEREVIDENCE_CLASSIFICATION"
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_items": 16,
+    "conflicts": 3
+  },
+  "model": {
+    "label": "TERRA",
+    "model_id": "openai/gpt-5.6-terra",
+    "reasoning": "medium"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_3",
+    "prompt_template_version": "0.3",
+    "prompt_template_sha256": "c8cd217419eca8a6f8f86c85ae066efdb41bef2a3e4f42fa436417ca1cdc0846",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_3",
+    "generation_schema_version": "0.3",
+    "generation_schema_sha256": "1517c7b7d6b5a7d1d72ab19ab9f7e5771de79c1a7b1d28f72b4327fc60f4ed72",
+    "max_output_tokens": 4096
+  },
+  "calibration_question": "Does medium reasoning produce canonical evidence references and correctly classify support versus counterevidence roles on the Adyen conflicting-evidence case?",
+  "why_this_contrast": [
+    "Adyen directly exercises the support/counterevidence polarity failure observed in the LUNA output.",
+    "TERRA is the lowest-cost higher-reasoning candidate.",
+    "Adyen's packet is substantially smaller than the RATIONAL packet on which TERRA previously failed semantic reference validity, allowing a targeted packet-density versus reasoning-reliability observation.",
+    "The call tests a specific failure mode rather than repeating an automatic four-model sweep."
+  ],
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.061458,
+    "authorized_hard_cap_usd": 0.0615,
+    "last_displayed_project_limit_usd": 4,
+    "last_displayed_project_spend_usd": 1.41,
+    "last_displayed_team_limit_usd": 4,
+    "last_displayed_team_spend_usd": 1.41
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "exact E-/C- grounding",
+      "correct support/counterevidence polarity",
+      "material conflict handling",
+      "weak-link usefulness",
+      "unresolved-point usefulness",
+      "judgment boundary"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
