@@ -1,0 +1,124 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ADYEN-LUNA-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "FAIL",
+  "classification": "SINGLE_MODEL_PAID_CANARY_NOT_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "prompt_template_sha256": "c8cd217419eca8a6f8f86c85ae066efdb41bef2a3e4f42fa436417ca1cdc0846",
+    "generation_schema_version": "0.3",
+    "generation_schema_sha256": "1517c7b7d6b5a7d1d72ab19ab9f7e5771de79c1a7b1d28f72b4327fc60f4ed72",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "minimal"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "6df5d669-3185-4907-8c82-c48fcd177c92",
+    "provider_request_id": "req_135cf8ff2e324a1680a9343b2b8b3672",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 6073,
+    "input_tokens": 3439,
+    "output_tokens": 666,
+    "reasoning_tokens": 55,
+    "total_tokens": 4105,
+    "gateway_cost_usd": 0.0020338,
+    "response_sha256": "e4a6741e0fc266c108c041c0450bcc61a2640a4a56d118fb52a556c26ac7f7e1"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS_WITH_ROLE_CLASSIFICATION_ERROR",
+    "conflict_handling": "PASS",
+    "counterevidence_treatment": "FAIL",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS_WITH_OBSERVATION",
+    "comparison_admissible": false,
+    "notes": [
+      "Finding 1 is grounded: E-036 reports sub-1% churn with an undisclosed metric definition, E-037 documents multi-PSP behavior, and C-005 correctly bounds switching-friction inference. E-041 and E-051 further support the ability to switch providers or orchestrate multiple PSPs.",
+      "Finding 2 is grounded: E-012, E-042 and E-057 support unified architecture, device integration and licensed/local infrastructure. E-052 is a legitimate competitive counterpoint showing rival direct-acquiring/local-regulatory investment.",
+      "Finding 3 correctly identifies that product-uplift evidence is primarily issuer-reported or selected through E-043, E-044 and E-045.",
+      "However, E-046 is incorrectly placed in counterevidence_ids. It is another issuer-reported uplift observation with no independent audit and therefore reinforces, rather than contradicts, the finding's limitation.",
+      "C-004 and C-005 are both surfaced as unresolved and materially relevant.",
+      "Because counterevidence field semantics are part of the human-quality contract, the observation is not comparison-admissible despite schemaValid=true and semanticValid=true.",
+      "No post-hoc repair or retry is authorized."
+    ]
+  },
+  "luna_sweep_state": {
+    "st_microelectronics": {
+      "role": "CYCLICAL_SEGMENTED",
+      "engineering_valid": true,
+      "comparison_admissible": true
+    },
+    "rational": {
+      "role": "SIMPLE_CLEAN_COMPOUNDER",
+      "engineering_valid": true,
+      "comparison_admissible": true
+    },
+    "constellation": {
+      "role": "SERIAL_ACQUIRER",
+      "engineering_valid": true,
+      "comparison_admissible": true
+    },
+    "brookfield": {
+      "role": "ACCOUNTING_HEAVY",
+      "engineering_valid": true,
+      "comparison_admissible": false
+    },
+    "adyen": {
+      "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "engineering_valid": true,
+      "comparison_admissible": false
+    },
+    "engineering_valid_rate": "5/5",
+    "comparison_admissible_rate": "3/5",
+    "interpretation": "LUNA is technically reliable across all five pilot roles but human-quality admissibility falls on two analytically more demanding cases due to evidence-role classification errors. This does not freeze a model winner or routing rule."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.41,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.41,
+    "current_call_exact_gateway_cost_usd": 0.0020338,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "adyen_luna_comparison_admissible": false,
+    "adyen_luna_retry_authorized": false,
+    "luna_five_company_sweep_complete": true,
+    "further_paid_execution_authorized": false,
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
