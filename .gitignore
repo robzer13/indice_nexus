@@ -29,6 +29,9 @@ node_modules/
 *.tsbuildinfo
 next-env.d.ts
 
+# OroTitan private calibration outputs
+calibration/vnext/private-runs/
+
 # IDE/editor
 .idea/
 .vscode/
