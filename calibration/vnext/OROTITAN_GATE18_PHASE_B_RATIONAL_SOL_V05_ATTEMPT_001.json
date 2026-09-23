@@ -1,0 +1,125 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-RATIONAL-SOL-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "FAIL",
+  "classification": "SINGLE_MODEL_PAID_CANARY_NOT_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "RATIONAL AG",
+    "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+    "data_cutoff": "2026-09-19",
+    "role": "SIMPLE_CLEAN_COMPOUNDER",
+    "evidence_packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "medium"
+  },
+  "model": {
+    "label": "SOL",
+    "model_id": "openai/gpt-5.6-sol",
+    "requested_reasoning": "medium"
+  },
+  "execution": {
+    "execution_id": "26b69e0d-b78a-4741-b7c3-fbff8034ad94",
+    "provider_request_id": "req_fec9e3c26fb74fa7b5ebe192aa40ed05",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 10409,
+    "input_tokens": 8948,
+    "output_tokens": 629,
+    "reasoning_tokens": 459,
+    "total_tokens": 9577,
+    "gateway_cost_usd": 0.057692,
+    "response_sha256": "79d5f727b63ba0d537906a5f79305f4304aa1dfb9b41e7cea6346c9d982baaf6"
+  },
+  "semantic_failure": {
+    "class": "NON_CANONICAL_COUNTEREVIDENCE_REFERENCE",
+    "invalid_reference": "E-051-E-054?",
+    "effect": "A counterevidence reference is not an exact packet evidence identifier, so deterministic grounding verification fails.",
+    "schema_valid_but_semantic_invalid": true
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "FAIL",
+    "directional_grounding": "PASS_WITH_SEMANTIC_REFERENCE_FAILURE",
+    "conflict_handling": "FAIL_INCOMPLETE",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "INCOMPLETE",
+    "comparison_admissible": false,
+    "notes": [
+      "The single visible finding is directionally supported by E-006, E-029, E-040 and C-011: workflow standardization may help while credible competitor overlap and replacement choice constrain switching-cost inference.",
+      "The counterevidence array contains the non-canonical string E-051-E-054?, which cannot be mapped deterministically to exact packet evidence IDs.",
+      "The model returned only one priority finding and empty material-conflicts, weak-link and unresolved-point sections despite a packet containing nine conflicts and multiple clearly material unresolved moat questions.",
+      "No retry is authorized. The observation is retained as a model-quality calibration failure rather than repaired post hoc."
+    ]
+  },
+  "paired_observation": {
+    "luna": {
+      "gateway_cost_usd": 0.00343145,
+      "latency_ms": 7014,
+      "input_tokens": 8948,
+      "output_tokens": 683,
+      "reasoning_tokens": 56,
+      "semantic_valid": true,
+      "comparison_admissible": true
+    },
+    "terra": {
+      "gateway_cost_usd": 0.0371435,
+      "latency_ms": 15496,
+      "input_tokens": 8948,
+      "output_tokens": 1200,
+      "reasoning_tokens": 496,
+      "semantic_valid": false,
+      "comparison_admissible": false
+    },
+    "sol": {
+      "gateway_cost_usd": 0.057692,
+      "latency_ms": 10409,
+      "input_tokens": 8948,
+      "output_tokens": 629,
+      "reasoning_tokens": 459,
+      "semantic_valid": false,
+      "comparison_admissible": false
+    },
+    "sol_to_luna_cost_ratio": 16.812717655801485,
+    "sol_to_luna_latency_ratio": 1.4840319361277445,
+    "sol_to_luna_reasoning_token_ratio": 8.196428571428571,
+    "sol_to_terra_cost_ratio": 1.5532192712049213,
+    "interpretation": "On this RATIONAL packet, LUNA is the only comparison-admissible observation among the first three candidates. This is case evidence only and does not freeze a model winner or routing rule."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.17,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.17,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "rational_luna_comparison_admissible": true,
+    "rational_terra_comparison_admissible": false,
+    "rational_sol_comparison_admissible": false,
+    "sol_retry_authorized": false,
+    "next_model_candidate": "ASTRA",
+    "astra_execution_authorized": false,
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
