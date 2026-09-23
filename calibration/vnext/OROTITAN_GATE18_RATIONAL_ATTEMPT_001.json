@@ -1,0 +1,81 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-RATIONAL-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PARTIAL_OR_FAILED",
+  "classification": "FAILED_STRUCTURED_OUTPUT_ADMISSION",
+  "observed_at_utc": "2026-09-23T10:53:52.931Z",
+  "case": {
+    "display_name": "RATIONAL AG",
+    "role": "SIMPLE_CLEAN_COMPOUNDER",
+    "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+    "data_cutoff": "2026-09-19",
+    "evidence_packet_sha256": "a756802a35367c3f7ee32d97d2d72e3206c14474b50a2893bc73118bf91a7c06"
+  },
+  "execution_contract": {
+    "module_id": "EVIDENCE_AUDIT_ASSISTED_V0_1",
+    "prompt_template_id": "GATE18_EVIDENCE_AUDIT_V0_1",
+    "prompt_template_version": "0.1",
+    "generation_schema_id": "GATE18_EVIDENCE_AUDIT_OUTPUT_V0_1",
+    "generation_schema_version": "0.1",
+    "max_output_tokens": 1536,
+    "explicit_case_spend_cap_usd": 1
+  },
+  "models_expected": 4,
+  "models_completed": 0,
+  "quality_observations": 0,
+  "failures": [
+    {
+      "label": "LUNA",
+      "model_id": "openai/gpt-5.6-luna",
+      "error": "No object generated: could not parse the response."
+    },
+    {
+      "label": "TERRA",
+      "model_id": "openai/gpt-5.6-terra",
+      "error": "No object generated: could not parse the response."
+    },
+    {
+      "label": "SOL",
+      "model_id": "openai/gpt-5.6-sol",
+      "error": "No output generated."
+    },
+    {
+      "label": "ASTRA",
+      "model_id": "openai/gpt-6-astra",
+      "error": "No output generated."
+    }
+  ],
+  "cost_evidence": {
+    "runner_observed_gateway_cost_usd": 0.5775745,
+    "vercel_budget_display_before_usd": 0.01,
+    "vercel_budget_display_after_usd": 0.68,
+    "reconciliation_status": "INCOMPLETE",
+    "note": "The failed-output runner did not retain enough per-call failure diagnostics to reconcile the external budget display to the runner aggregate. Budget display values are rounded. No inference should be drawn from the apparent difference until diagnostic receipts are captured."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false,
+    "methodology_changed": false
+  },
+  "interpretation": {
+    "analytical_quality_failure": false,
+    "engineering_output_contract_failure": true,
+    "root_cause_proven": false,
+    "output_token_limit_hypothesis": "UNCONFIRMED",
+    "automatic_rerun_authorized": false
+  },
+  "required_next_step": [
+    "Patch the runner to retain finish reason, usage, reasoning tokens, generated-text hash/length, provider request identity and gateway cost on failed structured output.",
+    "Support explicit single-model diagnostic execution.",
+    "Run at most one low-cost diagnostic call before changing max-output or GenerationSchema settings."
+  ],
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}

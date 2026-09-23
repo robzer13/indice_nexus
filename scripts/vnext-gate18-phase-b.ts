@@ -6,7 +6,11 @@ import {
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
 
-import { generateText, Output } from "ai";
+import {
+  generateText,
+  NoObjectGeneratedError,
+  Output,
+} from "ai";
 
 import pilotJson from "../calibration/vnext/OROTITAN_GATE18_PILOT_V0.1.json";
 import {
@@ -41,6 +45,7 @@ interface CliOptions {
   outputDir: string;
   execute: boolean;
   maxCaseSpendUsd: number | null;
+  modelLabels: string[];
 }
 
 interface ModelPricing {
@@ -52,6 +57,30 @@ interface SafeFailure {
   label: string;
   modelId: string;
   error: string;
+  errorType: string;
+  cause: string | null;
+  finishReason: string | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  reasoningTokens: number | null;
+  totalTokens: number | null;
+  generatedTextChars: number | null;
+  generatedTextSha256: string | null;
+  providerRequestId: string | null;
+  gatewayCostUsd: number | null;
+}
+
+interface StepDiagnosticSnapshot {
+  finishReason: string | null;
+  inputTokens: number | null;
+  outputTokens: number | null;
+  reasoningTokens: number | null;
+  totalTokens: number | null;
+  textChars: number;
+  textSha256: string;
+  providerRequestId: string | null;
+  gatewayCostUsd: number | null;
+  providerMetadata: unknown;
 }
 
 const DEFAULT_OUTPUT_DIR =
@@ -67,6 +96,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   let outputDir = DEFAULT_OUTPUT_DIR;
   let execute = false;
   let maxCaseSpendUsd: number | null = null;
+  const modelLabels: string[] = [];
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -92,6 +122,10 @@ function parseArgs(argv: readonly string[]): CliOptions {
         );
       }
       maxCaseSpendUsd = parsed;
+      continue;
+    }
+    if (arg === "--model") {
+      modelLabels.push((argv[++index] ?? "").trim().toUpperCase());
       continue;
     }
     if (arg === "--execute") {
@@ -123,12 +157,25 @@ function parseArgs(argv: readonly string[]): CliOptions {
     );
   }
 
+  for (const label of modelLabels) {
+    if (
+      !GATE18_MODEL_CANDIDATES.some(
+        (candidate) => candidate.label === label,
+      )
+    ) {
+      throw new Error(
+        `VNEXT_GATE18_PHASE_B_UNKNOWN_MODEL_LABEL:${label}`,
+      );
+    }
+  }
+
   return {
     caseSelector,
     privateRepoRoot: resolve(privateRepoRoot),
     outputDir: resolve(outputDir),
     execute,
     maxCaseSpendUsd,
+    modelLabels,
   };
 }
 
@@ -251,6 +298,84 @@ function safeError(error: unknown): string {
     .slice(0, 500);
 }
 
+function safeCause(error: unknown): string | null {
+  if (!(error instanceof Error)) {
+    return null;
+  }
+
+  const candidate = (error as Error & { cause?: unknown }).cause;
+  if (candidate === undefined) {
+    return null;
+  }
+
+  if (candidate instanceof Error) {
+    return safeError(candidate);
+  }
+
+  if (typeof candidate === "string") {
+    return candidate
+      .replace(/[\r\n\t]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+      .slice(0, 500);
+  }
+
+  return "NON_ERROR_CAUSE";
+}
+
+function failureDiagnostic(
+  label: string,
+  modelId: string,
+  error: unknown,
+  step: StepDiagnosticSnapshot | null,
+): SafeFailure {
+  let finishReason = step?.finishReason ?? null;
+  let inputTokens = step?.inputTokens ?? null;
+  let outputTokens = step?.outputTokens ?? null;
+  let reasoningTokens = step?.reasoningTokens ?? null;
+  let totalTokens = step?.totalTokens ?? null;
+  let generatedTextChars = step?.textChars ?? null;
+  let generatedTextSha256 = step?.textSha256 ?? null;
+
+  if (NoObjectGeneratedError.isInstance(error)) {
+    finishReason = error.finishReason ?? finishReason;
+
+    if (error.usage) {
+      inputTokens = error.usage.inputTokens ?? inputTokens;
+      outputTokens = error.usage.outputTokens ?? outputTokens;
+      reasoningTokens =
+        error.usage.outputTokenDetails.reasoningTokens ??
+        reasoningTokens;
+      totalTokens = error.usage.totalTokens ?? totalTokens;
+    }
+
+    if (typeof error.text === "string") {
+      generatedTextChars = error.text.length;
+      generatedTextSha256 = sha256Hex(error.text);
+    }
+  }
+
+  return {
+    label,
+    modelId,
+    error: safeError(error),
+    errorType:
+      error instanceof Error
+        ? error.name || "Error"
+        : "UNKNOWN_ERROR",
+    cause: safeCause(error),
+    finishReason,
+    inputTokens,
+    outputTokens,
+    reasoningTokens,
+    totalTokens,
+    generatedTextChars,
+    generatedTextSha256,
+    providerRequestId: step?.providerRequestId ?? null,
+    gatewayCostUsd: step?.gatewayCostUsd ?? null,
+  };
+}
+
 async function loadPricing(): Promise<
   ReadonlyMap<string, ModelPricing>
 > {
@@ -310,6 +435,7 @@ async function loadPricing(): Promise<
 function conservativeCaseCostCeiling(
   input: string,
   pricing: ReadonlyMap<string, ModelPricing>,
+  candidates: readonly (typeof GATE18_MODEL_CANDIDATES)[number][],
 ): {
   approximateInputTokenCeiling: number;
   perModel: Array<{
@@ -327,7 +453,7 @@ function conservativeCaseCostCeiling(
     input.length / 2,
   );
 
-  const perModel = GATE18_MODEL_CANDIDATES.map(
+  const perModel = candidates.map(
     (candidate) => {
       const modelPricing = pricing.get(candidate.modelId);
       if (!modelPricing) {
@@ -404,10 +530,24 @@ async function main(): Promise<void> {
   const modelInput = buildGate18PhaseBModelInput(
     verified.packet,
   );
+  const selectedCandidates =
+    options.modelLabels.length === 0
+      ? [...GATE18_MODEL_CANDIDATES]
+      : GATE18_MODEL_CANDIDATES.filter((candidate) =>
+          options.modelLabels.includes(candidate.label),
+        );
+
+  if (selectedCandidates.length === 0) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_MODEL_SELECTION_EMPTY",
+    );
+  }
+
   const pricing = await loadPricing();
   const ceiling = conservativeCaseCostCeiling(
     modelInput,
     pricing,
+    selectedCandidates,
   );
 
   const dryRunSummary = {
@@ -453,6 +593,11 @@ async function main(): Promise<void> {
     },
     conservativeCostGuard: ceiling,
     explicitSpendCapUsd: options.maxCaseSpendUsd,
+    selectedModels: selectedCandidates.map((candidate) => ({
+      label: candidate.label,
+      modelId: candidate.modelId,
+      reasoning: candidate.reasoning,
+    })),
   };
 
   if (!options.execute) {
@@ -487,7 +632,7 @@ async function main(): Promise<void> {
   const failures: SafeFailure[] = [];
   let observedGatewayCostUsd = 0;
 
-  for (const candidate of GATE18_MODEL_CANDIDATES) {
+  for (const candidate of selectedCandidates) {
     if (
       observedGatewayCostUsd >=
       options.maxCaseSpendUsd
@@ -497,11 +642,24 @@ async function main(): Promise<void> {
         modelId: candidate.modelId,
         error:
           "VNEXT_GATE18_PHASE_B_OBSERVED_SPEND_CAP_REACHED",
+        errorType: "SPEND_GUARD",
+        cause: null,
+        finishReason: null,
+        inputTokens: null,
+        outputTokens: null,
+        reasoningTokens: null,
+        totalTokens: null,
+        generatedTextChars: null,
+        generatedTextSha256: null,
+        providerRequestId: null,
+        gatewayCostUsd: null,
       });
       break;
     }
 
     const startedAt = performance.now();
+    let stepSnapshot: StepDiagnosticSnapshot | null = null;
+    let callCostAccounted = false;
 
     try {
       const result = await generateText({
@@ -528,21 +686,38 @@ async function main(): Promise<void> {
             ],
           },
         },
+        onStepFinish(step) {
+          const textValue =
+            typeof step.text === "string" ? step.text : "";
+          stepSnapshot = {
+            finishReason: step.finishReason ?? null,
+            inputTokens: step.usage.inputTokens ?? null,
+            outputTokens: step.usage.outputTokens ?? null,
+            reasoningTokens:
+              step.usage.outputTokenDetails.reasoningTokens ??
+              null,
+            totalTokens: step.usage.totalTokens ?? null,
+            textChars: textValue.length,
+            textSha256: sha256Hex(textValue),
+            providerRequestId:
+              providerRequestId(step.providerMetadata) ??
+              step.response.id ??
+              null,
+            gatewayCostUsd: parseGatewayCost(
+              step.providerMetadata,
+            ),
+            providerMetadata:
+              step.providerMetadata ?? null,
+          };
+        },
       });
 
-      let semanticValid = true;
-      try {
-        assertGate18PhaseBSemantics(
-          verified.packet,
-          result.output,
-        );
-      } catch {
-        semanticValid = false;
-      }
-
-      const gatewayCost = parseGatewayCost(
-        result.providerMetadata,
-      );
+      const capturedStep =
+        stepSnapshot as StepDiagnosticSnapshot | null;
+      const gatewayCost =
+        parseGatewayCost(result.providerMetadata) ??
+        capturedStep?.gatewayCostUsd ??
+        null;
 
       if (gatewayCost === null) {
         throw new Error(
@@ -551,8 +726,20 @@ async function main(): Promise<void> {
       }
 
       observedGatewayCostUsd += gatewayCost;
+      callCostAccounted = true;
 
-      const outputJson = JSON.stringify(result.output);
+      const output = result.output;
+      let semanticValid = true;
+      try {
+        assertGate18PhaseBSemantics(
+          verified.packet,
+          output,
+        );
+      } catch {
+        semanticValid = false;
+      }
+
+      const outputJson = JSON.stringify(output);
       const receipt: Gate18EngineeringReceipt = {
         invocation: {
           caseId: company.source_run_id,
@@ -609,16 +796,32 @@ async function main(): Promise<void> {
 
       executions.push({
         engineering: receipt,
-        output: result.output,
+        output,
         providerMetadata:
           result.providerMetadata ?? null,
       });
     } catch (error) {
-      failures.push({
-        label: candidate.label,
-        modelId: candidate.modelId,
-        error: safeError(error),
-      });
+      const capturedStep =
+        stepSnapshot as StepDiagnosticSnapshot | null;
+
+      if (
+        !callCostAccounted &&
+        capturedStep?.gatewayCostUsd !== null &&
+        capturedStep?.gatewayCostUsd !== undefined
+      ) {
+        observedGatewayCostUsd +=
+          capturedStep.gatewayCostUsd;
+        callCostAccounted = true;
+      }
+
+      failures.push(
+        failureDiagnostic(
+          candidate.label,
+          candidate.modelId,
+          error,
+          capturedStep,
+        ),
+      );
     }
   }
 
@@ -650,7 +853,7 @@ async function main(): Promise<void> {
         status:
           failures.length === 0 &&
           executions.length ===
-            GATE18_MODEL_CANDIDATES.length
+            selectedCandidates.length
             ? "COMPLETE"
             : "PARTIAL_OR_FAILED",
         displayName: company.display_name,
@@ -659,6 +862,19 @@ async function main(): Promise<void> {
           label: failure.label,
           modelId: failure.modelId,
           error: failure.error,
+          errorType: failure.errorType,
+          cause: failure.cause,
+          finishReason: failure.finishReason,
+          inputTokens: failure.inputTokens,
+          outputTokens: failure.outputTokens,
+          reasoningTokens: failure.reasoningTokens,
+          totalTokens: failure.totalTokens,
+          generatedTextChars: failure.generatedTextChars,
+          generatedTextSha256:
+            failure.generatedTextSha256,
+          providerRequestId:
+            failure.providerRequestId,
+          gatewayCostUsd: failure.gatewayCostUsd,
         })),
         observedGatewayCostUsd,
         outputFile: join(
@@ -675,7 +891,7 @@ async function main(): Promise<void> {
   if (
     failures.length > 0 ||
     executions.length !==
-      GATE18_MODEL_CANDIDATES.length
+      selectedCandidates.length
   ) {
     process.exitCode = 1;
   }

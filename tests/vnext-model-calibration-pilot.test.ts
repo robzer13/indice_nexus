@@ -3,6 +3,7 @@ import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
+import rationalAttempt from "../calibration/vnext/OROTITAN_GATE18_RATIONAL_ATTEMPT_001.json";
 import smokeAttempt from "../calibration/vnext/OROTITAN_GATE18_SMOKE_ATTEMPT_002.json";
 import {
   GATE18_PHASE_B_GENERATION_SCHEMA_SPEC,
@@ -272,6 +273,11 @@ test("Gate 18 Phase B runner is local, explicit-spend and private-output only", 
 
   assert.match(source, /--execute/);
   assert.match(source, /--max-case-spend-usd/);
+  assert.match(source, /--model/);
+  assert.match(source, /onStepFinish/);
+  assert.match(source, /NoObjectGeneratedError/);
+  assert.match(source, /generatedTextSha256/);
+  assert.match(source, /gatewayCostUsd/);
   assert.match(
     source,
     /VNEXT_GATE18_PHASE_B_EXECUTION_SPEND_CAP_REQUIRED/,
@@ -324,6 +330,50 @@ test("Gate 18 successful smoke evidence is exactly 4/4 with no model winner", ()
   assert.equal(smokeAttempt.model_winner_selected, false);
   assert.equal(
     smokeAttempt.gate_effect.gate_18,
+    "IN_PROGRESS_NOT_FROZEN",
+  );
+});
+
+
+test("Gate 18 RATIONAL attempt 001 is recorded as engineering failure without quality judgment", () => {
+  assert.equal(rationalAttempt.gate, 18);
+  assert.equal(
+    rationalAttempt.phase,
+    "B_COMPANY_CALIBRATION",
+  );
+  assert.equal(rationalAttempt.status, "PARTIAL_OR_FAILED");
+  assert.equal(rationalAttempt.models_completed, 0);
+  assert.equal(rationalAttempt.quality_observations, 0);
+  assert.equal(
+    rationalAttempt.interpretation.analytical_quality_failure,
+    false,
+  );
+  assert.equal(
+    rationalAttempt.interpretation.engineering_output_contract_failure,
+    true,
+  );
+  assert.equal(
+    rationalAttempt.interpretation.root_cause_proven,
+    false,
+  );
+  assert.equal(
+    rationalAttempt.interpretation.output_token_limit_hypothesis,
+    "UNCONFIRMED",
+  );
+  assert.equal(
+    rationalAttempt.cost_evidence.runner_observed_gateway_cost_usd,
+    0.5775745,
+  );
+  assert.equal(
+    rationalAttempt.cost_evidence.vercel_budget_display_after_usd,
+    0.68,
+  );
+  assert.equal(
+    rationalAttempt.authority.model_winner_selected,
+    false,
+  );
+  assert.equal(
+    rationalAttempt.gate_effect.gate_18,
     "IN_PROGRESS_NOT_FROZEN",
   );
 });
