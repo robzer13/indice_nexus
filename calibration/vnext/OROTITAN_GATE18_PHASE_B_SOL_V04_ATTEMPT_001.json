@@ -1,0 +1,71 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_MODEL_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-SOL-V04-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.4",
+  "status": "EXECUTION_FAILURE_REASONING_EXHAUSTED_OUTPUT_CAP",
+  "classification": "TRANSPORT_PROFILE_FAILURE_NOT_QUALITY_FAILURE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096
+  },
+  "model": {
+    "label": "SOL",
+    "model_id": "openai/gpt-5.6-sol",
+    "requested_reasoning": "high"
+  },
+  "execution": {
+    "provider_request_id": "req_9a87704e4b694b358966dcfc1440cad3",
+    "models_completed": 0,
+    "error": "No output generated.",
+    "error_type": "AI_NoOutputGeneratedError",
+    "finish_reason": "length",
+    "input_tokens": 2437,
+    "output_tokens": 4096,
+    "reasoning_tokens": 4096,
+    "total_tokens": 6533,
+    "generated_text_chars": 0,
+    "generated_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gateway_cost_usd": 0.094477
+  },
+  "prior_related_failure": {
+    "protocol_version": "0.3",
+    "max_output_tokens": 1536,
+    "reasoning_tokens": 1536,
+    "generated_text_chars": 0,
+    "gateway_cost_usd": 0.043277
+  },
+  "diagnosis": {
+    "observed": "SOL/high exhausted the complete visible-plus-reasoning budget twice, at 1536 and 4096 tokens, with zero visible structured output.",
+    "conclusion": "A third blind increase in the common max-output envelope is not justified under the project's cost-discipline rule.",
+    "quality_interpretation": "No analytical-quality observation is available because no visible structured answer was produced."
+  },
+  "next_protocol_rule": {
+    "action": "Test a bounded SOL company-level reasoning profile before any further paid SOL/high attempt.",
+    "reason": "Gate 18 permits model-specific reasoning profiles while holding company, evidence, prompt, schema, max-output contract and source access constant.",
+    "luna_terra_rerun_required": false,
+    "basis": "Their v0.4 invocations remain byte-identical on every controlled request field; only SOL's allowed model-specific reasoning profile is revised."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false,
+    "automatic_retry_authorized": false,
+    "astra_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
