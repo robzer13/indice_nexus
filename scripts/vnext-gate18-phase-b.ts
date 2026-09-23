@@ -14,8 +14,8 @@ import {
 
 import pilotJson from "../calibration/vnext/OROTITAN_GATE18_PILOT_V0.1.json";
 import {
-  GATE18_MODEL_CANDIDATES,
-} from "../runtime/vnext/model-calibration";
+  GATE18_PHASE_B_MODEL_CANDIDATES,
+} from "../runtime/vnext/model-calibration-phase-b-profiles";
 import {
   assertValidGate18EngineeringReceipt,
   type Gate18EngineeringReceipt,
@@ -41,7 +41,7 @@ import {
   gate18PhaseBV03OutputSchema,
   gate18PhaseBV03PromptTemplateSha256,
   type Gate18PhaseBV03Output,
-} from "../runtime/vnext/model-calibration-pilot-v04";
+} from "../runtime/vnext/model-calibration-pilot-v05";
 
 interface CliOptions {
   caseSelector: string;
@@ -185,7 +185,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
 
   for (const label of modelLabels) {
     if (
-      !GATE18_MODEL_CANDIDATES.some(
+      !GATE18_PHASE_B_MODEL_CANDIDATES.some(
         (candidate) => candidate.label === label,
       )
     ) {
@@ -495,7 +495,7 @@ async function loadPricing(): Promise<
 function conservativeCaseCostCeiling(
   input: string,
   pricing: ReadonlyMap<string, ModelPricing>,
-  candidates: readonly (typeof GATE18_MODEL_CANDIDATES)[number][],
+  candidates: readonly (typeof GATE18_PHASE_B_MODEL_CANDIDATES)[number][],
 ): {
   approximateInputTokenCeiling: number;
   perModel: Array<{
@@ -592,8 +592,8 @@ async function main(): Promise<void> {
   );
   const selectedCandidates =
     options.modelLabels.length === 0
-      ? [...GATE18_MODEL_CANDIDATES]
-      : GATE18_MODEL_CANDIDATES.filter((candidate) =>
+      ? [...GATE18_PHASE_B_MODEL_CANDIDATES]
+      : GATE18_PHASE_B_MODEL_CANDIDATES.filter((candidate) =>
           options.modelLabels.includes(candidate.label),
         );
 
