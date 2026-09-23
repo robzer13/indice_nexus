@@ -14,7 +14,8 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
     "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh && bash tests/postgres/run-registry-v1-migration-tests.sh && bash tests/postgres/run-v2-canonical-migration-tests.sh",
-    "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh"
+    "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh",
+    "test:vnext:azure-live": "tsx runtime/vnext/azure-gate13-smoke.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "2.110.7",
