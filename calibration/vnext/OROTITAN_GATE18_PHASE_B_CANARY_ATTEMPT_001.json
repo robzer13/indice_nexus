@@ -1,0 +1,59 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-LUNA-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "ENGINEERING_PASS_HUMAN_QUALITY_HOLD",
+  "classification": "SINGLE_MODEL_PAID_CANARY",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "c32092d2-0002-4fa4-a4b4-179acb00f306",
+    "provider_request_id": "req_0c4855218faa4c36ae3f2feed61c7e3f",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 7493,
+    "input_tokens": 2380,
+    "output_tokens": 786,
+    "reasoning_tokens": 116,
+    "total_tokens": 3166,
+    "gateway_cost_usd": 0.00191305,
+    "response_sha256": "414c40073b5225919191d9e8e5fbc113b3087f209f843e1c0ae75da60dc777aa"
+  },
+  "quality_adjudication": {
+    "grounding_check": "PASS_ON_SAMPLED_REFERENCES",
+    "conflict_handling_check": "PASS_ON_SAMPLED_REFERENCES",
+    "human_judgment_boundary_check": "PASS",
+    "narrative_completeness": "FAIL",
+    "comparison_admissible": false,
+    "reason": "Multiple narrative fields terminate at or near the v0.2 hard character boundary or end mid-thought. This is attributed to the calibration output contract, not to a proven model-quality deficiency."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "required_next_step": [
+    "Version the calibration prompt/schema rather than mutating v0.2 in place.",
+    "Preserve the 1536-token provider cap.",
+    "Add narrative headroom plus deterministic completeness validation.",
+    "Do not test TERRA, SOL or ASTRA until the revised LUNA canary passes."
+  ],
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
