@@ -9,7 +9,6 @@ import { basename, dirname, join, resolve } from "node:path";
 import {
   generateText,
   NoObjectGeneratedError,
-  NoOutputGeneratedError,
   Output,
 } from "ai";
 
