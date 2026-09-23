@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from "node:crypto";
+import { execFileSync } from "node:child_process";
 import {
   mkdirSync,
-  readFileSync,
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, join, resolve } from "node:path";
@@ -231,13 +231,9 @@ function artifactReader(
   privateRepoRoot: string,
 ): (pin: Gate18ArtifactPin) => Uint8Array {
   return (pin) => {
-    const absolute = resolve(privateRepoRoot, pin.path);
-    const rootPrefix = privateRepoRoot.endsWith("/")
-      ? privateRepoRoot
-      : `${privateRepoRoot}/`;
-
-    const normalizedAbsolute = absolute.replaceAll("\\", "/");
     const normalizedRoot = privateRepoRoot.replaceAll("\\", "/");
+    const absolute = resolve(privateRepoRoot, pin.path);
+    const normalizedAbsolute = absolute.replaceAll("\\", "/");
     const normalizedPrefix = normalizedRoot.endsWith("/")
       ? normalizedRoot
       : `${normalizedRoot}/`;
@@ -248,7 +244,44 @@ function artifactReader(
       );
     }
 
-    return readFileSync(absolute);
+    try {
+      execFileSync(
+        "git",
+        [
+          "-C",
+          privateRepoRoot,
+          "cat-file",
+          "-e",
+          `${pin.commit_sha}^{commit}`,
+        ],
+        {
+          stdio: ["ignore", "ignore", "pipe"],
+        },
+      );
+
+      return execFileSync(
+        "git",
+        [
+          "-C",
+          privateRepoRoot,
+          "show",
+          `${pin.commit_sha}:${pin.path.replaceAll("\\", "/")}`,
+        ],
+        {
+          encoding: "buffer",
+          maxBuffer: 20 * 1024 * 1024,
+          stdio: ["ignore", "pipe", "pipe"],
+        },
+      );
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message.replace(/[\r\n\t]+/g, " ").slice(0, 300)
+          : "UNKNOWN_GIT_READ_ERROR";
+      throw new Error(
+        `VNEXT_GATE18_PHASE_B_PINNED_GIT_READ_FAILED:${message}`,
+      );
+    }
   };
 }
 

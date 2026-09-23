@@ -34,6 +34,7 @@ interface Variant {
   valueKey: "value_statement" | "value";
   conflictIdKey: "conflict_id" | "id";
   conflictScope: "MOAT_INPUTS" | "MOAT";
+  omitTopLevelVersion?: boolean;
 }
 
 function buildVariant(variant: Variant) {
@@ -84,7 +85,7 @@ function buildVariant(variant: Variant) {
     artifact_type: "EVIDENCE_LEDGER",
     run_id: runId,
     data_cutoff: dataCutoff,
-    version: 1,
+    ...(variant.omitTopLevelVersion ? {} : { version: 1 }),
     [variant.evidenceArrayKey]: [
       scopedEvidence,
       conflictReferencedEvidence,
@@ -97,7 +98,7 @@ function buildVariant(variant: Variant) {
     artifact_type: "CONFLICT_LEDGER",
     run_id: runId,
     data_cutoff: dataCutoff,
-    version: 1,
+    ...(variant.omitTopLevelVersion ? {} : { version: 1 }),
     conflicts: [
       {
         [variant.conflictIdKey]: "C-001",
@@ -219,6 +220,7 @@ const variants: Variant[] = [
     valueKey: "value",
     conflictIdKey: "id",
     conflictScope: "MOAT",
+    omitTopLevelVersion: true,
   },
 ];
 
@@ -319,5 +321,30 @@ test("Gate 18 runner is wired to v0.2 and keeps paid multi-model execution opt-i
   assert.match(
     source,
     /VNEXT_GATE18_PHASE_B_PRECALL_SPEND_CAP_WOULD_BE_EXCEEDED/,
+  );
+});
+
+
+test("Gate 18 v0.2 fails closed when pinned filename version disagrees with manifest version", () => {
+  const fixture = buildVariant({
+    name: "VERSION_MISMATCH",
+    evidenceArrayKey: "items",
+    evidenceIdKey: "id",
+    moduleKey: "blocks",
+    valueKey: "value",
+    conflictIdKey: "id",
+    conflictScope: "MOAT",
+    omitTopLevelVersion: true,
+  });
+
+  fixture.company.evidence_ledger.version = 2;
+
+  assert.throws(
+    () =>
+      buildVerifiedGate18V02MoatPacket(
+        fixture.company,
+        fixture.readArtifact,
+      ),
+    /VNEXT_GATE18_V02_PRIVATE_PATH_VERSION_MISMATCH/,
   );
 });
