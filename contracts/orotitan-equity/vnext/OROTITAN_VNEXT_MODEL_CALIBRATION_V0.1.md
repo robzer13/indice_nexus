@@ -735,3 +735,51 @@ silently reused as the paired v0.4 comparison set. Paired v0.4 comparison
 requires fresh executions under the same 4096-token max-output contract.
 
 This correction changes no analytical methodology and selects no model winner.
+
+
+## 23. Phase B SOL bounded-reasoning correction
+
+The first two company-level SOL attempts used the initial `reasoning=high`
+profile.
+
+Observed on the same STMicroelectronics bounded MOAT audit:
+
+```text
+v0.3: 1536 / 1536 output tokens consumed as reasoning, visible output = 0
+v0.4: 4096 / 4096 output tokens consumed as reasoning, visible output = 0
+```
+
+Both finished for length. Neither produced analytical-quality evidence.
+
+Gate 18 does not authorize repeated paid max-output escalation without new
+information.
+
+Section 7 already permits model-specific reasoning profiles while holding the
+controlled benchmark request invariant. Phase B protocol v0.5 therefore
+changes only the company-level SOL reasoning profile:
+
+```text
+SOL reasoning: high -> medium
+physical model: unchanged
+maxOutputTokens: unchanged at 4096
+prompt/schema/packet/source access: unchanged
+```
+
+The general Phase A smoke candidate record remains historical and unchanged.
+The Phase B runner uses an explicit Phase B execution-profile registry.
+
+Accepted LUNA and TERRA v0.4 observations remain admissible because their
+individual request contracts are unchanged. They are not rerun solely because
+SOL's allowed model-specific reasoning profile changed.
+
+Durable artifacts:
+
+```text
+calibration/vnext/OROTITAN_GATE18_PHASE_B_SOL_V04_ATTEMPT_001.json
+calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V0.5.md
+runtime/vnext/model-calibration-phase-b-profiles.ts
+runtime/vnext/model-calibration-pilot-v05.ts
+```
+
+This correction changes no analytical methodology, selects no model winner,
+and does not authorize ASTRA.
