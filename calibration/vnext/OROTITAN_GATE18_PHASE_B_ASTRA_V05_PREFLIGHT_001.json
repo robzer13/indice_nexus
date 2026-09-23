@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_MODEL_PREFLIGHT_V1",
+  "attempt_id": "G18-PHASEB-ST-ASTRA-V05-PREFLIGHT-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "mode": "DRY_RUN",
+  "status": "PASS",
+  "publication_authority": false,
+  "production_mutation": false,
+  "model_winner_selected": false,
+  "paid_inference_executed": false,
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "role": "CYCLICAL_SEGMENTED"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 35,
+    "source_conflicts": 6,
+    "scoped_evidence_items": 9,
+    "scoped_conflicts": 2,
+    "packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673",
+    "evidence_ledger_sha256": "e223082e884a58f8677442a90ee400224892cd2bd7adb7df4f41e6095b9facd7",
+    "conflict_ledger_sha256": "6f4e1530677c26da56cd8976ddfc8df6aa71a81d3e732bb29200a309701938e2",
+    "serialized_chars": 6742
+  },
+  "prompt": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_3",
+    "prompt_template_version": "0.3",
+    "prompt_template_sha256": "c8cd217419eca8a6f8f86c85ae066efdb41bef2a3e4f42fa436417ca1cdc0846",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_3",
+    "generation_schema_version": "0.3",
+    "generation_schema_sha256": "1517c7b7d6b5a7d1d72ab19ab9f7e5771de79c1a7b1d28f72b4327fc60f4ed72",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "ASTRA",
+    "model_id": "openai/gpt-6-astra",
+    "reasoning": "high"
+  },
+  "cost_guard": {
+    "approximate_input_token_ceiling": 3578,
+    "conservative_model_cost_ceiling_usd": 0.24158000000000002,
+    "recommended_single_call_cap_usd": 0.242
+  },
+  "budget_snapshot": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 0.91,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 0.91,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "execution_authority": {
+    "automatic_paid_execution_authorized": false,
+    "single_model_only": true,
+    "multi_model_execution_authorized": false,
+    "automatic_retry_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
