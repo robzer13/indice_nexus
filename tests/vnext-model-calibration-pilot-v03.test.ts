@@ -85,7 +85,7 @@ function validOutput(): Gate18PhaseBV03Output {
     ],
     weak_link_candidates: [
       {
-        candidate: "Synthetic weak link",
+        candidate: "Synthetic weak link.",
         evidence_ids: ["E-001"],
         conflict_ids: ["C-001"],
         why_uncertain: "The packet does not independently resolve the underlying uncertainty.",
@@ -179,5 +179,36 @@ test("Gate 18 v0.3 still rejects unknown evidence references", () => {
         output,
       ),
     /VNEXT_GATE18_V03_UNKNOWN_EVIDENCE_REF/,
+  );
+});
+
+
+test("Gate 18 v0.3 rejects incomplete weak-link candidate text", () => {
+  const output = validOutput();
+  output.weak_link_candidates[0].candidate =
+    "This weak-link candidate ends mid-thought because";
+
+  assert.throws(
+    () =>
+      assertGate18PhaseBV03Semantics(
+        packet(),
+        output,
+      ),
+    /VNEXT_GATE18_V03_WEAK_LINK_CANDIDATE_INCOMPLETE/,
+  );
+});
+
+test("Gate 18 v0.3 rejects weak-link candidate boundary saturation", () => {
+  const output = validOutput();
+  output.weak_link_candidates[0].candidate =
+    `${"x".repeat(137)}.`;
+
+  assert.throws(
+    () =>
+      assertGate18PhaseBV03Semantics(
+        packet(),
+        output,
+      ),
+    /VNEXT_GATE18_V03_NARRATIVE_BOUNDARY_SATURATION/,
   );
 });
