@@ -1,0 +1,24 @@
+export {
+  GATE18_PHASE_B_V03_GENERATION_SCHEMA_ID,
+  GATE18_PHASE_B_V03_GENERATION_SCHEMA_SPEC,
+  GATE18_PHASE_B_V03_GENERATION_SCHEMA_VERSION,
+  GATE18_PHASE_B_V03_MODULE_ID,
+  GATE18_PHASE_B_V03_MODULE_QUESTION,
+  GATE18_PHASE_B_V03_PROMPT_TEMPLATE_ID,
+  GATE18_PHASE_B_V03_PROMPT_TEMPLATE_VERSION,
+  GATE18_PHASE_B_V03_SCOPE,
+  GATE18_PHASE_B_V03_SYSTEM_PROMPT,
+  GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS,
+  assertGate18PhaseBV03Semantics,
+  buildGate18PhaseBV03ModelInput,
+  buildVerifiedGate18V03MoatPacket,
+  gate18PhaseBV03GenerationSchemaSha256,
+  gate18PhaseBV03OutputSchema,
+  gate18PhaseBV03PromptTemplateSha256,
+} from "./model-calibration-pilot-v04";
+
+export type {
+  Gate18PhaseBV03Output,
+} from "./model-calibration-pilot-v04";
+
+export const GATE18_PHASE_B_PROTOCOL_VERSION = "0.5" as const;
