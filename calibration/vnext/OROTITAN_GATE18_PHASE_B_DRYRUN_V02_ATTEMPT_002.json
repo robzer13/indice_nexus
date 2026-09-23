@@ -1,0 +1,91 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_DRYRUN_V02_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-V02-DRYRUN-002",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "mode": "DRY_RUN",
+  "status": "PASS",
+  "classification": "FIVE_COMPANY_PREPAID_PREFLIGHT_PASS",
+  "publication_authority": false,
+  "production_mutation": false,
+  "model_winner_selected": false,
+  "paid_inference_executed": false,
+  "cases": [
+    {
+      "display_name": "RATIONAL AG",
+      "status": "PASS",
+      "source_evidence_items": 146,
+      "source_conflicts": 18,
+      "scoped_evidence_items": 56,
+      "scoped_conflicts": 9,
+      "packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879",
+      "serialized_chars": 34978,
+      "luna_cost_ceiling_usd": 0.006378,
+      "four_model_cost_ceiling_usd": 0.418114
+    },
+    {
+      "display_name": "Constellation Software",
+      "status": "PASS",
+      "source_evidence_items": 68,
+      "source_conflicts": 9,
+      "scoped_evidence_items": 11,
+      "scoped_conflicts": 1,
+      "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+      "serialized_chars": 8263,
+      "luna_cost_ceiling_usd": 0.0037066,
+      "four_model_cost_ceiling_usd": 0.2017306
+    },
+    {
+      "display_name": "STMicroelectronics",
+      "status": "PASS",
+      "source_evidence_items": 35,
+      "source_conflicts": 6,
+      "scoped_evidence_items": 9,
+      "scoped_conflicts": 2,
+      "packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673",
+      "serialized_chars": 6742,
+      "luna_cost_ceiling_usd": 0.0035544,
+      "four_model_cost_ceiling_usd": 0.1894024
+    },
+    {
+      "display_name": "Brookfield Corporation",
+      "status": "PASS",
+      "source_evidence_items": 55,
+      "source_conflicts": 18,
+      "scoped_evidence_items": 12,
+      "scoped_conflicts": 2,
+      "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+      "serialized_chars": 8865,
+      "luna_cost_ceiling_usd": 0.0037668,
+      "four_model_cost_ceiling_usd": 0.2066068
+    },
+    {
+      "display_name": "Adyen",
+      "status": "PASS",
+      "source_evidence_items": 80,
+      "source_conflicts": 10,
+      "scoped_evidence_items": 16,
+      "scoped_conflicts": 3,
+      "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+      "serialized_chars": 10891,
+      "luna_cost_ceiling_usd": 0.0039694,
+      "four_model_cost_ceiling_usd": 0.2230174
+    }
+  ],
+  "prepaid_canary_selection": {
+    "basis": "LOWEST_CONSERVATIVE_LUNA_COST_CEILING_AMONG_FIVE_VALID_DRY_RUNS",
+    "display_name": "STMicroelectronics",
+    "model_label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "conservative_cost_ceiling_usd": 0.0035544,
+    "automatic_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "engineering_conclusion": {
+    "all_five_pinned_private_sources_resolved": true,
+    "all_five_v02_packets_built": true,
+    "all_five_live_price_guards_computed": true,
+    "next_paid_step_must_be_single_model": true,
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
