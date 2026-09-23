@@ -503,6 +503,16 @@ function assertPin(
   }
 }
 
+function versionFromPinnedPath(path: string): number | null {
+  const match = path.match(/__v(\d{3})\.json$/);
+  if (!match) {
+    return null;
+  }
+
+  const parsed = Number(match[1]);
+  return Number.isInteger(parsed) ? parsed : null;
+}
+
 function parsePinnedArtifact(
   bytes: Uint8Array,
   pin: Gate18ArtifactPin,
@@ -534,8 +544,30 @@ function parsePinnedArtifact(
   if (record.data_cutoff !== company.data_cutoff) {
     throw new Error("VNEXT_GATE18_V02_PRIVATE_ARTIFACT_CUTOFF_MISMATCH");
   }
-  if (record.version !== pin.version) {
-    throw new Error("VNEXT_GATE18_V02_PRIVATE_ARTIFACT_VERSION_MISMATCH");
+  const pathVersion = versionFromPinnedPath(pin.path);
+
+  if (pathVersion !== pin.version) {
+    throw new Error(
+      "VNEXT_GATE18_V02_PRIVATE_PATH_VERSION_MISMATCH",
+    );
+  }
+
+  if (
+    record.version !== undefined &&
+    record.version !== pin.version
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_V02_PRIVATE_ARTIFACT_VERSION_MISMATCH",
+    );
+  }
+
+  if (
+    record.version === undefined &&
+    pathVersion === null
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_V02_PRIVATE_ARTIFACT_VERSION_UNPROVABLE",
+    );
   }
 
   return record;
