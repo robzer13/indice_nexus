@@ -1,0 +1,120 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-RATIONAL-TERRA-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "FAIL",
+  "classification": "SINGLE_MODEL_PAID_CANARY_NOT_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "RATIONAL AG",
+    "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+    "data_cutoff": "2026-09-19",
+    "role": "SIMPLE_CLEAN_COMPOUNDER",
+    "evidence_packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "medium"
+  },
+  "model": {
+    "label": "TERRA",
+    "model_id": "openai/gpt-5.6-terra",
+    "requested_reasoning": "medium"
+  },
+  "execution": {
+    "execution_id": "eda02bd3-137b-4fc3-abb0-217b497cec07",
+    "provider_request_id": "req_9b16eb49383e4124aab83ca60084d935",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 15496,
+    "input_tokens": 8948,
+    "output_tokens": 1200,
+    "reasoning_tokens": 496,
+    "total_tokens": 10148,
+    "gateway_cost_usd": 0.0371435,
+    "response_sha256": "beb88ba4188a67f4508c8695d12607ede3ca3b0e9caac8cf1a9a6333e65797ad"
+  },
+  "semantic_failure": {
+    "class": "MALFORMED_EVIDENCE_REFERENCE_STRINGS",
+    "examples": [
+      "E-026','E-29",
+      "E-049','E-51",
+      "E-058','E-59",
+      "E-035','E-38",
+      "E-026','E-30"
+    ],
+    "effect": "Evidence-reference arrays contain combined/non-canonical IDs, breaking deterministic grounding verification.",
+    "schema_valid_but_semantic_invalid": true
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "directional_grounding": "PASS_WITH_SEMANTIC_REFERENCE_FAILURE",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS_WITH_OBSERVATION",
+    "comparison_admissible": false,
+    "notes": [
+      "The substantive themes are directionally consistent with the packet: ConnectedCooking monetization boundary, service/channel economics, switching-cost counterevidence, recurrence uncertainty and customer-ROI uncertainty.",
+      "However, multiple evidence arrays contain malformed combined IDs rather than canonical packet identifiers. This prevents exact machine-verifiable grounding and fails the semantic contract.",
+      "No retry is authorized. The failure is retained as a model-quality calibration observation rather than corrected post hoc."
+    ]
+  },
+  "paired_observation_against_rational_luna": {
+    "luna": {
+      "gateway_cost_usd": 0.00343145,
+      "latency_ms": 7014,
+      "input_tokens": 8948,
+      "output_tokens": 683,
+      "reasoning_tokens": 56,
+      "semantic_valid": true,
+      "comparison_admissible": true
+    },
+    "terra": {
+      "gateway_cost_usd": 0.0371435,
+      "latency_ms": 15496,
+      "input_tokens": 8948,
+      "output_tokens": 1200,
+      "reasoning_tokens": 496,
+      "semantic_valid": false,
+      "comparison_admissible": false
+    },
+    "terra_to_luna_cost_ratio": 10.824432819944922,
+    "terra_to_luna_latency_ratio": 2.2092956943256343,
+    "terra_to_luna_output_token_ratio": 1.7569546120058566,
+    "terra_to_luna_reasoning_token_ratio": 8.857142857142858,
+    "interpretation": "TERRA used materially more reasoning and visible output than LUNA but failed the semantic evidence-reference contract on this RATIONAL observation. No quality-cost inference beyond this case is frozen."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.11,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.11,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "rational_luna_comparison_admissible": true,
+    "rational_terra_comparison_admissible": false,
+    "terra_retry_authorized": false,
+    "next_model_candidate": "SOL",
+    "sol_execution_authorized": false,
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
