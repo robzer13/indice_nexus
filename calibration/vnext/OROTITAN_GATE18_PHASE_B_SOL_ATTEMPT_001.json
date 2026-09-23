@@ -1,0 +1,58 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_MODEL_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-SOL-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.3",
+  "status": "EXECUTION_FAILURE_REASONING_EXHAUSTED_OUTPUT_CAP",
+  "classification": "TRANSPORT_ENVELOPE_FAILURE_NOT_QUALITY_FAILURE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "model": {
+    "label": "SOL",
+    "model_id": "openai/gpt-5.6-sol",
+    "requested_reasoning": "high"
+  },
+  "execution": {
+    "provider_request_id": "req_c79fa9e1acf64feba71cf5f149511f92",
+    "models_completed": 0,
+    "error": "No output generated.",
+    "error_type": "AI_NoOutputGeneratedError",
+    "finish_reason": "length",
+    "input_tokens": 2437,
+    "output_tokens": 1536,
+    "reasoning_tokens": 1536,
+    "total_tokens": 3973,
+    "generated_text_chars": 0,
+    "generated_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "gateway_cost_usd": 0.043277
+  },
+  "root_cause": {
+    "observed": "All 1536 allowed output tokens were consumed as reasoning tokens; no visible structured output was emitted.",
+    "provider_behavior": "Vercel AI Gateway documents that GPT-5.6 Sol reasoning tokens count toward maxOutputTokens.",
+    "provider_reference": "https://vercel.com/ai-gateway/models/gpt-5.6-sol",
+    "conclusion": "The common 1536-token transport envelope is incompatible with this SOL-high invocation. This is not evidence of analytical quality failure."
+  },
+  "contract_implication": {
+    "same_request_invariant": "Gate 18 section 7 requires the max output contract to remain identical across candidates.",
+    "forbidden_fix": "Do not increase maxOutputTokens only for SOL.",
+    "required_fix": "Version a new common max output contract and apply it identically to every candidate before paired comparison."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false,
+    "automatic_retry_authorized": false,
+    "astra_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
