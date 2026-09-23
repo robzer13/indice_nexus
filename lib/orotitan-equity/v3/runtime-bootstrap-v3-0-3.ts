@@ -104,7 +104,7 @@ export type RunContextV3 = {
   format: "OROTITAN_RUN_CONTEXT_V3";
   contextVersion: "3.0.3";
   orotitanVersion: "3.1";
-  runtimeBootstrapVersion: "3.0.2";
+  runtimeBootstrapVersion: "3.0.3";
   runtimeBootstrapCanonicalSha256: string;
   contractSetSha256: string;
   productionProjectRef: string;
@@ -516,7 +516,7 @@ export function assertRunContextV3(context: RunContextV3): void {
   assertRuntimeBootstrapIntegrity();
   const mismatch = [
     context.format !== "OROTITAN_RUN_CONTEXT_V3" && "format",
-    context.contextVersion !== "3.0.2" && "contextVersion",
+    context.contextVersion !== "3.0.3" && "contextVersion",
     context.orotitanVersion !== OROTITAN_VERSION && "orotitanVersion",
     context.runtimeBootstrapVersion !== OROTITAN_RUNTIME_BOOTSTRAP_VERSION && "runtimeBootstrapVersion",
     context.runtimeBootstrapCanonicalSha256 !== runtimeBootstrapCanonicalSha256 && "runtimeBootstrapCanonicalSha256",
