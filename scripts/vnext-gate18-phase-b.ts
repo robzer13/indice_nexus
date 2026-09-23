@@ -46,6 +46,7 @@ interface CliOptions {
   execute: boolean;
   maxCaseSpendUsd: number | null;
   modelLabels: string[];
+  allowMultiModel: boolean;
 }
 
 interface ModelPricing {
@@ -97,6 +98,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   let execute = false;
   let maxCaseSpendUsd: number | null = null;
   const modelLabels: string[] = [];
+  let allowMultiModel = false;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -128,6 +130,10 @@ function parseArgs(argv: readonly string[]): CliOptions {
       modelLabels.push((argv[++index] ?? "").trim().toUpperCase());
       continue;
     }
+    if (arg === "--allow-multi-model") {
+      allowMultiModel = true;
+      continue;
+    }
     if (arg === "--execute") {
       execute = true;
       continue;
@@ -157,6 +163,22 @@ function parseArgs(argv: readonly string[]): CliOptions {
     );
   }
 
+  if (execute && modelLabels.length === 0) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_EXPLICIT_MODEL_REQUIRED",
+    );
+  }
+
+  if (
+    execute &&
+    modelLabels.length > 1 &&
+    !allowMultiModel
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_MULTI_MODEL_REQUIRES_EXPLICIT_ALLOW",
+    );
+  }
+
   for (const label of modelLabels) {
     if (
       !GATE18_MODEL_CANDIDATES.some(
@@ -176,6 +198,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
     execute,
     maxCaseSpendUsd,
     modelLabels,
+    allowMultiModel,
   };
 }
 
@@ -593,6 +616,7 @@ async function main(): Promise<void> {
     },
     conservativeCostGuard: ceiling,
     explicitSpendCapUsd: options.maxCaseSpendUsd,
+    allowMultiModel: options.allowMultiModel,
     selectedModels: selectedCandidates.map((candidate) => ({
       label: candidate.label,
       modelId: candidate.modelId,
@@ -633,15 +657,26 @@ async function main(): Promise<void> {
   let observedGatewayCostUsd = 0;
 
   for (const candidate of selectedCandidates) {
+    const candidateCeiling =
+      ceiling.perModel.find(
+        (item) => item.label === candidate.label,
+      )?.costCeilingUsd ?? null;
+
+    if (candidateCeiling === null) {
+      throw new Error(
+        `VNEXT_GATE18_PHASE_B_COST_CEILING_MISSING:${candidate.label}`,
+      );
+    }
+
     if (
-      observedGatewayCostUsd >=
+      observedGatewayCostUsd + candidateCeiling >
       options.maxCaseSpendUsd
     ) {
       failures.push({
         label: candidate.label,
         modelId: candidate.modelId,
         error:
-          "VNEXT_GATE18_PHASE_B_OBSERVED_SPEND_CAP_REACHED",
+          "VNEXT_GATE18_PHASE_B_PRECALL_SPEND_CAP_WOULD_BE_EXCEEDED",
         errorType: "SPEND_GUARD",
         cause: null,
         finishReason: null,

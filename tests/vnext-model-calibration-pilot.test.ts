@@ -274,6 +274,19 @@ test("Gate 18 Phase B runner is local, explicit-spend and private-output only", 
   assert.match(source, /--execute/);
   assert.match(source, /--max-case-spend-usd/);
   assert.match(source, /--model/);
+  assert.match(source, /--allow-multi-model/);
+  assert.match(
+    source,
+    /VNEXT_GATE18_PHASE_B_EXPLICIT_MODEL_REQUIRED/,
+  );
+  assert.match(
+    source,
+    /VNEXT_GATE18_PHASE_B_MULTI_MODEL_REQUIRES_EXPLICIT_ALLOW/,
+  );
+  assert.match(
+    source,
+    /VNEXT_GATE18_PHASE_B_PRECALL_SPEND_CAP_WOULD_BE_EXCEEDED/,
+  );
   assert.match(source, /onStepFinish/);
   assert.match(source, /NoObjectGeneratedError/);
   assert.match(source, /generatedTextSha256/);
