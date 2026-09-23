@@ -1,0 +1,79 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_DRYRUN_V02_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-V02-DRYRUN-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "mode": "DRY_RUN",
+  "status": "PARTIAL_ENGINEERING_FAILURE",
+  "publication_authority": false,
+  "production_mutation": false,
+  "model_winner_selected": false,
+  "paid_inference_executed": false,
+  "cases": [
+    {
+      "display_name": "RATIONAL AG",
+      "status": "PASS",
+      "source_evidence_items": 146,
+      "source_conflicts": 18,
+      "scoped_evidence_items": 56,
+      "scoped_conflicts": 9,
+      "serialized_chars": 34978,
+      "luna_cost_ceiling_usd": 0.006378,
+      "four_model_cost_ceiling_usd": 0.418114
+    },
+    {
+      "display_name": "Constellation Software",
+      "status": "PASS",
+      "source_evidence_items": 68,
+      "source_conflicts": 9,
+      "scoped_evidence_items": 11,
+      "scoped_conflicts": 1,
+      "serialized_chars": 8263,
+      "luna_cost_ceiling_usd": 0.0037066,
+      "four_model_cost_ceiling_usd": 0.2017306
+    },
+    {
+      "display_name": "STMicroelectronics",
+      "status": "FAILED_CLOSED",
+      "error": "PINNED_ARTIFACT_NOT_PRESENT_IN_CURRENT_PRIVATE_WORKTREE",
+      "root_cause": "The runner read the current working tree even though the pilot manifest pins a historical commit. The exact artifact exists at the pinned commit."
+    },
+    {
+      "display_name": "Brookfield Corporation",
+      "status": "PASS",
+      "source_evidence_items": 55,
+      "source_conflicts": 18,
+      "scoped_evidence_items": 12,
+      "scoped_conflicts": 2,
+      "serialized_chars": 8865,
+      "luna_cost_ceiling_usd": 0.0037668,
+      "four_model_cost_ceiling_usd": 0.2066068
+    },
+    {
+      "display_name": "Adyen",
+      "status": "FAILED_CLOSED",
+      "error": "VNEXT_GATE18_V02_PRIVATE_ARTIFACT_VERSION_MISMATCH",
+      "root_cause": "The pinned v001 evidence/conflict filenames and manifest version identify version 1, but these physical ledgers omit a top-level version field."
+    }
+  ],
+  "free_repository_verification": {
+    "stmicroelectronics_exact_pinned_artifact_exists": true,
+    "stmicroelectronics_expected_scoped_evidence_items": 9,
+    "stmicroelectronics_expected_scoped_conflicts": 2,
+    "adyen_exact_pinned_artifacts_exist": true,
+    "adyen_evidence_top_level_version_present": false,
+    "adyen_conflict_top_level_version_present": false,
+    "adyen_expected_scoped_evidence_items": 16,
+    "adyen_expected_scoped_conflicts": 3
+  },
+  "required_fix": [
+    "Read private artifacts from the exact commit pinned by each artifact reference, not from the current working tree.",
+    "When a physical ledger omits top-level version, require the manifest version to match the exact __vNNN.json filename suffix.",
+    "Retain fail-closed behavior for any disagreement between manifest, path, embedded metadata or content hash."
+  ],
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
