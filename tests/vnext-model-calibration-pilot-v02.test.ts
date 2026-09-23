@@ -337,11 +337,7 @@ test("Gate 18 v0.2 fails closed when pinned filename version disagrees with mani
     omitTopLevelVersion: true,
   });
 
-  fixture.company.evidence_ledger.path =
-    fixture.company.evidence_ledger.path.replace(
-      "__v001.json",
-      "__v002.json",
-    );
+  fixture.company.evidence_ledger.version = 2;
 
   assert.throws(
     () =>
