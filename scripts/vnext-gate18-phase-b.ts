@@ -27,7 +27,8 @@ import {
 import {
   GATE18_PHASE_B_V03_GENERATION_SCHEMA_ID,
   GATE18_PHASE_B_V03_GENERATION_SCHEMA_VERSION,
-  GATE18_PHASE_B_V03_MAX_OUTPUT_TOKENS,
+  GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS,
+  GATE18_PHASE_B_PROTOCOL_VERSION,
   GATE18_PHASE_B_V03_MODULE_ID,
   GATE18_PHASE_B_V03_PROMPT_TEMPLATE_ID,
   GATE18_PHASE_B_V03_PROMPT_TEMPLATE_VERSION,
@@ -40,7 +41,7 @@ import {
   gate18PhaseBV03OutputSchema,
   gate18PhaseBV03PromptTemplateSha256,
   type Gate18PhaseBV03Output,
-} from "../runtime/vnext/model-calibration-pilot-v03";
+} from "../runtime/vnext/model-calibration-pilot-v04";
 
 interface CliOptions {
   caseSelector: string;
@@ -524,7 +525,7 @@ function conservativeCaseCostCeiling(
       const inferenceCeiling =
         approximateInputTokenCeiling *
           modelPricing.input +
-        GATE18_PHASE_B_V03_MAX_OUTPUT_TOKENS *
+        GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS *
           modelPricing.output;
 
       // Reserve one tenth of a cent for gateway/reporting
@@ -651,7 +652,7 @@ async function main(): Promise<void> {
       generationSchemaSha256:
         gate18PhaseBV03GenerationSchemaSha256(),
       maxOutputTokens:
-        GATE18_PHASE_B_V03_MAX_OUTPUT_TOKENS,
+        GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS,
     },
     conservativeCostGuard: ceiling,
     explicitSpendCapUsd: options.maxCaseSpendUsd,
@@ -748,7 +749,7 @@ async function main(): Promise<void> {
         system: GATE18_PHASE_B_V03_SYSTEM_PROMPT,
         prompt: modelInput,
         maxOutputTokens:
-          GATE18_PHASE_B_V03_MAX_OUTPUT_TOKENS,
+          GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS,
         providerOptions: {
           gateway: {
             tags: [
@@ -901,7 +902,7 @@ async function main(): Promise<void> {
 
   const payload = {
     format:
-      "OROTITAN_GATE18_PHASE_B_PRIVATE_RUN_V0.3",
+      `OROTITAN_GATE18_PHASE_B_PRIVATE_RUN_V${GATE18_PHASE_B_PROTOCOL_VERSION}`,
     privateArtifact: true,
     publicationAuthority: false,
     productionMutation: false,

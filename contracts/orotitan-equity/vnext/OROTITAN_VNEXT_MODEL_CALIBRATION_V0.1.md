@@ -683,3 +683,55 @@ investment conclusion
 
 This preserves the frozen human-judgment boundary while still generating
 comparable evidence for model calibration.
+
+
+## 22. Phase B compact moat-audit protocol and v0.4 transport correction
+
+The first broad company-level v0.1 packet proved unnecessarily large for
+cost-efficient calibration. Phase B therefore moved to the bounded
+MOAT_INPUTS audit contract while preserving the ASSIST-only human-judgment
+boundary.
+
+Current prompt/schema contract:
+
+```text
+module = MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3
+prompt template = GATE18_MOAT_EVIDENCE_AUDIT_V0_3
+GenerationSchema = GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_3
+scope = MOAT_INPUTS
+```
+
+The first v0.3 SOL/high company attempt then exposed an execution-envelope
+defect:
+
+```text
+maxOutputTokens = 1536
+reasoningTokens = 1536
+visible output = 0
+finishReason = length
+```
+
+Because section 7 requires the max output contract to remain identical across
+physical candidates, Gate 18 forbids a SOL-only token-cap exception.
+
+Protocol v0.4 therefore changes only the common transport envelope:
+
+```text
+common maxOutputTokens = 4096
+all candidates use the same value
+prompt/schema/evidence packet remain unchanged
+```
+
+Durable evidence and protocol:
+
+```text
+calibration/vnext/OROTITAN_GATE18_PHASE_B_SOL_ATTEMPT_001.json
+calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V0.4.md
+runtime/vnext/model-calibration-pilot-v04.ts
+```
+
+The prior LUNA and TERRA v0.3 outputs remain valid observations but are not
+silently reused as the paired v0.4 comparison set. Paired v0.4 comparison
+requires fresh executions under the same 4096-token max-output contract.
+
+This correction changes no analytical methodology and selects no model winner.
