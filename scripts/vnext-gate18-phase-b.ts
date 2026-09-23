@@ -339,12 +339,15 @@ function failureDiagnostic(
 
   if (NoObjectGeneratedError.isInstance(error)) {
     finishReason = error.finishReason ?? finishReason;
-    inputTokens = error.usage.inputTokens ?? inputTokens;
-    outputTokens = error.usage.outputTokens ?? outputTokens;
-    reasoningTokens =
-      error.usage.outputTokenDetails.reasoningTokens ??
-      reasoningTokens;
-    totalTokens = error.usage.totalTokens ?? totalTokens;
+
+    if (error.usage) {
+      inputTokens = error.usage.inputTokens ?? inputTokens;
+      outputTokens = error.usage.outputTokens ?? outputTokens;
+      reasoningTokens =
+        error.usage.outputTokenDetails.reasoningTokens ??
+        reasoningTokens;
+      totalTokens = error.usage.totalTokens ?? totalTokens;
+    }
 
     if (typeof error.text === "string") {
       generatedTextChars = error.text.length;
@@ -709,9 +712,11 @@ async function main(): Promise<void> {
         },
       });
 
+      const capturedStep =
+        stepSnapshot as StepDiagnosticSnapshot | null;
       const gatewayCost =
         parseGatewayCost(result.providerMetadata) ??
-        stepSnapshot?.gatewayCostUsd ??
+        capturedStep?.gatewayCostUsd ??
         null;
 
       if (gatewayCost === null) {
@@ -796,13 +801,16 @@ async function main(): Promise<void> {
           result.providerMetadata ?? null,
       });
     } catch (error) {
+      const capturedStep =
+        stepSnapshot as StepDiagnosticSnapshot | null;
+
       if (
         !callCostAccounted &&
-        stepSnapshot?.gatewayCostUsd !== null &&
-        stepSnapshot?.gatewayCostUsd !== undefined
+        capturedStep?.gatewayCostUsd !== null &&
+        capturedStep?.gatewayCostUsd !== undefined
       ) {
         observedGatewayCostUsd +=
-          stepSnapshot.gatewayCostUsd;
+          capturedStep.gatewayCostUsd;
         callCostAccounted = true;
       }
 
@@ -811,7 +819,7 @@ async function main(): Promise<void> {
           candidate.label,
           candidate.modelId,
           error,
-          stepSnapshot,
+          capturedStep,
         ),
       );
     }
