@@ -1,0 +1,132 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CROSS_COMPANY_DRYRUN_ADMISSION_V1",
+  "attempt_id": "G18-PHASEB-CROSSCOMPANY-DRYRUN-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "CROSS_COMPANY_DRYRUN_ADMISSION",
+  "source_plan": "OROTITAN_GATE18_PHASE_B_CROSS_COMPANY_PLAN_V1",
+  "repo_head_before_record": "817a77064a2520902ae7cffa2e26404124b30149",
+  "contract": {
+    "prompt_template_sha256": "c8cd217419eca8a6f8f86c85ae066efdb41bef2a3e4f42fa436417ca1cdc0846",
+    "generation_schema_sha256": "1517c7b7d6b5a7d1d72ab19ab9f7e5771de79c1a7b1d28f72b4327fc60f4ed72",
+    "max_output_tokens": 4096
+  },
+  "cases": [
+    {
+      "display_name": "RATIONAL AG",
+      "role": "SIMPLE_CLEAN_COMPOUNDER",
+      "data_cutoff": "2026-09-19",
+      "source_evidence_items": 146,
+      "source_conflicts": 18,
+      "evidence_items": 56,
+      "conflicts": 9,
+      "serialized_chars": 34978,
+      "approx_input_token_ceiling": 17696,
+      "packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879",
+      "evidence_ledger_sha256": "b3b94cb48f2aab55b2339c16d594ec645e40d18df8089ebfb1ed09c106735ff1",
+      "conflict_ledger_sha256": "e670395a412bc620f127fb708ab80bf7c267f8c478ae1c7ee1b6b4aec97961fa",
+      "cost_ceiling_usd": {
+        "LUNA": 0.0094544,
+        "TERRA": 0.085544,
+        "SOL": 0.153704,
+        "ASTRA": 0.38276,
+        "total": 0.6314624
+      }
+    },
+    {
+      "display_name": "Constellation Software",
+      "role": "SERIAL_ACQUIRER",
+      "data_cutoff": "2026-09-19",
+      "source_evidence_items": 68,
+      "source_conflicts": 9,
+      "evidence_items": 11,
+      "conflicts": 1,
+      "serialized_chars": 8263,
+      "approx_input_token_ceiling": 4339,
+      "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+      "evidence_ledger_sha256": "b8f09a799f99835962d70ab1093328136851638e4180a485e5be36c6974da909",
+      "conflict_ledger_sha256": "7496a3574e051611f2eeb05ba792ef0b615d93d7bf82722b9bbb072e541d0ac9",
+      "cost_ceiling_usd": {
+        "LUNA": 0.006783,
+        "TERRA": 0.05883,
+        "SOL": 0.100276,
+        "ASTRA": 0.24919,
+        "total": 0.415079
+      }
+    },
+    {
+      "display_name": "Brookfield Corporation",
+      "role": "ACCOUNTING_HEAVY",
+      "data_cutoff": "2026-09-19",
+      "source_evidence_items": 55,
+      "source_conflicts": 18,
+      "evidence_items": 12,
+      "conflicts": 2,
+      "serialized_chars": 8865,
+      "approx_input_token_ceiling": 4640,
+      "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+      "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+      "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185",
+      "cost_ceiling_usd": {
+        "LUNA": 0.0068432,
+        "TERRA": 0.059432,
+        "SOL": 0.10148,
+        "ASTRA": 0.2522,
+        "total": 0.4199552
+      }
+    },
+    {
+      "display_name": "Adyen",
+      "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "data_cutoff": "2026-09-19",
+      "source_evidence_items": 80,
+      "source_conflicts": 10,
+      "evidence_items": 16,
+      "conflicts": 3,
+      "serialized_chars": 10891,
+      "approx_input_token_ceiling": 5653,
+      "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+      "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+      "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+      "cost_ceiling_usd": {
+        "LUNA": 0.0070458,
+        "TERRA": 0.061458,
+        "SOL": 0.105532,
+        "ASTRA": 0.26233,
+        "total": 0.4363658
+      }
+    }
+  ],
+  "aggregate": {
+    "conservative_ceiling_usd": 1.9028624,
+    "plan_gate_usd": 2.0,
+    "headroom_to_plan_gate_usd": 0.0971376,
+    "budget_snapshot_displayed_spent_usd": 1.07,
+    "monthly_limit_usd": 4.0,
+    "worst_case_displayed_spend_plus_all_conservative_ceilings_usd": 2.9728624,
+    "remaining_monthly_headroom_under_worst_case_usd": 1.0271376
+  },
+  "admission": {
+    "all_four_dry_runs_passed": true,
+    "pinned_lineage_hashes_match": true,
+    "prompt_hash_consistent": true,
+    "generation_schema_hash_consistent": true,
+    "max_output_contract_consistent": true,
+    "aggregate_spend_gate_passed": true,
+    "paid_execution_authorized": "RATIONAL AG x LUNA ONLY",
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
