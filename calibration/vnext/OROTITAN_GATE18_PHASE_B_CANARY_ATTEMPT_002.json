@@ -1,0 +1,69 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-LUNA-002",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.3",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "75acf102-dcaa-4e35-99a5-ad8525735715",
+    "provider_request_id": "req_8036f2b84af44ce9a136944bea86dc7b",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 6399,
+    "input_tokens": 2437,
+    "output_tokens": 654,
+    "reasoning_tokens": 63,
+    "total_tokens": 3091,
+    "gateway_cost_usd": 0.0017689,
+    "response_sha256": "9cd729d23896e84e8ab63d65c330169fc0e25ac36f1acf837388d6a912abcd58"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "comparison_admissible": true,
+    "notes": [
+      "Priority findings are concise and complete.",
+      "E-019/E-020 are used with the packet's category-scope conflict rather than as company-wide leadership proof.",
+      "E-021/E-022 are used as reported multi-year SiC customer/program adoption evidence while preserving undisclosed economics.",
+      "E-023 is used as manufacturing-scale evidence and not as proof of current SiC market-share leadership.",
+      "C-001 and C-003 are carried with the packet's resolved/unresolved states.",
+      "Weak-link candidates and unresolved questions remain ASSIST-only and do not render a final moat judgment."
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "same_prompt_schema_required_for_next_model": true,
+    "reference_case": "STMicroelectronics",
+    "reference_protocol_version": "0.3",
+    "next_model_candidate": "TERRA",
+    "automatic_paid_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
