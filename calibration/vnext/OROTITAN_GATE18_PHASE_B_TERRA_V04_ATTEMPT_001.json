@@ -1,0 +1,95 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-TERRA-V04-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.4",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096
+  },
+  "model": {
+    "label": "TERRA",
+    "model_id": "openai/gpt-5.6-terra",
+    "requested_reasoning": "medium"
+  },
+  "execution": {
+    "execution_id": "f2911673-e671-4a6c-a923-5cc0b8288629",
+    "provider_request_id": "req_ec56fd7d92b14716b3c630ebc2f3ec4e",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 15120,
+    "input_tokens": 2437,
+    "output_tokens": 945,
+    "reasoning_tokens": 371,
+    "total_tokens": 3382,
+    "gateway_cost_usd": 0.017806,
+    "response_sha256": "653d581d1b3da2986a01ba493094143fff26a0c274dd52d069f53953cf3e6661"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS",
+    "comparison_admissible": true,
+    "notes": [
+      "E-018 supports PIC100 high-volume production for hyperscaler AI infrastructure demand; the output preserves undisclosed customer concentration.",
+      "E-019 with E-020 and C-001 preserves the product-scope distinction between general-purpose MCU leadership and broad automotive semiconductor share.",
+      "E-021 and E-022 support reported multi-year SiC customer relationships while leaving volumes, pricing, margins, and switching terms unresolved.",
+      "E-023 with C-003 is correctly treated as SiC capacity/investment evidence rather than proof of current market-share leadership.",
+      "Weak-link candidates and unresolved questions remain ASSIST-only and do not render a final moat, durability, runway, valuation, scoring, or investment conclusion."
+    ]
+  },
+  "paired_observation_against_luna_v04_same_case_same_contract": {
+    "luna_gateway_cost_usd": 0.0017617,
+    "terra_gateway_cost_usd": 0.017806,
+    "terra_to_luna_cost_ratio": 10.107282738264177,
+    "luna_latency_ms": 6375,
+    "terra_latency_ms": 15120,
+    "terra_to_luna_latency_ratio": 2.371764705882353,
+    "luna_output_tokens": 648,
+    "terra_output_tokens": 945,
+    "luna_reasoning_tokens": 75,
+    "terra_reasoning_tokens": 371,
+    "interpretation": "Both LUNA and TERRA are comparison-admissible under the same v0.4 contract. TERRA is materially more expensive and slower on this case and uses more reasoning/output tokens. This single paired case does not establish a routing winner or quality-cost rule."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 0.77,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 0.77,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "luna_v04_comparison_admissible": true,
+    "terra_v04_comparison_admissible": true,
+    "next_model_candidate": "SOL",
+    "sol_v04_automatic_execution_authorized": false,
+    "astra_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
