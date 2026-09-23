@@ -189,10 +189,10 @@
     }
   },
   "generation_evidence": {
-    "methodology_regression": "REQUIRED_BEFORE_MAIN_ACTIVATION",
-    "independent_implementation_equivalence": "REQUIRED_BEFORE_MAIN_ACTIVATION",
-    "authority_conflict_audit": "PASS_BY_EXPLICIT_SUPERSESSION",
-    "source_hash_verification": "PASS",
+    "methodology_regression": "PASS - Screener CI run 35823410656",
+    "independent_implementation_equivalence": "PASS - valuation-date alignment unit matrix + Registry V1.12 PostgreSQL 17 regression",
+    "authority_conflict_audit": "PASS - explicit narrow supersession; no residual dual VALUATION_DATE/SHARE_COUNT_AS_OF_DATE path",
+    "source_hash_verification": "PASS - SHA256 implementation cross-checked against frozen DCF authority",
     "unresolved_policy_branches": 0,
     "company_calibration": "FORBIDDEN"
   },
@@ -201,5 +201,11 @@
     "publishes_canonical_snapshot": false,
     "mutates_existing_run": false,
     "activates_production_contract_set": false
+  },
+  "freeze": {
+    "status": "FROZEN",
+    "frozen_at": "2026-09-23",
+    "production_activation": "RUNTIME_V3.0.3_ONLY",
+    "historical_contract_sets_preserved": true
   }
 }
