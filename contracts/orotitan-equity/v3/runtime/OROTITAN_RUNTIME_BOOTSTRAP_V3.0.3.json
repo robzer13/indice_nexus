@@ -1,0 +1,128 @@
+{
+  "format": "OROTITAN_RUNTIME_BOOTSTRAP_V3",
+  "version": "3.0.3",
+  "orotitan_version": "3.1",
+  "production_status": "ACTIVE_FOR_NEW_RUNS",
+  "scope": "OPERATIONAL_RUNTIME_ONLY",
+  "authority_boundary": {
+    "analytical_methodology_modified": true,
+    "methodology_delta": "VALUATION_DATE_ALIGNMENT_ONLY",
+    "contract_pin_pack_modified": true,
+    "contract_pin_pack_path": "contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json",
+    "contract_pin_pack_version": "3.0.2",
+    "contract_set_sha256": "3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2",
+    "prior_v3_contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
+    "historical_run_rebinding": false
+  },
+  "repository": {
+    "full_name": "robzer13/indice_nexus",
+    "runtime_directory": "lib/orotitan-equity/v3",
+    "active_runtime_selector": "lib/orotitan-equity/runtime.ts"
+  },
+  "production_environment": {
+    "provider": "SUPABASE",
+    "project_ref": "cugpgtzygqqlxetyeven",
+    "project_name": "orotitan-screener",
+    "region": "eu-west-3",
+    "required_status": "ACTIVE_HEALTHY",
+    "match_policy": "EXACT_ALLOWLIST",
+    "mismatch_code": "WRONG_ENVIRONMENT"
+  },
+  "registry": {
+    "required_tables": [
+      "orotitan_runs",
+      "orotitan_run_stages",
+      "orotitan_artifacts",
+      "orotitan_artifact_edges",
+      "orotitan_run_events"
+    ],
+    "required_controlled_rpcs": [
+      "create_orotitan_run",
+      "create_orotitan_methodology_successor_run",
+      "bind_orotitan_run_identity",
+      "start_orotitan_stage",
+      "checkpoint_orotitan_stage",
+      "pause_orotitan_stage",
+      "resume_orotitan_stage",
+      "finalize_orotitan_stage",
+      "reopen_orotitan_stage",
+      "resolve_orotitan_artifact",
+      "record_orotitan_publish_authorization",
+      "record_orotitan_publish_result"
+    ],
+    "create_run_rpc": "create_orotitan_run",
+    "bind_identity_rpc": "bind_orotitan_run_identity",
+    "contract_pin_admission": "COMPLETE_AND_HASH_RECONCILED",
+    "direct_write_policy": "FORBIDDEN",
+    "methodology_successor_create_rpc": "create_orotitan_methodology_successor_run"
+  },
+  "historical_compatibility": {
+    "existing_runs_resolve_from_persisted_contract_set": true,
+    "historical_run_rebinding": false,
+    "prior_active_contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
+    "prior_contract_set_modified": false,
+    "prior_contract_sets_preserved": true,
+    "methodology_successor_replay_supported": true
+  },
+  "run_defaults": {
+    "entry_path": "IMPOSED_COMPANY",
+    "canonical_mode": "ANALYZE",
+    "parent_run_id": null,
+    "publication_authorized": false
+  },
+  "run_type_routing": {
+    "no_current_canonical_snapshot": {
+      "run_type": "INITIAL",
+      "baseline_snapshot_id": null
+    },
+    "current_canonical_snapshot_present": {
+      "run_type": "REFRESH",
+      "baseline_snapshot_id": "CURRENT_CANONICAL_SNAPSHOT_ID"
+    },
+    "methodology_replay_successor": {
+      "run_type": "INITIAL",
+      "baseline_snapshot_id": null,
+      "parent_run_id": "REQUIRED_HISTORICAL_RUN_ID",
+      "data_cutoff": "INHERIT_PARENT",
+      "first_registry_stage": "RESEARCH",
+      "research_scope": "SAME_CUTOFF_NON_VALUATION_REVALIDATION_ONLY",
+      "first_analytical_phase": "VALUATION_AFTER_REVALIDATION",
+      "parent_cas": "TRANSACTIONAL_REQUIRED",
+      "valuation_lock_reuse": "FORBIDDEN"
+    },
+    "policy": "DATABASE_STATE_OR_CONTROLLED_SUCCESSOR"
+  },
+  "blocked_parent_repair_admission": {
+    "general_blocked_parent_admission": false,
+    "exact_prior_contract_set_sha256": "257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c",
+    "required_run_status": "BLOCKED",
+    "required_current_stage": "DEEP_DIVE",
+    "required_stage_lifecycle_status": "BLOCKED",
+    "required_contract_status_code": "VALUATION_BLOCKED_PINNED_TIMING_DENOMINATOR_DATE_CONFLICT",
+    "required_blocker_code": "V3_VALUATION_TIMING_DENOMINATOR_DATE_CONFLICT",
+    "required_blocker_classification": "PINNED_AUTHORITY_CONFLICT",
+    "required_blocker_scope": "VALUATION_DCF_AND_DEPENDENT_OUTPUTS",
+    "published_at": null,
+    "cancelled_at": null,
+    "current_canonical_snapshot_id": null
+  },
+  "activation_scope": {
+    "active_for_new_runs": true,
+    "historical_run_rebinding": false,
+    "prior_contract_sets_preserved": true,
+    "methodology_successor_replay_supported": true,
+    "valuation_date_alignment_authority_active_for_new_runs": true,
+    "transactional_successor_cas_required": true,
+    "canonical_publication_authorized": false,
+    "creates_company_run": false,
+    "mutates_existing_run": false
+  },
+  "source_evidence": [
+    "contracts/orotitan-equity/v3/OROTITAN_VALUATION_DATE_ALIGNMENT_AUTHORITY_V1_FREEZE_V1.0.md",
+    "contracts/orotitan-equity/v3/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md",
+    "contracts/orotitan-equity/v3/OROTITAN_EXECUTION_PROCESS_V3_1_FREEZE_V3.1.md",
+    "contracts/orotitan-equity/v3/OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_1_FREEZE_V3.1.md",
+    "contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json",
+    "contracts/orotitan-equity/v3/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V3.0.2.json"
+  ]
+}
