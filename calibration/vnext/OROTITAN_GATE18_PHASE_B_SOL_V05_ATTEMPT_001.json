@@ -1,0 +1,113 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-SOL-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "medium"
+  },
+  "model": {
+    "label": "SOL",
+    "model_id": "openai/gpt-5.6-sol",
+    "requested_reasoning": "medium"
+  },
+  "execution": {
+    "execution_id": "4aafd5af-56a0-4046-b022-918cc00fc493",
+    "provider_request_id": "req_8df8be2a8298400ba1fb524bcacc18bc",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 38399,
+    "input_tokens": 2437,
+    "output_tokens": 1788,
+    "reasoning_tokens": 1191,
+    "total_tokens": 4225,
+    "gateway_cost_usd": 0.048317,
+    "response_sha256": "02cdd75adfffcac49c91edba6ec7dc3273a23920c64a286ea583c3bbb7601991"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS",
+    "comparison_admissible": true,
+    "notes": [
+      "E-021 and E-022 support reported multi-year SiC design-in/supply relationships while the output preserves undisclosed pricing, volumes, margins, exclusivity and switching terms.",
+      "E-019 with E-020 and C-001 preserves the distinction between scoped general-purpose MCU leadership and broader automotive semiconductor positioning.",
+      "E-017 and E-018 are correctly separated into current reported production evidence versus a forward-looking 2027 AI revenue estimate.",
+      "E-023 with C-003 is used to keep SiC capacity investment distinct from verified current SiC market-share leadership.",
+      "E-008 is used only as a weak-link candidate for customer concentration and not as a final moat or investment conclusion.",
+      "The output remains ASSIST-only and does not render a final moat, durability, runway, valuation, score, routing or investment conclusion."
+    ]
+  },
+  "paired_observation_same_case": {
+    "luna": {
+      "protocol_version": "0.4",
+      "reasoning": "minimal",
+      "gateway_cost_usd": 0.0017617,
+      "latency_ms": 6375,
+      "output_tokens": 648,
+      "reasoning_tokens": 75,
+      "comparison_admissible": true
+    },
+    "terra": {
+      "protocol_version": "0.4",
+      "reasoning": "medium",
+      "gateway_cost_usd": 0.017806,
+      "latency_ms": 15120,
+      "output_tokens": 945,
+      "reasoning_tokens": 371,
+      "comparison_admissible": true
+    },
+    "sol": {
+      "protocol_version": "0.5",
+      "reasoning": "medium",
+      "gateway_cost_usd": 0.048317,
+      "latency_ms": 38399,
+      "output_tokens": 1788,
+      "reasoning_tokens": 1191,
+      "comparison_admissible": true
+    },
+    "interpretation": "All three outputs are admissible under their controlled Phase B profiles. SOL produced a valid bounded output only after its Phase B reasoning profile was reduced to medium. The single STMicroelectronics case is insufficient to establish a quality-cost routing rule or model winner."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 0.91,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 0.91,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "luna_comparison_admissible": true,
+    "terra_comparison_admissible": true,
+    "sol_comparison_admissible": true,
+    "astra_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
