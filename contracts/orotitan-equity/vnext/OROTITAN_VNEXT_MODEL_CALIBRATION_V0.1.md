@@ -310,6 +310,18 @@ RAW EVIDENCE TESTS
 
 FIRST REAL SMOKE ATTEMPT
 = calibration/vnext/OROTITAN_GATE18_SMOKE_ATTEMPT_001.json
+
+SUCCESSFUL 4/4 SMOKE ATTEMPT
+= calibration/vnext/OROTITAN_GATE18_SMOKE_ATTEMPT_002.json
+
+PHASE B VERIFIED PACKET + SEMANTIC VALIDATION
+= runtime/vnext/model-calibration-pilot.ts
+
+PHASE B LOCAL PRIVATE RUNNER
+= scripts/vnext-gate18-phase-b.ts
+
+PHASE B DETERMINISTIC ASSURANCE
+= tests/vnext-model-calibration-pilot.test.ts
 ```
 
 ## 13. Gate 18 progression
@@ -398,9 +410,10 @@ PROTECTED PREVIEW
 -> HTTP 403 customer_verification_required
 ```
 
-Vercel AI Gateway rejected the request before a physical model generation was
-confirmed because the OROTITAN team does not currently have a valid credit card
-on file.
+At the time of Attempt 001, Vercel AI Gateway rejected the request before a
+physical model generation was confirmed because provider admission required
+billing verification / paid-credit access. This was an external admission state,
+not a persistent analytical condition.
 
 Classification:
 
@@ -420,8 +433,9 @@ MODEL WINNER = NONE
 ROUTING CHANGE = NONE
 ```
 
-A retry without an external billing/provider-access change is not expected to
-produce new calibration evidence.
+A retry without an external billing/provider-access change was not expected to
+produce new calibration evidence. The external condition was subsequently
+changed and a second smoke attempt produced valid physical-model evidence.
 
 ## 17. Raw evidence law
 
@@ -539,3 +553,133 @@ and requires the Vercel project to authorize GitHub Actions as a Trusted
 Source before it can invoke protected calibration routes.
 
 This transport decision changes no analytical methodology.
+
+
+## 20. Second real smoke attempt — Phase A PASS
+
+After explicit paid-credit admission was enabled, the original controlled
+candidate set was invoked again through the protected preview route.
+
+Observed result:
+
+```text
+LUNA  -> structured-output PASS
+TERRA -> structured-output PASS
+SOL   -> structured-output PASS
+ASTRA -> structured-output PASS
+```
+
+All four requests:
+
+```text
+returned HTTP 200 at the Gate 18 route
+used the requested physical model
+completed through the OpenAI provider
+used one provider attempt
+used no provider fallback
+passed local schema / semantic validation
+finished with stop
+```
+
+Durable evidence:
+
+```text
+calibration/vnext/OROTITAN_GATE18_SMOKE_ATTEMPT_002.json
+```
+
+The observed aggregate engineering cost for the four-call smoke was:
+
+```text
+gateway cost = 0.007985 USD
+Vercel budget display after attempt = 0.01 USD
+```
+
+Classification:
+
+```text
+GATE 18 PHASE A = PASS
+PHYSICAL MODEL SMOKE = 4/4 PASS
+QUALITY OBSERVATIONS = 0
+MODEL WINNER = NONE
+ROUTING CHANGE = NONE
+GATE 18 = IN PROGRESS / NOT FROZEN
+```
+
+Phase A admission does not establish analytical quality.
+
+## 21. Phase B private execution path
+
+The initial company-level calibration path is deliberately local/private rather
+than a public CI evidence transport.
+
+Nominal execution path:
+
+```text
+authorized local checkout of robzer13/real-orotitan
+-> read exact artifact path pinned by the public pilot manifest
+-> verify immutable raw SHA-256
+-> verify source run / DATA_CUTOFF / artifact type / version
+-> deterministic admissible-field projection
+-> derived Evidence Packet SHA-256
+-> identical prompt + GenerationSchema + max-output contract
+-> LUNA / TERRA / SOL / ASTRA
+-> local semantic reference validation
+-> engineering receipt
+-> private gitignored run artifact
+-> later human adjudication
+```
+
+The public repository never receives private Research ledger contents or
+evidence-derived model outputs.
+
+The retained local runner therefore:
+
+```text
+defaults to DRY RUN
+requires explicit --execute
+requires explicit --max-case-spend-usd
+requires VERCEL_OIDC_TOKEN for real inference
+reads only the pinned private source files
+fails closed on SHA / run / cutoff / version drift
+fails closed when the conservative live-price cost ceiling exceeds the
+explicit execution cap
+writes full model outputs only below calibration/vnext/private-runs/
+which is gitignored
+does not call Supabase
+does not mutate production
+does not authorize publication
+does not select a model winner
+```
+
+The initial Phase B benchmark module is:
+
+```text
+EVIDENCE_AUDIT_ASSISTED_V0_1
+```
+
+It is an ASSIST-only calibration task. Its generation contract may surface:
+
+```text
+supported / mixed / unresolved findings
+source conflicts
+counter-evidence
+weak-link candidates
+unresolved questions
+```
+
+It may not render:
+
+```text
+final moat judgment
+final durability judgment
+final runway judgment
+valuation conclusion
+OQS / OVS
+Investment Score
+next action
+publication decision
+investment conclusion
+```
+
+This preserves the frozen human-judgment boundary while still generating
+comparable evidence for model calibration.
