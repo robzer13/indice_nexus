@@ -1,0 +1,321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:screener-contract:v3.1",
+  "title": "OroTitan Economic Share Count + Valuation Date Alignment Overlay V3.1",
+  "description": "Additive denominator-governance and valuation-date-alignment projection. Method authority is upstream; this schema preserves exact/bounded/unknown semantics and explicit timing fields without inventing cross-field values.",
+  "type": "object",
+  "required": [
+    "v3_methodology"
+  ],
+  "properties": {
+    "v3_methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "economic_share_count",
+        "valuation_timing"
+      ],
+      "properties": {
+        "economic_share_count": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "methodology_version",
+            "representation",
+            "share_count_as_of_date",
+            "valuation_admission",
+            "provenance_refs",
+            "propagation_status"
+          ],
+          "properties": {
+            "methodology_version": {
+              "const": "OROTITAN_ECONOMIC_SHARE_COUNT_METHODOLOGY_V1_FREEZE_V1.0"
+            },
+            "representation": {
+              "enum": [
+                "EXACT",
+                "BOUNDED",
+                "UNKNOWN"
+              ]
+            },
+            "share_count_as_of_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "valuation_admission": {
+              "enum": [
+                "YES",
+                "NO"
+              ]
+            },
+            "exact_count": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "lower_bound": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "upper_bound": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "bound_completeness": {
+              "const": "COMPLETE"
+            },
+            "unbounded_movement_classes": {
+              "const": 0
+            },
+            "unknown_reason": {
+              "enum": [
+                "NO_EVIDENCE",
+                "PARTIAL_EVIDENCE",
+                "EXACT_ANCHOR_BUT_INCOMPLETE_BRIDGE",
+                "BOUND_NOT_PROVABLE",
+                "METHODOLOGY_NOT_APPLICABLE"
+              ]
+            },
+            "provenance_refs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "propagation_status": {
+              "enum": [
+                "SCALAR_EXACT",
+                "RANGE_PROPAGATED",
+                "BLOCKED_UNKNOWN"
+              ]
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "representation": {
+                    "const": "EXACT"
+                  }
+                },
+                "required": [
+                  "representation"
+                ]
+              },
+              "then": {
+                "required": [
+                  "exact_count"
+                ],
+                "properties": {
+                  "valuation_admission": {
+                    "const": "YES"
+                  },
+                  "propagation_status": {
+                    "const": "SCALAR_EXACT"
+                  }
+                },
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "lower_bound"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "upper_bound"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "unknown_reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "representation": {
+                    "const": "BOUNDED"
+                  }
+                },
+                "required": [
+                  "representation"
+                ]
+              },
+              "then": {
+                "required": [
+                  "lower_bound",
+                  "upper_bound",
+                  "bound_completeness",
+                  "unbounded_movement_classes"
+                ],
+                "properties": {
+                  "valuation_admission": {
+                    "const": "YES"
+                  },
+                  "propagation_status": {
+                    "const": "RANGE_PROPAGATED"
+                  }
+                },
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "exact_count"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "unknown_reason"
+                      ]
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "representation": {
+                    "const": "UNKNOWN"
+                  }
+                },
+                "required": [
+                  "representation"
+                ]
+              },
+              "then": {
+                "required": [
+                  "unknown_reason"
+                ],
+                "properties": {
+                  "valuation_admission": {
+                    "const": "NO"
+                  },
+                  "propagation_status": {
+                    "const": "BLOCKED_UNKNOWN"
+                  }
+                },
+                "not": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "exact_count"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "lower_bound"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "upper_bound"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "bound_completeness"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "unbounded_movement_classes"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "valuation_timing": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "methodology_version",
+            "valuation_date",
+            "time_origin",
+            "reference_price_date",
+            "economic_share_count_date",
+            "share_count_as_of_date",
+            "ev_to_equity_bridge_date",
+            "market_cap_date",
+            "per_share_output_date"
+          ],
+          "properties": {
+            "methodology_version": {
+              "const": "OROTITAN_VALUATION_DATE_ALIGNMENT_AUTHORITY_V1_FREEZE_V1.0"
+            },
+            "valuation_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "time_origin": {
+              "type": "string",
+              "format": "date"
+            },
+            "reference_price_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "economic_share_count_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "share_count_as_of_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "ev_to_equity_bridge_date": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "const": "NOT_APPLICABLE"
+                }
+              ]
+            },
+            "market_cap_date": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "const": "NOT_ASSESSABLE"
+                }
+              ]
+            },
+            "per_share_output_date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "x-orotitan-base-contracts": [
+    "urn:orotitan:equity-research:screener-contract:v1",
+    "urn:orotitan:equity-research:screener-contract:v2"
+  ],
+  "x-orotitan-validation-mode": "COMPOSED_V1_CORE_PLUS_V2_PRODUCT_PLUS_V3_1_DATE_ALIGNMENT_OVERLAY",
+  "x-orotitan-methodology-authority": false,
+  "x-orotitan-boundary-rules": [
+    "lower_bound <= upper_bound is enforced by I3-B successor because JSON Schema cannot compare siblings portably",
+    "share_count_as_of_date == valuation_date == data_cutoff is enforced by I3-B successor",
+    "reference_price_date <= valuation_date is enforced by I3-B successor",
+    "market_cap_date == reference_price_date when numeric reference price is admitted",
+    "no hidden stale-denominator transport or scalarization is permitted"
+  ]
+}
