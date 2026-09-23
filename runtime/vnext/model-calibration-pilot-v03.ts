@@ -264,6 +264,7 @@ function sha256Hex(value: string): string {
 function assertCompleteNarrative(
   value: string,
   code: string,
+  saturationBoundary = 178,
 ): void {
   const trimmed = value.trim();
 
@@ -271,7 +272,7 @@ function assertCompleteNarrative(
     throw new Error(code);
   }
 
-  if (trimmed.length >= 178) {
+  if (trimmed.length >= saturationBoundary) {
     throw new Error(
       "VNEXT_GATE18_V03_NARRATIVE_BOUNDARY_SATURATION",
     );
@@ -326,6 +327,11 @@ export function assertGate18PhaseBV03Semantics(
   for (const candidate of output.weak_link_candidates) {
     evidenceRefs.push(...candidate.evidence_ids);
     conflictRefs.push(...candidate.conflict_ids);
+    assertCompleteNarrative(
+      candidate.candidate,
+      "VNEXT_GATE18_V03_WEAK_LINK_CANDIDATE_INCOMPLETE",
+      138,
+    );
     assertCompleteNarrative(
       candidate.why_uncertain,
       "VNEXT_GATE18_V03_WEAK_LINK_EXPLANATION_INCOMPLETE",
