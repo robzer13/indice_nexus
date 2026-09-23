@@ -1,0 +1,110 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-RATIONAL-LUNA-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "RATIONAL AG",
+    "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+    "data_cutoff": "2026-09-19",
+    "role": "SIMPLE_CLEAN_COMPOUNDER",
+    "evidence_packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "minimal"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "e59f222a-0c2a-4760-9cc6-3e3962fea6ad",
+    "provider_request_id": "req_18f544bc8e68422fb8ef1b8f7fb1b210",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 7014,
+    "input_tokens": 8948,
+    "output_tokens": 683,
+    "reasoning_tokens": 56,
+    "total_tokens": 9631,
+    "gateway_cost_usd": 0.00343145,
+    "response_sha256": "334c0bc90c19abdd3d986f14bda7edb957531236e794faad42c8169af08b0d1f"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS",
+    "comparison_admissible": true,
+    "notes": [
+      "E-025, E-026 and E-029 support meaningful ConnectedCooking fleet adoption and workflow functionality. E-010 and E-030 correctly prevent free connectivity from being treated as disclosed SaaS economics, consistent with C-006.",
+      "E-013, E-014 and E-041 support broad route-to-market, demand-generation and certified-service mechanisms. E-015 and E-048 with C-004/C-012 correctly retain dealer dependence and undisclosed retained service economics, so the finding remains MIXED.",
+      "E-049, E-051 and E-054 establish credible competitor overlap across intelligence, connectivity and multifunctional cooking. C-011 and E-058/E-059 correctly prevent feature overlap or workflow familiarity from being converted into hard switching-cost proof.",
+      "E-005, E-047 and E-048 with C-005 support the recurring-economics weak link; the 31% non-appliance bucket is not classified as recurring revenue.",
+      "E-032, E-033 and E-038 with C-007 support the customer-ROI weak link: resource savings are evidenced more strongly than representative total payback.",
+      "C-001 is appropriately retained as a material denominator conflict, and the unresolved market-share question does not accept management's approximately 50% headline share as total-market share.",
+      "The output remains ASSIST-only and does not render a final moat, durability, runway, valuation, score, routing or investment conclusion."
+    ]
+  },
+  "cross_company_observation_against_st_luna": {
+    "st_microelectronics": {
+      "protocol_version": "0.4",
+      "gateway_cost_usd": 0.0017617,
+      "latency_ms": 6375,
+      "input_tokens": 2437,
+      "output_tokens": 648,
+      "reasoning_tokens": 75,
+      "comparison_admissible": true
+    },
+    "rational": {
+      "protocol_version": "0.5",
+      "gateway_cost_usd": 0.00343145,
+      "latency_ms": 7014,
+      "input_tokens": 8948,
+      "output_tokens": 683,
+      "reasoning_tokens": 56,
+      "comparison_admissible": true
+    },
+    "rational_to_st_cost_ratio": 1.9478060963841743,
+    "rational_to_st_latency_ratio": 1.100235294117647,
+    "rational_to_st_input_token_ratio": 3.671727533853098,
+    "interpretation": "LUNA remained comparison-admissible on a materially denser RATIONAL packet. Input tokens were about 3.67x the ST case while observed cost was about 1.95x and latency about 1.10x. Two cases remain insufficient to establish a routing winner or general quality-cost rule."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.08,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.08,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "st_four_model_benchmark_complete": true,
+    "rational_luna_comparison_admissible": true,
+    "next_model_candidate": "TERRA",
+    "terra_execution_authorized": false,
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
