@@ -1,0 +1,125 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-RATIONAL-ASTRA-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "FAIL",
+  "classification": "SINGLE_MODEL_PAID_CANARY_NOT_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "RATIONAL AG",
+    "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+    "data_cutoff": "2026-09-19",
+    "role": "SIMPLE_CLEAN_COMPOUNDER",
+    "evidence_packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "high"
+  },
+  "model": {
+    "label": "ASTRA",
+    "model_id": "openai/gpt-6-astra",
+    "requested_reasoning": "high"
+  },
+  "execution": {
+    "execution_id": "d5dd47da-498a-4b51-9da4-2ec955c5af68",
+    "provider_request_id": "req_6aa6d250cba44089960146233b960e93",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 60105,
+    "input_tokens": 8948,
+    "output_tokens": 2387,
+    "reasoning_tokens": 2070,
+    "total_tokens": 11335,
+    "gateway_cost_usd": 0.2315675,
+    "response_sha256": "123314362a1ba7da9aa98faa850cacc81d01e90ed47de27c47e4242d8fdb09fc"
+  },
+  "semantic_failure": {
+    "class": "NON_CANONICAL_EVIDENCE_REFERENCE",
+    "invalid_reference": "E-051'",
+    "effect": "A counterevidence reference is not an exact packet evidence identifier, so deterministic grounding verification fails.",
+    "schema_valid_but_semantic_invalid": true
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "FAIL",
+    "directional_grounding": "PASS_WITH_SEMANTIC_REFERENCE_FAILURE",
+    "conflict_handling": "FAIL_INCOMPLETE",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "INCOMPLETE",
+    "comparison_admissible": false,
+    "notes": [
+      "The resource-efficiency finding is directionally grounded in E-032, E-033, E-035, E-038/E-039 and C-007, preserving the distinction between observed savings and representative total customer payback.",
+      "The workflow-standardization finding is directionally grounded in E-006, E-029, E-040 and C-011, but its counterevidence array contains the malformed reference E-051'.",
+      "The output contains only two priority findings and leaves material_conflicts, weak_link_candidates and unresolved_points empty despite nine packet conflicts and multiple material unresolved moat questions.",
+      "No retry is authorized. The observation is retained as a model-quality calibration failure rather than repaired post hoc."
+    ]
+  },
+  "rational_four_model_summary": {
+    "LUNA": {
+      "semantic_valid": true,
+      "comparison_admissible": true,
+      "cost_usd": 0.00343145,
+      "latency_ms": 7014,
+      "reasoning_tokens": 56
+    },
+    "TERRA": {
+      "semantic_valid": false,
+      "comparison_admissible": false,
+      "cost_usd": 0.0371435,
+      "latency_ms": 15496,
+      "reasoning_tokens": 496
+    },
+    "SOL": {
+      "semantic_valid": false,
+      "comparison_admissible": false,
+      "cost_usd": 0.057692,
+      "latency_ms": 10409,
+      "reasoning_tokens": 459
+    },
+    "ASTRA": {
+      "semantic_valid": false,
+      "comparison_admissible": false,
+      "cost_usd": 0.2315675,
+      "latency_ms": 60105,
+      "reasoning_tokens": 2070
+    },
+    "total_observed_cost_usd": 0.32983445,
+    "astra_to_luna_cost_ratio": 67.48386250710341,
+    "astra_to_luna_latency_ratio": 8.56928999144568,
+    "interpretation": "On RATIONAL, only LUNA produced a semantically valid, comparison-admissible observation. The higher-reasoning candidates did not improve contract reliability on this dense packet. This remains case evidence and is not a routing freeze."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.40,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.40,
+    "display_remaining_usd": 2.60,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "rational_four_model_benchmark_complete": true,
+    "rational_luna_comparison_admissible": true,
+    "rational_terra_comparison_admissible": false,
+    "rational_sol_comparison_admissible": false,
+    "rational_astra_comparison_admissible": false,
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
