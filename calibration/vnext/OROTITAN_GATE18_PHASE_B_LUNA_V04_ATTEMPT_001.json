@@ -1,0 +1,83 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-LUNA-V04-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.4",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "98582903-7e9a-404f-8c60-37ff92a8982e",
+    "provider_request_id": "req_55c32422df8446cc8a9ee4324ee8f782",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 6375,
+    "input_tokens": 2437,
+    "output_tokens": 648,
+    "reasoning_tokens": 75,
+    "total_tokens": 3085,
+    "gateway_cost_usd": 0.0017617,
+    "response_sha256": "9cf69927651797f33417348b3e67ca5fdc43d228cd943a2b829edee02212b01c"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS_WITH_OBSERVATION",
+    "comparison_admissible": true,
+    "notes": [
+      "E-008 exactly supports the reported Apple revenue concentration series and is admissible MOAT_INPUTS evidence; the output frames it as account exposure rather than a final moat conclusion.",
+      "E-021 and E-022 support reported multi-year SiC customer supply/design-in relationships while undisclosed economics remain unclaimed.",
+      "E-017 and E-018 support the forward-looking AI revenue target plus PIC100 production evidence; the output correctly marks this finding MIXED.",
+      "C-001 preserves the distinction between general-purpose MCU leadership and broad automotive semiconductor share.",
+      "C-003 correctly prevents manufacturing-scale investment from being treated as verified current SiC market-share leadership.",
+      "The priority set differs from the earlier LUNA v0.3 observation. This is recorded as selection variance, not as a strict repeatability result, because the max-output contract changed between v0.3 and v0.4."
+    ]
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 0.75,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 0.75,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "luna_v04_comparison_admissible": true,
+    "next_model_candidate": "TERRA",
+    "terra_v04_automatic_execution_authorized": false,
+    "sol_v04_execution_authorized": false,
+    "astra_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
