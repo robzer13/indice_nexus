@@ -1,0 +1,127 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_CANARY_ATTEMPT_V1",
+  "attempt_id": "G18-PHASEB-ST-ASTRA-V05-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.5",
+  "status": "PASS",
+  "classification": "SINGLE_MODEL_PAID_CANARY_COMPARISON_ADMISSIBLE",
+  "case": {
+    "display_name": "STMicroelectronics",
+    "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "data_cutoff": "2026-09-15",
+    "evidence_packet_sha256": "0c5badef2397ad1cc70ea10ead506cfe1794eb7a9a23c8174016b558c5d90673"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_version": "0.3",
+    "generation_schema_version": "0.3",
+    "common_max_output_tokens": 4096,
+    "phase_b_reasoning_profile": "high"
+  },
+  "model": {
+    "label": "ASTRA",
+    "model_id": "openai/gpt-6-astra",
+    "requested_reasoning": "high"
+  },
+  "execution": {
+    "execution_id": "7163724e-b8ad-437c-bde5-57270c324720",
+    "provider_request_id": "req_08f11e7a25ba47dbb771afb339d3f98d",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 60663,
+    "input_tokens": 2437,
+    "output_tokens": 2667,
+    "reasoning_tokens": 1891,
+    "total_tokens": 5104,
+    "gateway_cost_usd": 0.16418,
+    "response_sha256": "f30125eb290630dd430eea57bf51129bafe957dff2ba4430f4543974c5fb017e"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "grounding": "PASS",
+    "conflict_handling": "PASS",
+    "human_judgment_boundary": "PASS",
+    "priority_selection": "PASS",
+    "comparison_admissible": true,
+    "notes": [
+      "E-019 with E-020 and C-001 is used to distinguish scoped general-purpose MCU leadership from broad automotive semiconductor share; no company-wide leadership is inferred.",
+      "E-021, E-022 and E-023 with C-003 distinguish customer commitments and capacity investment from quantified switching costs or independently verified current SiC share leadership.",
+      "E-017 and E-018 distinguish current PIC100 high-volume production evidence from the forward-looking greater-than-$2bn 2027 AI revenue target and retain undisclosed customer concentration/economics.",
+      "E-008 is used only as a candidate bargaining-power weak link; the output does not infer customer leverage from concentration alone.",
+      "ASTRA labels all three priority findings SUPPORTED because each claim is narrowly phrased around what the packet establishes or fails to establish. This is not a stronger moat conclusion than SOL's MIXED labels on broader formulations.",
+      "C-003 remains UNRESOLVED_IN_PACKET, the unresolved questions remain explicit, and the output stays ASSIST-only without a final moat, durability, runway, valuation, score, routing or investment conclusion."
+    ]
+  },
+  "paired_observation_same_case": {
+    "luna": {
+      "protocol_version": "0.4",
+      "reasoning": "minimal",
+      "gateway_cost_usd": 0.0017617,
+      "latency_ms": 6375,
+      "output_tokens": 648,
+      "reasoning_tokens": 75,
+      "comparison_admissible": true
+    },
+    "terra": {
+      "protocol_version": "0.4",
+      "reasoning": "medium",
+      "gateway_cost_usd": 0.017806,
+      "latency_ms": 15120,
+      "output_tokens": 945,
+      "reasoning_tokens": 371,
+      "comparison_admissible": true
+    },
+    "sol": {
+      "protocol_version": "0.5",
+      "reasoning": "medium",
+      "gateway_cost_usd": 0.048317,
+      "latency_ms": 38399,
+      "output_tokens": 1788,
+      "reasoning_tokens": 1191,
+      "comparison_admissible": true
+    },
+    "astra": {
+      "protocol_version": "0.5",
+      "reasoning": "high",
+      "gateway_cost_usd": 0.16418,
+      "latency_ms": 60663,
+      "output_tokens": 2667,
+      "reasoning_tokens": 1891,
+      "comparison_admissible": true
+    },
+    "astra_to_luna_cost_ratio": 93.19407390588636,
+    "astra_to_terra_cost_ratio": 9.220487476131641,
+    "astra_to_sol_cost_ratio": 3.397975867707018,
+    "interpretation": "All four STMicroelectronics outputs are comparison-admissible under their controlled Phase B profiles. ASTRA is materially more expensive and slower, and produces the longest visible output and highest reasoning-token count. On this single case it adds useful scoping precision, but the evidence does not establish a model winner or a quality-cost routing rule."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.07,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.07,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "comparison_state": {
+    "luna_comparison_admissible": true,
+    "terra_comparison_admissible": true,
+    "sol_comparison_admissible": true,
+    "astra_comparison_admissible": true,
+    "st_four_model_benchmark_complete": true,
+    "additional_paid_execution_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
