@@ -1,0 +1,79 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_COMPACT_DRYRUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-BROOKFIELD-COMPACT-DRYRUN-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "BLOCKED",
+  "classification": "PLANNED_CONTEXT_BUDGET_INSUFFICIENT_NO_INFERENCE",
+  "base_vnext_sha": "403e067d7239f3e3663e00c79eecf278cad9b9f2",
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "phase_c_execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "case_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "display_name": "Brookfield Corporation",
+    "role": "ACCOUNTING_HEAVY",
+    "data_cutoff": "2026-09-19"
+  },
+  "source_integrity": {
+    "full_packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+    "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185"
+  },
+  "compact_packet": {
+    "evidence_ids": [
+      "E-036",
+      "E-037",
+      "E-039",
+      "E-042"
+    ],
+    "conflict_ids": [],
+    "evidence_items": 4,
+    "conflicts": 0,
+    "serialized_chars": 2933,
+    "sha256": "8b9a668cf00f900d385c393d6273b3cefcf894e02976021a13f048820fbb2039"
+  },
+  "prompt_budget": {
+    "system_chars": 4694,
+    "prompt_chars": 4492,
+    "combined_prompt_chars": 9186,
+    "generation_schema_chars": 2789,
+    "conservative_input_token_ceiling_without_schema": 4593,
+    "planned_context_tokens": 4096,
+    "planned_max_output_tokens": 1024,
+    "planned_total_token_ceiling_without_schema": 5617,
+    "context_fit": false
+  },
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "quantization": "Q4_K_M"
+  },
+  "safety": {
+    "external_model_api_call": false,
+    "model_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "model_rejected": false,
+    "semantic_regression_failed": false,
+    "blocker": "CONTEXT_PLAN_TOO_SMALL_FOR_CONSERVATIVE_GUARD",
+    "guard_defect_identified": "GENERATION_SCHEMA_CHARS_NOT_INCLUDED_IN_INITIAL_INPUT_CEILING",
+    "recovery": "REVISE_DRYRUN_TO_INCLUDE_SCHEMA_AND_TEST_LARGER_LOCAL_CONTEXT"
+  },
+  "next_action": "RUN_REVISED_NO_INFERENCE_DRYRUN_WITH_SCHEMA_AWARE_BUDGET_AND_8192_CONTEXT",
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

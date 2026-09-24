@@ -33,9 +33,9 @@ test("Brookfield C3 dry-run keeps only exact regression evidence", () => {
   assert.match(source, /evidence_items: evidenceItems/);
 });
 
-test("Brookfield C3 dry-run targets 4k context with bounded output", () => {
-  assert.match(source, /LOCAL_CONTEXT_TOKENS = 4096/);
-  assert.match(source, /LOCAL_MAX_OUTPUT_TOKENS = 1024/);
+test("Brookfield C3 dry-run targets schema-aware 8k context with bounded output", () => {
+  assert.match(source, /LOCAL_CONTEXT_TOKENS = 8192/);
+  assert.match(source, /LOCAL_MAX_OUTPUT_TOKENS = 768/);
   assert.match(source, /temperature: 0/);
   assert.match(source, /inferenceAuthorized: false/);
 });
@@ -45,4 +45,17 @@ test("Brookfield C3 dry-run preserves exact historical polarity target", () => {
   assert.match(source, /evidenceIds: \["E-036", "E-037", "E-039"\]/);
   assert.match(source, /evidenceIds: \["E-042"\]/);
   assert.match(source, /counterevidenceIds: \[\]/);
+});
+
+test("Brookfield C3 dry-run includes schema in the conservative input guard", () => {
+  assert.match(source, /schemaAwareInputChars/);
+  assert.match(source, /combinedPromptChars \+ outputSchemaJson\.length/);
+  assert.match(source, /contextHeadroomTokens/);
+});
+
+test("Brookfield C3 dry-run estimates local KV-cache pressure without inference", () => {
+  assert.match(source, /\/api\/show/);
+  assert.match(source, /estimatedKvCacheMiBAtPlannedContext/);
+  assert.match(source, /attention\.head_count_kv/);
+  assert.match(source, /freeVramMiB/);
 });
