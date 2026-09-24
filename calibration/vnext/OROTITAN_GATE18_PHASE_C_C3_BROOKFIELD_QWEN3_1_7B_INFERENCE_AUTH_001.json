@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "RUN_ONE_LOCAL_SEMANTIC_REGRESSION",
@@ -13,7 +13,7 @@
     "authorized_execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT"
   },
   "c3_inference": {
-    "authorized": true,
+    "authorized": false,
     "model_name": "qwen3:1.7b",
     "model_digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
     "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
@@ -26,7 +26,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
     "model_download_authorized": false,
@@ -52,5 +52,11 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "fcad15e21315a55e6b4d39ae01c7134309ee784d",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-LOCAL-RUN-001",
+    "result_classification": "RUNTIME_FAIL_HTTP_500_NO_SEMANTIC_RESULT",
+    "retry_authorized": false
+  }
 }
