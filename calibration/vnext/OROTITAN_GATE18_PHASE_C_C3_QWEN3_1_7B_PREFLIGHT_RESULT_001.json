@@ -1,0 +1,69 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_QWEN3_1_7B_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-QWEN3-1_7B-PREFLIGHT-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PASS",
+  "classification": "LOCAL_MODEL_METADATA_AND_CONTEXT_PREFLIGHT_PASS",
+  "base_vnext_sha": "4de493790cd2c729fc4bd8d3ccdd1f97b54c66e7",
+  "repetitions": [
+    {
+      "repetition": 1,
+      "free_ram_gib": 0.75,
+      "free_vram_mib": 3977
+    },
+    {
+      "repetition": 2,
+      "free_ram_gib": 0.84,
+      "free_vram_mib": 3977
+    }
+  ],
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "size_bytes": 1359293444,
+    "format": "gguf",
+    "family": "qwen3",
+    "parameter_size": "2.0B",
+    "quantization": "Q4_K_M",
+    "context_length": 40960,
+    "capabilities": [
+      "completion",
+      "tools"
+    ]
+  },
+  "runtime_state": {
+    "currently_loaded": false,
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true
+  },
+  "planning": {
+    "recommended_first_mode": "TARGETED_REGRESSION_COMPACT_FIRST",
+    "targeted_context_tokens": 4096,
+    "full_packet_context_authorized": false,
+    "first_regression": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "rationale": "Brookfield is the smallest exact historical polarity regression: four evidence IDs, zero conflicts, two findings."
+  },
+  "safety": {
+    "external_model_api_call": false,
+    "model_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "model_metadata_stable_across_two_preflights": true,
+    "low_system_ram_warning": true,
+    "c3_compact_dryrun_ready": true,
+    "c3_inference_authorized": false
+  },
+  "next_action": "RUN_BROOKFIELD_COMPACT_C3_DRYRUN_ONLY",
+  "authority": {
+    "paid_execution_authorized": false,
+    "c3_inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
