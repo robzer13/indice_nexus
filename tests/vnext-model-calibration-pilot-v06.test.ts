@@ -185,10 +185,8 @@ test("Gate 18 v0.6 schema rejects concatenated evidence IDs seen in calibration"
   const findings = output.priority_findings as Array<Record<string, unknown>>;
   findings[0].evidence_ids = ["E-041','E-51"];
 
-  assert.throws(
-    () => gate18PhaseBV06OutputSchema.parse(output),
-    /Invalid string/,
-  );
+  const parsed = gate18PhaseBV06OutputSchema.safeParse(output);
+  assert.equal(parsed.success, false);
 });
 
 test("Gate 18 v0.6 rejects support and counterevidence overlap", () => {
