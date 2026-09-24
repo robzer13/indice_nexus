@@ -25,23 +25,23 @@ import {
   type Gate18PilotCompany,
 } from "../runtime/vnext/model-calibration-pilot";
 import {
-  GATE18_PHASE_B_V06_GENERATION_SCHEMA_ID,
-  GATE18_PHASE_B_V06_GENERATION_SCHEMA_VERSION,
-  GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS,
+  GATE18_PHASE_B_V07_GENERATION_SCHEMA_ID,
+  GATE18_PHASE_B_V07_GENERATION_SCHEMA_VERSION,
+  GATE18_PHASE_B_V07_MAX_OUTPUT_TOKENS,
   GATE18_PHASE_B_PROTOCOL_VERSION,
-  GATE18_PHASE_B_V06_MODULE_ID,
-  GATE18_PHASE_B_V06_PROMPT_TEMPLATE_ID,
-  GATE18_PHASE_B_V06_PROMPT_TEMPLATE_VERSION,
-  GATE18_PHASE_B_V06_SCOPE,
-  GATE18_PHASE_B_V06_SYSTEM_PROMPT,
-  assertGate18PhaseBV06Semantics,
-  buildGate18PhaseBV06ModelInput,
-  buildVerifiedGate18V06MoatPacket,
-  gate18PhaseBV06GenerationSchemaSha256,
-  gate18PhaseBV06OutputSchema,
-  gate18PhaseBV06PromptTemplateSha256,
-  type Gate18PhaseBV06Output,
-} from "../runtime/vnext/model-calibration-pilot-v06";
+  GATE18_PHASE_B_V07_MODULE_ID,
+  GATE18_PHASE_B_V07_PROMPT_TEMPLATE_ID,
+  GATE18_PHASE_B_V07_PROMPT_TEMPLATE_VERSION,
+  GATE18_PHASE_B_V07_SCOPE,
+  GATE18_PHASE_B_V07_SYSTEM_PROMPT,
+  assertGate18PhaseBV07Semantics,
+  buildGate18PhaseBV07ModelInput,
+  buildVerifiedGate18V07MoatPacket,
+  gate18PhaseBV07GenerationSchemaSha256,
+  gate18PhaseBV07OutputSchema,
+  gate18PhaseBV07PromptTemplateSha256,
+  type Gate18PhaseBV07Output,
+} from "../runtime/vnext/model-calibration-pilot-v07";
 
 interface CliOptions {
   caseSelector: string;
@@ -525,7 +525,7 @@ function conservativeCaseCostCeiling(
       const inferenceCeiling =
         approximateInputTokenCeiling *
           modelPricing.input +
-        GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS *
+        GATE18_PHASE_B_V07_MAX_OUTPUT_TOKENS *
           modelPricing.output;
 
       // Reserve one tenth of a cent for gateway/reporting
@@ -582,12 +582,12 @@ async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
   const company = findCompany(options.caseSelector);
 
-  const verified = buildVerifiedGate18V06MoatPacket(
+  const verified = buildVerifiedGate18V07MoatPacket(
     company,
     artifactReader(options.privateRepoRoot),
   );
 
-  const modelInput = buildGate18PhaseBV06ModelInput(
+  const modelInput = buildGate18PhaseBV07ModelInput(
     verified.packet,
   );
   const selectedCandidates =
@@ -625,7 +625,7 @@ async function main(): Promise<void> {
       dataCutoff: verified.packet.data_cutoff,
     },
     packet: {
-      scope: GATE18_PHASE_B_V06_SCOPE,
+      scope: GATE18_PHASE_B_V07_SCOPE,
       sourceEvidenceItems: verified.sourceEvidenceCount,
       sourceConflicts: verified.sourceConflictCount,
       evidenceItems: verified.packet.evidence_items.length,
@@ -638,21 +638,21 @@ async function main(): Promise<void> {
       serializedChars: JSON.stringify(verified.packet).length,
     },
     prompt: {
-      moduleId: GATE18_PHASE_B_V06_MODULE_ID,
+      moduleId: GATE18_PHASE_B_V07_MODULE_ID,
       promptTemplateId:
-        GATE18_PHASE_B_V06_PROMPT_TEMPLATE_ID,
+        GATE18_PHASE_B_V07_PROMPT_TEMPLATE_ID,
       promptTemplateVersion:
-        GATE18_PHASE_B_V06_PROMPT_TEMPLATE_VERSION,
+        GATE18_PHASE_B_V07_PROMPT_TEMPLATE_VERSION,
       promptTemplateSha256:
-        gate18PhaseBV06PromptTemplateSha256(),
+        gate18PhaseBV07PromptTemplateSha256(),
       generationSchemaId:
-        GATE18_PHASE_B_V06_GENERATION_SCHEMA_ID,
+        GATE18_PHASE_B_V07_GENERATION_SCHEMA_ID,
       generationSchemaVersion:
-        GATE18_PHASE_B_V06_GENERATION_SCHEMA_VERSION,
+        GATE18_PHASE_B_V07_GENERATION_SCHEMA_VERSION,
       generationSchemaSha256:
-        gate18PhaseBV06GenerationSchemaSha256(),
+        gate18PhaseBV07GenerationSchemaSha256(),
       maxOutputTokens:
-        GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS,
+        GATE18_PHASE_B_V07_MAX_OUTPUT_TOKENS,
     },
     conservativeCostGuard: ceiling,
     explicitSpendCapUsd: options.maxCaseSpendUsd,
@@ -690,7 +690,7 @@ async function main(): Promise<void> {
 
   const executions: Array<{
     engineering: Gate18EngineeringReceipt;
-    output: Gate18PhaseBV06Output;
+    output: Gate18PhaseBV07Output;
     providerMetadata: unknown;
   }> = [];
   const failures: SafeFailure[] = [];
@@ -744,12 +744,12 @@ async function main(): Promise<void> {
           name: "orotitan_gate18_phase_b_evidence_audit",
           description:
             "OroTitan Gate 18 assisted evidence-audit calibration output.",
-          schema: gate18PhaseBV06OutputSchema,
+          schema: gate18PhaseBV07OutputSchema,
         }),
-        system: GATE18_PHASE_B_V06_SYSTEM_PROMPT,
+        system: GATE18_PHASE_B_V07_SYSTEM_PROMPT,
         prompt: modelInput,
         maxOutputTokens:
-          GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS,
+          GATE18_PHASE_B_V07_MAX_OUTPUT_TOKENS,
         providerOptions: {
           gateway: {
             tags: [
@@ -806,7 +806,7 @@ async function main(): Promise<void> {
       const output = result.output;
       let semanticValid = true;
       try {
-        assertGate18PhaseBV06Semantics(
+        assertGate18PhaseBV07Semantics(
           verified.packet,
           output,
         );
@@ -821,22 +821,22 @@ async function main(): Promise<void> {
           displayName: company.display_name,
           sourceRunId: company.source_run_id,
           dataCutoff: company.data_cutoff,
-          moduleId: GATE18_PHASE_B_V06_MODULE_ID,
+          moduleId: GATE18_PHASE_B_V07_MODULE_ID,
           modelLabel: candidate.label,
           modelId: candidate.modelId,
           repetition: 1,
           promptTemplateId:
-            GATE18_PHASE_B_V06_PROMPT_TEMPLATE_ID,
+            GATE18_PHASE_B_V07_PROMPT_TEMPLATE_ID,
           promptTemplateVersion:
-            GATE18_PHASE_B_V06_PROMPT_TEMPLATE_VERSION,
+            GATE18_PHASE_B_V07_PROMPT_TEMPLATE_VERSION,
           promptTemplateSha256:
-            gate18PhaseBV06PromptTemplateSha256(),
+            gate18PhaseBV07PromptTemplateSha256(),
           generationSchemaId:
-            GATE18_PHASE_B_V06_GENERATION_SCHEMA_ID,
+            GATE18_PHASE_B_V07_GENERATION_SCHEMA_ID,
           generationSchemaVersion:
-            GATE18_PHASE_B_V06_GENERATION_SCHEMA_VERSION,
+            GATE18_PHASE_B_V07_GENERATION_SCHEMA_VERSION,
           generationSchemaSha256:
-            gate18PhaseBV06GenerationSchemaSha256(),
+            gate18PhaseBV07GenerationSchemaSha256(),
           evidencePacketSha256:
             verified.packetSha256,
         },

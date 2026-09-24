@@ -245,21 +245,21 @@ test("Gate 18 v0.6 requires cited conflicts to touch finding evidence", () => {
   );
 });
 
-test("Gate 18 runner is routed through v0.6 contract", () => {
+test("Gate 18 v0.6 invariants remain while the runner advances to v0.7", () => {
   const source = readFileSync(
     "scripts/vnext-gate18-phase-b.ts",
     "utf8",
   );
 
-  assert.match(source, /model-calibration-pilot-v06/);
-  assert.match(source, /gate18PhaseBV06OutputSchema/);
-  assert.match(source, /assertGate18PhaseBV06Semantics/);
+  assert.match(source, /model-calibration-pilot-v07/);
+  assert.match(source, /gate18PhaseBV07OutputSchema/);
+  assert.match(source, /assertGate18PhaseBV07Semantics/);
   assert.match(
     source,
-    /GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS/,
+    /GATE18_PHASE_B_V07_MAX_OUTPUT_TOKENS/,
   );
   assert.doesNotMatch(
     source,
-    /model-calibration-pilot-v05/,
+    /model-calibration-pilot-v06/,
   );
 });

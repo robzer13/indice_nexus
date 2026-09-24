@@ -296,7 +296,7 @@ test("Gate 18 v0.2 remains ASSIST-only and versioned", () => {
   );
 });
 
-test("Gate 18 runner advances to current v0.6 while preserving v0.2 packet normalization and paid-call guards", () => {
+test("Gate 18 runner advances to current v0.7 while preserving v0.2 packet normalization and paid-call guards", () => {
   const source = readFileSync(
     "scripts/vnext-gate18-phase-b.ts",
     "utf8",
@@ -304,11 +304,11 @@ test("Gate 18 runner advances to current v0.6 while preserving v0.2 packet norma
 
   assert.match(
     source,
-    /model-calibration-pilot-v06/,
+    /model-calibration-pilot-v07/,
   );
   assert.match(
     source,
-    /GATE18_PHASE_B_V06_SCOPE/,
+    /GATE18_PHASE_B_V07_SCOPE/,
   );
   assert.match(
     source,
