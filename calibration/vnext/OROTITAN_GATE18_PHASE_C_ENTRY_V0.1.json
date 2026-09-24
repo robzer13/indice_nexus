@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BLOCKED_PENDING_POST_UPGRADE_VERIFICATION",
+    "c3_historical_semantic_regressions": "BLOCKED_DRIVER_AND_MODEL_REGISTRY_RECOVERY_PENDING",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_NO_INFERENCE_OLLAMA_POST_UPGRADE_VERIFICATION",
+  "next_action": "RUN_NO_INFERENCE_OLLAMA_MODEL_REGISTRY_RECOVERY_CHECK",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -67,7 +67,7 @@
   "c3_last_run_classification": "RUNTIME_FAIL_HTTP_500_NO_SEMANTIC_RESULT",
   "c3_semantic_result_observed": false,
   "c3_runtime_diagnostic_conclusion": "G18-PHASEC-C3-RUNTIME-DIAGNOSTIC-CONCLUSION-001",
-  "c3_active_runtime_version": "0.6.6",
+  "c3_active_runtime_version": "0.34.3",
   "c3_runtime_version_qualified_for_qwen3": false,
   "c3_recommended_runtime_target": "0.34.4_CURRENT_STABLE_OBSERVED",
   "c3_ollama_upgrade_authorized": true,
@@ -76,5 +76,10 @@
   "c3_nvidia_driver_upgrade_authorized": false,
   "c3_ollama_upgrade_execution": "EXECUTED_WITH_PRECONDITION_VIOLATION",
   "c3_ollama_upgrade_preflight_status": "BLOCKED_DRIVER_532_03_LT_551_61",
-  "c3_post_upgrade_verification_ready": true
+  "c3_post_upgrade_verification_ready": true,
+  "c3_post_upgrade_result": "G18-PHASEC-OLLAMA-0343-POSTCHECK-001",
+  "c3_cli_api_coherent": true,
+  "c3_nvidia_driver_version": "532.03",
+  "c3_nvidia_driver_meets_minimum": false,
+  "c3_qwen3_digest_reverified_after_upgrade": false
 }
