@@ -51,6 +51,15 @@ import {
   buildGate18V10TargetedProbeInput,
   gate18V10TargetedProbePromptSha256,
 } from "../runtime/vnext/model-calibration-targeted-regression-v10";
+import {
+  GATE18_V10_BROOKFIELD_TARGETED_PROBE_ID,
+  GATE18_V10_BROOKFIELD_TARGETED_PROBE_PROMPT_TEMPLATE_ID,
+  GATE18_V10_BROOKFIELD_TARGETED_PROBE_PROMPT_TEMPLATE_VERSION,
+  GATE18_V10_BROOKFIELD_TARGETED_PROBE_SYSTEM_PROMPT,
+  assertGate18V10BrookfieldTargetedProbeSemantics,
+  buildGate18V10BrookfieldTargetedProbeInput,
+  gate18V10BrookfieldTargetedProbePromptSha256,
+} from "../runtime/vnext/model-calibration-targeted-brookfield-v10";
 
 interface CliOptions {
   caseSelector: string;
@@ -212,7 +221,9 @@ function parseArgs(argv: readonly string[]): CliOptions {
 
   if (
     targetedRegressionProbe !== null &&
-    targetedRegressionProbe !== GATE18_V10_TARGETED_PROBE_ID
+    targetedRegressionProbe !== GATE18_V10_TARGETED_PROBE_ID &&
+    targetedRegressionProbe !==
+      GATE18_V10_BROOKFIELD_TARGETED_PROBE_ID
   ) {
     throw new Error(
       `VNEXT_GATE18_PHASE_B_UNKNOWN_TARGETED_PROBE:${targetedRegressionProbe}`,
@@ -612,32 +623,65 @@ async function main(): Promise<void> {
     artifactReader(options.privateRepoRoot),
   );
 
-  const targetedProbe =
+  const adyenTargetedProbe =
     options.targetedRegressionProbe ===
     GATE18_V10_TARGETED_PROBE_ID;
+  const brookfieldTargetedProbe =
+    options.targetedRegressionProbe ===
+    GATE18_V10_BROOKFIELD_TARGETED_PROBE_ID;
+  const targetedProbe =
+    adyenTargetedProbe || brookfieldTargetedProbe;
 
-  if (targetedProbe && company.display_name !== "Adyen") {
+  if (
+    adyenTargetedProbe &&
+    company.display_name !== "Adyen"
+  ) {
     throw new Error(
       "VNEXT_GATE18_PHASE_B_TARGETED_PROBE_REQUIRES_ADYEN",
     );
   }
+  if (
+    brookfieldTargetedProbe &&
+    company.display_name !== "Brookfield Corporation"
+  ) {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_TARGETED_PROBE_REQUIRES_BROOKFIELD",
+    );
+  }
 
-  const modelInput = targetedProbe
+  const modelInput = adyenTargetedProbe
     ? buildGate18V10TargetedProbeInput(verified.packet)
-    : buildGate18PhaseBV10ModelInput(verified.packet);
+    : brookfieldTargetedProbe
+      ? buildGate18V10BrookfieldTargetedProbeInput(
+          verified.packet,
+        )
+      : buildGate18PhaseBV10ModelInput(verified.packet);
 
-  const systemPrompt = targetedProbe
+  const systemPrompt = adyenTargetedProbe
     ? GATE18_V10_TARGETED_PROBE_SYSTEM_PROMPT
-    : GATE18_PHASE_B_V10_SYSTEM_PROMPT;
-  const promptTemplateId = targetedProbe
+    : brookfieldTargetedProbe
+      ? GATE18_V10_BROOKFIELD_TARGETED_PROBE_SYSTEM_PROMPT
+      : GATE18_PHASE_B_V10_SYSTEM_PROMPT;
+  const promptTemplateId = adyenTargetedProbe
     ? GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_ID
-    : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_ID;
-  const promptTemplateVersion = targetedProbe
+    : brookfieldTargetedProbe
+      ? GATE18_V10_BROOKFIELD_TARGETED_PROBE_PROMPT_TEMPLATE_ID
+      : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_ID;
+  const promptTemplateVersion = adyenTargetedProbe
     ? GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_VERSION
-    : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_VERSION;
-  const promptTemplateSha256 = targetedProbe
+    : brookfieldTargetedProbe
+      ? GATE18_V10_BROOKFIELD_TARGETED_PROBE_PROMPT_TEMPLATE_VERSION
+      : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_VERSION;
+  const promptTemplateSha256 = adyenTargetedProbe
     ? gate18V10TargetedProbePromptSha256()
-    : gate18PhaseBV10PromptTemplateSha256();
+    : brookfieldTargetedProbe
+      ? gate18V10BrookfieldTargetedProbePromptSha256()
+      : gate18PhaseBV10PromptTemplateSha256();
+  const activeTargetedProbeId = adyenTargetedProbe
+    ? GATE18_V10_TARGETED_PROBE_ID
+    : brookfieldTargetedProbe
+      ? GATE18_V10_BROOKFIELD_TARGETED_PROBE_ID
+      : null;
   const selectedCandidates =
     options.modelLabels.length === 0
       ? [...GATE18_PHASE_B_MODEL_CANDIDATES]
@@ -667,7 +711,7 @@ async function main(): Promise<void> {
     modelWinnerSelected: false,
     targetedRegressionProbe: targetedProbe
       ? {
-          probeId: GATE18_V10_TARGETED_PROBE_ID,
+          probeId: activeTargetedProbeId,
           comparisonAdmissible: false,
           modelRankingAuthority: false,
           routingAuthority: false,
@@ -859,8 +903,13 @@ async function main(): Promise<void> {
       const output = result.output;
       let semanticValid = true;
       try {
-        if (targetedProbe) {
+        if (adyenTargetedProbe) {
           assertGate18V10TargetedProbeSemantics(
+            verified.packet,
+            output,
+          );
+        } else if (brookfieldTargetedProbe) {
+          assertGate18V10BrookfieldTargetedProbeSemantics(
             verified.packet,
             output,
           );
