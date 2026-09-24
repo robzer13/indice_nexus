@@ -1,0 +1,79 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_PENDING_RENAME_REVIEW_RESULT_V0.1",
+  "result_id": "G18-PHASEC-NVIDIA-61714-PENDING-RENAME-REVIEW-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS_PENDING_RENAME_NOT_NVIDIA_RELEVANT",
+  "observed_after_reboot": {
+    "last_boot_up_time": "2026-09-24T13:58:11.5000000+02:00",
+    "component_based_servicing_pending": false,
+    "windows_update_pending": false,
+    "pending_file_rename_operations_present": true,
+    "pending_file_rename_operations_2_present": false,
+    "operations": [
+      {
+        "source": "C:\\Windows\\System32\\gamingservicesproxy_13.dll.0",
+        "destination": ""
+      },
+      {
+        "source": "C:\\WRP1A59.tmp",
+        "destination": ""
+      },
+      {
+        "source": "C:\\Program Files\\Google\\Chrome\\Temp\\18596_2092271338\\old_chrome.exe",
+        "destination": ""
+      },
+      {
+        "source": "C:\\Program Files\\Google\\Chrome\\Temp\\18596_2092271338",
+        "destination": ""
+      },
+      {
+        "source": "C:\\Program Files\\Google\\Chrome\\Temp",
+        "destination": ""
+      }
+    ]
+  },
+  "interpretation": {
+    "all_operations_are_delete_on_reboot_pairs": true,
+    "nvidia_path_observed": false,
+    "nvidia_component_observed": false,
+    "display_driver_path_observed": false,
+    "cuda_path_observed": false,
+    "ollama_path_observed": false,
+    "classification": "UNRELATED_PENDING_DELETE_OPERATIONS",
+    "blocks_nvidia_driver_download": false,
+    "blocks_nvidia_driver_install_by_itself": false,
+    "registry_value_must_not_be_deleted_manually": true
+  },
+  "target": {
+    "version": "617.14",
+    "certification": "WHQL",
+    "release_date": "2026-09-22",
+    "package_class": "GEFORCE_GAME_READY_DRIVER_NOTEBOOK",
+    "package_name": "617.14-notebook-win10-win11-64bit-international-dch-whql.exe",
+    "source": "NVIDIA_OFFICIAL"
+  },
+  "authorization": {
+    "driver_download_authorized": true,
+    "driver_install_authorized": false,
+    "reason_install_blocked": "Downloaded package must first pass local Authenticode and package-identity validation.",
+    "ddu_authorized": false,
+    "current_driver_uninstall_authorized": false,
+    "bios_update_authorized": false,
+    "vbios_update_authorized": false,
+    "chipset_update_authorized": false,
+    "model_inference_authorized": false
+  },
+  "next_action": "DOWNLOAD_OFFICIAL_NVIDIA_617_14_NOTEBOOK_PACKAGE_AND_VALIDATE_SIGNATURE_IDENTITY",
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "0c6a2baaee42050f1c5e37fcddb42bf36f7d0070",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
