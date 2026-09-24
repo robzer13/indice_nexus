@@ -25,8 +25,8 @@ import {
 const MODEL_NAME = "qwen3:1.7b";
 const MODEL_DIGEST =
   "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7";
-const LOCAL_CONTEXT_TOKENS = 4096;
-const LOCAL_MAX_OUTPUT_TOKENS = 1024;
+const LOCAL_CONTEXT_TOKENS = 8192;
+const LOCAL_MAX_OUTPUT_TOKENS = 768;
 const REQUIRED_EVIDENCE_IDS = [
   "E-036",
   "E-037",
@@ -49,6 +49,61 @@ interface OllamaTag {
     parameter_size?: string;
     quantization_level?: string;
   };
+}
+
+interface OllamaShow {
+  model_info?: Record<string, unknown>;
+  capabilities?: string[];
+}
+
+function numberBySuffix(
+  record: Record<string, unknown> | undefined,
+  suffix: string,
+): number | null {
+  if (!record) {
+    return null;
+  }
+
+  for (const [key, value] of Object.entries(record)) {
+    if (!key.endsWith(suffix)) {
+      continue;
+    }
+
+    if (typeof value === "number" && Number.isFinite(value)) {
+      return value;
+    }
+
+    if (typeof value === "string") {
+      const parsed = Number(value);
+      if (Number.isFinite(parsed)) {
+        return parsed;
+      }
+    }
+  }
+
+  return null;
+}
+
+function nvidiaFreeVramMiB(): number | null {
+  try {
+    const output = execFileSync(
+      "nvidia-smi",
+      [
+        "--query-gpu=memory.free",
+        "--format=csv,noheader,nounits",
+      ],
+      {
+        encoding: "utf8",
+        stdio: ["ignore", "pipe", "ignore"],
+        timeout: 10_000,
+      },
+    ).trim();
+
+    const parsed = Number(output.split(/\r?\n/)[0]?.trim());
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch {
+    return null;
+  }
 }
 
 function sha256Hex(value: string): string {
@@ -201,6 +256,38 @@ async function getInstalledModel(): Promise<OllamaTag> {
   }
 }
 
+async function getModelShow(): Promise<OllamaShow> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 5_000);
+
+  try {
+    const response = await fetch(
+      "http://127.0.0.1:11434/api/show",
+      {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          model: MODEL_NAME,
+          verbose: false,
+        }),
+        signal: controller.signal,
+      },
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        `VNEXT_GATE18_PHASE_C_C3_DRYRUN_OLLAMA_SHOW_HTTP_${response.status}`,
+      );
+    }
+
+    return (await response.json()) as OllamaShow;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 function buildCompactPacket(
   source: Gate18V02EvidencePacket,
 ): Gate18V02EvidencePacket {
@@ -240,24 +327,73 @@ async function main(): Promise<void> {
   const modelInput =
     buildGate18V10BrookfieldTargetedProbeInput(compactPacket);
   const installedModel = await getInstalledModel();
+  const modelShow = await getModelShow();
 
   const systemChars =
     GATE18_V10_BROOKFIELD_TARGETED_PROBE_SYSTEM_PROMPT.length;
   const promptChars = modelInput.length;
   const combinedPromptChars = systemChars + promptChars;
 
-  // Deliberately conservative guard for English + JSON.
-  // This is not a tokenizer replacement.
-  const conservativeInputTokenCeiling = Math.ceil(
-    combinedPromptChars / 2,
-  );
-  const plannedTotalTokenCeiling =
-    conservativeInputTokenCeiling + LOCAL_MAX_OUTPUT_TOKENS;
-
   const compactPacketJson = JSON.stringify(compactPacket);
   const outputSchemaJson = JSON.stringify(
     GATE18_PHASE_B_V10_GENERATION_SCHEMA_SPEC,
   );
+
+  // Deliberately conservative guard for English + JSON.
+  // Count system + user prompt + generation schema, then assume
+  // no more than two UTF-16 code units per input token.
+  // This is not a tokenizer replacement.
+  const schemaAwareInputChars =
+    combinedPromptChars + outputSchemaJson.length;
+  const conservativeInputTokenCeiling = Math.ceil(
+    schemaAwareInputChars / 2,
+  );
+  const plannedTotalTokenCeiling =
+    conservativeInputTokenCeiling + LOCAL_MAX_OUTPUT_TOKENS;
+  const contextHeadroomTokens =
+    LOCAL_CONTEXT_TOKENS - plannedTotalTokenCeiling;
+
+  const blockCount = numberBySuffix(
+    modelShow.model_info,
+    ".block_count",
+  );
+  const embeddingLength = numberBySuffix(
+    modelShow.model_info,
+    ".embedding_length",
+  );
+  const attentionHeads = numberBySuffix(
+    modelShow.model_info,
+    ".attention.head_count",
+  );
+  const kvHeads = numberBySuffix(
+    modelShow.model_info,
+    ".attention.head_count_kv",
+  );
+  const headDim =
+    embeddingLength !== null &&
+    attentionHeads !== null &&
+    attentionHeads > 0
+      ? embeddingLength / attentionHeads
+      : null;
+
+  // Ollama defaults to f16 KV cache when no explicit KV cache
+  // type is configured. This is an advisory estimate only.
+  const estimatedKvBytes =
+    blockCount !== null &&
+    kvHeads !== null &&
+    headDim !== null
+      ? 2 *
+        blockCount *
+        kvHeads *
+        headDim *
+        2 *
+        LOCAL_CONTEXT_TOKENS
+      : null;
+  const estimatedKvMiB =
+    estimatedKvBytes === null
+      ? null
+      : Math.round((estimatedKvBytes / 1024 ** 2) * 10) / 10;
+  const freeVramMiB = nvidiaFreeVramMiB();
 
   const status =
     plannedTotalTokenCeiling <= LOCAL_CONTEXT_TOKENS
@@ -323,6 +459,7 @@ async function main(): Promise<void> {
       promptChars,
       combinedPromptChars,
       generationSchemaChars: outputSchemaJson.length,
+      schemaAwareInputChars,
     },
     model: {
       name: MODEL_NAME,
@@ -344,7 +481,20 @@ async function main(): Promise<void> {
       keepAlive: "0s",
       conservativeInputTokenCeiling,
       plannedTotalTokenCeiling,
+      contextHeadroomTokens,
       inferenceAuthorized: false,
+    },
+    memoryAdvisory: {
+      modelInfoBlockCount: blockCount,
+      modelInfoEmbeddingLength: embeddingLength,
+      modelInfoAttentionHeads: attentionHeads,
+      modelInfoKvHeads: kvHeads,
+      estimatedHeadDim: headDim,
+      assumedKvCacheBytesPerElement: 2,
+      estimatedKvCacheMiBAtPlannedContext: estimatedKvMiB,
+      freeVramMiB,
+      note:
+        "KV estimate is advisory only; runtime graph and model memory remain implementation-dependent.",
     },
     expectedSemantics: {
       findingCount: 2,
