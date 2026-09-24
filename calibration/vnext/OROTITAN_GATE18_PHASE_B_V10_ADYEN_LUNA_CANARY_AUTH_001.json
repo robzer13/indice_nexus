@@ -1,0 +1,162 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_PAID_CANARY_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V10-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "protocol_document": "calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V1.0.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V10_ADYEN_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "6706a24bf5814cb610eefd386a9913533e637375",
+    "targeted_failure_mode": "COUNTEREVIDENCE_NOT_ALIGNED_TO_EXACT_CLAIM_TARGET"
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "evidence_items": 16,
+    "conflicts": 3
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "calibration_question": "Does the v1.0 claim-target-alignment contract cause Adyen x LUNA to assign support, counterevidence, MIXED state, and conflict handling only when they bear on the same exact semantic proposition?",
+  "specific_regression_targets": [
+    {
+      "target": "low_reported_churn",
+      "expected_support_examples": [
+        "E-036"
+      ],
+      "forbidden_counterevidence_if_claim_is_descriptive": [
+        "E-037",
+        "E-041"
+      ],
+      "required_behavior": "If the exact claim is only that reported churn is low, multi-sourcing or volume-shifting evidence must not be counterevidence merely because it weakens a downstream switching-friction inference."
+    },
+    {
+      "target": "switching_friction_inference",
+      "expected_support_examples": [
+        "E-036",
+        "E-042"
+      ],
+      "expected_counterevidence_examples": [
+        "E-037",
+        "E-041",
+        "E-051"
+      ],
+      "expected_conflict_examples": [
+        "C-005"
+      ],
+      "required_behavior": "If opposition is used, the claim should be framed at the economically contestable switching-friction or relationship-persistence level so support and counterevidence address the same target."
+    },
+    {
+      "target": "service_disruption_existence",
+      "expected_support_examples": [
+        "E-055"
+      ],
+      "forbidden_counterevidence_if_claim_is_incident_existence": [
+        "E-056"
+      ],
+      "required_behavior": "High uptime during another scoped event must not be treated as counterevidence to the exact proposition that a documented service incident occurred."
+    },
+    {
+      "target": "scope_resolved_conflict",
+      "required_behavior": "A conflict resolved by scope must not cause MIXED unless residual evidence still materially weakens the exact claim after the scope distinction."
+    },
+    {
+      "target": "orthogonal_qualification_regression",
+      "evidence_id": "E-040",
+      "expected_direction_if_used": "SUPPORT",
+      "expected_qualification_if_material": "Selected enterprise wins do not quantify revenue contribution."
+    },
+    {
+      "target": "issuer_hosted_support_regression",
+      "evidence_id": "E-043",
+      "required_behavior": "Issuer-hosted or selected evidence may remain SUPPORT when directionally supportive, with source limitations recorded as qualifications rather than converted into COUNTEREVIDENCE."
+    },
+    {
+      "target": "weak_link_label_regression",
+      "required_behavior": "weak_link_candidates.candidate may remain a short label without terminal punctuation and must not fail semantic validation for that reason."
+    }
+  ],
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0070822,
+    "authorized_hard_cap_usd": 0.0071,
+    "fresh_budget_snapshot": {
+      "source": "vercel ai-gateway budgets list",
+      "cli_version": "59.26.0",
+      "node_version": "24.19.0",
+      "project_name": "orotitan-vnext-pilotage",
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.44,
+      "team_name": "orotitan",
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.44,
+      "project_display_headroom_usd": 2.56,
+      "team_display_headroom_usd": 2.56,
+      "worst_case_project_display_spend_after_call_usd": 1.4471,
+      "worst_case_team_display_spend_after_call_usd": 1.4471
+    }
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "support and counterevidence address the same exact semantic target",
+      "descriptive claims are not weakened by evidence that only challenges downstream inference",
+      "MIXED is used only when same-target support and opposition both exist",
+      "scope-resolved conflicts do not create false MIXED states",
+      "service-incident existence is not contradicted by high uptime in another scoped event",
+      "qualification remains orthogonal to evidence direction",
+      "E-040 support-plus-qualification behavior is preserved if exercised",
+      "E-043 supportive direction is not inverted solely because of source limitations",
+      "weak-link labels do not create mechanical semantic failure",
+      "human judgment boundary is respected"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
