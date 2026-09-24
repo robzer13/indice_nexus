@@ -1,0 +1,121 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V09_PAID_CANARY_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V09-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "protocol_document": "calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V0.9.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V09_ADYEN_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "7b4a1526ce87b00e71c024632abe1b50ff7ed4ab",
+    "targeted_failure_mode": "COMPOUND_CONTRASTIVE_CLAIM_ABSORBS_ITS_OWN_COUNTEREVIDENCE"
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "evidence_items": 16,
+    "conflicts": 3
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "0.9",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_7",
+    "prompt_template_version": "0.7",
+    "prompt_template_sha256": "4b5d04b55306df855b463433ae6f016bc87240ea079294ac8355b8f414f0dcfa",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "calibration_question": "Does the v0.9 atomic-claim contract prevent Adyen x LUNA from embedding opposing context inside the claim and thereby misclassifying evidence polarity relative to the exact claim?",
+  "specific_regression_targets": [
+    {
+      "target": "switching_friction",
+      "expected_claim_shape": "One atomic proposition about persistence or switching friction only.",
+      "expected_support_examples": ["E-036", "E-042"],
+      "expected_counterevidence_examples": ["E-037", "E-041", "E-051"],
+      "required_behavior": "The claim itself must not include the counterevidence clause such as customer ability to switch or shift volume."
+    },
+    {
+      "target": "enterprise_win_capability",
+      "expected_claim_shape": "One atomic proposition about enterprise win/displacement capability only.",
+      "expected_support_examples": ["E-040", "E-041"],
+      "required_behavior": "Multi-provider architecture must not be called counterevidence solely because it was embedded as contrastive context in the claim."
+    },
+    {
+      "target": "orthogonal_qualification_regression",
+      "evidence_id": "E-040",
+      "expected_direction_if_used": "SUPPORT",
+      "expected_qualification_if_material": "Selected wins; new-customer revenue contribution is not quantified."
+    },
+    {
+      "target": "weak_link_label_regression",
+      "required_behavior": "weak_link_candidates.candidate may be a short label without terminal punctuation and must not fail semantic validation for that reason."
+    }
+  ],
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0070642,
+    "authorized_hard_cap_usd": 0.0071,
+    "fresh_budget_snapshot": {
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.44,
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.44,
+      "project_display_headroom_usd": 2.56,
+      "worst_case_project_display_spend_after_call_usd": 1.4471
+    }
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "each finding claim is genuinely atomic",
+      "support and counterevidence polarity are correct relative to the exact atomic claim",
+      "opposing context is kept outside claim wording",
+      "qualification remains orthogonal to evidence direction",
+      "E-040 support-plus-qualification behavior is preserved if exercised",
+      "weak-link labels do not create mechanical semantic failure",
+      "material conflict handling is coherent",
+      "weak-link and unresolved-point outputs are useful",
+      "judgment boundary is respected"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
