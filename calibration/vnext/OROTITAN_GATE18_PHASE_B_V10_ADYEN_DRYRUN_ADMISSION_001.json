@@ -1,0 +1,117 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_DRYRUN_ADMISSION_V1",
+  "admission_id": "G18-PHASEB-V10-ADYEN-DRYRUN-ADMISSION-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "NO_COST_DRYRUN_CONTRACT_ADMISSION",
+  "base_vnext_sha": "05c3074ac51b89095908abceb7aeda3416b698ce",
+  "case": {
+    "display_name": "Adyen",
+    "case_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 80,
+    "source_conflicts": 10,
+    "evidence_items": 16,
+    "conflicts": 3,
+    "serialized_chars": 10891,
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "lineage_vs_v09": "UNCHANGED"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "semantic_change": {
+    "principle": "ATOMICITY != CLAIM_TARGET_ALIGNMENT",
+    "counterfactual_counterevidence_test": "Counterevidence is admissible only when, if true, it makes the exact claim materially less likely, less strong, or less economically valid.",
+    "coexistence_rule": "Evidence fully compatible with the exact claim is not counterevidence merely because it challenges a downstream inference, broader moat mechanism, or another scoped event.",
+    "descriptive_vs_inferential_rule": "When opposition targets an economic inference rather than a raw observation, frame the finding at the economically contestable inferential level or leave counterevidence empty for the descriptive claim.",
+    "mixed_rule": "MIXED requires support and opposition to bear on the same semantic target.",
+    "scope_rule": "A conflict resolved by scope does not create MIXED unless residual evidence still weakens the exact claim after the scope distinction.",
+    "schema_shape_changed": false
+  },
+  "regression_targets": [
+    "Low reported churn may remain a descriptive claim only if multi-sourcing / volume-shifting evidence is not misclassified as counterevidence to the low-churn observation.",
+    "Switching-friction findings may use multi-sourcing / volume-shifting evidence as counterevidence when the claim itself is framed at the switching-friction inference level.",
+    "A documented service incident must not be made MIXED solely by high availability during another scoped event.",
+    "E-040 remains SUPPORT with qualification when selected enterprise wins do not quantify revenue contribution.",
+    "Issuer-hosted or selected supportive evidence may remain SUPPORT with explicit qualification rather than being mislabeled COUNTEREVIDENCE.",
+    "weak_link_candidates.candidate short labels remain valid without terminal punctuation."
+  ],
+  "cost_guard": {
+    "approximate_input_token_ceiling": 5835,
+    "per_model": [
+      {
+        "label": "LUNA",
+        "model_id": "openai/gpt-5.6-luna",
+        "cost_ceiling_usd": 0.007082199999999999
+      },
+      {
+        "label": "TERRA",
+        "model_id": "openai/gpt-5.6-terra",
+        "cost_ceiling_usd": 0.061822
+      },
+      {
+        "label": "SOL",
+        "model_id": "openai/gpt-5.6-sol",
+        "cost_ceiling_usd": 0.10626000000000001
+      },
+      {
+        "label": "ASTRA",
+        "model_id": "openai/gpt-6-astra",
+        "cost_ceiling_usd": 0.26415
+      }
+    ],
+    "total_cost_ceiling_usd": 0.4393142,
+    "v09_luna_ceiling_usd": 0.0070642,
+    "v09_total_ceiling_usd": 0.43785620000000003,
+    "interpretation": "The v1.0 claim-target-alignment prompt adds only modest input overhead while preserving the common 4096-token output envelope."
+  },
+  "admission_checks": {
+    "head_matches_merged_v10_contract": true,
+    "dry_run_mode": true,
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "allow_multi_model": false,
+    "explicit_spend_cap_usd": null,
+    "packet_identity_preserved": true,
+    "prompt_hash_pinned": true,
+    "schema_hash_unchanged_by_design": true,
+    "common_output_envelope_preserved": true,
+    "cost_guard_present": true
+  },
+  "paid_execution": {
+    "authorized": false,
+    "reason": "This receipt admits only the no-cost v1.0 dry-run. Any paid canary requires a separate fresh-budget snapshot and explicit authorization."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v10_contract": "IMPLEMENTED_GREEN",
+    "v10_dryrun": "ADMITTED",
+    "v10_paid_canary": "NOT_AUTHORIZED"
+  }
+}
