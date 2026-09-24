@@ -1,0 +1,91 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V06_DRYRUN_ADMISSION_V1",
+  "attempt_id": "G18-PHASEB-V06-ADYEN-DRYRUN-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "V06_SINGLE_CASE_DRYRUN_ADMISSION",
+  "repo_head_verified": "8f73f5b3b639c293f447e992842a03121d5a3202",
+  "case": {
+    "case_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "display_name": "Adyen",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 80,
+    "source_conflicts": 10,
+    "evidence_items": 16,
+    "conflicts": 3,
+    "serialized_chars": 10891,
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "lineage_matches_v05": true,
+    "packet_sha_matches_v05": true
+  },
+  "contract": {
+    "protocol_version": "0.6",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_4",
+    "prompt_template_version": "0.4",
+    "prompt_template_sha256": "947b8daf5ec9f2e86ff80d872481a581f2a2df7472491cff97a55031917e107a",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_4",
+    "generation_schema_version": "0.4",
+    "generation_schema_sha256": "ceb774809c74ccabc24a0b365e4a6289ca5413132a78d06cf8262a195f4979c2",
+    "max_output_tokens": 4096
+  },
+  "cost_guard": {
+    "approximate_input_token_ceiling": 5682,
+    "per_model_usd": {
+      "LUNA": 0.0070516,
+      "TERRA": 0.061516,
+      "SOL": 0.105648,
+      "ASTRA": 0.26262
+    },
+    "total_cost_ceiling_usd": 0.4368356
+  },
+  "comparison_to_v05_adyen_dryrun": {
+    "previous_approximate_input_token_ceiling": 5653,
+    "input_token_ceiling_delta": 29,
+    "input_token_ceiling_delta_percent": 0.5130019459,
+    "previous_total_cost_ceiling_usd": 0.4363658,
+    "total_cost_ceiling_delta_usd": 0.0004698,
+    "total_cost_ceiling_delta_percent": 0.1076619662,
+    "per_model_delta_usd": {
+      "LUNA": 0.0000058,
+      "TERRA": 0.000058,
+      "SOL": 0.000116,
+      "ASTRA": 0.00029
+    }
+  },
+  "admission": {
+    "dry_run_passed": true,
+    "authoritative_repo_head_matched_local_head": true,
+    "pinned_lineage_unchanged": true,
+    "point_in_time_packet_unchanged": true,
+    "prompt_contract_versioned": true,
+    "generation_schema_contract_versioned": true,
+    "common_max_output_contract_unchanged": true,
+    "cost_guard_materially_stable": true,
+    "paid_execution_authorized": false,
+    "authorization_blocker": "FRESH_VERCEL_BUDGET_SNAPSHOT_REQUIRED",
+    "automatic_retry_authorized": false,
+    "multi_model_execution_authorized": false
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v06_contract": "IMPLEMENTATION_CANDIDATE",
+    "v06_paid_canary": "NOT_YET_AUTHORIZED"
+  }
+}
