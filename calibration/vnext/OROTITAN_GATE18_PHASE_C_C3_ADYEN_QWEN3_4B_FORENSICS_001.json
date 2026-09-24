@@ -1,0 +1,97 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_QWEN3_4B_FORENSICS_V0.1",
+  "result_id": "G18-PHASEC-C3-ADYEN-QWEN4B-FORENSICS-001",
+  "source_run_result": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-002",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_FORENSICS",
+  "status": "FORENSICS_PARTIAL_DOWNSTREAM_CHECK_REQUIRED",
+  "observations": {
+    "runtime_pass": true,
+    "schema_pass": true,
+    "semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+    "material_conflicts": [
+      {
+        "conflict_id": "C-005",
+        "resolution_state": "UNRESOLVED_IN_PACKET",
+        "implication_length": 20,
+        "terminal_punctuation": false,
+        "saturation_boundary_reached": false
+      },
+      {
+        "conflict_id": "C-010",
+        "resolution_state": "RESOLVED_IN_PACKET",
+        "implication_length": 18,
+        "terminal_punctuation": false,
+        "saturation_boundary_reached": false
+      }
+    ],
+    "priority_findings": [
+      {
+        "index": 1,
+        "support_state": "MIXED",
+        "evidence_ids": [
+          "E-036",
+          "E-042"
+        ],
+        "conflict_ids": [
+          "C-005"
+        ],
+        "counterevidence_ids": [
+          "E-037",
+          "E-041"
+        ],
+        "qualification_evidence_ids": []
+      },
+      {
+        "index": 2,
+        "support_state": "SUPPORTED",
+        "evidence_ids": [
+          "E-055"
+        ],
+        "conflict_ids": [
+          "C-010"
+        ],
+        "counterevidence_ids": [],
+        "qualification_evidence_ids": []
+      },
+      {
+        "index": 3,
+        "support_state": "SUPPORTED",
+        "evidence_ids": [
+          "E-040",
+          "E-043"
+        ],
+        "conflict_ids": [],
+        "counterevidence_ids": [],
+        "qualification_evidence_ids": [
+          "E-040",
+          "E-043"
+        ]
+      }
+    ]
+  },
+  "validator_order_interpretation": {
+    "base_finding_level_checks_completed_before_failure": true,
+    "targeted_exact_id_checks_not_reached_due_base_validator_short_circuit": true,
+    "forensic_values_match_targeted_expected_ids_and_resolution_states": true,
+    "weak_link_and_unresolved_point_checks_not_reached": true
+  },
+  "conclusion_boundary": {
+    "semantic_polarity_failure_observed": false,
+    "instruction_coverage_failure_observed": false,
+    "output_contract_narrative_completeness_failure_observed": true,
+    "only_defect_concluded": false,
+    "model_capability_failure_concluded": false,
+    "c3_pass_retroactively_allowed": false
+  },
+  "next_action": "RUN_IN_MEMORY_PUNCTUATION_NORMALIZATION_FORENSIC_THEN_FULL_VALIDATOR_NO_INFERENCE",
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "artifact_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

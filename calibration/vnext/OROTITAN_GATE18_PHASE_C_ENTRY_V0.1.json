@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "QWEN3_4B_BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_FORENSICS_REQUIRED",
+    "c3_historical_semantic_regressions": "QWEN3_4B_BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_PUNCTUATION_FORENSIC_PREPARED",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_READ_ONLY_PRIVATE_ARTIFACT_FORENSICS_NO_INFERENCE",
+  "next_action": "RUN_ADYEN_IN_MEMORY_PUNCTUATION_NORMALIZATION_FORENSIC_NO_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -229,5 +229,18 @@
   "c3_qwen3_4b_adyen_timeout300_completed_response": true,
   "c3_qwen3_4b_adyen_timeout300_runtime_ms": 158845,
   "c3_qwen3_4b_adyen_timeout180_inadequacy_proven": false,
-  "c3_qwen3_4b_adyen_timeout_root_cause_proven": false
+  "c3_qwen3_4b_adyen_timeout_root_cause_proven": false,
+  "c3_qwen3_4b_adyen_forensics_result": "G18-PHASEC-C3-ADYEN-QWEN4B-FORENSICS-001",
+  "c3_qwen3_4b_adyen_forensics_status": "FORENSICS_PARTIAL_DOWNSTREAM_CHECK_REQUIRED",
+  "c3_qwen3_4b_adyen_observed_conflict_implication_failures": [
+    "C-005",
+    "C-010"
+  ],
+  "c3_qwen3_4b_adyen_priority_finding_structure_matches_target": true,
+  "c3_qwen3_4b_adyen_conflict_resolution_states_match_target": true,
+  "c3_qwen3_4b_adyen_only_defect_concluded": false,
+  "c3_qwen3_4b_adyen_punctuation_forensic_prepared": true,
+  "c3_qwen3_4b_adyen_punctuation_forensic_script": "scripts/vnext-gate18-phase-c-c3-adyen-punctuation-normalization-forensic.ts",
+  "c3_qwen3_4b_adyen_punctuation_forensic_is_inference": false,
+  "c3_qwen3_4b_adyen_retroactive_pass_allowed": false
 }
