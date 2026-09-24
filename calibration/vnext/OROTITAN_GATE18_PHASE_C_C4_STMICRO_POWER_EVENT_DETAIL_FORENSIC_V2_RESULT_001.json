@@ -1,0 +1,47 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_V2_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-V2-RESULT-001",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "BLOCKED_POWERSHELL_PARSER_ERROR",
+  "observed": {
+    "powershell_process_succeeded": false,
+    "subquery_count": 0,
+    "failed_query_count": 0,
+    "event_count": 0,
+    "get_win_event_execution_reached": false,
+    "first_parser_error": "MissingExpressionAfterToken",
+    "parser_failure_evidence": [
+      "Expression missing after comma in $specs array",
+      "Hashtable literal incomplete after semicolon injection",
+      "Unexpected token caused before event queries"
+    ]
+  },
+  "root_cause": {
+    "concluded": true,
+    "classification": "SCRIPT_SERIALIZATION_BUG",
+    "defect": "PowerShell source lines were joined with semicolons, injecting invalid separators after array commas and inside multiline hashtable literals.",
+    "source_expression": "].join(\";\")",
+    "windows_event_data_absence_concluded": false
+  },
+  "remediation": {
+    "strategy": "CREATE_V3_WITH_NEWLINE_PRESERVING_POWERSHELL_SOURCE",
+    "v2_mutated_retroactively": false,
+    "event_query_scope_changed": false,
+    "inference_scope_changed": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_POWER_EVENT_DETAIL_FORENSIC_V3_NO_INFERENCE",
+  "base_vnext_sha": "8e68adcd31d29297d3c2022ed7b459f6707e898a",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
