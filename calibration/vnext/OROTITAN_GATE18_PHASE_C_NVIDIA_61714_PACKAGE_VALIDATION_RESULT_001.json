@@ -1,0 +1,74 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_DRIVER_PACKAGE_VALIDATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-NVIDIA-61714-PACKAGE-VALIDATION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS_PACKAGE_VALIDATED_INSTALL_AUTHORIZED",
+  "package": {
+    "full_name": "C:\\Users\\robin\\Downloads\\617.14-notebook-win10-win11-64bit-international-dch-whql.exe",
+    "file_name": "617.14-notebook-win10-win11-64bit-international-dch-whql.exe",
+    "length_bytes": 990845872,
+    "file_version": "1.0.15",
+    "product_version": "1.0.15",
+    "sha256": "63D3DA5ED52547BF3FD86204BB9EA1455947B24E2AA2519F359126F9A6EFE13F"
+  },
+  "signature": {
+    "status": "Valid",
+    "status_message": "Signature vérifiée.",
+    "signer_subject": "CN=NVIDIA Corporation, OU=2008B9F, O=NVIDIA Corporation, L=Santa Clara, S=California, C=US",
+    "signer_issuer": "CN=DigiCert Trusted G4 Code Signing RSA4096 SHA384 2021 CA1, O=\"DigiCert, Inc.\", C=US",
+    "nvidia_signer_validated": true
+  },
+  "official_target": {
+    "driver_version": "617.14",
+    "certification": "WHQL",
+    "release_date": "2026-09-22",
+    "operating_systems": [
+      "Windows 10 64-bit",
+      "Windows 11"
+    ],
+    "official_file_size_display": "990.85 MB",
+    "source": "NVIDIA_OFFICIAL",
+    "details_url": "https://www.nvidia.com/en-us/geforce/drivers/details/279803/"
+  },
+  "validation": {
+    "expected_file_name_match": true,
+    "official_size_coherent": true,
+    "authenticode_valid": true,
+    "signer_is_nvidia": true,
+    "local_sha256_recorded": true,
+    "official_sha256_published_and_compared": false,
+    "package_identity_sufficient_for_controlled_install": true
+  },
+  "authorization": {
+    "driver_install_authorized": true,
+    "authorized_install_mode": "SIGNED_NVIDIA_INSTALLER_IN_PLACE_UPGRADE",
+    "nvidia_app_install_authorized": false,
+    "clean_install_option_authorized": false,
+    "ddu_authorized": false,
+    "manual_current_driver_uninstall_authorized": false,
+    "bios_update_authorized": false,
+    "vbios_update_authorized": false,
+    "chipset_update_authorized": false,
+    "model_inference_authorized": false,
+    "automatic_retry_authorized": false
+  },
+  "required_post_install": [
+    "REBOOT_WINDOWS",
+    "VERIFY_NVIDIA_SMI_DRIVER_AND_GPU_IDENTITY",
+    "RERUN_NVIDIA_DRIVER_UPGRADE_PREFLIGHT",
+    "VERIFY_OLLAMA_API_AND_QWEN_REGISTRY_WITHOUT_INFERENCE"
+  ],
+  "next_action": "INSTALL_NVIDIA_617_14_IN_PLACE_WITHOUT_NVIDIA_APP_OR_CLEAN_INSTALL_THEN_REBOOT",
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "6da850600430a0b84bc5130f57edc3d93d8e0bac",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
