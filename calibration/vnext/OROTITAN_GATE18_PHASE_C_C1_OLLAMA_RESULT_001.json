@@ -1,0 +1,70 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C1_OLLAMA_RUNTIME_ADMISSION_RESULT_V0.1",
+  "attempt_id": "G18-PHASEC-C1-OLLAMA-ATTEMPT-002",
+  "supersedes_attempt_id": "G18-PHASEC-C1-OLLAMA-ATTEMPT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C1_LOCAL_RUNTIME_ADMISSION",
+  "status": "PASS",
+  "classification": "LOCAL_OLLAMA_RUNTIME_ADMITTED",
+  "runtime": {
+    "runtime": "OLLAMA",
+    "cli_version": "0.6.6",
+    "api_version": "0.6.6",
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true,
+    "endpoint_reachable": true,
+    "loaded_models_at_probe": []
+  },
+  "installed_models": [
+    {
+      "name": "phi:latest",
+      "digest": "e2fd6321a5fe6bb3ac8a4e6f1cf04477fd2dea2924cf53237a995387e152ee9c",
+      "parameter_size": "3B",
+      "quantization": "Q4_0",
+      "size_bytes": 1602463378,
+      "role": "C2_RUNTIME_SMOKE_ONLY"
+    },
+    {
+      "name": "llama2:latest",
+      "digest": "78e26419b4469263f75331927a00a0284ef6544c1975b826b15abdaef17bb962",
+      "parameter_size": "7B",
+      "quantization": "Q4_0",
+      "size_bytes": 3826793677,
+      "role": "EXISTING_MODEL_NOT_ADMITTED"
+    },
+    {
+      "name": "mistral:latest",
+      "digest": "f974a74358d62a017b37c6f424fcdf2744ca02926c4f952513ddf474b2fa5091",
+      "parameter_size": "7.2B",
+      "quantization": "Q4_0",
+      "size_bytes": 4113301824,
+      "role": "EXISTING_MODEL_NOT_ADMITTED"
+    }
+  ],
+  "safety": {
+    "external_network_access_requested": false,
+    "external_model_api_call": false,
+    "model_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "hidden_cloud_fallback_allowed": false
+  },
+  "interpretation": {
+    "runtime_admitted": true,
+    "production_model_admitted": false,
+    "phi_promoted_to_production_candidate": false,
+    "next_stage": "C2_STRUCTURED_OUTPUT_SMOKE",
+    "c2_download_required": false
+  },
+  "authority": {
+    "paid_execution_authorized": false,
+    "model_download_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
