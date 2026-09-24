@@ -1,0 +1,97 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONTEXT_FIT_DIAGNOSTIC_V0.1",
+  "result_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "CONTEXT_4096_NOT_ADMISSIBLE_FOR_FULL_MATRIX_CONTEXT16384_PREFLIGHT_REQUIRED",
+  "basis": {
+    "static_preflight_format": "OROTITAN_GATE18_PHASE_C_C4_STATIC_REQUEST_PREFLIGHT_V0.1",
+    "c3_observed_calibration_points": [
+      {
+        "case": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_QWEN4B_4096",
+        "prompt_bytes": 4492,
+        "prompt_eval_count": 2162
+      },
+      {
+        "case": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096_TIMEOUT300",
+        "prompt_bytes": 7742,
+        "prompt_eval_count": 3075
+      }
+    ],
+    "empirical_local_relation": {
+      "formula": "estimated_prompt_tokens = 900.0935384615384 + 0.28092307692307694 * prompt_bytes",
+      "exact_tokenizer": false,
+      "use": "CONTEXT_RISK_SCREEN_ONLY"
+    }
+  },
+  "rows": [
+    {
+      "company": "RATIONAL AG",
+      "prompt_bytes": 35756,
+      "estimated_prompt_tokens": 10945,
+      "estimated_total_tokens_at_max_output_768": 11713,
+      "estimated_headroom_vs_4096": -7617,
+      "context_4096_disposition": "INADMISSIBLE"
+    },
+    {
+      "company": "Constellation Software",
+      "prompt_bytes": 9041,
+      "estimated_prompt_tokens": 3440,
+      "estimated_total_tokens_at_max_output_768": 4208,
+      "estimated_headroom_vs_4096": -112,
+      "context_4096_disposition": "INSUFFICIENT_MARGIN"
+    },
+    {
+      "company": "STMicroelectronics",
+      "prompt_bytes": 7558,
+      "estimated_prompt_tokens": 3023,
+      "estimated_total_tokens_at_max_output_768": 3791,
+      "estimated_headroom_vs_4096": 305,
+      "context_4096_disposition": "PLAUSIBLE_BUT_TIGHT"
+    },
+    {
+      "company": "Brookfield Corporation",
+      "prompt_bytes": 9643,
+      "estimated_prompt_tokens": 3609,
+      "estimated_total_tokens_at_max_output_768": 4377,
+      "estimated_headroom_vs_4096": -281,
+      "context_4096_disposition": "INSUFFICIENT_MARGIN"
+    },
+    {
+      "company": "Adyen",
+      "prompt_bytes": 11671,
+      "estimated_prompt_tokens": 4179,
+      "estimated_total_tokens_at_max_output_768": 4947,
+      "estimated_headroom_vs_4096": -851,
+      "context_4096_disposition": "INADMISSIBLE"
+    }
+  ],
+  "decision": {
+    "common_context_4096_admissible": false,
+    "common_context_8192_selected": false,
+    "common_context_12288_selected": false,
+    "proposed_common_context_tokens": 16384,
+    "rationale": "Preserves the full five-company packet matrix without packet compaction and provides material headroom over the largest empirically estimated case.",
+    "packet_compaction_selected": false,
+    "packet_compaction_reason": "Would change the C4 workload and requires separate methodology governance."
+  },
+  "hardware_boundary": {
+    "context_4096_load_fit_proven": true,
+    "context_16384_load_fit_proven": false,
+    "context_16384_inference_fit_proven": false,
+    "context_growth_policy_satisfied_for_preparation_only": true,
+    "context_growth_executable_without_new_smoke": false
+  },
+  "authority": {
+    "context_growth_authorized_for_inference": false,
+    "load_smoke_authorized": false,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_QWEN3_4B_LOAD_ONLY_SMOKE_AT_CONTEXT_16384_AND_REQUEST_EXPLICIT_AUTHORIZATION",
+  "base_vnext_sha": "c9ad07ac102640ad5f447e5e3c4aff0570ba15e4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
