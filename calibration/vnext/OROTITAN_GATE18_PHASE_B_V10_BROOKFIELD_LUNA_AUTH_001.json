@@ -1,0 +1,108 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_PAID_CANARY_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V10-BROOKFIELD-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "phase_b_synthesis": "calibration/vnext/OROTITAN_GATE18_PHASE_B_SYNTHESIS_V2.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V10_BROOKFIELD_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "4403f17ac571a62df13f33b885a5b804696fff09",
+    "calibration_question": "Does the v1.0 normal path generalize the Adyen evidence-role improvement to Brookfield's independent ACCOUNTING_HEAVY case without repeating the historical peer-replicability polarity error?"
+  },
+  "case": {
+    "display_name": "Brookfield Corporation",
+    "source_run_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "data_cutoff": "2026-09-19",
+    "role": "ACCOUNTING_HEAVY",
+    "evidence_packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+    "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "historical_failure_target": {
+    "prior_contract_version": "0.5",
+    "failure_class": "COUNTEREVIDENCE_ROLE_CLASSIFICATION",
+    "affected_evidence_ids": [
+      "E-039",
+      "E-042"
+    ],
+    "required_human_check": "If the generated claim asserts peer replicability, competitive capital intensity, or lack of uniqueness, E-039/E-042 must not be assigned as counterevidence merely because they mention peers or joint participation."
+  },
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0068796,
+    "authorized_hard_cap_usd": 0.0069,
+    "fresh_budget_snapshot": {
+      "source": "vercel ai-gateway budgets list",
+      "cli_version": "59.26.0",
+      "node_version": "24.19.0",
+      "project_name": "orotitan-vnext-pilotage",
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.45,
+      "project_display_headroom_usd": 2.55,
+      "team_name": "orotitan",
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.45,
+      "team_display_headroom_usd": 2.55,
+      "worst_case_project_display_spend_after_call_usd": 1.4569,
+      "worst_case_team_display_spend_after_call_usd": 1.4569
+    }
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "no support/counterevidence role inversion",
+      "E-039 and E-042 are directionally classified relative to the exact generated claim",
+      "material Brookfield conflicts are handled coherently",
+      "qualifications remain orthogonal to evidence direction",
+      "judgment boundary remains respected",
+      "normal priority selection remains useful"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "brookfield_v10_dryrun": "ADMITTED",
+    "brookfield_v10_paid_canary": "AUTHORIZED_SINGLE_CALL"
+  }
+}
