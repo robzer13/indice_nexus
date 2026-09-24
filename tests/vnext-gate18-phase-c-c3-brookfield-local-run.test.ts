@@ -28,7 +28,7 @@ test("Brookfield local C3 runner requires explicit authorization artifact and ex
   assert.match(source, /--authorization-id/);
   assert.match(
     source,
-    /OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_QWEN3_1_7B_INFERENCE_AUTH_001\.json/,
+    /OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_QWEN3_1_7B_INFERENCE_AUTH_002\.json/,
   );
   assert.match(source, /AUTHORIZATION_ARTIFACT_MISSING/);
 });
