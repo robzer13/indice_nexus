@@ -1,0 +1,86 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_LOCAL_RUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-001",
+  "authorization_id": "G18-PHASEC-C3-ADYEN-QWEN4B-INFERENCE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "FAIL",
+  "classification": "RUNTIME_FAIL_CLIENT_TIMEOUT_ABORT_NO_SEMANTIC_RESULT",
+  "base_vnext_sha": "db8a379f5a56729a0595f95090ce8832a8781790",
+  "probe": {
+    "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "execution_id": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096",
+    "mandatory_c3_regressions_targeted": [
+      "Adyen same-target switching-friction role alignment",
+      "Adyen scope-resolved incident handling",
+      "Adyen qualification orthogonality"
+    ],
+    "mandatory_c3_regressions_adjudicated": [],
+    "comparison_admissible": false
+  },
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0
+  },
+  "execution": {
+    "authorized_run_count": 1,
+    "authorized_run_consumed": true,
+    "wall_clock_ms": 180037,
+    "configured_client_timeout_ms": 180000,
+    "timeout_guard": "AbortController",
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "This operation was aborted",
+    "schema_valid": false,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": null,
+    "semantic_result_observed": false,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "private_artifact": {
+    "repo_relative_path": "calibration/vnext/private-runs/2026-09-24T150836895Z__ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096.json",
+    "gitignored": true,
+    "generated_content_publication_forbidden": true
+  },
+  "diagnosis": {
+    "client_timeout_match": true,
+    "evidence": "wall_clock_ms=180037 approximately equals configured 180000ms fetch timeout",
+    "ollama_completion_observed": false,
+    "schema_result_observed": false,
+    "semantic_result_observed": false,
+    "model_semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "prompt_contract_failure_concluded": false,
+    "decoding_failure_concluded": false,
+    "timeout_policy_failure_concluded": false,
+    "note": "The run was aborted by the client timeout before an Ollama response was received. No semantic conclusion is admissible."
+  },
+  "c3_effect": {
+    "mandatory_regression_count": 5,
+    "mandatory_regressions_passed_count": 2,
+    "mandatory_regressions_remaining_count": 3,
+    "adyen_regressions_remain_unadjudicated": true,
+    "c3_complete": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "decoding_change_authorized": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_NON_INFERENCE_POST_TIMEOUT_DIAGNOSTIC_BEFORE_ANY_REAUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
