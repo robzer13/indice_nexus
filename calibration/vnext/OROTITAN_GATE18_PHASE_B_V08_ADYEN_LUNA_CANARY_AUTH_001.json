@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V08_PAID_CANARY_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V08-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "protocol_document": "calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V0.8.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V08_ADYEN_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "6f9ad04a87776c4bc4f5bccf76e4835ea52e3d00",
+    "targeted_failure_mode": "DIRECTION_AND_QUALIFICATION_CONFLATED_AS_EXCLUSIVE_ROLES"
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_items": 16,
+    "conflicts": 3
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "0.8",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_6",
+    "prompt_template_version": "0.6",
+    "prompt_template_sha256": "8de3e41c601612538846c77097c82382e3725c58cab982d6b1df5da67d11c847",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "calibration_question": "Does the v0.8 orthogonal qualification contract allow Adyen x LUNA to preserve one directional role per evidence item while attaching qualification metadata to supportive-but-limited evidence?",
+  "specific_regression_targets": [
+    {
+      "evidence_id": "E-043",
+      "expected_direction_if_used_for_bounded_payment_performance_claim": "SUPPORT",
+      "expected_qualification": "Issuer-hosted selected customer case; representativeness is limited."
+    },
+    {
+      "evidence_id": "E-040",
+      "expected_direction_if_used_for_new-enterprise-win_claim": "SUPPORT",
+      "expected_qualification": "Selected wins are evidenced, but revenue contribution is not quantified."
+    }
+  ],
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0070608,
+    "authorized_hard_cap_usd": 0.0071,
+    "fresh_budget_snapshot": {
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.44,
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.44,
+      "project_display_headroom_usd": 2.56,
+      "worst_case_project_display_spend_after_call_usd": 1.4471
+    }
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "exact E-/C- grounding",
+      "support/counterevidence direction is correct",
+      "qualification metadata is attached only to directionally cited evidence",
+      "E-043 is not converted into counterevidence merely because it is selected/issuer-hosted",
+      "E-040 can remain support while carrying a revenue-attribution limitation",
+      "material conflict handling",
+      "weak-link usefulness",
+      "unresolved-point usefulness",
+      "judgment boundary"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
