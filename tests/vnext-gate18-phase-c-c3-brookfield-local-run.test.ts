@@ -56,3 +56,9 @@ test("Brookfield local C3 runner writes generated content only to gitignored pri
   assert.match(source, /comparisonAdmissible: false/);
   assert.match(source, /modelRankingAuthority: false/);
 });
+
+test("Brookfield local C3 runner preserves bounded Ollama HTTP error bodies", () => {
+  assert.match(source, /await response\.text\(\)/);
+  assert.match(source, /slice\(0, 2000\)/);
+  assert.match(source, /NO_RESPONSE_BODY/);
+});

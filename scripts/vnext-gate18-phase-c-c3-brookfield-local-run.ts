@@ -304,8 +304,15 @@ async function fetchJson<T>(
     );
 
     if (!response.ok) {
+      const errorBody = (await response.text())
+        .replace(/[\r\n\t]+/g, " ")
+        .trim()
+        .slice(0, 2000);
       throw new Error(
-        `VNEXT_GATE18_PHASE_C_C3_LOCAL_OLLAMA_HTTP_${response.status}`,
+        [
+          `VNEXT_GATE18_PHASE_C_C3_LOCAL_OLLAMA_HTTP_${response.status}`,
+          errorBody.length > 0 ? errorBody : "NO_RESPONSE_BODY",
+        ].join(":"),
       );
     }
 
