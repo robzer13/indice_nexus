@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BLOCKED_PENDING_NVIDIA_DRIVER_INSTALL_AND_POSTCHECK",
+    "c3_historical_semantic_regressions": "BLOCKED_PENDING_CORRECTED_NVIDIA_POSTCHECK",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "INSTALL_NVIDIA_617_14_IN_PLACE_WITHOUT_NVIDIA_APP_OR_CLEAN_INSTALL_THEN_REBOOT",
+  "next_action": "MERGE_PREFLIGHT_TARGET_ACTIVE_STATE_FIX_THEN_RERUN_NON_INFERENCE_POSTCHECK",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -79,8 +79,8 @@
   "c3_post_upgrade_verification_ready": true,
   "c3_post_upgrade_result": "G18-PHASEC-OLLAMA-0343-POSTCHECK-001",
   "c3_cli_api_coherent": true,
-  "c3_nvidia_driver_version": "532.03",
-  "c3_nvidia_driver_meets_minimum": false,
+  "c3_nvidia_driver_version": "617.14",
+  "c3_nvidia_driver_meets_minimum": true,
   "c3_qwen3_digest_reverified_after_upgrade": true,
   "c3_model_registry_recovery_result": "G18-PHASEC-OLLAMA-REGISTRY-RECOVERY-001_PASS",
   "c3_qwen3_capabilities": [
@@ -102,5 +102,13 @@
   "c3_nvidia_driver_package_sha256": "63D3DA5ED52547BF3FD86204BB9EA1455947B24E2AA2519F359126F9A6EFE13F",
   "c3_nvidia_driver_install_mode": "SIGNED_NVIDIA_INSTALLER_IN_PLACE_UPGRADE",
   "c3_nvidia_app_install_authorized": false,
-  "c3_nvidia_clean_install_authorized": false
+  "c3_nvidia_clean_install_authorized": false,
+  "c3_nvidia_driver_meets_target": true,
+  "c3_nvidia_driver_install_result": "PASS_ACTIVE_AFTER_REBOOT",
+  "c3_nvidia_driver_windows_version": "32.0.16.1714",
+  "c3_nvidia_driver_postinstall_result": "G18-PHASEC-NVIDIA-61714-POSTINSTALL-001",
+  "c3_nvidia_preflight_state_bug": "TARGET_DRIVER_ACTIVE_FELL_THROUGH_TO_BLOCKED",
+  "c3_nvidia_preflight_state_fix_required": true,
+  "c3_post_driver_ollama_api_version": "0.34.3",
+  "c3_qwen3_digest_reverified_after_driver_upgrade": true
 }

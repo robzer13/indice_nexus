@@ -139,10 +139,17 @@ async function main() {
       (item: any) => item?.Name === EXPECTED_GPU,
     );
 
-  const belowMinimum =
-    compareVersions(observedDriver, MINIMUM_DRIVER) === -1;
-  const belowTarget =
-    compareVersions(observedDriver, TARGET_DRIVER) === -1;
+  const minimumComparison =
+    compareVersions(observedDriver, MINIMUM_DRIVER);
+  const targetComparison =
+    compareVersions(observedDriver, TARGET_DRIVER);
+
+  const belowMinimum = minimumComparison === -1;
+  const belowTarget = targetComparison === -1;
+  const meetsMinimum = minimumComparison !== null && minimumComparison >= 0;
+  const targetDriverExactMatch = targetComparison === 0;
+  const targetDriverActiveOrNewer =
+    targetComparison !== null && targetComparison >= 0;
 
   const osCaption =
     operatingSystem &&
@@ -155,9 +162,11 @@ async function main() {
     /Windows 10|Windows 11/i.test(osCaption);
 
   const status =
-    exactGpuName && windowsSupported && belowTarget
-      ? "PASS_HARDWARE_IDENTIFIED_REVIEW_OEM"
-      : "BLOCKED";
+    !exactGpuName || !windowsSupported || targetComparison === null
+      ? "BLOCKED"
+      : targetDriverActiveOrNewer
+        ? "PASS_TARGET_DRIVER_ACTIVE"
+        : "PASS_HARDWARE_IDENTIFIED_REVIEW_OEM";
 
   const payload = {
     format:
@@ -196,6 +205,9 @@ async function main() {
       windowsSupported,
       belowMinimumQualification: belowMinimum,
       belowTargetDriver: belowTarget,
+      meetsMinimumQualification: meetsMinimum,
+      targetDriverExactMatch,
+      targetDriverActiveOrNewer,
     },
     safety: {
       networkAccessRequested: false,
@@ -211,7 +223,9 @@ async function main() {
     nextAction:
       status === "PASS_HARDWARE_IDENTIFIED_REVIEW_OEM"
         ? "Review system manufacturer/model and exact PNPDeviceID against OEM/NVIDIA support before downloading the driver."
-        : "Do not download or install a driver until the blocked hardware/OS condition is resolved.",
+        : status === "PASS_TARGET_DRIVER_ACTIVE"
+          ? "Target NVIDIA driver is active. Do not download or reinstall the driver; proceed to non-inference runtime postcheck."
+          : "Do not download or install a driver until the blocked hardware/OS condition is resolved.",
   };
 
   console.log(JSON.stringify(payload, null, 2));

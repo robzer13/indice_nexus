@@ -1,0 +1,64 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_61714_POSTINSTALL_VERIFICATION_V0.1",
+  "result_id": "G18-PHASEC-NVIDIA-61714-POSTINSTALL-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS_RUNTIME_EVIDENCE_PREFLIGHT_STATE_FIX_REQUIRED",
+  "observed_after_install_and_reboot": {
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver_version": "617.14",
+    "pci_bus_id": "00000000:01:00.0",
+    "memory_total_mib": 4096,
+    "pnp_device_id": "PCI\\VEN_10DE&DEV_25A2&SUBSYS_143E1025&REV_A1\\4&2F204912&0&0008",
+    "windows_driver_version": "32.0.16.1714",
+    "gpu_status": "OK"
+  },
+  "driver_validation": {
+    "minimum_qualification_driver": "551.61",
+    "target_driver": "617.14",
+    "below_minimum_qualification": false,
+    "below_target_driver": false,
+    "exact_target_observed": true,
+    "driver_runtime_remediation": "PASS"
+  },
+  "preflight_script_observation": {
+    "observed_status": "BLOCKED",
+    "classification": "STATE_MACHINE_FALSE_BLOCK",
+    "cause": "The script only treated below-target drivers as PASS_HARDWARE_IDENTIFIED_REVIEW_OEM and fell through to BLOCKED when the target driver was already active.",
+    "pending_file_rename_operations_observed": true,
+    "pending_reboot_boolean_used_in_status_decision": false,
+    "fix_required": true
+  },
+  "ollama_postcheck": {
+    "api_version": "0.34.3",
+    "tags_reachable": true,
+    "qwen_model": "qwen3:1.7b",
+    "qwen_digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "qwen_size_bytes": 1359293444,
+    "qwen_format": "gguf",
+    "qwen_family": "qwen3",
+    "qwen_parameter_size": "2.0B",
+    "qwen_quantization": "Q4_K_M",
+    "qwen_context_length": 40960,
+    "qwen_capabilities": [
+      "completion",
+      "tools",
+      "thinking"
+    ],
+    "api_show_reachable": true,
+    "exact_digest_preserved": true,
+    "model_inference_executed": false
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "qwen3_4b_escalation_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "MERGE_PREFLIGHT_TARGET_ACTIVE_STATE_FIX_THEN_RERUN_NON_INFERENCE_POSTCHECK",
+  "base_vnext_sha": "4668e932a1207ac703f5db63663277c1744c5f64",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

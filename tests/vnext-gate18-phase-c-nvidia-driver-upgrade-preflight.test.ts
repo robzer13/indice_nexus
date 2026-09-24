@@ -42,3 +42,12 @@ test("NVIDIA driver preflight cannot authorize model inference", () => {
   assert.match(source, /productionMutation: false/);
   assert.match(source, /publicationAuthority: false/);
 });
+
+
+test("NVIDIA driver preflight recognizes the target driver as a successful postinstall state", () => {
+  assert.match(source, /PASS_TARGET_DRIVER_ACTIVE/);
+  assert.match(source, /targetDriverExactMatch/);
+  assert.match(source, /targetDriverActiveOrNewer/);
+  assert.match(source, /meetsMinimumQualification/);
+  assert.match(source, /Target NVIDIA driver is active/);
+});
