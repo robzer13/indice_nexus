@@ -1,0 +1,50 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_FETCH_FAILURE_FORENSICS_V2_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-V2-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+    "v1_forensics_result": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-RESULT-001",
+    "v1_failure": "BLOCKED_MONOLITHIC_POWERSHELL_COLLECTOR_FAILED"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-fetch-failure-forensics-v2.ts",
+  "design_delta": {
+    "monolithic_powershell_collector": false,
+    "independent_powershell_probes": true,
+    "encoded_command_transport": true,
+    "per_probe_stderr_capture": true,
+    "per_probe_failure_isolation": true
+  },
+  "collection_scope": {
+    "current_ollama_version": true,
+    "current_ollama_process_state": true,
+    "current_gpu_state": true,
+    "current_ram_state": true,
+    "windows_power_events": true,
+    "windows_wake_events": true,
+    "windows_resource_exhaustion_events": true,
+    "windows_display_reset_events": true,
+    "windows_application_error_events": true,
+    "windows_error_reporting_events": true,
+    "filtered_local_ollama_log_error_tail": true
+  },
+  "run_window": {
+    "estimated_start_utc": "2026-09-24T20:03:43.290Z",
+    "observed_end_utc": "2026-09-24T20:08:47.736Z",
+    "query_margin_minutes": 5
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_FETCH_FAILURE_FORENSICS_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
