@@ -311,18 +311,18 @@ test("Gate 18 v0.8 allows supported evidence with qualification but no oppositio
   );
 });
 
-test("Gate 18 v0.8 invariants remain while the runner advances to v0.9", () => {
+test("Gate 18 v0.8 invariants remain while the runner advances to v1.0", () => {
   const source = readFileSync(
     "scripts/vnext-gate18-phase-b.ts",
     "utf8",
   );
 
-  assert.match(source, /model-calibration-pilot-v09/);
-  assert.match(source, /gate18PhaseBV09OutputSchema/);
-  assert.match(source, /assertGate18PhaseBV09Semantics/);
+  assert.match(source, /model-calibration-pilot-v10/);
+  assert.match(source, /gate18PhaseBV10OutputSchema/);
+  assert.match(source, /assertGate18PhaseBV10Semantics/);
   assert.match(
     source,
-    /GATE18_PHASE_B_V09_MAX_OUTPUT_TOKENS/,
+    /GATE18_PHASE_B_V10_MAX_OUTPUT_TOKENS/,
   );
   assert.doesNotMatch(
     source,
