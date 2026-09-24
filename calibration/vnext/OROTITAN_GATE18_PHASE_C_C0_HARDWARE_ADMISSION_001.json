@@ -1,0 +1,82 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C0_HARDWARE_ADMISSION_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C0_HARDWARE_AND_RUNTIME_QUALIFICATION",
+  "status": "PASS_WITH_CONSTRAINTS",
+  "source": {
+    "observed_from_local_preflight": true,
+    "preflight_format": "OROTITAN_GATE18_PHASE_C_C0_HARDWARE_PREFLIGHT_V0.1",
+    "base_vnext_sha": "49a7883f22595be211d9a800c1c27c3932cbd472"
+  },
+  "privacy": {
+    "public_receipt": true,
+    "hardware_identity_redacted": true,
+    "local_paths_redacted": true,
+    "hostname_redacted": true
+  },
+  "hardware_envelope": {
+    "os_family": "WINDOWS_X64",
+    "logical_cpu_count": 8,
+    "system_ram_gib": 7.84,
+    "free_ram_gib_at_probe": 0.7,
+    "discrete_nvidia_gpu_present": true,
+    "discrete_vram_mib": 4096
+  },
+  "local_runtime_observation": {
+    "ollama_installed": true,
+    "python_installed": true,
+    "docker_installed": true,
+    "lm_studio_cli_installed": false,
+    "llama_cpp_cli_installed": false
+  },
+  "interpretation": {
+    "c0_admitted": true,
+    "c1_runtime_candidate": "OLLAMA",
+    "runtime_admitted": false,
+    "model_download_authorized": false,
+    "inference_authorized": false,
+    "paid_model_call_authorized": false
+  },
+  "candidate_fit": {
+    "qwen3_1_7b_q4": {
+      "state": "LIKELY_FIT",
+      "role": "ULTRA_LIGHT_BASELINE",
+      "note": "Model artifact class is about 1.4 GB in Ollama; final fit depends on context, KV cache and free system memory."
+    },
+    "qwen3_4b_instruct_q4": {
+      "state": "PLAUSIBLE_PRIMARY_CANDIDATE",
+      "role": "FIRST_SERIOUS_LOCAL_CANDIDATE",
+      "note": "Model artifact class is about 2.5 GB in Ollama. Use constrained context and free RAM before inference qualification."
+    },
+    "qwen3_8b_q4": {
+      "state": "POOR_FIT_NOT_DEFAULT",
+      "role": "ESCALATION_ONLY",
+      "note": "Approximate 5.2 GB model artifact exceeds discrete VRAM and would require material CPU/RAM offload on an 8 GB system."
+    },
+    "qwen3_14b_q4": {
+      "state": "REJECT_CURRENT_MACHINE",
+      "note": "Approximate 9.3 GB model artifact is not operationally appropriate for the observed memory envelope."
+    },
+    "gpt_oss_20b": {
+      "state": "REJECT_CURRENT_MACHINE",
+      "note": "Official memory requirement is about 16 GB, above the observed system memory envelope."
+    },
+    "qwen3_30b_a3b": {
+      "state": "REJECT_CURRENT_MACHINE",
+      "note": "Approximate 19 GB Ollama artifact is not operationally appropriate for the observed memory envelope."
+    }
+  },
+  "current_risk": {
+    "low_free_ram_at_probe": true,
+    "implication": "Before any local inference smoke, close memory-heavy applications or reboot so the candidate is not evaluated under an avoidable 0.7 GiB free-RAM bottleneck."
+  },
+  "next_action": "C1_OLLAMA_RUNTIME_ADMISSION_NO_MODEL_DOWNLOAD",
+  "authority": {
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
