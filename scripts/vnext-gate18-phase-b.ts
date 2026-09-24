@@ -42,6 +42,15 @@ import {
   gate18PhaseBV10PromptTemplateSha256,
   type Gate18PhaseBV10Output,
 } from "../runtime/vnext/model-calibration-pilot-v10";
+import {
+  GATE18_V10_TARGETED_PROBE_ID,
+  GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_ID,
+  GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_VERSION,
+  GATE18_V10_TARGETED_PROBE_SYSTEM_PROMPT,
+  assertGate18V10TargetedProbeSemantics,
+  buildGate18V10TargetedProbeInput,
+  gate18V10TargetedProbePromptSha256,
+} from "../runtime/vnext/model-calibration-targeted-regression-v10";
 
 interface CliOptions {
   caseSelector: string;
@@ -51,6 +60,7 @@ interface CliOptions {
   maxCaseSpendUsd: number | null;
   modelLabels: string[];
   allowMultiModel: boolean;
+  targetedRegressionProbe: string | null;
 }
 
 interface ModelPricing {
@@ -103,6 +113,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   let maxCaseSpendUsd: number | null = null;
   const modelLabels: string[] = [];
   let allowMultiModel = false;
+  let targetedRegressionProbe: string | null = null;
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
@@ -136,6 +147,10 @@ function parseArgs(argv: readonly string[]): CliOptions {
     }
     if (arg === "--allow-multi-model") {
       allowMultiModel = true;
+      continue;
+    }
+    if (arg === "--targeted-regression-probe") {
+      targetedRegressionProbe = argv[++index] ?? "";
       continue;
     }
     if (arg === "--execute") {
@@ -195,6 +210,15 @@ function parseArgs(argv: readonly string[]): CliOptions {
     }
   }
 
+  if (
+    targetedRegressionProbe !== null &&
+    targetedRegressionProbe !== GATE18_V10_TARGETED_PROBE_ID
+  ) {
+    throw new Error(
+      `VNEXT_GATE18_PHASE_B_UNKNOWN_TARGETED_PROBE:${targetedRegressionProbe}`,
+    );
+  }
+
   return {
     caseSelector,
     privateRepoRoot: resolve(privateRepoRoot),
@@ -203,6 +227,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
     maxCaseSpendUsd,
     modelLabels,
     allowMultiModel,
+    targetedRegressionProbe,
   };
 }
 
@@ -587,9 +612,32 @@ async function main(): Promise<void> {
     artifactReader(options.privateRepoRoot),
   );
 
-  const modelInput = buildGate18PhaseBV10ModelInput(
-    verified.packet,
-  );
+  const targetedProbe =
+    options.targetedRegressionProbe ===
+    GATE18_V10_TARGETED_PROBE_ID;
+
+  if (targetedProbe && company.display_name !== "Adyen") {
+    throw new Error(
+      "VNEXT_GATE18_PHASE_B_TARGETED_PROBE_REQUIRES_ADYEN",
+    );
+  }
+
+  const modelInput = targetedProbe
+    ? buildGate18V10TargetedProbeInput(verified.packet)
+    : buildGate18PhaseBV10ModelInput(verified.packet);
+
+  const systemPrompt = targetedProbe
+    ? GATE18_V10_TARGETED_PROBE_SYSTEM_PROMPT
+    : GATE18_PHASE_B_V10_SYSTEM_PROMPT;
+  const promptTemplateId = targetedProbe
+    ? GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_ID
+    : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_ID;
+  const promptTemplateVersion = targetedProbe
+    ? GATE18_V10_TARGETED_PROBE_PROMPT_TEMPLATE_VERSION
+    : GATE18_PHASE_B_V10_PROMPT_TEMPLATE_VERSION;
+  const promptTemplateSha256 = targetedProbe
+    ? gate18V10TargetedProbePromptSha256()
+    : gate18PhaseBV10PromptTemplateSha256();
   const selectedCandidates =
     options.modelLabels.length === 0
       ? [...GATE18_PHASE_B_MODEL_CANDIDATES]
@@ -617,6 +665,14 @@ async function main(): Promise<void> {
     publicationAuthority: false,
     productionMutation: false,
     modelWinnerSelected: false,
+    targetedRegressionProbe: targetedProbe
+      ? {
+          probeId: GATE18_V10_TARGETED_PROBE_ID,
+          comparisonAdmissible: false,
+          modelRankingAuthority: false,
+          routingAuthority: false,
+        }
+      : null,
     case: {
       caseId: verified.packet.case_id,
       displayName: verified.packet.display_name,
@@ -639,12 +695,9 @@ async function main(): Promise<void> {
     },
     prompt: {
       moduleId: GATE18_PHASE_B_V10_MODULE_ID,
-      promptTemplateId:
-        GATE18_PHASE_B_V10_PROMPT_TEMPLATE_ID,
-      promptTemplateVersion:
-        GATE18_PHASE_B_V10_PROMPT_TEMPLATE_VERSION,
-      promptTemplateSha256:
-        gate18PhaseBV10PromptTemplateSha256(),
+      promptTemplateId,
+      promptTemplateVersion,
+      promptTemplateSha256,
       generationSchemaId:
         GATE18_PHASE_B_V10_GENERATION_SCHEMA_ID,
       generationSchemaVersion:
@@ -746,7 +799,7 @@ async function main(): Promise<void> {
             "OroTitan Gate 18 assisted evidence-audit calibration output.",
           schema: gate18PhaseBV10OutputSchema,
         }),
-        system: GATE18_PHASE_B_V10_SYSTEM_PROMPT,
+        system: systemPrompt,
         prompt: modelInput,
         maxOutputTokens:
           GATE18_PHASE_B_V10_MAX_OUTPUT_TOKENS,
@@ -806,10 +859,17 @@ async function main(): Promise<void> {
       const output = result.output;
       let semanticValid = true;
       try {
-        assertGate18PhaseBV10Semantics(
-          verified.packet,
-          output,
-        );
+        if (targetedProbe) {
+          assertGate18V10TargetedProbeSemantics(
+            verified.packet,
+            output,
+          );
+        } else {
+          assertGate18PhaseBV10Semantics(
+            verified.packet,
+            output,
+          );
+        }
       } catch {
         semanticValid = false;
       }
@@ -825,12 +885,9 @@ async function main(): Promise<void> {
           modelLabel: candidate.label,
           modelId: candidate.modelId,
           repetition: 1,
-          promptTemplateId:
-            GATE18_PHASE_B_V10_PROMPT_TEMPLATE_ID,
-          promptTemplateVersion:
-            GATE18_PHASE_B_V10_PROMPT_TEMPLATE_VERSION,
-          promptTemplateSha256:
-            gate18PhaseBV10PromptTemplateSha256(),
+          promptTemplateId,
+          promptTemplateVersion,
+          promptTemplateSha256,
           generationSchemaId:
             GATE18_PHASE_B_V10_GENERATION_SCHEMA_ID,
           generationSchemaVersion:
