@@ -1,0 +1,108 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_QWEN3_4B_FORENSIC_CONCLUSION_V0.1",
+  "result_id": "G18-PHASEC-C3-QWEN3-4B-FORENSIC-CONCLUSION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PASS_SEMANTIC_REGRESSIONS_WITH_OUTPUT_CONTRACT_RELIABILITY_DEFECT",
+  "source_results": {
+    "brookfield": "G18-PHASEC-C3-BROOKFIELD-QWEN4B-LOCAL-RUN-001",
+    "adyen_original": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-002",
+    "adyen_forensics": "G18-PHASEC-C3-ADYEN-QWEN4B-FORENSICS-001",
+    "adyen_punctuation_normalization_forensic": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_PUNCTUATION_NORMALIZATION_FORENSIC_V0.1"
+  },
+  "model": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096
+  },
+  "mandatory_regressions": {
+    "total": 5,
+    "satisfied": 5,
+    "items": [
+      {
+        "regression": "Brookfield E-039 peer-platform replicability polarity",
+        "disposition": "PASS_ORIGINAL_RUN"
+      },
+      {
+        "regression": "Brookfield E-042 competing-capital polarity",
+        "disposition": "PASS_ORIGINAL_RUN"
+      },
+      {
+        "regression": "Adyen same-target switching-friction role alignment",
+        "disposition": "PASS_FORENSIC_HUMAN_ADJUDICATION"
+      },
+      {
+        "regression": "Adyen scope-resolved incident handling",
+        "disposition": "PASS_FORENSIC_HUMAN_ADJUDICATION"
+      },
+      {
+        "regression": "Adyen qualification orthogonality",
+        "disposition": "PASS_FORENSIC_HUMAN_ADJUDICATION"
+      }
+    ]
+  },
+  "adyen_original_run_integrity": {
+    "original_run_status": "FAIL",
+    "original_run_status_changed": false,
+    "semantic_validator_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+    "runtime_pass": true,
+    "schema_pass": true,
+    "done_reason": "stop",
+    "eval_count": 699,
+    "max_output_tokens": 768
+  },
+  "adyen_forensic_conclusion": {
+    "c005_resolution_state_correct": true,
+    "c010_resolution_state_correct": true,
+    "all_three_priority_finding_structures_match_target": true,
+    "all_targeted_evidence_roles_match": true,
+    "all_required_qualification_roles_match": true,
+    "only_observed_output_contract_defect": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+    "normalized_conflicts": [
+      "C-005",
+      "C-010"
+    ],
+    "in_memory_full_targeted_validator_pass_after_punctuation_only_normalization": true,
+    "downstream_validation_error_after_normalization": null,
+    "source_artifact_mutated": false,
+    "retroactive_pass_applied": false
+  },
+  "protocol_interpretation": {
+    "c3_objective": "HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+    "deterministic_validation_does_not_substitute_for_human_semantic_review": true,
+    "critical_semantic_regressions_pass": true,
+    "structured_output_reliability_separate_c7_requirement": true,
+    "c4_entry_allowed": true,
+    "c7_production_candidate_decision_allowed_now": false
+  },
+  "reliability_carry": {
+    "status": "OPEN_DEFECT",
+    "defect": "EXPLICIT_TERMINAL_PUNCTUATION_INSTRUCTION_NOT_RELIABLY_FOLLOWED_ON_MATERIAL_CONFLICT_IMPLICATIONS",
+    "severity": "NONCRITICAL_SEMANTIC_BUT_ENGINEERING_RELIABILITY_RELEVANT",
+    "must_be_retested_in_repeatability": true,
+    "must_be_resolved_or_accepted_before_c7": true
+  },
+  "candidate_disposition": {
+    "broader_phase_c_admission": true,
+    "admission_mode": "CONDITIONAL_WITH_RELIABILITY_CARRY",
+    "model_capability_failure_concluded": false,
+    "critical_semantic_failure_concluded": false,
+    "qwen3_8b_escalation_condition_satisfied": false,
+    "model_winner_selected": false,
+    "production_candidate_accepted": false
+  },
+  "authority": {
+    "c4_execution_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "routing_frozen": false
+  },
+  "next_action": "PREPARE_C4_DIVERSIFIED_COMPANY_MODULE_MATRIX_FOR_QWEN3_4B_WITH_RELIABILITY_CARRY",
+  "base_vnext_sha": "6392441451a481870eb30faa821107f63cdcdaae",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
