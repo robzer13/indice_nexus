@@ -1,0 +1,98 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V07_PAID_CANARY_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V07-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "protocol_document": "calibration/vnext/OROTITAN_GATE18_PHASE_B_PROTOCOL_V0.7.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V07_ADYEN_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "e8f2fa924900ec989032dbdd5b58041e414cdc99",
+    "targeted_failure_mode": "SUPPORTIVE_BUT_LIMITED_EVIDENCE_FORCED_INTO_COUNTEREVIDENCE"
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_items": 16,
+    "conflicts": 3
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "0.7",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_5",
+    "prompt_template_version": "0.5",
+    "prompt_template_sha256": "25c8c631d5c4e0a7f129685454462954402f2283a0fd3fc29d78ab61b684ece4",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_5",
+    "generation_schema_version": "0.5",
+    "generation_schema_sha256": "af8a7b1bc72550dacaf4b1eec76c4b6ddeed4805ca24d38f93669a8a1ce688f5",
+    "max_output_tokens": 4096
+  },
+  "calibration_question": "Does the v0.7 three-role evidence contract allow Adyen x LUNA to classify supportive-but-limited evidence as qualification instead of counterevidence while preserving canonical references and conflict discipline?",
+  "specific_regression_target": {
+    "evidence_id": "E-043",
+    "expected_role_if_used_for_the_bounded_benefit_claim": "qualification_evidence_ids",
+    "reason": "The item is an issuer-hosted selected customer case that supports the existence of a reported uplift while limiting representativeness; it does not oppose the bounded benefit-plus-validation-limit claim."
+  },
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0070586,
+    "authorized_hard_cap_usd": 0.0071,
+    "fresh_budget_snapshot": {
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.43,
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.43,
+      "project_display_headroom_usd": 2.57,
+      "worst_case_project_display_spend_after_call_usd": 1.4371
+    }
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "human_quality": [
+      "exact E-/C- grounding",
+      "correct support/qualification/counterevidence role assignment",
+      "qualification_link accurately explains scope limitation without opposition",
+      "counterevidence_link accurately explains genuine weakening of the exact claim",
+      "material conflict handling",
+      "weak-link usefulness",
+      "unresolved-point usefulness",
+      "judgment boundary"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
+}
