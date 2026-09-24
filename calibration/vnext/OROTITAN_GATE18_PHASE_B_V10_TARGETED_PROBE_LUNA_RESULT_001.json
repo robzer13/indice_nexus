@@ -1,0 +1,139 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_TARGETED_PROBE_PAID_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V10-TARGETED-PROBE-LUNA-001",
+  "authorization_id": "G18-PHASEB-V10-TARGETED-PROBE-LUNA-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "1.0",
+  "status": "PASS",
+  "classification": "ENGINEERING_PASS_TARGETED_SEMANTIC_REGRESSION_PASS",
+  "probe": {
+    "probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "prompt_template_version": "0.1",
+    "prompt_template_sha256": "e779d681f084b130aee35a901648bc599c1c8b912229dcbbd41f2a2f9c719284",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "bcce1f49-b86d-4257-b07f-cc8b1301aed1",
+    "provider_request_id": "req_5afa0c17475c4b26be4daaebeadf0e56",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 6105,
+    "input_tokens": 4485,
+    "output_tokens": 602,
+    "reasoning_tokens": 127,
+    "total_tokens": 5087,
+    "gateway_cost_usd": 0.0022185,
+    "response_sha256": "2c391c28f1f5d306ec3f595c91341b3cb8ce01e8aa2cb885e9c823184923e641"
+  },
+  "targeted_regression_adjudication": {
+    "same_target_mixed_switching_friction": {
+      "status": "PASS",
+      "support_ids": [
+        "E-036",
+        "E-042"
+      ],
+      "counterevidence_ids": [
+        "E-037",
+        "E-041"
+      ],
+      "conflict_id": "C-005",
+      "interpretation": "The model used support and opposition against the same switching-friction / relationship-persistence proposition, directly exercising the missing v1.0 counterevidence path."
+    },
+    "service_incident_scope_resolution": {
+      "status": "PASS",
+      "support_ids": [
+        "E-055"
+      ],
+      "counterevidence_ids": [],
+      "conflict_id": "C-010",
+      "conflict_resolution_state": "RESOLVED_IN_PACKET",
+      "interpretation": "The service-incident existence proposition remained supported without treating scoped peak-uptime evidence as counterevidence."
+    },
+    "qualification_orthogonality": {
+      "status": "PASS",
+      "support_ids": [
+        "E-040",
+        "E-043"
+      ],
+      "counterevidence_ids": [],
+      "qualification_ids": [
+        "E-040",
+        "E-043"
+      ],
+      "interpretation": "Both selected positive observations remained support while source/denominator limitations were represented separately as qualifications."
+    },
+    "evidence_role_inversion": "NONE_OBSERVED",
+    "claim_atomicity": "PASS",
+    "judgment_boundary": "PASS",
+    "deterministic_targeted_semantics": "PASS"
+  },
+  "coverage_effect": {
+    "prior_normal_v10_canary": "COMPLETE_PARTIAL_PASS",
+    "prior_unexercised_paths": [
+      "same-target counterevidence assignment",
+      "MIXED semantic-target alignment",
+      "E-055/E-056 scope-resolved conflict handling",
+      "E-040/E-043 directional qualification handling"
+    ],
+    "targeted_probe_closes_direct_execution_gap": true,
+    "normal_priority_selection_behavior_reclassified": false,
+    "repeatability_proven": false,
+    "cross_company_generalization_proven": false
+  },
+  "spend": {
+    "authorized_hard_cap_usd": 0.0072,
+    "actual_gateway_cost_usd": 0.0022185,
+    "cap_utilization_ratio": 0.308125,
+    "within_authorized_cap": true
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The targeted regression passed. Record and synthesize Phase B evidence before authorizing any additional paid execution."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v10_normal_canary": "COMPLETE_PARTIAL_PASS",
+    "targeted_probe_paid_execution": "PASS",
+    "routing_freeze": "NONE",
+    "model_winner": "NONE"
+  }
+}
