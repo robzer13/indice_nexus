@@ -1,0 +1,129 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V08_PAID_CANARY_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V08-ADYEN-LUNA-CANARY-001",
+  "authorization_id": "G18-PHASEB-V08-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.8",
+  "status": "FAIL",
+  "classification": "STRUCTURAL_REGRESSION_IMPROVEMENT_CLAIM_ATOMICITY_HUMAN_QUALITY_FAIL",
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_6",
+    "prompt_template_version": "0.6",
+    "prompt_template_sha256": "8de3e41c601612538846c77097c82382e3725c58cab982d6b1df5da67d11c847",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "7883c8ec-a54a-46e6-9215-4594d1413747",
+    "provider_request_id": "req_d52ef861e52a4461aa5ecb3b8a4b18e4",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 11061,
+    "input_tokens": 3866,
+    "output_tokens": 1156,
+    "reasoning_tokens": 287,
+    "total_tokens": 5022,
+    "gateway_cost_usd": 0.00272855,
+    "response_sha256": "8d180c1a8473422f1bb8a97e0fa4d94ac6db82f878eda8e1920d6c0712ae5a58"
+  },
+  "deterministic_semantic_failure": {
+    "class": "NARRATIVE_COMPLETENESS",
+    "validator_rule": "weak_link_candidates.candidate must terminate with punctuation",
+    "observed_failures": [
+      "Switching-friction inference from low churn and integrations",
+      "Generalizing optimization outcomes across customers and periods"
+    ],
+    "inferred_error_code": "VNEXT_GATE18_V08_WEAK_LINK_CANDIDATE_INCOMPLETE",
+    "evidence": "The v0.8 validator applies assertCompleteNarrative to weak_link_candidates.candidate, and both generated candidate labels omit terminal punctuation."
+  },
+  "targeted_regression_results": {
+    "e040": {
+      "target_passed": true,
+      "observed_direction": "SUPPORT",
+      "qualification_present": true,
+      "qualification_summary": "Selected enterprise wins are evidenced, but new-customer revenue contribution is not disclosed.",
+      "interpretation": "The v0.8 orthogonal qualification design resolves the v0.7 support-plus-qualification overlap failure."
+    },
+    "e043": {
+      "target_exercised": false,
+      "observed_direction": null,
+      "qualification_present": false,
+      "interpretation": "E-043 was not cited in this run, so this canary neither confirms nor contradicts the earlier v0.7 correction for E-043."
+    }
+  },
+  "human_quality_adjudication": {
+    "exact_grounding": "PASS",
+    "canonical_reference_format": "PASS",
+    "qualification_attachment": "PASS",
+    "e040_orthogonal_qualification": "PASS",
+    "e043_regression": "NOT_EXERCISED",
+    "material_conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary": "PASS",
+    "claim_atomicity": "FAIL",
+    "counterevidence_polarity_relative_to_exact_claim": "FAIL",
+    "comparison_admissible": false,
+    "notes": [
+      "Finding 1 claim bundles both sides of the tension: retention/integration indicators coexist with the ability to shift payment volume.",
+      "E-037 and E-041 are placed in counterevidence_ids, but relative to that exact bundled claim they support the second clause by directly evidencing multi-PSP behavior and provider switching.",
+      "Finding 2 similarly states that Adyen demonstrates win/displacement capability despite a multi-provider market structure.",
+      "E-037 and E-051 are then labeled counterevidence, but they primarily substantiate the multi-provider clause already embedded in the claim rather than contradict the claim itself.",
+      "Finding 3 is directionally clean: E-044/E-045/E-046 support the bounded payment-optimization claim and their issuer-measured/selection limitations are expressed through evidence_qualifications.",
+      "The v0.8 structural model is therefore better than v0.7, but balanced compound claims can absorb the opposing fact into claim wording and make counterevidence classification logically inconsistent."
+    ]
+  },
+  "contract_learning": {
+    "v08_success": "Evidence qualification is correctly orthogonal to evidence direction, demonstrated by E-040 remaining SUPPORT while carrying a material qualification.",
+    "v08_failure": "The contract still permits compound or contrastive claims that contain both the proposition and its challenge, causing evidence labeled counterevidence to actually support a clause of the exact claim.",
+    "next_contract_requirement": "Require atomic directional claims. Counterevidence must weaken the proposition expressed by the claim, not merely substantiate a contrast clause already embedded in that claim. Opposing context should stay outside the claim wording and be represented only through counterevidence_ids, conflicts, or qualification metadata."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.44,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.44,
+    "current_call_exact_gateway_cost_usd": 0.00272855,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The v0.8 canary resolves the support-plus-qualification schema problem but remains non-admissible because exact-claim counterevidence polarity fails on compound contrastive claims."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v08_paid_canary": "COMPLETE_NON_ADMISSIBLE"
+  }
+}
