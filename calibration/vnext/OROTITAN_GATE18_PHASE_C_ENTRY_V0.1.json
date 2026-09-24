@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "STMICRO_OLLAMA_LOG_FORENSICS_V3_PREPARED",
+    "c4_diversified_matrix": "STMICRO_OLLAMA_LOG_FORENSICS_V4_PREPARED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_LOCAL_READ_ONLY_OLLAMA_LOG_FORENSICS_V3",
+  "next_action": "RUN_LOCAL_READ_ONLY_OLLAMA_LOG_FORENSICS_V4",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -417,5 +417,10 @@
   "c4_stmicro_fetch_failure_forensics_v2_failed_probe": "ollamaLogs",
   "c4_stmicro_ollama_log_forensics_v3_prep": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V3-PREP-001",
   "c4_stmicro_ollama_log_forensics_v3_script": "scripts/vnext-gate18-phase-c-c4-stmicro-ollama-log-forensics-v3.ts",
-  "c4_stmicro_ollama_log_forensics_v3_is_inference": false
+  "c4_stmicro_ollama_log_forensics_v3_is_inference": false,
+  "c4_stmicro_ollama_log_forensics_v3_result": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V3-RESULT-001",
+  "c4_stmicro_ollama_log_forensics_v3_status": "BLOCKED_STDOUT_JSON_PARSE_FAILED",
+  "c4_stmicro_ollama_log_forensics_v4_prep": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V4-PREP-001",
+  "c4_stmicro_ollama_log_forensics_v4_script": "scripts/vnext-gate18-phase-c-c4-stmicro-ollama-log-forensics-v4.ts",
+  "c4_stmicro_ollama_log_forensics_v4_is_inference": false
 }

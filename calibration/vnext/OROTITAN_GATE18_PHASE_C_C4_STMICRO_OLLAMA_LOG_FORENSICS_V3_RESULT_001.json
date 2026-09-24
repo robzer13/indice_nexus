@@ -1,0 +1,48 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_LOG_FORENSICS_V3_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V3-RESULT-001",
+  "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "BLOCKED_STDOUT_JSON_PARSE_FAILED",
+  "mode": "LOCAL_READ_ONLY_NO_INFERENCE",
+  "execution": {
+    "powershell_process_succeeded": true,
+    "stderr": null,
+    "process_error": null,
+    "stdout_present": true,
+    "stdout_json_parse_succeeded": false,
+    "ollama_logs": null
+  },
+  "interpretation": {
+    "ollama_log_absence_concluded": false,
+    "ollama_runner_crash_concluded": false,
+    "oom_concluded": false,
+    "cuda_failure_concluded": false,
+    "local_connection_failure_mechanism_concluded": false,
+    "provider_5xx_concluded": false,
+    "fetch_failure_root_cause_concluded": false,
+    "model_capability_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "root_cause_boundary": {
+    "exact_stdout_parse_failure_cause_concluded": false,
+    "suspected_classes": [
+      "POWERSHELL_OUTPUT_ENCODING_OR_BOM",
+      "NON_JSON_STDOUT_PREFIX_OR_SUFFIX",
+      "CONSOLE_SERIALIZATION_NOISE"
+    ]
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_BASE64_TRANSPORT_OLLAMA_LOG_FORENSICS_V4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

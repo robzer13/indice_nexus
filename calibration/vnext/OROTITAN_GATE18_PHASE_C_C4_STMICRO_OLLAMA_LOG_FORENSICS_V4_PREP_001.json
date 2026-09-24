@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_LOG_FORENSICS_V4_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V4-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+    "v3_result": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V3-RESULT-001",
+    "v3_status": "BLOCKED_STDOUT_JSON_PARSE_FAILED"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-ollama-log-forensics-v4.ts",
+  "transport_fix": {
+    "powershell_json_encoding": "UTF8",
+    "powershell_stdout_encoding": "BASE64_ASCII",
+    "node_transport_decode": "BASE64_TO_UTF8",
+    "node_json_parse_after_decode": true,
+    "raw_stdout_success_no_longer_equates_to_parse_success": true
+  },
+  "collection_scope": {
+    "local_ollama_log_files": true,
+    "time_window_lines": true,
+    "error_keyword_lines": true,
+    "runner_failure_markers": true,
+    "cuda_oom_markers": true,
+    "local_connection_markers": true,
+    "provider_5xx_markers": true
+  },
+  "query_window": {
+    "run_start_utc": "2026-09-24T20:03:43.290Z",
+    "run_end_utc": "2026-09-24T20:08:47.736Z",
+    "margin_minutes": 5
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_OLLAMA_LOG_FORENSICS_V4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
