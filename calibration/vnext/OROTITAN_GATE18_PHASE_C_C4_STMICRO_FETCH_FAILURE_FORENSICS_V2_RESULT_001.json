@@ -1,0 +1,102 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_FETCH_FAILURE_FORENSICS_V2_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-V2-RESULT-001",
+  "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PARTIAL_PASS_7_OF_8_LOG_PROBE_BLOCKED",
+  "mode": "LOCAL_READ_ONLY_NO_INFERENCE",
+  "run_window": {
+    "estimated_start_utc": "2026-09-24T20:03:43.290Z",
+    "observed_end_utc": "2026-09-24T20:08:47.736Z",
+    "queried_start_utc": "2026-09-24T19:58:43.290Z",
+    "queried_end_utc": "2026-09-24T20:13:47.736Z"
+  },
+  "probe_summary": {
+    "independent_probe_count": 8,
+    "successful_probe_count": 7,
+    "failed_probe_count": 1,
+    "failed_probe": "ollamaLogs"
+  },
+  "current_state": {
+    "ollama_version": "0.34.3",
+    "ollama_cli_reachable": true,
+    "loaded_model_rows": 0,
+    "ollama_process_start_times_utc": [
+      "2026-09-24T12:55:46.8507625Z",
+      "2026-09-24T12:55:45.6716631Z"
+    ],
+    "ollama_daemon_restart_during_run_observed": false,
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.95,
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver": "617.14",
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "gpu_utilization_percent": 0
+  },
+  "successful_windows_probes": {
+    "kernel_power_event_count": 0,
+    "wake_event_count": 0,
+    "resource_exhaustion_event_count": 0,
+    "display_reset_event_count": 0,
+    "application_error_event_count": 0,
+    "windows_error_reporting_event_count": 18
+  },
+  "wer_interpretation": {
+    "activity_observed_during_run_window": true,
+    "event_time_cluster_utc": "2026-09-24T20:06:36Z_TO_2026-09-24T20:06:37Z",
+    "messages_reference_historical_dump_artifacts": true,
+    "historical_dump_dates_observed": [
+      "2026-04-08",
+      "2026-04-25",
+      "2026-05-19",
+      "2026-05-24",
+      "2026-05-28",
+      "2026-05-29",
+      "2026-05-30",
+      "2026-05-31",
+      "2026-06-13",
+      "2026-07-01",
+      "2026-07-18",
+      "2026-08-26",
+      "2026-08-27"
+    ],
+    "contemporaneous_crash_proven": false,
+    "wer_activity_causality_concluded": false
+  },
+  "blocked_log_probe": {
+    "process_succeeded": false,
+    "root_cause": "POWERSHELL_CASE_INSENSITIVE_MATCHES_VARIABLE_COLLISION",
+    "detail": "The script used $matches as an array while -match populates automatic variable $Matches. PowerShell variable names are case-insensitive, so the automatic hashtable replaced the intended array and ConvertTo-Json failed on a non-string-key dictionary.",
+    "ollama_log_evidence_collected": false
+  },
+  "interpretation": {
+    "system_sleep_or_wake_during_run_observed": false,
+    "windows_resource_exhaustion_event_observed": false,
+    "display_reset_event_observed": false,
+    "windows_application_error_event_observed": false,
+    "ollama_daemon_restart_during_run_observed": false,
+    "post_incident_resource_recovery_observed": true,
+    "gpu_reset_concluded": false,
+    "resource_exhaustion_concluded": false,
+    "ollama_runner_crash_concluded": false,
+    "wer_causality_concluded": false,
+    "fetch_failure_root_cause_concluded": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "parameter_change_authorized": false,
+    "model_load_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_TARGETED_OLLAMA_LOG_FORENSICS_V3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
