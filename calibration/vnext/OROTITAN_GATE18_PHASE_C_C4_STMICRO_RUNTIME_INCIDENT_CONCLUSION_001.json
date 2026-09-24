@@ -1,0 +1,41 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_RUNTIME_INCIDENT_CONCLUSION_V0.1",
+  "conclusion_id": "G18-PHASEC-C4-STM-RUNTIME-INCIDENT-CONCLUSION-001",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "source_power_forensic": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-V3-RESULT-001",
+  "status": "RUN_INVALIDATED_BY_CONFIRMED_SYSTEM_SLEEP",
+  "classification": "ENVIRONMENTAL_RUNTIME_INTERRUPTION_NOT_MODEL_FAILURE",
+  "findings": {
+    "low_power_interval_confirmed": true,
+    "low_power_interval_seconds": 4392.705,
+    "run_active_time_excluding_sleep_seconds_approx": 239.478,
+    "no_model_result_observed": true,
+    "no_schema_result_observed": true,
+    "no_semantic_result_observed": true,
+    "post_abort_resource_recovery_pass": true
+  },
+  "adjudication": {
+    "stmicro_matrix_cell_completed": false,
+    "model_capability_failure_concluded": false,
+    "context16384_inference_failure_concluded": false,
+    "timeout_300s_failure_concluded": false,
+    "retry_justified_in_principle_after_environmental_remediation": true,
+    "retry_authorized_now": false
+  },
+  "remediation_boundary": {
+    "preserve_model_identity": true,
+    "preserve_packet": true,
+    "preserve_prompt_hash": true,
+    "preserve_schema": true,
+    "preserve_context_16384": true,
+    "preserve_max_output_768": true,
+    "preserve_temperature_0": true,
+    "preserve_timeout_300000_ms": true,
+    "prevent_idle_sleep_process_scoped_where_supported": true,
+    "fail_closed_if_power_transition_occurs_during_execution": true,
+    "user_initiated_or_lid_sleep_must_still_be_avoided": true,
+    "persistent_power_plan_mutation": false
+  },
+  "next_action": "PREPARE_AND_VALIDATE_PROCESS_SCOPED_SLEEP_GUARD_SMOKE_BEFORE_NEW_INFERENCE_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
