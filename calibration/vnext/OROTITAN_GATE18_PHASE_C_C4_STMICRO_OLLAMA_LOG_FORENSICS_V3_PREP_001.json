@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_LOG_FORENSICS_V3_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V3-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+    "v2_result": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-V2-RESULT-001",
+    "v2_status": "PARTIAL_PASS_7_OF_8_LOG_PROBE_BLOCKED",
+    "v2_log_probe_root_cause": "POWERSHELL_CASE_INSENSITIVE_MATCHES_VARIABLE_COLLISION"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-ollama-log-forensics-v3.ts",
+  "query_window": {
+    "run_start_utc": "2026-09-24T20:03:43.290Z",
+    "run_end_utc": "2026-09-24T20:08:47.736Z",
+    "margin_minutes": 5
+  },
+  "collection_scope": {
+    "local_ollama_log_files": true,
+    "time_window_lines": true,
+    "error_keyword_lines": true,
+    "runner_failure_markers": true,
+    "cuda_oom_markers": true,
+    "local_connection_markers": true,
+    "provider_5xx_markers": true
+  },
+  "implementation_fix": {
+    "forbidden_variable_name": "matches",
+    "replacement_variable_name": "matchedLines",
+    "reason": "PowerShell $Matches automatic variable is case-insensitive and is overwritten by -match."
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_OLLAMA_LOG_FORENSICS_V3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
