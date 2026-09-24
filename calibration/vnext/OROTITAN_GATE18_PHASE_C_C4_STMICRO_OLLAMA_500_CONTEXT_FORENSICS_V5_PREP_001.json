@@ -1,0 +1,41 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_500_CONTEXT_FORENSICS_V5_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-OLLAMA-500-CONTEXT-FORENSICS-V5-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+    "v4_result": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V4-RESULT-001",
+    "v4_classification": "OLLAMA_LOCAL_API_500_AT_RUN_TERMINATION_INTERNAL_CAUSE_UNRESOLVED"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-ollama-500-context-forensics-v5.ts",
+  "collection_scope": {
+    "server_log_only": true,
+    "exact_terminal_500_anchor": true,
+    "raw_context_before_lines": 180,
+    "raw_context_after_lines": 80,
+    "immediate_context_before_lines": 25,
+    "immediate_context_after_lines": 25,
+    "diagnostic_patterns": true,
+    "powershell_used": false
+  },
+  "target": {
+    "local_timestamp": "2026/09/24 - 22:08:47",
+    "http_status": 500,
+    "route": "POST /api/generate",
+    "expected_server_duration": "5m4s"
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_OLLAMA_500_CONTEXT_FORENSICS_V5",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
