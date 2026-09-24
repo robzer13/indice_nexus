@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_DRIVER_UPGRADE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-NVIDIA-61714-DRIVER-UPGRADE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "AUTHORIZED_CONDITIONAL_DRIVER_UPGRADE",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "UPGRADE_NVIDIA_DISPLAY_DRIVER",
+    "authorized_gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "authorized_target_version": "617.14"
+  },
+  "current_state": {
+    "observed_driver_version": "532.03",
+    "minimum_qualification_version": "551.61",
+    "blocker": "NVIDIA_DRIVER_BELOW_QUALIFICATION_MINIMUM"
+  },
+  "target": {
+    "version": "617.14",
+    "certification": "WHQL",
+    "release_date": "2026-09-22",
+    "operating_systems": [
+      "Windows 10 64-bit",
+      "Windows 11"
+    ],
+    "source": "NVIDIA_OFFICIAL",
+    "source_url": "https://www.nvidia.com/en-us/geforce/drivers/details/279803/",
+    "package_class": "GEFORCE_GAME_READY_DRIVER"
+  },
+  "mandatory_preinstall_checks": [
+    "Capture Windows edition/build.",
+    "Capture system manufacturer and model.",
+    "Capture exact NVIDIA GPU PNPDeviceID.",
+    "Capture currently installed NVIDIA signed-driver metadata.",
+    "Confirm target is not installed already.",
+    "Do not uninstall current driver or use DDU.",
+    "Do not install until notebook/OEM compatibility is reviewed."
+  ],
+  "constraints": {
+    "driver_download_authorized": false,
+    "driver_install_authorized": false,
+    "ddu_authorized": false,
+    "current_driver_uninstall_authorized": false,
+    "bios_update_authorized": false,
+    "chipset_update_authorized": false,
+    "ollama_inference_authorized": false,
+    "model_download_authorized": false,
+    "paid_model_api_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "authorization_is_conditional": true,
+    "preflight_required_before_download_or_install": true,
+    "note": "Explicit user approval authorizes the driver-upgrade workflow, but the physical installer remains gated on hardware/OEM compatibility checks."
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "ce633c2c085e8e2392d49b23dbdc9e93e2fe631e",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
