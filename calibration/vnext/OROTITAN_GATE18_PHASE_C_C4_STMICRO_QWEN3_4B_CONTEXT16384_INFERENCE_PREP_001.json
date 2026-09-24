@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "PREPARED_NOT_AUTHORIZED",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
   "basis": {
     "c3_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "context_fit_diagnostic": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
@@ -36,9 +36,9 @@
   "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-local-run.ts",
   "future_authorization": {
     "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001",
-    "authorization_artifact_present": false,
-    "inference_authorized": false,
-    "authorized_run_count": 0
+    "authorization_artifact_present": true,
+    "inference_authorized": true,
+    "authorized_run_count": 1
   },
   "evaluation": {
     "deterministic_schema_validator": "gate18PhaseBV10OutputSchema",
@@ -65,6 +65,7 @@
       "EXECUTE_FIRST_REAL_C4_MATRIX_CELL"
     ]
   },
-  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_STMICROELECTRONICS_C4_QWEN4B_CONTEXT16384_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_ONE_C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001"
 }
