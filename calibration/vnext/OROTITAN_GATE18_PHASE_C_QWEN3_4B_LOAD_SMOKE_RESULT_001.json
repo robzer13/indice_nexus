@@ -1,0 +1,79 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_4B_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3-4B-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3-4B-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_CAPABILITY_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "context_tokens_observed": 4096
+  },
+  "before": {
+    "free_ram_gib": 0.75,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "free_ram_gib": 0.66,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1652,
+    "vram_used_mib": 2311,
+    "ollama_reported_size": "3.5 GB",
+    "processor_split": "33%/67% CPU/GPU",
+    "context_tokens": 4096,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "after": {
+    "free_ram_gib": 1.79,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2311,
+    "vram_headroom_while_loaded_mib": 1652,
+    "free_ram_delta_before_to_loaded_gib": -0.09,
+    "full_vram_release_after_unload": true
+  },
+  "interpretation": {
+    "load_fit_at_4096_context": "PASS",
+    "inference_fit_at_4096_context": "NOT_YET_EXECUTION_PROVEN",
+    "system_ram_pressure": "HIGH",
+    "gpu_headroom_while_loaded": "MATERIAL_BUT_FINITE",
+    "bounded_4096_inference_preparation_allowed": true,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "context_growth_authorized": false,
+    "note": "The model successfully loads at 4096 context with 1652 MiB free VRAM. Semantic inference remains a separate authorization because generation adds KV-cache/compute pressure."
+  },
+  "safety": {
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_QWEN3_4B_BROOKFIELD_4096_RUNNER_AND_REQUEST_EXPLICIT_INFERENCE_AUTHORIZATION",
+  "base_vnext_sha": "fbe986d9a20a539fc8a0e6a5c737ead975b19ba9",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
