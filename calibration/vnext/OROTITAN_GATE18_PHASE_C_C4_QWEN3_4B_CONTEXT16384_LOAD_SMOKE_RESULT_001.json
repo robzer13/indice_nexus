@@ -1,0 +1,78 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_4B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.61,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.62,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1604,
+    "vram_used_mib": 2359,
+    "ollama_reported_size": "5.4 GB",
+    "processor_split": "56%/44% CPU/GPU",
+    "context_tokens": 16384,
+    "model_loaded": true
+  },
+  "unload": {
+    "done": true,
+    "done_reason": "unload",
+    "model_unloaded": true
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 3.32,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2359,
+    "vram_headroom_while_loaded_mib": 1604,
+    "vram_delta_vs_context4096_load_mib": 48,
+    "reported_loaded_size_delta_vs_context4096": "1.9 GB",
+    "context4096_processor_split": "33%/67% CPU/GPU",
+    "context16384_processor_split": "56%/44% CPU/GPU",
+    "full_vram_release_after_unload": true,
+    "ram_measurement_stability": "NOISY_OS_LEVEL_FREE_MEMORY_NOT_DIRECTLY_COMPARABLE"
+  },
+  "interpretation": {
+    "context16384_load_fit": "PASS",
+    "context16384_inference_fit": "NOT_YET_PROVEN",
+    "gpu_headroom_while_loaded": "MATERIAL_BUT_FINITE",
+    "system_ram_pressure": "HIGH",
+    "full_matrix_context_growth_preparation_allowed": true,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "model_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ONE_STMICROELECTRONICS_C4_INFERENCE_AT_CONTEXT16384_AND_REQUEST_EXPLICIT_AUTHORIZATION",
+  "base_vnext_sha": "448a607642a22d2b412509e1c3b960476a6cb6de",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
