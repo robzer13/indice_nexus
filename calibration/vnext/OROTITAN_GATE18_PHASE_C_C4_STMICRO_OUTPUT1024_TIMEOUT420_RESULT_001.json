@@ -1,0 +1,72 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OUTPUT1024_TIMEOUT420_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_REMEDIATION",
+  "status": "FAIL",
+  "classification": "RUNTIME_FAIL_FETCH_FAILED_BEFORE_CLIENT_TIMEOUT_NO_PROVIDER_RESPONSE",
+  "base_vnext_sha": "d6bc237ae3a997e66bb36a720855255189b6fda9",
+  "matrix_cell": {
+    "id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_GUARDED_001",
+    "company": "STMicroelectronics",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91",
+    "evidence_count": 9,
+    "conflict_count": 2
+  },
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000
+  },
+  "execution": {
+    "wall_clock_ms": 304446,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "fetch failed",
+    "schema_valid": false,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": null,
+    "private_artifact_path": "calibration/vnext/private-runs/2026-09-24T200847736Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json"
+  },
+  "timing_interpretation": {
+    "client_timeout_ms": 420000,
+    "observed_failure_ms": 304446,
+    "remaining_before_client_timeout_ms": 115554,
+    "client_abort_boundary_reached": false,
+    "failure_approximately_equal_to_client_timeout": false
+  },
+  "interpretation": {
+    "provider_response_observed": false,
+    "client_timeout_abort_concluded": false,
+    "fetch_transport_or_local_runtime_failure_observed": true,
+    "exact_fetch_failure_cause_concluded": false,
+    "output1024_adequacy_concluded": false,
+    "semantic_result_observed": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "prompt_contract_failure_concluded": false,
+    "schema_contract_failure_concluded": false,
+    "automatic_retry_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "timeout_change_authorized": false,
+    "max_output_change_authorized": false,
+    "context_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_NON_INFERENCE_LOCAL_FETCH_FAILURE_FORENSICS",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
