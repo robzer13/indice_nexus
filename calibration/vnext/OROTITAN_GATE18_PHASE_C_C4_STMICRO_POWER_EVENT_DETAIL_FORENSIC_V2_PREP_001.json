@@ -2,7 +2,7 @@
   "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_V2_PREP_V0.1",
   "prep_id": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-V2-PREP-001",
   "source_blocked_result": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-RESULT-001",
-  "status": "PREPARED_NO_INFERENCE",
+  "status": "EXECUTED_BLOCKED_POWERSHELL_PARSER_ERROR",
   "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-power-event-detail-forensic-v2.ts",
   "query_strategy": {
     "provider_event_queries_independent": true,
@@ -20,6 +20,7 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_V2_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_V3_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-V2-RESULT-001"
 }
