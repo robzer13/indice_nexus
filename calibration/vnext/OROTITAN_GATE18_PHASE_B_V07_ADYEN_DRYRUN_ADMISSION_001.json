@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V07_DRYRUN_ADMISSION_V1",
+  "admission_id": "G18-PHASEB-V07-ADYEN-DRYRUN-ADMISSION-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "NO_COST_DRYRUN_CONTRACT_ADMISSION",
+  "base_vnext_sha": "f256e0d160751af24a951d9f5ad27a168e62619f",
+  "case": {
+    "display_name": "Adyen",
+    "case_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 80,
+    "source_conflicts": 10,
+    "evidence_items": 16,
+    "conflicts": 3,
+    "serialized_chars": 10891,
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "lineage_vs_v06": "UNCHANGED"
+  },
+  "contract": {
+    "protocol_version": "0.7",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_5",
+    "prompt_template_version": "0.5",
+    "prompt_template_sha256": "25c8c631d5c4e0a7f129685454462954402f2283a0fd3fc29d78ab61b684ece4",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_5",
+    "generation_schema_version": "0.5",
+    "generation_schema_sha256": "af8a7b1bc72550dacaf4b1eec76c4b6ddeed4805ca24d38f93669a8a1ce688f5",
+    "max_output_tokens": 4096
+  },
+  "structural_change": {
+    "support_channel": "evidence_ids",
+    "qualification_channel": "qualification_evidence_ids + qualification_link",
+    "counterevidence_channel": "counterevidence_ids + counterevidence_link",
+    "targeted_failure_mode": "SUPPORTIVE_BUT_LIMITED_EVIDENCE_FORCED_INTO_COUNTEREVIDENCE",
+    "adyen_regression_target": "E-043 should be expressible as qualification rather than counterevidence when the claim is bounded."
+  },
+  "cost_guard": {
+    "approximate_input_token_ceiling": 5717,
+    "per_model": [
+      {
+        "label": "LUNA",
+        "model_id": "openai/gpt-5.6-luna",
+        "cost_ceiling_usd": 0.0070586
+      },
+      {
+        "label": "TERRA",
+        "model_id": "openai/gpt-5.6-terra",
+        "cost_ceiling_usd": 0.061586
+      },
+      {
+        "label": "SOL",
+        "model_id": "openai/gpt-5.6-sol",
+        "cost_ceiling_usd": 0.10578800000000001
+      },
+      {
+        "label": "ASTRA",
+        "model_id": "openai/gpt-6-astra",
+        "cost_ceiling_usd": 0.26297000000000004
+      }
+    ],
+    "total_cost_ceiling_usd": 0.43740260000000003,
+    "v06_luna_ceiling_usd": 0.0070516,
+    "v06_total_ceiling_usd": 0.43683560000000005,
+    "interpretation": "The v0.7 structural schema expansion adds negligible cost-envelope overhead and preserves the common 4096-token output contract."
+  },
+  "admission_checks": {
+    "head_matches_merged_v07_contract": true,
+    "dry_run_mode": true,
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "allow_multi_model": false,
+    "packet_identity_preserved": true,
+    "prompt_hash_pinned": true,
+    "schema_hash_pinned": true,
+    "common_output_envelope_preserved": true,
+    "cost_guard_present": true
+  },
+  "paid_execution": {
+    "authorized": false,
+    "reason": "This receipt admits only the no-cost v0.7 dry-run. A paid canary requires a separate fresh-budget authorization."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v07_contract": "IMPLEMENTED_GREEN",
+    "v07_dryrun": "ADMITTED",
+    "v07_paid_canary": "NOT_AUTHORIZED"
+  }
+}
