@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C3_CAPABILITY_ESCALATION",
-  "status": "AUTHORIZED_DOWNLOAD_ONLY",
+  "status": "CONSUMED_DOWNLOAD_ONLY",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "DOWNLOAD_LOCAL_MODEL",
@@ -35,7 +35,7 @@
     "paid_model_api_authorized": false
   },
   "constraints": {
-    "action_count_authorized": 1,
+    "action_count_authorized": 0,
     "command_family": "ollama pull",
     "exact_model_only": true,
     "inference_after_download": false,
@@ -55,7 +55,7 @@
     "no_c3_inference_until_separate_load_preflight_and_authorization": true
   },
   "authority": {
-    "qwen3_4b_download_authorized": true,
+    "qwen3_4b_download_authorized": false,
     "qwen3_4b_inference_authorized": false,
     "c3_inference_authorized": false,
     "model_winner_selected": false,
@@ -65,5 +65,10 @@
     "paid_execution_authorized": false
   },
   "base_vnext_sha": "eaeeb7dd8f0f154dff435aa86b841c220fefd24a",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-QWEN3-4B-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED"
+  }
 }
