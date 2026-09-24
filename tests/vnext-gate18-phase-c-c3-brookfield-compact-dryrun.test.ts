@@ -54,7 +54,7 @@ test("Brookfield C3 dry-run includes schema in the conservative input guard", ()
 });
 
 test("Brookfield C3 dry-run estimates local KV-cache pressure without inference", () => {
-  assert.match(source, /"\/api\/show"/);
+  assert.match(source, /\/api\/show/);
   assert.match(source, /estimatedKvCacheMiBAtPlannedContext/);
   assert.match(source, /attention\.head_count_kv/);
   assert.match(source, /freeVramMiB/);
