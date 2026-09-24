@@ -1,0 +1,117 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V07_PAID_CANARY_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V07-ADYEN-LUNA-CANARY-001",
+  "authorization_id": "G18-PHASEB-V07-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.7",
+  "status": "FAIL",
+  "classification": "TARGETED_SEMANTIC_IMPROVEMENT_SCHEMA_CONTRACT_FAIL",
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_5",
+    "prompt_template_version": "0.5",
+    "prompt_template_sha256": "25c8c631d5c4e0a7f129685454462954402f2283a0fd3fc29d78ab61b684ece4",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_5",
+    "generation_schema_version": "0.5",
+    "generation_schema_sha256": "af8a7b1bc72550dacaf4b1eec76c4b6ddeed4805ca24d38f93669a8a1ce688f5",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "3a385d27-5b9d-4f34-b3f8-53e340436a81",
+    "provider_request_id": "req_37aad72613334e3b9885248f1ac7434a",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 9763,
+    "input_tokens": 3839,
+    "output_tokens": 965,
+    "reasoning_tokens": 231,
+    "total_tokens": 4804,
+    "gateway_cost_usd": 0.0024926,
+    "response_sha256": "85bd5bf870f03c9464061d4025a7b4cc0ea5380ca0966a0dfa1158f822519e5e"
+  },
+  "targeted_regression_result": {
+    "evidence_id": "E-043",
+    "v06_role": "counterevidence_ids",
+    "v07_role": "qualification_evidence_ids",
+    "target_passed": true,
+    "interpretation": "The v0.7 qualification channel fixes the original Adyen E-043 polarity failure."
+  },
+  "semantic_failure": {
+    "class": "SUPPORT_QUALIFICATION_ROLE_OVERLAP",
+    "evidence_id": "E-040",
+    "finding": "Growth evidence supports both existing-customer expansion and new enterprise wins, but their relative contribution is unresolved.",
+    "observed_roles": [
+      "evidence_ids",
+      "qualification_evidence_ids"
+    ],
+    "validator_effect": "semanticValid=false under the v0.7 exclusivity invariant."
+  },
+  "human_quality_adjudication": {
+    "finding_1": "PASS",
+    "finding_2": "PASS",
+    "finding_3_directional_content": "PASS",
+    "finding_3_schema_fit": "FAIL",
+    "material_conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary": "PASS",
+    "comparison_admissible": false,
+    "notes": [
+      "Finding 1 correctly separates integration depth from genuine displacement/multi-PSP counterevidence and uses E-057 as a scope qualification.",
+      "Finding 2 achieves the v0.7 regression target: E-043 is correctly classified as qualification evidence for a bounded payment-performance claim, while E-044/E-045/E-046 remain support and counterevidence is empty.",
+      "Finding 3 exposes a structural contract problem rather than a clear analytical error. E-040 both supports the existence of new enterprise wins and carries a limitation because selected wins do not quantify revenue contribution.",
+      "The v0.7 rule forbidding support/qualification overlap cannot represent that legitimate dual property, so the run fails semantic validation despite analytically useful content.",
+      "No retry or model escalation is authorized."
+    ]
+  },
+  "contract_learning": {
+    "v07_success": "Qualification is now distinguishable from genuine counterevidence.",
+    "v07_failure": "Qualification was modeled as an exclusive evidence role even though evidentiary direction and evidentiary strength are orthogonal dimensions.",
+    "next_contract_requirement": "Represent directional role separately from qualification metadata so a supporting item can also carry an explicit scope/quality qualifier without duplicate cross-channel reference."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.44,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.44,
+    "current_call_exact_gateway_cost_usd": 0.0024926,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The targeted polarity regression passes, but v0.7 fails deterministic semantics because the schema incorrectly treats support and qualification as mutually exclusive roles."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v07_paid_canary": "COMPLETE_NON_ADMISSIBLE"
+  }
+}
