@@ -1,0 +1,77 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_LOG_FORENSICS_V4_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V4-RESULT-001",
+  "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_LOCAL_OLLAMA_HTTP_500_OBSERVED_AT_FAILURE_BOUNDARY",
+  "mode": "LOCAL_READ_ONLY_NO_INFERENCE",
+  "transport": {
+    "powershell_process_succeeded": true,
+    "stdout_present": true,
+    "stdout_length": 101080,
+    "base64_decode_and_json_parse_succeeded": true,
+    "decode_error": null
+  },
+  "log_inventory": {
+    "root": "C:\\Users\\robin\\AppData\\Local\\Ollama",
+    "log_file_count": 12,
+    "relevant_file": "server.log",
+    "relevant_file_last_write_utc": "2026-09-24T20:26:02.3288031Z",
+    "relevant_file_length_bytes": 251761,
+    "relevant_window_line_count": 14
+  },
+  "source_run_timing": {
+    "run_start_utc": "2026-09-24T20:03:43.290Z",
+    "run_end_utc": "2026-09-24T20:08:47.736Z",
+    "wall_clock_ms": 304446,
+    "configured_client_timeout_ms": 420000
+  },
+  "observed_server_sequence": {
+    "model_context_tokens": 16384,
+    "llama_server_start_local": "2026-09-24T22:03:45.769+02:00",
+    "llama_server_ready_local": "2026-09-24T22:03:54.743+02:00",
+    "api_generate_terminal_log_local": "2026-09-24T22:08:47+02:00",
+    "api_generate_http_status": 500,
+    "api_generate_logged_duration": "5m4s",
+    "api_generate_route": "/api/generate",
+    "client_address": "127.0.0.1"
+  },
+  "timing_alignment": {
+    "server_terminal_500_matches_run_end_boundary": true,
+    "server_logged_duration_seconds_approx": 304,
+    "client_observed_wall_clock_seconds": 304.446,
+    "delta_seconds_approx": 0.446
+  },
+  "interpretation": {
+    "local_ollama_api_failure_observed": true,
+    "server_side_http_500_observed": true,
+    "client_received_usable_http_response": false,
+    "client_timeout_reached": false,
+    "system_sleep_or_wake_during_run_observed": false,
+    "windows_resource_exhaustion_event_observed": false,
+    "display_reset_event_observed": false,
+    "windows_application_error_event_observed": false,
+    "ollama_daemon_restart_during_run_observed": false,
+    "oom_concluded": false,
+    "cuda_failure_concluded": false,
+    "llama_server_process_crash_concluded": false,
+    "exact_internal_500_cause_concluded": false,
+    "model_capability_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "classification": "OLLAMA_LOCAL_API_500_AT_RUN_TERMINATION_INTERNAL_CAUSE_UNRESOLVED",
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_TARGETED_SERVER_LOG_CONTEXT_FORENSICS_V5",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
