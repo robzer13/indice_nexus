@@ -1,0 +1,101 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_COMPACT_DRYRUN_RESULT_V0.2",
+  "result_id": "G18-PHASEC-C3-BROOKFIELD-COMPACT-DRYRUN-002",
+  "supersedes_result_id": "G18-PHASEC-C3-BROOKFIELD-COMPACT-DRYRUN-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PASS",
+  "classification": "LOCAL_COMPACT_REGRESSION_CONTEXT_AND_MEMORY_PLAN_ADMISSIBLE",
+  "base_vnext_sha": "1b549dbc6217e62d0eb904de4cd3ca0d5d6a45e2",
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "phase_c_execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "case_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "display_name": "Brookfield Corporation",
+    "role": "ACCOUNTING_HEAVY",
+    "data_cutoff": "2026-09-19"
+  },
+  "source_integrity": {
+    "full_packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+    "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185"
+  },
+  "compact_packet": {
+    "evidence_ids": [
+      "E-036",
+      "E-037",
+      "E-039",
+      "E-042"
+    ],
+    "conflict_ids": [],
+    "evidence_items": 4,
+    "conflicts": 0,
+    "serialized_chars": 2933,
+    "sha256": "8b9a668cf00f900d385c393d6273b3cefcf894e02976021a13f048820fbb2039"
+  },
+  "prompt": {
+    "prompt_template_id": "GATE18_BROOKFIELD_PEER_ROLE_PROBE_V0_1",
+    "prompt_template_version": "0.1",
+    "prompt_template_sha256": "a0a88a82479d73d694f4f84f9054f3c5ae9c6540040d499ffa8779b190e2913a",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "system_chars": 4694,
+    "prompt_chars": 4492,
+    "combined_prompt_chars": 9186,
+    "generation_schema_chars": 2789,
+    "schema_aware_input_chars": 11975
+  },
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "quantization": "Q4_K_M"
+  },
+  "execution_plan": {
+    "endpoint": "http://127.0.0.1:11434",
+    "temperature": 0,
+    "context_tokens": 8192,
+    "max_output_tokens": 768,
+    "keep_alive": "0s",
+    "conservative_input_token_ceiling": 5988,
+    "planned_total_token_ceiling": 6756,
+    "context_headroom_tokens": 1436,
+    "inference_authorized": false
+  },
+  "memory_advisory": {
+    "model_info_block_count": 28,
+    "model_info_embedding_length": 2048,
+    "model_info_attention_heads": 16,
+    "model_info_kv_heads": 8,
+    "estimated_head_dim": 128,
+    "assumed_kv_cache_bytes_per_element": 2,
+    "estimated_kv_cache_mib_at_planned_context": 896,
+    "free_vram_mib": 3977,
+    "conclusion": "ADVISORY_FIT_PLAUSIBLE"
+  },
+  "safety": {
+    "external_model_api_call": false,
+    "model_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "model_rejected": false,
+    "semantic_regression_result": "NOT_YET_EXECUTED",
+    "first_inference_runner_preparation_ready": true,
+    "first_inference_requires_separate_explicit_local_authorization": true
+  },
+  "next_action": "PREPARE_LOCAL_INFERENCE_RUNNER_THEN_REQUIRE_EXPLICIT_USER_AUTHORIZATION",
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
