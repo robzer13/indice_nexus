@@ -1,0 +1,50 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C1_OLLAMA_RUNTIME_ADMISSION_ATTEMPT_V0.1",
+  "attempt_id": "G18-PHASEC-C1-OLLAMA-ATTEMPT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C1_LOCAL_RUNTIME_ADMISSION",
+  "status": "BLOCKED_RECOVERABLE",
+  "classification": "OLLAMA_CLIENT_PRESENT_LOCAL_SERVER_NOT_RUNNING",
+  "source": {
+    "observed_from_local_preflight": true,
+    "preflight_format": "OROTITAN_GATE18_PHASE_C_C1_OLLAMA_RUNTIME_PREFLIGHT_V0.1",
+    "base_vnext_sha": "e5eb8a691a9c95a92e7cac23236febde88823972"
+  },
+  "observation": {
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true,
+    "endpoint_reachable": false,
+    "api_version": null,
+    "cli_present": true,
+    "cli_reported_version": "0.6.6",
+    "installed_models_observed": [],
+    "loaded_models_observed": []
+  },
+  "safety": {
+    "external_network_access_requested": false,
+    "external_model_api_call": false,
+    "model_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "ollama_runtime_rejected": false,
+    "hardware_rejected": false,
+    "model_candidate_rejected": false,
+    "blocker": "LOCAL_OLLAMA_SERVER_NOT_RUNNING",
+    "recovery_action": "START_LOCAL_OLLAMA_SERVER_AND_RETRY_SAME_C1_PREFLIGHT",
+    "prompt_or_schema_change_required": false,
+    "model_download_required_for_recovery": false
+  },
+  "next_action": "START_OLLAMA_LOCAL_SERVER_THEN_RETRY_C1_PREFLIGHT",
+  "authority": {
+    "paid_execution_authorized": false,
+    "model_download_authorized": false,
+    "inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
