@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_ONE_RUN_NOT_CONSUMED",
+  "status": "PREPARED_NOT_AUTHORIZED",
   "basis": {
     "invalidated_run": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
     "runtime_incident_conclusion": "G18-PHASEC-C4-STM-RUNTIME-INCIDENT-CONCLUSION-001",
@@ -54,17 +54,17 @@
   "future_authorization": {
     "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-GUARDED-RETRY-AUTH-001",
     "required": true,
-    "authorized": true,
-    "authorized_run_count": 1
+    "authorized": false,
+    "authorized_run_count": 0
   },
   "authority": {
-    "inference_authorized": true,
-    "stmicro_retry_authorized": true,
+    "inference_authorized": false,
+    "stmicro_retry_authorized": false,
     "automatic_retry_authorized": false,
     "model_switch_authorized": false,
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_ONE_GUARDED_STMICRO_RETRY",
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_GUARDED_STMICRO_RETRY",
   "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }
