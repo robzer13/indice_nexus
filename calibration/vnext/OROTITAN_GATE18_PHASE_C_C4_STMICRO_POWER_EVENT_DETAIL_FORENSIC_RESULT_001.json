@@ -1,0 +1,40 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-RESULT-001",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "source_forensic_result": "G18-PHASEC-C4-STM-POST-ABORT-FORENSICS-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "BLOCKED_EVENT_QUERY_FAILED",
+  "observations": {
+    "detailed_query_returned_events": false,
+    "event_count": 0,
+    "initial_forensic_power_events_remain_observed": true,
+    "initial_observed_event_ids": [
+      42,
+      107,
+      1
+    ],
+    "sleep_wake_timing_concluded": false,
+    "timeout_delay_root_cause_concluded": false
+  },
+  "diagnostic_interpretation": {
+    "evidence_absence_concluded": false,
+    "likely_failure_class": "POWERSHELL_AGGREGATED_QUERY_FAIL_CLOSED",
+    "exact_subquery_failure_not_observed": true,
+    "remediation": "QUERY_PROVIDER_AND_EVENT_IDS_INDEPENDENTLY_AND_CAPTURE_ERRORS"
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_ROBUST_V2_POWER_EVENT_DETAIL_FORENSIC_NO_INFERENCE",
+  "base_vnext_sha": "0d3eb1fbd40092663fea4da3fb7cdb8c550ea02e",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
