@@ -1,0 +1,77 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OUTPUT_BUDGET_STATIC_DIAGNOSTIC_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-QWEN4B-OUTPUT-BUDGET-STATIC-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_DIAGNOSTIC",
+  "status": "PASS_OUTPUT_BUDGET_REMEDIATION_JUSTIFIED",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-GUARDED-RETRY-RESULT-001",
+  "observed": {
+    "wall_clock_ms": 264717,
+    "configured_client_timeout_ms": 300000,
+    "done_reason": "length",
+    "prompt_eval_count": 3059,
+    "eval_count": 768,
+    "configured_max_output_tokens": 768,
+    "schema_error": "Unterminated string in JSON at position 2860 (line 84 column 8)",
+    "runtime_error": null
+  },
+  "comparison_context": {
+    "brookfield_complete_eval_count": 405,
+    "brookfield_done_reason": "stop",
+    "brookfield_schema_valid": true,
+    "adyen_complete_eval_count": 699,
+    "adyen_done_reason": "stop",
+    "adyen_schema_valid": true,
+    "note": "Prior complete C3 outputs terminated naturally below the 768-token ceiling; STMicro consumed the full ceiling and terminated by length."
+  },
+  "output_budget_analysis": {
+    "prior_max_output_tokens": 768,
+    "proposed_max_output_tokens": 1024,
+    "delta_tokens": 256,
+    "delta_percent": 33.333,
+    "rationale": "Minimal one-step increase that creates material headroom above the observed hard ceiling while preserving model, prompt, schema, packet, context, and temperature."
+  },
+  "timeout_analysis": {
+    "prior_client_timeout_ms": 300000,
+    "observed_wall_clock_ms": 264717,
+    "observed_headroom_ms": 35283,
+    "observed_headroom_percent_vs_wall_clock": 13.329,
+    "proportional_runtime_at_1024_tokens_ms_diagnostic_only": 352956,
+    "proposed_client_timeout_ms": 420000,
+    "proposed_headroom_vs_proportional_estimate_ms": 67044,
+    "proposed_headroom_vs_proportional_estimate_percent": 18.995,
+    "note": "Linear output-token scaling is diagnostic only, not a runtime prediction. The timeout increase is operational headroom required to make the larger output ceiling executable without a likely client abort."
+  },
+  "remediation": {
+    "type": "OUTPUT_BUDGET_PLUS_OPERATIONAL_TIMEOUT_ONLY",
+    "proposed_max_output_tokens": 1024,
+    "proposed_client_timeout_ms": 420000,
+    "model_change": false,
+    "model_digest_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "packet_change": false,
+    "context_change": false,
+    "temperature_change": false,
+    "sleep_guard_change": false
+  },
+  "interpretation": {
+    "max_output_768_inadequacy_proven": true,
+    "timeout_300_inadequacy_for_768_run_proven": false,
+    "timeout_420_required_by_semantic_contract": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "remediation_justified": true
+  },
+  "authority": {
+    "remediation_prepared": true,
+    "remediation_authorized_for_future_runner": false,
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_STMICRO_OUTPUT1024_TIMEOUT420_GUARDED_RUNNER_NO_INFERENCE_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OUTPUT_BUDGET_REMEDIATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-QWEN4B-OUTPUT1024-TIMEOUT420-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_REMEDIATION",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "prior_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-GUARDED-RETRY-RESULT-001",
+    "static_diagnostic": "G18-PHASEC-C4-STM-QWEN4B-OUTPUT-BUDGET-STATIC-001",
+    "sleep_guard_smoke_result": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-RESULT-001"
+  },
+  "unchanged_semantic_envelope": {
+    "company": "STMicroelectronics",
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "matrix_cell_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91",
+    "prompt_bytes": 7558,
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "context_tokens": 16384,
+    "temperature": 0,
+    "packet_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "context_change": false,
+    "model_change": false,
+    "sleep_guard_change": false
+  },
+  "remediation_delta": {
+    "type": "OUTPUT_BUDGET_PLUS_OPERATIONAL_TIMEOUT_ONLY",
+    "prior_max_output_tokens": 768,
+    "proposed_max_output_tokens": 1024,
+    "prior_client_timeout_ms": 300000,
+    "proposed_client_timeout_ms": 420000
+  },
+  "future_execution": {
+    "attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_GUARDED_001",
+    "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-output1024-timeout420-guarded.ts",
+    "required_future_authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-AUTH-001",
+    "authorization_artifact_present": false,
+    "inference_authorized": false,
+    "retry_authorized": false
+  },
+  "authority": {
+    "max_output_change_executable_without_auth": false,
+    "timeout_change_executable_without_auth": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "second_retry_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_STMICRO_OUTPUT1024_TIMEOUT420_GUARDED_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
