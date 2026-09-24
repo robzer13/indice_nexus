@@ -1,0 +1,123 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V06_PAID_CANARY_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V06-ADYEN-LUNA-CANARY-001",
+  "authorization_id": "G18-PHASEB-V06-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "0.6",
+  "status": "FAIL",
+  "classification": "ENGINEERING_VALID_HUMAN_QUALITY_FAIL",
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_4",
+    "prompt_template_version": "0.4",
+    "prompt_template_sha256": "947b8daf5ec9f2e86ff80d872481a581f2a2df7472491cff97a55031917e107a",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_4",
+    "generation_schema_version": "0.4",
+    "generation_schema_sha256": "ceb774809c74ccabc24a0b365e4a6289ca5413132a78d06cf8262a195f4979c2",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "011dfa09-cb35-4655-8fd2-bed8407baac3",
+    "provider_request_id": "req_c99ea092857d49f293ce2e61b00ae4d9",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 12390,
+    "input_tokens": 3661,
+    "output_tokens": 774,
+    "reasoning_tokens": 74,
+    "total_tokens": 4435,
+    "gateway_cost_usd": 0.0022189,
+    "response_sha256": "ce32600625d958dab052e1b040430ecdd28747c6f988b53dbb859fc769dc1db6"
+  },
+  "human_quality_adjudication": {
+    "narrative_completeness": "PASS",
+    "exact_grounding": "PASS",
+    "canonical_reference_format": "PASS",
+    "support_counterevidence_overlap": "PASS",
+    "counterevidence_link_presence": "PASS",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "human_judgment_boundary": "PASS",
+    "counterevidence_polarity": "FAIL",
+    "comparison_admissible": false,
+    "notes": [
+      "Finding 1 is correctly polarized: E-012, E-042 and E-057 support platform/integration depth, while E-037 and E-041 weaken a switching-friction inference by documenting multi-PSP behavior and an actual provider replacement. C-005 is correctly retained.",
+      "Finding 2 is correctly bounded: E-036 and E-039 support persistence/expansion, while E-037 and E-041 weaken the claim that these relationships are difficult to displace. C-004 and C-005 are both relevant to the bounded wording.",
+      "Finding 3 is still mis-polarized. E-044, E-045 and E-046 support the bounded claim that Adyen reports payment-performance benefits while broad independent validation remains limited.",
+      "E-043 is not counterevidence to that bounded claim. It is another issuer-hosted selected customer uplift case with an explicit representativeness limitation, so it reinforces both the existence of reported benefit and the stated validation limitation.",
+      "The new counterevidence_link makes the model's role assignment auditable, but the explanation does not convert E-043 into genuine evidence that weakens the claim.",
+      "The v0.6 contract therefore fixes deterministic ID-format failures and improves auditability, but does not by itself solve natural-language evidence-polarity judgment."
+    ]
+  },
+  "comparison_to_v05_adyen_luna": {
+    "v05": {
+      "schema_valid": true,
+      "semantic_valid": true,
+      "comparison_admissible": false,
+      "failure_mode": "COUNTEREVIDENCE_ROLE_CLASSIFICATION",
+      "misclassified_counterevidence_id": "E-046",
+      "gateway_cost_usd": 0.0020338,
+      "latency_ms": 6073,
+      "output_tokens": 666,
+      "reasoning_tokens": 55
+    },
+    "v06": {
+      "schema_valid": true,
+      "semantic_valid": true,
+      "comparison_admissible": false,
+      "failure_mode": "COUNTEREVIDENCE_ROLE_CLASSIFICATION",
+      "misclassified_counterevidence_id": "E-043",
+      "gateway_cost_usd": 0.0022189,
+      "latency_ms": 12390,
+      "output_tokens": 774,
+      "reasoning_tokens": 74
+    },
+    "interpretation": "v0.6 materially improves deterministic reference integrity and exposes explicit counterevidence rationale, but the Adyen human-quality result remains non-admissible because a supportive selected-case limitation is still treated as counterevidence to a bounded claim."
+  },
+  "budget_snapshot_after_call": {
+    "project_limit_usd": 4,
+    "project_spent_display_usd": 1.43,
+    "team_limit_usd": 4,
+    "team_spent_display_usd": 1.43,
+    "current_call_exact_gateway_cost_usd": 0.0022189,
+    "display_precision_note": "Vercel CLI budget display is rounded and is not used as exact per-call cost evidence."
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The v0.6 canary passed deterministic engineering validation but failed the targeted human-quality evidence-polarity criterion."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v06_paid_canary": "COMPLETE_NON_ADMISSIBLE"
+  }
+}
