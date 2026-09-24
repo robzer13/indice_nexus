@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_WINDOWS_SLEEP_GUARD_SMOKE_V2_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_ENVIRONMENT_REMEDIATION",
+  "status": "AUTHORIZED_ONE_RUN_NOT_CONSUMED",
+  "user_authorization": {
+    "explicit": true,
+    "exact_user_command": "go Windows sleep guard smoke v2",
+    "authorized_action": "ONE_PROCESS_SCOPED_WINDOWS_SLEEP_GUARD_SMOKE_V2",
+    "inference_authorized": false
+  },
+  "basis": {
+    "source_v1_result": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-RESULT-001",
+    "sleep_guard_v2_prep": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-PREP-001",
+    "v1_root_cause": "POWERSHELL_SIGNED_HEX_LITERAL_CAST"
+  },
+  "execution": {
+    "runner": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke-v2.ts",
+    "authorized_run_count": 1,
+    "mechanism": "SetThreadExecutionState",
+    "acquire_flags": [
+      "ES_CONTINUOUS",
+      "ES_SYSTEM_REQUIRED"
+    ],
+    "release_flags": [
+      "ES_CONTINUOUS"
+    ],
+    "uint32_construction": "Convert.ToUInt32(\"80000000\", 16)",
+    "hold_ms": 5000,
+    "process_scoped": true,
+    "administrator_privileges_required": false,
+    "powercfg_requests": "OPTIONAL_BEST_EFFORT"
+  },
+  "constraints": {
+    "model_load_authorized": false,
+    "model_inference_authorized": false,
+    "ollama_api_call_authorized": false,
+    "automatic_retry_authorized": false,
+    "stmicro_retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "persistent_power_setting_mutation_authorized": false,
+    "lid_or_manual_sleep_override_authorized": false,
+    "display_required_authorized": false,
+    "away_mode_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "verification": {
+    "ready_marker_required": true,
+    "released_marker_required": true,
+    "clean_exit_required": true,
+    "acquisition_return_nonzero_required": true,
+    "powercfg_requests_required_for_pass": false
+  },
+  "base_vnext_sha": "bf789d53982f4c8826ae95e51697d58fe6c1b098",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
