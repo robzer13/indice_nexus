@@ -1,0 +1,174 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_PAID_CANARY_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V10-ADYEN-LUNA-CANARY-001",
+  "authorization_id": "G18-PHASEB-V10-ADYEN-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "1.0",
+  "status": "PARTIAL_PASS",
+  "classification": "ENGINEERING_PASS_HUMAN_QUALITY_PASS_TARGETED_REGRESSION_PARTIALLY_EXERCISED",
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "0e3d6595-e1de-4a66-81cb-7239d0ff4ac2",
+    "provider_request_id": "req_c70d21f6d0ce40a89d08179616036289",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 13702,
+    "input_tokens": 4238,
+    "output_tokens": 1204,
+    "reasoning_tokens": 460,
+    "total_tokens": 5442,
+    "gateway_cost_usd": 0.00287915,
+    "response_sha256": "c2b725e6757ddddd906054614476d0efc4918f6170162c6d531d929ee5ec745d"
+  },
+  "human_quality_adjudication": {
+    "finding_1": {
+      "status": "PASS",
+      "claim": "Adyen operates a common backend spanning multiple payment functions.",
+      "support": [
+        "E-012"
+      ],
+      "counterevidence": [],
+      "reason": "The claim is bounded and descriptive. E-012 supports the architecture observation, while the issuer-origin limitation is kept as a qualification rather than inverted into counterevidence."
+    },
+    "finding_2": {
+      "status": "PASS",
+      "claim": "Enterprise customers can shift payment volume away from Adyen or replace it as a provider.",
+      "support": [
+        "E-037",
+        "E-041",
+        "E-051"
+      ],
+      "counterevidence": [],
+      "conflict_ids": [
+        "C-005"
+      ],
+      "reason": "The claim is framed directly at substitution and volume-migration capability, so E-037/E-041/E-051 now support the exact skeptical proposition instead of being misclassified as counterevidence to low churn. C-005 remains a broader switching-friction tension rather than false counterevidence."
+    },
+    "finding_3": {
+      "status": "PASS",
+      "claim": "Adyen reports payment-optimization improvements across conversion, authorization, and cost metrics.",
+      "support": [
+        "E-044",
+        "E-045",
+        "E-046"
+      ],
+      "counterevidence": [],
+      "reason": "Reported outcomes are directionally supported and issuer/denominator limitations remain orthogonal qualifications."
+    },
+    "exact_grounding": "PASS",
+    "canonical_reference_format": "PASS",
+    "deterministic_semantics": "PASS",
+    "claim_atomicity": "PASS",
+    "observed_counterevidence_polarity_errors": "NONE",
+    "qualification_attachment": "PASS",
+    "material_conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary": "PASS",
+    "comparison_admissible": true
+  },
+  "targeted_regression_results": {
+    "low_reported_churn_false_counterevidence": {
+      "target_exercised_as_priority_finding": false,
+      "indirect_behavior": "PASS_SIGNAL",
+      "interpretation": "The model did not repeat the v0.9 low-churn error. Instead it framed E-037/E-041/E-051 as support for a substitution-capability claim and moved the low-churn versus multi-provider tension to the switching-friction weak link."
+    },
+    "switching_friction_same_target": {
+      "target_exercised_as_priority_mixed_finding": false,
+      "indirect_behavior": "PASS_SIGNAL",
+      "interpretation": "The weak-link candidate combines E-036, E-037 and E-041 around switching friction coherently, but no priority finding used same-target support plus counterevidence, so the MIXED/counterevidence path is not directly proven."
+    },
+    "service_disruption_scope_regression": {
+      "target_exercised_as_priority_finding": false,
+      "interpretation": "E-055/E-056 were not selected in the three priority findings, so the v0.9 false-counterevidence regression for incident existence was not re-tested by this execution."
+    },
+    "e040_orthogonal_qualification": {
+      "target_exercised_as_priority_finding": false,
+      "interpretation": "E-040 appears in weak-link and unresolved-point grounding only. No directional SUPPORT-plus-qualification regression was exercised."
+    },
+    "e043_support_direction": {
+      "target_exercised_as_priority_finding": false,
+      "interpretation": "E-043 appears only in an unresolved question and is not assigned a directional evidence role."
+    },
+    "weak_link_label": {
+      "target_passed": true,
+      "interpretation": "Short weak-link labels remain valid without terminal punctuation."
+    }
+  },
+  "contract_learning": {
+    "positive_evidence": [
+      "No generated priority finding contains the v0.9 claim-target polarity errors.",
+      "The model selected a skeptical substitution-capability claim for E-037/E-041/E-051 instead of attaching those items as counterevidence to a low-churn observation.",
+      "Qualifications remained orthogonal to evidence direction.",
+      "Switching friction is represented as an uncertainty/weak-link question rather than collapsed into a misleading descriptive finding."
+    ],
+    "remaining_uncertainty": [
+      "No priority finding contained counterevidence_ids, so same-target counterevidence assignment was not directly exercised.",
+      "No priority finding used MIXED status, so the MIXED semantic-target rule was not directly exercised.",
+      "The E-055/E-056 service-incident scope regression was not exercised.",
+      "E-040 and E-043 directional regression targets were not exercised as priority findings."
+    ],
+    "conclusion": "v1.0 materially improves observed Adyen behavior and yields a human-quality-admissible output, but this single stochastic canary is insufficient to freeze claim-target alignment because several targeted regression paths were not exercised."
+  },
+  "spend": {
+    "authorized_hard_cap_usd": 0.0071,
+    "actual_gateway_cost_usd": 0.00287915,
+    "cap_utilization_ratio": 0.40551408450704224,
+    "pre_call_budget_snapshot": {
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.44,
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.44,
+      "display_headroom_usd": 2.56
+    },
+    "note": "No post-call rounded budget snapshot is required for this result because no further paid execution is authorized by this artifact."
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The v1.0 canary is a human-quality-admissible observation but does not fully exercise the targeted counterevidence/MIXED and service-scope regression paths. Stop and design the next calibration step before any additional paid call."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v10_paid_canary": "COMPLETE_PARTIAL_PASS",
+    "routing_freeze": "NONE",
+    "model_winner": "NONE"
+  }
+}
