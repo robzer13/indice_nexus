@@ -39,14 +39,14 @@ test("Gate 18 v0.4 runner applies one common max output contract", () => {
     "utf8",
   );
 
-  assert.match(source, /model-calibration-pilot-v05/);
+  assert.match(source, /model-calibration-pilot-v06/);
   assert.match(
     source,
-    /maxOutputTokens:\s*GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS/,
+    /maxOutputTokens:\s*GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS/,
   );
   assert.match(
     source,
-    /GATE18_PHASE_B_V04_MAX_OUTPUT_TOKENS \*\s*modelPricing\.output/,
+    /GATE18_PHASE_B_V06_MAX_OUTPUT_TOKENS \*\s*modelPricing\.output/,
   );
 
   assert.doesNotMatch(
