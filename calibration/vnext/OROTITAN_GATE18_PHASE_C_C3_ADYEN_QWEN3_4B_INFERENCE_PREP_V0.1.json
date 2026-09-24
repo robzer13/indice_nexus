@@ -1,0 +1,127 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_QWEN3_4B_INFERENCE_PREP_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "brookfield_qwen3_4b_result": "G18-PHASEC-C3-BROOKFIELD-QWEN4B-LOCAL-RUN-001",
+    "brookfield_mandatory_regressions": "PASS",
+    "remaining_mandatory_regressions": [
+      "Adyen same-target switching-friction role alignment",
+      "Adyen scope-resolved incident handling",
+      "Adyen qualification orthogonality"
+    ]
+  },
+  "probe": {
+    "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "execution_id": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096",
+    "prompt_template_id": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "comparison_admissible": false
+  },
+  "packet_compaction": {
+    "required_evidence_ids": [
+      "E-036",
+      "E-037",
+      "E-040",
+      "E-041",
+      "E-042",
+      "E-043",
+      "E-055",
+      "E-056"
+    ],
+    "required_conflict_ids": [
+      "C-005",
+      "C-010"
+    ],
+    "unrelated_evidence_removed": true,
+    "required_semantic_roles_unchanged": true
+  },
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "finetune": "Instruct"
+  },
+  "execution_plan": {
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "keep_alive": "0s",
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "private_output_directory": "calibration/vnext/private-runs",
+    "external_model_api_cost_usd": 0
+  },
+  "expected_regression_map": {
+    "finding_1": {
+      "topic": "same-target switching friction / relationship persistence",
+      "support_state": "MIXED",
+      "support_ids": [
+        "E-036",
+        "E-042"
+      ],
+      "counterevidence_ids": [
+        "E-037",
+        "E-041"
+      ],
+      "conflict_ids": [
+        "C-005"
+      ]
+    },
+    "finding_2": {
+      "topic": "documented service disruption existence",
+      "support_state": "SUPPORTED",
+      "support_ids": [
+        "E-055"
+      ],
+      "counterevidence_ids": [],
+      "conflict_ids": [
+        "C-010"
+      ]
+    },
+    "finding_3": {
+      "topic": "qualification orthogonality for selected positive commercial outcomes",
+      "support_state": "SUPPORTED",
+      "support_ids": [
+        "E-040",
+        "E-043"
+      ],
+      "counterevidence_ids": [],
+      "qualification_ids": [
+        "E-040",
+        "E-043"
+      ]
+    },
+    "conflict_states": {
+      "C-005": "UNRESOLVED_IN_PACKET",
+      "C-010": "RESOLVED_IN_PACKET"
+    }
+  },
+  "guard": {
+    "authorization_id": "G18-PHASEC-C3-ADYEN-QWEN4B-INFERENCE-AUTH-001",
+    "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C3_ADYEN_QWEN3_4B_INFERENCE_AUTH_001.json",
+    "authorization_artifact_present": false,
+    "execute_flag_required": true,
+    "authorization_id_argument_required": true,
+    "exact_model_digest_required": true,
+    "exact_context_required": true,
+    "exact_max_output_required": true,
+    "exact_temperature_required": true,
+    "no_preloaded_model_required": true,
+    "inference_currently_authorized": false
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "qwen3_4b_adyen_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_QWEN3_4B_ADYEN_4096_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
