@@ -16,8 +16,8 @@
   "current_state": {
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
-    "c2_structured_output_smoke": "NEXT",
-    "c3_historical_semantic_regressions": "NOT_STARTED",
+    "c2_structured_output_smoke": "PASS",
+    "c3_historical_semantic_regressions": "PLANNED_AWAITING_INITIAL_MODEL_DOWNLOAD",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_C2_LOCAL_STRUCTURED_OUTPUT_SMOKE_WITH_EXISTING_PINNED_PHI",
+  "next_action": "REQUEST_EXPLICIT_USER_APPROVAL_TO_DOWNLOAD_QWEN3_1_7B",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -41,5 +41,10 @@
     "name": "phi:latest",
     "digest": "e2fd6321a5fe6bb3ac8a4e6f1cf04477fd2dea2924cf53237a995387e152ee9c",
     "role": "RUNTIME_SMOKE_ONLY_NOT_PRODUCTION_CANDIDATE"
-  }
+  },
+  "c2_latest_attempt": "G18-PHASEC-C2-PHI-LOCAL-SMOKE-001",
+  "c2_result": "LOCAL_RUNTIME_STRUCTURED_JSON_PATH_VALIDATED",
+  "initial_c3_candidate": "QWEN3_1_7B_OLLAMA_Q4",
+  "initial_c3_model_name": "qwen3:1.7b",
+  "c3_model_download_authorized": false
 }

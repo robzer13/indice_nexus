@@ -1,0 +1,82 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C2_LOCAL_STRUCTURED_OUTPUT_SMOKE_RESULT_V0.1",
+  "attempt_id": "G18-PHASEC-C2-PHI-LOCAL-SMOKE-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C2_STRUCTURED_OUTPUT_SMOKE",
+  "status": "PASS",
+  "classification": "LOCAL_RUNTIME_STRUCTURED_JSON_PATH_VALIDATED",
+  "base_vnext_sha": "e815fd60bab37c563327b9375e0dfdcc06cf37cf",
+  "runtime": {
+    "runtime": "OLLAMA",
+    "api_version": "0.6.6",
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true
+  },
+  "model": {
+    "name": "phi:latest",
+    "digest": "e2fd6321a5fe6bb3ac8a4e6f1cf04477fd2dea2924cf53237a995387e152ee9c",
+    "role": "RUNTIME_SMOKE_ONLY_NOT_PRODUCTION_CANDIDATE"
+  },
+  "generation": {
+    "format": "json",
+    "temperature": 0,
+    "num_ctx": 2048,
+    "num_predict": 128,
+    "keep_alive": "0s",
+    "done_reason": "stop"
+  },
+  "validation": {
+    "json_parse_valid": true,
+    "exact_keyset_valid": true,
+    "exact_values_valid": true,
+    "exact_model_identity_valid": true,
+    "semantic_smoke_valid": true
+  },
+  "metrics": {
+    "wall_clock_ms": 51088,
+    "total_duration_ns": 51076682700,
+    "load_duration_ns": 35506352400,
+    "prompt_eval_count": 106,
+    "prompt_eval_duration_ns": 14627620100,
+    "eval_count": 53,
+    "eval_duration_ns": 922238800,
+    "free_ram_gib_before": 0.48,
+    "free_ram_gib_after": 0.24,
+    "free_vram_mib_before": 3977,
+    "free_vram_mib_after": 3977
+  },
+  "hardware_observation": {
+    "phi_full_gpu_fit": true,
+    "gpu_layers_offloaded": "33/33",
+    "required_runtime_memory_gib": 2.7,
+    "kv_cache_mib": 640,
+    "observed_gpu_available_gib_at_load": 3.2,
+    "observed_system_free_memory_mib_at_load": 484.4
+  },
+  "safety": {
+    "external_model_api_call": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "hidden_cloud_fallback_allowed": false
+  },
+  "interpretation": {
+    "c1_runtime_path_validated": true,
+    "c2_structured_output_path_validated": true,
+    "production_model_admitted": false,
+    "phi_promoted_to_production_candidate": false,
+    "critical_quality_conclusion": "NONE",
+    "main_operational_constraint": "LOW_SYSTEM_RAM_HEADROOM_AND_COLD_START_LATENCY",
+    "next_stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE"
+  },
+  "authority": {
+    "paid_execution_authorized": false,
+    "model_download_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
