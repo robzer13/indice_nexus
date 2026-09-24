@@ -2,7 +2,10 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import type { Gate18V02EvidencePacket } from "../runtime/vnext/model-calibration-pilot-v02";
+import type {
+  Gate18V02EvidenceItem,
+  Gate18V02EvidencePacket,
+} from "../runtime/vnext/model-calibration-pilot-v02";
 import {
   GATE18_PHASE_B_V10_GENERATION_SCHEMA_VERSION,
   gate18PhaseBV10GenerationSchemaSha256,
@@ -23,7 +26,7 @@ import {
 function evidence(
   evidenceId: string,
   conflictStatus: string | null = null,
-) {
+): Gate18V02EvidenceItem {
   return {
     evidence_id: evidenceId,
     claim_id: evidenceId,
@@ -38,7 +41,7 @@ function evidence(
     limitations: null,
     conflict_status: conflictStatus,
     module_tags: ["MOAT_INPUTS"],
-  } as const;
+  };
 }
 
 function packet(): Gate18V02EvidencePacket {
