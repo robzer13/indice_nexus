@@ -1,0 +1,89 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_DRIVER_OEM_REVIEW_RESULT_V0.1",
+  "result_id": "G18-PHASEC-NVIDIA-61714-OEM-REVIEW-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS_OEM_REVIEW_BLOCKED_PENDING_REBOOT",
+  "observed_system": {
+    "manufacturer": "Acer",
+    "model": "Nitro AN515-55",
+    "operating_system": "Microsoft Windows 11 Famille",
+    "windows_version": "10.0.26200",
+    "windows_build": "26200",
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "pnp_device_id": "PCI\\VEN_10DE&DEV_25A2&SUBSYS_143E1025&REV_A1\\4&2F204912&0&0008",
+    "current_driver_version": "532.03",
+    "current_driver_store_version": "31.0.15.3203",
+    "current_inf": "oem104.inf",
+    "memory_total_mib": 4096
+  },
+  "pending_reboot": {
+    "component_based_servicing": false,
+    "windows_update": false,
+    "pending_file_rename_operations": true,
+    "installation_blocker": true
+  },
+  "target_review": {
+    "target_version": "617.14",
+    "certification": "WHQL",
+    "release_date": "2026-09-22",
+    "package_class": "GEFORCE_GAME_READY_DRIVER_NOTEBOOK",
+    "preferred_source": "NVIDIA_OFFICIAL",
+    "preferred_package": "617.14-notebook-win10-win11-64bit-international-dch-whql.exe",
+    "gpu_family_supported": true,
+    "windows_11_supported": true,
+    "exact_61714_inf_hardware_id_match_directly_inspected": false,
+    "exact_device_id_corrobation": {
+      "device_id": "PCI\\VEN_10DE&DEV_25A2&SUBSYS_143E1025",
+      "same_model_modern_nvidia_driver_observed": true,
+      "note": "Independent device inventories show this exact Acer subsystem running materially newer NVIDIA branches than the installed 532.03 driver. This supports generic NVIDIA notebook-driver compatibility, but is not a substitute for installer self-validation."
+    }
+  },
+  "decision": {
+    "oem_package_selected": false,
+    "nvidia_generic_notebook_package_selected": true,
+    "reason": "Acer AN515-55 support material is legacy relative to the current NVIDIA notebook branch; the exact RTX 3050 Laptop device identity is corroborated on modern NVIDIA drivers and NVIDIA publishes 617.14 WHQL for supported notebook GeForce RTX 30-series GPUs.",
+    "install_now": false,
+    "next_action": "REBOOT_WINDOWS_THEN_RERUN_EXISTING_NVIDIA_DRIVER_UPGRADE_PREFLIGHT"
+  },
+  "constraints": {
+    "driver_download_authorized": false,
+    "driver_install_authorized": false,
+    "ddu_authorized": false,
+    "current_driver_uninstall_authorized": false,
+    "bios_update_authorized": false,
+    "vbios_update_authorized": false,
+    "chipset_update_authorized": false,
+    "model_inference_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "sources": [
+    {
+      "class": "NVIDIA_OFFICIAL",
+      "url": "https://www.nvidia.com/en-us/geforce/drivers/details/279803/",
+      "claim": "617.14 is WHQL, released 2026-09-22, for Windows 10/11."
+    },
+    {
+      "class": "SECONDARY_DRIVER_INDEX",
+      "url": "https://www.techspot.com/downloads/drivers/essentials/nvidia-windows-10/",
+      "claim": "617.14 has a notebook 64-bit distribution."
+    },
+    {
+      "class": "SECONDARY_DEVICE_INVENTORY",
+      "url": "https://www.driveridentifier.com/scan/acer-nitro-an515-55-driver/desktop/FF538453D4BA497E897E4C2F49E7D75E",
+      "claim": "Acer Nitro AN515-55 with PCI\\VEN_10DE&DEV_25A2&SUBSYS_143E1025 is observed on a modern NVIDIA 32.0.16.1047 branch."
+    }
+  ],
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "10b9cf82dc0415fc3d697c35a1f24563b35f1c08",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

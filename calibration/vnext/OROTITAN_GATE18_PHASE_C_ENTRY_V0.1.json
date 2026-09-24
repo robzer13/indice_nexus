@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BLOCKED_PENDING_NVIDIA_DRIVER_HARDWARE_PREFLIGHT",
+    "c3_historical_semantic_regressions": "BLOCKED_PENDING_NVIDIA_DRIVER_PREINSTALL_REBOOT",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_NVIDIA_DRIVER_HARDWARE_OEM_PREFLIGHT",
+  "next_action": "REBOOT_WINDOWS_THEN_RERUN_NVIDIA_DRIVER_UPGRADE_PREFLIGHT",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -90,5 +90,9 @@
   ],
   "c3_nvidia_driver_target": "617.14_WHQL",
   "c3_nvidia_driver_download_authorized": false,
-  "c3_nvidia_driver_install_authorized": false
+  "c3_nvidia_driver_install_authorized": false,
+  "c3_nvidia_driver_oem_preflight_result": "G18-PHASEC-NVIDIA-61714-OEM-REVIEW-001",
+  "c3_nvidia_driver_oem_preflight_status": "PASS_HARDWARE_IDENTIFIED_REVIEW_COMPLETED",
+  "c3_nvidia_driver_package_choice": "NVIDIA_GENERIC_NOTEBOOK_617_14_WHQL",
+  "c3_nvidia_driver_pending_reboot_detected": true
 }
