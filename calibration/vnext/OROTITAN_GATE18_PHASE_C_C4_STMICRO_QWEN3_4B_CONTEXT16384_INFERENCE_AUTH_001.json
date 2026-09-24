@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "ONE_BOUNDED_LOCAL_C4_STMICRO_FULL_PACKET_INFERENCE_CONTEXT16384",
@@ -17,7 +17,7 @@
     "stmicro_inference_prep": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-PREP-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "STMicroelectronics",
     "archetype": "CYCLICAL_SEGMENTED",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -43,7 +43,7 @@
     "output_must_be_adjudicated_as_emitted": true
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -76,9 +76,9 @@
   "base_vnext_sha": "0b2a4b0faa9bc01c7ed126d3bb8614acf9a4ffc5",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "consumption": {
-    "consumed": false,
-    "result_id": null,
-    "result_classification": null,
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+    "result_classification": "RUNTIME_FAIL_ABORT_WITH_DELAYED_OR_UNBOUNDED_WALLCLOCK_NO_MODEL_RESULT",
     "retry_authorized": false
   }
 }
