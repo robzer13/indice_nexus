@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "EXECUTED_RUNTIME_FAIL_FORENSICS_REQUIRED",
   "basis": {
     "c3_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "context_fit_diagnostic": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
@@ -37,8 +37,8 @@
   "future_authorization": {
     "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001",
     "authorization_artifact_present": true,
-    "inference_authorized": true,
-    "authorized_run_count": 1
+    "inference_authorized": false,
+    "authorized_run_count": 0
   },
   "evaluation": {
     "deterministic_schema_validator": "gate18PhaseBV10OutputSchema",
@@ -65,7 +65,9 @@
       "EXECUTE_FIRST_REAL_C4_MATRIX_CELL"
     ]
   },
-  "next_action": "RUN_ONE_C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384",
+  "next_action": "RUN_NON_INFERENCE_POST_ABORT_RUNTIME_AND_SLEEP_FORENSICS",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
-  "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001"
+  "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001",
+  "result_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "result_classification": "RUNTIME_FAIL_ABORT_WITH_DELAYED_OR_UNBOUNDED_WALLCLOCK_NO_MODEL_RESULT"
 }
