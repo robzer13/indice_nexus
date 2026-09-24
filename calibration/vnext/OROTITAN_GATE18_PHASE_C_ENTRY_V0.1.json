@@ -14,8 +14,8 @@
     "local_open_weight_models_role": "PRODUCTION_CANDIDATES"
   },
   "current_state": {
-    "c0_hardware_preflight": "NOT_YET_OBSERVED",
-    "c1_local_runtime_admission": "NOT_STARTED",
+    "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
+    "c1_local_runtime_admission": "NEXT",
     "c2_structured_output_smoke": "NOT_STARTED",
     "c3_historical_semantic_regressions": "NOT_STARTED",
     "c4_diversified_matrix": "NOT_STARTED",
@@ -30,6 +30,9 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_C0_LOCAL_HARDWARE_PREFLIGHT_ONLY",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_C1_OLLAMA_RUNTIME_ADMISSION_NO_MODEL_DOWNLOAD",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "local_runtime_candidate": "OLLAMA",
+  "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+  "ultra_light_baseline_candidate": "QWEN3_1_7B_OLLAMA_Q4"
 }
