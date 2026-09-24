@@ -1,0 +1,144 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_TARGETED_PROBE_PAID_AUTHORIZATION_V1",
+  "authorization_id": "G18-PHASEB-V10-TARGETED-PROBE-LUNA-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "AUTHORIZED_SINGLE_CALL",
+  "basis": {
+    "targeted_probe_document": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V10_TARGETED_CLAIM_PROBE_V0.1.md",
+    "dryrun_admission": "calibration/vnext/OROTITAN_GATE18_PHASE_B_V10_TARGETED_PROBE_DRYRUN_ADMISSION_001.json",
+    "dryrun_admission_merge_sha": "a8f8a90382a0946570371a68998bbdef6e9d8631",
+    "targeted_gap": "DIRECT_EXERCISE_SAME_TARGET_COUNTEREVIDENCE_MIXED_SCOPE_AND_QUALIFICATION"
+  },
+  "probe": {
+    "probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "display_name": "Adyen",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "evidence_packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03"
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "reasoning": "minimal"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "prompt_template_version": "0.1",
+    "prompt_template_sha256": "e779d681f084b130aee35a901648bc599c1c8b912229dcbbd41f2a2f9c719284",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "required_regression_behavior": {
+    "finding_1": {
+      "support_state": "MIXED",
+      "support": [
+        "E-036",
+        "E-042"
+      ],
+      "counterevidence": [
+        "E-037",
+        "E-041"
+      ],
+      "conflict": [
+        "C-005"
+      ],
+      "requirement": "Support and counterevidence must bear on the same switching-friction or relationship-persistence proposition."
+    },
+    "finding_2": {
+      "support_state": "SUPPORTED",
+      "support": [
+        "E-055"
+      ],
+      "counterevidence": [],
+      "conflict": [
+        "C-010"
+      ],
+      "requirement": "E-056 must not be counterevidence to incident existence and C-010 must be resolved by scope."
+    },
+    "finding_3": {
+      "support_state": "SUPPORTED",
+      "support": [
+        "E-040",
+        "E-043"
+      ],
+      "counterevidence": [],
+      "requirement": "Both evidence items remain support and each limitation is represented as a qualification."
+    }
+  },
+  "spend": {
+    "dry_run_conservative_ceiling_usd": 0.0071908,
+    "authorized_hard_cap_usd": 0.0072,
+    "fresh_budget_snapshot": {
+      "source": "vercel ai-gateway budgets list",
+      "cli_version": "59.26.0",
+      "node_version": "24.19.0",
+      "project_name": "orotitan-vnext-pilotage",
+      "project_limit_usd": 4,
+      "project_spent_display_usd": 1.44,
+      "project_display_headroom_usd": 2.56,
+      "team_name": "orotitan",
+      "team_limit_usd": 4,
+      "team_spent_display_usd": 1.44,
+      "team_display_headroom_usd": 2.56,
+      "worst_case_project_display_spend_after_call_usd": 1.4472,
+      "worst_case_team_display_spend_after_call_usd": 1.4472
+    },
+    "prior_0_0071_cap_reused": false
+  },
+  "execution_constraints": {
+    "calls_authorized": 1,
+    "automatic_retry": false,
+    "allow_multi_model": false,
+    "raw_output_private_gitignored": true,
+    "post_call_human_adjudication_required": true,
+    "record_ci_merge_required_before_further_paid_call": true,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false
+  },
+  "acceptance_question": {
+    "engineering": [
+      "schemaValid=true",
+      "semanticValid=true",
+      "finishReason=stop",
+      "retryCount=0",
+      "provider cost evidence present",
+      "response hash present"
+    ],
+    "targeted_semantics": [
+      "finding 1 is MIXED with exact switching-friction support/counterevidence roles",
+      "finding 1 counterevidence weakens the same exact economic proposition",
+      "finding 2 is SUPPORTED by E-055 with no counterevidence",
+      "C-010 is RESOLVED_IN_PACKET",
+      "finding 3 keeps E-040 and E-043 as support with separate qualifications",
+      "no evidence-role inversion is introduced",
+      "judgment boundary remains respected"
+    ]
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "targeted_probe_dryrun": "ADMITTED",
+    "targeted_probe_paid_execution": "AUTHORIZED_SINGLE_CALL"
+  }
+}
