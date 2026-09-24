@@ -1,0 +1,97 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_RUNTIME_DIAGNOSTIC_CONCLUSION_V0.1",
+  "result_id": "G18-PHASEC-C3-RUNTIME-DIAGNOSTIC-CONCLUSION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_FAILURE_DIAGNOSTIC",
+  "status": "PASS_DIAGNOSTIC",
+  "classification": "LOCAL_RUNTIME_VERSION_NOT_QUALIFIED_FOR_QWEN3_C3",
+  "base_vnext_sha": "63fa2b06ba44560bffd8f3bbaef56fcc4eb644d5",
+  "observed_local_runtime": {
+    "provider": "OLLAMA",
+    "version": "0.6.6",
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true
+  },
+  "observed_model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "family": "qwen3",
+    "quantization": "Q4_K_M",
+    "context_length": 40960,
+    "currently_loaded": false
+  },
+  "observed_memory_at_diagnostic": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.38,
+    "total_vram_mib": 4096,
+    "used_vram_mib": 0,
+    "free_vram_mib": 3977
+  },
+  "prior_run": {
+    "result_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-LOCAL-RUN-001",
+    "classification": "RUNTIME_FAIL_HTTP_500_NO_SEMANTIC_RESULT",
+    "semantic_result_observed": false,
+    "retry_authorized": false
+  },
+  "upstream_evidence": [
+    {
+      "source": "ollama/ollama#10400",
+      "url": "https://github.com/ollama/ollama/issues/10400",
+      "relevance": "Ollama 0.6.6 on Windows/NVIDIA/Intel showed JSON-schema-to-GBNF failures during structured generation; issue closed completed after upstream llama.cpp fix.",
+      "exact_match_to_orotitan_schema": false,
+      "note": "OroTitan schema does not contain the specific maxItems:0 trigger documented in that issue."
+    },
+    {
+      "source": "ollama commit ad3c7c9bda3b2db9a6887f65e3134c093333d3d5",
+      "url": "https://github.com/ollama/ollama/commit/ad3c7c9bda3b2db9a6887f65e3134c093333d3d5",
+      "relevance": "Qwen3 handling landed after 0.6.6; commit message explicitly describes work as being in advance of proper support.",
+      "commit_date": "2025-04-30"
+    },
+    {
+      "source": "ollama commit 5f57b0ef4268a6bd9e8043d54c351a608a7e1bca",
+      "url": "https://github.com/ollama/ollama/commit/5f57b0ef4268a6bd9e8043d54c351a608a7e1bca",
+      "relevance": "Thinking support for API/CLI, including Qwen3 template control/parsing, landed after 0.6.6.",
+      "commit_date": "2025-05-28"
+    },
+    {
+      "source": "ollama latest release",
+      "url": "https://github.com/ollama/ollama/releases/tag/v0.34.4",
+      "relevance": "Current stable release observed during diagnostic.",
+      "version": "0.34.4",
+      "published_at": "2026-09-23T02:24:43Z"
+    }
+  ],
+  "conclusion": {
+    "qwen3_model_quality_rejected": false,
+    "brookfield_semantic_regression_failed": false,
+    "runtime_version_qualified_for_qwen3": false,
+    "exact_http_500_root_cause_proven": false,
+    "upgrade_required_before_next_c3_inference": true,
+    "reason": "The active Ollama 0.6.6 runtime predates substantial Qwen3 support work and contains known structured-output failure classes. Repeating the same C3 inference on 0.6.6 would not isolate model quality."
+  },
+  "remediation_plan": {
+    "next_action": "UPGRADE_OLLAMA_RUNTIME_BEFORE_ANY_RETRY",
+    "target_policy": "CURRENT_STABLE_OR_EXPLICITLY_PINNED_NEWER_VERSION",
+    "observed_current_stable": "0.34.4",
+    "model_redownload_required": false,
+    "c3_inference_after_upgrade_authorized": false,
+    "post_upgrade_requirements": [
+      "Capture exact Ollama CLI/API version.",
+      "Verify qwen3:1.7b digest unchanged.",
+      "Run no-inference metadata preflight.",
+      "Run a structured-output smoke on the upgraded runtime before re-authorizing Brookfield C3.",
+      "Require a fresh single-run local inference authorization."
+    ]
+  },
+  "authority": {
+    "ollama_upgrade_authorized": false,
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
