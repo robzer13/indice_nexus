@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "PLANNED_AWAITING_INITIAL_MODEL_DOWNLOAD",
+    "c3_historical_semantic_regressions": "PREFLIGHT_READY_NO_INFERENCE",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "REQUEST_EXPLICIT_USER_APPROVAL_TO_DOWNLOAD_QWEN3_1_7B",
+  "next_action": "RUN_C3_QWEN3_1_7B_METADATA_PREFLIGHT_ONLY",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -46,5 +46,10 @@
   "c2_result": "LOCAL_RUNTIME_STRUCTURED_JSON_PATH_VALIDATED",
   "initial_c3_candidate": "QWEN3_1_7B_OLLAMA_Q4",
   "initial_c3_model_name": "qwen3:1.7b",
-  "c3_model_download_authorized": false
+  "c3_model_download_authorized": false,
+  "qwen3_1_7b_download_result": "PASS_PINNED",
+  "qwen3_1_7b_digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+  "qwen3_1_7b_size_bytes": 1359293444,
+  "qwen3_1_7b_quantization": "Q4_K_M",
+  "c3_inference_authorized": false
 }
