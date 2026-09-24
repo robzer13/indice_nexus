@@ -1,0 +1,58 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_PRIVATE_FORENSICS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-FORENSICS-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "source_run_result": "G18-PHASEC-C3-BROOKFIELD-QWEN17-LOCAL-RUN-002",
+  "status": "FAIL_CONFIRMED_MODEL_CAPABILITY_REASON",
+  "observed_private_output": {
+    "priority_finding_count": 1,
+    "required_priority_finding_count": 2,
+    "finding_1": {
+      "support_state": "SUPPORTED",
+      "claim": "Large-scale alternative-asset-management capability is present across Brookfield's major peers",
+      "claim_length": 94,
+      "ends_with_terminal_punctuation": false,
+      "at_or_above_178_char_boundary": false,
+      "evidence_ids": [
+        "E-036",
+        "E-037",
+        "E-039"
+      ],
+      "conflict_ids": [],
+      "counterevidence_ids": []
+    },
+    "finding_2_present": false
+  },
+  "deterministic_validator_implications": {
+    "first_observed_failure": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
+    "cause_of_first_failure": "FINDING_1_MISSING_TERMINAL_PUNCTUATION",
+    "saturation_boundary_triggered": false,
+    "subsequent_failure_if_terminal_punctuation_were_repaired": "VNEXT_GATE18_V10_BROOKFIELD_TARGETED_PROBE_FINDING_COUNT",
+    "reason": "The targeted prompt explicitly requires exactly two findings in order; only one was emitted."
+  },
+  "exclusions": {
+    "runtime_failure": false,
+    "schema_failure": false,
+    "global_generation_truncation": false,
+    "prompt_ambiguity": false,
+    "hidden_retry": false,
+    "decoding_change": false
+  },
+  "conclusion": {
+    "qwen3_1_7b_c3_result": "FAIL",
+    "model_capability_failure_concluded": true,
+    "failure_mode": "INSTRUCTION_COMPLETENESS_AND_REQUIRED_OUTPUT_COVERAGE",
+    "broader_c3_admission": false,
+    "automatic_retry_authorized": false,
+    "prompt_relaxation_authorized": false,
+    "schema_relaxation_authorized": false,
+    "qwen3_4b_escalation_condition_model_failure_satisfied": true,
+    "qwen3_4b_escalation_authorized": false,
+    "remaining_condition": "LOCAL_MEMORY_PREFLIGHT_ACCEPTABLE"
+  },
+  "next_action": "RUN_QWEN3_4B_LOCAL_MEMORY_PREFLIGHT_WITHOUT_DOWNLOAD_OR_INFERENCE",
+  "base_vnext_sha": "9507cd2a75f08b76ca3c700821bea50367e0de74",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
