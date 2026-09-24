@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_OLLAMA_POST_UPGRADE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-OLLAMA-0343-POSTCHECK-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "BLOCKED",
+  "classification": "BLOCKED_DRIVER_AND_MODEL_REGISTRY_TIMEOUT",
+  "base_vnext_sha": "2d484fb0bc66d71a1c91bcca1898c023a59f8590",
+  "observed": {
+    "cli_version": "0.34.3",
+    "api_version": "0.34.3",
+    "cli_api_coherent": true,
+    "ollama_path": "C:\\Users\\robin\\AppData\\Local\\Programs\\Ollama\\ollama.exe",
+    "nvidia_driver_version": "532.03",
+    "required_nvidia_driver_version": "551.61",
+    "api_version_endpoint_reachable": true,
+    "ps_endpoint_reachable": true,
+    "tags_endpoint_reachable": false,
+    "tags_endpoint_error": "This operation was aborted",
+    "qwen3_digest_observed": null,
+    "qwen3_loaded": false
+  },
+  "interpretation": {
+    "upgrade_observed": true,
+    "runtime_binary_incoherent": false,
+    "gpu_qualification_blocked": true,
+    "model_registry_integrity_unverified": true,
+    "qwen3_model_missing_conclusion": false,
+    "qwen3_redownload_required": false,
+    "c3_inference_authorized": false,
+    "reason": "CLI/API both report 0.34.3. The remaining blockers are the NVIDIA driver below the required minimum and an /api/tags timeout that prevented re-verifying the pinned model digest."
+  },
+  "recovery_plan": {
+    "next_action": "RUN_NO_INFERENCE_MODEL_REGISTRY_RECOVERY_CHECK",
+    "use_ollama_list": true,
+    "retry_api_tags_with_longer_timeout": true,
+    "model_inference": false,
+    "model_download": false,
+    "driver_upgrade": false
+  },
+  "authority": {
+    "nvidia_driver_upgrade_authorized": false,
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
