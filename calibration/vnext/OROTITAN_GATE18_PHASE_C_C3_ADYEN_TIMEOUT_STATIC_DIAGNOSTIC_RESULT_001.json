@@ -1,0 +1,87 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_TIMEOUT_STATIC_DIAGNOSTIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-ADYEN-QWEN4B-TIMEOUT-STATIC-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_FAILURE_DIAGNOSTIC",
+  "status": "PASS_TIMEOUT_ONLY_REMEDIATION_JUSTIFIED",
+  "source_run_result": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-001",
+  "pinned_generation_config": {
+    "model": "qwen3:4b-instruct",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0
+  },
+  "adyen_request": {
+    "required_priority_findings": 3,
+    "evidence_count": 8,
+    "conflict_count": 2,
+    "system_bytes": 4694,
+    "prompt_bytes": 7742,
+    "request_bytes": 16061,
+    "prompt_sha256": "7693187a41c801374054d2e289535822dd9a92ff23fc390e5de15640d2789e77",
+    "request_sha256": "9c4eac6f0849007b460d12dfeacb913484bbf816ae04797520f0e9a46f68f1e8"
+  },
+  "brookfield_baseline": {
+    "required_priority_findings": 2,
+    "evidence_count": 4,
+    "conflict_count": 0,
+    "prompt_bytes": 4492,
+    "request_bytes": 12399,
+    "observed_wall_clock_ms": 101077,
+    "observed_prompt_eval_count": 2162,
+    "observed_eval_count": 405,
+    "semantic_result": "PASS"
+  },
+  "relative_size": {
+    "prompt_bytes_adyen_vs_brookfield": 1.724,
+    "request_bytes_adyen_vs_brookfield": 1.295,
+    "required_finding_count_adyen_vs_brookfield": 1.5,
+    "evidence_count_adyen_vs_brookfield": 2
+  },
+  "timeout_analysis": {
+    "prior_timeout_ms": 180000,
+    "prior_observed_abort_ms": 180037,
+    "brookfield_runtime_scaled_by_prompt_bytes_ms": 174257,
+    "brookfield_runtime_scaled_by_finding_count_ms": 151616,
+    "brookfield_runtime_scaled_by_request_bytes_ms": 130895,
+    "prior_timeout_headroom_vs_prompt_scaled_estimate_ms": 5743,
+    "prior_timeout_headroom_vs_prompt_scaled_estimate_percent": 3.3,
+    "proposed_timeout_ms": 300000,
+    "proposed_timeout_headroom_vs_prompt_scaled_estimate_ms": 125743,
+    "proposed_timeout_headroom_vs_prompt_scaled_estimate_percent": 72.2,
+    "note": "Linear scaling is diagnostic only, not a runtime prediction. It is used to show that the prior 180s bound was materially too close to the measured workload."
+  },
+  "remediation": {
+    "type": "CLIENT_TIMEOUT_ONLY",
+    "proposed_timeout_ms": 300000,
+    "request_body_change": false,
+    "model_change": false,
+    "model_digest_change": false,
+    "context_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "max_output_change": false,
+    "temperature_change": false,
+    "retry_policy_change": false,
+    "semantic_contract_change": false
+  },
+  "interpretation": {
+    "timeout_root_cause_proven": false,
+    "timeout_bound_inadequacy_supported": true,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "timeout_only_remediation_justified": true
+  },
+  "authority": {
+    "timeout_change_prepared": true,
+    "timeout_change_authorized_for_future_runner": false,
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ADYEN_QWEN4B_RUNNER_WITH_300S_CLIENT_TIMEOUT_NO_INFERENCE_AUTHORIZATION",
+  "base_vnext_sha": "96d81fdbc9d3a6537eb3b40e925372c77c48f2a4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_TIMEOUT_ONLY_REMEDIATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C3-ADYEN-QWEN4B-TIMEOUT300-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_FAILURE_REMEDIATION",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "prior_run_result": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-001",
+    "prior_run_classification": "RUNTIME_FAIL_CLIENT_TIMEOUT_ABORT_NO_SEMANTIC_RESULT",
+    "post_timeout_resource_diagnostic": "G18-PHASEC-C3-ADYEN-QWEN4B-POST-TIMEOUT-RESOURCE-001",
+    "static_request_diagnostic": "G18-PHASEC-C3-ADYEN-QWEN4B-TIMEOUT-STATIC-001",
+    "brookfield_baseline_result": "G18-PHASEC-C3-BROOKFIELD-QWEN4B-LOCAL-RUN-001"
+  },
+  "unchanged_semantic_envelope": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "prompt_template": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "request_sha256": "9c4eac6f0849007b460d12dfeacb913484bbf816ae04797520f0e9a46f68f1e8"
+  },
+  "remediation_delta": {
+    "type": "CLIENT_TIMEOUT_ONLY",
+    "prior_client_timeout_ms": 180000,
+    "proposed_client_timeout_ms": 300000,
+    "delta_ms": 120000,
+    "model_change": false,
+    "model_digest_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "context_change": false,
+    "max_output_change": false,
+    "temperature_change": false,
+    "packet_change": false,
+    "decoding_change": false
+  },
+  "future_execution": {
+    "execution_id": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096_TIMEOUT300",
+    "runner": "scripts/vnext-gate18-phase-c-c3-adyen-qwen4b-local-run-timeout300.ts",
+    "required_future_authorization_id": "G18-PHASEC-C3-ADYEN-QWEN4B-INFERENCE-AUTH-002",
+    "authorization_artifact_present": false,
+    "inference_authorized": false,
+    "retry_authorized": false
+  },
+  "authority": {
+    "timeout_change_executable_without_auth": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_ADYEN_QWEN4B_4096_TIMEOUT300_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
