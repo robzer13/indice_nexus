@@ -1,0 +1,64 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_WINDOWS_SLEEP_GUARD_SMOKE_V0.2",
+  "result_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_ENVIRONMENT_REMEDIATION",
+  "status": "PASS_API_GUARD_ACQUIRED_AND_RELEASED",
+  "mode": "PROCESS_SCOPED_POWER_REQUEST_ONLY_NO_INFERENCE",
+  "source_authorization_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-AUTH-001",
+  "observed": {
+    "helper": {
+      "readyObserved": true,
+      "releasedObserved": true,
+      "setThreadExecutionStateAcquirePriorFlagsRaw": "2147483648",
+      "setThreadExecutionStateReleasePriorFlagsRaw": "2147483649",
+      "pid": 2712,
+      "stderr": null,
+      "exitCode": 0,
+      "forcedTermination": false
+    },
+    "powercfgRequests": {
+      "verificationRequiredForPass": false,
+      "before": {
+        "stdout": "DISPLAY�:\r\nAucune.\r\n\r\nSYSTEM :\r\nAucune.\r\n\r\nAWAYMODE�:\r\nAucune.\r\n\r\nEX�CUTION�:\r\nAucune.\r\n\r\nPERFBOOST�:\r\nAucune.\r\n\r\nACTIVELOCKSCREEN :\r\nAucune.",
+        "error": null
+      },
+      "during": {
+        "stdout": "DISPLAY�:\r\nAucune.\r\n\r\nSYSTEM :\r\n[PROCESS] \\Device\\HarddiskVolume3\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\r\n\r\nAWAYMODE�:\r\nAucune.\r\n\r\nEX�CUTION�:\r\nAucune.\r\n\r\nPERFBOOST�:\r\nAucune.\r\n\r\nACTIVELOCKSCREEN :\r\nAucune.",
+        "error": null
+      },
+      "after": {
+        "stdout": "DISPLAY�:\r\nAucune.\r\n\r\nSYSTEM :\r\nAucune.\r\n\r\nAWAYMODE�:\r\nAucune.\r\n\r\nEX�CUTION�:\r\nAucune.\r\n\r\nPERFBOOST�:\r\nAucune.\r\n\r\nACTIVELOCKSCREEN :\r\nAucune.",
+        "error": null
+      },
+      "elevationRequiredObserved": false
+    }
+  },
+  "conclusion": {
+    "idleSleepPreventionMechanismInvoked": true,
+    "processScopedGuardReleaseObserved": true,
+    "windowsApiGuardSmokePassed": true,
+    "powercfgSystemRequestObservedDuringGuard": true,
+    "powercfgSystemRequestAbsentBeforeGuard": true,
+    "powercfgSystemRequestAbsentAfterGuard": true,
+    "lidOrManualSleepPreventionConcluded": false,
+    "actualLongDurationSleepPreventionProven": false,
+    "inferenceExecuted": false,
+    "stmicroRetryExecuted": false,
+    "guardMechanismQualifiedForControlledInferenceIntegration": true
+  },
+  "safety": {
+    "networkAccessRequested": false,
+    "ollamaApiCalled": false,
+    "modelLoaded": false,
+    "modelInferenceExecuted": false,
+    "persistentPowerPlanMutation": false,
+    "displayRequiredFlagUsed": false,
+    "awayModeFlagUsed": false,
+    "productionMutation": false,
+    "publicationAuthority": false
+  },
+  "next_action": "PREPARE_GUARDED_STMICRO_RETRY_WITHOUT_EXECUTION_AUTHORITY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
