@@ -179,6 +179,22 @@ test("Gate 18 v1.0 changes semantic prompt while preserving the v0.6 JSON shape"
     GATE18_PHASE_B_V10_SYSTEM_PROMPT,
     /weak_link_candidates\.candidate is a short label/,
   );
+  assert.match(
+    GATE18_PHASE_B_V10_SYSTEM_PROMPT,
+    /counterfactual test: if that evidence is true, does the exact claim become materially less likely, less strong, or less economically valid/,
+  );
+  assert.match(
+    GATE18_PHASE_B_V10_SYSTEM_PROMPT,
+    /fully true at the same time as the exact claim is not counterevidence/,
+  );
+  assert.match(
+    GATE18_PHASE_B_V10_SYSTEM_PROMPT,
+    /support and counterevidence must address the same semantic target/,
+  );
+  assert.match(
+    GATE18_PHASE_B_V10_SYSTEM_PROMPT,
+    /conflict resolved by scope must not create MIXED status/,
+  );
 });
 
 test("Gate 18 v1.0 accepts an atomic claim with separate counterevidence", () => {
