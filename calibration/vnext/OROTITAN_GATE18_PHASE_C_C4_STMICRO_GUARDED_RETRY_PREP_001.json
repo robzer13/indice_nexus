@@ -1,0 +1,70 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_GUARDED_RETRY_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-GUARDED-RETRY-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "invalidated_run": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+    "runtime_incident_conclusion": "G18-PHASEC-C4-STM-RUNTIME-INCIDENT-CONCLUSION-001",
+    "sleep_guard_smoke_result": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-guarded-retry.ts",
+  "sleep_guard_module": "runtime/vnext/windows-sleep-guard.ts",
+  "attempt": {
+    "company": "STMicroelectronics",
+    "matrix_cell_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_GUARDED_RETRY_001",
+    "model_name": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91",
+    "prompt_bytes": 7558,
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "context_tokens": 16384,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "client_timeout_ms": 300000,
+    "keep_alive": "0s",
+    "packet_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "context_change": false,
+    "timeout_change": false,
+    "model_change": false
+  },
+  "sleep_guard": {
+    "api": "SetThreadExecutionState",
+    "acquire_flags": [
+      "ES_CONTINUOUS",
+      "ES_SYSTEM_REQUIRED"
+    ],
+    "release_flags": [
+      "ES_CONTINUOUS"
+    ],
+    "process_scoped": true,
+    "acquired_before_generate_request": true,
+    "released_in_finally": true,
+    "persistent_power_plan_mutation": false,
+    "display_required": false,
+    "away_mode": false,
+    "lid_or_manual_sleep_override": false
+  },
+  "future_authorization": {
+    "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-GUARDED-RETRY-AUTH-001",
+    "required": true,
+    "authorized": false,
+    "authorized_run_count": 0
+  },
+  "authority": {
+    "inference_authorized": false,
+    "stmicro_retry_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_GUARDED_STMICRO_RETRY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
