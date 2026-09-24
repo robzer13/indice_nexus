@@ -1,0 +1,53 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3-1_7B-DOWNLOAD-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3-1_7B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PASS",
+  "classification": "LOCAL_MODEL_DOWNLOADED_AND_PINNED",
+  "base_vnext_sha": "81a0c8d6255fd7e19d272ce0c73d2a30e95e4d55",
+  "model": {
+    "candidate_id": "QWEN3_1_7B_OLLAMA_Q4",
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "size_bytes": 1359293444,
+    "format": "gguf",
+    "family": "qwen3",
+    "parameter_size_reported_by_ollama": "2.0B",
+    "quantization": "Q4_K_M",
+    "role": "FIRST_C3_PRODUCTION_CANDIDATE"
+  },
+  "download": {
+    "method": "OLLAMA_PULL",
+    "completed": true,
+    "sha256_verification_reported_by_ollama": true,
+    "additional_model_downloads_authorized": false
+  },
+  "safety": {
+    "inference_executed": false,
+    "paid_model_api_call": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "model_presence_verified": true,
+    "exact_digest_captured": true,
+    "exact_size_captured": true,
+    "exact_quantization_captured": true,
+    "c3_inference_ready_for_preflight": true,
+    "c3_inference_authorized": false,
+    "qwen3_4b_escalation_authorized": false
+  },
+  "next_action": "RUN_C3_NO_INFERENCE_PREFLIGHT_FOR_PINNED_QWEN3_1_7B",
+  "authority": {
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "paid_execution_authorized": false,
+    "c3_inference_authorized": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
