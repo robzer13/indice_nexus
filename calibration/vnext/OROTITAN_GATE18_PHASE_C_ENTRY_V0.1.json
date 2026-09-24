@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BROOKFIELD_COMPACT_DRYRUN_READY",
+    "c3_historical_semantic_regressions": "BROOKFIELD_COMPACT_DRYRUN_REVISED_PENDING",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_BROOKFIELD_COMPACT_C3_DRYRUN_ONLY",
+  "next_action": "RUN_REVISED_BROOKFIELD_COMPACT_C3_DRYRUN_ONLY",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -54,6 +54,8 @@
   "c3_inference_authorized": false,
   "c3_latest_preflight_result": "G18-PHASEC-C3-QWEN3-1_7B-PREFLIGHT-RESULT-001",
   "c3_first_regression": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
-  "c3_planned_context_tokens": 4096,
-  "c3_planned_max_output_tokens": 1024
+  "c3_planned_context_tokens": 8192,
+  "c3_planned_max_output_tokens": 768,
+  "c3_last_dryrun_result": "G18-PHASEC-C3-BROOKFIELD-COMPACT-DRYRUN-001_BLOCKED_CONTEXT",
+  "c3_guard_schema_aware": true
 }
