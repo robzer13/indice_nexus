@@ -278,6 +278,13 @@ test("Gate 18 v0.8 qualification alone does not justify MIXED", () => {
   output.priority_findings[0].counterevidence_ids = [];
   output.priority_findings[0].counterevidence_link = null;
   output.priority_findings[0].conflict_ids = [];
+  output.priority_findings[0].evidence_qualifications = [
+    {
+      evidence_id: "E-001",
+      qualification:
+        "E-001 supports the claim but comes from a selected disclosure.",
+    },
+  ];
 
   assert.throws(
     () => assertGate18PhaseBV08Semantics(packet(), output),
