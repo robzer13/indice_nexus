@@ -1,0 +1,71 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_FETCH_FAILURE_FORENSICS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-RESULT-001",
+  "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "BLOCKED_MONOLITHIC_POWERSHELL_COLLECTOR_FAILED",
+  "mode": "LOCAL_READ_ONLY_NO_INFERENCE",
+  "executions_observed": 2,
+  "repeated_same_failure": true,
+  "source_observations": {
+    "configured_client_timeout_ms": 420000,
+    "observed_wall_clock_ms": 304446,
+    "runtime_error": "fetch failed",
+    "run_window": {
+      "estimated_start_utc": "2026-09-24T20:03:43.290Z",
+      "observed_end_utc": "2026-09-24T20:08:47.736Z",
+      "queried_start_utc": "2026-09-24T19:58:43.290Z",
+      "queried_end_utc": "2026-09-24T20:13:47.736Z"
+    }
+  },
+  "post_incident_current_state": {
+    "ollama_version": "0.34.3",
+    "ollama_ps_reachable": true,
+    "loaded_model_rows": 0,
+    "total_ram_gib": 7.84,
+    "free_ram_gib_observed_range": [
+      2.9,
+      3.04
+    ],
+    "gpu": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "nvidia_driver": "617.14",
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "gpu_utilization_percent": 0
+  },
+  "blocked_collection": {
+    "windows_query_succeeded": false,
+    "measurements": null,
+    "process_error_observed": true,
+    "useful_powershell_stderr_captured": false,
+    "exact_failure_cause_concluded": false
+  },
+  "interpretation": {
+    "post_incident_resource_recovery_observed": true,
+    "ollama_cli_reachable_after_incident": true,
+    "model_resident_after_incident": false,
+    "ollama_process_crash_concluded": false,
+    "resource_exhaustion_concluded": false,
+    "gpu_reset_concluded": false,
+    "power_transition_concluded": false,
+    "windows_application_crash_concluded": false,
+    "fetch_failure_root_cause_concluded": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "parameter_change_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_INDEPENDENT_PROBE_FETCH_FAILURE_FORENSICS_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
