@@ -1,0 +1,58 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_OLLAMA_RUNTIME_UPGRADE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-OLLAMA-0343-UPGRADE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "AUTHORIZED_CONDITIONAL_RUNTIME_UPGRADE",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "UPGRADE_LOCAL_OLLAMA_RUNTIME",
+    "authorized_target_version": "0.34.3",
+    "authorization_scope": "OLLAMA_ONLY"
+  },
+  "current_runtime": {
+    "observed_version": "0.6.6",
+    "qualification_status": "NOT_QUALIFIED_FOR_QWEN3_C3"
+  },
+  "target_runtime": {
+    "version": "0.34.3",
+    "channel": "LATEST_STABLE_OBSERVED",
+    "source": "OFFICIAL_OLLAMA_WINDOWS_INSTALLER",
+    "install_method": "OFFICIAL_INSTALL_PS1_PINNED_VERSION"
+  },
+  "preconditions": {
+    "driver_check_required": true,
+    "minimum_nvidia_driver_version": "551.61",
+    "exact_qwen3_model_digest_required": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "preflight_must_pass_before_upgrade": true
+  },
+  "constraints": {
+    "ollama_upgrade_authorized": true,
+    "nvidia_driver_upgrade_authorized": false,
+    "model_download_authorized": false,
+    "model_delete_authorized": false,
+    "model_redownload_authorized": false,
+    "inference_authorized": false,
+    "paid_model_api_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_upgrade_requirements": [
+    "Capture exact Ollama CLI and API version.",
+    "Verify qwen3:1.7b digest is unchanged.",
+    "Run metadata-only preflight.",
+    "Run structured-output smoke before any Brookfield retry.",
+    "Require a fresh single-run C3 inference authorization."
+  ],
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "f4df8a9f3b92794972f20d7b0695ee3539bda41a",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
