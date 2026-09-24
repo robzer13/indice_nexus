@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "PREFLIGHT_READY_NO_INFERENCE",
+    "c3_historical_semantic_regressions": "BROOKFIELD_COMPACT_DRYRUN_READY",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_C3_QWEN3_1_7B_METADATA_PREFLIGHT_ONLY",
+  "next_action": "RUN_BROOKFIELD_COMPACT_C3_DRYRUN_ONLY",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -51,5 +51,9 @@
   "qwen3_1_7b_digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
   "qwen3_1_7b_size_bytes": 1359293444,
   "qwen3_1_7b_quantization": "Q4_K_M",
-  "c3_inference_authorized": false
+  "c3_inference_authorized": false,
+  "c3_latest_preflight_result": "G18-PHASEC-C3-QWEN3-1_7B-PREFLIGHT-RESULT-001",
+  "c3_first_regression": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
+  "c3_planned_context_tokens": 4096,
+  "c3_planned_max_output_tokens": 1024
 }
