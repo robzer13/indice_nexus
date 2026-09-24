@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_RUNTIME_ENVIRONMENT_REMEDIATION",
-  "status": "AUTHORIZED_ONE_RUN_NOT_CONSUMED",
+  "status": "CONSUMED_PASS",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go Windows sleep guard smoke v2",
@@ -18,7 +18,7 @@
   },
   "execution": {
     "runner": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke-v2.ts",
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "mechanism": "SetThreadExecutionState",
     "acquire_flags": [
       "ES_CONTINUOUS",
@@ -56,5 +56,13 @@
     "powercfg_requests_required_for_pass": false
   },
   "base_vnext_sha": "bf789d53982f4c8826ae95e51697d58fe6c1b098",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-RESULT-001",
+    "result_status": "PASS_API_GUARD_ACQUIRED_AND_RELEASED",
+    "retry_authorized": false,
+    "inference_authorized": false,
+    "stmicro_retry_authorized": false
+  }
 }
