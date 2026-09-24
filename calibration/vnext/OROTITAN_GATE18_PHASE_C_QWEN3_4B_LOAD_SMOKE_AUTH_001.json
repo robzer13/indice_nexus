@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C3_CAPABILITY_ESCALATION_LOAD_SMOKE",
-  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_SMOKE",
+  "status": "CONSUMED_SINGLE_LOAD_ONLY_SMOKE",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "LOAD_AND_UNLOAD_LOCAL_MODEL_WITHOUT_PROMPT_OR_GENERATION",
@@ -18,7 +18,7 @@
   },
   "execution": {
     "script": "scripts/vnext-gate18-phase-c-qwen4b-load-smoke.ts",
-    "action_count_authorized": 1,
+    "action_count_authorized": 0,
     "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
     "loopback_only": true,
     "prompt_provided": false,
@@ -46,7 +46,7 @@
     "load_only_response_guard": true
   },
   "authority": {
-    "qwen3_4b_load_smoke_authorized": true,
+    "qwen3_4b_load_smoke_authorized": false,
     "qwen3_4b_inference_authorized": false,
     "c3_inference_authorized": false,
     "model_winner_selected": false,
@@ -55,9 +55,9 @@
   "base_vnext_sha": "6d35c0fee5bb6411809383bb564f8f45bb5a36f0",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "consumption": {
-    "consumed": false,
-    "result_id": null,
-    "result_status": null,
+    "consumed": true,
+    "result_id": "G18-PHASEC-QWEN3-4B-LOAD-SMOKE-RESULT-001",
+    "result_status": "PASS_LOAD_ONLY_MEASURED",
     "retry_authorized": false
   }
 }

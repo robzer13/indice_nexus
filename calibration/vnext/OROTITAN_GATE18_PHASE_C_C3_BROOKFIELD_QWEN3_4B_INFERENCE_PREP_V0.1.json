@@ -1,0 +1,78 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_QWEN3_4B_INFERENCE_PREP_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "qwen3_1_7b_result": "FAIL_CRITICAL_SEMANTIC_REGRESSION",
+    "qwen3_4b_download_result": "G18-PHASEC-QWEN3-4B-DOWNLOAD-RESULT-001",
+    "qwen3_4b_load_smoke_result": "G18-PHASEC-QWEN3-4B-LOAD-SMOKE-RESULT-001",
+    "load_fit_at_4096_context": "PASS",
+    "observed_vram_headroom_while_loaded_mib": 1652,
+    "observed_free_ram_while_loaded_gib": 0.66
+  },
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_QWEN4B_4096",
+    "comparison_admissible": false
+  },
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "finetune": "Instruct"
+  },
+  "execution_plan": {
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "keep_alive": "0s",
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "prompt_template": "GATE18_BROOKFIELD_PEER_ROLE_PROBE_V0_1",
+    "private_output_directory": "calibration/vnext/private-runs",
+    "external_model_api_cost_usd": 0
+  },
+  "context_policy": {
+    "candidate_registry_planned_initial_context_tokens": 4096,
+    "qwen3_4b_load_smoke_context_tokens": 4096,
+    "prior_qwen3_1_7b_context_tokens": 8192,
+    "context_change_is_explicit": true,
+    "silent_context_reduction": false,
+    "context_growth_authorized": false
+  },
+  "resource_boundary": {
+    "load_only_fit_proven": true,
+    "semantic_inference_fit_proven": false,
+    "system_ram_pressure": "HIGH",
+    "preloaded_ollama_models_allowed": false,
+    "automatic_retry_authorized": false
+  },
+  "guard": {
+    "authorization_id": "G18-PHASEC-C3-BROOKFIELD-QWEN4B-INFERENCE-AUTH-001",
+    "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_QWEN3_4B_INFERENCE_AUTH_001.json",
+    "authorization_artifact_present": false,
+    "execute_flag_required": true,
+    "authorization_id_argument_required": true,
+    "exact_model_digest_required": true,
+    "exact_context_required": true,
+    "exact_max_output_required": true,
+    "exact_temperature_required": true,
+    "no_preloaded_model_required": true,
+    "inference_currently_authorized": false
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "qwen3_4b_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_QWEN3_4B_BROOKFIELD_4096_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
