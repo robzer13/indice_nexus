@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_4B_MEMORY_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-QWEN3-4B-MEMORY-PREFLIGHT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_CAPABILITY_ESCALATION_PREFLIGHT",
+  "status": "PASS_WITH_CONSTRAINTS_DOWNLOAD_CONSIDERATION_ONLY",
+  "target": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "model_name": "qwen3:4b-instruct",
+    "family": "Qwen3",
+    "total_parameters": "4.02B",
+    "quantization": "Q4_K_M",
+    "artifact_size_approx_gb": 2.5,
+    "official_ollama_digest_prefix": "0edcdef34593",
+    "official_ollama_tag_verified": true
+  },
+  "observed_resources": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.43,
+    "free_ram_percent": 18.23,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver_version": "617.14",
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "pci_bus_id": "00000000:01:00.0",
+    "ollama_ps_reachable": true,
+    "ollama_loaded_model_count": 0
+  },
+  "interpretation": {
+    "qwen3_1_7b_capability_failure_established": true,
+    "qwen3_4b_artifact_fit_against_free_vram": "PLAUSIBLE",
+    "free_vram_headroom_after_approx_artifact_mib": 1402,
+    "system_ram_headroom": "LOW",
+    "runtime_overhead_and_kv_cache_fit_proven": false,
+    "inference_fit_concluded": false,
+    "download_consideration_allowed": true,
+    "download_authorized": false,
+    "inference_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "automatic_retry_authorized": false,
+    "note": "Artifact size is not equivalent to total runtime memory. A post-download identity check and a separate bounded load/inference preflight are required."
+  },
+  "planned_next_configuration_boundary": {
+    "candidate_registry_initial_context_tokens": 4096,
+    "prior_qwen3_1_7b_brookfield_context_tokens": 8192,
+    "context_change_authorized": false,
+    "note": "Any 4B execution context must be explicitly pinned before inference; no silent context reduction is permitted."
+  },
+  "safety": {
+    "network_access_requested": false,
+    "model_download_executed": false,
+    "model_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_QWEN3_4B_INSTRUCT_ONLY",
+  "base_vnext_sha": "23ad71b3f47ebcd398360192d9730188be0455ca",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
