@@ -1,0 +1,41 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_ADYEN_POST_TIMEOUT_RESOURCE_DIAGNOSTIC_V0.1",
+  "result_id": "G18-PHASEC-C3-ADYEN-QWEN4B-POST-TIMEOUT-RESOURCE-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_FAILURE_DIAGNOSTIC",
+  "status": "PASS_RESOURCE_RECOVERY",
+  "source_run_result": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-001",
+  "observations": {
+    "ollama_loaded_model_count": 0,
+    "ollama_ps_rows": [],
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.28,
+    "free_ram_percent": 16.4,
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver_version": "617.14",
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0
+  },
+  "conclusion": {
+    "model_resident_after_abort": false,
+    "vram_released_after_abort": true,
+    "ollama_runtime_reachable": true,
+    "persistent_resource_leak_observed": false,
+    "semantic_failure_concluded": false,
+    "timeout_root_cause_fully_proven": false,
+    "timeout_hypothesis_strengthened": true
+  },
+  "next_action": "MEASURE_EXACT_ADYEN_COMPACT_PACKET_AND_PROMPT_SIZE_WITHOUT_INFERENCE",
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "044187602fa2d133e7d6f6d8d4437bff6eff8284",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
