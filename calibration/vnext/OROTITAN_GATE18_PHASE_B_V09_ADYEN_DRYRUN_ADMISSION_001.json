@@ -1,0 +1,124 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V09_DRYRUN_ADMISSION_V1",
+  "admission_id": "G18-PHASEB-V09-ADYEN-DRYRUN-ADMISSION-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "NO_COST_DRYRUN_CONTRACT_ADMISSION",
+  "base_vnext_sha": "0782469d30864bcc8462b95e90fb0501b7d66b16",
+  "case": {
+    "display_name": "Adyen",
+    "case_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 80,
+    "source_conflicts": 10,
+    "evidence_items": 16,
+    "conflicts": 3,
+    "serialized_chars": 10891,
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "lineage_vs_v08": "UNCHANGED"
+  },
+  "contract": {
+    "protocol_version": "0.9",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_7",
+    "prompt_template_version": "0.7",
+    "prompt_template_sha256": "4b5d04b55306df855b463433ae6f016bc87240ea079294ac8355b8f414f0dcfa",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "structural_change": {
+    "atomic_claim_rule": "Each finding claim must contain one directional proposition and must not absorb its challenge/counterevidence/conflict into claim wording.",
+    "contrastive_claim_guard": [
+      "but",
+      "despite",
+      "although",
+      "though",
+      "while",
+      "whereas",
+      "yet",
+      "however",
+      "nevertheless",
+      "nonetheless",
+      "coexist/coexists"
+    ],
+    "weak_link_candidate_semantics": "weak_link_candidates.candidate is a short label and no longer requires terminal punctuation.",
+    "qualification_model": "v0.8 orthogonal evidence_qualifications preserved unchanged.",
+    "schema_shape_changed": false
+  },
+  "regression_targets": [
+    "Switching-friction claim must be atomic; multi-PSP/provider-switch evidence must remain outside claim wording and be evaluated as counterevidence to the exact proposition.",
+    "Enterprise-win claim must be atomic; multi-provider structure must not be called counterevidence merely because it is opposing context already embedded in a contrastive claim.",
+    "E-040 remains SUPPORT with optional qualification on selected wins / unquantified revenue contribution.",
+    "weak_link_candidates.candidate without terminal punctuation must not cause semantic invalidation."
+  ],
+  "cost_guard": {
+    "approximate_input_token_ceiling": 5745,
+    "per_model": [
+      {
+        "label": "LUNA",
+        "model_id": "openai/gpt-5.6-luna",
+        "cost_ceiling_usd": 0.0070642
+      },
+      {
+        "label": "TERRA",
+        "model_id": "openai/gpt-5.6-terra",
+        "cost_ceiling_usd": 0.061642
+      },
+      {
+        "label": "SOL",
+        "model_id": "openai/gpt-5.6-sol",
+        "cost_ceiling_usd": 0.10590000000000001
+      },
+      {
+        "label": "ASTRA",
+        "model_id": "openai/gpt-6-astra",
+        "cost_ceiling_usd": 0.26325000000000004
+      }
+    ],
+    "total_cost_ceiling_usd": 0.43785620000000003,
+    "v08_luna_ceiling_usd": 0.0070608,
+    "v08_total_ceiling_usd": 0.43758080000000005,
+    "interpretation": "The v0.9 atomic-claim prompt adds negligible input overhead and preserves the common 4096-token output envelope."
+  },
+  "admission_checks": {
+    "head_matches_merged_v09_contract": true,
+    "dry_run_mode": true,
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "allow_multi_model": false,
+    "packet_identity_preserved": true,
+    "prompt_hash_pinned": true,
+    "schema_hash_unchanged_by_design": true,
+    "common_output_envelope_preserved": true,
+    "cost_guard_present": true
+  },
+  "paid_execution": {
+    "authorized": false,
+    "reason": "This receipt admits only the no-cost v0.9 dry-run. A paid canary requires a separate fresh-budget authorization."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v09_contract": "IMPLEMENTED_GREEN",
+    "v09_dryrun": "ADMITTED",
+    "v09_paid_canary": "NOT_AUTHORIZED"
+  }
+}
