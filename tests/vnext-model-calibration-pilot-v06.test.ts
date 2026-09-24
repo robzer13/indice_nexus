@@ -172,11 +172,11 @@ test("Gate 18 v0.6 hardens IDs and evidence-role instructions without changing s
 });
 
 test("Gate 18 v0.6 accepts a grounded role-separated output", () => {
-  const output = gate18PhaseBV07OutputSchema.parse(
+  const output = gate18PhaseBV06OutputSchema.parse(
     validOutput(),
   );
   assert.doesNotThrow(() =>
-    assertGate18PhaseBV07Semantics(packet(), output),
+    assertGate18PhaseBV06Semantics(packet(), output),
   );
 });
 
@@ -185,7 +185,7 @@ test("Gate 18 v0.6 schema rejects concatenated evidence IDs seen in calibration"
   const findings = output.priority_findings as Array<Record<string, unknown>>;
   findings[0].evidence_ids = ["E-041','E-51"];
 
-  const parsed = gate18PhaseBV07OutputSchema.safeParse(output);
+  const parsed = gate18PhaseBV06OutputSchema.safeParse(output);
   assert.equal(parsed.success, false);
 });
 
@@ -196,7 +196,7 @@ test("Gate 18 v0.6 rejects support and counterevidence overlap", () => {
   ];
 
   assert.throws(
-    () => assertGate18PhaseBV07Semantics(packet(), output),
+    () => assertGate18PhaseBV06Semantics(packet(), output),
     /VNEXT_GATE18_V06_SUPPORT_COUNTEREVIDENCE_OVERLAP/,
   );
 });
@@ -206,7 +206,7 @@ test("Gate 18 v0.6 requires a counterevidence explanation when counterevidence e
   output.priority_findings[0].counterevidence_link = null;
 
   assert.throws(
-    () => assertGate18PhaseBV07Semantics(packet(), output),
+    () => assertGate18PhaseBV06Semantics(packet(), output),
     /VNEXT_GATE18_V06_COUNTEREVIDENCE_LINK_REQUIRED/,
   );
 });
@@ -216,7 +216,7 @@ test("Gate 18 v0.6 rejects counterevidence explanations without counterevidence 
   output.priority_findings[0].counterevidence_ids = [];
 
   assert.throws(
-    () => assertGate18PhaseBV07Semantics(packet(), output),
+    () => assertGate18PhaseBV06Semantics(packet(), output),
     /VNEXT_GATE18_V06_COUNTEREVIDENCE_LINK_WITHOUT_IDS/,
   );
 });
@@ -228,7 +228,7 @@ test("Gate 18 v0.6 requires MIXED findings to expose a challenge", () => {
   output.priority_findings[0].conflict_ids = [];
 
   assert.throws(
-    () => assertGate18PhaseBV07Semantics(packet(), output),
+    () => assertGate18PhaseBV06Semantics(packet(), output),
     /VNEXT_GATE18_V06_MIXED_REQUIRES_CHALLENGE/,
   );
 });
@@ -240,7 +240,7 @@ test("Gate 18 v0.6 requires cited conflicts to touch finding evidence", () => {
   output.priority_findings[0].counterevidence_link = null;
 
   assert.throws(
-    () => assertGate18PhaseBV07Semantics(packet(), output),
+    () => assertGate18PhaseBV06Semantics(packet(), output),
     /VNEXT_GATE18_V06_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS/,
   );
 });
