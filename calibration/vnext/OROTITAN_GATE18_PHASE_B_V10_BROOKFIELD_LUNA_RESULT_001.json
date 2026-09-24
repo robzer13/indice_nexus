@@ -1,0 +1,149 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_PAID_CANARY_RESULT_V1",
+  "attempt_id": "G18-PHASEB-V10-BROOKFIELD-LUNA-CANARY-001",
+  "authorization_id": "G18-PHASEB-V10-BROOKFIELD-LUNA-CANARY-AUTH-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "protocol_version": "1.0",
+  "status": "PARTIAL_PASS",
+  "classification": "ENGINEERING_PASS_HUMAN_QUALITY_PASS_HISTORICAL_REGRESSION_NOT_DIRECTLY_EXERCISED",
+  "case": {
+    "display_name": "Brookfield Corporation",
+    "source_run_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "data_cutoff": "2026-09-19",
+    "role": "ACCOUNTING_HEAVY",
+    "evidence_packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+    "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185"
+  },
+  "contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096
+  },
+  "model": {
+    "label": "LUNA",
+    "model_id": "openai/gpt-5.6-luna",
+    "requested_reasoning": "minimal"
+  },
+  "execution": {
+    "execution_id": "80a4a820-bec3-495b-a661-dfac2980baf0",
+    "provider_request_id": "req_c897a6731f6547259de2ab1d4f541f86",
+    "schema_valid": true,
+    "semantic_valid": true,
+    "finish_reason": "stop",
+    "retry_count": 0,
+    "latency_ms": 11517,
+    "input_tokens": 3779,
+    "output_tokens": 1223,
+    "reasoning_tokens": 450,
+    "total_tokens": 5002,
+    "gateway_cost_usd": 0.00249556,
+    "response_sha256": "5814dc0f021ffd6e1cec590a84d0f761cb50fd144cbf046481501eaadaa0671c"
+  },
+  "human_quality_adjudication": {
+    "finding_1": {
+      "status": "PASS",
+      "claim": "Brookfield has substantial and growing fee-bearing capital and fundraising activity.",
+      "support": [
+        "E-005",
+        "E-053"
+      ],
+      "counterevidence": [],
+      "conflicts": [
+        "C-009"
+      ],
+      "reason": "The claim is bounded to scale and fundraising activity. The output explicitly qualifies AUM versus fee-bearing capital and fundraising versus durable economics."
+    },
+    "finding_2": {
+      "status": "PASS",
+      "claim": "Brookfield-related ecosystem transactions require economic elimination before shareholder benefits are attributed.",
+      "support": [
+        "E-015",
+        "E-016"
+      ],
+      "counterevidence": [],
+      "conflicts": [
+        "C-013"
+      ],
+      "reason": "The finding is appropriately skeptical and keeps related-party attribution unresolved rather than converting gross activity into shareholder benefit."
+    },
+    "finding_3": {
+      "status": "PASS",
+      "claim": "Large-scale alternative-asset-management capabilities are present across Brookfield's major peers.",
+      "support": [
+        "E-036",
+        "E-037",
+        "E-038"
+      ],
+      "counterevidence": [],
+      "conflicts": [],
+      "reason": "Peer-scale evidence is directionally aligned as support for replicability and industry capability. No evidence-role inversion is present in the selected finding."
+    },
+    "exact_grounding": "PASS",
+    "canonical_reference_format": "PASS",
+    "deterministic_semantics": "PASS",
+    "claim_atomicity": "PASS",
+    "observed_counterevidence_polarity_errors": "NONE",
+    "qualification_attachment": "PASS",
+    "material_conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary": "PASS",
+    "priority_selection": "PASS",
+    "comparison_admissible": true
+  },
+  "historical_regression_target": {
+    "prior_contract_version": "0.5",
+    "historical_failure_class": "COUNTEREVIDENCE_ROLE_CLASSIFICATION",
+    "affected_evidence_ids": [
+      "E-039",
+      "E-042"
+    ],
+    "selected_in_v10_priority_findings": false,
+    "direct_regression_exercised": false,
+    "indirect_signal": "PASS_SIGNAL",
+    "interpretation": "The v1.0 normal run chose a peer-replicability proposition and correctly used E-036/E-037/E-038 as support with no false counterevidence. However E-039/E-042 were not selected, so their historical misclassification was not directly re-tested."
+  },
+  "cross_company_generalization": {
+    "adyen_v10_normal_path": "HUMAN_QUALITY_ADMISSIBLE",
+    "adyen_v10_targeted_probe": "PASS",
+    "brookfield_v10_normal_path": "HUMAN_QUALITY_ADMISSIBLE",
+    "positive_signal": true,
+    "direct_historical_brookfield_regression_proven": false,
+    "interpretation": "v1.0 now has human-quality-admissible normal-path observations on two distinct archetypes, which is meaningful cross-company evidence. The exact Brookfield E-039/E-042 historical regression remains unexercised."
+  },
+  "spend": {
+    "authorized_hard_cap_usd": 0.0069,
+    "actual_gateway_cost_usd": 0.00249556,
+    "cap_utilization_ratio": 0.3616753623188406,
+    "within_authorized_cap": true
+  },
+  "stop_rule": {
+    "automatic_retry": false,
+    "automatic_terra_escalation": false,
+    "automatic_sol_escalation": false,
+    "automatic_astra_escalation": false,
+    "further_paid_execution_authorized": false,
+    "reason": "The Brookfield v1.0 normal run is comparison-admissible and provides positive cross-company generalization evidence, but the exact E-039/E-042 regression was not directly exercised. Stop and decide whether a no-cost targeted Brookfield probe is needed before Phase B closure."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "brookfield_v10_paid_canary": "COMPLETE_PARTIAL_PASS",
+    "routing_freeze": "NONE",
+    "model_winner": "NONE"
+  }
+}
