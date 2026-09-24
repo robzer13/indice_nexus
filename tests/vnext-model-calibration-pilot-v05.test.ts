@@ -53,10 +53,10 @@ test("Gate 18 Phase B v0.5 runner uses Phase B profiles without per-model output
 
   assert.match(source, /model-calibration-phase-b-profiles/);
   assert.match(source, /GATE18_PHASE_B_MODEL_CANDIDATES/);
-  assert.match(source, /model-calibration-pilot-v09/);
+  assert.match(source, /model-calibration-pilot-v10/);
   assert.match(
     source,
-    /maxOutputTokens:\s*GATE18_PHASE_B_V09_MAX_OUTPUT_TOKENS/,
+    /maxOutputTokens:\s*GATE18_PHASE_B_V10_MAX_OUTPUT_TOKENS/,
   );
 
   assert.doesNotMatch(
