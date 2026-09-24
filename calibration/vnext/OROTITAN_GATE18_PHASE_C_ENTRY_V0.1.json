@@ -1,0 +1,35 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_ENTRY_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "IN_PROGRESS",
+  "entry_preconditions": {
+    "phase_a": "PASS",
+    "phase_b": "PASS",
+    "phase_b_closure_sha": "416c6f9e18b89bb8143c13672557a8f84b459c8a"
+  },
+  "production_economics_target": {
+    "external_model_api_cost_per_call_usd": 0,
+    "paid_models_role": "BENCHMARK_ONLY",
+    "local_open_weight_models_role": "PRODUCTION_CANDIDATES"
+  },
+  "current_state": {
+    "c0_hardware_preflight": "NOT_YET_OBSERVED",
+    "c1_local_runtime_admission": "NOT_STARTED",
+    "c2_structured_output_smoke": "NOT_STARTED",
+    "c3_historical_semantic_regressions": "NOT_STARTED",
+    "c4_diversified_matrix": "NOT_STARTED",
+    "c5_repeatability": "NOT_STARTED",
+    "c6_blinded_adjudication": "NOT_STARTED",
+    "c7_local_candidate_decision": "NOT_STARTED"
+  },
+  "initial_model_dependent_module": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "deterministic_p0_modules_remain_provider_independent": true,
+  "paid_execution_authorized": false,
+  "production_mutation": false,
+  "publication_authority": false,
+  "model_winner_selected": false,
+  "routing_frozen": false,
+  "next_action": "RUN_C0_LOCAL_HARDWARE_PREFLIGHT_ONLY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
