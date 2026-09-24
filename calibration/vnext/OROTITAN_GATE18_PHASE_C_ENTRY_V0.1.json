@@ -15,8 +15,8 @@
   },
   "current_state": {
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
-    "c1_local_runtime_admission": "BLOCKED_RECOVERABLE_RUNTIME_NOT_RUNNING",
-    "c2_structured_output_smoke": "NOT_STARTED",
+    "c1_local_runtime_admission": "PASS",
+    "c2_structured_output_smoke": "NEXT",
     "c3_historical_semantic_regressions": "NOT_STARTED",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
@@ -30,10 +30,16 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "START_OLLAMA_LOCAL_SERVER_THEN_RETRY_C1_PREFLIGHT",
+  "next_action": "RUN_C2_LOCAL_STRUCTURED_OUTPUT_SMOKE_WITH_EXISTING_PINNED_PHI",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
   "ultra_light_baseline_candidate": "QWEN3_1_7B_OLLAMA_Q4",
-  "c1_latest_attempt": "G18-PHASEC-C1-OLLAMA-ATTEMPT-001"
+  "c1_latest_attempt": "G18-PHASEC-C1-OLLAMA-ATTEMPT-002",
+  "local_runtime_admitted": "OLLAMA_0.6.6_LOOPBACK",
+  "c2_smoke_model": {
+    "name": "phi:latest",
+    "digest": "e2fd6321a5fe6bb3ac8a4e6f1cf04477fd2dea2924cf53237a995387e152ee9c",
+    "role": "RUNTIME_SMOKE_ONLY_NOT_PRODUCTION_CANDIDATE"
+  }
 }
