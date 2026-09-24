@@ -6,7 +6,7 @@
     "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
     "sleep_interval_confirmed": true
   },
-  "status": "AUTHORIZED_SINGLE_PROCESS_SCOPED_SLEEP_GUARD_SMOKE",
+  "status": "EXECUTED_BLOCKED_BEFORE_GUARD",
   "runner": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke.ts",
   "mechanism": {
     "api": "SetThreadExecutionState",
@@ -28,8 +28,8 @@
     "inference_executed": false
   },
   "authority": {
-    "smoke_authorized": true,
-    "temporary_power_request_authorized": true,
+    "smoke_authorized": false,
+    "temporary_power_request_authorized": false,
     "inference_authorized": false,
     "retry_authorized": false,
     "timeout_change_authorized": false,
@@ -38,8 +38,9 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_ONE_PROCESS_SCOPED_WINDOWS_SLEEP_GUARD_SMOKE",
+  "next_action": "PREPARE_WINDOWS_SLEEP_GUARD_SMOKE_V2_AND_REQUEST_NEW_EXPLICIT_AUTHORIZATION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "authorization_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-AUTH-001",
-  "authorized_run_count": 1
+  "authorized_run_count": 0,
+  "result_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-RESULT-001"
 }
