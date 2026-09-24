@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "CONTEXT16384_LOAD_PASS_STMICRO_RUNNER_PREPARED_AUTH_PENDING",
+    "c4_diversified_matrix": "STMICRO_CONTEXT16384_AUTHORIZED_ONE_RUN",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_STMICROELECTRONICS_C4_QWEN4B_CONTEXT16384_INFERENCE",
+  "next_action": "RUN_ONE_C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -260,8 +260,8 @@
   "c4_company_count": 5,
   "c4_static_request_preflight_prepared": true,
   "c4_static_request_preflight_script": "scripts/vnext-gate18-phase-c-c4-qwen4b-static-request-preflight.ts",
-  "c4_inference_authorized": false,
-  "c4_authorized_run_count": 0,
+  "c4_inference_authorized": true,
+  "c4_authorized_run_count": 1,
   "c4_automatic_retry_authorized": false,
   "c4_context_tokens": 4096,
   "c4_max_output_tokens": 768,
@@ -278,7 +278,7 @@
   "c4_context16384_load_smoke_authorized": false,
   "c4_context16384_load_fit_proven": true,
   "c4_context16384_inference_fit_proven": false,
-  "c4_context_growth_for_inference_authorized": false,
+  "c4_context_growth_for_inference_authorized": true,
   "c4_context16384_load_smoke_authorization_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
   "c4_context16384_load_smoke_authorized_run_count": 0,
   "c4_context16384_load_smoke_result": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
@@ -296,6 +296,7 @@
   "c4_stmicro_evidence_count": 9,
   "c4_stmicro_conflict_count": 2,
   "c4_stmicro_inference_authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001",
-  "c4_stmicro_inference_authorized": false,
-  "c4_stmicro_authorized_run_count": 0
+  "c4_stmicro_inference_authorized": true,
+  "c4_stmicro_authorized_run_count": 1,
+  "c4_authorized_context_tokens": 16384
 }
