@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "ONE_BOUNDED_LOCAL_ADYEN_TARGETED_INFERENCE_TIMEOUT300",
@@ -18,7 +18,7 @@
     "brookfield_qwen3_4b_result": "G18-PHASEC-C3-BROOKFIELD-QWEN4B-LOCAL-RUN-001"
   },
   "c3_inference": {
-    "authorized": true,
+    "authorized": false,
     "model_name": "qwen3:4b-instruct",
     "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
     "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
@@ -66,7 +66,7 @@
     ]
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -95,9 +95,9 @@
   "base_vnext_sha": "b5b271dac5c7945d27ec437e57a573902862033f",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "consumption": {
-    "consumed": false,
-    "result_id": null,
-    "result_classification": null,
+    "consumed": true,
+    "result_id": "G18-PHASEC-C3-ADYEN-QWEN4B-LOCAL-RUN-002",
+    "result_classification": "SEMANTIC_FAIL_CONFLICT_IMPLICATION_INCOMPLETE_FORENSICS_REQUIRED",
     "retry_authorized": false
   }
 }
