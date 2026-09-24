@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "PROVISIONAL_PENDING_C0_HARDWARE_PREFLIGHT",
+  "status": "C0_HARDWARE_CONSTRAINED_SHORTLIST",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -10,42 +10,68 @@
     "no_popularity_ranking": true,
     "no_model_winner_selected": true,
     "paid_models_benchmark_only": true,
-    "no_hidden_cloud_fallback": true
+    "no_hidden_cloud_fallback": true,
+    "initial_context_tokens": 4096,
+    "context_growth_policy": "INCREASE_ONLY_AFTER_STABLE_LOCAL_SMOKE_AND_MEMORY_MEASUREMENT"
   },
   "candidates": [
     {
-      "candidate_id": "QWEN3_8B_LOCAL",
+      "candidate_id": "QWEN3_1_7B_OLLAMA_Q4",
       "family": "Qwen3",
-      "model_id": "Qwen/Qwen3-8B",
-      "total_parameters": "8B class",
+      "model_id": "qwen3:1.7b",
+      "total_parameters": "1.7B class",
       "architecture": "dense",
       "license": "Apache-2.0",
-      "role": "LOW_RESOURCE_BASELINE",
-      "admission_state": "PROVISIONAL",
-      "rationale": "Smallest serious instruction/reasoning candidate in the initial registry; useful to test whether OroTitan contracts allow a low-resource local model to clear semantic regressions.",
-      "runtime_interfaces": [
-        "OpenAI-compatible local server",
-        "Transformers",
-        "vLLM-compatible deployment"
-      ],
-      "source_url": "https://huggingface.co/Qwen/Qwen3-8B"
+      "observed_ollama_artifact_size": "1.4GB",
+      "role": "ULTRA_LIGHT_BASELINE",
+      "admission_state": "C0_HARDWARE_FIT_LIKELY",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "planned_initial_context_tokens": 4096,
+      "rationale": "Lowest-resource serious baseline for validating OroTitan structured output and semantic regressions on the observed 8GB-RAM/4GB-VRAM machine.",
+      "source_url": "https://ollama.com/library/qwen3/tags"
+    },
+    {
+      "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+      "family": "Qwen3",
+      "model_id": "qwen3:4b-instruct",
+      "total_parameters": "4.02B",
+      "architecture": "dense",
+      "quantization": "Q4_K_M",
+      "license": "Apache-2.0",
+      "observed_ollama_artifact_size": "2.5GB",
+      "role": "PRIMARY_LOCAL_PRODUCTION_CANDIDATE",
+      "admission_state": "C0_HARDWARE_FIT_PLAUSIBLE",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "planned_initial_context_tokens": 4096,
+      "rationale": "First serious local candidate after C0. Artifact size fits the GPU-memory class, but runtime overhead and KV cache require constrained context and adequate free system RAM.",
+      "source_url": "https://ollama.com/library/qwen3:4b-instruct"
+    },
+    {
+      "candidate_id": "QWEN3_8B_LOCAL",
+      "family": "Qwen3",
+      "model_id": "qwen3:8b",
+      "total_parameters": "8.19B",
+      "architecture": "dense",
+      "quantization": "Q4_K_M",
+      "license": "Apache-2.0",
+      "observed_ollama_artifact_size": "5.2GB",
+      "role": "ESCALATION_ONLY",
+      "admission_state": "C0_POOR_FIT_NOT_DEFAULT",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "rationale": "Artifact exceeds 4GB discrete VRAM and would require material CPU/RAM offload on an 8GB-RAM machine.",
+      "source_url": "https://ollama.com/library/qwen3:8b"
     },
     {
       "candidate_id": "QWEN3_14B_LOCAL",
       "family": "Qwen3",
-      "model_id": "Qwen/Qwen3-14B",
+      "model_id": "qwen3:14b",
       "total_parameters": "14B",
       "architecture": "dense",
       "license": "Apache-2.0",
-      "role": "MID_RESOURCE_DENSE",
-      "admission_state": "PROVISIONAL",
-      "rationale": "Intermediate dense candidate if 8B fails for model-capability reasons and hardware can support a larger local model.",
-      "runtime_interfaces": [
-        "OpenAI-compatible local server",
-        "Transformers",
-        "vLLM-compatible deployment"
-      ],
-      "source_url": "https://huggingface.co/Qwen/Qwen3-14B"
+      "observed_ollama_artifact_size": "9.3GB",
+      "role": "REJECTED_BY_CURRENT_HARDWARE",
+      "admission_state": "C0_REJECT_CURRENT_MACHINE",
+      "source_url": "https://ollama.com/library/qwen3"
     },
     {
       "candidate_id": "GPT_OSS_20B_LOCAL",
@@ -55,71 +81,23 @@
       "active_parameters": "3.6B",
       "architecture": "Mixture-of-Experts",
       "license": "Apache-2.0",
-      "official_memory_note": "OpenAI states gpt-oss-20b can run with about 16 GB of memory.",
+      "official_memory_requirement": "about 16GB",
       "structured_outputs_officially_supported": true,
-      "context_length": "128k",
-      "role": "PRIMARY_OPEN_WEIGHT_REASONING_CANDIDATE_IF_HARDWARE_FITS",
-      "admission_state": "PROVISIONAL",
-      "rationale": "Open-weight reasoning model with official Structured Outputs support and explicit local/on-device positioning.",
-      "runtime_interfaces": [
-        "Ollama",
-        "llama.cpp",
-        "LM Studio",
-        "local reference implementations"
-      ],
+      "role": "REJECTED_BY_CURRENT_HARDWARE",
+      "admission_state": "C0_REJECT_CURRENT_MACHINE",
+      "rationale": "Official memory requirement exceeds the observed total system memory.",
       "source_url": "https://openai.com/index/introducing-gpt-oss/"
     },
     {
       "candidate_id": "QWEN3_30B_A3B_LOCAL",
       "family": "Qwen3",
-      "model_id": "Qwen/Qwen3-30B-A3B",
-      "total_parameters": "30.5B",
-      "active_parameters": "3.3B",
+      "model_id": "qwen3:30b",
       "architecture": "Mixture-of-Experts",
       "license": "Apache-2.0",
-      "native_context_length": 32768,
-      "extended_context_length": 131072,
-      "role": "HIGHER_RESOURCE_MOE_CONTROL",
-      "admission_state": "PROVISIONAL",
-      "rationale": "Higher-capacity local MoE comparison with low active-parameter count; only test if hardware fit and smaller candidates are insufficient.",
-      "runtime_interfaces": [
-        "OpenAI-compatible vLLM server",
-        "SGLang",
-        "Transformers"
-      ],
-      "source_url": "https://huggingface.co/Qwen/Qwen3-30B-A3B"
-    },
-    {
-      "candidate_id": "DEEPSEEK_R1_DISTILL_QWEN_14B_LOCAL",
-      "family": "DeepSeek-R1-Distill",
-      "model_id": "deepseek-ai/DeepSeek-R1-Distill-Qwen-14B",
-      "total_parameters": "14B",
-      "architecture": "dense",
-      "license_note": "DeepSeek repository states the Qwen-based distills derive from Apache-2.0 Qwen2.5 checkpoints; verify exact model-card terms before production admission.",
-      "role": "REASONING_CONTROL",
-      "admission_state": "RESERVE",
-      "rationale": "Optional reasoning control if primary Qwen3/gpt-oss candidates expose a capability gap.",
-      "runtime_interfaces": [
-        "vLLM",
-        "SGLang",
-        "Qwen-compatible local runtimes"
-      ],
-      "source_url": "https://github.com/deepseek-ai/DeepSeek-R1"
-    },
-    {
-      "candidate_id": "GEMMA3_12B_LOCAL",
-      "family": "Gemma 3",
-      "model_id": "google/gemma-3-12b-it",
-      "total_parameters": "12B class",
-      "architecture": "dense",
-      "license": "Gemma Terms",
-      "role": "RESERVE_DIVERSE_ARCHITECTURE",
-      "admission_state": "RESERVE",
-      "rationale": "Optional architecture-family diversity if Apache-licensed candidates do not provide sufficient robustness.",
-      "runtime_interfaces": [
-        "local open-weight runtimes"
-      ],
-      "source_url": "https://ai.google.dev/gemma/docs/core/model_card_3"
+      "observed_ollama_artifact_size": "19GB",
+      "role": "REJECTED_BY_CURRENT_HARDWARE",
+      "admission_state": "C0_REJECT_CURRENT_MACHINE",
+      "source_url": "https://ollama.com/library/qwen3"
     }
   ],
   "paid_benchmark_models": {
@@ -132,5 +110,11 @@
     "production_candidate": false,
     "default_phase_c_execution_authorized": false,
     "use_policy": "Only a specific information gap may justify a separately authorized paid benchmark."
+  },
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "ollama_installed": true,
+    "hardware_identity_redacted": true
   }
 }
