@@ -2,7 +2,7 @@
   "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POST_ABORT_RUNTIME_FORENSICS_PREP_V0.1",
   "prep_id": "G18-PHASEC-C4-STM-POST-ABORT-FORENSICS-PREP-001",
   "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
-  "status": "PREPARED_NO_INFERENCE",
+  "status": "EXECUTED_RESULT_RECORDED",
   "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-post-abort-runtime-forensics.ts",
   "checks": [
     "OLLAMA_PS_CURRENT_STATE",
@@ -20,6 +20,7 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_C4_STMICRO_POST_ABORT_RUNTIME_FORENSICS_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-STM-POST-ABORT-FORENSICS-RESULT-001"
 }

@@ -1,0 +1,75 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POST_ABORT_RUNTIME_FORENSICS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-POST-ABORT-FORENSICS-RESULT-001",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_RESOURCE_RECOVERY_POWER_TRANSITION_OBSERVED_DETAIL_REQUIRED",
+  "run_window": {
+    "estimated_start_utc": "2026-09-24T17:20:51.014Z",
+    "observed_end_utc": "2026-09-24T18:38:03.196Z",
+    "configured_timeout_ms": 300000,
+    "observed_wall_clock_ms": 4632182
+  },
+  "post_abort_state": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.69,
+    "boot_time_utc": "2026-09-24T12:50:58.5000000Z",
+    "gpu_name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "driver_version": "617.14",
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_ps_reachable": true,
+    "loaded_model_count": 0,
+    "persistent_model_residency_observed": false,
+    "persistent_vram_leak_observed": false
+  },
+  "power_events": [
+    {
+      "event_time_utc": "2026-09-24T17:24:40.490Z",
+      "event_id": 42,
+      "provider": "Microsoft-Windows-Kernel-Power"
+    },
+    {
+      "event_time_utc": "2026-09-24T17:24:56.510Z",
+      "event_id": 107,
+      "provider": "Microsoft-Windows-Kernel-Power"
+    },
+    {
+      "event_time_utc": "2026-09-24T18:37:53.747Z",
+      "event_id": 1,
+      "provider": "Microsoft-Windows-Power-Troubleshooter"
+    }
+  ],
+  "timing_observations": {
+    "run_start_to_event_42_seconds": 229.476,
+    "expected_timeout_utc": "2026-09-24T17:25:51.014Z",
+    "observed_end_delay_beyond_expected_timeout_seconds": 4332.182,
+    "event_42_to_power_troubleshooter_1_seconds": 4393.257,
+    "power_troubleshooter_1_to_run_end_seconds": 9.449
+  },
+  "interpretation": {
+    "resource_recovery": "PASS",
+    "power_transition_observed_during_run": true,
+    "event_42_consistent_with_sleep_entry": true,
+    "event_1_consistent_with_return_from_low_power_state": true,
+    "exact_sleep_wake_interval_from_event_message_verified": false,
+    "timeout_delay_root_cause_concluded": false,
+    "inference_fit_concluded": false,
+    "model_capability_failure_concluded": false,
+    "semantic_failure_concluded": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_DETAILED_WINDOWS_POWER_EVENT_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
