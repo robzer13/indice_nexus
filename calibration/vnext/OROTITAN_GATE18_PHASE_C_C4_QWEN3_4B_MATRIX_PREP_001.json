@@ -1,0 +1,128 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_DIVERSIFIED_MATRIX_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-QWEN3-4B-MATRIX-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "STATIC_PREFLIGHT_PREPARED_NO_INFERENCE_AUTHORIZATION",
+  "basis": {
+    "c3_conclusion": "G18-PHASEC-C3-QWEN3-4B-FORENSIC-CONCLUSION-001",
+    "c3_semantic_regressions": "PASS_5_OF_5",
+    "broader_phase_c_admission": "CONDITIONAL_WITH_RELIABILITY_CARRY",
+    "reliability_carry": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS"
+  },
+  "model": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "runtime": "OLLAMA_LOCAL"
+  },
+  "module_contract": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "scope": "MOAT_INPUTS",
+    "protocol_version": "1.0",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "prompt_template_version": "0.8",
+    "prompt_template_sha256": "c820aebb54802bc28fd4eb67d436e8b05e1835084cf7de524465012016f226e3",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096,
+    "temperature": 0,
+    "deterministic_validator": "assertGate18PhaseBV10Semantics",
+    "human_semantic_adjudication_required": true
+  },
+  "matrix": [
+    {
+      "order": 1,
+      "archetype": "SIMPLE_CLEAN_COMPOUNDER",
+      "company": "RATIONAL AG",
+      "source_run_id": "46890dc8-af5f-4cc4-9333-ba2b2c510ff5",
+      "data_cutoff": "2026-09-19",
+      "phase_b_reference": "G18-PHASEB-RATIONAL-LUNA-V05-001",
+      "phase_b_reference_protocol": "0.5",
+      "phase_b_reference_input_tokens": 8948,
+      "phase_b_reference_is_exact_v10_contract": false
+    },
+    {
+      "order": 2,
+      "archetype": "SERIAL_ACQUIRER",
+      "company": "Constellation Software",
+      "source_run_id": "adcaafd1-1586-49df-84b9-4879b2a36b4d",
+      "data_cutoff": "2026-09-19",
+      "phase_b_reference": "G18-PHASEB-CONSTELLATION-LUNA-V05-001",
+      "phase_b_reference_protocol": "0.5",
+      "phase_b_reference_input_tokens": 2761,
+      "phase_b_reference_is_exact_v10_contract": false
+    },
+    {
+      "order": 3,
+      "archetype": "CYCLICAL_SEGMENTED",
+      "company": "STMicroelectronics",
+      "source_run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+      "data_cutoff": "2026-09-15",
+      "phase_b_reference": "G18-PHASEB-ST-LUNA-V04-001",
+      "phase_b_reference_protocol": "0.4",
+      "phase_b_reference_input_tokens": 2437,
+      "phase_b_reference_is_exact_v10_contract": false
+    },
+    {
+      "order": 4,
+      "archetype": "ACCOUNTING_HEAVY",
+      "company": "Brookfield Corporation",
+      "source_run_id": "b765650c-477a-4d34-9143-55db296f6000",
+      "data_cutoff": "2026-09-19",
+      "phase_b_reference": "G18-PHASEB-V10-BROOKFIELD-LUNA-CANARY-001",
+      "phase_b_reference_protocol": "1.0",
+      "phase_b_reference_input_tokens": 3779,
+      "phase_b_reference_is_exact_v10_contract": true
+    },
+    {
+      "order": 5,
+      "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "company": "Adyen",
+      "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+      "data_cutoff": "2026-09-19",
+      "phase_b_reference": "G18-PHASEB-V10-ADYEN-LUNA-CANARY-001",
+      "phase_b_reference_protocol": "1.0",
+      "phase_b_reference_input_tokens": 4238,
+      "phase_b_reference_is_exact_v10_contract": true
+    }
+  ],
+  "execution_policy": {
+    "matrix_size": 5,
+    "one_company_per_authorization": true,
+    "multi_company_batch_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "normal_priority_selection_task": true,
+    "targeted_c3_probe_reuse_forbidden": true
+  },
+  "context_policy": {
+    "candidate_registry_initial_context_tokens": 4096,
+    "c3_targeted_context_tokens": 4096,
+    "normal_module_max_output_tokens": 4096,
+    "c4_context_tokens": null,
+    "context_growth_authorized": false,
+    "reason": "Full normal-path v1.0 packets must be statically measured before selecting a local context. C4 must not silently reuse the compact C3 envelope."
+  },
+  "reliability_observation": {
+    "carry_forward_terminal_punctuation_defect": true,
+    "narrative_completeness_must_be_recorded_per_observation": true,
+    "structured_output_reliability_must_be_reassessed_before_c7": true
+  },
+  "authority": {
+    "static_preflight_authorized": true,
+    "c4_inference_authorized": false,
+    "context_growth_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "RUN_NO_INFERENCE_C4_FIVE_COMPANY_NORMAL_V10_REQUEST_STATIC_PREFLIGHT",
+  "base_vnext_sha": "3c2350ca23d73fd446792a5636436172423cb031",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
