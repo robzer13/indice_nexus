@@ -1,0 +1,36 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_NVIDIA_DRIVER_POSTCHECK_RESULT_V0.1",
+  "result_id": "G18-PHASEC-NVIDIA-61714-CORRECTED-POSTCHECK-002",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS_TARGET_DRIVER_ACTIVE",
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3050 Laptop GPU",
+    "observed_driver_version": "617.14",
+    "windows_driver_version": "32.0.16.1714",
+    "pci_bus_id": "00000000:01:00.0",
+    "memory_total_mib": 4096,
+    "pnp_device_id": "PCI\\VEN_10DE&DEV_25A2&SUBSYS_143E1025&REV_A1\\4&2F204912&0&0008",
+    "status": "OK"
+  },
+  "validation": {
+    "exact_gpu_name": true,
+    "windows_supported": true,
+    "minimum_qualification_driver": "551.61",
+    "target_driver": "617.14",
+    "below_minimum_qualification": false,
+    "below_target_driver": false,
+    "meets_minimum_qualification": true,
+    "target_driver_exact_match": true,
+    "target_driver_active_or_newer": true
+  },
+  "safety": {
+    "model_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ONE_MANUAL_BROOKFIELD_QWEN3_1_7B_C3_LOCAL_RUN",
+  "base_vnext_sha": "df27eee3133e8d95d155b9bf82e42fea4a7b9976",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
