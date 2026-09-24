@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
-  "status": "PREPARED_NOT_AUTHORIZED",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_SMOKE",
   "basis": {
     "context_fit_diagnostic": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
     "common_context_4096_admissible": false,
@@ -29,8 +29,8 @@
     "full_unload_confirmation"
   ],
   "guard": {
-    "authorization_artifact_present": false,
-    "load_smoke_authorized": false,
+    "authorization_artifact_present": true,
+    "load_smoke_authorized": true,
     "c4_inference_authorized": false,
     "automatic_retry_authorized": false,
     "context_growth_for_inference_authorized": false
@@ -40,6 +40,7 @@
     "publication_authority": false,
     "paid_execution_authorized": false
   },
-  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_QWEN3_4B_CONTEXT16384_LOAD_ONLY_SMOKE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_ONE_QWEN3_4B_CONTEXT16384_LOAD_ONLY_SMOKE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "authorization_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001"
 }
