@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_4B_CONTEXT16384_LOAD_SMOKE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "context_fit_diagnostic": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
+    "common_context_4096_admissible": false,
+    "proposed_common_context_tokens": 16384,
+    "c3_load_fit_context_tokens": 4096,
+    "c3_load_fit_status": "PASS"
+  },
+  "target": {
+    "model": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-qwen4b-context16384-load-smoke.ts",
+  "measurements": [
+    "system_free_ram_before_loaded_after",
+    "gpu_vram_before_loaded_after",
+    "ollama_ps_context",
+    "ollama_processor_split",
+    "full_unload_confirmation"
+  ],
+  "guard": {
+    "authorization_artifact_present": false,
+    "load_smoke_authorized": false,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "context_growth_for_inference_authorized": false
+  },
+  "authority": {
+    "production_mutation": false,
+    "publication_authority": false,
+    "paid_execution_authorized": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_QWEN3_4B_CONTEXT16384_LOAD_ONLY_SMOKE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
