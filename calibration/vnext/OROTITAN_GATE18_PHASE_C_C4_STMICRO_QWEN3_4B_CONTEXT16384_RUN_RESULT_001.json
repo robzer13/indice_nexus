@@ -1,0 +1,85 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LOCAL_RUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-INFERENCE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL",
+  "classification": "RUNTIME_FAIL_ABORT_WITH_DELAYED_OR_UNBOUNDED_WALLCLOCK_NO_MODEL_RESULT",
+  "base_vnext_sha": "cda0192c986235cb75b7c52c05ea5e6d3c498721",
+  "matrix_cell": {
+    "id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "company": "STMicroelectronics",
+    "archetype": "CYCLICAL_SEGMENTED",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91"
+  },
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "client_timeout_ms": 300000
+  },
+  "execution": {
+    "wall_clock_ms": 4632182,
+    "wall_clock_minutes_approx": 77.203,
+    "configured_timeout_ms": 300000,
+    "wall_clock_vs_configured_timeout_ratio": 15.441,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "This operation was aborted",
+    "schema_result_observed": false,
+    "semantic_result_observed": false,
+    "schema_valid": false,
+    "semantic_valid": false,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "timeout_guard_verification": {
+    "runner_constant_ms": 300000,
+    "abort_controller_present": true,
+    "set_timeout_present": true,
+    "timeout_passed_to_generate_fetch": true,
+    "guard_bounded_wall_clock_as_intended": false,
+    "exact_reason_for_delay_concluded": false
+  },
+  "private_artifact": {
+    "repo_relative_path": "calibration/vnext/private-runs/2026-09-24T183803196Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+    "generated_content_publication_forbidden": true
+  },
+  "interpretation": {
+    "c4_stmicro_semantic_failure_concluded": false,
+    "c4_stmicro_schema_failure_concluded": false,
+    "qwen3_4b_model_capability_failure_concluded": false,
+    "context16384_inference_fit_concluded": false,
+    "client_timeout_insufficient_concluded": false,
+    "event_loop_or_system_suspend_cause_concluded": false,
+    "automatic_retry_authorized": false
+  },
+  "c4_effect": {
+    "matrix_cells_completed": 0,
+    "matrix_cells_remaining": 5,
+    "stmicro_cell_adjudicated": false,
+    "broader_c4_execution_blocked_pending_runtime_forensics": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "prompt_change_authorized": false,
+    "packet_compaction_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_NON_INFERENCE_POST_ABORT_RUNTIME_AND_SLEEP_FORENSICS",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
