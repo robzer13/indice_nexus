@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "MATRIX_PREPARED_STATIC_PREFLIGHT_PENDING",
+    "c4_diversified_matrix": "CONTEXT_4096_NOT_ADMISSIBLE_CONTEXT16384_LOAD_SMOKE_PREPARED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_C4_FIVE_COMPANY_STATIC_REQUEST_PREFLIGHT_NO_INFERENCE",
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_QWEN3_4B_CONTEXT16384_LOAD_ONLY_SMOKE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -268,5 +268,15 @@
   "c4_temperature": 0,
   "c4_client_timeout_ms": 300000,
   "c4_reliability_carry": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
-  "c4_auto_repair_authorized": false
+  "c4_auto_repair_authorized": false,
+  "c4_static_request_preflight_result": "OROTITAN_GATE18_PHASE_C_C4_STATIC_REQUEST_PREFLIGHT_V0.1",
+  "c4_context_fit_diagnostic": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001",
+  "c4_common_context_4096_admissible": false,
+  "c4_proposed_common_context_tokens": 16384,
+  "c4_context16384_load_smoke_prep": "G18-PHASEC-C4-QWEN3-4B-CONTEXT16384-LOAD-SMOKE-PREP-001",
+  "c4_context16384_load_smoke_runner": "scripts/vnext-gate18-phase-c-c4-qwen4b-context16384-load-smoke.ts",
+  "c4_context16384_load_smoke_authorized": false,
+  "c4_context16384_load_fit_proven": false,
+  "c4_context16384_inference_fit_proven": false,
+  "c4_context_growth_for_inference_authorized": false
 }
