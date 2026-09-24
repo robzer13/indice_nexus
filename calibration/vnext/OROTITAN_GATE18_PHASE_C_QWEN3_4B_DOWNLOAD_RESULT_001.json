@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3-4B-DOWNLOAD-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3-4B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_CAPABILITY_ESCALATION",
+  "status": "PASS_PINNED",
+  "model": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "ollama_model_name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "size_bytes": 2497293803,
+    "format": "gguf",
+    "family": "qwen3",
+    "parameter_size": "4.0B",
+    "parameter_count": 4022468096,
+    "quantization": "Q4_K_M",
+    "context_length": 262144,
+    "embedding_length": 2560,
+    "finetune": "Instruct",
+    "version": "2507",
+    "capabilities": [
+      "tools",
+      "thinking",
+      "completion"
+    ]
+  },
+  "download": {
+    "command_family": "ollama pull",
+    "exact_model": "qwen3:4b-instruct",
+    "manifest_pulled": true,
+    "sha256_digest_verified_by_ollama": true,
+    "manifest_written": true,
+    "success": true,
+    "model_download_executed": true,
+    "other_model_download_executed": false
+  },
+  "verification": {
+    "ollama_list_exact_tag_present": true,
+    "api_tags_exact_tag_present": true,
+    "api_tags_digest_captured": true,
+    "api_show_reachable": true,
+    "exact_digest_matches_expected_prefix": true,
+    "expected_quantization_match": true,
+    "expected_family_match": true,
+    "instruct_finetune_confirmed": true
+  },
+  "authority": {
+    "qwen3_4b_download_authorized": false,
+    "qwen3_4b_inference_authorized": false,
+    "c3_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_SEPARATE_QWEN3_4B_LOAD_AND_MEMORY_SMOKE_AUTHORIZATION",
+  "base_vnext_sha": "b30564225b2269aa1d237be301e7c5781d809a24",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

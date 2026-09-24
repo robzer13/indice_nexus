@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "QWEN3_1_7B_FAILED_QWEN3_4B_DOWNLOAD_AUTHORIZED_NOT_EXECUTED",
+    "c3_historical_semantic_regressions": "QWEN3_1_7B_FAILED_QWEN3_4B_DOWNLOADED_PINNED_LOAD_SMOKE_AUTH_PENDING",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "OLLAMA_PULL_QWEN3_4B_INSTRUCT_THEN_CAPTURE_IDENTITY",
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_QWEN3_4B_LOAD_ONLY_SMOKE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -130,7 +130,7 @@
   "c3_qwen3_4b_memory_preflight_prepared": true,
   "c3_qwen3_4b_memory_preflight_script": "scripts/vnext-gate18-phase-c-qwen4b-memory-preflight.ts",
   "c3_qwen3_4b_resource_fit_concluded": false,
-  "c3_qwen3_4b_download_authorized": true,
+  "c3_qwen3_4b_download_authorized": false,
   "c3_qwen3_4b_inference_authorized": false,
   "c3_qwen3_4b_memory_preflight_result": "G18-PHASEC-C3-QWEN3-4B-MEMORY-PREFLIGHT-001",
   "c3_qwen3_4b_resource_fit": "PLAUSIBLE_WITH_CONSTRAINTS",
@@ -140,5 +140,19 @@
   "c3_qwen3_4b_official_tag_verified": true,
   "c3_qwen3_4b_official_digest_prefix": "0edcdef34593",
   "c3_qwen3_4b_download_authorization_id": "G18-PHASEC-QWEN3-4B-DOWNLOAD-AUTH-001",
-  "c3_qwen3_4b_download_executed": false
+  "c3_qwen3_4b_download_executed": true,
+  "c3_qwen3_4b_download_result": "G18-PHASEC-QWEN3-4B-DOWNLOAD-RESULT-001",
+  "c3_qwen3_4b_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+  "c3_qwen3_4b_size_bytes": 2497293803,
+  "c3_qwen3_4b_parameter_count": 4022468096,
+  "c3_qwen3_4b_quantization": "Q4_K_M",
+  "c3_qwen3_4b_finetune": "Instruct",
+  "c3_qwen3_4b_capabilities": [
+    "tools",
+    "thinking",
+    "completion"
+  ],
+  "c3_qwen3_4b_load_smoke_prepared": true,
+  "c3_qwen3_4b_load_smoke_script": "scripts/vnext-gate18-phase-c-qwen4b-load-smoke.ts",
+  "c3_qwen3_4b_load_smoke_authorized": false
 }
