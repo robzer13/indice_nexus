@@ -1,0 +1,67 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_OLLAMA_MODEL_REGISTRY_RECOVERY_RESULT_V0.1",
+  "result_id": "G18-PHASEC-OLLAMA-REGISTRY-RECOVERY-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "PASS",
+  "classification": "MODEL_REGISTRY_RECOVERED_DRIVER_REMAINS_BLOCKER",
+  "base_vnext_sha": "d45332381f1ba26f7510b0ce9a4110abaa515a79",
+  "runtime": {
+    "provider": "OLLAMA",
+    "version": "0.34.3",
+    "endpoint": "http://127.0.0.1:11434",
+    "endpoint_loopback_only": true
+  },
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "size_bytes": 1359293444,
+    "exact_digest_valid": true,
+    "details": {
+      "format": "gguf",
+      "family": "qwen3",
+      "parameter_size": "2.0B",
+      "quantization_level": "Q4_K_M"
+    },
+    "capabilities": [
+      "completion",
+      "tools",
+      "thinking"
+    ]
+  },
+  "registry": {
+    "cli_list_succeeded": true,
+    "qwen_listed": true,
+    "api_tags_reachable": true,
+    "api_tags_elapsed_ms": 13,
+    "api_show_reachable": true,
+    "api_show_elapsed_ms": 65,
+    "local_presence_corroborated": true,
+    "api_registry_healthy": true
+  },
+  "remaining_blocker": {
+    "type": "NVIDIA_DRIVER_BELOW_QUALIFICATION_MINIMUM",
+    "observed_version": "532.03",
+    "required_minimum": "551.61",
+    "driver_upgrade_authorized": false
+  },
+  "interpretation": {
+    "ollama_runtime_upgrade_verified": true,
+    "qwen_model_registry_integrity_verified": true,
+    "qwen_model_redownload_required": false,
+    "c3_model_quality_result_observed": false,
+    "c3_inference_authorized": false,
+    "next_required_step": "EXPLICIT_NVIDIA_DRIVER_UPGRADE_AUTHORIZATION_OR_ALTERNATIVE_RUNTIME_DECISION"
+  },
+  "authority": {
+    "nvidia_driver_upgrade_authorized": false,
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BLOCKED_DRIVER_AND_MODEL_REGISTRY_RECOVERY_PENDING",
+    "c3_historical_semantic_regressions": "BLOCKED_ON_NVIDIA_DRIVER_ONLY",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_NO_INFERENCE_OLLAMA_MODEL_REGISTRY_RECOVERY_CHECK",
+  "next_action": "REQUEST_EXPLICIT_NVIDIA_DRIVER_UPGRADE_AUTHORIZATION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -81,5 +81,11 @@
   "c3_cli_api_coherent": true,
   "c3_nvidia_driver_version": "532.03",
   "c3_nvidia_driver_meets_minimum": false,
-  "c3_qwen3_digest_reverified_after_upgrade": false
+  "c3_qwen3_digest_reverified_after_upgrade": true,
+  "c3_model_registry_recovery_result": "G18-PHASEC-OLLAMA-REGISTRY-RECOVERY-001_PASS",
+  "c3_qwen3_capabilities": [
+    "completion",
+    "tools",
+    "thinking"
+  ]
 }
