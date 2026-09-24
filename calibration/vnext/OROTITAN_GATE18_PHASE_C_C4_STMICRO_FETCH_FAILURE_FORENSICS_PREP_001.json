@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_RUNTIME_FAILURE_FORENSICS",
-  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "status": "EXECUTED_BLOCKED_COLLECTOR_FAILED",
   "basis": {
     "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
     "observed_runtime_error": "fetch failed",
@@ -39,6 +39,7 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_LOCAL_READ_ONLY_FETCH_FAILURE_FORENSICS",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_LOCAL_READ_ONLY_FETCH_FAILURE_FORENSICS_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-STM-FETCH-FAILURE-FORENSICS-RESULT-001"
 }
