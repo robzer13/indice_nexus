@@ -13,8 +13,8 @@ import {
   GATE18_PHASE_B_V06_PROMPT_TEMPLATE_ID,
   GATE18_PHASE_B_V06_PROMPT_TEMPLATE_VERSION,
   GATE18_PHASE_B_V06_SYSTEM_PROMPT,
-  assertGate18PhaseBV07Semantics,
-  gate18PhaseBV07OutputSchema,
+  assertGate18PhaseBV06Semantics,
+  gate18PhaseBV06OutputSchema,
   type Gate18PhaseBV06Output,
 } from "../runtime/vnext/model-calibration-pilot-v06";
 
