@@ -8,19 +8,59 @@ test("STMicro output-budget remediation is prepared, invariant-preserving, and u
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_STMICRO_GUARDED_RETRY_RESULT_001.json",
       "utf8",
     ),
-  ) as Record<string, any>;
+  ) as {
+    classification: string;
+    execution: {
+      done_reason: string;
+      eval_count: number;
+      runtime_error: string | null;
+    };
+    model: { max_output_tokens: number };
+    diagnosis: {
+      max_output_768_inadequate_for_this_packet_concluded: boolean;
+      semantic_failure_concluded: boolean;
+    };
+  };
   const diagnostic = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_STMICRO_OUTPUT_BUDGET_STATIC_DIAGNOSTIC_001.json",
       "utf8",
     ),
-  ) as Record<string, any>;
+  ) as {
+    status: string;
+    remediation: {
+      proposed_max_output_tokens: number;
+      proposed_client_timeout_ms: number;
+      model_change: boolean;
+      prompt_change: boolean;
+      schema_change: boolean;
+      packet_change: boolean;
+      context_change: boolean;
+      temperature_change: boolean;
+    };
+  };
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_STMICRO_OUTPUT_BUDGET_REMEDIATION_PREP_001.json",
       "utf8",
     ),
-  ) as Record<string, any>;
+  ) as {
+    status: string;
+    future_execution: {
+      inference_authorized: boolean;
+      retry_authorized: boolean;
+    };
+    authority: {
+      inference_authorized: boolean;
+      automatic_retry_authorized: boolean;
+    };
+    remediation_delta: {
+      prior_max_output_tokens: number;
+      proposed_max_output_tokens: number;
+      prior_client_timeout_ms: number;
+      proposed_client_timeout_ms: number;
+    };
+  };
   const runner = readFileSync(
     "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-output1024-timeout420-guarded.ts",
     "utf8",
