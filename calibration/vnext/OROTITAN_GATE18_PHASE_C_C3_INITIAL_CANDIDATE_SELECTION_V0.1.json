@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_INITIAL_CANDIDATE_SELECTION_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PLANNED_NOT_EXECUTED",
+  "basis": {
+    "c0_hardware_admission": "PASS_WITH_CONSTRAINTS",
+    "c1_ollama_runtime_admission": "PASS",
+    "c2_structured_output_smoke": "PASS",
+    "observed_system_ram_gib": 7.84,
+    "observed_discrete_vram_mib": 4096,
+    "observed_phi_full_gpu_fit": true,
+    "observed_phi_required_runtime_memory_gib": 2.7,
+    "observed_phi_cold_start_ms": 35506,
+    "observed_low_system_ram_headroom": true
+  },
+  "initial_candidate": {
+    "candidate_id": "QWEN3_1_7B_OLLAMA_Q4",
+    "model_name": "qwen3:1.7b",
+    "role": "FIRST_C3_PRODUCTION_CANDIDATE",
+    "reason": [
+      "Smallest plausible modern local candidate in the hardware-constrained registry.",
+      "C3 should test semantic adequacy before increasing model size.",
+      "Observed RAM headroom is too low to make Qwen3 4B the first default test."
+    ],
+    "planned_initial_context_tokens": 2048,
+    "planned_temperature": 0,
+    "runtime": "OLLAMA_LOCAL_LOOPBACK"
+  },
+  "escalation_candidate": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "model_name": "qwen3:4b-instruct",
+    "role": "CAPABILITY_ESCALATION_ONLY",
+    "escalation_allowed_only_if": "QWEN3_1_7B_FAILS_C3_FOR_MODEL_CAPABILITY_REASON_AND_LOCAL_MEMORY_PREFLIGHT_IS_ACCEPTABLE"
+  },
+  "c3_mandatory_regressions": [
+    "ADYEN_SWITCHING_FRICTION_TARGET_ALIGNMENT",
+    "ADYEN_SCOPE_RESOLVED_INCIDENT_HANDLING",
+    "ADYEN_QUALIFICATION_ORTHOGONALITY",
+    "BROOKFIELD_E039_PEER_REPLICABILITY_POLARITY",
+    "BROOKFIELD_E042_COMPETING_CAPITAL_POLARITY"
+  ],
+  "download": {
+    "required_for_initial_candidate": true,
+    "authorized_by_this_artifact": false,
+    "note": "Selection does not authorize network download. User approval is required before ollama pull."
+  },
+  "inference": {
+    "authorized_by_this_artifact": false,
+    "note": "C3 inference requires model presence, deterministic dry-run/preflight, and explicit execution step."
+  },
+  "authority": {
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
