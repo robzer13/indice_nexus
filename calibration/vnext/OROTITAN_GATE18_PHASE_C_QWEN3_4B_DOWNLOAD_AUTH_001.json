@@ -1,0 +1,69 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-QWEN3-4B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_CAPABILITY_ESCALATION",
+  "status": "AUTHORIZED_DOWNLOAD_ONLY",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "DOWNLOAD_LOCAL_MODEL",
+    "authorized_model": "qwen3:4b-instruct"
+  },
+  "basis": {
+    "qwen3_1_7b_c3_disposition": "FAIL_CRITICAL_SEMANTIC_REGRESSION",
+    "qwen3_1_7b_model_capability_failure_concluded": true,
+    "qwen3_4b_memory_preflight": "G18-PHASEC-C3-QWEN3-4B-MEMORY-PREFLIGHT-001",
+    "qwen3_4b_resource_fit": "PLAUSIBLE_WITH_CONSTRAINTS",
+    "free_ram_gib_at_probe": 1.43,
+    "free_vram_mib_at_probe": 3962,
+    "ollama_loaded_model_count_at_probe": 0
+  },
+  "model": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "ollama_model_name": "qwen3:4b-instruct",
+    "expected_parameter_count": "4.02B",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~2.5GB",
+    "official_digest_prefix": "0edcdef34593",
+    "role": "CAPABILITY_ESCALATION_ONLY"
+  },
+  "network_scope": {
+    "local_runtime": "OLLAMA",
+    "remote_download_required": true,
+    "inference_request_authorized": false,
+    "paid_model_api_authorized": false
+  },
+  "constraints": {
+    "action_count_authorized": 1,
+    "command_family": "ollama pull",
+    "exact_model_only": true,
+    "inference_after_download": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_model_switch": false,
+    "automatic_retry": false,
+    "automatic_paid_model_escalation": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_c3_inference_until_separate_load_preflight_and_authorization": true
+  },
+  "authority": {
+    "qwen3_4b_download_authorized": true,
+    "qwen3_4b_inference_authorized": false,
+    "c3_inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "paid_execution_authorized": false
+  },
+  "base_vnext_sha": "eaeeb7dd8f0f154dff435aa86b841c220fefd24a",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
