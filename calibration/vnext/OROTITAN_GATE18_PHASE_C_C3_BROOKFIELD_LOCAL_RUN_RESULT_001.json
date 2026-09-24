@@ -1,0 +1,65 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_LOCAL_RUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-LOCAL-RUN-001",
+  "authorization_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-INFERENCE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "FAIL",
+  "classification": "RUNTIME_FAIL_HTTP_500_NO_SEMANTIC_RESULT",
+  "base_vnext_sha": "aaf4ad69076bcae3a3fa95ca93240984e4583070",
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
+    "comparison_admissible": false
+  },
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "quantization": "Q4_K_M"
+  },
+  "execution": {
+    "authorized_run_count": 1,
+    "authorized_run_consumed": true,
+    "wall_clock_ms": 14693,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "VNEXT_GATE18_PHASE_C_C3_LOCAL_OLLAMA_HTTP_500",
+    "schema_valid": false,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": null,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "private_artifact": {
+    "path_redacted_to_repo_relative": "calibration/vnext/private-runs/2026-09-24T105943649Z__BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT.json",
+    "gitignored": true,
+    "generated_content_publication_forbidden": true
+  },
+  "interpretation": {
+    "semantic_regression_result": "NOT_OBSERVED",
+    "model_capability_failure": false,
+    "prompt_contract_failure": false,
+    "decoding_failure": false,
+    "runtime_failure": true,
+    "reason": "Ollama returned HTTP 500 before a model response was available for schema or semantic adjudication.",
+    "retry_authorized": false,
+    "next_required_step": "DIAGNOSE_LOCAL_RUNTIME_FAILURE_WITHOUT_INFERENCE"
+  },
+  "suspected_causes_are_not_conclusions": [
+    "Insufficient local RAM/VRAM headroom at 8192 context.",
+    "Ollama runtime/model loading failure.",
+    "Structured-schema or request-shape incompatibility in this Ollama version.",
+    "Other local runtime error hidden by the current runner because HTTP response bodies were not preserved."
+  ],
+  "safety": {
+    "production_mutation": false,
+    "publication_authority": false,
+    "paid_execution_authorized": false,
+    "automatic_retry_authorized": false,
+    "qwen3_4b_escalation_authorized": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
