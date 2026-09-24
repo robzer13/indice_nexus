@@ -15,7 +15,7 @@
   },
   "current_state": {
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
-    "c1_local_runtime_admission": "NEXT",
+    "c1_local_runtime_admission": "BLOCKED_RECOVERABLE_RUNTIME_NOT_RUNNING",
     "c2_structured_output_smoke": "NOT_STARTED",
     "c3_historical_semantic_regressions": "NOT_STARTED",
     "c4_diversified_matrix": "NOT_STARTED",
@@ -30,9 +30,10 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_C1_OLLAMA_RUNTIME_ADMISSION_NO_MODEL_DOWNLOAD",
+  "next_action": "START_OLLAMA_LOCAL_SERVER_THEN_RETRY_C1_PREFLIGHT",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
-  "ultra_light_baseline_candidate": "QWEN3_1_7B_OLLAMA_Q4"
+  "ultra_light_baseline_candidate": "QWEN3_1_7B_OLLAMA_Q4",
+  "c1_latest_attempt": "G18-PHASEC-C1-OLLAMA-ATTEMPT-001"
 }
