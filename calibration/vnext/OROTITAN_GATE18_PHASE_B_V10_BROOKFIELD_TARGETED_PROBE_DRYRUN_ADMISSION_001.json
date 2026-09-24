@@ -1,0 +1,99 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_TARGETED_PROBE_DRYRUN_ADMISSION_V1",
+  "admission_id": "G18-PHASEB-V10-BROOKFIELD-TARGETED-PROBE-DRYRUN-ADMISSION-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "NO_COST_TARGETED_REGRESSION_DRYRUN_ADMISSION",
+  "base_vnext_sha": "c3c4d4dafe222dafded8a130bc3b984cc7cce594",
+  "probe": {
+    "probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "display_name": "Brookfield Corporation",
+    "case_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "source_run_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "data_cutoff": "2026-09-19",
+    "role": "ACCOUNTING_HEAVY"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 55,
+    "source_conflicts": 18,
+    "evidence_items": 12,
+    "conflicts": 2,
+    "serialized_chars": 8865,
+    "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "evidence_ledger_sha256": "816d3facedfe9bc0b4071b7677dbfd25d4e0bada35bc7ad8fe3ec48c095872f7",
+    "conflict_ledger_sha256": "56f437fb9b65badfd91aaa23153fc2845dd0957c2cd6b6b98a98e73edb9e9185",
+    "lineage_vs_brookfield_v10_normal": "UNCHANGED"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_BROOKFIELD_PEER_ROLE_PROBE_V0_1",
+    "prompt_template_version": "0.1",
+    "prompt_template_sha256": "a0a88a82479d73d694f4f84f9054f3c5ae9c6540040d499ffa8779b190e2913a",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096,
+    "schema_shape_changed": false
+  },
+  "targeted_regression_scope": {
+    "finding_1": "E-039 must remain SUPPORT for a peer-platform replicability proposition, with no counterevidence.",
+    "finding_2": "E-042 must remain SUPPORT for a competing-capital proposition, with no counterevidence."
+  },
+  "cost_guard": {
+    "approximate_input_token_ceiling": 5212,
+    "per_model": [
+      {
+        "label": "LUNA",
+        "model_id": "openai/gpt-5.6-luna",
+        "cost_ceiling_usd": 0.0069576
+      }
+    ],
+    "total_cost_ceiling_usd": 0.0069576
+  },
+  "admission_checks": {
+    "head_matches_merged_brookfield_targeted_probe": true,
+    "dry_run_mode": true,
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "allow_multi_model": false,
+    "explicit_spend_cap_usd": null,
+    "selected_model_count": 1,
+    "selected_model_label": "LUNA",
+    "packet_identity_preserved": true,
+    "prompt_hash_pinned": true,
+    "schema_hash_unchanged_by_design": true,
+    "common_output_envelope_preserved": true,
+    "cost_guard_present": true
+  },
+  "paid_execution": {
+    "authorized": false,
+    "reason": "This receipt admits only the no-cost Brookfield targeted-regression dry-run. A paid probe requires a fresh AI Gateway budget snapshot and a separate single-call authorization with a hard cap at or above $0.0069576."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "brookfield_v10_normal_canary": "COMPLETE_PARTIAL_PASS",
+    "brookfield_targeted_probe_implementation": "IMPLEMENTED_GREEN",
+    "brookfield_targeted_probe_dryrun": "ADMITTED",
+    "brookfield_targeted_probe_paid_execution": "NOT_AUTHORIZED"
+  }
+}
