@@ -1,0 +1,77 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_POWER_EVENT_DETAIL_FORENSIC_V3_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-POWER-EVENT-DETAIL-FORENSIC-V3-RESULT-001",
+  "source_run_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-RUN-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_SLEEP_WAKE_INTERVAL_CONFIRMED",
+  "powershell_execution": {
+    "process_succeeded": true,
+    "subquery_count": 5,
+    "failed_query_count": 2,
+    "total_event_count": 3,
+    "failed_queries_are_no_matching_event": [
+      506,
+      507
+    ]
+  },
+  "observed_events": {
+    "kernel_power_42": {
+      "time_created_utc": "2026-09-24T17:24:40.4905513Z",
+      "message_class": "SYSTEM_ENTERING_SLEEP",
+      "target_state": "4",
+      "effective_state": "4"
+    },
+    "kernel_power_107": {
+      "time_created_utc": "2026-09-24T17:24:56.5107880Z",
+      "message_class": "SYSTEM_EXITED_SLEEP",
+      "wake_from_state": "4"
+    },
+    "power_troubleshooter_1": {
+      "time_created_utc": "2026-09-24T18:37:53.7478755Z",
+      "message_class": "SYSTEM_RETURNED_FROM_LOW_POWER_STATE",
+      "sleep_time_utc": "2026-09-24T17:24:38.5476431Z",
+      "wake_time_utc": "2026-09-24T18:37:51.2521890Z",
+      "target_state": "4",
+      "effective_state": "4",
+      "wake_source_type": "0",
+      "wake_source_text": ""
+    }
+  },
+  "derived_timing": {
+    "run_start_utc": "2026-09-24T17:20:51.014Z",
+    "run_end_utc": "2026-09-24T18:38:03.196Z",
+    "configured_timeout_ms": 300000,
+    "observed_wall_clock_ms": 4632182,
+    "run_start_to_sleep_seconds": 227.534,
+    "sleep_interval_seconds": 4392.705,
+    "wake_to_run_end_seconds": 11.944,
+    "active_wall_clock_excluding_sleep_seconds_approx": 239.478,
+    "expected_timeout_utc_without_sleep": "2026-09-24T17:25:51.014Z"
+  },
+  "interpretation": {
+    "system_low_power_interval_during_run": "CONFIRMED",
+    "run_interrupted_by_system_sleep": true,
+    "runtime_result_adjudicable_for_model_quality": false,
+    "timeout_300s_inadequacy_concluded": false,
+    "context16384_inference_fit_concluded": false,
+    "model_capability_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "exact_abort_propagation_mechanism_concluded": false,
+    "kernel_power_107_timestamp_reconciled_with_full_sleep_interval": false,
+    "power_troubleshooter_sleep_wake_fields_control_interval_interpretation": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_PROCESS_SCOPED_SLEEP_GUARD_AND_POWER_TRANSITION_FAIL_CLOSED_SMOKE",
+  "base_vnext_sha": "50bc4504f8a4c1357ef59a1d312ebe8b6c12e16a",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
