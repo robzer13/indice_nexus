@@ -1,0 +1,59 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_WINDOWS_SLEEP_GUARD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_ENVIRONMENT_REMEDIATION",
+  "status": "AUTHORIZED_SINGLE_PROCESS_SCOPED_SLEEP_GUARD_SMOKE",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "ONE_PROCESS_SCOPED_WINDOWS_SLEEP_GUARD_SMOKE",
+    "inference_authorized": false
+  },
+  "basis": {
+    "runtime_incident_conclusion": "G18-PHASEC-C4-STM-RUNTIME-INCIDENT-CONCLUSION-001",
+    "sleep_guard_prep": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-PREP-001",
+    "confirmed_system_sleep_seconds": 4392.705
+  },
+  "execution": {
+    "runner": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke.ts",
+    "authorized_run_count": 1,
+    "mechanism": "SetThreadExecutionState",
+    "flags": [
+      "ES_CONTINUOUS",
+      "ES_SYSTEM_REQUIRED"
+    ],
+    "hold_ms": 5000,
+    "process_scoped": true,
+    "persistent_power_plan_mutation": false,
+    "display_required": false,
+    "away_mode": false
+  },
+  "constraints": {
+    "model_load_authorized": false,
+    "model_inference_authorized": false,
+    "ollama_api_call_authorized": false,
+    "automatic_retry_authorized": false,
+    "inference_retry_authorized": false,
+    "timeout_change_authorized": false,
+    "context_change_authorized": false,
+    "persistent_power_setting_mutation_authorized": false,
+    "lid_or_manual_sleep_override_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "verification": {
+    "powercfg_requests_before_required": true,
+    "powercfg_requests_during_required": true,
+    "powercfg_requests_after_required": true,
+    "helper_release_required": true
+  },
+  "base_vnext_sha": "e412e05b6a5c2282d36333bf0246f46e685d0294",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": false,
+    "result_id": null,
+    "result_status": null,
+    "retry_authorized": false
+  }
+}
