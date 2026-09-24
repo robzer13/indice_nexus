@@ -1,0 +1,57 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_WINDOWS_SLEEP_GUARD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_ENVIRONMENT_REMEDIATION",
+  "status": "BLOCKED_BEFORE_GUARD",
+  "classification": "HELPER_UINT32_CONSTANT_FAILURE_AND_NON_ELEVATED_POWERCFG_VERIFICATION",
+  "observations": {
+    "ready_observed": false,
+    "helper_exit_code": 1,
+    "set_thread_execution_state_invoked": false,
+    "idle_sleep_prevention_mechanism_invoked": false,
+    "process_scoped_guard_release_observed": true,
+    "powercfg_requests_before_succeeded": false,
+    "powercfg_requests_during_succeeded": false,
+    "powercfg_requests_after_succeeded": false,
+    "powercfg_requires_elevation_on_host": true,
+    "model_inference_executed": false
+  },
+  "defects": [
+    {
+      "id": "SLEEP_GUARD_V1_UINT32_LITERAL",
+      "root_cause_concluded": true,
+      "defect": "Windows PowerShell 5.1 interpreted 0x80000000 as a signed value before the [uint32] cast, causing InvalidCastIConvertible.",
+      "failing_expression": "[uint32]0x80000000",
+      "remediation": "Construct ES_CONTINUOUS with Convert.ToUInt32(\"80000000\", 16) and cast the final bitwise flags explicitly."
+    },
+    {
+      "id": "SLEEP_GUARD_V1_POWERCFG_ELEVATION",
+      "root_cause_concluded": true,
+      "defect": "powercfg.exe /requests requires administrator privileges on this host.",
+      "remediation": "Treat powercfg /requests as optional best-effort telemetry, not a PASS precondition; prove guard invocation and release from SetThreadExecutionState return values."
+    }
+  ],
+  "adjudication": {
+    "smoke_passed": false,
+    "guard_mechanism_failure_concluded": false,
+    "windows_api_incompatibility_concluded": false,
+    "retry_justified_after_runner_fix": true,
+    "retry_authorized_now": false,
+    "stmicro_inference_retry_authorized": false
+  },
+  "authority": {
+    "sleep_guard_smoke_authorized": false,
+    "temporary_power_request_authorized": false,
+    "inference_authorized": false,
+    "stmicro_retry_authorized": false,
+    "persistent_power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_WINDOWS_SLEEP_GUARD_SMOKE_V2_AND_REQUEST_NEW_EXPLICIT_AUTHORIZATION",
+  "base_vnext_sha": "ee3f15feb1bc7b3a691172b6048347bd596ef02d",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

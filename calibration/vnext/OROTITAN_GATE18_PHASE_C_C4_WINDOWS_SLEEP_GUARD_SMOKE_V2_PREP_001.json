@@ -1,0 +1,39 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_WINDOWS_SLEEP_GUARD_SMOKE_V2_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-V2-PREP-001",
+  "source_v1_result": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-RESULT-001",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "runner": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke-v2.ts",
+  "mechanism": {
+    "api": "SetThreadExecutionState",
+    "acquire_flags": [
+      "ES_CONTINUOUS",
+      "ES_SYSTEM_REQUIRED"
+    ],
+    "explicit_release_flags": [
+      "ES_CONTINUOUS"
+    ],
+    "uint32_construction": "Convert.ToUInt32_HEX_SAFE",
+    "hold_ms": 5000,
+    "process_scoped": true
+  },
+  "verification": {
+    "ready_marker_required": true,
+    "released_marker_required": true,
+    "clean_exit_required": true,
+    "powercfg_requests_optional_best_effort": true,
+    "administrator_privileges_required": false,
+    "inference_executed": false
+  },
+  "authority": {
+    "smoke_authorized": false,
+    "temporary_power_request_authorized": false,
+    "inference_authorized": false,
+    "stmicro_retry_authorized": false,
+    "persistent_power_setting_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_WINDOWS_SLEEP_GUARD_SMOKE_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
