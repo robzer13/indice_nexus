@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_B_V10_TARGETED_PROBE_DRYRUN_ADMISSION_V1",
+  "admission_id": "G18-PHASEB-V10-TARGETED-PROBE-DRYRUN-ADMISSION-001",
+  "gate": 18,
+  "phase": "B_COMPANY_CALIBRATION",
+  "status": "PASS",
+  "classification": "NO_COST_TARGETED_REGRESSION_DRYRUN_ADMISSION",
+  "base_vnext_sha": "528558a309cd13f1a9b109d65d33c7998c26aed6",
+  "probe": {
+    "probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "case": {
+    "display_name": "Adyen",
+    "case_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "source_run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "data_cutoff": "2026-09-19",
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE"
+  },
+  "packet": {
+    "scope": "MOAT_INPUTS",
+    "source_evidence_items": 80,
+    "source_conflicts": 10,
+    "evidence_items": 16,
+    "conflicts": 3,
+    "serialized_chars": 10891,
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "evidence_ledger_sha256": "9e3a6366e10956afbbe0f9837e663737ad5199464b0bca977a3e63dbeba94b11",
+    "conflict_ledger_sha256": "07e88a50f319318b3ef25156fa8f24caae4928c3d73fae6d2e38205ceff15b03",
+    "lineage_vs_v10_canary": "UNCHANGED"
+  },
+  "contract": {
+    "protocol_version": "1.0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "prompt_template_version": "0.1",
+    "prompt_template_sha256": "e779d681f084b130aee35a901648bc599c1c8b912229dcbbd41f2a2f9c719284",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "generation_schema_version": "0.6",
+    "generation_schema_sha256": "8bc40ab1ab14a13f5069b4447a6133fa9b0ad6e09dc23087abc733e0365ca00d",
+    "max_output_tokens": 4096,
+    "schema_shape_changed": false
+  },
+  "targeted_regression_scope": {
+    "finding_1": "Switching friction must be MIXED at the inferential economic level with E-036/E-042 support, E-037/E-041 counterevidence, and C-005.",
+    "finding_2": "Documented service disruption must remain SUPPORTED by E-055 with C-010 scope-resolved and E-056 excluded from counterevidence.",
+    "finding_3": "E-040 and E-043 must remain SUPPORT with separate qualifications for revenue-contribution uncertainty and issuer-hosted selection limits.",
+    "material_conflict_C005": "UNRESOLVED_IN_PACKET",
+    "material_conflict_C010": "RESOLVED_IN_PACKET"
+  },
+  "cost_guard": {
+    "approximate_input_token_ceiling": 6378,
+    "per_model": [
+      {
+        "label": "LUNA",
+        "model_id": "openai/gpt-5.6-luna",
+        "cost_ceiling_usd": 0.0071908
+      }
+    ],
+    "total_cost_ceiling_usd": 0.0071908,
+    "prior_v10_normal_luna_ceiling_usd": 0.0070822,
+    "delta_usd": 0.0001086,
+    "interpretation": "The targeted probe adds controlled prompt overhead. Any paid authorization must use a hard cap at or above $0.0071908; the prior $0.0071 cap is insufficient."
+  },
+  "admission_checks": {
+    "head_matches_merged_targeted_probe": true,
+    "dry_run_mode": true,
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "allow_multi_model": false,
+    "explicit_spend_cap_usd": null,
+    "selected_model_count": 1,
+    "selected_model_label": "LUNA",
+    "packet_identity_preserved": true,
+    "prompt_hash_pinned": true,
+    "schema_hash_unchanged_by_design": true,
+    "common_output_envelope_preserved": true,
+    "cost_guard_present": true,
+    "prior_hard_cap_0_0071_rejected_for_future_execution": true
+  },
+  "paid_execution": {
+    "authorized": false,
+    "reason": "This receipt admits only the no-cost targeted-regression dry-run. A paid probe requires a fresh AI Gateway budget snapshot and a separate single-call authorization with a hard cap that covers $0.0071908."
+  },
+  "authority": {
+    "publication_authority": false,
+    "production_mutation": false,
+    "model_winner_selected": false,
+    "routing_policy_changed": false
+  },
+  "gate_effect": {
+    "phase_a": "PASS",
+    "phase_b": "IN_PROGRESS",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN",
+    "v10_paid_canary": "COMPLETE_PARTIAL_PASS",
+    "targeted_probe_implementation": "IMPLEMENTED_GREEN",
+    "targeted_probe_dryrun": "ADMITTED",
+    "targeted_probe_paid_execution": "NOT_AUTHORIZED"
+  }
+}
