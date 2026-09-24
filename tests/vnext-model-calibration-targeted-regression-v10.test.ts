@@ -299,7 +299,7 @@ test("Gate 18 runner exposes targeted probe without changing the default v1.0 pa
   );
 
   assert.match(source, /--targeted-regression-probe/);
-  assert.match(source, /ADYEN_CLAIM_TARGET_CORE_001/);
+  assert.match(source, /GATE18_V10_TARGETED_PROBE_ID/);
   assert.match(source, /buildGate18V10TargetedProbeInput/);
   assert.match(source, /assertGate18V10TargetedProbeSemantics/);
 });
