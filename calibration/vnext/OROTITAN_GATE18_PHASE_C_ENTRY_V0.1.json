@@ -17,7 +17,7 @@
     "c0_hardware_preflight": "PASS_WITH_CONSTRAINTS",
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
-    "c3_historical_semantic_regressions": "BLOCKED_PENDING_OLLAMA_UPGRADE_PREFLIGHT",
+    "c3_historical_semantic_regressions": "BLOCKED_PENDING_POST_UPGRADE_VERIFICATION",
     "c4_diversified_matrix": "NOT_STARTED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_NO_INSTALL_OLLAMA_UPGRADE_PREFLIGHT",
+  "next_action": "RUN_NO_INFERENCE_OLLAMA_POST_UPGRADE_VERIFICATION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -73,5 +73,8 @@
   "c3_ollama_upgrade_authorized": true,
   "c3_ollama_upgrade_target": "0.34.3",
   "c3_nvidia_driver_minimum": "551.61",
-  "c3_nvidia_driver_upgrade_authorized": false
+  "c3_nvidia_driver_upgrade_authorized": false,
+  "c3_ollama_upgrade_execution": "EXECUTED_WITH_PRECONDITION_VIOLATION",
+  "c3_ollama_upgrade_preflight_status": "BLOCKED_DRIVER_532_03_LT_551_61",
+  "c3_post_upgrade_verification_ready": true
 }

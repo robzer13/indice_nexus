@@ -1,0 +1,54 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_OLLAMA_UPGRADE_EXECUTION_RECEIPT_V0.1",
+  "result_id": "G18-PHASEC-OLLAMA-0343-UPGRADE-EXECUTION-001",
+  "authorization_id": "G18-PHASEC-OLLAMA-0343-UPGRADE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_RUNTIME_REMEDIATION",
+  "status": "EXECUTED_WITH_PRECONDITION_VIOLATION",
+  "base_vnext_sha": "f2eb785ff034562c25e962f0301066f3536ea89a",
+  "observed_sequence": {
+    "preflight_status": "BLOCKED",
+    "preflight_blocker": "NVIDIA_DRIVER_BELOW_MINIMUM",
+    "observed_driver_version": "532.03",
+    "required_driver_version": "551.61",
+    "target_ollama_version": "0.34.3",
+    "installer_command_executed": true,
+    "installer_reported_success": true,
+    "installer_reported_message": "Install complete. Run 'ollama' from the command line.",
+    "env_version_pin_removed_after_install": true
+  },
+  "protocol_interpretation": {
+    "upgrade_was_user_authorized_in_general": true,
+    "upgrade_precondition_satisfied": false,
+    "installer_execution_conformed_to_protocol": false,
+    "inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "semantic_result_observed": false
+  },
+  "current_unknowns": [
+    "Observed CLI version after install.",
+    "Observed API version after install.",
+    "Whether the active Ollama server restarted onto the new binary.",
+    "Whether qwen3:1.7b digest remains unchanged.",
+    "Whether GPU execution is viable with NVIDIA driver 532.03 under the upgraded runtime."
+  ],
+  "recovery_plan": {
+    "next_action": "RUN_NO_INFERENCE_POST_UPGRADE_VERIFICATION",
+    "automatic_inference_retry_authorized": false,
+    "driver_upgrade_authorized": false,
+    "model_redownload_authorized": false,
+    "rollback_authorized": false
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
