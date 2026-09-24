@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_LOCAL_INFERENCE_PREP_V0.1",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C3_HISTORICAL_SEMANTIC_REGRESSION_SUITE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "base_vnext_sha": "1b549dbc6217e62d0eb904de4cd3ca0d5d6a45e2",
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT",
+    "comparison_admissible": false
+  },
+  "model": {
+    "name": "qwen3:1.7b",
+    "digest": "8f68893c685c3ddff2aa3fffce2aa60a30bb2da65ca488b61fff134a4d1730e7",
+    "quantization": "Q4_K_M"
+  },
+  "execution_plan": {
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "context_tokens": 8192,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "prompt_template": "GATE18_BROOKFIELD_PEER_ROLE_PROBE_V0_1",
+    "private_output_directory": "calibration/vnext/private-runs",
+    "external_model_api_cost_usd": 0
+  },
+  "guard": {
+    "authorization_id": "G18-PHASEC-C3-BROOKFIELD-QWEN17-INFERENCE-AUTH-001",
+    "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C3_BROOKFIELD_QWEN3_1_7B_INFERENCE_AUTH_001.json",
+    "authorization_artifact_present": false,
+    "execute_flag_required": true,
+    "authorization_id_argument_required": true,
+    "exact_model_digest_required": true,
+    "inference_currently_authorized": false
+  },
+  "failure_interpretation": {
+    "deterministic_config_note": "Initial run uses the already dry-runned temperature=0 configuration.",
+    "decoding_sensitivity_note": "A semantic failure does not by itself reject Qwen3 1.7B; decoding sensitivity must be separated from model-capability failure before rejection."
+  },
+  "authority": {
+    "c3_inference_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "MERGE_RUNNER_PREP_THEN_REQUEST_EXPLICIT_LOCAL_INFERENCE_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
