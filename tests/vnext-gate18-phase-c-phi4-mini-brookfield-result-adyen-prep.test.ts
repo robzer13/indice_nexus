@@ -30,7 +30,7 @@ test("Phi-4 mini Brookfield compact result is a bounded engineering PASS only", 
   assert.equal(result.authority.production_candidate_decision_authority, false);
 });
 
-test("Phi-4 mini Adyen prep targets the three remaining regressions under scoped standing authorization", () => {
+test("Phi-4 mini Adyen prep records executed semantic FAIL and consumed authorization", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE_PREP_001.json",
@@ -38,7 +38,7 @@ test("Phi-4 mini Adyen prep targets the three remaining regressions under scoped
     ),
   );
 
-  assert.equal(prep.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED");
+  assert.equal(prep.status, "EXECUTED_FAIL_AUTHORIZATION_CONSUMED_FORENSICS_REQUIRED");
   assert.equal(prep.probe.semantic_probe_id, "ADYEN_CLAIM_TARGET_CORE_001");
   assert.equal(
     prep.probe.execution_id,
@@ -53,8 +53,8 @@ test("Phi-4 mini Adyen prep targets the three remaining regressions under scoped
   assert.equal(prep.expected_regression_map.finding_2.support_state, "SUPPORTED");
   assert.equal(prep.expected_regression_map.finding_3.support_state, "SUPPORTED");
   assert.equal(prep.guard.authorization_artifact_present, true);
-  assert.equal(prep.guard.inference_currently_authorized, true);
-  assert.equal(prep.authority.phi4_mini_inference_authorized, true);
+  assert.equal(prep.guard.inference_currently_authorized, false);
+  assert.equal(prep.authority.phi4_mini_inference_authorized, false);
   assert.equal(prep.authority.automatic_retry_authorized, false);
   assert.equal(prep.authority.context_growth_authorized, false);
 });
@@ -88,7 +88,7 @@ test("Phi-4 mini Adyen runner is digest-pinned and cannot execute without separa
   assert.match(raw, /publicationAuthority: false/);
 });
 
-test("Phase C activates only the scoped Adyen probe under standing authorization", () => {
+test("Phase C records Adyen semantic FAIL and stops at read-only forensics", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -97,17 +97,19 @@ test("Phase C activates only the scoped Adyen probe under standing authorization
   );
 
   assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
-  assert.equal(entry.phi4_mini_inference_authorized, true);
-  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, true);
+  assert.equal(entry.phi4_mini_inference_authorized, false);
+  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
   assert.equal(entry.phi4_mini_adyen_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_adyen_compact4096_max_output_tokens, 768);
   assert.equal(entry.phi4_mini_adyen_compact4096_temperature, 0);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 1);
+  assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 0);
+  assert.equal(entry.phi4_mini_adyen_compact4096_result_status, "SEMANTIC_FAIL_FORENSICS_REQUIRED");
+  assert.equal(entry.phi4_mini_adyen_forensics_required, true);
   assert.equal(
     entry.next_action,
-    "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+    "RUN_LOCAL_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC",
   );
 });
