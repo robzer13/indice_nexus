@@ -1,0 +1,47 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_OLLAMA_500_CONTEXT_FORENSICS_V5_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-OLLAMA-500-CONTEXT-FORENSICS-V5-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_RUNTIME_SEQUENCE_CAPTURED",
+  "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+  "source_v4_result": "G18-PHASEC-C4-STM-OLLAMA-LOG-FORENSICS-V4-RESULT-001",
+  "observed": {
+    "prompt_tokens": 3059,
+    "generation_tokens_before_failure": 890,
+    "max_output_tokens": 1024,
+    "remaining_output_tokens_if_limit_reached": 134,
+    "generation_rate_tokens_per_second_near_failure": 3.12,
+    "explicit_client_timeout_ms": 420000,
+    "observed_wall_clock_ms": 304446,
+    "server_http_status": 500,
+    "server_http_duration": "5m4s",
+    "server_http_route": "POST /api/generate",
+    "exact_500_anchor_count": 1
+  },
+  "surrounding_log_findings": {
+    "prompt_processing_completed": true,
+    "steady_generation_progress_observed": true,
+    "last_observed_n_gen": 890,
+    "panic_observed": false,
+    "oom_observed": false,
+    "cuda_failure_observed": false,
+    "runner_exit_observed": false,
+    "llama_server_process_crash_observed": false,
+    "system_sleep_observed": false,
+    "windows_resource_exhaustion_observed": false
+  },
+  "interpretation": {
+    "output_limit_1024_reached": false,
+    "explicit_420s_abort_reached": false,
+    "model_was_actively_generating_before_failure": true,
+    "server_500_is_terminal_symptom": true,
+    "exact_internal_ollama_model_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "next_action": "STATIC_CLIENT_TRANSPORT_TIMEOUT_DIAGNOSTIC",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
