@@ -1,0 +1,72 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_LOCAL_RUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
+  "authorization_id": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-INFERENCE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
+  "status": "PASS",
+  "classification": "ENGINEERING_PASS_SCHEMA_AND_TARGETED_SEMANTICS_PASS",
+  "base_vnext_sha": "ccbefdeba9d5a70e3e424c7c21b3f6694de264b9",
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_PHI4MINI_4096",
+    "targeted_regressions": [
+      "Brookfield E-039 peer-platform replicability polarity",
+      "Brookfield E-042 competing-capital polarity"
+    ],
+    "comparison_admissible": false
+  },
+  "model": {
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0
+  },
+  "execution": {
+    "authorized_run_count": 1,
+    "authorized_run_consumed": true,
+    "wall_clock_ms": 72703,
+    "done_reason": "stop",
+    "prompt_eval_count": 2020,
+    "eval_count": 401,
+    "runtime_error": null,
+    "schema_valid": true,
+    "schema_error": null,
+    "semantic_valid": true,
+    "semantic_error": null,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "private_artifact": {
+    "repo_relative_path": "calibration/vnext/private-runs/2026-09-25T184944545Z__BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_PHI4MINI_4096.json",
+    "gitignored": true,
+    "generated_content_publication_forbidden": true,
+    "raw_generated_content_persisted_publicly": false
+  },
+  "interpretation": {
+    "runtime_result": "PASS",
+    "schema_result": "PASS",
+    "targeted_semantic_result": "PASS",
+    "inference_fit_at_4096_context": "PASS_FOR_THIS_BOUNDED_PROBE",
+    "brookfield_targeted_regressions": "PASS",
+    "broader_phi4_mini_c3_admission": "PENDING_ADYEN_TARGETED_REGRESSIONS",
+    "c4_quality_assessed": false,
+    "c5_repeatability_assessed": false,
+    "automatic_retry_authorized": false,
+    "context_growth_authorized": false,
+    "model_winner_selected": false
+  },
+  "authority": {
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ADYEN_CLAIM_TARGET_CORE_001_PHI4_MINI_4096_RUNNER_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

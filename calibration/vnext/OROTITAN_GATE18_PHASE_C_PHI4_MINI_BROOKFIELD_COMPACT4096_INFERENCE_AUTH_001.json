@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "ONE_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE",
@@ -21,7 +21,7 @@
     "system_ram_pressure": "HIGH"
   },
   "phi4_mini_inference": {
-    "authorized": true,
+    "authorized": false,
     "model_name": "phi4-mini:3.8b-q4_K_M",
     "model_digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
     "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
@@ -35,7 +35,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -62,6 +62,12 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "673e05f5fff57d644401fb8968090b64d326c444",
-  "next_action": "RUN_ONE_LOCAL_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_ADYEN_CLAIM_TARGET_CORE_001_PHI4_MINI_4096_RUNNER_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
+    "result_classification": "ENGINEERING_PASS_SCHEMA_AND_TARGETED_SEMANTICS_PASS",
+    "retry_authorized": false
+  }
 }
