@@ -43,7 +43,7 @@ test("Phi-4 mini download runner pulls exact model and contains no inference or 
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C entry preserves the pinned Phi-4 mini download across later load-smoke authorization", () => {
+test("Phase C entry preserves the pinned Phi-4 mini download across later semantic-probe authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -62,7 +62,6 @@ test("Phase C entry preserves the pinned Phi-4 mini download across later load-s
     entry.phi4_mini_digest,
     "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
   );
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
 });
