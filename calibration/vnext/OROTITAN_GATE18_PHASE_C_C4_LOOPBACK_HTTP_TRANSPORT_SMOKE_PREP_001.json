@@ -1,0 +1,37 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LOOPBACK_HTTP_TRANSPORT_SMOKE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-LOOPBACK-HTTP-TRANSPORT-SMOKE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_TRANSPORT_REMEDIATION",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "basis": {
+    "diagnostic": "G18-PHASEC-C4-STM-NODE-UNDICI-HEADERS-TIMEOUT-STATIC-001",
+    "classification": "CLIENT_TRANSPORT_HEADERS_TIMEOUT_300S_PREEMPTED_EXPLICIT_420S_ABORT_HIGH_CONFIDENCE"
+  },
+  "helper": "runtime/vnext/loopback-http-json-client.ts",
+  "runner": "scripts/vnext-gate18-phase-c-c4-loopback-http-transport-smoke.ts",
+  "probes": {
+    "delayed_success": {
+      "delayed_headers_ms": 1500,
+      "explicit_timeout_ms": 5000,
+      "expected": "SUCCESS"
+    },
+    "explicit_timeout": {
+      "delayed_headers_ms": 1500,
+      "explicit_timeout_ms": 250,
+      "expected": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_250MS"
+    }
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_LOOPBACK_HTTP_TRANSPORT_SMOKE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
