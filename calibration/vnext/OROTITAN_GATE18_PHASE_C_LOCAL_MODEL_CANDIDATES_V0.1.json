@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "C0_HARDWARE_CONSTRAINED_SHORTLIST",
+  "status": "POST_C4_STATIC_EXPANSION_RECORDED_NO_DOWNLOAD",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -12,7 +12,9 @@
     "paid_models_benchmark_only": true,
     "no_hidden_cloud_fallback": true,
     "initial_context_tokens": 4096,
-    "context_growth_policy": "INCREASE_ONLY_AFTER_STABLE_LOCAL_SMOKE_AND_MEMORY_MEASUREMENT"
+    "context_growth_policy": "INCREASE_ONLY_AFTER_STABLE_LOCAL_SMOKE_AND_MEMORY_MEASUREMENT",
+    "post_c4_escalation_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+    "next_static_candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M"
   },
   "candidates": [
     {
@@ -98,6 +100,51 @@
       "role": "REJECTED_BY_CURRENT_HARDWARE",
       "admission_state": "C0_REJECT_CURRENT_MACHINE",
       "source_url": "https://ollama.com/library/qwen3"
+    },
+    {
+      "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "family": "Phi-4",
+      "model_id": "phi4-mini:3.8b-q4_K_M",
+      "total_parameters": "3.8B",
+      "architecture": "dense",
+      "quantization": "Q4_K_M",
+      "license": "MIT",
+      "observed_ollama_artifact_size": "2.5GB",
+      "role": "POST_C4_ESCALATION_CANDIDATE_1",
+      "admission_state": "STATIC_RESEARCHED_NOT_DOWNLOADED",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
+      "source_url": "https://ollama.com/library/phi4-mini/tags"
+    },
+    {
+      "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "family": "Qwen3.5",
+      "model_id": "qwen3.5:4b-q4_K_M",
+      "total_parameters": "4B",
+      "architecture": "multimodal",
+      "quantization": "Q4_K_M",
+      "license": "Apache-2.0",
+      "observed_ollama_artifact_size": "3.4GB",
+      "role": "POST_C4_ESCALATION_CANDIDATE_2",
+      "admission_state": "STATIC_RESEARCHED_NOT_DOWNLOADED",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "rationale": "Current Qwen successor in the same parameter class; artifact is larger than the current Qwen3 4B candidate so memory fit must be proven before inference.",
+      "source_url": "https://ollama.com/library/qwen3.5/tags"
+    },
+    {
+      "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+      "family": "Gemma 3",
+      "model_id": "gemma3:4b-it-q4_K_M",
+      "total_parameters": "4.3B",
+      "architecture": "multimodal",
+      "quantization": "Q4_K_M",
+      "license": "Gemma Terms of Use",
+      "observed_ollama_artifact_size": "3.3GB",
+      "role": "POST_C4_ESCALATION_CANDIDATE_3",
+      "admission_state": "STATIC_RESEARCHED_LICENSE_REVIEW_REQUIRED_NOT_DOWNLOADED",
+      "planned_runtime": "OLLAMA_LOCAL",
+      "rationale": "Different model family with plausible static hardware fit; separate license review is required before production candidacy.",
+      "source_url": "https://ollama.com/library/gemma3/tags"
     }
   ],
   "paid_benchmark_models": {
