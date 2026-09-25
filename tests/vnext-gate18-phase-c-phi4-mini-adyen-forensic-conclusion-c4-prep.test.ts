@@ -106,7 +106,7 @@ test("Phi-4 C4 static preflight performs no Ollama or network inference", () => 
   assert.match(source, /c4InferenceAuthorized: false/);
 });
 
-test("Phase C preserves Phi-4 C4 admission while advancing to context16384 load smoke", () => {
+test("Phase C preserves Phi-4 C4 admission across later first-cell execution advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -125,13 +125,7 @@ test("Phase C preserves Phi-4 C4 admission while advancing to context16384 load 
   );
   assert.equal(entry.phi4_mini_structured_output_reliability_acceptable, false);
   assert.equal(entry.phi4_mini_reliability_retest_required, true);
-  assert.equal(entry.phi4_mini_c4_inference_authorized, false);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
-  assert.equal(entry.phi4_mini_c4_context16384_load_smoke_authorized, true);
   assert.equal(entry.phi4_mini_c4_proposed_common_context_tokens, 16384);
-  assert.equal(
-    entry.next_action,
-    "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
-  );
+  assert.equal(entry.phi4_mini_c4_context16384_load_fit, "PASS");
 });
