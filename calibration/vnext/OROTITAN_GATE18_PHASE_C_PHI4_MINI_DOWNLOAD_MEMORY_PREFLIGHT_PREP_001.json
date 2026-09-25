@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_PREFLIGHT",
-  "status": "PREPARED_STATIC_NO_DOWNLOAD_NO_INFERENCE_AWAITING_EXPLICIT_USER_AUTHORIZATION",
+  "status": "DOWNLOAD_COMPLETED_MEMORY_LOAD_PREFLIGHT_SPLIT_TO_SEPARATE_AUTHORIZATION",
   "source_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
   "candidate": {
     "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
@@ -47,9 +47,12 @@
     "prompt_change_authorized": false,
     "schema_change_authorized": false,
     "production_mutation": false,
-    "publication_authority": false
+    "publication_authority": false,
+    "load_smoke_authorized": false
   },
-  "explicit_user_authorization_required_for": "DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M_ONLY",
-  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "explicit_user_authorization_required_for": "ONE_PHI4_MINI_LOAD_AND_UNLOAD_WITHOUT_PROMPT_OR_GENERATION_AT_CONTEXT4096",
+  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_FOR_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_4096",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "download_result": "G18-PHASEC-PHI4-MINI-DOWNLOAD-RESULT-001",
+  "load_smoke_prep": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-PREP-001"
 }
