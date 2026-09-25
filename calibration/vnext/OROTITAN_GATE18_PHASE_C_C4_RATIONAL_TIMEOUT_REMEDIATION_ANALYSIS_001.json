@@ -1,0 +1,73 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_TIMEOUT_REMEDIATION_ANALYSIS_V0.1",
+  "analysis_id": "G18-PHASEC-C4-RATIONAL-TIMEOUT-REMEDIATION-ANALYSIS-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "COMPLETE_NO_INFERENCE",
+  "failed_attempt": "C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1280_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "failed_runtime_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_600000MS",
+  "observed_reference_runs": [
+    {
+      "company": "STMicroelectronics",
+      "prompt_bytes": 7558,
+      "prompt_eval_count": 3059,
+      "eval_count": 1024,
+      "wall_clock_ms": 338601
+    },
+    {
+      "company": "Constellation Software",
+      "prompt_bytes": 9041,
+      "prompt_eval_count": 3348,
+      "eval_count": 962,
+      "wall_clock_ms": 376327
+    },
+    {
+      "company": "Brookfield Corporation",
+      "prompt_bytes": 9643,
+      "prompt_eval_count": 3668,
+      "eval_count": 1096,
+      "wall_clock_ms": 495684
+    },
+    {
+      "company": "Adyen",
+      "prompt_bytes": 11671,
+      "prompt_eval_count": 4078,
+      "eval_count": 1109,
+      "wall_clock_ms": 492659
+    }
+  ],
+  "heuristic": {
+    "description": "Use prior C4 prompt-bytes-to-prompt-eval ratios plus observed wall_clock/(prompt_eval_count*eval_count) coefficients to derive a conservative timeout envelope. This is an empirical sizing heuristic, not a runtime guarantee.",
+    "observed_bytes_per_prompt_eval_token_min": 2.4707420726,
+    "observed_bytes_per_prompt_eval_token_max": 2.8619421285,
+    "rational_prompt_bytes": 35756,
+    "conservative_rational_prompt_eval_count_range": [
+      12494,
+      14472
+    ],
+    "observed_wall_ms_per_prompt_eval_times_eval_max": 0.1233005517,
+    "conservative_full_1280_output_upper_wall_clock_ms": 2284003,
+    "selected_timeout_ms": 2700000,
+    "selected_timeout_headroom_vs_upper_estimate_pct": 18.21
+  },
+  "decision": {
+    "max_output_tokens": 1280,
+    "context_tokens": 16384,
+    "client_timeout_ms": 2700000,
+    "temperature": 0,
+    "request_body_identity_unchanged": true,
+    "request_sha256": "0132c86d5372c512b6a7628cd6f06bd8ea79e5348ee1a992b9467cea6c65fe6d",
+    "rationale": "Keep the C4 output budget and request body fixed, change only the client timeout, and provide bounded headroom over a conservative empirical runtime estimate."
+  },
+  "boundaries": {
+    "timeout2700_adequacy_guaranteed": false,
+    "runtime_completion_guaranteed": false,
+    "output_truncation_impossible_concluded": false,
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_capability_failure_concluded": false
+  },
+  "next_action": "PREPARE_TIMEOUT2700_RUNNER_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

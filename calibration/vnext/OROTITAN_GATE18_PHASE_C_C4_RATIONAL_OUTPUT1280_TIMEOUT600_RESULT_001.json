@@ -1,0 +1,56 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_OUTPUT1280_TIMEOUT600_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL_RUNTIME_TIMEOUT",
+  "source_authorization": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-AUTH-001",
+  "matrix_cell_id": "C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "attempt_id": "C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1280_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "company": "RATIONAL AG",
+  "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0"
+  },
+  "identities": {
+    "packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879",
+    "prompt_sha256": "70265015372600e619010150a72e72dad5df32973f61c01a79658994ea02c0a5",
+    "request_sha256": "0132c86d5372c512b6a7628cd6f06bd8ea79e5348ee1a992b9467cea6c65fe6d"
+  },
+  "execution": {
+    "wall_clock_ms": 600330,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_600000MS",
+    "schema_valid": false,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": null
+  },
+  "classification": {
+    "runtime_completed": false,
+    "provider_response_received": false,
+    "structured_output_observed": false,
+    "schema_quality_assessed": false,
+    "semantic_quality_assessed": false,
+    "model_capability_failure_concluded": false,
+    "output_budget_failure_concluded": false,
+    "timeout600_adequacy_invalidated": true
+  },
+  "authority": {
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "retry_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "private_output_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T160043520Z__C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "next_action": "PREPARE_BOUNDED_TIMEOUT_REMEDIATION_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
