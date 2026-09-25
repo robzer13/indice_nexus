@@ -74,7 +74,7 @@ test("Phi-4 mini load-smoke runner requires the exact separate authorization art
   assert.doesNotMatch(raw, /\/api\/chat/);
 });
 
-test("Phase C preserves pinned download and measured load fit while inference stays blocked", () => {
+test("Phase C preserves pinned download and measured load fit across later semantic-probe authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -90,7 +90,6 @@ test("Phase C preserves pinned download and measured load fit while inference st
     entry.phi4_mini_load_smoke_authorization_status,
     "CONSUMED_SINGLE_LOAD_ONLY",
   );
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_load_fit_at_4096, "PASS");
   assert.equal(entry.phi4_mini_loaded_vram_free_mib, 1668);
