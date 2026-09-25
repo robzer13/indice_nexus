@@ -1,0 +1,72 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_LOOPBACK_HTTP_TRANSPORT_REMEDIATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-TRANSPORT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_TRANSPORT_REMEDIATION",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001",
+    "v5_result": "G18-PHASEC-C4-STM-OLLAMA-500-CONTEXT-FORENSICS-V5-RESULT-001",
+    "transport_static_diagnostic": "G18-PHASEC-C4-STM-NODE-UNDICI-HEADERS-TIMEOUT-STATIC-001",
+    "transport_smoke_result": "G18-PHASEC-C4-LOOPBACK-HTTP-TRANSPORT-SMOKE-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-output1024-timeout420-loopback-guarded.ts",
+  "future_authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+  "future_authorization_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_STMICRO_QWEN3_4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_AUTH_001.json",
+  "future_attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+  "frozen_inference": {
+    "company": "STMicroelectronics",
+    "archetype": "CYCLICAL_SEGMENTED",
+    "model_name": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "execution_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91",
+    "prompt_bytes": 7558,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "keep_alive": "0s",
+    "sleep_guard_required": true
+  },
+  "remediation_delta": {
+    "transport_from": "NODE_GLOBAL_FETCH_UNDICI",
+    "transport_to": "NODE_HTTP_REQUEST_LOOPBACK",
+    "model_change": false,
+    "model_digest_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "packet_change": false,
+    "context_change": false,
+    "max_output_change": false,
+    "temperature_change": false,
+    "explicit_client_timeout_change": false,
+    "sleep_guard_change": false
+  },
+  "constraints": {
+    "authorized_run_count": 0,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "second_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "model_download_authorized": false,
+    "paid_model_escalation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "future_authorization_contract": {
+    "status": "AUTHORIZED_SINGLE_LOCAL_TRANSPORT_REMEDIATION",
+    "authorized_run_count": 1,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "exact_attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+    "sleep_guard_required": true,
+    "all_frozen_inference_fields_must_match": true
+  }
+}

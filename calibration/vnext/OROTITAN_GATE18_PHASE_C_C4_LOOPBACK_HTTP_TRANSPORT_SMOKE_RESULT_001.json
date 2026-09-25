@@ -1,0 +1,51 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LOOPBACK_HTTP_TRANSPORT_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-LOOPBACK-HTTP-TRANSPORT-SMOKE-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_TRANSPORT_REMEDIATION",
+  "status": "PASS",
+  "mode": "LOCAL_READ_ONLY_NO_INFERENCE",
+  "node": {
+    "version": "v22.23.3",
+    "undici_version": "6.28.1"
+  },
+  "success_probe": {
+    "delayed_headers_ms": 1500,
+    "explicit_timeout_ms": 5000,
+    "wall_clock_ms": 1525,
+    "response_ok": true
+  },
+  "explicit_timeout_probe": {
+    "delayed_headers_ms": 1500,
+    "explicit_timeout_ms": 250,
+    "wall_clock_ms": 256,
+    "timeout_observed": true,
+    "timeout_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_250MS"
+  },
+  "transport": {
+    "implementation": "node:http.request",
+    "global_fetch_used": false,
+    "undici_dispatcher_used": false,
+    "loopback_only": true,
+    "hidden_headers_timeout_configured": false,
+    "explicit_abort_timer_only": true
+  },
+  "interpretation": {
+    "replacement_transport_smoke_passed": true,
+    "hidden_undici_headers_timeout_removed_from_smoke_path": true,
+    "explicit_timeout_behavior_verified": true,
+    "inference_transport_remediation_preparation_justified": true,
+    "inference_retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_load_authorized": false,
+    "parameter_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_STMICRO_LOOPBACK_HTTP_TRANSPORT_REMEDIATION_RUNNER",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
