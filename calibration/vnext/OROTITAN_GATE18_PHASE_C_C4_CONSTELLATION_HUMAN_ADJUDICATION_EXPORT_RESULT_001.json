@@ -1,0 +1,43 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_HUMAN_ADJUDICATION_EXPORT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-EXPORT-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "PASS_REVIEW_PACKET_READY",
+  "mode": "LOCAL_PRIVATE_NO_INFERENCE",
+  "source": {
+    "automated_result": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+    "export_prep": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-EXPORT-PREP-001"
+  },
+  "export_summary": {
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "priority_finding_count": 3,
+    "material_conflict_count": 1,
+    "weak_link_count": 2,
+    "unresolved_point_count": 3,
+    "packet_identity_verified": true,
+    "prompt_identity_verified": true,
+    "no_inference_executed": true,
+    "public_repo_persistence": false,
+    "publication_authority": false
+  },
+  "private_review_packet": {
+    "expected_local_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T091318903Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001__HUMAN_ADJUDICATION_PACKET.json",
+    "content_persisted_to_public_repo": false,
+    "chat_attachment_reviewed": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "final_moat_conclusion_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "COMPLETE_CONSTELLATION_HUMAN_QUALITY_ADJUDICATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

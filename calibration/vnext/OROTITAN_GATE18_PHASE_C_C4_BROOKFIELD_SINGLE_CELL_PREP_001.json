@@ -1,0 +1,81 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_SINGLE_CELL_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "matrix_prep": "G18-PHASEC-C4-QWEN3-4B-MATRIX-PREP-001",
+    "remaining_preflight": "G18-PHASEC-C4-REMAINING-MATRIX-STATIC-PREFLIGHT-V2-RESULT-001",
+    "completed_stmicro": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+    "completed_constellation": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-brookfield-qwen4b-context16384-output1024-timeout480-loopback-guarded.ts",
+  "future_authorization_id": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-AUTH-001",
+  "future_authorization_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_QWEN3_4B_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_AUTH_001.json",
+  "future_attempt_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001",
+  "matrix_cell_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "frozen_inference": {
+    "company": "Brookfield Corporation",
+    "archetype": "ACCOUNTING_HEAVY",
+    "model_name": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 12,
+    "conflict_count": 2,
+    "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+    "prompt_bytes": 9643,
+    "request_sha256": "28d1917a888bf5981fb4b524243af2d78ee67feb33e5e1554a5c4d787520dd80",
+    "request_bytes": 18096,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 480000,
+    "keep_alive": "0s",
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "selection_basis": {
+    "remaining_companies": [
+      "RATIONAL AG",
+      "Brookfield Corporation",
+      "Adyen"
+    ],
+    "smallest_remaining_prompt_company": "Brookfield Corporation",
+    "smallest_remaining_prompt_bytes": 9643,
+    "closest_completed_runtime_reference": "Constellation Software",
+    "distinct_archetype": "ACCOUNTING_HEAVY"
+  },
+  "future_authorization_contract": {
+    "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+    "authorized_run_count": 1,
+    "exact_company": "Brookfield Corporation",
+    "exact_attempt_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001",
+    "exact_transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "exact_client_timeout_ms": 480000,
+    "all_frozen_inference_fields_must_match": true
+  },
+  "constraints": {
+    "authorized_run_count": 0,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "second_retry_authorized": false,
+    "model_switch_authorized": false,
+    "model_download_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false,
+    "temperature_change_authorized": false,
+    "transport_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

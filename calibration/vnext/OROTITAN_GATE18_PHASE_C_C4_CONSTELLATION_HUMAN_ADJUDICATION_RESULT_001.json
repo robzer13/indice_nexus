@@ -1,0 +1,75 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_HUMAN_QUALITY_CARRY",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "source": {
+    "automated_result": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+    "adjudication_export_result": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-EXPORT-RESULT-001",
+    "private_packet_reviewed": true,
+    "private_packet_content_persisted_publicly": false
+  },
+  "engineering_carry": {
+    "output_budget_fully_consumed": false,
+    "done_reason": "stop",
+    "eval_count": 962,
+    "max_output_tokens": 1024,
+    "output_token_margin": 62,
+    "disposition": "NO_OUTPUT_BUDGET_SATURATION_CARRY"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "PASS_WITH_DEFECT",
+    "claim_atomicity": "PASS",
+    "claim_target_alignment": "PASS",
+    "support_counterevidence_polarity": "PASS",
+    "qualification_orthogonality": "PASS_WITH_DEFECT",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS_WITH_DEFECT",
+    "unresolved_point_usefulness": "PASS_WITH_DEFECT",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "PASS_WITH_DEFECT"
+  },
+  "carry_codes": [
+    "RECURRING_SHARE_MISCHARACTERIZED_AS_DIRECT_ISSUER_REPORTED_WHEN_PACKET_CLASSIFIES_RATIO_AS_CALCULATED",
+    "E045_REPLACEMENT_LIMITATION_NOT_SURFACED_IN_FINDING_EVIDENCE_QUALIFICATIONS",
+    "WEAK_LINK_CANDIDATE_LABELS_USE_EVIDENCE_IDS_INSTEAD_OF_SEMANTIC_LABELS",
+    "UNRESOLVED_POINT_FRAMES_DISCLOSURE_ABSENCE_AS_POSSIBLE_LOW_RETENTION_SIGNAL_DESPITE_PACKET_LIMITATION",
+    "PRIORITY_SELECTION_UNDERWEIGHTS_SERIAL_ACQUIRER_SPECIFIC_ORGANIZATIONAL_AND_SOURCING_EVIDENCE"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "unsupported_counterevidence_polarity": false,
+    "claim_atomicity_critical_failure": false,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": false
+  },
+  "disposition": {
+    "automated_engineering_pass": true,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": false,
+    "clean_pass": false,
+    "pass_with_carry": true,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_BROOKFIELD_SINGLE_CELL_INFERENCE_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
