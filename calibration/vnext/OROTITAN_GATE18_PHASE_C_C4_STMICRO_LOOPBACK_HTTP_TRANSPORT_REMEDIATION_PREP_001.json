@@ -60,5 +60,13 @@
     "publication_authority": false
   },
   "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "future_authorization_contract": {
+    "status": "AUTHORIZED_SINGLE_LOCAL_TRANSPORT_REMEDIATION",
+    "authorized_run_count": 1,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "exact_attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+    "sleep_guard_required": true,
+    "all_frozen_inference_fields_must_match": true
+  }
 }
