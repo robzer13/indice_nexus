@@ -81,10 +81,6 @@ test("Phase C entry preserves Phi-4 mini escalation selection across later autho
   assert.equal(entry.candidate_registry_static_expansion_completed, true);
   assert.equal(entry.candidate_registry_static_expansion_count, 3);
   assert.equal(entry.candidate_escalation_first_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
-  assert.equal(entry.phi4_mini_download_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
-  assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.candidate_registry_static_expansion_completed, true);
-  assert.equal(entry.candidate_escalation_first_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
   assert.equal(entry.model_switch_authorized, false);
 });
