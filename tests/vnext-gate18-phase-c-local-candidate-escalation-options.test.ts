@@ -36,7 +36,7 @@ test("expanded local candidate registry preserves ordering while recording Phi-4
   );
   const ids = new Set(registry.candidates.map((candidate: { candidate_id: string }) => candidate.candidate_id));
 
-  assert.equal(registry.status, "POST_C4_PHI4_MINI_BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_FORENSICS_PENDING");
+  assert.equal(registry.status, "POST_C4_PHI4_MINI_TARGETED_REGRESSIONS_PASS_WITH_RELIABILITY_CARRY_C4_STATIC_PREFLIGHT_PENDING");
   assert.equal(registry.selection_policy.no_model_winner_selected, true);
   assert.equal(registry.selection_policy.next_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
   assert.equal(ids.has("PHI4_MINI_3_8B_OLLAMA_Q4_K_M"), true);
@@ -46,7 +46,7 @@ test("expanded local candidate registry preserves ordering while recording Phi-4
     (candidate: { candidate_id: string }) =>
       candidate.candidate_id === "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
   );
-  assert.equal(phi.admission_state, "BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_FORENSICS_PENDING_CONTEXT4096");
+  assert.equal(phi.admission_state, "TARGETED_REGRESSIONS_PASS_WITH_RELIABILITY_CARRY_C4_STATIC_PREFLIGHT_PENDING");
   assert.equal(phi.observed_loaded_vram_free_mib, 1668);
   assert.equal(phi.semantic_inference_authorized, false);
 });
