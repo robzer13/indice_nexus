@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "PREPARE_LOCAL_CANDIDATE_ESCALATION_OPTIONS_STATIC_ONLY",
+  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -889,5 +889,12 @@
   "c5_qwen3_4b_production_admission_path": "NOT_ADMITTED",
   "c5_qwen3_4b_diagnostic_repeatability_future_authorization_possible": true,
   "candidate_escalation_static_options_required": true,
-  "model_switch_authorized": false
+  "model_switch_authorized": false,
+  "candidate_escalation_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+  "candidate_registry_static_expansion_completed": true,
+  "candidate_registry_static_expansion_count": 3,
+  "candidate_escalation_first_static_candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+  "phi4_mini_download_memory_preflight_prep": "G18-PHASEC-PHI4-MINI-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
+  "phi4_mini_download_authorized": false,
+  "phi4_mini_inference_authorized": false
 }
