@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "CONTEXT16384_LOAD_PASS_FIRST_CELL_STMICRO_AUTHORIZED",
+  "status": "FIRST_CELL_STMICRO_SEMANTIC_FAIL_FORENSICS_PENDING",
   "precondition": {
     "c3_result": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "c3_conclusion_id": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
@@ -96,7 +96,7 @@
   },
   "execution_policy": {
     "initial_mode": "STATIC_REQUEST_PREFLIGHT_ONLY",
-    "c4_inference_authorized": true,
+    "c4_inference_authorized": false,
     "automatic_retry_authorized": false,
     "automatic_model_switch_authorized": false,
     "prompt_change_authorized": false,
@@ -106,7 +106,7 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_ONE_STMICRO_PHI4_MINI_C4_FULL_PACKET_INFERENCE_CONTEXT16384",
+  "next_action": "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "static_preflight_result": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
   "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
@@ -118,12 +118,16 @@
     "selection_basis": "SMALLEST_FULL_PACKET_BY_STATIC_PREFLIGHT",
     "prep_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-PREP-001",
     "authorization_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
-    "authorized": true,
+    "authorized": false,
     "context_tokens": 16384,
     "max_output_tokens": 1024,
     "temperature": 0,
     "client_timeout_ms": 420000,
     "transport": "NODE_HTTP_REQUEST_LOOPBACK",
-    "sleep_guard_required": true
+    "sleep_guard_required": true,
+    "result_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+    "result_status": "SEMANTIC_FAIL_FORENSICS_REQUIRED",
+    "semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
+    "forensic_prep_id": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-PREP-001"
   }
 }
