@@ -1,0 +1,56 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_HUMAN_ADJUDICATION_EXPORT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-EXPORT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "PREPARED_LOCAL_PRIVATE_NO_INFERENCE",
+  "basis": {
+    "automated_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+    "matrix_prep": "G18-PHASEC-C4-QWEN3-4B-MATRIX-PREP-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-human-adjudication-export.ts",
+  "expected_private_run_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T070506830Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "private_repo_root": "C:\\Users\\robin\\real-orotitan",
+  "output_policy": {
+    "destination": "SIBLING_PRIVATE_FILE_NEXT_TO_SOURCE_RUN",
+    "suffix": "__HUMAN_ADJUDICATION_PACKET.json",
+    "public_repo_persistence": false,
+    "generated_content_publication": false
+  },
+  "integrity_checks": {
+    "matrix_cell_id": true,
+    "attempt_id": true,
+    "company": true,
+    "model": true,
+    "model_digest": true,
+    "prompt_sha256": true,
+    "packet_sha256_rebuilt_and_matched": true,
+    "schema_reparse": true,
+    "source_run_automated_pass_required": true
+  },
+  "human_quality_criteria": [
+    "exact_evidence_grounding",
+    "claim_atomicity",
+    "claim_target_alignment",
+    "support_counterevidence_polarity",
+    "qualification_orthogonality",
+    "conflict_handling",
+    "weak_link_usefulness",
+    "unresolved_point_usefulness",
+    "judgment_boundary_compliance",
+    "priority_selection_usefulness"
+  ],
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "final_moat_conclusion_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_STMICRO_HUMAN_ADJUDICATION_PACKET_EXPORT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
