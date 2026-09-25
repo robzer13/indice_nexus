@@ -52,7 +52,7 @@ test("Phi-4 targeted regression conclusion admits C4 conditionally with reliabil
     result.candidate_disposition.admission_mode,
     "CONDITIONAL_WITH_RELIABILITY_CARRY",
   );
-  assert.equal(result.reliability_carry.c4_auto_repair_forbidden, true);
+  assert.equal(result.reliability_carry.auto_repair_for_c4_forbidden, true);
   assert.equal(result.authority.c4_execution_authorized, false);
 });
 
