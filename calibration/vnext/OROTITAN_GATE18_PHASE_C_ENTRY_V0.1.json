@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+  "next_action": "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -896,7 +896,7 @@
   "candidate_escalation_first_static_candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
   "phi4_mini_download_memory_preflight_prep": "G18-PHASEC-PHI4-MINI-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
   "phi4_mini_download_authorized": false,
-  "phi4_mini_inference_authorized": false,
+  "phi4_mini_inference_authorized": true,
   "phi4_mini_download_authorization": "G18-PHASEC-PHI4-MINI-DOWNLOAD-AUTH-001",
   "phi4_mini_download_authorization_status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "phi4_mini_download_verify_script": "scripts/vnext-gate18-phase-c-phi4-mini-download-verify.ts",
@@ -951,5 +951,11 @@
   "phi4_mini_adyen_compact4096_max_output_tokens": 768,
   "phi4_mini_adyen_compact4096_temperature": 0,
   "phi4_mini_adyen_compact4096_client_timeout_ms": 180000,
-  "phi4_mini_adyen_compact4096_inference_authorized": false
+  "phi4_mini_adyen_compact4096_inference_authorized": true,
+  "standing_technical_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
+  "standing_technical_authorization_status": "ACTIVE",
+  "standing_in_scope_reprompt_required": false,
+  "phi4_mini_adyen_compact4096_inference_authorization_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-AUTH-001",
+  "phi4_mini_adyen_compact4096_inference_authorization_status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "phi4_mini_adyen_compact4096_authorized_run_count": 1
 }
