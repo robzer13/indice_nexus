@@ -1,0 +1,42 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_ADYEN_CONFLICT_GROUNDING_FORENSIC_V3_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-ADYEN-CONFLICT-GROUNDING-FORENSIC-V3-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "PREPARED_LOCAL_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-ADYEN-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-ADYEN-CAUSAL-LINK-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-ADYEN-NARRATIVE-SATURATION-FORENSIC-V2-RESULT-001"
+  ],
+  "runner": "scripts/vnext-gate18-phase-c-c4-adyen-conflict-grounding-forensic-v3.ts",
+  "expected_private_artifact": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T125304239Z__C4_ADYEN_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "diagnostic_normalization": {
+    "cumulative": true,
+    "causal_link_completion": "Append one period only to causal_link values lacking terminal . ! or ? punctuation.",
+    "narrative_saturation": "Replace only narratives with trimmed length >=178 by short field-appropriate diagnostic placeholders on the in-memory copy.",
+    "conflict_grounding": "Remove a finding conflict_id only when the packet conflict has evidence_refs and none overlap the finding support/counterevidence refs.",
+    "raw_narrative_text_printed": false,
+    "in_memory_only": true,
+    "source_artifact_mutation": false,
+    "retroactive_pass_allowed": false
+  },
+  "observed_deterministic_defect_classes": [
+    "CAUSAL_LINK_INCOMPLETE",
+    "NARRATIVE_BOUNDARY_SATURATION",
+    "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS"
+  ],
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_ADYEN_CONFLICT_GROUNDING_FORENSIC_V3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
