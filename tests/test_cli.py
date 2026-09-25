@@ -67,6 +67,8 @@ class CLIRunnerTests(unittest.TestCase):
                     "risk": 5.0,
                     "as_of": "2023-01-03T09:00:00+00:00",
                     "notes": ["missing: SMA200"],
+                    "weights": {"trend": 0.4, "momentum": 0.3, "quality": 0.2, "risk": 0.1},
+                    "regime": "Expansion",
                 },
                 "meta": {
                     "ticker": "AAA",
@@ -87,6 +89,8 @@ class CLIRunnerTests(unittest.TestCase):
                     "risk": 4.0,
                     "as_of": "2023-01-03T09:00:00+00:00",
                     "notes": [],
+                    "weights": {"trend": 0.3, "momentum": 0.3, "quality": 0.25, "risk": 0.15},
+                    "regime": "Expansion",
                 },
                 "meta": {
                     "ticker": "BBB",

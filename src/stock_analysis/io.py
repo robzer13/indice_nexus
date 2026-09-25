@@ -134,6 +134,7 @@ def save_analysis(
     schema_version: str = "1.0.0",
     backtest: Dict[str, object] | None = None,
     include_backtest: bool = True,
+    regime: Dict[str, object] | None = None,
 ) -> List[str]:
     """Persist the aggregated ``result`` to disk and return the created paths."""
 
@@ -205,6 +206,7 @@ def save_analysis(
             bundle = payload.get("score")
             if isinstance(bundle, dict) and bundle:
                 notes = bundle.get("notes") if isinstance(bundle.get("notes"), list) else []
+                weight_map = bundle.get("weights") if isinstance(bundle.get("weights"), dict) else {}
                 scoreboard_rows.append(
                     {
                         "Ticker": ticker,
@@ -213,6 +215,10 @@ def save_analysis(
                         "Momentum": bundle.get("momentum"),
                         "Quality": bundle.get("quality"),
                         "Risk": bundle.get("risk"),
+                        "TrendW": weight_map.get("trend"),
+                        "MomentumW": weight_map.get("momentum"),
+                        "QualityW": weight_map.get("quality"),
+                        "RiskW": weight_map.get("risk"),
                         "As Of": bundle.get("as_of", ""),
                         "NotesCount": len(notes),
                         "Notes": "; ".join(str(note) for note in notes),
@@ -268,6 +274,21 @@ def save_analysis(
             ml_rows.append(ml_entry)
 
     if include_scores and scoreboard_rows:
+        columns = [
+            "Ticker",
+            "Score",
+            "Trend",
+            "Momentum",
+            "Quality",
+            "Risk",
+            "TrendW",
+            "MomentumW",
+            "QualityW",
+            "RiskW",
+            "As Of",
+            "NotesCount",
+            "Notes",
+        ]
         columns = ["Ticker", "Score", "Trend", "Momentum", "Quality", "Risk", "As Of", "NotesCount", "Notes"]
         scores_frame = pd.DataFrame({column: [row.get(column) for row in scoreboard_rows] for column in columns})
         scores_path = output_directory / f"{base_name}_scores.{format}"
@@ -378,6 +399,7 @@ def save_analysis(
         "ml": ml_rows,
         "ml_summary_file": str(ml_summary_path) if ml_summary_path else None,
         "backtest": backtest_manifest,
+        "regime": regime,
         "versions": {
             "package": __version__,
             "python": platform.python_version(),
