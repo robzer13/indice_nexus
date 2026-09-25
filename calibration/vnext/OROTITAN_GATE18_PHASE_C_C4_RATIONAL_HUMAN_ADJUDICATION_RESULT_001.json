@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-RATIONAL-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_ENGINEERING_FAIL_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "company": "RATIONAL AG",
+  "matrix_cell_id": "C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "source": {
+    "automated_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+    "adjudication_export_result": "G18-PHASEC-C4-RATIONAL-HUMAN-ADJUDICATION-EXPORT-RESULT-001",
+    "exhaustive_semantic_forensic": "G18-PHASEC-C4-RATIONAL-COUNTEREVIDENCE-LINK-FORENSIC-V4-RESULT-001",
+    "private_packet_reviewed": true,
+    "private_packet_content_persisted_publicly": false,
+    "original_output_adjudicated_as_emitted": true
+  },
+  "engineering_disposition": {
+    "runtime_pass": true,
+    "schema_valid": true,
+    "semantic_validator_pass": false,
+    "semantic_error": "VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS",
+    "deterministic_semantic_failure": true,
+    "deterministic_defect_class_count": 4,
+    "deterministic_defect_classes": [
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "DIRECTION_ROLE_OVERLAP",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM",
+      "COUNTEREVIDENCE_LINK_INCOMPLETE"
+    ],
+    "output_budget_fully_consumed": false,
+    "done_reason": "stop",
+    "eval_count": 1098,
+    "max_output_tokens": 1280,
+    "output_token_margin": 182,
+    "disposition": "ENGINEERING_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "FAIL",
+    "claim_atomicity": "FAIL",
+    "claim_target_alignment": "FAIL",
+    "support_counterevidence_polarity": "FAIL",
+    "qualification_orthogonality": "FAIL",
+    "conflict_handling": "FAIL",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "FAIL"
+  },
+  "failure_codes": [
+    "FINDING_1_OVERSTATES_E006_FEATURE_DESCRIPTION_AS_COMPETITIVE_DIFFERENTIATION",
+    "FINDING_1_ATTACHES_C005_WITHOUT_FINDING_EVIDENCE_OVERLAP",
+    "FINDING_2_ATTACHES_C007_WITHOUT_FINDING_EVIDENCE_OVERLAP",
+    "FINDING_2_IS_NON_ATOMIC_CONTRASTIVE_CLAIM",
+    "FINDING_2_USES_E031_AS_BOTH_SUPPORT_AND_COUNTEREVIDENCE",
+    "FINDING_2_COUNTEREVIDENCE_LINK_IS_INCOMPLETE_AND_BOUNDARY_SATURATED",
+    "FINDING_2_E031_QUALIFICATION_RESTATES_CORE_NEGATIVE_CLAIM",
+    "MATERIAL_CONFLICT_SELECTION_OMITS_DIRECTLY_RELEVANT_C006_AND_C011",
+    "PRIORITY_SELECTION_UNDERWEIGHTS_INDEPENDENT_CUSTOMER_ECONOMIC_EVIDENCE_SERVICE_ECOSYSTEM_AND_COMPETITOR_REPLICABILITY",
+    "PRIORITY_SELECTION_IS_NOT_SUFFICIENTLY_DIRECT_TO_ECONOMIC_MOAT_MECHANISMS"
+  ],
+  "positive_observations": [
+    "NO_EVIDENCE_ID_INVENTION",
+    "NO_CONFLICT_ID_INVENTION",
+    "WEAK_LINKS_ARE_PACKET_GROUNDED_AND_ACTIONABLE",
+    "ALL_THREE_UNRESOLVED_POINTS_ARE_ACTIONABLE_AND_PACKET_GROUNDED",
+    "E006_QUALIFICATION_CORRECTLY_LIMITS_ECONOMIC_INFERENCE",
+    "NO_FINAL_MOAT_JUDGMENT_EMITTED"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "exact_evidence_grounding_failure": true,
+    "unsupported_counterevidence_polarity": true,
+    "claim_atomicity_critical_failure": true,
+    "ungrounded_conflict_reference": true,
+    "counterevidence_contract_failure": true,
+    "incomplete_counterevidence_link": true,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": true
+  },
+  "disposition": {
+    "automated_engineering_pass": false,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": true,
+    "clean_pass": false,
+    "pass_with_carry": false,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "SYNTHESIZE_C4_FIVE_COMPANY_MATRIX_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

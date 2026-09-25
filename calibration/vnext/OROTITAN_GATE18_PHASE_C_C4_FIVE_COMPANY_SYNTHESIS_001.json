@@ -1,0 +1,121 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_FIVE_COMPANY_SYNTHESIS_V0.1",
+  "synthesis_id": "G18-PHASEC-C4-FIVE-COMPANY-SYNTHESIS-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "C4_MATRIX_COMPLETE_RECURRENT_CRITICAL_FAILURES_OBSERVED",
+  "candidate": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "model": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3"
+  },
+  "matrix": {
+    "planned_cells": 5,
+    "completed_cells": 5,
+    "remaining_cells": 0,
+    "cells": [
+      {
+        "index": 1,
+        "archetype": "SIMPLE_CLEAN_COMPOUNDER",
+        "company": "RATIONAL AG",
+        "human_result": "G18-PHASEC-C4-RATIONAL-HUMAN-ADJUDICATION-RESULT-001",
+        "engineering": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+        "human_quality": "CRITICAL_FAILURE"
+      },
+      {
+        "index": 2,
+        "archetype": "SERIAL_ACQUIRER",
+        "company": "Constellation Software",
+        "human_result": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-RESULT-001",
+        "engineering": "PASS",
+        "human_quality": "PASS_WITH_CARRY"
+      },
+      {
+        "index": 3,
+        "archetype": "CYCLICAL_SEGMENTED",
+        "company": "STMicroelectronics",
+        "human_result": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+        "engineering": "PASS",
+        "human_quality": "PASS_WITH_CARRY"
+      },
+      {
+        "index": 4,
+        "archetype": "ACCOUNTING_HEAVY",
+        "company": "Brookfield Corporation",
+        "human_result": "G18-PHASEC-C4-BROOKFIELD-HUMAN-ADJUDICATION-RESULT-001",
+        "engineering": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+        "human_quality": "CRITICAL_FAILURE"
+      },
+      {
+        "index": 5,
+        "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+        "company": "Adyen",
+        "human_result": "G18-PHASEC-C4-ADYEN-HUMAN-ADJUDICATION-RESULT-001",
+        "engineering": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+        "human_quality": "CRITICAL_FAILURE"
+      }
+    ]
+  },
+  "aggregate": {
+    "automated_engineering_pass_count": 2,
+    "deterministic_engineering_fail_count": 3,
+    "human_quality_clean_pass_count": 0,
+    "human_quality_pass_with_carry_count": 2,
+    "human_quality_critical_failure_count": 3,
+    "critical_failure_companies": [
+      "RATIONAL AG",
+      "Brookfield Corporation",
+      "Adyen"
+    ]
+  },
+  "recurrent_observations": {
+    "ungrounded_finding_conflict_reference_observed_in": [
+      "RATIONAL AG",
+      "Brookfield Corporation",
+      "Adyen"
+    ],
+    "non_atomic_contrastive_claim_observed_in": [
+      "RATIONAL AG",
+      "Brookfield Corporation"
+    ],
+    "narrative_completeness_or_boundary_defect_observed_in": [
+      "RATIONAL AG",
+      "Adyen"
+    ],
+    "priority_selection_critical_failure_observed_in": [
+      "RATIONAL AG",
+      "Brookfield Corporation",
+      "Adyen"
+    ],
+    "evidence_id_invention_observed": false,
+    "conflict_id_invention_observed": false,
+    "final_moat_judgment_boundary_breach_observed": false
+  },
+  "interpretation_boundary": {
+    "c4_matrix_complete": true,
+    "recurrent_critical_errors_observed": true,
+    "global_model_capability_failure_concluded": false,
+    "model_ranking_authority": false,
+    "c5_repeatability_authorized": false,
+    "model_switch_authorized": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "required_post_c4_decision": {
+    "purpose": "Determine whether the current 4B candidate is rejected, conditionally retained for repeatability, or whether a separately authorized escalation is justified.",
+    "must_consider": [
+      "recurrent critical semantic errors across three diversified cells",
+      "two pass-with-carry cells",
+      "current 8GB RAM / 4GB VRAM hardware constraint",
+      "QWEN3_8B_LOCAL is escalation-only and a poor current-hardware fit",
+      "C5 repeatability cannot erase unresolved critical C4 failures"
+    ],
+    "no_inference_required": true
+  },
+  "next_action": "PREPARE_POST_C4_CANDIDATE_DISPOSITION_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
