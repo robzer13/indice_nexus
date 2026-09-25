@@ -97,7 +97,6 @@ test("Phase C preserves Brookfield PASS and the original Adyen semantic FAIL acr
   );
 
   assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
   assert.equal(entry.phi4_mini_adyen_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_adyen_compact4096_max_output_tokens, 768);

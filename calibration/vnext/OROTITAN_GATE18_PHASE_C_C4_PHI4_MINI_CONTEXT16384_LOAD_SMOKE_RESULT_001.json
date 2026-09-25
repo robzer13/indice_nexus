@@ -1,0 +1,95 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.74,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.84,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1680,
+    "vram_used_mib": 2283,
+    "ollama_reported_size": "5.3 GB",
+    "processor_split": "56%/44% CPU/GPU",
+    "context_tokens": 16384,
+    "model_loaded": true
+  },
+  "load": {
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload": {
+    "done": true,
+    "done_reason": "unload",
+    "unload_confirmed": true,
+    "model_unloaded": true
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 3.29,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "comparison_to_context4096": {
+    "context4096_vram_used_mib": 2295,
+    "context16384_vram_used_mib": 2283,
+    "vram_used_delta_mib": -12,
+    "context4096_vram_free_mib": 1668,
+    "context16384_vram_free_mib": 1680,
+    "vram_free_delta_mib": 12,
+    "context4096_loaded_free_ram_gib": 0.81,
+    "context16384_loaded_free_ram_gib": 0.84,
+    "loaded_free_ram_delta_gib": 0.03,
+    "context4096_reported_size": "3.6 GB",
+    "context16384_reported_size": "5.3 GB",
+    "context4096_processor_split": "36%/64% CPU/GPU",
+    "context16384_processor_split": "56%/44% CPU/GPU",
+    "note": "GPU residency did not increase materially because the larger context shifted more of the loaded footprint to CPU/RAM. OS-level free RAM remains noisy and is not treated as a precise memory-cost delta."
+  },
+  "interpretation": {
+    "context16384_load_fit": "PASS",
+    "context16384_inference_fit": "NOT_YET_PROVEN",
+    "gpu_headroom_while_loaded": "MATERIAL_BUT_FINITE",
+    "system_ram_pressure": "HIGH",
+    "first_c4_cell_preparation_allowed": true,
+    "first_c4_cell_selected": "STMicroelectronics",
+    "selection_rationale": "SMALLEST_FULL_PACKET_BY_STATIC_PREFLIGHT",
+    "c4_matrix_execution_complete": false
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_AND_AUTHORIZE_ONE_STMICROELECTRONICS_C4_INFERENCE_AT_CONTEXT16384_UNDER_STANDING_AUTHORIZATION",
+  "base_vnext_sha": "f700b848add53c8056566f005e04625495415afc",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

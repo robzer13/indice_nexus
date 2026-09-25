@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
-  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "status": "CONSUMED_SINGLE_LOAD_ONLY_SMOKE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
@@ -30,7 +30,7 @@
   },
   "execution": {
     "script": "scripts/vnext-gate18-phase-c-c4-phi4-mini-context16384-load-smoke.ts",
-    "action_count_authorized": 1,
+    "action_count_authorized": 0,
     "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
     "loopback_only": true,
     "prompt_provided": false,
@@ -51,13 +51,19 @@
     "publication_authority": false
   },
   "authority": {
-    "context16384_load_smoke_authorized": true,
+    "context16384_load_smoke_authorized": false,
     "context16384_inference_authorized": false,
     "c4_inference_authorized": false,
     "model_winner_selected": false,
     "routing_frozen": false
   },
   "base_vnext_sha": "c4d0c8035666363644791ec48daaffb0197276d3",
-  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_AND_AUTHORIZE_ONE_STMICROELECTRONICS_C4_INFERENCE_AT_CONTEXT16384_UNDER_STANDING_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "result_status": "PASS_LOAD_ONLY_MEASURED",
+    "retry_authorized": false
+  }
 }

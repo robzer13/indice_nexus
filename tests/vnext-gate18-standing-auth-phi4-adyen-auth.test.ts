@@ -82,7 +82,6 @@ test("Phase C preserves standing authorization and consumed Adyen execution hist
 
   assert.equal(entry.standing_technical_authorization_status, "ACTIVE");
   assert.equal(entry.standing_in_scope_reprompt_required, false);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
   assert.equal(
     entry.phi4_mini_adyen_compact4096_inference_authorization_status,

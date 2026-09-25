@@ -36,7 +36,7 @@ test("expanded local candidate registry preserves ordering while recording Phi-4
   );
   const ids = new Set(registry.candidates.map((candidate: { candidate_id: string }) => candidate.candidate_id));
 
-  assert.equal(registry.status, "POST_C4_PHI4_MINI_TARGETED_REGRESSIONS_PASS_RELIABILITY_CARRY_C4_CONTEXT16384_LOAD_SMOKE_PENDING");
+  assert.equal(registry.status, "POST_C4_PHI4_MINI_CONTEXT16384_LOAD_PASS_STMICRO_FIRST_CELL_AUTHORIZED");
   assert.equal(registry.selection_policy.no_model_winner_selected, true);
   assert.equal(registry.selection_policy.next_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
   assert.equal(ids.has("PHI4_MINI_3_8B_OLLAMA_Q4_K_M"), true);
@@ -46,9 +46,9 @@ test("expanded local candidate registry preserves ordering while recording Phi-4
     (candidate: { candidate_id: string }) =>
       candidate.candidate_id === "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
   );
-  assert.equal(phi.admission_state, "C4_CONTEXT16384_LOAD_SMOKE_PENDING_WITH_RELIABILITY_CARRY");
+  assert.equal(phi.admission_state, "C4_CONTEXT16384_LOAD_PASS_STMICRO_FIRST_CELL_AUTHORIZED_WITH_RELIABILITY_CARRY");
   assert.equal(phi.observed_loaded_vram_free_mib, 1668);
-  assert.equal(phi.semantic_inference_authorized, false);
+  assert.equal(phi.semantic_inference_authorized, true);
 });
 
 test("Phi-4 mini combined preflight records completed download and separate load-only authorization boundary", () => {

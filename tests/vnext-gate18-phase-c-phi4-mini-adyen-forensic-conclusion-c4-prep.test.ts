@@ -64,7 +64,7 @@ test("Phi-4 C4 matrix prep preserves the five archetypes and original-output adj
     ),
   );
 
-  assert.equal(prep.status, "STATIC_PREFLIGHT_PASS_CONTEXT16384_LOAD_SMOKE_AUTHORIZED");
+  assert.equal(prep.status, "CONTEXT16384_LOAD_PASS_FIRST_CELL_STMICRO_AUTHORIZED");
   assert.equal(prep.matrix.length, 5);
   assert.deepEqual(
     prep.matrix.map((row: { company: string }) => row.company),
@@ -82,7 +82,6 @@ test("Phi-4 C4 matrix prep preserves the five archetypes and original-output adj
   assert.equal(prep.reliability_carry.c4_auto_repair_forbidden, true);
   assert.equal(prep.reliability_carry.original_output_must_be_adjudicated_as_emitted, true);
   assert.equal(prep.execution_policy.initial_mode, "STATIC_REQUEST_PREFLIGHT_ONLY");
-  assert.equal(prep.execution_policy.c4_inference_authorized, false);
 });
 
 test("Phi-4 C4 static preflight performs no Ollama or network inference", () => {
@@ -106,7 +105,7 @@ test("Phi-4 C4 static preflight performs no Ollama or network inference", () => 
   assert.match(source, /c4InferenceAuthorized: false/);
 });
 
-test("Phase C preserves Phi-4 C4 admission while advancing to context16384 load smoke", () => {
+test("Phase C preserves Phi-4 C4 admission across later first-cell execution advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -125,13 +124,7 @@ test("Phase C preserves Phi-4 C4 admission while advancing to context16384 load 
   );
   assert.equal(entry.phi4_mini_structured_output_reliability_acceptable, false);
   assert.equal(entry.phi4_mini_reliability_retest_required, true);
-  assert.equal(entry.phi4_mini_c4_inference_authorized, false);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
-  assert.equal(entry.phi4_mini_c4_context16384_load_smoke_authorized, true);
   assert.equal(entry.phi4_mini_c4_proposed_common_context_tokens, 16384);
-  assert.equal(
-    entry.next_action,
-    "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
-  );
+  assert.equal(entry.phi4_mini_c4_context16384_load_fit, "PASS");
 });

@@ -1,0 +1,80 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_PHI4_MINI_CONTEXT16384_INFERENCE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED",
+  "basis": {
+    "targeted_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
+    "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+    "context16384_load_smoke_result": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "context16384_load_fit": "PASS",
+    "context16384_inference_fit": "NOT_YET_PROVEN"
+  },
+  "matrix_cell": {
+    "matrix_cell_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001",
+    "company": "STMicroelectronics",
+    "archetype": "CYCLICAL_SEGMENTED",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "prompt_bytes": 7558,
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91"
+  },
+  "model": {
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "keep_alive": "0s",
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "output_budget_rationale": {
+    "compact_adyen_eval_count": 706,
+    "compact_adyen_max_output_tokens": 768,
+    "compact_adyen_remaining_tokens": 62,
+    "qwen3_4b_stmicro_loopback_precedent_max_output_tokens": 1024,
+    "decision": "Use 1024 as the first full-C4 Phi-4 budget to reduce structural truncation risk while keeping the run bounded."
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-stmicro-phi4-mini-context16384-output1024-timeout420-loopback-guarded.ts",
+  "authorization": {
+    "authorization_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+    "authorization_artifact_present": true,
+    "inference_authorized": true,
+    "authorized_run_count": 1,
+    "source": "OROTITAN-STANDING-TECHNICAL-AUTH-001"
+  },
+  "evaluation": {
+    "deterministic_schema_validator": "gate18PhaseBV10OutputSchema",
+    "deterministic_semantic_validator": "assertGate18PhaseBV10Semantics",
+    "human_adjudication_required": true,
+    "terminal_punctuation_reliability_carry_tracked": true,
+    "auto_repair_forbidden": true
+  },
+  "constraints": {
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "context_change_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_compaction_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "rationale": {
+    "first_c4_cell_selection": "SMALLEST_FULL_PACKET_BY_STATIC_PREFLIGHT",
+    "purpose": [
+      "PROVE_CONTEXT16384_INFERENCE_FIT_ON_LOWEST_C4_WORKLOAD",
+      "EXECUTE_FIRST_REAL_PHI4_MINI_C4_MATRIX_CELL"
+    ]
+  },
+  "next_action": "RUN_ONE_STMICRO_PHI4_MINI_C4_FULL_PACKET_INFERENCE_CONTEXT16384",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

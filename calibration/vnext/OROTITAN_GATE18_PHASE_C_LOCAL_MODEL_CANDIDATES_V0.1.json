@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "POST_C4_PHI4_MINI_TARGETED_REGRESSIONS_PASS_RELIABILITY_CARRY_C4_CONTEXT16384_LOAD_SMOKE_PENDING",
+  "status": "POST_C4_PHI4_MINI_CONTEXT16384_LOAD_PASS_STMICRO_FIRST_CELL_AUTHORIZED",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -111,7 +111,7 @@
       "license": "MIT",
       "observed_ollama_artifact_size": "2.5GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_1",
-      "admission_state": "C4_CONTEXT16384_LOAD_SMOKE_PENDING_WITH_RELIABILITY_CARRY",
+      "admission_state": "C4_CONTEXT16384_LOAD_PASS_STMICRO_FIRST_CELL_AUTHORIZED_WITH_RELIABILITY_CARRY",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
       "source_url": "https://ollama.com/library/phi4-mini/tags",
@@ -123,7 +123,7 @@
       "observed_loaded_free_ram_gib": 0.81,
       "observed_processor_split": "36%/64% CPU/GPU",
       "load_smoke_result": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-RESULT-001",
-      "semantic_inference_authorized": false,
+      "semantic_inference_authorized": true,
       "context_growth_authorized": false,
       "brookfield_targeted_result": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
       "brookfield_targeted_status": "PASS",
@@ -147,7 +147,13 @@
       "c4_context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
       "c4_proposed_common_context_tokens": 16384,
       "c4_context16384_load_smoke_authorized": true,
-      "c4_inference_authorized": false
+      "c4_inference_authorized": true,
+      "c4_context16384_load_smoke_result": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+      "c4_context16384_load_fit": "PASS",
+      "c4_context16384_loaded_vram_free_mib": 1680,
+      "c4_context16384_loaded_free_ram_gib": 0.84,
+      "c4_first_cell": "STMicroelectronics",
+      "c4_first_cell_authorized": true
     },
     {
       "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
