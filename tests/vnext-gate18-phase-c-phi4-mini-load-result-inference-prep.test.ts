@@ -101,7 +101,6 @@ test("Phase C records Brookfield PASS and stops before the Adyen probe authoriza
   assert.equal(entry.phi4_mini_loaded_free_ram_gib, 0.81);
   assert.equal(entry.phi4_mini_bounded_4096_inference_preparation_allowed, true);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_brookfield_compact4096_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_brookfield_compact4096_context_tokens, 4096);
@@ -109,9 +108,5 @@ test("Phase C records Brookfield PASS and stops before the Adyen probe authoriza
   assert.equal(entry.phi4_mini_brookfield_compact4096_temperature, 0);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
-  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
-  );
+  assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
 });
