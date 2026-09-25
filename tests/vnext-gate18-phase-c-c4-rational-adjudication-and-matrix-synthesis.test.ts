@@ -86,7 +86,7 @@ test("C4 five-company synthesis closes all five matrix cells without authorizing
   assert.equal(synthesis.interpretation_boundary.production_candidate_decision_authority, false);
 });
 
-test("Phase C entry advances from RATIONAL adjudication to post-C4 disposition", () => {
+test("Phase C entry preserves completed RATIONAL adjudication and closed C4 matrix across later stage advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -106,7 +106,9 @@ test("Phase C entry advances from RATIONAL adjudication to post-C4 disposition",
   assert.equal(entry.c4_recurrent_critical_errors_observed, true);
   assert.equal(entry.c5_repeatability_authorized, false);
   assert.equal(
-    entry.next_action,
-    "PREPARE_POST_C4_CANDIDATE_DISPOSITION_NO_INFERENCE",
+    entry.current_state.c4_diversified_matrix,
+    "COMPLETE_5_OF_5_SYNTHESIS_RECORDED_RECURRENT_CRITICAL_FAILURES",
   );
+  assert.equal(entry.c4_matrix_cells_completed, 5);
+  assert.equal(entry.c4_matrix_cells_remaining, 0);
 });
