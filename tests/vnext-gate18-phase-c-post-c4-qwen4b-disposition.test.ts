@@ -50,8 +50,8 @@ test("Phase C entry records Qwen3 4B post-C4 disposition without authorizing a m
   assert.equal(entry.c5_qwen3_4b_production_admission_path, "NOT_ADMITTED");
   assert.equal(entry.candidate_escalation_static_options_required, true);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "PREPARE_LOCAL_CANDIDATE_ESCALATION_OPTIONS_STATIC_ONLY",
-  );
+  assert.equal(entry.c4_qwen3_4b_candidate_capability_failure_concluded, true);
+  assert.equal(entry.c4_qwen3_family_global_failure_concluded, false);
+  assert.equal(entry.c5_qwen3_4b_production_admission_path, "NOT_ADMITTED");
+  assert.equal(entry.model_switch_authorized, false);
 });
