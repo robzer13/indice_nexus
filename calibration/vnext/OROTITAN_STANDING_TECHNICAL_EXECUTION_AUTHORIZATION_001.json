@@ -1,0 +1,43 @@
+{
+  "format": "OROTITAN_STANDING_TECHNICAL_EXECUTION_AUTHORIZATION_V0.1",
+  "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
+  "status": "ACTIVE",
+  "user_authorization": {
+    "explicit": true,
+    "confirmation_basis": "User confirmed ongoing authorization for OroTitan technical protocol execution and requested that routine authorization not be requested again.",
+    "scope": "ONGOING_OROTITAN_TECHNICAL_EXECUTION_WITH_PROTOCOL_GUARDS"
+  },
+  "authorized_categories": [
+    "LOCAL_MODEL_DOWNLOADS_REQUIRED_BY_APPROVED_CANDIDATE_ESCALATION",
+    "LOCAL_MODEL_LOAD_AND_MEMORY_SMOKES",
+    "LOCAL_BOUNDED_MODEL_INFERENCES",
+    "TARGETED_SEMANTIC_PROBES",
+    "DIAGNOSTIC_FORENSICS",
+    "JUSTIFIED_RETRIES_WITHIN_EXISTING_PROTOCOL",
+    "JUSTIFIED_CONTEXT_OR_MODEL_CHANGES_WITHIN_EXISTING_PROTOCOL",
+    "GITHUB_BRANCH_PR_CI_AND_MERGE_OPERATIONS",
+    "SANITIZED_DIAGNOSTIC_RESULT_PERSISTENCE"
+  ],
+  "exclusions_requiring_new_explicit_authorization": [
+    "SIGNIFICANT_EXTERNAL_PAID_EXECUTION_OR_PURCHASE",
+    "PUBLICATION_OF_PRIVATE_OR_LICENSED_SOURCE_CONTENT",
+    "PRODUCTION_MUTATION_OR_PRODUCTION_ROUTING_FREEZE",
+    "DESTRUCTIVE_OR_IRREVERSIBLE_ACTION_OUTSIDE_NORMAL_VERSION_CONTROL",
+    "MATERIAL_CHANGE_OF_OROTITAN_PROJECT_OBJECTIVE_OR_SCOPE"
+  ],
+  "protocol_guards": {
+    "preserve_original_failed_outputs": true,
+    "no_retroactive_pass": true,
+    "private_generated_content_stays_private": true,
+    "public_repo_only_sanitized_diagnostics": true,
+    "fail_closed_on_identity_or_contract_mismatch": true,
+    "evidence_calculation_judgment_narrative_order_preserved": true,
+    "ci_required_before_merge": true
+  },
+  "execution_policy": {
+    "per_execution_authorization_artifacts_may_be_derived_from_this_standing_authorization": true,
+    "user_reprompt_required_for_in_scope_actions": false,
+    "user_reprompt_required_for_excluded_actions": true
+  },
+  "base_vnext_sha": "9520115affe0f9cdbb98400b8054d8d605e746eb"
+}
