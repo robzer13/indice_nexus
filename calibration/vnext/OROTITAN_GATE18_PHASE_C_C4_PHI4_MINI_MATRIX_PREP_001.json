@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "STATIC_PREFLIGHT_PASS_CONTEXT16384_LOAD_SMOKE_AUTHORIZED",
+  "status": "CONTEXT16384_LOAD_PASS_FIRST_CELL_STMICRO_AUTHORIZED",
   "precondition": {
     "c3_result": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "c3_conclusion_id": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
@@ -96,7 +96,7 @@
   },
   "execution_policy": {
     "initial_mode": "STATIC_REQUEST_PREFLIGHT_ONLY",
-    "c4_inference_authorized": false,
+    "c4_inference_authorized": true,
     "automatic_retry_authorized": false,
     "automatic_model_switch_authorized": false,
     "prompt_change_authorized": false,
@@ -106,8 +106,24 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
+  "next_action": "RUN_ONE_STMICRO_PHI4_MINI_C4_FULL_PACKET_INFERENCE_CONTEXT16384",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "static_preflight_result": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
-  "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001"
+  "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+  "context16384_load_smoke_result": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "context16384_load_fit": "PASS",
+  "first_cell": {
+    "company": "STMicroelectronics",
+    "archetype": "CYCLICAL_SEGMENTED",
+    "selection_basis": "SMALLEST_FULL_PACKET_BY_STATIC_PREFLIGHT",
+    "prep_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-PREP-001",
+    "authorization_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+    "authorized": true,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  }
 }
