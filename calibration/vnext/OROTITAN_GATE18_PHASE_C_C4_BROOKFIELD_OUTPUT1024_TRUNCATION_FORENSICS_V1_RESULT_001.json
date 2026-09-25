@@ -1,0 +1,75 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1024_TRUNCATION_FORENSICS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-OUTPUT1024-TRUNCATION-FORENSICS-V1-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_FORENSICS",
+  "status": "PASS_TRUNCATION_STRUCTURE_MEASURED_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+  "source_run": {
+    "wall_clock_ms": 416162,
+    "done_reason": "length",
+    "prompt_eval_count": 3668,
+    "eval_count": 1024,
+    "max_output_tokens": 1024,
+    "client_timeout_ms": 480000,
+    "runtime_error": null,
+    "schema_valid": false,
+    "schema_error": "Unterminated string in JSON at position 3764 (line 112 column 19)"
+  },
+  "raw_output_metrics": {
+    "chars": 3764,
+    "bytes": 3764,
+    "sha256": "ccd2e1946f057701a3fdd90c7dbe9fd71ab78d42f425a17624ac302c15a13a66",
+    "parse_error_position": 3764,
+    "parse_error_line": 112,
+    "parse_error_column": 19,
+    "terminal_in_string": true,
+    "terminal_object_depth": 2,
+    "terminal_array_depth": 1
+  },
+  "structural_progress": {
+    "all_top_level_sections_present": true,
+    "last_present_section": "unresolved_points",
+    "priority_findings_started": 3,
+    "priority_causal_links_started": 3,
+    "material_conflicts_started": 2,
+    "weak_link_candidates_started": 2,
+    "unresolved_questions_started": 2
+  },
+  "diagnostic_runtime_projection": {
+    "wall_clock_per_generated_token_upper_bound_ms": 406.408203125,
+    "output1152_linear_upper_bound_ms": 468183,
+    "output1280_linear_upper_bound_ms": 520203,
+    "output1536_linear_upper_bound_ms": 624243,
+    "interpretation": "Diagnostic upper bounds only; prompt/load time is partly fixed."
+  },
+  "remediation_selection": {
+    "selected_max_output_tokens": 1280,
+    "rejected_1152_reason": "Only 128 additional tokens beyond the observed truncation boundary; insufficient margin to defensibly finish the active unresolved point, possible third unresolved point, and JSON closure.",
+    "rejected_1536_reason": "More headroom than currently justified by the observed late-structure truncation.",
+    "proposed_client_timeout_ms": 600000,
+    "timeout_headroom_vs_output1280_linear_projection_ms": 79797,
+    "rationale": "1280 is the smallest defensible output budget from observed structural progress; 600s provides bounded runtime headroom above the conservative 1280-token projection."
+  },
+  "interpretation_boundary": {
+    "output_budget_1024_inadequacy_proven": true,
+    "exact_tokens_needed_unknown": true,
+    "output1280_selected_for_remediation_prep": true,
+    "timeout600_selected_for_remediation_prep": true,
+    "retry_authorized": false,
+    "inference_authorized": false,
+    "parameter_change_execution_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "max_output_change_execution_authorized": false,
+    "timeout_change_execution_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_BROOKFIELD_OUTPUT1280_TIMEOUT600_STATIC_REQUEST_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
