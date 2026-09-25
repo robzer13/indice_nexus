@@ -1,0 +1,110 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_DIVERSIFIED_MATRIX_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-PHI4-MINI-MATRIX-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_STATIC_PREFLIGHT_PENDING",
+  "precondition": {
+    "c3_result": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
+    "c3_conclusion_id": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
+    "broader_phase_c_admission": true
+  },
+  "candidate": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "model": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "client_timeout_ms": 180000
+  },
+  "module": {
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "additional_model_dependent_modules_admitted": false
+  },
+  "matrix": [
+    {
+      "index": 1,
+      "archetype": "SIMPLE_CLEAN_COMPOUNDER",
+      "company": "RATIONAL AG"
+    },
+    {
+      "index": 2,
+      "archetype": "SERIAL_ACQUIRER",
+      "company": "Constellation Software"
+    },
+    {
+      "index": 3,
+      "archetype": "CYCLICAL_SEGMENTED",
+      "company": "STMicroelectronics"
+    },
+    {
+      "index": 4,
+      "archetype": "ACCOUNTING_HEAVY",
+      "company": "Brookfield Corporation"
+    },
+    {
+      "index": 5,
+      "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "company": "Adyen"
+    }
+  ],
+  "evaluation_dimensions": {
+    "engineering": [
+      "schema_validity",
+      "semantic_validator_result",
+      "malformed_reference_errors",
+      "finish_reason",
+      "retry_count",
+      "runtime_errors",
+      "context_overflow",
+      "output_truncation",
+      "terminal_punctuation_reliability"
+    ],
+    "human_quality": [
+      "exact_evidence_grounding",
+      "claim_atomicity",
+      "claim_target_alignment",
+      "support_counterevidence_polarity",
+      "qualification_orthogonality",
+      "conflict_handling",
+      "weak_link_usefulness",
+      "unresolved_point_usefulness",
+      "judgment_boundary_compliance",
+      "priority_selection_usefulness"
+    ],
+    "runtime_economics": [
+      "external_api_cost_usd",
+      "wall_clock_latency",
+      "prompt_eval_count",
+      "eval_count",
+      "peak_vram_when_available",
+      "peak_ram_when_available"
+    ]
+  },
+  "reliability_carry": {
+    "source": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
+    "defect": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+    "tracking_required": true,
+    "c4_auto_repair_forbidden": true,
+    "original_output_must_be_adjudicated_as_emitted": true
+  },
+  "execution_policy": {
+    "initial_mode": "STATIC_REQUEST_PREFLIGHT_ONLY",
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "context_change_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_C4_FIVE_COMPANY_STATIC_REQUEST_PREFLIGHT_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
