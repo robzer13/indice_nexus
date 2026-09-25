@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_CONFLICT_GROUNDING_FORENSIC_V1_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-RATIONAL-CONFLICT-GROUNDING-FORENSIC-V1-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+  "source_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+  "diagnostic_observations": {
+    "removed_ungrounded_conflict_refs": [
+      {
+        "finding_index": 1,
+        "conflict_id": "C-005",
+        "conflict_evidence_refs": [
+          "E-005",
+          "E-025",
+          "E-047",
+          "E-048"
+        ],
+        "finding_evidence_refs": [
+          "E-006"
+        ]
+      },
+      {
+        "finding_index": 2,
+        "conflict_id": "C-007",
+        "conflict_evidence_refs": [
+          "E-032",
+          "E-033",
+          "E-035",
+          "E-038",
+          "E-039"
+        ],
+        "finding_evidence_refs": [
+          "E-029",
+          "E-031"
+        ]
+      }
+    ],
+    "removed_conflict_ref_count": 2,
+    "downstream_full_validator_pass": false,
+    "downstream_full_validator_error": "VNEXT_GATE18_V10_DIRECTION_ROLE_OVERLAP"
+  },
+  "observed_deterministic_defect_classes": [
+    "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+    "DIRECTION_ROLE_OVERLAP"
+  ],
+  "observed_deterministic_defect_class_count": 2,
+  "interpretation_boundary": {
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "all_known_deterministic_defects_exhausted": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false,
+    "inference_executed": false,
+    "auto_repair_executed": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_RATIONAL_DIRECTION_ROLE_OVERLAP_FORENSIC_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
