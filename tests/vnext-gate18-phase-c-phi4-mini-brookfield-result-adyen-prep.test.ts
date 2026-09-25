@@ -88,7 +88,7 @@ test("Phi-4 mini Adyen runner is digest-pinned and cannot execute without separa
   assert.match(raw, /publicationAuthority: false/);
 });
 
-test("Phase C is stopped at the Adyen explicit authorization boundary", () => {
+test("Phase C activates only the scoped Adyen probe under standing authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -97,16 +97,17 @@ test("Phase C is stopped at the Adyen explicit authorization boundary", () => {
   );
 
   assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
-  assert.equal(entry.phi4_mini_inference_authorized, false);
-  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
+  assert.equal(entry.phi4_mini_inference_authorized, true);
+  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, true);
   assert.equal(entry.phi4_mini_adyen_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_adyen_compact4096_max_output_tokens, 768);
   assert.equal(entry.phi4_mini_adyen_compact4096_temperature, 0);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
+  assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 1);
   assert.equal(
     entry.next_action,
-    "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+    "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
   );
 });
