@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+  "status": "CONSUMED_FAIL_RUNTIME_TIMEOUT",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go RATIONAL output1280 timeout600",
@@ -25,7 +25,7 @@
     "completed_adyen": "G18-PHASEC-C4-ADYEN-HUMAN-ADJUDICATION-RESULT-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "RATIONAL AG",
     "archetype": "SIMPLE_CLEAN_COMPOUNDER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -52,7 +52,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -101,5 +101,23 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "d4964db16913989e8d3766538dd96242fefd7950",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+    "result_status": "FAIL_RUNTIME_TIMEOUT",
+    "wall_clock_ms": 600330,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_600000MS",
+    "schema_valid": false,
+    "semantic_valid": false,
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "timeout_change_authorized": false
+  }
 }
