@@ -70,7 +70,7 @@ test("Phi-4 mini preflight prep requires explicit authorization before download 
   );
 });
 
-test("Phase C entry stops at the explicit Phi-4 mini download authorization boundary", () => {
+test("Phase C entry preserves Phi-4 mini escalation selection across later authorization advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -81,11 +81,6 @@ test("Phase C entry stops at the explicit Phi-4 mini download authorization boun
   assert.equal(entry.candidate_registry_static_expansion_completed, true);
   assert.equal(entry.candidate_registry_static_expansion_count, 3);
   assert.equal(entry.candidate_escalation_first_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
-  assert.equal(entry.phi4_mini_download_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
-  );
 });

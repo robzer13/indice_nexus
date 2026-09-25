@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
+  "next_action": "RUN_LOCAL_PHI4_MINI_DOWNLOAD_VERIFY_ONCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -895,6 +895,10 @@
   "candidate_registry_static_expansion_count": 3,
   "candidate_escalation_first_static_candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
   "phi4_mini_download_memory_preflight_prep": "G18-PHASEC-PHI4-MINI-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
-  "phi4_mini_download_authorized": false,
-  "phi4_mini_inference_authorized": false
+  "phi4_mini_download_authorized": true,
+  "phi4_mini_inference_authorized": false,
+  "phi4_mini_download_authorization": "G18-PHASEC-PHI4-MINI-DOWNLOAD-AUTH-001",
+  "phi4_mini_download_authorization_status": "AUTHORIZED_SINGLE_DOWNLOAD_UNCONSUMED",
+  "phi4_mini_download_verify_script": "scripts/vnext-gate18-phase-c-phi4-mini-download-verify.ts",
+  "phi4_mini_load_smoke_authorized": false
 }

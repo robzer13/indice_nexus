@@ -1,0 +1,73 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-PHI4-MINI-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_UNCONSUMED",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "DOWNLOAD_LOCAL_MODEL_AND_VERIFY_IDENTITY_ONLY",
+    "authorized_model": "phi4-mini:3.8b-q4_K_M",
+    "authorization_scope": "ONE_MODEL_ONE_DOWNLOAD_NO_INFERENCE"
+  },
+  "basis": {
+    "qwen3_4b_disposition": "G18-PHASEC-POST-C4-QWEN3-4B-DISPOSITION-001",
+    "escalation_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+    "phi4_mini_preflight_prep": "G18-PHASEC-PHI4-MINI-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
+    "qwen3_4b_production_path": "NOT_ADMITTED",
+    "phi4_mini_static_artifact_fit": "PLAUSIBLE",
+    "same_artifact_size_class_as_qwen3_4b": true
+  },
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "phi4-mini:3.8b-q4_K_M",
+    "expected_parameter_count": "3.8B",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~2.5GB",
+    "expected_digest_prefix": "78fad5d182a7",
+    "license": "MIT",
+    "role": "POST_C4_ESCALATION_CANDIDATE_1"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-phi4-mini-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_authorization": true
+  },
+  "authority": {
+    "phi4_mini_download_authorized": true,
+    "phi4_mini_load_smoke_authorized": false,
+    "phi4_mini_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "6da8e0ba551a0ce4ce5faf141486294c7606fb66",
+  "next_action": "RUN_LOCAL_PHI4_MINI_DOWNLOAD_VERIFY_ONCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
