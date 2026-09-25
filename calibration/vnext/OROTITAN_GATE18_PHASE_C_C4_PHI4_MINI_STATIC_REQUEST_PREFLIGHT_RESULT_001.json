@@ -1,0 +1,114 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_STATIC_REQUEST_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PASS_STATIC_REQUESTS_MEASURED",
+  "mode": "NO_INFERENCE_NO_OLLAMA_REQUEST",
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "context_tokens_requested_for_measurement": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0
+  },
+  "module": {
+    "id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "prompt_template_id": "GATE18_MOAT_EVIDENCE_AUDIT_V0_8",
+    "generation_schema_id": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6"
+  },
+  "rows": [
+    {
+      "role": "SIMPLE_CLEAN_COMPOUNDER",
+      "company": "RATIONAL AG",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 56,
+      "conflict_count": 9,
+      "prompt_chars": 35756,
+      "prompt_bytes": 35756,
+      "request_chars": 46941,
+      "request_bytes": 46941,
+      "prompt_sha256": "70265015372600e619010150a72e72dad5df32973f61c01a79658994ea02c0a5",
+      "request_sha256": "5ef21b0cbaa34b861d11b6145c375e60ba37829ab1a5b60da7a305f9bbc6cca2"
+    },
+    {
+      "role": "SERIAL_ACQUIRER",
+      "company": "Constellation Software",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 11,
+      "conflict_count": 1,
+      "prompt_chars": 9041,
+      "prompt_bytes": 9041,
+      "request_chars": 17668,
+      "request_bytes": 17668,
+      "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+      "request_sha256": "f46b3f51038ebb4be9e127e5d773fca9eec6c814b15531ffb1f68408d4a3a337"
+    },
+    {
+      "role": "CYCLICAL_SEGMENTED",
+      "company": "STMicroelectronics",
+      "data_cutoff": "2026-09-15",
+      "evidence_count": 9,
+      "conflict_count": 2,
+      "prompt_chars": 7520,
+      "prompt_bytes": 7558,
+      "request_chars": 15777,
+      "request_bytes": 15815,
+      "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91",
+      "request_sha256": "a03931715f64fe5e724d2214f8a73269bfa38e323274bed7980542ea3dd96592"
+    },
+    {
+      "role": "ACCOUNTING_HEAVY",
+      "company": "Brookfield Corporation",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 12,
+      "conflict_count": 2,
+      "prompt_chars": 9643,
+      "prompt_bytes": 9643,
+      "request_chars": 18098,
+      "request_bytes": 18098,
+      "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+      "request_sha256": "6f143834cd9be4327d9e8c532b5b8c7504af06bf605e1c83bb5c803644765e76"
+    },
+    {
+      "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "company": "Adyen",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 16,
+      "conflict_count": 3,
+      "prompt_chars": 11669,
+      "prompt_bytes": 11671,
+      "request_chars": 20584,
+      "request_bytes": 20586,
+      "prompt_sha256": "ef8f55478017eddfb26d68e652aa4855f9d474dc1a75114e6026a12e17666f0c",
+      "request_sha256": "701f5caf3dce3265821e9890059fe82b3ca615f13e186ceacffd8ef5eb725278"
+    }
+  ],
+  "summary": {
+    "row_count": 5,
+    "min_prompt_bytes": 7558,
+    "max_prompt_bytes": 35756,
+    "min_request_bytes": 15815,
+    "max_request_bytes": 46941
+  },
+  "calibration_basis": {
+    "compact_brookfield_prompt_bytes": 4492,
+    "compact_brookfield_prompt_eval_count": 2020,
+    "compact_adyen_prompt_bytes": 7742,
+    "compact_adyen_prompt_eval_count": 2872,
+    "exact_tokenizer": false
+  },
+  "safety": {
+    "network_access_requested": false,
+    "ollama_api_called": false,
+    "model_loaded": false,
+    "model_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "DERIVE_PHI4_MINI_CONTEXT_RISK_SCREEN",
+  "base_vnext_sha": "c4d0c8035666363644791ec48daaffb0197276d3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
