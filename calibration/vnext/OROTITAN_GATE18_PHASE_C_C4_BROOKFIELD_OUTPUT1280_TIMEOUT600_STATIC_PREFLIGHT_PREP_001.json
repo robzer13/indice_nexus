@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1280_TIMEOUT600_STATIC_REQUEST_PREFLIGHT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-BROOKFIELD-OUTPUT1280-TIMEOUT600-STATIC-PREFLIGHT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_REMEDIATION",
+  "status": "PREPARED_NO_INFERENCE",
+  "basis": {
+    "output1024_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+    "truncation_forensics": "G18-PHASEC-C4-BROOKFIELD-OUTPUT1024-TRUNCATION-FORENSICS-V1-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-brookfield-output1280-timeout600-static-preflight.ts",
+  "proposed_runtime": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1280,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "keep_alive": "0s",
+    "sleep_guard_required": true
+  },
+  "remediation_delta": {
+    "max_output_tokens_from": 1024,
+    "max_output_tokens_to": 1280,
+    "max_output_delta": 256,
+    "client_timeout_ms_from": 480000,
+    "client_timeout_ms_to": 600000,
+    "client_timeout_delta_ms": 120000,
+    "model_change": false,
+    "model_digest_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "packet_change": false,
+    "context_change": false,
+    "temperature_change": false,
+    "transport_change": false,
+    "sleep_guard_change": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "max_output_change_execution_authorized": false,
+    "timeout_change_execution_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_BROOKFIELD_OUTPUT1280_TIMEOUT600_STATIC_REQUEST_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
