@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
@@ -25,7 +25,7 @@
     "system_ram_pressure": "HIGH"
   },
   "phi4_mini_inference": {
-    "authorized": true,
+    "authorized": false,
     "model_name": "phi4-mini:3.8b-q4_K_M",
     "model_digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
     "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
@@ -39,7 +39,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -66,6 +66,13 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "9520115affe0f9cdbb98400b8054d8d605e746eb",
-  "next_action": "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_NORMALIZATION_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+    "result_status": "FAIL",
+    "result_classification": "SEMANTIC_FAIL_CONFLICT_IMPLICATION_INCOMPLETE_FORENSICS_REQUIRED",
+    "retry_authorized": false
+  }
 }
