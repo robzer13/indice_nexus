@@ -1,0 +1,63 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_CONTEXT16384_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
+    "standing_scope_applies": true,
+    "separate_user_reprompt_required": false
+  },
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "LOAD_AND_UNLOAD_LOCAL_PHI4_MINI_AT_CONTEXT16384_WITHOUT_PROMPT_OR_GENERATION",
+    "authorized_model": "phi4-mini:3.8b-q4_K_M"
+  },
+  "basis": {
+    "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+    "load_smoke_prep": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-PREP-001",
+    "proposed_common_context_tokens": 16384
+  },
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-c4-phi4-mini-context16384-load-smoke.ts",
+    "action_count_authorized": 1,
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
+    "loopback_only": true,
+    "prompt_provided": false,
+    "semantic_inference_authorized": false,
+    "keep_alive_load": "2m",
+    "explicit_unload": true
+  },
+  "constraints": {
+    "model_download_authorized": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "further_context_change_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "authority": {
+    "context16384_load_smoke_authorized": true,
+    "context16384_inference_authorized": false,
+    "c4_inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "base_vnext_sha": "c4d0c8035666363644791ec48daaffb0197276d3",
+  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
