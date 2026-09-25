@@ -72,7 +72,7 @@ test("Phi-4 mini Adyen authorization remains traceable after the single run is c
   assert.equal(auth.constraints.publication_authority, false);
 });
 
-test("Phase C current state records the consumed Adyen run and read-only forensic next action", () => {
+test("Phase C preserves standing authorization and consumed Adyen execution history", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -95,5 +95,4 @@ test("Phase C current state records the consumed Adyen run and read-only forensi
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.next_action, "RUN_LOCAL_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC");
 });

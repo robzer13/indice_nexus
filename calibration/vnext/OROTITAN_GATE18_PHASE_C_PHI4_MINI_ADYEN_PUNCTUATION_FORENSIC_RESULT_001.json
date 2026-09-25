@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-PHI4-MINI-ADYEN-PUNCTUATION-FORENSIC-RESULT-001",
+  "source_run_result": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T191602555Z__ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_PHI4MINI_4096.json",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_PUNCTUATION_ONLY_DEFECT_DOWNSTREAM_TARGETED_VALIDATOR_PASS",
+  "mode": "IN_MEMORY_DIAGNOSTIC_ONLY_NO_ARTIFACT_MUTATION_NO_INFERENCE",
+  "observations": {
+    "original_run_status": "FAIL",
+    "original_semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+    "material_conflicts": [
+      {
+        "conflict_id": "C-005",
+        "resolution_state": "UNRESOLVED_IN_PACKET",
+        "implication_length": 20,
+        "terminal_punctuation": false
+      },
+      {
+        "conflict_id": "C-010",
+        "resolution_state": "RESOLVED_IN_PACKET",
+        "implication_length": 18,
+        "terminal_punctuation": false
+      }
+    ]
+  },
+  "diagnostic_normalization": {
+    "normalized_conflict_ids": [
+      "C-005",
+      "C-010"
+    ],
+    "normalization_rule": "Append one period only when terminal punctuation is absent.",
+    "source_artifact_mutated": false,
+    "generated_content_published": false
+  },
+  "downstream_validation": {
+    "full_targeted_validator_executed_on_in_memory_copy": true,
+    "pass": true,
+    "error": null
+  },
+  "conclusion_boundary": {
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "inference_executed": false,
+    "model_capability_failure_concluded": false,
+    "targeted_semantic_content_failure_observed_after_normalization": false,
+    "only_observed_defect_for_this_targeted_probe": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS"
+  },
+  "authority": {
+    "retry_authorized": false,
+    "inference_authorized": false,
+    "artifact_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RECORD_PHI4_MINI_C3_CONDITIONAL_PASS_WITH_RELIABILITY_CARRY_AND_PREPARE_C4_STATIC_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
