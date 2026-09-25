@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_ATOMIC_CLAIM_FORENSIC_V3R_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3R-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+  "source_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-RATIONAL-CONFLICT-GROUNDING-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-DIRECTION-ROLE-OVERLAP-FORENSIC-V2-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001"
+  ],
+  "observed_console": {
+    "removed_conflict_ref_count": 2,
+    "removed_support_overlap_ref_count": 1,
+    "non_atomic_findings": [
+      {
+        "finding_index": 2,
+        "matched_patterns": [
+          "but"
+        ]
+      }
+    ],
+    "downstream_full_validator_pass": false,
+    "downstream_full_validator_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_INCOMPLETE"
+  },
+  "fourth_deterministic_defect": {
+    "class": "COUNTEREVIDENCE_LINK_INCOMPLETE",
+    "validator_code": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_INCOMPLETE",
+    "validator_rule": "A non-null counterevidence_link must end in terminal punctuation and remain below the frozen 178-character saturation boundary.",
+    "offending_finding_identified": false,
+    "raw_counterevidence_text_published": false
+  },
+  "interpretation_boundary": {
+    "retroactive_pass_allowed": false,
+    "original_run_status_changed": false,
+    "inference_executed": false,
+    "auto_repair_executed": false,
+    "all_known_deterministic_defects_exhausted": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_RATIONAL_COUNTEREVIDENCE_LINK_FORENSIC_V4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
