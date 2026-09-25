@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_TIMEOUT420_LOG_FORENSICS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-TIMEOUT420-LOG-FORENSICS-V1-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_HEALTHY_SLOW_GENERATION_EXPLICIT_TIMEOUT_INADEQUACY_CONFIRMED",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+  "observations": {
+    "server_request_terminal_status": 500,
+    "server_request_logged_duration": "7m0s",
+    "server_request_anchor_local": "2026-09-25T10:35:49+02:00",
+    "anchor_distance_ms": 839,
+    "prompt_tokens": 3348,
+    "latest_observed_n_gen": 959,
+    "configured_max_output_tokens": 1024,
+    "latest_observed_tokens_remaining_upper_bound": 65,
+    "observed_average_generation_rate_tps": 2.5,
+    "observed_recent_generation_rate_tps": 2.66,
+    "model_context_tokens": 16384,
+    "model_startup_seconds_approx": 25.28,
+    "generation_progress_continuous_to_terminal_boundary": true,
+    "oom_observed": false,
+    "cuda_failure_observed": false,
+    "runner_exit_observed": false,
+    "panic_or_fatal_observed": false,
+    "server_stall_observed": false
+  },
+  "diagnosis": {
+    "classification": "HEALTHY_SLOW_GENERATION_PREEMPTED_BY_EXPLICIT_420S_CLIENT_TIMEOUT",
+    "timeout_420_inadequate_for_this_cell": true,
+    "transport_failure": false,
+    "model_capability_failure_concluded": false,
+    "schema_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "estimate_only": {
+      "remaining_tokens_at_latest_log": 65,
+      "rate_tps": 2.5,
+      "projected_additional_generation_seconds": 26,
+      "projected_completion_wall_clock_seconds_from_420s_boundary": 446,
+      "proposed_timeout_seconds": 480,
+      "proposed_timeout_headroom_vs_projection_seconds": 34
+    }
+  },
+  "remediation_basis": {
+    "proposed_client_timeout_ms": 480000,
+    "timeout_delta_ms": 60000,
+    "rationale": "Minimal bounded increase above the evidence-based ~446s completion projection while preserving all inference content and runtime identities.",
+    "all_other_inference_fields_unchanged": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_execution_authorized": false,
+    "model_switch_authorized": false,
+    "output_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_CONSTELLATION_TIMEOUT480_SINGLE_RETRY_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
