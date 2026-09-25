@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_LOAD_SMOKE",
-  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "status": "CONSUMED_SINGLE_LOAD_ONLY",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "LOAD_AND_UNLOAD_LOCAL_MODEL_WITHOUT_PROMPT_OR_GENERATION",
@@ -55,7 +55,7 @@
     "memory_release_observation": true
   },
   "authority": {
-    "phi4_mini_load_smoke_authorized": true,
+    "phi4_mini_load_smoke_authorized": false,
     "phi4_mini_inference_authorized": false,
     "model_switch_authorized": false,
     "paid_execution_authorized": false,
@@ -63,6 +63,12 @@
     "publication_authority": false
   },
   "base_vnext_sha": "d4941d00b7ae7de2160167222a9769a5e23532fc",
-  "next_action": "RUN_LOCAL_PHI4_MINI_LOAD_SMOKE_ONCE_CONTEXT4096",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_ONE_COMPACT_PHI4_MINI_4096_SEMANTIC_PROBE_AND_REQUEST_EXPLICIT_INFERENCE_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-RESULT-001",
+    "result_status": "PASS_LOAD_ONLY_MEASURED",
+    "retry_authorized": false
+  }
 }
