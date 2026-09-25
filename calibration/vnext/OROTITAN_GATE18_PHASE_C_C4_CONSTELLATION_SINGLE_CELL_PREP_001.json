@@ -64,5 +64,18 @@
     "publication_authority": false
   },
   "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "reliability_carry": [
+    {
+      "source": "G18-PHASEC-C3-QWEN3-4B-FORENSIC-CONCLUSION-001",
+      "code": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+      "tracking_required": true
+    },
+    {
+      "source": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+      "code": "OUTPUT_BUDGET_SATURATED_AT_1024_WITH_VALID_COMPLETE_STRUCTURE",
+      "tracking_required": true,
+      "automatic_output_budget_change_authorized": false
+    }
+  ]
 }
