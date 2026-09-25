@@ -1,0 +1,50 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_ADYEN_OUTPUT1280_TIMEOUT600_STATIC_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-ADYEN-OUTPUT1280-TIMEOUT600-STATIC-PREFLIGHT-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PASS_STATIC_REQUEST_MEASURED_NO_INFERENCE",
+  "mode": "NO_INFERENCE_NO_OLLAMA_REQUEST",
+  "company": {
+    "role": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "display_name": "Adyen",
+    "data_cutoff": "2026-09-19",
+    "evidence_count": 16,
+    "conflict_count": 3
+  },
+  "runtime": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1280,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "keep_alive": "0s",
+    "sleep_guard_required": true
+  },
+  "identities": {
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "prompt_sha256": "ef8f55478017eddfb26d68e652aa4855f9d474dc1a75114e6026a12e17666f0c",
+    "prompt_bytes": 11671,
+    "request_sha256": "374163421c4780b70a4cf34ee3443b160d7a5e5e7b7f1701508c9ae5bc0f02e1",
+    "request_bytes": 20584
+  },
+  "runtime_basis": {
+    "brookfield_natural_stop_eval_count": 1096,
+    "brookfield_max_output_tokens": 1280,
+    "brookfield_wall_clock_ms": 495684,
+    "rationale": "1280/600 retains bounded headroom after Brookfield demonstrated that 1024 output tokens can truncate a complete C4 response."
+  },
+  "interpretation_boundary": {
+    "request_identity_measured": true,
+    "inference_fit_concluded": false,
+    "runtime_fit_concluded": false,
+    "semantic_quality_assessed": false,
+    "inference_authorized": false,
+    "retry_authorized": false
+  },
+  "next_action": "PREPARE_EXACT_ADYEN_OUTPUT1280_TIMEOUT600_RUNNER_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
