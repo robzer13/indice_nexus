@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1024_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL_OUTPUT_BUDGET_EXHAUSTED_TRUNCATED_JSON",
+  "matrix_cell_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "attempt_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001",
+  "company": "Brookfield Corporation",
+  "archetype": "ACCOUNTING_HEAVY",
+  "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0"
+  },
+  "frozen_inference": {
+    "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+    "request_sha256": "28d1917a888bf5981fb4b524243af2d78ee67feb33e5e1554a5c4d787520dd80",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 480000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "execution": {
+    "wall_clock_ms": 416162,
+    "done_reason": "length",
+    "prompt_eval_count": 3668,
+    "eval_count": 1024,
+    "runtime_error": null,
+    "schema_valid": false,
+    "schema_error": "Unterminated string in JSON at position 3764 (line 112 column 19)",
+    "semantic_valid": false,
+    "semantic_error": null,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "diagnosis": {
+    "classification": "OUTPUT_BUDGET_EXHAUSTED_TRUNCATED_JSON_NO_SEMANTIC_RESULT",
+    "output_budget_fully_consumed": true,
+    "output_budget_inadequacy_proven": true,
+    "transport_failure": false,
+    "explicit_480s_timeout_reached": false,
+    "runtime_failure": false,
+    "schema_model_failure_concluded": false,
+    "semantic_model_failure_concluded": false,
+    "note": "JSON parsing failed because generation ended at the configured max_output boundary. Exact additional budget required is not yet concluded."
+  },
+  "private_output": {
+    "path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T094102306Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+    "public_repo_generated_content_forbidden": true,
+    "generated_content_embedded_in_public_result": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_OUTPUT1024_TRUNCATION_FORENSICS_V1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
