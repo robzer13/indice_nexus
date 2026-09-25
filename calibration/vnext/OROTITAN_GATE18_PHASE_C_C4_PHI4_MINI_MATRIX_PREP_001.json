@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "PREPARED_STATIC_PREFLIGHT_PENDING",
+  "status": "STATIC_PREFLIGHT_PASS_CONTEXT16384_LOAD_SMOKE_AUTHORIZED",
   "precondition": {
     "c3_result": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "c3_conclusion_id": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
@@ -18,7 +18,8 @@
     "context_tokens": 4096,
     "max_output_tokens": 768,
     "temperature": 0,
-    "client_timeout_ms": 180000
+    "client_timeout_ms": 180000,
+    "proposed_common_context_tokens": 16384
   },
   "module": {
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -105,6 +106,8 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_C4_FIVE_COMPANY_STATIC_REQUEST_PREFLIGHT_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "static_preflight_result": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
+  "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001"
 }

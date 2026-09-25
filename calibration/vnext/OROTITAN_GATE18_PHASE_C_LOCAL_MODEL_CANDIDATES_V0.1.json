@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "POST_C4_PHI4_MINI_TARGETED_REGRESSIONS_PASS_WITH_RELIABILITY_CARRY_C4_STATIC_PREFLIGHT_PENDING",
+  "status": "POST_C4_PHI4_MINI_TARGETED_REGRESSIONS_PASS_RELIABILITY_CARRY_C4_CONTEXT16384_LOAD_SMOKE_PENDING",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -111,7 +111,7 @@
       "license": "MIT",
       "observed_ollama_artifact_size": "2.5GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_1",
-      "admission_state": "TARGETED_REGRESSIONS_PASS_WITH_RELIABILITY_CARRY_C4_STATIC_PREFLIGHT_PENDING",
+      "admission_state": "C4_CONTEXT16384_LOAD_SMOKE_PENDING_WITH_RELIABILITY_CARRY",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
       "source_url": "https://ollama.com/library/phi4-mini/tags",
@@ -142,7 +142,12 @@
       "reliability_defect": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
       "broader_phase_c_admission": true,
       "broader_phase_c_admission_mode": "CONDITIONAL_WITH_RELIABILITY_CARRY",
-      "c4_matrix_prep": "G18-PHASEC-C4-PHI4-MINI-MATRIX-PREP-001"
+      "c4_matrix_prep": "G18-PHASEC-C4-PHI4-MINI-MATRIX-PREP-001",
+      "c4_static_request_preflight_result": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
+      "c4_context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+      "c4_proposed_common_context_tokens": 16384,
+      "c4_context16384_load_smoke_authorized": true,
+      "c4_inference_authorized": false
     },
     {
       "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",

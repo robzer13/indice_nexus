@@ -1,0 +1,117 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_CONTEXT_FIT_DIAGNOSTIC_V0.1",
+  "result_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "CONTEXT_4096_NOT_ADMISSIBLE_CONTEXT16384_LOAD_SMOKE_REQUIRED",
+  "basis": {
+    "static_preflight_result": "G18-PHASEC-C4-PHI4-MINI-STATIC-REQUEST-PREFLIGHT-RESULT-001",
+    "observed_calibration_points": [
+      {
+        "case": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_PHI4MINI_4096",
+        "prompt_bytes": 4492,
+        "prompt_eval_count": 2020
+      },
+      {
+        "case": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_PHI4MINI_4096",
+        "prompt_bytes": 7742,
+        "prompt_eval_count": 2872
+      }
+    ],
+    "empirical_local_relation": {
+      "formula": "estimated_prompt_tokens = 842.4049230769233 + 0.2621538461538461 * prompt_bytes",
+      "exact_tokenizer": false,
+      "calibration_range_prompt_bytes": [
+        4492,
+        7742
+      ],
+      "extrapolation_warning": "RATIONAL full packet is materially outside the observed calibration range; estimates are for context-risk screening only.",
+      "use": "CONTEXT_RISK_SCREEN_ONLY"
+    }
+  },
+  "rows": [
+    {
+      "company": "RATIONAL AG",
+      "prompt_bytes": 35756,
+      "estimated_prompt_tokens": 10216,
+      "estimated_total_tokens_at_max_output_768": 10984,
+      "headroom_vs_4096": -6888,
+      "headroom_vs_8192": -2792,
+      "headroom_vs_12288": 1304,
+      "headroom_vs_16384": 5400,
+      "context_4096_disposition": "INADMISSIBLE"
+    },
+    {
+      "company": "Constellation Software",
+      "prompt_bytes": 9041,
+      "estimated_prompt_tokens": 3213,
+      "estimated_total_tokens_at_max_output_768": 3981,
+      "headroom_vs_4096": 115,
+      "headroom_vs_8192": 4211,
+      "headroom_vs_12288": 8307,
+      "headroom_vs_16384": 12403,
+      "context_4096_disposition": "INSUFFICIENT_MARGIN"
+    },
+    {
+      "company": "STMicroelectronics",
+      "prompt_bytes": 7558,
+      "estimated_prompt_tokens": 2824,
+      "estimated_total_tokens_at_max_output_768": 3592,
+      "headroom_vs_4096": 504,
+      "headroom_vs_8192": 4600,
+      "headroom_vs_12288": 8696,
+      "headroom_vs_16384": 12792,
+      "context_4096_disposition": "PLAUSIBLE_BUT_TIGHT"
+    },
+    {
+      "company": "Brookfield Corporation",
+      "prompt_bytes": 9643,
+      "estimated_prompt_tokens": 3370,
+      "estimated_total_tokens_at_max_output_768": 4138,
+      "headroom_vs_4096": -42,
+      "headroom_vs_8192": 4054,
+      "headroom_vs_12288": 8150,
+      "headroom_vs_16384": 12246,
+      "context_4096_disposition": "INADMISSIBLE"
+    },
+    {
+      "company": "Adyen",
+      "prompt_bytes": 11671,
+      "estimated_prompt_tokens": 3902,
+      "estimated_total_tokens_at_max_output_768": 4670,
+      "headroom_vs_4096": -574,
+      "headroom_vs_8192": 3522,
+      "headroom_vs_12288": 7618,
+      "headroom_vs_16384": 11714,
+      "context_4096_disposition": "INADMISSIBLE"
+    }
+  ],
+  "decision": {
+    "common_context_4096_admissible": false,
+    "common_context_8192_admissible": false,
+    "common_context_12288_selected": false,
+    "proposed_common_context_tokens": 16384,
+    "rationale": "RATIONAL exceeds 8192 materially. Although the linear screen estimates 1304 tokens of headroom at 12288, that estimate is an extrapolation far beyond the measured Phi-4 calibration range; 16384 provides materially safer headroom without packet compaction.",
+    "packet_compaction_selected": false,
+    "packet_compaction_reason": "Packet compaction would change the C4 workload and is not needed before testing a 16384 load envelope."
+  },
+  "hardware_boundary": {
+    "context_4096_load_fit_proven": true,
+    "context_4096_bounded_inference_fit_proven": true,
+    "context_16384_load_fit_proven": false,
+    "context_16384_inference_fit_proven": false,
+    "context_growth_executable_only_as_load_smoke": true
+  },
+  "authority": {
+    "context16384_load_smoke_allowed_under_standing_authorization": true,
+    "context16384_inference_authorized": false,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
