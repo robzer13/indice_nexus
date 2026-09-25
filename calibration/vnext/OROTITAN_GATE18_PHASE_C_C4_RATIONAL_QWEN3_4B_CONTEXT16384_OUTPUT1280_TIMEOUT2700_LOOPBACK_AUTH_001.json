@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+  "status": "CONSUMED_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go RATIONAL output1280 timeout2700",
@@ -25,7 +25,7 @@
     "completed_adyen": "G18-PHASEC-C4-ADYEN-HUMAN-ADJUDICATION-RESULT-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "RATIONAL AG",
     "archetype": "SIMPLE_CLEAN_COMPOUNDER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -52,7 +52,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -101,5 +101,22 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "8fd9032ef69250d5d57e910f3291dc07fdc535fe",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+    "result_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+    "wall_clock_ms": 958160,
+    "done_reason": "stop",
+    "prompt_eval_count": 9979,
+    "eval_count": 1098,
+    "schema_valid": true,
+    "semantic_valid": false,
+    "semantic_error": "VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS",
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false
+  }
 }
