@@ -1,0 +1,74 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_HUMAN_QUALITY_CARRY",
+  "company": "STMicroelectronics",
+  "matrix_cell_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "source": {
+    "automated_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+    "adjudication_export_result": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-EXPORT-RESULT-001",
+    "private_packet_reviewed": true,
+    "private_packet_content_persisted_publicly": false
+  },
+  "engineering_carry": {
+    "output_budget_fully_consumed": true,
+    "done_reason": "length",
+    "structural_truncation_observed": false,
+    "semantic_truncation_observed": false,
+    "disposition": "CARRY_OUTPUT_BUDGET_SATURATION"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "PASS_WITH_DEFECT",
+    "claim_atomicity": "PASS",
+    "claim_target_alignment": "PASS",
+    "support_counterevidence_polarity": "PASS",
+    "qualification_orthogonality": "PASS_WITH_DEFECT",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS_WITH_DEFECT",
+    "unresolved_point_usefulness": "PASS",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "PASS_WITH_DEFECT"
+  },
+  "carry_codes": [
+    "ONE_PRIORITY_FINDING_VERB_OVERSTATES_PROJECT_STATUS_RELATIVE_TO_PACKET",
+    "ONE_EVIDENCE_QUALIFICATION_MIXES_PROBATIVE_LIMITATION_WITH_ECONOMIC_RISK",
+    "WEAK_LINK_CANDIDATE_LABELS_USE_EVIDENCE_IDS_INSTEAD_OF_SEMANTIC_LABELS",
+    "PRIORITY_SELECTION_IS_DEFENSIBLE_BUT_NOT_MAXIMALLY_DIRECT_TO_MOAT_MECHANISM",
+    "OUTPUT_BUDGET_SATURATED_AT_1024_WITH_VALID_COMPLETE_STRUCTURE"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "unsupported_counterevidence_polarity": false,
+    "claim_atomicity_critical_failure": false,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": false
+  },
+  "disposition": {
+    "automated_engineering_pass": true,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": false,
+    "clean_pass": false,
+    "pass_with_carry": true,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_REMAINING_C4_COMMON_RUNTIME_STATIC_PREFLIGHT_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
