@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_ATOMIC_CLAIM_FORENSIC_V3_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+  "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-BROOKFIELD-COUNTEREVIDENCE-LINK-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-BROOKFIELD-CONFLICT-GROUNDING-FORENSIC-V2-RESULT-001"
+  ],
+  "diagnostic_observations": {
+    "counterevidence_link_normalized_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "removed_ungrounded_conflict_refs": [
+      {
+        "finding_index": 1,
+        "conflict_id": "C-009"
+      }
+    ],
+    "non_atomic_findings": [
+      {
+        "finding_index": 3,
+        "matched_patterns": [
+          "but"
+        ]
+      }
+    ],
+    "downstream_full_validator_pass": true,
+    "downstream_full_validator_error": null
+  },
+  "deterministic_defect_set": {
+    "class_count": 3,
+    "classes": [
+      "COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM"
+    ],
+    "all_known_deterministic_defects_exhausted": true
+  },
+  "disposition_boundary": {
+    "original_run_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "engineering_failure_concluded": true,
+    "global_model_capability_failure_concluded": false,
+    "human_adjudication_required": true,
+    "original_output_must_be_adjudicated_as_emitted": true,
+    "auto_repair_forbidden": true,
+    "retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_PRIVATE_BROOKFIELD_HUMAN_ADJUDICATION_EXPORT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

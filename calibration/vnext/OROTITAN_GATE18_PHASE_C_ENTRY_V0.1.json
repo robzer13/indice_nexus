@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "BROOKFIELD_SEMANTIC_FAIL_THIRD_DEFECT_FORENSIC_V3_PREPARED",
+    "c4_diversified_matrix": "BROOKFIELD_ENGINEERING_FAIL_HUMAN_ADJUDICATION_EXPORT_PREPARED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_ATOMIC_CLAIM_NORMALIZATION_FORENSIC_V3",
+  "next_action": "RUN_LOCAL_PRIVATE_BROOKFIELD_HUMAN_ADJUDICATION_EXPORT",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -658,8 +658,17 @@
     "NON_ATOMIC_CONTRASTIVE_CLAIM"
   ],
   "c4_brookfield_observed_deterministic_defect_class_count": 3,
-  "c4_brookfield_all_known_deterministic_defects_exhausted": false,
+  "c4_brookfield_all_known_deterministic_defects_exhausted": true,
   "c4_brookfield_atomic_claim_forensics_v3_prep": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-PREP-001",
   "c4_brookfield_atomic_claim_forensics_v3_script": "scripts/vnext-gate18-phase-c-c4-brookfield-atomic-claim-normalization-forensic-v3.ts",
-  "c4_brookfield_atomic_claim_forensics_v3_is_inference": false
+  "c4_brookfield_atomic_claim_forensics_v3_is_inference": false,
+  "c4_brookfield_atomic_claim_forensics_v3_result": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001",
+  "c4_brookfield_atomic_claim_forensics_v3_status": "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+  "c4_brookfield_engineering_failure_concluded": true,
+  "c4_brookfield_global_model_capability_failure_concluded": false,
+  "c4_brookfield_human_adjudication_required": true,
+  "c4_brookfield_matrix_cell_completed": false,
+  "c4_brookfield_human_adjudication_export_prep": "G18-PHASEC-C4-BROOKFIELD-HUMAN-ADJUDICATION-EXPORT-PREP-001",
+  "c4_brookfield_human_adjudication_export_script": "scripts/vnext-gate18-phase-c-c4-brookfield-human-adjudication-export.ts",
+  "c4_brookfield_human_adjudication_export_is_inference": false
 }
