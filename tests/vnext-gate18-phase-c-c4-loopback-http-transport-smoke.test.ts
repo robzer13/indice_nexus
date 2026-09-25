@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import http from "node:http";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import {
   LoopbackHttpExplicitTimeoutError,
@@ -63,7 +64,6 @@ test("loopback HTTP client rejects non-loopback endpoints before network access"
 });
 
 test("transport smoke is non-inference and avoids global fetch", () => {
-  const { readFileSync } = require("node:fs") as typeof import("node:fs");
   const source = readFileSync(
     "scripts/vnext-gate18-phase-c-c4-loopback-http-transport-smoke.ts",
     "utf8",
