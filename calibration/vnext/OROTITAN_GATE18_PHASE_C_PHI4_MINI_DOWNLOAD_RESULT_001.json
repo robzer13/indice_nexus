@@ -1,0 +1,66 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-PHI4-MINI-DOWNLOAD-RESULT-001",
+  "authorization_id": "G18-PHASEC-PHI4-MINI-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "PASS_PINNED_DOWNLOAD_ONLY",
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "size_bytes": 2491876774,
+    "format": "gguf",
+    "ollama_reported_family": "phi3",
+    "parameter_size": "3.8B",
+    "quantization": "Q4_K_M"
+  },
+  "download": {
+    "command_family": "ollama pull",
+    "exact_model": "phi4-mini:3.8b-q4_K_M",
+    "manifest_pulled": true,
+    "sha256_digest_verified_by_ollama": true,
+    "manifest_written": true,
+    "success": true,
+    "model_download_executed": true,
+    "other_model_download_executed": false
+  },
+  "verification": {
+    "exact_tag_present": true,
+    "digest_captured": true,
+    "expected_digest_prefix_matched": true,
+    "api_show_reachable": true,
+    "expected_quantization_matched": true
+  },
+  "safety": {
+    "load_smoke_executed": false,
+    "prompt_provided": false,
+    "model_inference_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "paid_execution_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "identity_pin_status": "PASS",
+    "artifact_size_class": "MATCHES_STATIC_EXPECTATION_APPROX_2_5GB",
+    "runtime_memory_fit": "NOT_YET_PROVEN",
+    "semantic_quality_assessed": false,
+    "note": "Ollama reports family=phi3 for the pinned Phi-4 mini tag. The exact tag, digest prefix, parameter size and Q4_K_M quantization all matched the authorized target."
+  },
+  "authority": {
+    "phi4_mini_download_authorized": false,
+    "phi4_mini_load_smoke_authorized": false,
+    "phi4_mini_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_SEPARATE_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_AUTHORIZATION",
+  "base_vnext_sha": "32e25391787406cc550ccb65b9f4256fc3d31885",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

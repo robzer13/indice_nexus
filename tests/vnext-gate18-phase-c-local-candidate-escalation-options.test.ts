@@ -44,7 +44,7 @@ test("expanded local candidate registry remains static and selects no winner", (
   assert.equal(ids.has("GEMMA3_4B_OLLAMA_Q4_K_M"), true);
 });
 
-test("Phi-4 mini preflight prep requires explicit authorization before download and forbids inference", () => {
+test("Phi-4 mini combined preflight records completed download and separate load-only authorization boundary", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_DOWNLOAD_MEMORY_PREFLIGHT_PREP_001.json",
@@ -54,7 +54,7 @@ test("Phi-4 mini preflight prep requires explicit authorization before download 
 
   assert.equal(
     prep.status,
-    "PREPARED_STATIC_NO_DOWNLOAD_NO_INFERENCE_AWAITING_EXPLICIT_USER_AUTHORIZATION",
+    "DOWNLOAD_COMPLETED_MEMORY_LOAD_PREFLIGHT_SPLIT_TO_SEPARATE_AUTHORIZATION",
   );
   assert.equal(prep.candidate.model_id, "phi4-mini:3.8b-q4_K_M");
   assert.equal(prep.candidate.expected_ollama_artifact_size_gb, 2.5);
@@ -62,11 +62,12 @@ test("Phi-4 mini preflight prep requires explicit authorization before download 
   assert.equal(prep.hardware_basis.runtime_memory_fit, "NOT_YET_PROVEN");
   assert.equal(prep.authority.download_authorized, false);
   assert.equal(prep.authority.inference_authorized, false);
+  assert.equal(prep.authority.load_smoke_authorized, false);
   assert.equal(prep.authority.automatic_retry_authorized, false);
   assert.equal(prep.authority.automatic_model_switch_authorized, false);
   assert.equal(
     prep.next_action,
-    "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
+    "AWAIT_EXPLICIT_USER_AUTHORIZATION_FOR_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_4096",
   );
 });
 

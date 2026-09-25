@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_DOWNLOAD",
-  "status": "AUTHORIZED_SINGLE_DOWNLOAD_UNCONSUMED",
+  "status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "DOWNLOAD_LOCAL_MODEL_AND_VERIFY_IDENTITY_ONLY",
@@ -59,7 +59,7 @@
     "no_load_or_inference_until_separate_authorization": true
   },
   "authority": {
-    "phi4_mini_download_authorized": true,
+    "phi4_mini_download_authorized": false,
     "phi4_mini_load_smoke_authorized": false,
     "phi4_mini_inference_authorized": false,
     "model_switch_authorized": false,
@@ -68,6 +68,12 @@
     "publication_authority": false
   },
   "base_vnext_sha": "6da8e0ba551a0ce4ce5faf141486294c7606fb66",
-  "next_action": "RUN_LOCAL_PHI4_MINI_DOWNLOAD_VERIFY_ONCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_SEPARATE_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-PHI4-MINI-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "retry_authorized": false
+  }
 }

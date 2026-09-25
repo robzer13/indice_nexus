@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Phi-4 mini download authorization is single-use scoped and forbids load/inference", () => {
+test("Phi-4 mini download authorization is consumed after one pinned download and still forbids load/inference", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_DOWNLOAD_AUTH_001.json",
@@ -10,7 +10,7 @@ test("Phi-4 mini download authorization is single-use scoped and forbids load/in
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_DOWNLOAD_UNCONSUMED");
+  assert.equal(auth.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(auth.user_authorization.explicit, true);
   assert.equal(auth.model.ollama_model_name, "phi4-mini:3.8b-q4_K_M");
   assert.equal(auth.model.expected_digest_prefix, "78fad5d182a7");
@@ -19,7 +19,7 @@ test("Phi-4 mini download authorization is single-use scoped and forbids load/in
   assert.equal(auth.constraints.load_smoke_after_download, false);
   assert.equal(auth.constraints.automatic_retry, false);
   assert.equal(auth.constraints.automatic_model_switch, false);
-  assert.equal(auth.authority.phi4_mini_download_authorized, true);
+  assert.equal(auth.authority.phi4_mini_download_authorized, false);
   assert.equal(auth.authority.phi4_mini_load_smoke_authorized, false);
   assert.equal(auth.authority.phi4_mini_inference_authorized, false);
 });
@@ -43,7 +43,7 @@ test("Phi-4 mini download runner pulls exact model and contains no inference or 
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C entry stops at one authorized Phi-4 mini download with inference still forbidden", () => {
+test("Phase C entry preserves the pinned Phi-4 mini download while stopping before load/inference", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -51,13 +51,19 @@ test("Phase C entry stops at one authorized Phi-4 mini download with inference s
     ),
   );
 
-  assert.equal(entry.phi4_mini_download_authorized, true);
+  assert.equal(entry.phi4_mini_download_authorized, false);
   assert.equal(
     entry.phi4_mini_download_authorization_status,
-    "AUTHORIZED_SINGLE_DOWNLOAD_UNCONSUMED",
+    "CONSUMED_SINGLE_DOWNLOAD_ONLY",
+  );
+  assert.equal(entry.phi4_mini_download_executed, true);
+  assert.equal(entry.phi4_mini_identity_pin_status, "PASS");
+  assert.equal(
+    entry.phi4_mini_digest,
+    "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
   );
   assert.equal(entry.phi4_mini_load_smoke_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.next_action, "RUN_LOCAL_PHI4_MINI_DOWNLOAD_VERIFY_ONCE");
+  assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
 });
