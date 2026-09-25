@@ -19,7 +19,7 @@
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "c4_diversified_matrix": "COMPLETE_5_OF_5_SYNTHESIS_RECORDED_RECURRENT_CRITICAL_FAILURES",
-    "c5_repeatability": "NOT_AUTHORIZED_POST_C4_DISPOSITION_PENDING",
+    "c5_repeatability": "QWEN3_4B_NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
   },
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "PREPARE_POST_C4_CANDIDATE_DISPOSITION_NO_INFERENCE",
+  "next_action": "PREPARE_LOCAL_CANDIDATE_ESCALATION_OPTIONS_STATIC_ONLY",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -882,5 +882,12 @@
   "c4_human_quality_critical_failure_count": 3,
   "c4_recurrent_critical_errors_observed": true,
   "c4_global_model_capability_failure_concluded": false,
-  "c5_repeatability_authorized": false
+  "c5_repeatability_authorized": false,
+  "c4_qwen3_4b_post_matrix_disposition": "G18-PHASEC-POST-C4-QWEN3-4B-DISPOSITION-001",
+  "c4_qwen3_4b_candidate_capability_failure_concluded": true,
+  "c4_qwen3_family_global_failure_concluded": false,
+  "c5_qwen3_4b_production_admission_path": "NOT_ADMITTED",
+  "c5_qwen3_4b_diagnostic_repeatability_future_authorization_possible": true,
+  "candidate_escalation_static_options_required": true,
+  "model_switch_authorized": false
 }
