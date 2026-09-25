@@ -1,0 +1,66 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_POST_C4_CANDIDATE_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-POST-C4-QWEN3-4B-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_DISPOSITION",
+  "status": "QWEN3_4B_NOT_ADMITTED_TO_C5_PRODUCTION_PATH_ESCALATION_OPTIONS_REQUIRED",
+  "candidate": {
+    "candidate_id": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "model": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "quantization": "Q4_K_M",
+    "runtime": "OLLAMA_LOCAL"
+  },
+  "evidence_basis": {
+    "c3_status": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
+    "c4_synthesis": "G18-PHASEC-C4-FIVE-COMPANY-SYNTHESIS-001",
+    "c4_cells_completed": 5,
+    "c4_engineering_pass_count": 2,
+    "c4_engineering_fail_count": 3,
+    "c4_human_quality_clean_pass_count": 0,
+    "c4_human_quality_pass_with_carry_count": 2,
+    "c4_human_quality_critical_failure_count": 3,
+    "recurrent_critical_errors_observed": true,
+    "critical_failure_companies": [
+      "RATIONAL AG",
+      "Brookfield Corporation",
+      "Adyen"
+    ]
+  },
+  "reasoning": {
+    "recurrent_critical_semantic_errors_are_not_repeatability_carries": true,
+    "original_c4_failures_remain_authoritative": true,
+    "c5_repeatability_cannot_retroactively_repair_failed_c4_outputs": true,
+    "two_pass_with_carry_cells_do_not_offset_three_critical_failures": true,
+    "clean_c4_pass_observed": false,
+    "candidate_remains_useful_as_calibration_evidence": true
+  },
+  "disposition": {
+    "qwen3_4b_candidate_capability_failure_concluded": true,
+    "qwen3_family_global_failure_concluded": false,
+    "c5_repeatability_as_production_admission_path": "NOT_ADMITTED",
+    "diagnostic_repeatability_future_authorization_possible": true,
+    "production_candidate_status": "NOT_QUALIFIED",
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "escalation_boundary": {
+    "model_switch_authorized": false,
+    "model_download_authorized": false,
+    "new_inference_authorized": false,
+    "candidate_registry_expansion_authorized": false,
+    "paid_benchmark_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_step_requirements": {
+    "action": "PREPARE_LOCAL_CANDIDATE_ESCALATION_OPTIONS_STATIC_ONLY",
+    "compare_registered_qwen3_8b_hardware_fit": true,
+    "consider_candidate_registry_expansion_before_download": true,
+    "require_static_no_download_no_inference_analysis_first": true,
+    "preserve_zero_external_api_cost_target": true
+  },
+  "next_action": "PREPARE_LOCAL_CANDIDATE_ESCALATION_OPTIONS_STATIC_ONLY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
