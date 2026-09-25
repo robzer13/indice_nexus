@@ -1,0 +1,132 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_ESCALATION_OPTIONS_V0.1",
+  "options_id": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_LOCAL_CANDIDATE_ESCALATION_OPTIONS",
+  "status": "STATIC_OPTIONS_COMPLETE_REGISTRY_EXPANSION_JUSTIFIED_NO_DOWNLOAD_NO_INFERENCE",
+  "source_checked_at": "2026-09-25",
+  "trigger": {
+    "disposition": "G18-PHASEC-POST-C4-QWEN3-4B-DISPOSITION-001",
+    "qwen3_4b_production_path": "NOT_ADMITTED",
+    "recurrent_c4_critical_failures": true,
+    "zero_external_api_cost_target_preserved": true
+  },
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "qwen3_4b_context16384_observed_loaded_vram_mib": 2359,
+    "qwen3_4b_context16384_observed_vram_headroom_mib": 1604,
+    "qwen3_4b_context16384_system_ram_pressure": "HIGH",
+    "implication": "Do not default to a materially larger weight artifact before considering same-size or near-same-size model-family alternatives."
+  },
+  "current_registered_escalation": {
+    "candidate_id": "QWEN3_8B_LOCAL",
+    "model_id": "qwen3:8b",
+    "artifact_size_approx_gb": 5.2,
+    "state": "HOLD_POOR_CURRENT_HARDWARE_FIT",
+    "reason": "Weight artifact exceeds discrete VRAM and would require material CPU/RAM offload on an 8GB system already showing high RAM pressure at Qwen3 4B context16384.",
+    "download_authorized": false,
+    "inference_authorized": false
+  },
+  "researched_options": [
+    {
+      "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "family": "Phi-4",
+      "model_id": "phi4-mini:3.8b-q4_K_M",
+      "parameters": "3.8B",
+      "architecture_class": "dense_text",
+      "ollama_artifact_size_gb": 2.5,
+      "context_window_tokens": 128000,
+      "ollama_digest_prefix": "78fad5d182a7",
+      "license": "MIT",
+      "hardware_fit_static": "PLAUSIBLE_SIMILAR_WEIGHT_CLASS_TO_CURRENT_QWEN3_4B",
+      "information_gain": "HIGH_FAMILY_DIVERSITY_AT_CURRENT_WEIGHT_CLASS",
+      "structured_output_boundary": "OLLAMA_RUNTIME_JSON_SCHEMA_SUPPORTED_BUT_OROTITAN_SEMANTIC_CONTRACT_UNTESTED",
+      "source_urls": [
+        "https://ollama.com/library/phi4-mini/tags",
+        "https://huggingface.co/microsoft/Phi-4-mini-instruct/blob/main/LICENSE"
+      ]
+    },
+    {
+      "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "family": "Qwen3.5",
+      "model_id": "qwen3.5:4b-q4_K_M",
+      "parameters": "4B",
+      "architecture_class": "multimodal",
+      "ollama_artifact_size_gb": 3.4,
+      "context_window_tokens": 256000,
+      "ollama_digest_prefix": "2a654d98e6fb",
+      "license": "Apache-2.0",
+      "hardware_fit_static": "PLAUSIBLE_BUT_TIGHTER_THAN_CURRENT_QWEN3_4B",
+      "information_gain": "MEDIUM_SUCCESSOR_GENERATION_WITHIN_QWEN_LINEAGE",
+      "structured_output_boundary": "OLLAMA_RUNTIME_JSON_SCHEMA_SUPPORTED_BUT_OROTITAN_SEMANTIC_CONTRACT_UNTESTED",
+      "source_urls": [
+        "https://ollama.com/library/qwen3.5/tags",
+        "https://huggingface.co/Qwen/Qwen3.5-4B"
+      ]
+    },
+    {
+      "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+      "family": "Gemma 3",
+      "model_id": "gemma3:4b-it-q4_K_M",
+      "parameters": "4.3B",
+      "architecture_class": "multimodal",
+      "ollama_artifact_size_gb": 3.3,
+      "context_window_tokens": 128000,
+      "ollama_digest_prefix": "a2af6cc3eb7f",
+      "license": "Gemma Terms of Use",
+      "hardware_fit_static": "PLAUSIBLE_BUT_TIGHTER_THAN_CURRENT_QWEN3_4B",
+      "information_gain": "HIGH_FAMILY_DIVERSITY",
+      "legal_boundary": "SEPARATE_LICENSE_REVIEW_REQUIRED_BEFORE_PRODUCTION_CANDIDACY",
+      "structured_output_boundary": "OLLAMA_RUNTIME_JSON_SCHEMA_SUPPORTED_BUT_OROTITAN_SEMANTIC_CONTRACT_UNTESTED",
+      "source_urls": [
+        "https://ollama.com/library/gemma3/tags",
+        "https://ollama.com/library/gemma3:latest"
+      ]
+    }
+  ],
+  "static_evaluation_sequence": [
+    {
+      "order": 1,
+      "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "rationale": "Same 2.5GB artifact class as the failed Qwen3 4B candidate while changing model family, maximizing diagnostic information before increasing memory pressure."
+    },
+    {
+      "order": 2,
+      "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "rationale": "Current Qwen successor at 3.4GB; potentially feasible but requires tighter memory preflight because the artifact is materially larger than the current 2.5GB Qwen3 4B artifact."
+    },
+    {
+      "order": 3,
+      "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+      "rationale": "Architecture/family diversity at 3.3GB, but production candidacy requires separate Gemma-terms review."
+    },
+    {
+      "order": 4,
+      "candidate_id": "QWEN3_8B_LOCAL",
+      "rationale": "Retain only as a later escalation because current hardware fit remains poor."
+    }
+  ],
+  "registry_decision": {
+    "candidate_registry_expansion_justified": true,
+    "add_static_candidates": [
+      "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "GEMMA3_4B_OLLAMA_Q4_K_M"
+    ],
+    "model_winner_selected": false,
+    "semantic_quality_inferred_from_public_benchmarks": false
+  },
+  "authority": {
+    "candidate_registry_static_expansion_authorized": true,
+    "model_download_authorized": false,
+    "model_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_benchmark_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_PHI4_MINI_DOWNLOAD_AND_MEMORY_PREFLIGHT_NO_DOWNLOAD",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
