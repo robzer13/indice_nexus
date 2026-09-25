@@ -54,7 +54,7 @@ test("Phi-4 C4 context-risk screen rejects 4096 and selects 16384 only for load-
   assert.equal(result.authority.c4_inference_authorized, false);
 });
 
-test("Phi-4 context16384 load-smoke authorization derives from standing authority and remains non-inference", () => {
+test("Phi-4 context16384 load-smoke authorization is consumed after the measured load-only run", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
@@ -62,7 +62,7 @@ test("Phi-4 context16384 load-smoke authorization derives from standing authorit
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOAD_ONLY_SMOKE");
   assert.equal(auth.authorization_source.type, "STANDING_USER_AUTHORIZATION");
   assert.equal(
     auth.authorization_source.authorization_id,
@@ -75,12 +75,12 @@ test("Phi-4 context16384 load-smoke authorization derives from standing authorit
     "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
   );
   assert.equal(auth.model.context_tokens, 16384);
-  assert.equal(auth.execution.action_count_authorized, 1);
+  assert.equal(auth.execution.action_count_authorized, 0);
   assert.equal(auth.execution.semantic_inference_authorized, false);
   assert.equal(auth.constraints.c4_inference_authorized, false);
   assert.equal(auth.constraints.automatic_retry_authorized, false);
   assert.equal(auth.constraints.further_context_change_authorized, false);
-  assert.equal(auth.authority.context16384_load_smoke_authorized, true);
+  assert.equal(auth.authority.context16384_load_smoke_authorized, false);
   assert.equal(auth.authority.context16384_inference_authorized, false);
 });
 
@@ -110,7 +110,7 @@ test("Phi-4 context16384 load-smoke runner is authorization-gated and generation
   assert.doesNotMatch(source, /messages:/);
 });
 
-test("Phase C current state authorizes only the context16384 load smoke, not C4 inference", () => {
+test("Phase C preserves the measured context16384 load fit across later first-cell authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -123,14 +123,9 @@ test("Phase C current state authorizes only the context16384 load smoke, not C4 
   assert.equal(entry.phi4_mini_c4_context8192_admissible, false);
   assert.equal(entry.phi4_mini_c4_context12288_selected, false);
   assert.equal(entry.phi4_mini_c4_proposed_common_context_tokens, 16384);
-  assert.equal(entry.phi4_mini_c4_context16384_load_smoke_authorized, true);
-  assert.equal(entry.phi4_mini_c4_context16384_load_fit, "NOT_YET_PROVEN");
-  assert.equal(entry.phi4_mini_c4_inference_authorized, false);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
+  assert.equal(entry.phi4_mini_c4_context16384_load_smoke_authorized, false);
+  assert.equal(entry.phi4_mini_c4_context16384_load_fit, "PASS");
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
-  );
+  assert.equal(entry.phi4_mini_c4_context16384_loaded_vram_free_mib, 1680);
 });
