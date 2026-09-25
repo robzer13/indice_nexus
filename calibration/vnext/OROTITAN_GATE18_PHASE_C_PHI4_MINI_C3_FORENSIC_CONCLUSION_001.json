@@ -1,0 +1,105 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_C3_FORENSIC_CONCLUSION_V0.1",
+  "result_id": "G18-PHASEC-PHI4-MINI-C3-FORENSIC-CONCLUSION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_TARGETED_REGRESSION_CONCLUSION",
+  "status": "PASS_TARGETED_SEMANTIC_REGRESSIONS_WITH_OUTPUT_CONTRACT_RELIABILITY_DEFECT",
+  "source_results": {
+    "brookfield": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
+    "adyen_original": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+    "adyen_punctuation_forensic": "G18-PHASEC-PHI4-MINI-ADYEN-PUNCTUATION-FORENSIC-RESULT-001"
+  },
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096
+  },
+  "mandatory_regressions": {
+    "total": 5,
+    "satisfied": 5,
+    "items": [
+      {
+        "regression": "Brookfield E-039 peer-platform replicability polarity",
+        "disposition": "PASS_ORIGINAL_RUN"
+      },
+      {
+        "regression": "Brookfield E-042 competing-capital polarity",
+        "disposition": "PASS_ORIGINAL_RUN"
+      },
+      {
+        "regression": "Adyen same-target switching-friction role alignment",
+        "disposition": "PASS_TARGETED_VALIDATOR_AFTER_PUNCTUATION_ONLY_FORENSIC_NORMALIZATION"
+      },
+      {
+        "regression": "Adyen scope-resolved incident handling",
+        "disposition": "PASS_TARGETED_VALIDATOR_AFTER_PUNCTUATION_ONLY_FORENSIC_NORMALIZATION"
+      },
+      {
+        "regression": "Adyen qualification orthogonality",
+        "disposition": "PASS_TARGETED_VALIDATOR_AFTER_PUNCTUATION_ONLY_FORENSIC_NORMALIZATION"
+      }
+    ]
+  },
+  "adyen_original_run_integrity": {
+    "original_run_status": "FAIL",
+    "original_run_status_changed": false,
+    "semantic_validator_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+    "runtime_pass": true,
+    "schema_pass": true,
+    "done_reason": "stop",
+    "eval_count": 706,
+    "max_output_tokens": 768
+  },
+  "adyen_forensic_conclusion": {
+    "c005_resolution_state_correct": true,
+    "c010_resolution_state_correct": true,
+    "missing_terminal_punctuation_conflict_ids": [
+      "C-005",
+      "C-010"
+    ],
+    "in_memory_full_targeted_validator_pass_after_punctuation_only_normalization": true,
+    "downstream_validation_error_after_normalization": null,
+    "source_artifact_mutated": false,
+    "retroactive_pass_applied": false,
+    "only_observed_output_contract_defect": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS"
+  },
+  "protocol_interpretation": {
+    "targeted_regression_objective_satisfied": true,
+    "deterministic_validation_does_not_substitute_for_c4_human_quality_review": true,
+    "critical_semantic_regressions_pass_with_reliability_carry": true,
+    "c4_entry_allowed": true,
+    "c5_repeatability_allowed_now": false,
+    "c7_production_candidate_decision_allowed_now": false
+  },
+  "reliability_carry": {
+    "status": "OPEN_DEFECT",
+    "defect": "EXPLICIT_TERMINAL_PUNCTUATION_INSTRUCTION_NOT_RELIABLY_FOLLOWED_ON_MATERIAL_CONFLICT_IMPLICATIONS",
+    "severity": "NONCRITICAL_SEMANTIC_BUT_ENGINEERING_RELIABILITY_RELEVANT",
+    "must_be_retested_in_repeatability": true,
+    "must_be_resolved_or_explicitly_accepted_before_c7": true,
+    "auto_repair_for_c4_forbidden": true,
+    "original_outputs_must_be_adjudicated_as_emitted": true
+  },
+  "candidate_disposition": {
+    "broader_phase_c_admission": true,
+    "admission_mode": "CONDITIONAL_WITH_RELIABILITY_CARRY",
+    "model_capability_failure_concluded": false,
+    "critical_semantic_failure_concluded": false,
+    "model_winner_selected": false,
+    "production_candidate_accepted": false
+  },
+  "authority": {
+    "c4_execution_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "routing_frozen": false
+  },
+  "next_action": "PREPARE_C4_DIVERSIFIED_COMPANY_MODULE_MATRIX_FOR_PHI4_MINI_WITH_RELIABILITY_CARRY",
+  "base_vnext_sha": "d307481e56c0e010b339861cf8f2751adff13110",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
