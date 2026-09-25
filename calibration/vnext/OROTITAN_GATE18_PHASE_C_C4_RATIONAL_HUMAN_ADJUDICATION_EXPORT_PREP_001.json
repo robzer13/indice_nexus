@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_HUMAN_ADJUDICATION_EXPORT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-RATIONAL-HUMAN-ADJUDICATION-EXPORT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "PREPARED_LOCAL_PRIVATE_NO_INFERENCE_ENGINEERING_FAIL",
+  "source_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+  "exhaustive_semantic_forensic": "G18-PHASEC-C4-RATIONAL-COUNTEREVIDENCE-LINK-FORENSIC-V4-RESULT-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-rational-human-adjudication-export.ts",
+  "expected_private_source": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T163411054Z__C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "expected_private_export": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T163411054Z__C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001__HUMAN_ADJUDICATION_PACKET.json",
+  "engineering_disposition": {
+    "original_run_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+    "schema_valid": true,
+    "semantic_valid": false,
+    "semantic_error": "VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS",
+    "deterministic_defect_classes": [
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "DIRECTION_ROLE_OVERLAP",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM",
+      "COUNTEREVIDENCE_LINK_INCOMPLETE"
+    ],
+    "deterministic_defect_set_exhausted": true,
+    "engineering_failure_concluded": true
+  },
+  "human_quality_criteria": [
+    "exact_evidence_grounding",
+    "claim_atomicity",
+    "claim_target_alignment",
+    "support_counterevidence_polarity",
+    "qualification_orthogonality",
+    "conflict_handling",
+    "weak_link_usefulness",
+    "unresolved_point_usefulness",
+    "judgment_boundary_compliance",
+    "priority_selection_usefulness"
+  ],
+  "policy": {
+    "original_output_must_be_adjudicated_as_emitted": true,
+    "diagnostic_normalizations_must_not_be_applied": true,
+    "generated_content_must_remain_private": true,
+    "public_repo_persistence_forbidden": true,
+    "auto_repair_forbidden": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "final_moat_conclusion_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_PRIVATE_RATIONAL_HUMAN_ADJUDICATION_EXPORT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
