@@ -1,0 +1,104 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "model": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens_observed": 4096
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.83,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.81,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1668,
+    "vram_used_mib": 2295,
+    "ollama_reported_size": "3.6 GB",
+    "processor_split": "36%/64% CPU/GPU",
+    "context_tokens": 4096,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload",
+    "unload_confirmed": true
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.25,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2295,
+    "vram_headroom_while_loaded_mib": 1668,
+    "free_ram_delta_before_to_loaded_gib": -1.02,
+    "free_ram_delta_before_to_after_gib": 0.42,
+    "full_vram_release_after_unload": true,
+    "ollama_model_residency_cleared_after_unload": true,
+    "post_unload_free_ram_at_or_above_preload": true
+  },
+  "comparison_to_qwen3_4b_context4096_load_smoke": {
+    "qwen3_4b_vram_used_mib": 2311,
+    "phi4_mini_vram_used_mib": 2295,
+    "phi4_mini_vram_used_mib_delta_vs_qwen3_4b": -16,
+    "qwen3_4b_vram_headroom_mib": 1652,
+    "phi4_mini_vram_headroom_mib": 1668,
+    "phi4_mini_vram_headroom_delta_vs_qwen3_4b": 16,
+    "qwen3_4b_loaded_free_ram_gib": 0.66,
+    "phi4_mini_loaded_free_ram_gib": 0.81,
+    "loaded_free_ram_delta_vs_qwen3_4b_gib": 0.15,
+    "comparability_note": "Absolute loaded headroom is directionally comparable; before-to-loaded RAM deltas are not treated as directly comparable because host background memory state differed between runs."
+  },
+  "interpretation": {
+    "load_fit_at_4096_context": "PASS",
+    "inference_fit_at_4096_context": "NOT_YET_EXECUTION_PROVEN",
+    "system_ram_pressure": "HIGH",
+    "gpu_headroom_while_loaded": "MATERIAL_BUT_FINITE",
+    "bounded_4096_inference_preparation_allowed": true,
+    "context_growth_allowed": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "semantic_quality_assessed": false,
+    "note": "Phi-4 mini loads successfully at 4096 context with 1668 MiB free VRAM and 0.81 GiB free system RAM. A single compact 4096 inference may be prepared, but generation remains separately authorized because RAM pressure is high."
+  },
+  "safety": {
+    "network_scope": "LOOPBACK_ONLY",
+    "prompt_provided": false,
+    "messages_provided": false,
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ONE_COMPACT_PHI4_MINI_4096_SEMANTIC_PROBE_AND_REQUEST_EXPLICIT_INFERENCE_AUTHORIZATION",
+  "base_vnext_sha": "042fdda18fc84ec55455ae05ccfa9b6705bbc07d",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
