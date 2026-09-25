@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
-  "status": "PREPARED_NOT_AUTHORIZED",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED",
   "basis": {
     "brookfield_phi4_mini_result": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
     "brookfield_targeted_regressions": "PASS",
@@ -117,7 +117,7 @@
   "guard": {
     "authorization_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-AUTH-001",
     "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE_AUTH_001.json",
-    "authorization_artifact_present": false,
+    "authorization_artifact_present": true,
     "execute_flag_required": true,
     "authorization_id_argument_required": true,
     "exact_model_digest_required": true,
@@ -125,7 +125,7 @@
     "exact_max_output_required": true,
     "exact_temperature_required": true,
     "no_preloaded_model_required": true,
-    "inference_currently_authorized": false
+    "inference_currently_authorized": true
   },
   "interpretation_boundary": {
     "a_pass_would_prove": "BROOKFIELD_AND_ADYEN_TARGETED_REGRESSION_PATHS_PASS_AT_CONTEXT4096",
@@ -138,7 +138,7 @@
     ]
   },
   "authority": {
-    "phi4_mini_inference_authorized": false,
+    "phi4_mini_inference_authorized": true,
     "automatic_retry_authorized": false,
     "context_growth_authorized": false,
     "model_switch_authorized": false,
@@ -148,6 +148,10 @@
     "model_winner_selected": false,
     "routing_frozen": false
   },
-  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001"
+  }
 }

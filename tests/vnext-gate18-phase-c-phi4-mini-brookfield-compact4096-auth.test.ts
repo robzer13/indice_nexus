@@ -56,7 +56,7 @@ test("Phi-4 mini Brookfield generated content remains private and carries no pro
   assert.equal(auth.constraints.publication_authority, false);
 });
 
-test("Phase C preserves the consumed Brookfield result while no inference remains authorized", () => {
+test("Phase C preserves the consumed Brookfield result across later scoped authorizations", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -64,7 +64,6 @@ test("Phase C preserves the consumed Brookfield result while no inference remain
     ),
   );
 
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(
     entry.phi4_mini_brookfield_compact4096_inference_authorization_status,
     "CONSUMED_SINGLE_LOCAL_INFERENCE",
