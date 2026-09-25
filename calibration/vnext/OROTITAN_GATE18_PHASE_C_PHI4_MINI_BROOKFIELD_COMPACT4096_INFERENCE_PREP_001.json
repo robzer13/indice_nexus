@@ -1,0 +1,96 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_BROOKFIELD_COMPACT_INFERENCE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-INFERENCE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "qwen3_4b_post_c4_disposition": "G18-PHASEC-POST-C4-QWEN3-4B-DISPOSITION-001",
+    "phi4_mini_download_result": "G18-PHASEC-PHI4-MINI-DOWNLOAD-RESULT-001",
+    "phi4_mini_load_smoke_result": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-RESULT-001",
+    "load_fit_at_4096_context": "PASS",
+    "observed_vram_headroom_while_loaded_mib": 1668,
+    "observed_free_ram_while_loaded_gib": 0.81,
+    "system_ram_pressure": "HIGH"
+  },
+  "probe": {
+    "semantic_probe_id": "BROOKFIELD_PEER_ROLE_CORE_001",
+    "execution_id": "BROOKFIELD_PEER_ROLE_CORE_001_LOCAL_COMPACT_PHI4MINI_4096",
+    "rationale": "Reuse the compact historical Brookfield semantic regression as the first bounded semantic-path admission probe for a new model family before any context growth or C4-scale execution.",
+    "comparison_admissible": false,
+    "model_ranking_authority": false
+  },
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "parameter_size": "3.8B"
+  },
+  "execution_plan": {
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "client_timeout_ms": 180000,
+    "keep_alive": "0s",
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "prompt_template": "GATE18_BROOKFIELD_PEER_ROLE_PROBE_V0_1",
+    "private_output_directory": "calibration/vnext/private-runs",
+    "external_model_api_cost_usd": 0
+  },
+  "context_policy": {
+    "candidate_registry_initial_context_tokens": 4096,
+    "phi4_mini_load_smoke_context_tokens": 4096,
+    "context_change_from_load_smoke": false,
+    "context_growth_authorized": false,
+    "silent_context_growth": false
+  },
+  "resource_boundary": {
+    "load_only_fit_proven": true,
+    "semantic_inference_fit_proven": false,
+    "system_ram_pressure": "HIGH",
+    "preloaded_ollama_models_allowed": false,
+    "automatic_retry_authorized": false,
+    "max_one_execution_if_later_authorized": true
+  },
+  "guard": {
+    "authorization_id": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-INFERENCE-AUTH-001",
+    "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE_AUTH_001.json",
+    "authorization_artifact_present": false,
+    "execute_flag_required": true,
+    "authorization_id_argument_required": true,
+    "exact_model_digest_required": true,
+    "exact_context_required": true,
+    "exact_max_output_required": true,
+    "exact_temperature_required": true,
+    "no_preloaded_model_required": true,
+    "inference_currently_authorized": false
+  },
+  "interpretation_boundary": {
+    "a_pass_would_prove": "ONE_COMPACT_HISTORICAL_SEMANTIC_PROBE_PASSES_AT_CONTEXT4096",
+    "a_pass_would_not_prove": [
+      "C4_MATRIX_QUALITY",
+      "REPEATABILITY",
+      "C5_ADMISSION",
+      "MODEL_WINNER_STATUS",
+      "PRODUCTION_ROUTING",
+      "CONTEXT_GROWTH_FIT"
+    ]
+  },
+  "authority": {
+    "phi4_mini_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "context_growth_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
