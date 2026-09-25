@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_CONFLICT_GROUNDING_FORENSIC_V2_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-CONFLICT-GROUNDING-FORENSIC-V2-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_THIRD_SEMANTIC_DEFECT_FOUND",
+  "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "prior_forensic": "G18-PHASEC-C4-BROOKFIELD-COUNTEREVIDENCE-LINK-FORENSIC-V1-RESULT-001",
+  "observations": {
+    "original_finding_count": 3,
+    "counterevidence_link_normalized_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "conflict_grounding_removed_refs": [
+      {
+        "finding_index": 1,
+        "conflict_id": "C-009",
+        "conflict_evidence_refs": [
+          "E-005",
+          "E-008"
+        ],
+        "finding_evidence_refs": [
+          "E-004"
+        ]
+      }
+    ],
+    "removed_conflict_ref_count": 1
+  },
+  "downstream_validation": {
+    "full_validator_executed_on_in_memory_copy": true,
+    "pass": false,
+    "error": "VNEXT_GATE18_V10_NON_ATOMIC_CONTRASTIVE_CLAIM"
+  },
+  "conclusion": {
+    "observed_deterministic_defect_classes": [
+      "COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM"
+    ],
+    "third_deterministic_semantic_defect_found": true,
+    "all_known_deterministic_defects_exhausted": false,
+    "model_capability_failure_concluded": false,
+    "retry_authorized": false,
+    "retroactive_pass_allowed": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_ATOMIC_CLAIM_NORMALIZATION_FORENSIC_V3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

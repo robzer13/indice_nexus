@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "BROOKFIELD_SEMANTIC_FAIL_SECOND_DEFECT_FORENSIC_V2_PREPARED",
+    "c4_diversified_matrix": "BROOKFIELD_SEMANTIC_FAIL_THIRD_DEFECT_FORENSIC_V3_PREPARED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_CONFLICT_GROUNDING_NORMALIZATION_FORENSIC_V2",
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_ATOMIC_CLAIM_NORMALIZATION_FORENSIC_V3",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -646,5 +646,20 @@
   "c4_brookfield_additional_semantic_defect_found": true,
   "c4_brookfield_conflict_grounding_forensics_v2_prep": "G18-PHASEC-C4-BROOKFIELD-CONFLICT-GROUNDING-FORENSIC-V2-PREP-001",
   "c4_brookfield_conflict_grounding_forensics_v2_script": "scripts/vnext-gate18-phase-c-c4-brookfield-conflict-grounding-normalization-forensic-v2.ts",
-  "c4_brookfield_conflict_grounding_forensics_v2_is_inference": false
+  "c4_brookfield_conflict_grounding_forensics_v2_is_inference": false,
+  "c4_brookfield_conflict_grounding_forensics_v2_result": "G18-PHASEC-C4-BROOKFIELD-CONFLICT-GROUNDING-FORENSIC-V2-RESULT-001",
+  "c4_brookfield_conflict_grounding_forensics_v2_status": "FORENSIC_COMPLETE_THIRD_SEMANTIC_DEFECT_FOUND",
+  "c4_brookfield_conflict_grounding_removed_ref_count": 1,
+  "c4_brookfield_conflict_grounding_downstream_pass": false,
+  "c4_brookfield_conflict_grounding_downstream_error": "VNEXT_GATE18_V10_NON_ATOMIC_CONTRASTIVE_CLAIM",
+  "c4_brookfield_observed_deterministic_defect_classes": [
+    "COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+    "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+    "NON_ATOMIC_CONTRASTIVE_CLAIM"
+  ],
+  "c4_brookfield_observed_deterministic_defect_class_count": 3,
+  "c4_brookfield_all_known_deterministic_defects_exhausted": false,
+  "c4_brookfield_atomic_claim_forensics_v3_prep": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-PREP-001",
+  "c4_brookfield_atomic_claim_forensics_v3_script": "scripts/vnext-gate18-phase-c-c4-brookfield-atomic-claim-normalization-forensic-v3.ts",
+  "c4_brookfield_atomic_claim_forensics_v3_is_inference": false
 }

@@ -1,0 +1,39 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_ATOMIC_CLAIM_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "PREPARED_LOCAL_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-BROOKFIELD-COUNTEREVIDENCE-LINK-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-BROOKFIELD-CONFLICT-GROUNDING-FORENSIC-V2-RESULT-001"
+  ],
+  "runner": "scripts/vnext-gate18-phase-c-c4-brookfield-atomic-claim-normalization-forensic-v3.ts",
+  "expected_private_artifact": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T112153186Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "diagnostic_normalization": {
+    "cumulative": true,
+    "prior_rules": [
+      "Set counterevidence_link to null only when counterevidence_ids is empty.",
+      "Remove finding conflict_id only when the packet conflict has evidence_refs and none overlap finding support/counterevidence refs."
+    ],
+    "third_rule": "Replace only claims matching the frozen non-atomic contrastive pattern set with a neutral atomic diagnostic placeholder on the in-memory copy.",
+    "raw_claim_text_printed": false,
+    "in_memory_only": true,
+    "source_artifact_mutation": false,
+    "retroactive_pass_allowed": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_ATOMIC_CLAIM_NORMALIZATION_FORENSIC_V3",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
