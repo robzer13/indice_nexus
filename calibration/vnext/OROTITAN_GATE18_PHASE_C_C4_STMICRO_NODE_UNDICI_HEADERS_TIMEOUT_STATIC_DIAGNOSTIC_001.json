@@ -1,0 +1,86 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_CLIENT_TRANSPORT_TIMEOUT_STATIC_DIAGNOSTIC_V0.1",
+  "diagnostic_id": "G18-PHASEC-C4-STM-NODE-UNDICI-HEADERS-TIMEOUT-STATIC-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PASS_HIGH_CONFIDENCE_TRANSPORT_ROOT_CAUSE",
+  "classification": "CLIENT_TRANSPORT_HEADERS_TIMEOUT_300S_PREEMPTED_EXPLICIT_420S_ABORT_HIGH_CONFIDENCE",
+  "evidence": {
+    "runner_uses_node_global_fetch": true,
+    "runner_custom_dispatcher_present": false,
+    "runner_abort_controller_timeout_ms": 420000,
+    "node_fetch_implementation_family": "UNDICI",
+    "undici_documented_default_headers_timeout_ms": 300000,
+    "ollama_request_stream_false": true,
+    "ollama_nonstreaming_handler_buffers_until_generation_completion": true,
+    "ollama_v0_34_3_internal_llama_http_client_timeout_configured": false,
+    "ollama_load_timeout_scope": "MODEL_LOAD_STALL_DETECTION_ONLY",
+    "observed_fetch_failure_wall_clock_ms": 304446,
+    "observed_server_500_duration": "5m4s",
+    "observed_generation_tokens_before_failure": 890,
+    "observed_generation_rate_tokens_per_second_near_failure": 3.12,
+    "output_tokens_remaining_to_1024": 134,
+    "estimated_additional_generation_seconds_at_near_failure_rate": 42.95
+  },
+  "causal_chain": [
+    "OroTitan runner sends POST /api/generate with stream=false using Node global fetch and AbortController=420s.",
+    "Ollama v0.34.3 non-streaming GenerateHandler accumulates generation and calls c.JSON only after the generation channel completes.",
+    "Node fetch uses Undici transport semantics; Undici documents a default 300000 ms headersTimeout.",
+    "No response headers are available to the client while non-streaming generation remains active.",
+    "Generation remains healthy through n_gen=890, after roughly five minutes of request lifetime.",
+    "The client reports generic TypeError 'fetch failed' before the explicit 420s AbortController boundary.",
+    "Ollama records the same request as HTTP 500 at approximately the same terminal boundary, consistent with request-context cancellation after the client transport closes."
+  ],
+  "confidence": {
+    "level": "HIGH",
+    "exact_undici_error_cause_code_captured_in_original_run": false,
+    "expected_code_if_hypothesis_is_correct": "UND_ERR_HEADERS_TIMEOUT",
+    "why_not_absolute": "The original runner persisted only error.message and discarded error.cause, so the exact Undici cause code was not captured."
+  },
+  "exclusions": {
+    "output_budget_exhaustion": false,
+    "explicit_client_timeout_420s": false,
+    "system_sleep": false,
+    "windows_resource_exhaustion_event": false,
+    "display_gpu_reset_event": false,
+    "ollama_daemon_restart": false,
+    "panic_in_surrounding_server_log": false,
+    "oom_in_surrounding_server_log": false,
+    "cuda_failure_in_surrounding_server_log": false,
+    "runner_exit_in_surrounding_server_log": false,
+    "ollama_load_timeout_as_generation_timeout": false
+  },
+  "remediation_direction": {
+    "change_model": false,
+    "change_model_digest": false,
+    "change_prompt": false,
+    "change_schema": false,
+    "change_packet": false,
+    "change_context_tokens": false,
+    "change_max_output_tokens": false,
+    "change_temperature": false,
+    "change_explicit_client_timeout_ms": false,
+    "replace_global_fetch_for_long_nonstreaming_generation": true,
+    "proposed_transport": "NODE_HTTP_REQUEST_LOOPBACK_WITH_ONLY_EXPLICIT_TOTAL_ABORT",
+    "smoke_test_required_before_inference_retry": true
+  },
+  "references": {
+    "ollama_tag": "v0.34.3",
+    "ollama_commit": "6383a0fa9cbf97494b847226e189f6e36b401a08",
+    "ollama_generate_handler_path": "server/routes.go",
+    "ollama_llama_server_client_path": "llm/llama_server.go",
+    "ollama_envconfig_path": "envconfig/config.go",
+    "undici_headers_timeout_documented_ms": 300000
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "transport_change_for_inference_authorized": false,
+    "model_load_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_NON_INFERENCE_LOOPBACK_HTTP_TRANSPORT_SMOKE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
