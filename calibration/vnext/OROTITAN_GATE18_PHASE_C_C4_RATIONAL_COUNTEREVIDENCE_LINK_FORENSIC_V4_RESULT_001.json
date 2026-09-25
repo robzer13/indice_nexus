@@ -1,0 +1,112 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_COUNTEREVIDENCE_LINK_FORENSIC_V4_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-RATIONAL-COUNTEREVIDENCE-LINK-FORENSIC-V4-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+  "source_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-RATIONAL-CONFLICT-GROUNDING-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-DIRECTION-ROLE-OVERLAP-FORENSIC-V2-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3R-RESULT-001"
+  ],
+  "diagnostic_observations": {
+    "removed_ungrounded_conflict_refs": [
+      {
+        "finding_index": 1,
+        "conflict_id": "C-005",
+        "conflict_evidence_refs": [
+          "E-005",
+          "E-025",
+          "E-047",
+          "E-048"
+        ],
+        "finding_evidence_refs": [
+          "E-006"
+        ]
+      },
+      {
+        "finding_index": 2,
+        "conflict_id": "C-007",
+        "conflict_evidence_refs": [
+          "E-032",
+          "E-033",
+          "E-035",
+          "E-038",
+          "E-039"
+        ],
+        "finding_evidence_refs": [
+          "E-029",
+          "E-031"
+        ]
+      }
+    ],
+    "direction_role_overlaps": [
+      {
+        "finding_index": 2,
+        "evidence_id": "E-031",
+        "retained_role": "counterevidence"
+      }
+    ],
+    "non_atomic_findings": [
+      {
+        "finding_index": 2,
+        "matched_patterns": [
+          "but"
+        ]
+      }
+    ],
+    "incomplete_counterevidence_links": [
+      {
+        "finding_index": 2,
+        "trimmed_length": 180,
+        "reasons": [
+          "MISSING_TERMINAL_PUNCTUATION",
+          "NARRATIVE_BOUNDARY_SATURATION"
+        ]
+      }
+    ],
+    "downstream_full_validator_pass": true,
+    "downstream_full_validator_error": null
+  },
+  "deterministic_defect_set": {
+    "class_count": 4,
+    "classes": [
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "DIRECTION_ROLE_OVERLAP",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM",
+      "COUNTEREVIDENCE_LINK_INCOMPLETE"
+    ],
+    "all_known_deterministic_defects_exhausted": true
+  },
+  "tooling_note": {
+    "atomic_claim_forensic_v3_status": "FORENSIC_TOOLING_DEFECT_INCONCLUSIVE",
+    "atomic_claim_forensic_v3r_corrected_tooling": true,
+    "tooling_defect_not_counted_as_model_semantic_defect": true
+  },
+  "disposition_boundary": {
+    "original_run_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "engineering_failure_concluded": true,
+    "global_model_capability_failure_concluded": false,
+    "human_adjudication_required": true,
+    "original_output_must_be_adjudicated_as_emitted": true,
+    "auto_repair_forbidden": true,
+    "retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_PRIVATE_RATIONAL_HUMAN_ADJUDICATION_EXPORT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
