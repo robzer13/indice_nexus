@@ -64,7 +64,7 @@ test("Phi-4 C4 matrix prep preserves the five archetypes and original-output adj
     ),
   );
 
-  assert.equal(prep.status, "PREPARED_STATIC_PREFLIGHT_PENDING");
+  assert.equal(prep.status, "STATIC_PREFLIGHT_PASS_CONTEXT16384_LOAD_SMOKE_AUTHORIZED");
   assert.equal(prep.matrix.length, 5);
   assert.deepEqual(
     prep.matrix.map((row: { company: string }) => row.company),
@@ -106,7 +106,7 @@ test("Phi-4 C4 static preflight performs no Ollama or network inference", () => 
   assert.match(source, /c4InferenceAuthorized: false/);
 });
 
-test("Phase C current action is Phi-4 five-company static preflight with no inference authority", () => {
+test("Phase C preserves Phi-4 C4 admission while advancing to context16384 load smoke", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -128,8 +128,10 @@ test("Phase C current action is Phi-4 five-company static preflight with no infe
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
+  assert.equal(entry.phi4_mini_c4_context16384_load_smoke_authorized, true);
+  assert.equal(entry.phi4_mini_c4_proposed_common_context_tokens, 16384);
   assert.equal(
     entry.next_action,
-    "RUN_C4_PHI4_MINI_FIVE_COMPANY_STATIC_REQUEST_PREFLIGHT_NO_INFERENCE",
+    "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
   );
 });
