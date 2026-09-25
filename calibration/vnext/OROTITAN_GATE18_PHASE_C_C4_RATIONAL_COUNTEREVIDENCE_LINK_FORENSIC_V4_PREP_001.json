@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_COUNTEREVIDENCE_LINK_FORENSIC_V4_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-RATIONAL-COUNTEREVIDENCE-LINK-FORENSIC-V4-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "PREPARED_LOCAL_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-RATIONAL-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT2700-LOOPBACK-RESULT-001",
+  "prior_forensics": [
+    "G18-PHASEC-C4-RATIONAL-CONFLICT-GROUNDING-FORENSIC-V1-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-DIRECTION-ROLE-OVERLAP-FORENSIC-V2-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001",
+    "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3R-RESULT-001"
+  ],
+  "runner": "scripts/vnext-gate18-phase-c-c4-rational-counterevidence-link-forensic-v4.ts",
+  "expected_private_source": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T163411054Z__C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "observed_deterministic_defect_classes": [
+    "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+    "DIRECTION_ROLE_OVERLAP",
+    "NON_ATOMIC_CONTRASTIVE_CLAIM",
+    "COUNTEREVIDENCE_LINK_INCOMPLETE"
+  ],
+  "diagnostic_normalization": {
+    "cumulative": true,
+    "conflict_grounding": "Remove only finding conflict_ids whose packet conflict evidence_refs have no overlap with the finding support/counterevidence refs.",
+    "direction_role_overlap": "When an evidence_id appears in both roles, remove it only from evidence_ids and retain it in counterevidence_ids on the diagnostic clone.",
+    "non_atomic_claim": "Replace only claims matching the frozen non-atomic contrastive patterns with a short atomic diagnostic placeholder.",
+    "counterevidence_link": "For non-null counterevidence_link only, detect missing terminal punctuation and/or trimmed length >= 178, record finding index/length/reason without raw text, then replace with a short diagnostic placeholder.",
+    "raw_narrative_text_printed": false,
+    "in_memory_only": true,
+    "source_artifact_mutation": false,
+    "retroactive_pass_allowed": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_RATIONAL_COUNTEREVIDENCE_LINK_FORENSIC_V4",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
