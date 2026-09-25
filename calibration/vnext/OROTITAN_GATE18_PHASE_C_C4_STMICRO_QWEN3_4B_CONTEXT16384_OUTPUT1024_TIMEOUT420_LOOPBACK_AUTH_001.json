@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_RUNTIME_TRANSPORT_REMEDIATION",
-  "status": "AUTHORIZED_SINGLE_LOCAL_TRANSPORT_REMEDIATION",
+  "status": "CONSUMED_PASS_AUTOMATED_HUMAN_ADJUDICATION_PENDING",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go STMicro loopback transport remediation",
@@ -20,7 +20,7 @@
     "prior_attempt_result": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-RESULT-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "STMicroelectronics",
     "archetype": "CYCLICAL_SEGMENTED",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -58,7 +58,7 @@
     "sleep_guard_change": false
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -107,5 +107,18 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "ec2ecf022ea279bd0e5e531cfa0e91cc4345d7c2",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+    "result_status": "PASS_AUTOMATED_HUMAN_ADJUDICATION_PENDING",
+    "runtime_pass": true,
+    "schema_valid": true,
+    "semantic_valid": true,
+    "done_reason": "length",
+    "eval_count": 1024,
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "parameter_change_authorized": false
+  }
 }
