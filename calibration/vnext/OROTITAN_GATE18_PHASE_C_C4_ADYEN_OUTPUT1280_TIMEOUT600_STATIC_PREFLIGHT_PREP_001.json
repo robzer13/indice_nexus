@@ -1,0 +1,44 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_ADYEN_OUTPUT1280_TIMEOUT600_STATIC_REQUEST_PREFLIGHT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-ADYEN-OUTPUT1280-TIMEOUT600-STATIC-PREFLIGHT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_NO_INFERENCE",
+  "selection_basis": {
+    "company": "Adyen",
+    "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+    "remaining_cells": [
+      "Adyen",
+      "RATIONAL AG"
+    ],
+    "selected_next": true,
+    "reason": "Adyen is the smaller remaining full packet and directly stress-tests conflicting moat evidence before the much larger RATIONAL packet."
+  },
+  "runtime_basis": {
+    "prior_common_context_tokens": 16384,
+    "prior_common_max_output_tokens": 1024,
+    "prior_common_client_timeout_ms": 480000,
+    "selected_context_tokens": 16384,
+    "selected_max_output_tokens": 1280,
+    "selected_client_timeout_ms": 600000,
+    "rationale": "Brookfield required 1096 generated tokens for a natural stop; 1280/600 is used as bounded headroom for the remaining more complex cells."
+  },
+  "expected_static_identity": {
+    "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74",
+    "prompt_sha256": "ef8f55478017eddfb26d68e652aa4855f9d474dc1a75114e6026a12e17666f0c",
+    "prompt_bytes": 11671,
+    "evidence_count": 16,
+    "conflict_count": 3
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-adyen-output1280-timeout600-static-preflight.ts",
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_ADYEN_OUTPUT1280_TIMEOUT600_STATIC_REQUEST_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
