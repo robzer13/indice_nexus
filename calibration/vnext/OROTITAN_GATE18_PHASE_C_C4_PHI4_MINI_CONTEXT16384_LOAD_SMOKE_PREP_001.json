@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
-  "status": "PREPARED_AUTHORIZED_UNEXECUTED",
+  "status": "EXECUTED_PASS_RESULT_RECORDED",
   "basis": {
     "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
     "common_context_4096_admissible": false,
@@ -30,7 +30,7 @@
   ],
   "guard": {
     "authorization_artifact_present": true,
-    "load_smoke_authorized": true,
+    "load_smoke_authorized": false,
     "c4_inference_authorized": false,
     "automatic_retry_authorized": false,
     "context_growth_for_inference_authorized": false
@@ -41,6 +41,7 @@
     "publication_authority": false,
     "paid_execution_authorized": false
   },
-  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_AND_AUTHORIZE_ONE_STMICROELECTRONICS_C4_INFERENCE_AT_CONTEXT16384_UNDER_STANDING_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-RESULT-001"
 }
