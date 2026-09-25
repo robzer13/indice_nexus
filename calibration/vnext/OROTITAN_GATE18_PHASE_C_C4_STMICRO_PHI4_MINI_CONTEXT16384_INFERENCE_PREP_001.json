@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED",
+  "status": "EXECUTED_SEMANTIC_FAIL_AUTHORIZATION_CONSUMED_FORENSICS_REQUIRED",
   "basis": {
     "targeted_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
@@ -46,8 +46,8 @@
   "authorization": {
     "authorization_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
     "authorization_artifact_present": true,
-    "inference_authorized": true,
-    "authorized_run_count": 1,
+    "inference_authorized": false,
+    "authorized_run_count": 0,
     "source": "OROTITAN-STANDING-TECHNICAL-AUTH-001"
   },
   "evaluation": {
@@ -75,6 +75,9 @@
       "EXECUTE_FIRST_REAL_PHI4_MINI_C4_MATRIX_CELL"
     ]
   },
-  "next_action": "RUN_ONE_STMICRO_PHI4_MINI_C4_FULL_PACKET_INFERENCE_CONTEXT16384",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "result_status": "FAIL",
+  "result_semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE"
 }

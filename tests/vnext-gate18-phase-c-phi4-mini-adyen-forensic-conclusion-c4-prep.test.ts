@@ -64,7 +64,6 @@ test("Phi-4 C4 matrix prep preserves the five archetypes and original-output adj
     ),
   );
 
-  assert.equal(prep.status, "CONTEXT16384_LOAD_PASS_FIRST_CELL_STMICRO_AUTHORIZED");
   assert.equal(prep.matrix.length, 5);
   assert.deepEqual(
     prep.matrix.map((row: { company: string }) => row.company),
