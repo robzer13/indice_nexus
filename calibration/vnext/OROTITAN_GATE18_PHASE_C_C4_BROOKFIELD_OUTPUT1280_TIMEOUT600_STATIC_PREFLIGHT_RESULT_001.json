@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1280_TIMEOUT600_STATIC_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-OUTPUT1280-TIMEOUT600-STATIC-PREFLIGHT-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_REMEDIATION",
+  "status": "PASS_STATIC_REQUEST_MEASURED_NO_INFERENCE",
+  "mode": "NO_INFERENCE_NO_OLLAMA_REQUEST",
+  "company": {
+    "role": "ACCOUNTING_HEAVY",
+    "display_name": "Brookfield Corporation",
+    "data_cutoff": "2026-09-19",
+    "evidence_count": 12,
+    "conflict_count": 2
+  },
+  "runtime": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1280,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "keep_alive": "0s",
+    "sleep_guard_required": true
+  },
+  "identities": {
+    "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+    "prompt_bytes": 9643,
+    "request_sha256": "cc51153ec6bdc8041f22800aea2b6aa6418a27837589547b19db88745bc0ff8f",
+    "request_bytes": 18096
+  },
+  "remediation_delta": {
+    "max_output_tokens_from": 1024,
+    "max_output_tokens_to": 1280,
+    "max_output_delta": 256,
+    "client_timeout_ms_from": 480000,
+    "client_timeout_ms_to": 600000,
+    "client_timeout_delta_ms": 120000,
+    "model_change": false,
+    "model_digest_change": false,
+    "prompt_change": false,
+    "schema_change": false,
+    "packet_change": false,
+    "context_change": false,
+    "temperature_change": false,
+    "transport_change": false,
+    "sleep_guard_change": false
+  },
+  "diagnostic_basis": {
+    "prior_eval_count": 1024,
+    "prior_done_reason": "length",
+    "prior_wall_clock_ms": 416162,
+    "output1280_linear_upper_bound_wall_clock_ms": 520203,
+    "proposed_timeout_headroom_ms": 79797
+  },
+  "interpretation_boundary": {
+    "request_identity_measured": true,
+    "inference_fit_concluded": false,
+    "runtime_fit_concluded": false,
+    "semantic_quality_assessed": false,
+    "inference_authorized": false,
+    "retry_authorized": false
+  },
+  "next_action": "PREPARE_EXACT_BROOKFIELD_OUTPUT1280_TIMEOUT600_RUNNER_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
