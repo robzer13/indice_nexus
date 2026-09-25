@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+  "status": "CONSUMED_FAIL_EXPLICIT_CLIENT_TIMEOUT_REACHED",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go Constellation single cell",
@@ -19,7 +19,7 @@
     "completed_reference_cell": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "Constellation Software",
     "archetype": "SERIAL_ACQUIRER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -46,7 +46,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -108,5 +108,17 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "43b938495860838c353390fdcaae8b298e25fe48",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+    "result_status": "FAIL_EXPLICIT_CLIENT_TIMEOUT_REACHED_NO_PROVIDER_RESPONSE",
+    "wall_clock_ms": 420485,
+    "runtime_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_420000MS",
+    "provider_response_observed": false,
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "timeout_change_authorized": false,
+    "output_change_authorized": false
+  }
 }

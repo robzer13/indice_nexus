@@ -1,0 +1,80 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_EXPLICIT_TIMEOUT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL_EXPLICIT_CLIENT_TIMEOUT_REACHED_NO_PROVIDER_RESPONSE",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+  "company": "Constellation Software",
+  "archetype": "SERIAL_ACQUIRER",
+  "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0"
+  },
+  "frozen_inference": {
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "request_sha256": "145ad3b20eacfe243c0cbbc8089e729b6cb71e0cc2c9a19dcee09e133d347441",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "execution": {
+    "wall_clock_ms": 420485,
+    "explicit_client_timeout_ms": 420000,
+    "timeout_overrun_ms": 485,
+    "done_reason": null,
+    "prompt_eval_count": null,
+    "eval_count": null,
+    "runtime_error": "LOOPBACK_HTTP_EXPLICIT_TIMEOUT_420000MS",
+    "schema_valid": false,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": null,
+    "provider_response_observed": false,
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "timing": {
+    "private_output_timestamp_utc": "2026-09-25T08:35:49.839Z",
+    "estimated_start_utc": "2026-09-25T08:28:49.354Z",
+    "estimated_end_utc": "2026-09-25T08:35:49.839Z",
+    "estimated_start_local": "2026-09-25T10:28:49.354+02:00",
+    "estimated_end_local": "2026-09-25T10:35:49.839+02:00"
+  },
+  "interpretation": {
+    "hidden_undici_headers_timeout_in_active_path": false,
+    "explicit_420s_timeout_reached": true,
+    "transport_helper_behaved_as_configured": true,
+    "inference_completed": false,
+    "provider_response_observed": false,
+    "schema_failure_concluded": false,
+    "semantic_failure_concluded": false,
+    "model_capability_failure_concluded": false,
+    "exact_runtime_mechanism_before_timeout_concluded": false,
+    "timeout_inadequacy_concluded": false,
+    "note": "The explicit client deadline terminated the request. Logs are required to distinguish healthy but slow generation from a server-side stall or other runtime event."
+  },
+  "private_output": {
+    "path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T083549839Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+    "public_repo_generated_content_forbidden": true,
+    "generated_content_embedded_in_public_result": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "timeout_change_authorized": false,
+    "output_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_CONSTELLATION_TIMEOUT_LOG_FORENSICS_V1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

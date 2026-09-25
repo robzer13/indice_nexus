@@ -1,0 +1,44 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_TIMEOUT420_LOG_FORENSICS_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-TIMEOUT420-LOG-FORENSICS-V1-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_RUNTIME_FAILURE_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-RESULT-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-timeout420-log-forensics-v1.ts",
+  "target_run_window": {
+    "estimated_start_utc": "2026-09-25T08:28:49.354Z",
+    "estimated_end_utc": "2026-09-25T08:35:49.839Z",
+    "estimated_start_local": "2026-09-25T10:28:49.354+02:00",
+    "estimated_end_local": "2026-09-25T10:35:49.839+02:00",
+    "query_anchor_margin_ms": 120000
+  },
+  "collector": {
+    "source": "%LOCALAPPDATA%\\\\Ollama\\\\server.log",
+    "direct_node_file_read": true,
+    "ollama_api_call": false,
+    "inference": false,
+    "model_load": false,
+    "context_lines_before": 220,
+    "context_lines_after": 100,
+    "extracts_generation_progress": true
+  },
+  "questions": [
+    "Was Ollama still making token-generation progress immediately before the 420s client abort?",
+    "Did Ollama log the request termination as HTTP 500 or another status?",
+    "What was the latest observed n_gen before termination?",
+    "Do the adjacent logs show cancellation, stall, OOM, CUDA, runner exit, or another explicit runtime fault?"
+  ],
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "timeout_change_authorized": false,
+    "output_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_CONSTELLATION_TIMEOUT_LOG_FORENSICS_V1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
