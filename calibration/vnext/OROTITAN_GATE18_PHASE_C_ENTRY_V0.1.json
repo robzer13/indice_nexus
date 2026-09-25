@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "PREPARE_ADYEN_CLAIM_TARGET_CORE_001_PHI4_MINI_4096_RUNNER_NO_INFERENCE",
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -943,5 +943,13 @@
   "phi4_mini_brookfield_compact4096_eval_count": 401,
   "phi4_mini_brookfield_compact4096_schema_valid": true,
   "phi4_mini_brookfield_compact4096_semantic_valid": true,
-  "phi4_mini_broader_c3_admission": "PENDING_ADYEN_TARGETED_REGRESSIONS"
+  "phi4_mini_broader_c3_admission": "PENDING_ADYEN_TARGETED_REGRESSIONS",
+  "phi4_mini_adyen_compact4096_inference_prep": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-PREP-001",
+  "phi4_mini_adyen_compact4096_runner": "scripts/vnext-gate18-phase-c-phi4-mini-adyen-compact4096-local-run.ts",
+  "phi4_mini_adyen_compact4096_future_authorization_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-AUTH-001",
+  "phi4_mini_adyen_compact4096_context_tokens": 4096,
+  "phi4_mini_adyen_compact4096_max_output_tokens": 768,
+  "phi4_mini_adyen_compact4096_temperature": 0,
+  "phi4_mini_adyen_compact4096_client_timeout_ms": 180000,
+  "phi4_mini_adyen_compact4096_inference_authorized": false
 }
