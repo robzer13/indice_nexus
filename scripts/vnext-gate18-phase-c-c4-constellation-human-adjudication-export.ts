@@ -20,7 +20,7 @@ import {
 } from "../runtime/vnext/model-calibration-pilot-v10";
 
 const EXPECTED_ATTEMPT_ID =
-  "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001";
+  "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001";
 const EXPECTED_MATRIX_CELL_ID =
   "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001";
 const EXPECTED_MODEL = "qwen3:4b-instruct";
@@ -122,7 +122,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   return { privateRepoRoot, privateOutputPath, outputPath };
 }
 
-function findConstellation Software(): Gate18PilotCompany {
+function findConstellationSoftware(): Gate18PilotCompany {
   const matches = pilotJson.companies.filter(
     (company) => company.display_name === "Constellation Software",
   );
@@ -229,7 +229,7 @@ function main(): void {
     run.response?.parsedJson,
   );
 
-  const company = findConstellation Software();
+  const company = findConstellationSoftware();
   const verified = buildVerifiedGate18V10MoatPacket(
     company,
     artifactReader(options.privateRepoRoot),
