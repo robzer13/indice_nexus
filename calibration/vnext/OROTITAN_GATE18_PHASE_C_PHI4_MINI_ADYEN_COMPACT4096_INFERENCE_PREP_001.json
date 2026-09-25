@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED",
+  "status": "EXECUTED_FAIL_AUTHORIZATION_CONSUMED_FORENSICS_REQUIRED",
   "basis": {
     "brookfield_phi4_mini_result": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
     "brookfield_targeted_regressions": "PASS",
@@ -125,7 +125,7 @@
     "exact_max_output_required": true,
     "exact_temperature_required": true,
     "no_preloaded_model_required": true,
-    "inference_currently_authorized": true
+    "inference_currently_authorized": false
   },
   "interpretation_boundary": {
     "a_pass_would_prove": "BROOKFIELD_AND_ADYEN_TARGETED_REGRESSION_PATHS_PASS_AT_CONTEXT4096",
@@ -138,7 +138,7 @@
     ]
   },
   "authority": {
-    "phi4_mini_inference_authorized": true,
+    "phi4_mini_inference_authorized": false,
     "automatic_retry_authorized": false,
     "context_growth_authorized": false,
     "model_switch_authorized": false,
@@ -148,10 +148,13 @@
     "model_winner_selected": false,
     "routing_frozen": false
   },
-  "next_action": "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+  "next_action": "RUN_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_NORMALIZATION_FORENSIC_NO_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001"
-  }
+  },
+  "execution_result": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+  "execution_result_status": "FAIL",
+  "execution_semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE"
 }
