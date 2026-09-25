@@ -1,0 +1,57 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_REMAINING_MATRIX_STATIC_PREFLIGHT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-REMAINING-MATRIX-STATIC-PREFLIGHT-V2-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_NO_INFERENCE",
+  "basis": {
+    "completed_cell": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+    "transport_smoke": "G18-PHASEC-C4-LOOPBACK-HTTP-TRANSPORT-SMOKE-RESULT-001",
+    "context_fit": "G18-PHASEC-C4-QWEN3-4B-CONTEXT-FIT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-remaining-matrix-static-preflight-v2.ts",
+  "proposed_common_runtime": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "remaining_matrix": [
+    {
+      "index": 1,
+      "archetype": "SIMPLE_CLEAN_COMPOUNDER",
+      "company": "RATIONAL AG"
+    },
+    {
+      "index": 2,
+      "archetype": "SERIAL_ACQUIRER",
+      "company": "Constellation Software"
+    },
+    {
+      "index": 4,
+      "archetype": "ACCOUNTING_HEAVY",
+      "company": "Brookfield Corporation"
+    },
+    {
+      "index": 5,
+      "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "company": "Adyen"
+    }
+  ],
+  "authority": {
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_execution_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_REMAINING_MATRIX_STATIC_PREFLIGHT_V2",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
