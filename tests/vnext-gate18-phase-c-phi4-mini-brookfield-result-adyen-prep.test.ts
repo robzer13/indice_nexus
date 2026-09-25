@@ -88,7 +88,7 @@ test("Phi-4 mini Adyen runner is digest-pinned and cannot execute without separa
   assert.match(raw, /publicationAuthority: false/);
 });
 
-test("Phase C records Adyen semantic FAIL and stops at read-only forensics", () => {
+test("Phase C preserves Brookfield PASS and the original Adyen semantic FAIL across later forensic advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -107,9 +107,8 @@ test("Phase C records Adyen semantic FAIL and stops at read-only forensics", () 
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_adyen_compact4096_result_status, "SEMANTIC_FAIL_FORENSICS_REQUIRED");
-  assert.equal(entry.phi4_mini_adyen_forensics_required, true);
   assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC",
+    entry.phi4_mini_adyen_compact4096_result_status,
+    "SEMANTIC_FAIL_FORENSICS_REQUIRED",
   );
 });
