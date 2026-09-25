@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "POST_C4_PHI4_MINI_BROOKFIELD_TARGETED_PASS_ADYEN_PENDING",
+  "status": "POST_C4_PHI4_MINI_BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_FORENSICS_PENDING",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -111,7 +111,7 @@
       "license": "MIT",
       "observed_ollama_artifact_size": "2.5GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_1",
-      "admission_state": "BROOKFIELD_TARGETED_PASS_ADYEN_PENDING_CONTEXT4096",
+      "admission_state": "BROOKFIELD_PASS_ADYEN_SEMANTIC_FAIL_FORENSICS_PENDING_CONTEXT4096",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
       "source_url": "https://ollama.com/library/phi4-mini/tags",
@@ -129,7 +129,13 @@
       "brookfield_targeted_status": "PASS",
       "brookfield_schema_valid": true,
       "brookfield_semantic_valid": true,
-      "inference_fit_context4096": "PASS_FOR_BOUNDED_BROOKFIELD_PROBE"
+      "inference_fit_context4096": "PASS_FOR_BOUNDED_BROOKFIELD_PROBE",
+      "adyen_targeted_result": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+      "adyen_targeted_status": "SEMANTIC_FAIL_FORENSICS_REQUIRED",
+      "adyen_schema_valid": true,
+      "adyen_semantic_valid": false,
+      "adyen_semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+      "adyen_forensics_required": true
     },
     {
       "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
