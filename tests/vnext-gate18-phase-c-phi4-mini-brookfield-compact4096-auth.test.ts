@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Phi-4 mini Brookfield compact inference authorization is one-run and exact", () => {
+test("Phi-4 mini Brookfield compact inference authorization is consumed after one exact run", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE_AUTH_001.json",
@@ -10,13 +10,13 @@ test("Phi-4 mini Brookfield compact inference authorization is one-run and exact
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
   assert.equal(auth.user_authorization.explicit, true);
   assert.equal(
     auth.user_authorization.authorized_action,
     "ONE_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE",
   );
-  assert.equal(auth.phi4_mini_inference.authorized, true);
+  assert.equal(auth.phi4_mini_inference.authorized, false);
   assert.equal(auth.phi4_mini_inference.model_name, "phi4-mini:3.8b-q4_K_M");
   assert.equal(
     auth.phi4_mini_inference.model_digest,
@@ -30,7 +30,7 @@ test("Phi-4 mini Brookfield compact inference authorization is one-run and exact
   assert.equal(auth.phi4_mini_inference.context_tokens, 4096);
   assert.equal(auth.phi4_mini_inference.max_output_tokens, 768);
   assert.equal(auth.phi4_mini_inference.temperature, 0);
-  assert.equal(auth.constraints.authorized_run_count, 1);
+  assert.equal(auth.constraints.authorized_run_count, 0);
   assert.equal(auth.constraints.automatic_retry_authorized, false);
   assert.equal(auth.constraints.context_growth_authorized, false);
   assert.equal(auth.constraints.automatic_model_switch_authorized, false);
@@ -56,7 +56,7 @@ test("Phi-4 mini Brookfield generated content remains private and carries no pro
   assert.equal(auth.constraints.publication_authority, false);
 });
 
-test("Phase C exposes only the one authorized Phi-4 mini compact inference", () => {
+test("Phase C preserves the consumed Brookfield result while no inference remains authorized", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -64,12 +64,12 @@ test("Phase C exposes only the one authorized Phi-4 mini compact inference", () 
     ),
   );
 
-  assert.equal(entry.phi4_mini_inference_authorized, true);
+  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(
     entry.phi4_mini_brookfield_compact4096_inference_authorization_status,
-    "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+    "CONSUMED_SINGLE_LOCAL_INFERENCE",
   );
-  assert.equal(entry.phi4_mini_brookfield_compact4096_authorized_run_count, 1);
+  assert.equal(entry.phi4_mini_brookfield_compact4096_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_brookfield_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_brookfield_compact4096_max_output_tokens, 768);
   assert.equal(entry.phi4_mini_brookfield_compact4096_temperature, 0);
