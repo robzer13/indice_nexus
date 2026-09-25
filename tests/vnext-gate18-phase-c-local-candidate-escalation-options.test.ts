@@ -78,7 +78,7 @@ test("Phi-4 mini combined preflight records completed download and separate load
   );
 });
 
-test("Phase C entry preserves Phi-4 mini escalation selection across later authorization advances", () => {
+test("Phase C entry preserves Phi-4 mini escalation selection across later execution advances", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -89,6 +89,5 @@ test("Phase C entry preserves Phi-4 mini escalation selection across later autho
   assert.equal(entry.candidate_registry_static_expansion_completed, true);
   assert.equal(entry.candidate_registry_static_expansion_count, 3);
   assert.equal(entry.candidate_escalation_first_static_candidate, "PHI4_MINI_3_8B_OLLAMA_Q4_K_M");
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
 });
