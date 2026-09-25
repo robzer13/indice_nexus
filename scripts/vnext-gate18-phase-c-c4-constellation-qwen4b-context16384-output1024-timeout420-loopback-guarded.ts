@@ -156,7 +156,7 @@ function parseArgs(argv: readonly string[]): CliOptions {
   };
 }
 
-function findConstellation Software(): Gate18PilotCompany {
+function findConstellationSoftware(): Gate18PilotCompany {
   const matches = pilotJson.companies.filter(
     (company) =>
       company.display_name === "Constellation Software",
@@ -262,7 +262,7 @@ function readAndAssertAuthorization(
 
   if (
     artifact.authorization_id !== AUTHORIZATION_ID ||
-    artifact.status !== "AUTHORIZED_SINGLE_LOCAL_TRANSPORT_REMEDIATION" ||
+    artifact.status !== "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE" ||
     artifact.c4_inference?.authorized !== true ||
     artifact.c4_inference.model_name !== MODEL_NAME ||
     artifact.c4_inference.model_digest !== MODEL_DIGEST ||
@@ -396,7 +396,7 @@ async function main(): Promise<void> {
   assertNoLoadedModels();
   const installedModel = await assertInstalledModel();
 
-  const company = findConstellation Software();
+  const company = findConstellationSoftware();
   const verified = buildVerifiedGate18V10MoatPacket(
     company,
     artifactReader(options.privateRepoRoot),
