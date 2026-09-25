@@ -30,7 +30,7 @@ test("Phi-4 mini Brookfield compact result is a bounded engineering PASS only", 
   assert.equal(result.authority.production_candidate_decision_authority, false);
 });
 
-test("Phi-4 mini Adyen prep targets the three remaining targeted regressions without authorization", () => {
+test("Phi-4 mini Adyen prep targets the three remaining regressions under scoped standing authorization", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE_PREP_001.json",
@@ -38,7 +38,7 @@ test("Phi-4 mini Adyen prep targets the three remaining targeted regressions wit
     ),
   );
 
-  assert.equal(prep.status, "PREPARED_NOT_AUTHORIZED");
+  assert.equal(prep.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED");
   assert.equal(prep.probe.semantic_probe_id, "ADYEN_CLAIM_TARGET_CORE_001");
   assert.equal(
     prep.probe.execution_id,
@@ -52,9 +52,9 @@ test("Phi-4 mini Adyen prep targets the three remaining targeted regressions wit
   assert.equal(prep.expected_regression_map.finding_1.support_state, "MIXED");
   assert.equal(prep.expected_regression_map.finding_2.support_state, "SUPPORTED");
   assert.equal(prep.expected_regression_map.finding_3.support_state, "SUPPORTED");
-  assert.equal(prep.guard.authorization_artifact_present, false);
-  assert.equal(prep.guard.inference_currently_authorized, false);
-  assert.equal(prep.authority.phi4_mini_inference_authorized, false);
+  assert.equal(prep.guard.authorization_artifact_present, true);
+  assert.equal(prep.guard.inference_currently_authorized, true);
+  assert.equal(prep.authority.phi4_mini_inference_authorized, true);
   assert.equal(prep.authority.automatic_retry_authorized, false);
   assert.equal(prep.authority.context_growth_authorized, false);
 });
