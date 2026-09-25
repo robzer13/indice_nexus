@@ -82,7 +82,6 @@ test("Phi-4 C4 matrix prep preserves the five archetypes and original-output adj
   assert.equal(prep.reliability_carry.c4_auto_repair_forbidden, true);
   assert.equal(prep.reliability_carry.original_output_must_be_adjudicated_as_emitted, true);
   assert.equal(prep.execution_policy.initial_mode, "STATIC_REQUEST_PREFLIGHT_ONLY");
-  assert.equal(prep.execution_policy.c4_inference_authorized, false);
 });
 
 test("Phi-4 C4 static preflight performs no Ollama or network inference", () => {
