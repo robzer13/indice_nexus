@@ -1,0 +1,101 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_ENGINEERING_FAIL_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "company": "Brookfield Corporation",
+  "matrix_cell_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "source": {
+    "automated_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+    "adjudication_export_result": "G18-PHASEC-C4-BROOKFIELD-HUMAN-ADJUDICATION-EXPORT-RESULT-001",
+    "exhaustive_semantic_forensic": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001",
+    "private_packet_reviewed": true,
+    "private_packet_content_persisted_publicly": false,
+    "original_output_adjudicated_as_emitted": true
+  },
+  "engineering_disposition": {
+    "runtime_pass": true,
+    "schema_valid": true,
+    "semantic_validator_pass": false,
+    "semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+    "deterministic_semantic_failure": true,
+    "deterministic_defect_class_count": 3,
+    "deterministic_defect_classes": [
+      "COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+      "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+      "NON_ATOMIC_CONTRASTIVE_CLAIM"
+    ],
+    "output_budget_fully_consumed": false,
+    "done_reason": "stop",
+    "eval_count": 1096,
+    "max_output_tokens": 1280,
+    "output_token_margin": 184,
+    "disposition": "ENGINEERING_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "PASS_WITH_DEFECT",
+    "claim_atomicity": "FAIL",
+    "claim_target_alignment": "FAIL",
+    "support_counterevidence_polarity": "PASS",
+    "qualification_orthogonality": "FAIL",
+    "conflict_handling": "FAIL",
+    "weak_link_usefulness": "FAIL",
+    "unresolved_point_usefulness": "PASS_WITH_DEFECT",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "FAIL"
+  },
+  "failure_codes": [
+    "ALL_THREE_FINDINGS_EMIT_STRING_NULL_COUNTEREVIDENCE_LINK_WITH_EMPTY_COUNTEREVIDENCE_IDS",
+    "FINDING_1_ATTACHES_C009_WITHOUT_E005_OR_E008_GROUNDING",
+    "FINDING_3_IS_NON_ATOMIC_CONTRASTIVE_CLAIM",
+    "FINDING_1_CAUSAL_LINK_OVERSTATES_70_PERCENT_ECONOMIC_OWNERSHIP_AS_OPERATIONAL_CONTROL",
+    "PRIORITY_FINDINGS_DRIFT_FROM_MOAT_MECHANISMS_TO_OWNERSHIP_METRIC_SCOPE_AND_RUNWAY",
+    "QUALIFICATIONS_2_AND_3_RESTATE_CORE_CLAIM_LIMITATIONS_INSTEAD_OF_ADDING_ORTHOGONAL_PROBATIVE_LIMITS",
+    "WEAK_LINK_E004_MISCHARACTERIZES_COMBINED_74_PERCENT_ATTRIBUTION_AS_WEAKENING_DIRECT_70_PERCENT_OWNERSHIP",
+    "PRIORITY_SELECTION_UNDERWEIGHTS_C013_RELATED_PARTY_ECOSYSTEM_EVIDENCE_AND_PEER_REPLICABILITY_EVIDENCE",
+    "UNRESOLVED_POINT_1_DRIFTS_INTO_VALUATION_ELIMINATION"
+  ],
+  "positive_observations": [
+    "NO_EVIDENCE_ID_INVENTION",
+    "NO_CONFLICT_ID_INVENTION",
+    "C013_UNRESOLVED_CONFLICT_SURFACED_IN_MATERIAL_CONFLICTS",
+    "UNRESOLVED_POINTS_2_AND_3_ARE_ACTIONABLE_AND_PACKET_GROUNDED",
+    "NO_FINAL_MOAT_JUDGMENT_EMITTED"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "unsupported_counterevidence_polarity": false,
+    "claim_atomicity_critical_failure": true,
+    "ungrounded_conflict_reference": true,
+    "counterevidence_contract_failure": true,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": true
+  },
+  "disposition": {
+    "automated_engineering_pass": false,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": true,
+    "clean_pass": false,
+    "pass_with_carry": false,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_ADYEN_SINGLE_CELL_STATIC_PREFLIGHT_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
