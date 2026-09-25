@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_PHI4_MINI_FINDING_CLAIM_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_SEMANTIC_FORENSICS",
+  "status": "PREPARED_NO_INFERENCE_REQUIRED",
+  "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+  "observed_first_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
+  "forensic": {
+    "script": "scripts/vnext-gate18-phase-c-c4-stmicro-phi4-mini-finding-claim-punctuation-forensic.ts",
+    "operation": "IDENTIFY_FINDING_CLAIMS_WITHOUT_TERMINAL_PUNCTUATION_APPEND_ONE_PERIOD_IN_MEMORY_COPY_REVALIDATE_FULL_SCHEMA_AND_SEMANTICS",
+    "source_artifact_mutated": false,
+    "inference_executed": false,
+    "network_request_executed": false,
+    "model_loaded": false
+  },
+  "diagnostic_questions": [
+    "Which finding claims fail terminal-punctuation completeness?",
+    "Does punctuation-only normalization preserve schema validity?",
+    "After punctuation-only normalization, does the full C4 semantic validator pass?",
+    "If not, what is the next deterministic semantic error?"
+  ],
+  "interpretation_boundary": {
+    "original_run_remains_fail": true,
+    "retroactive_pass_allowed": false,
+    "punctuation_only_cause_not_assumed": true,
+    "model_capability_failure_concluded": false,
+    "c4_cell_completed": false,
+    "human_quality_assessed": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "context_change_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "artifact_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
