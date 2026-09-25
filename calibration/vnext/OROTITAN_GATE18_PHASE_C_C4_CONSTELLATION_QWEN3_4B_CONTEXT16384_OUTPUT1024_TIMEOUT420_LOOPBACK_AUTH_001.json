@@ -1,0 +1,112 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_SINGLE_CELL_INFERENCE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+  "user_authorization": {
+    "explicit": true,
+    "exact_user_command": "go Constellation single cell",
+    "authorized_action": "ONE_BOUNDED_LOCAL_C4_CONSTELLATION_FULL_PACKET_INFERENCE",
+    "authorized_company": "Constellation Software",
+    "authorized_matrix_cell": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "authorized_transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "basis": {
+    "prep": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-PREP-001",
+    "remaining_matrix_preflight": "G18-PHASEC-C4-REMAINING-MATRIX-STATIC-PREFLIGHT-V2-RESULT-001",
+    "completed_reference_cell": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001"
+  },
+  "c4_inference": {
+    "authorized": true,
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "execution_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+    "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+    "sleep_guard_required": true,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "model_name": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "request_sha256": "145ad3b20eacfe243c0cbbc8089e729b6cb71e0cc2c9a19dcee09e133d347441",
+    "request_bytes": 17666,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "keep_alive": "0s"
+  },
+  "constraints": {
+    "authorized_run_count": 1,
+    "no_preloaded_ollama_model_required": true,
+    "external_model_api_call": false,
+    "external_model_api_cost_usd": 0,
+    "model_download_authorized": false,
+    "automatic_retry_authorized": false,
+    "second_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false,
+    "temperature_change_authorized": false,
+    "transport_change_authorized": false,
+    "paid_model_escalation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "reliability_carry": [
+    {
+      "source": "G18-PHASEC-C3-QWEN3-4B-FORENSIC-CONCLUSION-001",
+      "code": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+      "tracking_required": true
+    },
+    {
+      "source": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+      "code": "OUTPUT_BUDGET_SATURATED_AT_1024_WITH_VALID_COMPLETE_STRUCTURE",
+      "tracking_required": true,
+      "automatic_output_budget_change_authorized": false
+    }
+  ],
+  "sleep_guard": {
+    "mechanism": "SetThreadExecutionState",
+    "acquire_flags": [
+      "ES_CONTINUOUS",
+      "ES_SYSTEM_REQUIRED"
+    ],
+    "release_flags": [
+      "ES_CONTINUOUS"
+    ],
+    "process_scoped": true,
+    "persistent_power_plan_mutation": false,
+    "display_required": false,
+    "away_mode": false,
+    "lid_or_manual_sleep_override": false
+  },
+  "output_policy": {
+    "generated_content_destination": "calibration/vnext/private-runs/",
+    "public_repo_generated_content_forbidden": true,
+    "human_adjudication_required": true
+  },
+  "authority": {
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "base_vnext_sha": "43b938495860838c353390fdcaae8b298e25fe48",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
