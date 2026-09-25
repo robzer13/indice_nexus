@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_REMAINING_MATRIX_STATIC_PREFLIGHT_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-REMAINING-MATRIX-STATIC-PREFLIGHT-V2-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PASS_STATIC_REQUESTS_MEASURED_NO_INFERENCE",
+  "mode": "NO_INFERENCE_NO_OLLAMA_REQUEST",
+  "common_runtime": {
+    "model": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "completed_reference_cell": {
+    "company": "STMicroelectronics",
+    "disposition": "COMPLETED_WITH_HUMAN_QUALITY_CARRY",
+    "result": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001"
+  },
+  "remaining_rows": [
+    {
+      "matrix_index": 1,
+      "archetype": "SIMPLE_CLEAN_COMPOUNDER",
+      "company": "RATIONAL AG",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 56,
+      "conflict_count": 9,
+      "prompt_bytes": 35756,
+      "request_bytes": 46939,
+      "prompt_sha256": "70265015372600e619010150a72e72dad5df32973f61c01a79658994ea02c0a5",
+      "request_sha256": "fb39abe4d2be14e794341bcecc54c1cc3802f0635dd44f0b11c869f70c477964",
+      "packet_sha256": "3dc89f69ff39bee857595624cfe65b7772a3591fda538de05af0c757f83ba879"
+    },
+    {
+      "matrix_index": 2,
+      "archetype": "SERIAL_ACQUIRER",
+      "company": "Constellation Software",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 11,
+      "conflict_count": 1,
+      "prompt_bytes": 9041,
+      "request_bytes": 17666,
+      "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+      "request_sha256": "145ad3b20eacfe243c0cbbc8089e729b6cb71e0cc2c9a19dcee09e133d347441",
+      "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8"
+    },
+    {
+      "matrix_index": 4,
+      "archetype": "ACCOUNTING_HEAVY",
+      "company": "Brookfield Corporation",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 12,
+      "conflict_count": 2,
+      "prompt_bytes": 9643,
+      "request_bytes": 18096,
+      "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+      "request_sha256": "28d1917a888bf5981fb4b524243af2d78ee67feb33e5e1554a5c4d787520dd80",
+      "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3"
+    },
+    {
+      "matrix_index": 5,
+      "archetype": "DIFFICULT_MOAT_CONFLICTING_EVIDENCE",
+      "company": "Adyen",
+      "data_cutoff": "2026-09-19",
+      "evidence_count": 16,
+      "conflict_count": 3,
+      "prompt_bytes": 11671,
+      "request_bytes": 20584,
+      "prompt_sha256": "ef8f55478017eddfb26d68e652aa4855f9d474dc1a75114e6026a12e17666f0c",
+      "request_sha256": "bf9fb123b93d6151574a3379e22e4cb46a5dbe60067b73e83590715cf6ca7438",
+      "packet_sha256": "89e14b09d58b1305064d76170a15bb31e93a0768737d94f2bfc19d32c39a9b74"
+    }
+  ],
+  "next_cell_selection": {
+    "company": "Constellation Software",
+    "matrix_index": 2,
+    "archetype": "SERIAL_ACQUIRER",
+    "rationale": [
+      "Smallest remaining prompt and request footprint.",
+      "Closest remaining workload size to the completed STMicro reference cell.",
+      "Reduces runtime-size confounding while testing a distinct SERIAL_ACQUIRER archetype."
+    ],
+    "selection_is_model_ranking": false,
+    "selection_is_production_routing": false
+  },
+  "interpretation_boundary": {
+    "inference_fit_for_constellation_concluded": false,
+    "semantic_quality_for_constellation_assessed": false,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_switch_authorized": false,
+    "parameter_change_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_CONSTELLATION_SINGLE_CELL_INFERENCE_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
