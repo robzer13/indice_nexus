@@ -76,6 +76,7 @@ interface AuthorizationArtifact {
     max_output_tokens?: number;
     temperature?: number;
     client_timeout_ms?: number;
+    transport?: string;
   };
 }
 
@@ -270,7 +271,8 @@ function readAndAssertAuthorization(
     artifact.c4_inference.context_tokens !== CONTEXT_TOKENS ||
     artifact.c4_inference.max_output_tokens !== MAX_OUTPUT_TOKENS ||
     artifact.c4_inference.temperature !== 0 ||
-    artifact.c4_inference.client_timeout_ms !== CLIENT_TIMEOUT_MS
+    artifact.c4_inference.client_timeout_ms !== CLIENT_TIMEOUT_MS ||
+    artifact.c4_inference.transport !== "NODE_HTTP_REQUEST_LOOPBACK"
   ) {
     throw new Error(
       "VNEXT_GATE18_PHASE_C_C4_LOCAL_AUTHORIZATION_ARTIFACT_INVALID",
@@ -720,7 +722,7 @@ void main().catch((error: unknown) => {
     JSON.stringify(
       {
         format:
-          "OROTITAN_GATE18_PHASE_C_C4_LOCAL_GUARDED_RETRY_EXECUTION_SUMMARY_V0.1",
+          "OROTITAN_GATE18_PHASE_C_C4_LOCAL_LOOPBACK_TRANSPORT_REMEDIATION_EXECUTION_SUMMARY_V0.1",
         status: "BLOCKED_BEFORE_INFERENCE",
         externalModelApiCostUsd: 0,
         modelDownloadExecuted: false,
