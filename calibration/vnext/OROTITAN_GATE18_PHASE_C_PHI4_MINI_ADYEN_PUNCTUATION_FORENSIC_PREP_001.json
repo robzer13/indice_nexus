@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-MINI-ADYEN-PUNCTUATION-FORENSIC-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_FORENSICS",
+  "status": "PREPARED_NO_INFERENCE_REQUIRED",
+  "source_run_result": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T191602555Z__ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_PHI4MINI_4096.json",
+  "observed_first_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+  "forensic": {
+    "script": "scripts/vnext-gate18-phase-c-c3-adyen-punctuation-normalization-forensic.ts",
+    "script_reuse_rationale": "The forensic reads only the schema-valid private output and the pinned Adyen packet, is model-provider agnostic, performs no Ollama/network call, mutates only an in-memory diagnostic copy, and re-runs the exact full targeted validator.",
+    "operation": "APPEND_ONE_PERIOD_ONLY_TO_CONFLICT_IMPLICATIONS_MISSING_TERMINAL_PUNCTUATION_IN_MEMORY_COPY",
+    "source_artifact_mutated": false,
+    "inference_executed": false,
+    "network_request_executed": false,
+    "model_loaded": false
+  },
+  "diagnostic_questions": [
+    "Which material_conflicts lack terminal punctuation?",
+    "After punctuation-only normalization on an in-memory copy, does the exact targeted validator pass?",
+    "If it does not pass, what is the next deterministic semantic error?"
+  ],
+  "interpretation_boundary": {
+    "original_run_remains_fail": true,
+    "retroactive_pass_allowed": false,
+    "same_underlying_defect_as_qwen3_4b_not_assumed": true,
+    "model_capability_failure_concluded": false,
+    "c3_admission_concluded": false,
+    "c4_quality_concluded": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "context_change_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "artifact_mutation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_FORENSIC_AGAINST_PHI4_MINI_ADYEN_PRIVATE_ARTIFACT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
