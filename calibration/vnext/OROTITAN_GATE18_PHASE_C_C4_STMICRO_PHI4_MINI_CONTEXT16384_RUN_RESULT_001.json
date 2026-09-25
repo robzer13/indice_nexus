@@ -1,0 +1,90 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_LOCAL_RUN_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "authorization_id": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL",
+  "classification": "SEMANTIC_FAIL_FINDING_CLAIM_INCOMPLETE_FORENSICS_REQUIRED",
+  "base_vnext_sha": "bf486c1b03de1233c7605c57a5b01e5f374bd15c",
+  "matrix_cell": {
+    "id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001",
+    "attempt_id": "C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+    "company": "STMicroelectronics",
+    "archetype": "CYCLICAL_SEGMENTED",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 9,
+    "conflict_count": 2,
+    "prompt_sha256": "3f06d6e22dbbc88abbbc64fd470811f438a595c71154f7fcb8c004a6d4f5bc91"
+  },
+  "model": {
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "execution": {
+    "authorized_run_count": 1,
+    "authorized_run_consumed": true,
+    "wall_clock_ms": 192409,
+    "done_reason": "stop",
+    "prompt_eval_count": 2845,
+    "eval_count": 714,
+    "runtime_error": null,
+    "schema_valid": true,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "private_artifact": {
+    "repo_relative_path": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+    "user_reported_absolute_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+    "gitignored": true,
+    "generated_content_publication_forbidden": true,
+    "raw_generated_content_persisted_publicly": false
+  },
+  "validator_interpretation": {
+    "validator": "assertGate18PhaseBV10Semantics",
+    "failing_field_family": "findings[*].claim",
+    "first_observed_failure": "At least one finding claim fails assertCompleteNarrative.",
+    "exact_finding_index_not_yet_determined": true,
+    "missing_terminal_punctuation_not_yet_proven_as_only_cause": true,
+    "downstream_defect_set_not_yet_determined": true
+  },
+  "interpretation": {
+    "runtime_result": "PASS",
+    "schema_result": "PASS",
+    "deterministic_semantic_result": "FAIL",
+    "output_budget_saturation_observed": false,
+    "semantic_failure_observed": true,
+    "model_capability_failure_concluded": false,
+    "context16384_inference_runtime_fit": "PASS_FOR_THIS_CELL_EXECUTION",
+    "c4_human_quality_assessed": false,
+    "automatic_retry_authorized": false
+  },
+  "c4_effect": {
+    "matrix_cells_completed": 0,
+    "matrix_cells_remaining": 5,
+    "stmicro_cell_adjudicated": false,
+    "broader_c4_execution_blocked_pending_forensics": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "context_change_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
