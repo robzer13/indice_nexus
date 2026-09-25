@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "STMICRO_LOOPBACK_HTTP_TRANSPORT_REMEDIATION_PREPARED",
+    "c4_diversified_matrix": "STMICRO_LOOPBACK_HTTP_TRANSPORT_REMEDIATION_AUTHORIZED_ONE_RUN",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
+  "next_action": "RUN_ONE_STMICRO_LOOPBACK_HTTP_TRANSPORT_REMEDIATION_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -260,7 +260,7 @@
   "c4_company_count": 5,
   "c4_static_request_preflight_prepared": true,
   "c4_static_request_preflight_script": "scripts/vnext-gate18-phase-c-c4-qwen4b-static-request-preflight.ts",
-  "c4_inference_authorized": false,
+  "c4_inference_authorized": true,
   "c4_authorized_run_count": 0,
   "c4_automatic_retry_authorized": false,
   "c4_context_tokens": 4096,
@@ -353,7 +353,7 @@
   "c4_stmicro_active_time_excluding_sleep_seconds_approx": 239.478,
   "c4_stmicro_timeout_300s_inadequacy_concluded": false,
   "c4_stmicro_retry_justified_after_environmental_remediation": true,
-  "c4_stmicro_retry_authorized": false,
+  "c4_stmicro_retry_authorized": true,
   "c4_windows_sleep_guard_smoke_prep": "G18-PHASEC-C4-WINDOWS-SLEEP-GUARD-SMOKE-PREP-001",
   "c4_windows_sleep_guard_smoke_script": "scripts/vnext-gate18-phase-c-c4-windows-sleep-guard-smoke.ts",
   "c4_windows_sleep_guard_smoke_authorized": false,
@@ -454,6 +454,7 @@
   "c4_stmicro_transport_remediation_prep": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-TRANSPORT-PREP-001",
   "c4_stmicro_transport_remediation_runner": "scripts/vnext-gate18-phase-c-c4-stmicro-qwen4b-context16384-output1024-timeout420-loopback-guarded.ts",
   "c4_stmicro_transport_remediation_future_authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
-  "c4_stmicro_transport_remediation_authorized": false,
-  "c4_stmicro_transport_remediation_authorized_run_count": 0
+  "c4_stmicro_transport_remediation_authorized": true,
+  "c4_stmicro_transport_remediation_authorized_run_count": 1,
+  "c4_stmicro_transport_remediation_authorization_id": "G18-PHASEC-C4-STM-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001"
 }
