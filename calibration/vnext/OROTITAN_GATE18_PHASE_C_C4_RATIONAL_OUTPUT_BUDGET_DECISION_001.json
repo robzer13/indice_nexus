@@ -1,0 +1,51 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_RATIONAL_OUTPUT_BUDGET_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-C4-RATIONAL-OUTPUT-BUDGET-DECISION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "SELECT_OUTPUT1280_TIMEOUT600_WITH_EMPIRICAL_HEADROOM_NOT_GUARANTEED",
+  "basis": {
+    "output_schema_unchanged_across_c4_cells": true,
+    "output_cardinality_bounded": true,
+    "rational_input_packet_larger_than_prior_cells": true,
+    "input_packet_size_does_not_change_output_schema_cardinality": true,
+    "observed_reference_runs": [
+      {
+        "company": "Brookfield Corporation",
+        "max_output_tokens": 1280,
+        "eval_count": 1096,
+        "remaining_margin_tokens": 184,
+        "done_reason": "stop"
+      },
+      {
+        "company": "Adyen",
+        "max_output_tokens": 1280,
+        "eval_count": 1109,
+        "remaining_margin_tokens": 171,
+        "done_reason": "stop"
+      }
+    ],
+    "historical_rational_phase_b": {
+      "max_output_tokens": 1536,
+      "comparable": false,
+      "reason": "Old module/schema version and structured-output admission failure; not valid evidence for current C4 output-budget sizing."
+    }
+  },
+  "decision": {
+    "context_tokens": 16384,
+    "max_output_tokens": 1280,
+    "client_timeout_ms": 600000,
+    "rationale": "Preserve C4 comparability and use demonstrated empirical output headroom under the same current schema. This is not a guarantee against a length stop."
+  },
+  "boundaries": {
+    "adequacy_guaranteed": false,
+    "truncation_impossible_concluded": false,
+    "retry_authorized": false,
+    "automatic_remediation_authorized": false,
+    "inference_authorized": false,
+    "parameter_change_authorized": false
+  },
+  "next_action": "PREPARE_EXACT_RATIONAL_OUTPUT1280_TIMEOUT600_RUNNER_AND_AWAIT_EXPLICIT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
