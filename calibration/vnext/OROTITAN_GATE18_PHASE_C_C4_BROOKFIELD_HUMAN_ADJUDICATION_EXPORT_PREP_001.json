@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_HUMAN_ADJUDICATION_EXPORT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-BROOKFIELD-HUMAN-ADJUDICATION-EXPORT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "PREPARED_LOCAL_PRIVATE_NO_INFERENCE_ENGINEERING_FAIL",
+  "basis": {
+    "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+    "exhaustive_forensic": "G18-PHASEC-C4-BROOKFIELD-ATOMIC-CLAIM-FORENSIC-V3-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-brookfield-human-adjudication-export.ts",
+  "expected_private_run_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T112153186Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "source_engineering_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+  "source_schema_valid": true,
+  "source_semantic_valid": false,
+  "source_semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+  "deterministic_defect_classes": [
+    "COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+    "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
+    "NON_ATOMIC_CONTRASTIVE_CLAIM"
+  ],
+  "output_policy": {
+    "destination": "SIBLING_PRIVATE_FILE_NEXT_TO_SOURCE_RUN",
+    "suffix": "__HUMAN_ADJUDICATION_PACKET.json",
+    "public_repo_persistence": false,
+    "generated_content_publication": false,
+    "diagnostic_normalizations_applied": false,
+    "original_output_preserved": true
+  },
+  "integrity_checks": {
+    "matrix_cell_id": true,
+    "attempt_id": true,
+    "company": true,
+    "model": true,
+    "model_digest": true,
+    "prompt_sha256": true,
+    "packet_sha256_rebuilt_and_matched": true,
+    "request_sha256": true,
+    "schema_reparse": true,
+    "source_engineering_fail_required": true,
+    "source_semantic_error_required": true
+  },
+  "human_quality_criteria": [
+    "exact_evidence_grounding",
+    "claim_atomicity",
+    "claim_target_alignment",
+    "support_counterevidence_polarity",
+    "qualification_orthogonality",
+    "conflict_handling",
+    "weak_link_usefulness",
+    "unresolved_point_usefulness",
+    "judgment_boundary_compliance",
+    "priority_selection_usefulness"
+  ],
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "final_moat_conclusion_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_PRIVATE_BROOKFIELD_HUMAN_ADJUDICATION_EXPORT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
