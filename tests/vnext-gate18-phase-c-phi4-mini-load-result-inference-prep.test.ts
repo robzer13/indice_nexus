@@ -33,7 +33,7 @@ test("Phi-4 mini 4096 load result records measured headroom and full unload", ()
   assert.equal(result.interpretation.inference_authorized, false);
 });
 
-test("Phi-4 mini first semantic probe prep is compact, 4096, deterministic, and singly authorized", () => {
+test("Phi-4 mini first semantic probe prep records executed Brookfield PASS", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE_PREP_001.json",
@@ -41,7 +41,7 @@ test("Phi-4 mini first semantic probe prep is compact, 4096, deterministic, and 
     ),
   );
 
-  assert.equal(prep.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED");
+  assert.equal(prep.status, "EXECUTED_PASS_AUTHORIZATION_CONSUMED");
   assert.equal(prep.probe.semantic_probe_id, "BROOKFIELD_PEER_ROLE_CORE_001");
   assert.equal(
     prep.probe.execution_id,
@@ -56,8 +56,8 @@ test("Phi-4 mini first semantic probe prep is compact, 4096, deterministic, and 
   assert.equal(prep.resource_boundary.system_ram_pressure, "HIGH");
   assert.equal(prep.resource_boundary.automatic_retry_authorized, false);
   assert.equal(prep.guard.authorization_artifact_present, true);
-  assert.equal(prep.guard.inference_currently_authorized, true);
-  assert.equal(prep.authority.phi4_mini_inference_authorized, true);
+  assert.equal(prep.guard.inference_currently_authorized, false);
+  assert.equal(prep.authority.phi4_mini_inference_authorized, false);
   assert.equal(prep.authority.context_growth_authorized, false);
   assert.equal(prep.authority.model_switch_authorized, false);
 });
@@ -88,7 +88,7 @@ test("Phi-4 mini Brookfield runner is authorization-gated, digest-pinned, privat
   assert.match(raw, /publicationAuthority: false/);
 });
 
-test("Phase C permits exactly the bounded Phi-4 mini semantic probe while broader authority remains blocked", () => {
+test("Phase C records Brookfield PASS and stops before the Adyen probe authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -101,15 +101,17 @@ test("Phase C permits exactly the bounded Phi-4 mini semantic probe while broade
   assert.equal(entry.phi4_mini_loaded_free_ram_gib, 0.81);
   assert.equal(entry.phi4_mini_bounded_4096_inference_preparation_allowed, true);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
-  assert.equal(entry.phi4_mini_inference_authorized, true);
+  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.phi4_mini_brookfield_compact4096_authorized_run_count, 1);
+  assert.equal(entry.phi4_mini_brookfield_compact4096_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_brookfield_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_brookfield_compact4096_max_output_tokens, 768);
   assert.equal(entry.phi4_mini_brookfield_compact4096_temperature, 0);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
+  assert.equal(entry.phi4_mini_brookfield_compact4096_result_status, "PASS");
+  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
   assert.equal(
     entry.next_action,
-    "RUN_ONE_LOCAL_PHI4_MINI_BROOKFIELD_COMPACT4096_INFERENCE",
+    "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
   );
 });
