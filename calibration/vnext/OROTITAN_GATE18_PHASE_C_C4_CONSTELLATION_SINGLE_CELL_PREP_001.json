@@ -1,0 +1,81 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_SINGLE_CELL_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "matrix_prep": "G18-PHASEC-C4-QWEN3-4B-MATRIX-PREP-001",
+    "remaining_preflight": "G18-PHASEC-C4-REMAINING-MATRIX-STATIC-PREFLIGHT-V2-RESULT-001",
+    "completed_reference_cell": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001"
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-qwen4b-context16384-output1024-timeout420-loopback-guarded.ts",
+  "future_authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT420-LOOPBACK-AUTH-001",
+  "future_authorization_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_AUTH_001.json",
+  "future_attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "frozen_inference": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "model_name": "qwen3:4b-instruct",
+    "model_digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "request_sha256": "145ad3b20eacfe243c0cbbc8089e729b6cb71e0cc2c9a19dcee09e133d347441",
+    "request_bytes": 17666,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 420000,
+    "keep_alive": "0s",
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "future_authorization_contract": {
+    "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+    "authorized_run_count": 1,
+    "exact_company": "Constellation Software",
+    "exact_attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1024_TIMEOUT420_LOOPBACK_GUARDED_001",
+    "exact_transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "all_frozen_inference_fields_must_match": true
+  },
+  "constraints": {
+    "authorized_run_count": 0,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "second_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "model_download_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false,
+    "temperature_change_authorized": false,
+    "paid_model_escalation_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "reliability_carry": [
+    {
+      "source": "G18-PHASEC-C3-QWEN3-4B-FORENSIC-CONCLUSION-001",
+      "code": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+      "tracking_required": true
+    },
+    {
+      "source": "G18-PHASEC-C4-STM-HUMAN-ADJUDICATION-RESULT-001",
+      "code": "OUTPUT_BUDGET_SATURATED_AT_1024_WITH_VALID_COMPLETE_STRUCTURE",
+      "tracking_required": true,
+      "automatic_output_budget_change_authorized": false
+    }
+  ]
+}
