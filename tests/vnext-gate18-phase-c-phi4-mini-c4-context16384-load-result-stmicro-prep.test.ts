@@ -33,7 +33,7 @@ test("First Phi-4 C4 cell prep selects the smallest full packet and a bounded 10
     ),
   );
 
-  assert.equal(prep.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE_UNCONSUMED");
+  assert.equal(prep.status, "EXECUTED_SEMANTIC_FAIL_AUTHORIZATION_CONSUMED_FORENSICS_REQUIRED");
   assert.equal(prep.matrix_cell.company, "STMicroelectronics");
   assert.equal(prep.matrix_cell.packet_mode, "FULL_PINNED_PACKET");
   assert.equal(prep.matrix_cell.evidence_count, 9);
@@ -62,11 +62,11 @@ test("First Phi-4 C4 STMicro authorization is one-run, loopback-only, and derive
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
   assert.equal(auth.authorization_source.type, "STANDING_USER_AUTHORIZATION");
   assert.equal(auth.authorization_source.authorization_id, "OROTITAN-STANDING-TECHNICAL-AUTH-001");
   assert.equal(auth.authorization_source.separate_user_reprompt_required, false);
-  assert.equal(auth.c4_inference.authorized, true);
+  assert.equal(auth.c4_inference.authorized, false);
   assert.equal(auth.c4_inference.company, "STMicroelectronics");
   assert.equal(auth.c4_inference.model_name, "phi4-mini:3.8b-q4_K_M");
   assert.equal(
@@ -77,7 +77,7 @@ test("First Phi-4 C4 STMicro authorization is one-run, loopback-only, and derive
   assert.equal(auth.c4_inference.max_output_tokens, 1024);
   assert.equal(auth.c4_inference.client_timeout_ms, 420000);
   assert.equal(auth.c4_inference.transport, "NODE_HTTP_REQUEST_LOOPBACK");
-  assert.equal(auth.constraints.authorized_run_count, 1);
+  assert.equal(auth.constraints.authorized_run_count, 0);
   assert.equal(auth.constraints.automatic_retry_authorized, false);
   assert.equal(auth.constraints.context_change_authorized, false);
   assert.equal(auth.constraints.production_mutation, false);
@@ -109,7 +109,7 @@ test("Phi-4 STMicro C4 runner is identity-pinned, sleep-guarded, loopback, priva
   assert.match(raw, /publicationAuthority: false/);
 });
 
-test("Phase C current state authorizes exactly the first Phi-4 STMicro C4 cell and no automatic retry", () => {
+test("Phase C preserves the first Phi-4 STMicro C4 execution history after semantic FAIL", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -118,19 +118,21 @@ test("Phase C current state authorizes exactly the first Phi-4 STMicro C4 cell a
   );
 
   assert.equal(entry.phi4_mini_c4_context16384_load_fit, "PASS");
-  assert.equal(entry.phi4_mini_c4_context16384_inference_fit, "NOT_YET_PROVEN");
+  assert.equal(entry.phi4_mini_c4_context16384_inference_fit, "PASS_FOR_STMICRO_RUNTIME_EXECUTION");
   assert.equal(entry.phi4_mini_c4_first_cell, "STMicroelectronics");
-  assert.equal(entry.phi4_mini_c4_stmicro_authorization_status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(entry.phi4_mini_c4_stmicro_authorized_run_count, 1);
+  assert.equal(entry.phi4_mini_c4_stmicro_authorization_status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(entry.phi4_mini_c4_stmicro_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_c4_stmicro_context_tokens, 16384);
   assert.equal(entry.phi4_mini_c4_stmicro_max_output_tokens, 1024);
   assert.equal(entry.phi4_mini_c4_stmicro_transport, "NODE_HTTP_REQUEST_LOOPBACK");
-  assert.equal(entry.phi4_mini_c4_inference_authorized, true);
-  assert.equal(entry.phi4_mini_inference_authorized, true);
+  assert.equal(entry.phi4_mini_c4_inference_authorized, false);
+  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
+  assert.equal(entry.phi4_mini_c4_stmicro_result_status, "SEMANTIC_FAIL_FORENSICS_REQUIRED");
+  assert.equal(entry.phi4_mini_c4_stmicro_forensics_required, true);
   assert.equal(
     entry.next_action,
-    "RUN_ONE_STMICRO_PHI4_MINI_C4_FULL_PACKET_INFERENCE_CONTEXT16384",
+    "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
   );
 });
