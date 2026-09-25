@@ -36,7 +36,7 @@ test("Phi-4 mini Adyen result preserves the original semantic FAIL", () => {
   assert.equal(result.authority.model_switch_authorized, false);
 });
 
-test("Phi-4 mini Adyen forensic prep is read-only, provider-agnostic, and non-inference", () => {
+test("Phi-4 mini Adyen forensic prep records completed read-only forensic execution", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC_PREP_001.json",
@@ -44,7 +44,7 @@ test("Phi-4 mini Adyen forensic prep is read-only, provider-agnostic, and non-in
     ),
   );
 
-  assert.equal(prep.status, "PREPARED_NO_INFERENCE_REQUIRED");
+  assert.equal(prep.status, "EXECUTED_FORENSIC_COMPLETE");
   assert.equal(
     prep.source_run_result,
     "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-LOCAL-RUN-001",
@@ -83,7 +83,7 @@ test("Reused Adyen punctuation forensic performs no model inference and full tar
   assert.match(source, /originalRunStatusChanged: false/);
 });
 
-test("Phase C has no active Phi-4 inference while the Adyen forensic is pending", () => {
+test("Phase C has no active Phi-4 inference after the Adyen forensic completes", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -104,12 +104,10 @@ test("Phase C has no active Phi-4 inference while the Adyen forensic is pending"
     entry.phi4_mini_adyen_compact4096_result_status,
     "SEMANTIC_FAIL_FORENSICS_REQUIRED",
   );
-  assert.equal(entry.phi4_mini_adyen_forensics_required, true);
+  assert.equal(entry.phi4_mini_adyen_forensics_required, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC",
-  );
+  assert.equal(entry.phi4_mini_adyen_punctuation_forensic_full_targeted_validator_pass, true);
+  assert.equal(entry.phi4_mini_broader_phase_c_admission, true);
 });
