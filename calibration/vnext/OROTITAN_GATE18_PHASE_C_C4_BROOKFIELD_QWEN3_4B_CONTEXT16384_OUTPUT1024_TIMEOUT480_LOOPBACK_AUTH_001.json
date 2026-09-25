@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_C4_CELL_INFERENCE",
+  "status": "CONSUMED_FAIL_OUTPUT_BUDGET_EXHAUSTED_TRUNCATED_JSON",
   "user_authorization": {
     "explicit": true,
     "exact_user_command": "go Brookfield single cell",
@@ -21,7 +21,7 @@
     "completed_constellation": "G18-PHASEC-C4-CONSTELLATION-HUMAN-ADJUDICATION-RESULT-001"
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "Brookfield Corporation",
     "archetype": "ACCOUNTING_HEAVY",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -48,7 +48,7 @@
     "keep_alive": "0s"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_preloaded_ollama_model_required": true,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
@@ -97,5 +97,21 @@
     "routing_frozen": false
   },
   "base_vnext_sha": "22d51f1ec7766d1c04a54dfa248419f25f6e4e04",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+    "result_status": "FAIL_OUTPUT_BUDGET_EXHAUSTED_TRUNCATED_JSON",
+    "wall_clock_ms": 416162,
+    "done_reason": "length",
+    "prompt_eval_count": 3668,
+    "eval_count": 1024,
+    "schema_valid": false,
+    "schema_error": "Unterminated string in JSON at position 3764 (line 112 column 19)",
+    "semantic_valid": false,
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false
+  }
 }
