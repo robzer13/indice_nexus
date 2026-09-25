@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_LOAD_SMOKE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PREPARED_AWAITING_EXPLICIT_USER_AUTHORIZATION_NO_EXECUTION",
+  "source_download_result": "G18-PHASEC-PHI4-MINI-DOWNLOAD-RESULT-001",
+  "candidate": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "model_id": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "parameter_size": "3.8B",
+    "quantization": "Q4_K_M",
+    "size_bytes": 2491876774,
+    "ollama_reported_family": "phi3"
+  },
+  "planned_execution": {
+    "script": "scripts/vnext-gate18-phase-c-phi4-mini-load-smoke.ts",
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_PROMPT_OR_SEMANTIC_INFERENCE",
+    "context_tokens": 4096,
+    "keep_alive_load": "2m",
+    "explicit_unload": true,
+    "loopback_only": true,
+    "prompt_provided": false,
+    "messages_provided": false,
+    "semantic_inference_requested": false
+  },
+  "required_observations": {
+    "exact_model_identity_guard": true,
+    "full_digest_guard": true,
+    "ram_before_during_after": true,
+    "vram_before_during_after": true,
+    "ollama_ps_before_during_after": true,
+    "load_only_response_guard": true,
+    "explicit_unload_guard": true,
+    "full_vram_release_observation": true
+  },
+  "fail_closed_conditions": [
+    "MISSING_OR_UNCONSUMED_AUTHORIZATION_ARTIFACT",
+    "MODEL_IDENTITY_MISMATCH",
+    "NON_EMPTY_GENERATED_RESPONSE",
+    "NON_ZERO_EVAL_COUNT",
+    "LOOPBACK_OLLAMA_UNREACHABLE",
+    "LOAD_FAILURE",
+    "UNLOAD_FAILURE"
+  ],
+  "authority": {
+    "phi4_mini_load_smoke_authorized": false,
+    "phi4_mini_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_growth_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "explicit_user_authorization_required_for": "ONE_PHI4_MINI_LOAD_AND_UNLOAD_WITHOUT_PROMPT_OR_GENERATION_AT_CONTEXT4096",
+  "future_authorization_id": "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-AUTH-001",
+  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_FOR_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_4096",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
