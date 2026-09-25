@@ -18,7 +18,7 @@
     "c1_local_runtime_admission": "PASS",
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
-    "c4_diversified_matrix": "RATIONAL_SECOND_DETERMINISTIC_DEFECT_FORENSIC_V2_PREPARED",
+    "c4_diversified_matrix": "RATIONAL_THIRD_DETERMINISTIC_DEFECT_FORENSIC_V3_PREPARED",
     "c5_repeatability": "NOT_STARTED",
     "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "NOT_STARTED"
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_LOCAL_READ_ONLY_RATIONAL_DIRECTION_ROLE_OVERLAP_FORENSIC_V2",
+  "next_action": "RUN_LOCAL_READ_ONLY_RATIONAL_ATOMIC_CLAIM_FORENSIC_V3",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -818,9 +818,10 @@
   "c4_rational_conflict_grounding_forensics_v1_is_inference": false,
   "c4_rational_observed_deterministic_defect_classes": [
     "FINDING_CONFLICT_ID_NOT_GROUNDED_IN_FINDING_EVIDENCE_REFS",
-    "DIRECTION_ROLE_OVERLAP"
+    "DIRECTION_ROLE_OVERLAP",
+    "NON_ATOMIC_CONTRASTIVE_CLAIM"
   ],
-  "c4_rational_observed_deterministic_defect_class_count": 2,
+  "c4_rational_observed_deterministic_defect_class_count": 3,
   "c4_rational_all_known_deterministic_defects_exhausted": false,
   "c4_rational_conflict_grounding_forensics_v1_result": "G18-PHASEC-C4-RATIONAL-CONFLICT-GROUNDING-FORENSIC-V1-RESULT-001",
   "c4_rational_conflict_grounding_forensics_v1_status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
@@ -829,5 +830,13 @@
   "c4_rational_conflict_grounding_downstream_error": "VNEXT_GATE18_V10_DIRECTION_ROLE_OVERLAP",
   "c4_rational_direction_role_overlap_forensics_v2_prep": "G18-PHASEC-C4-RATIONAL-DIRECTION-ROLE-OVERLAP-FORENSIC-V2-PREP-001",
   "c4_rational_direction_role_overlap_forensics_v2_script": "scripts/vnext-gate18-phase-c-c4-rational-direction-role-overlap-forensic-v2.ts",
-  "c4_rational_direction_role_overlap_forensics_v2_is_inference": false
+  "c4_rational_direction_role_overlap_forensics_v2_is_inference": false,
+  "c4_rational_direction_role_overlap_forensics_v2_result": "G18-PHASEC-C4-RATIONAL-DIRECTION-ROLE-OVERLAP-FORENSIC-V2-RESULT-001",
+  "c4_rational_direction_role_overlap_forensics_v2_status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+  "c4_rational_direction_role_overlap_removed_support_ref_count": 1,
+  "c4_rational_direction_role_overlap_downstream_pass": false,
+  "c4_rational_direction_role_overlap_downstream_error": "VNEXT_GATE18_V10_NON_ATOMIC_CONTRASTIVE_CLAIM",
+  "c4_rational_atomic_claim_forensics_v3_prep": "G18-PHASEC-C4-RATIONAL-ATOMIC-CLAIM-FORENSIC-V3-PREP-001",
+  "c4_rational_atomic_claim_forensics_v3_script": "scripts/vnext-gate18-phase-c-c4-rational-atomic-claim-forensic-v3.ts",
+  "c4_rational_atomic_claim_forensics_v3_is_inference": false
 }
