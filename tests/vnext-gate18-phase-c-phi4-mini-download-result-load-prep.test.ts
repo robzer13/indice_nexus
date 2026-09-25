@@ -53,7 +53,7 @@ test("Phi-4 mini load-smoke prep is 4096 load-only and awaits separate explicit 
   );
 });
 
-test("Phi-4 mini load-smoke runner fails closed without the separate authorization artifact", () => {
+test("Phi-4 mini load-smoke runner requires the exact separate authorization artifact", () => {
   const raw = readFileSync(
     "scripts/vnext-gate18-phase-c-phi4-mini-load-smoke.ts",
     "utf8",
@@ -74,7 +74,7 @@ test("Phi-4 mini load-smoke runner fails closed without the separate authorizati
   assert.doesNotMatch(raw, /\/api\/chat/);
 });
 
-test("Phase C stops at explicit authorization boundary after pinned Phi-4 mini download", () => {
+test("Phase C preserves pinned download and permits only the authorized load-only smoke", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -85,11 +85,15 @@ test("Phase C stops at explicit authorization boundary after pinned Phi-4 mini d
   assert.equal(entry.phi4_mini_download_executed, true);
   assert.equal(entry.phi4_mini_identity_pin_status, "PASS");
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
-  assert.equal(entry.phi4_mini_load_smoke_authorized, false);
+  assert.equal(entry.phi4_mini_load_smoke_authorized, true);
+  assert.equal(
+    entry.phi4_mini_load_smoke_authorization_status,
+    "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  );
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "AWAIT_EXPLICIT_USER_AUTHORIZATION_FOR_PHI4_MINI_LOAD_ONLY_MEMORY_PREFLIGHT_4096",
+    "RUN_LOCAL_PHI4_MINI_LOAD_SMOKE_ONCE_CONTEXT4096",
   );
 });
