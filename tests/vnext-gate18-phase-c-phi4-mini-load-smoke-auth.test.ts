@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Phi-4 mini load-smoke authorization is single-use, 4096-context, and non-inference", () => {
+test("Phi-4 mini load-smoke authorization is consumed after one 4096 load-only execution", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_LOAD_SMOKE_AUTH_001.json",
@@ -10,7 +10,7 @@ test("Phi-4 mini load-smoke authorization is single-use, 4096-context, and non-i
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOAD_ONLY");
   assert.equal(auth.user_authorization.explicit, true);
   assert.equal(auth.user_authorization.authorized_model, "phi4-mini:3.8b-q4_K_M");
   assert.equal(auth.user_authorization.authorized_context_tokens, 4096);
@@ -26,7 +26,7 @@ test("Phi-4 mini load-smoke authorization is single-use, 4096-context, and non-i
   assert.equal(auth.constraints.automatic_retry_authorized, false);
   assert.equal(auth.constraints.automatic_model_switch_authorized, false);
   assert.equal(auth.constraints.context_growth_authorized, false);
-  assert.equal(auth.authority.phi4_mini_load_smoke_authorized, true);
+  assert.equal(auth.authority.phi4_mini_load_smoke_authorized, false);
   assert.equal(auth.authority.phi4_mini_inference_authorized, false);
   assert.equal(auth.authority.model_switch_authorized, false);
 });
@@ -48,7 +48,7 @@ test("Phi-4 mini load-smoke authorization pins the exact downloaded artifact", (
   assert.equal(auth.basis.identity_pin_status, "PASS");
 });
 
-test("Phase C authorizes the load-only smoke while inference remains forbidden", () => {
+test("Phase C preserves consumed load-only result while inference remains forbidden", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,10 +56,10 @@ test("Phase C authorizes the load-only smoke while inference remains forbidden",
     ),
   );
 
-  assert.equal(entry.phi4_mini_load_smoke_authorized, true);
+  assert.equal(entry.phi4_mini_load_smoke_authorized, false);
   assert.equal(
     entry.phi4_mini_load_smoke_authorization_status,
-    "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "CONSUMED_SINGLE_LOAD_ONLY",
   );
   assert.equal(
     entry.phi4_mini_load_smoke_authorization_id,
@@ -68,8 +68,6 @@ test("Phase C authorizes the load-only smoke while inference remains forbidden",
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_PHI4_MINI_LOAD_SMOKE_ONCE_CONTEXT4096",
-  );
+  assert.equal(entry.phi4_mini_load_fit_at_4096, "PASS");
+  assert.equal(entry.phi4_mini_inference_authorized, false);
 });

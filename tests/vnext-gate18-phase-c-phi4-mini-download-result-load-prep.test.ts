@@ -28,7 +28,7 @@ test("Phi-4 mini pinned download result preserves exact identity and no-executio
   assert.equal(result.authority.phi4_mini_inference_authorized, false);
 });
 
-test("Phi-4 mini load-smoke prep is 4096 load-only and awaits separate explicit authorization", () => {
+test("Phi-4 mini load-smoke prep records completed 4096 load-only execution", () => {
   const prep = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_LOAD_SMOKE_PREP_001.json",
@@ -38,7 +38,7 @@ test("Phi-4 mini load-smoke prep is 4096 load-only and awaits separate explicit 
 
   assert.equal(
     prep.status,
-    "PREPARED_AWAITING_EXPLICIT_USER_AUTHORIZATION_NO_EXECUTION",
+    "EXECUTED_RESULT_RECORDED_AUTHORIZATION_CONSUMED",
   );
   assert.equal(prep.planned_execution.context_tokens, 4096);
   assert.equal(prep.planned_execution.prompt_provided, false);
@@ -74,7 +74,7 @@ test("Phi-4 mini load-smoke runner requires the exact separate authorization art
   assert.doesNotMatch(raw, /\/api\/chat/);
 });
 
-test("Phase C preserves pinned download and permits only the authorized load-only smoke", () => {
+test("Phase C preserves pinned download and measured load fit while inference stays blocked", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -85,15 +85,13 @@ test("Phase C preserves pinned download and permits only the authorized load-onl
   assert.equal(entry.phi4_mini_download_executed, true);
   assert.equal(entry.phi4_mini_identity_pin_status, "PASS");
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
-  assert.equal(entry.phi4_mini_load_smoke_authorized, true);
+  assert.equal(entry.phi4_mini_load_smoke_authorized, false);
   assert.equal(
     entry.phi4_mini_load_smoke_authorization_status,
-    "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "CONSUMED_SINGLE_LOAD_ONLY",
   );
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_PHI4_MINI_LOAD_SMOKE_ONCE_CONTEXT4096",
-  );
+  assert.equal(entry.phi4_mini_load_fit_at_4096, "PASS");
+  assert.equal(entry.phi4_mini_loaded_vram_free_mib, 1668);
 });
