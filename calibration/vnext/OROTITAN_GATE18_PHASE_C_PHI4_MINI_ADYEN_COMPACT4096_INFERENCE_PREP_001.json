@@ -1,0 +1,153 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT_INFERENCE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_SEMANTIC_PROBE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "basis": {
+    "brookfield_phi4_mini_result": "G18-PHASEC-PHI4-MINI-BROOKFIELD-COMPACT4096-LOCAL-RUN-001",
+    "brookfield_targeted_regressions": "PASS",
+    "inference_fit_at_4096_context": "PASS_FOR_BOUNDED_BROOKFIELD_PROBE",
+    "remaining_targeted_regressions": [
+      "Adyen same-target switching-friction role alignment",
+      "Adyen scope-resolved incident handling",
+      "Adyen qualification orthogonality"
+    ],
+    "system_ram_pressure": "HIGH"
+  },
+  "probe": {
+    "semantic_probe_id": "ADYEN_CLAIM_TARGET_CORE_001",
+    "execution_id": "ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_PHI4MINI_4096",
+    "prompt_template_id": "GATE18_ADYEN_CLAIM_TARGET_PROBE_V0_1",
+    "rationale": "Use the historical Adyen targeted regression after Brookfield PASS to cover the three remaining mandatory targeted semantic roles before any broader Phi-4 mini admission or C4-scale execution.",
+    "comparison_admissible": false,
+    "model_ranking_authority": false
+  },
+  "packet_compaction": {
+    "required_evidence_ids": [
+      "E-036",
+      "E-037",
+      "E-040",
+      "E-041",
+      "E-042",
+      "E-043",
+      "E-055",
+      "E-056"
+    ],
+    "required_conflict_ids": [
+      "C-005",
+      "C-010"
+    ],
+    "unrelated_evidence_removed": true,
+    "required_semantic_roles_unchanged": true
+  },
+  "model": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "name": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "parameter_size": "3.8B"
+  },
+  "execution_plan": {
+    "runtime": "OLLAMA_LOCAL",
+    "endpoint": "http://127.0.0.1:11434",
+    "context_tokens": 4096,
+    "max_output_tokens": 768,
+    "temperature": 0,
+    "client_timeout_ms": 180000,
+    "keep_alive": "0s",
+    "output_schema": "GATE18_MOAT_EVIDENCE_AUDIT_OUTPUT_V0_6",
+    "private_output_directory": "calibration/vnext/private-runs",
+    "external_model_api_cost_usd": 0
+  },
+  "expected_regression_map": {
+    "finding_1": {
+      "topic": "same-target switching friction / relationship persistence",
+      "support_state": "MIXED",
+      "support_ids": [
+        "E-036",
+        "E-042"
+      ],
+      "counterevidence_ids": [
+        "E-037",
+        "E-041"
+      ],
+      "conflict_ids": [
+        "C-005"
+      ]
+    },
+    "finding_2": {
+      "topic": "documented service disruption existence",
+      "support_state": "SUPPORTED",
+      "support_ids": [
+        "E-055"
+      ],
+      "counterevidence_ids": [],
+      "conflict_ids": [
+        "C-010"
+      ]
+    },
+    "finding_3": {
+      "topic": "qualification orthogonality for selected positive commercial outcomes",
+      "support_state": "SUPPORTED",
+      "support_ids": [
+        "E-040",
+        "E-043"
+      ],
+      "counterevidence_ids": [],
+      "qualification_ids": [
+        "E-040",
+        "E-043"
+      ]
+    },
+    "conflict_states": {
+      "C-005": "UNRESOLVED_IN_PACKET",
+      "C-010": "RESOLVED_IN_PACKET"
+    }
+  },
+  "resource_boundary": {
+    "prior_bounded_inference_fit_proven": true,
+    "adyen_inference_fit_proven": false,
+    "system_ram_pressure": "HIGH",
+    "preloaded_ollama_models_allowed": false,
+    "automatic_retry_authorized": false,
+    "context_growth_authorized": false
+  },
+  "guard": {
+    "authorization_id": "G18-PHASEC-PHI4-MINI-ADYEN-COMPACT4096-INFERENCE-AUTH-001",
+    "authorization_artifact_path": "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE_AUTH_001.json",
+    "authorization_artifact_present": false,
+    "execute_flag_required": true,
+    "authorization_id_argument_required": true,
+    "exact_model_digest_required": true,
+    "exact_context_required": true,
+    "exact_max_output_required": true,
+    "exact_temperature_required": true,
+    "no_preloaded_model_required": true,
+    "inference_currently_authorized": false
+  },
+  "interpretation_boundary": {
+    "a_pass_would_prove": "BROOKFIELD_AND_ADYEN_TARGETED_REGRESSION_PATHS_PASS_AT_CONTEXT4096",
+    "a_pass_would_not_prove": [
+      "C4_MATRIX_QUALITY",
+      "C5_REPEATABILITY",
+      "MODEL_WINNER_STATUS",
+      "PRODUCTION_ROUTING",
+      "CONTEXT_GROWTH_FIT"
+    ]
+  },
+  "authority": {
+    "phi4_mini_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "context_growth_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "next_action": "REQUEST_EXPLICIT_USER_AUTHORIZATION_FOR_ONE_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
