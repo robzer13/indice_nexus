@@ -1,0 +1,82 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1280_TIMEOUT600_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1280-TIMEOUT600-LOOPBACK-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_REMEDIATION",
+  "status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+  "matrix_cell_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001",
+  "attempt_id": "C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_OUTPUT1280_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "company": "Brookfield Corporation",
+  "archetype": "ACCOUNTING_HEAVY",
+  "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "model": {
+    "name": "qwen3:4b-instruct",
+    "digest": "0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0"
+  },
+  "frozen_inference": {
+    "packet_sha256": "eb2d779b95fa5f207e91fd3485ece39b2bd101c2589eaaf8c48481f750ef75b3",
+    "prompt_sha256": "516496bf4dc9bcdce47897c056282eb2bda63b014cd63c1b76e3992b1c0cdad2",
+    "request_sha256": "cc51153ec6bdc8041f22800aea2b6aa6418a27837589547b19db88745bc0ff8f",
+    "context_tokens": 16384,
+    "max_output_tokens": 1280,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "execution": {
+    "wall_clock_ms": 495684,
+    "done_reason": "stop",
+    "prompt_eval_count": 3668,
+    "eval_count": 1096,
+    "runtime_error": null,
+    "schema_valid": true,
+    "schema_error": null,
+    "semantic_valid": false,
+    "semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false
+  },
+  "output_budget": {
+    "max_output_tokens": 1280,
+    "eval_count": 1096,
+    "remaining_token_margin": 184,
+    "fully_consumed": false,
+    "finish_reason_stop": true,
+    "structural_truncation_observed": false,
+    "classification": "NATURAL_STOP_WITH_OUTPUT_BUDGET_MARGIN"
+  },
+  "diagnosis": {
+    "classification": "COMPLETE_SCHEMA_VALID_OUTPUT_FAILED_DETERMINISTIC_COUNTEREVIDENCE_LINK_CONTRACT",
+    "output_budget_remediation_validated": true,
+    "timeout600_reached": false,
+    "transport_failure": false,
+    "runtime_failure": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": true,
+    "exact_semantic_defect": "A priority finding emitted non-null counterevidence_link while counterevidence_ids was empty.",
+    "prompt_contract_explicit": true,
+    "auto_repair_allowed": false,
+    "sole_defect_concluded": false,
+    "model_capability_failure_concluded": false,
+    "note": "A no-inference in-memory normalization forensic is required to determine whether downstream semantic checks reveal additional defects."
+  },
+  "private_output": {
+    "path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T112153186Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+    "public_repo_generated_content_forbidden": true,
+    "generated_content_embedded_in_public_result": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "second_retry_authorized": false,
+    "auto_repair_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_COUNTEREVIDENCE_LINK_NORMALIZATION_FORENSIC_V1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
