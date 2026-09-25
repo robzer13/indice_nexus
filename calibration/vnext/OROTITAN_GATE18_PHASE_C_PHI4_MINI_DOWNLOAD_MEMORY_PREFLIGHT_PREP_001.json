@@ -1,0 +1,55 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_PHI4_MINI_DOWNLOAD_MEMORY_PREFLIGHT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-MINI-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_C4_CANDIDATE_ESCALATION_PREFLIGHT",
+  "status": "PREPARED_STATIC_NO_DOWNLOAD_NO_INFERENCE_AWAITING_EXPLICIT_USER_AUTHORIZATION",
+  "source_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+  "candidate": {
+    "candidate_id": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "model_id": "phi4-mini:3.8b-q4_K_M",
+    "family": "Phi-4",
+    "parameters": "3.8B",
+    "quantization": "Q4_K_M",
+    "expected_ollama_artifact_size_gb": 2.5,
+    "expected_ollama_digest_prefix": "78fad5d182a7",
+    "context_capability_tokens": 128000,
+    "license": "MIT"
+  },
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "comparison_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "comparison_artifact_size_gb": 2.5,
+    "static_artifact_fit": "PLAUSIBLE",
+    "runtime_memory_fit": "NOT_YET_PROVEN"
+  },
+  "planned_sequence_after_authorization": [
+    "DOWNLOAD_EXACT_PHI4_MINI_Q4_K_M_TAG_ONLY",
+    "VERIFY_EXACT_LOCAL_MODEL_ID_AND_FULL_DIGEST",
+    "RUN_NO_PROMPT_LOAD_ONLY_MEMORY_PREFLIGHT_AT_CONSTRAINED_CONTEXT",
+    "UNLOAD_AND_VERIFY_MEMORY_RELEASE",
+    "REVIEW_MEASURED_FIT_BEFORE_ANY_INFERENCE"
+  ],
+  "fail_closed_conditions": [
+    "UNEXPECTED_MODEL_TAG_OR_DIGEST",
+    "DOWNLOAD_FAILURE",
+    "INSUFFICIENT_MEMORY_HEADROOM",
+    "HIDDEN_CLOUD_FALLBACK",
+    "UNAUTHORIZED_INFERENCE"
+  ],
+  "authority": {
+    "download_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "explicit_user_authorization_required_for": "DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M_ONLY",
+  "next_action": "AWAIT_EXPLICIT_USER_AUTHORIZATION_TO_DOWNLOAD_PHI4_MINI_3_8B_Q4_K_M",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
