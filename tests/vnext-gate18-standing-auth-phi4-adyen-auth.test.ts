@@ -34,7 +34,7 @@ test("OroTitan standing technical authorization is active with explicit exclusio
   assert.equal(standing.protocol_guards.no_retroactive_pass, true);
 });
 
-test("Phi-4 mini Adyen authorization is a one-run derivative of standing authority", () => {
+test("Phi-4 mini Adyen authorization remains traceable after the single run is consumed", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE_AUTH_001.json",
@@ -42,14 +42,14 @@ test("Phi-4 mini Adyen authorization is a one-run derivative of standing authori
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
   assert.equal(auth.authorization_source.type, "STANDING_USER_AUTHORIZATION");
   assert.equal(
     auth.authorization_source.authorization_id,
     "OROTITAN-STANDING-TECHNICAL-AUTH-001",
   );
   assert.equal(auth.authorization_source.separate_user_reprompt_required, false);
-  assert.equal(auth.phi4_mini_inference.authorized, true);
+  assert.equal(auth.phi4_mini_inference.authorized, false);
   assert.equal(auth.phi4_mini_inference.model_name, "phi4-mini:3.8b-q4_K_M");
   assert.equal(
     auth.phi4_mini_inference.model_digest,
@@ -63,7 +63,7 @@ test("Phi-4 mini Adyen authorization is a one-run derivative of standing authori
   assert.equal(auth.phi4_mini_inference.context_tokens, 4096);
   assert.equal(auth.phi4_mini_inference.max_output_tokens, 768);
   assert.equal(auth.phi4_mini_inference.temperature, 0);
-  assert.equal(auth.constraints.authorized_run_count, 1);
+  assert.equal(auth.constraints.authorized_run_count, 0);
   assert.equal(auth.constraints.automatic_retry_authorized, false);
   assert.equal(auth.constraints.context_growth_authorized, false);
   assert.equal(auth.constraints.automatic_model_switch_authorized, false);
@@ -72,7 +72,7 @@ test("Phi-4 mini Adyen authorization is a one-run derivative of standing authori
   assert.equal(auth.constraints.publication_authority, false);
 });
 
-test("Phase C current state exposes only the bounded Adyen run", () => {
+test("Phase C current state records the consumed Adyen run and read-only forensic next action", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -82,18 +82,18 @@ test("Phase C current state exposes only the bounded Adyen run", () => {
 
   assert.equal(entry.standing_technical_authorization_status, "ACTIVE");
   assert.equal(entry.standing_in_scope_reprompt_required, false);
-  assert.equal(entry.phi4_mini_inference_authorized, true);
-  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, true);
+  assert.equal(entry.phi4_mini_inference_authorized, false);
+  assert.equal(entry.phi4_mini_adyen_compact4096_inference_authorized, false);
   assert.equal(
     entry.phi4_mini_adyen_compact4096_inference_authorization_status,
-    "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+    "CONSUMED_SINGLE_LOCAL_INFERENCE",
   );
-  assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 1);
+  assert.equal(entry.phi4_mini_adyen_compact4096_authorized_run_count, 0);
   assert.equal(entry.phi4_mini_adyen_compact4096_context_tokens, 4096);
   assert.equal(entry.phi4_mini_adyen_compact4096_max_output_tokens, 768);
   assert.equal(entry.phi4_mini_adyen_compact4096_temperature, 0);
   assert.equal(entry.phi4_mini_context_growth_authorized, false);
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.next_action, "RUN_ONE_LOCAL_PHI4_MINI_ADYEN_COMPACT4096_INFERENCE");
+  assert.equal(entry.next_action, "RUN_LOCAL_READ_ONLY_PHI4_MINI_ADYEN_PUNCTUATION_FORENSIC");
 });
