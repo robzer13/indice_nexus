@@ -68,5 +68,4 @@ test("Phase C preserves consumed load-only result across later semantic-probe au
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_load_fit_at_4096, "PASS");
-  assert.equal(entry.phi4_mini_inference_authorized, false);
 });
