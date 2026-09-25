@@ -48,7 +48,7 @@ test("Phi-4 mini load-smoke authorization pins the exact downloaded artifact", (
   assert.equal(auth.basis.identity_pin_status, "PASS");
 });
 
-test("Phase C preserves consumed load-only result while inference remains forbidden", () => {
+test("Phase C preserves consumed load-only result across later semantic-probe authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -66,7 +66,6 @@ test("Phase C preserves consumed load-only result while inference remains forbid
     "G18-PHASEC-PHI4-MINI-LOAD-SMOKE-AUTH-001",
   );
   assert.equal(entry.phi4_mini_load_smoke_context_tokens, 4096);
-  assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_load_fit_at_4096, "PASS");
   assert.equal(entry.phi4_mini_inference_authorized, false);
