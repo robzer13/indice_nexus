@@ -1,0 +1,32 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_BROOKFIELD_OUTPUT1024_TRUNCATION_FORENSICS_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-BROOKFIELD-OUTPUT1024-TRUNCATION-FORENSICS-V1-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_OUTPUT_BUDGET_FORENSICS",
+  "status": "PREPARED_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-BROOKFIELD-QWEN4B-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-RESULT-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-brookfield-output1024-truncation-forensics-v1.ts",
+  "expected_private_run_path": "C:\\Users\\robin\\indice_nexus\\calibration\\vnext\\private-runs\\2026-09-25T094102306Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+  "collector": {
+    "local_private_file_read": true,
+    "raw_output_persisted_publicly": false,
+    "raw_output_printed_to_console": false,
+    "measures_top_level_section_markers": true,
+    "counts_completed_item_keys": true,
+    "measures_terminal_json_structure": true,
+    "computes_diagnostic_runtime_projections": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "max_output_change_authorized": false,
+    "timeout_change_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_BROOKFIELD_OUTPUT1024_TRUNCATION_FORENSICS_V1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
