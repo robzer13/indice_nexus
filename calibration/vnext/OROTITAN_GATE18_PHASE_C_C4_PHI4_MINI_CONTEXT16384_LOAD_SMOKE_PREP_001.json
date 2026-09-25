@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_MINI_CONTEXT16384_LOAD_SMOKE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-PHI4-MINI-CONTEXT16384-LOAD-SMOKE-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PREPARED_AUTHORIZED_UNEXECUTED",
+  "basis": {
+    "context_fit_diagnostic": "G18-PHASEC-C4-PHI4-MINI-CONTEXT-FIT-001",
+    "common_context_4096_admissible": false,
+    "proposed_common_context_tokens": 16384,
+    "prior_context4096_load_fit": "PASS",
+    "prior_context4096_bounded_inference_fit": "PASS_FOR_TARGETED_PROBES"
+  },
+  "target": {
+    "model": "phi4-mini:3.8b-q4_K_M",
+    "digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "runner": "scripts/vnext-gate18-phase-c-c4-phi4-mini-context16384-load-smoke.ts",
+  "measurements": [
+    "system_free_ram_before_loaded_after",
+    "gpu_vram_before_loaded_after",
+    "ollama_ps_context",
+    "ollama_processor_split",
+    "full_unload_confirmation"
+  ],
+  "guard": {
+    "authorization_artifact_present": true,
+    "load_smoke_authorized": true,
+    "c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "context_growth_for_inference_authorized": false
+  },
+  "authority": {
+    "standing_authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
+    "production_mutation": false,
+    "publication_authority": false,
+    "paid_execution_authorized": false
+  },
+  "next_action": "RUN_ONE_PHI4_MINI_CONTEXT16384_LOAD_ONLY_SMOKE_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
