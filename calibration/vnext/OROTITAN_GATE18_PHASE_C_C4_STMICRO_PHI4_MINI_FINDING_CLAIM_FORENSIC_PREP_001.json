@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_SEMANTIC_FORENSICS",
-  "status": "PREPARED_NO_INFERENCE_REQUIRED",
+  "status": "EXECUTED_FORENSIC_COMPLETE_ADDITIONAL_DEFECT_FOUND",
   "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
   "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
   "observed_first_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
@@ -44,11 +44,14 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "strategy_checkpoint": {
     "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
     "required_after_corrected_forensic": true,
-    "before_any_second_c4_matrix_cell": true
-  }
+    "before_any_second_c4_matrix_cell": true,
+    "status": "TRIGGERED"
+  },
+  "forensic_result": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-RESULT-001",
+  "downstream_semantic_error": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE"
 }
