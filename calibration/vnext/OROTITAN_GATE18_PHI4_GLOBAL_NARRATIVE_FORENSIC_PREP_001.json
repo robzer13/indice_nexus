@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "STRATEGY_CHECKPOINT_DISCRIMINATING_FORENSIC",
-  "status": "PREPARED_NO_INFERENCE_REQUIRED",
+  "status": "EXECUTED_FORENSIC_COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SIGNAL",
   "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
   "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
   "checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
@@ -44,6 +44,15 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "OPEN_VERSIONED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_NO_EXECUTION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "forensic_result": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
+  "result_summary": {
+    "field_count": 13,
+    "missing_terminal_punctuation_count": 13,
+    "saturation_boundary_count": 0,
+    "schema_pass_after_safe_normalization": true,
+    "semantic_pass_after_safe_normalization": true,
+    "semantic_error_after_safe_normalization": null
+  }
 }
