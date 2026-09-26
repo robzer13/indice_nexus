@@ -1,0 +1,73 @@
+{
+  "format": "OROTITAN_GATE18_V1_1_SHADOW_REPLAY_MANIFEST_V0.1",
+  "manifest_id": "G18-PHASEC-V1_1-SHADOW-REPLAY-MANIFEST-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "VERSIONED_CONTRACT_ARCHITECTURE_REVIEW",
+  "status": "PREPARED_NO_INFERENCE",
+  "purpose": "Replay existing schema-valid artifacts under a two-layer shadow evaluation that separates raw presentation compliance from substantive deterministic semantics after punctuation-only normalization.",
+  "cases": [
+    {
+      "case_id": "PHI4_ADYEN_TARGETED_001",
+      "model": "phi4-mini:3.8b-q4_K_M",
+      "company": "Adyen",
+      "validator_mode": "TARGETED_ADYEN_COMPACT",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-25T191602555Z__ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_PHI4MINI_4096.json",
+      "recorded_status": "FAIL",
+      "recorded_semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE"
+    },
+    {
+      "case_id": "PHI4_STMICRO_FULL_001",
+      "model": "phi4-mini:3.8b-q4_K_M",
+      "company": "STMicroelectronics",
+      "validator_mode": "FULL",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+      "recorded_status": "FAIL",
+      "recorded_semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE"
+    },
+    {
+      "case_id": "QWEN3_4B_ADYEN_TARGETED_001",
+      "model": "qwen3:4b-instruct",
+      "company": "Adyen",
+      "validator_mode": "TARGETED_ADYEN_COMPACT",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-24T155615553Z__ADYEN_CLAIM_TARGET_CORE_001_LOCAL_COMPACT_QWEN4B_4096_TIMEOUT300.json",
+      "recorded_status": "FAIL",
+      "recorded_semantic_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE"
+    },
+    {
+      "case_id": "QWEN3_4B_BROOKFIELD_FULL_001",
+      "model": "qwen3:4b-instruct",
+      "company": "Brookfield Corporation",
+      "validator_mode": "FULL",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-25T112153186Z__C4_BROOKFIELD_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+      "recorded_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+      "recorded_semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS"
+    },
+    {
+      "case_id": "QWEN3_4B_RATIONAL_FULL_001",
+      "model": "qwen3:4b-instruct",
+      "company": "RATIONAL AG",
+      "validator_mode": "FULL",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-25T163411054Z__C4_RATIONAL_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+      "recorded_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+      "recorded_semantic_error": "VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS"
+    },
+    {
+      "case_id": "QWEN3_4B_STMICRO_FULL_CONTROL_001",
+      "model": "qwen3:4b-instruct",
+      "company": "STMicroelectronics",
+      "validator_mode": "FULL",
+      "artifact_path": "calibration/vnext/private-runs/2026-09-25T070506830Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_QWEN4B_CONTEXT16384_001.json",
+      "recorded_status": "PASS_AUTOMATED_HUMAN_ADJUDICATION_PENDING",
+      "recorded_semantic_error": null
+    }
+  ],
+  "boundaries": {
+    "source_artifact_mutation": false,
+    "new_inference": false,
+    "historical_result_reclassification": false,
+    "shadow_only": true,
+    "human_quality_reassessment": false
+  },
+  "next_action": "RUN_V1_1_SHADOW_REPLAY_NO_INFERENCE"
+}
