@@ -1,0 +1,44 @@
+{
+  "format": "OROTITAN_GATE18_V1_1_SHADOW_REPLAY_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-V1_1-SHADOW-REPLAY-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "VERSIONED_CONTRACT_ARCHITECTURE_REVIEW",
+  "status": "AUTHORIZED_NO_INFERENCE_SHADOW_REPLAY_IMPLEMENTATION_AND_EXECUTION",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-001",
+    "category": "DIAGNOSTIC_FORENSICS",
+    "user_reprompt_required": false
+  },
+  "scope": {
+    "implement_shadow_replay_tool": true,
+    "execute_against_existing_private_artifacts": true,
+    "new_model_inference": false,
+    "source_artifact_mutation": false,
+    "historical_v1_0_result_mutation": false,
+    "v1_1_contract_change": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "allowed_normalization": {
+    "operation": "APPEND_TERMINAL_PERIOD_ONLY_WHEN_ASSERT_COMPLETE_NARRATIVE_FIELD_IS_NONEMPTY_MISSING_TERMINAL_PUNCTUATION_AND_BELOW_SCHEMA_SAFE_LENGTH",
+    "lexical_change": false,
+    "meaning_change": false,
+    "placeholders": false,
+    "structural_repairs": false,
+    "evidence_ref_repairs": false
+  },
+  "required_outputs": [
+    "RAW_SCHEMA_VALIDITY",
+    "RAW_PRESENTATION_COMPLIANCE",
+    "RAW_V1_0_RECORDED_STATUS",
+    "NORMALIZED_COPY_SCHEMA_VALIDITY",
+    "NORMALIZED_COPY_DETERMINISTIC_SEMANTIC_RESULT",
+    "NORMALIZED_PATH_COUNT",
+    "SATURATION_BOUNDARY_COUNT",
+    "CASE_LEVEL_DISPOSITION_DELTA"
+  ],
+  "next_action": "IMPLEMENT_AND_RUN_NO_INFERENCE_V1_1_SHADOW_REPLAY_ON_EXISTING_QWEN3_4B_AND_PHI4_ARTIFACTS",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

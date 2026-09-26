@@ -38,7 +38,7 @@ test("v1.1 architecture review separates raw compliance, safe normalization, sem
     ),
   );
 
-  assert.equal(review.status, "REVIEW_OPEN_NO_IMPLEMENTATION_NO_INFERENCE");
+  assert.equal(review.status, "SHADOW_REPLAY_AUTHORIZED_PENDING_NO_INFERENCE");
   assert.equal(review.current_v1_0_architecture.validator_boundary.function, "assertCompleteNarrative");
   assert.deepEqual(
     review.current_v1_0_architecture.validator_boundary.checks,
@@ -58,7 +58,8 @@ test("v1.1 architecture review separates raw compliance, safe normalization, sem
   assert.equal(review.shadow_replay_requirements.no_new_model_inference, true);
   assert.equal(review.shadow_replay_requirements.no_source_artifact_mutation, true);
   assert.equal(review.authority.v1_1_contract_change_authorized, false);
-  assert.equal(review.authority.shadow_validator_implementation_authorized, false);
+  assert.equal(review.authority.shadow_validator_implementation_authorized, true);
+  assert.equal(review.authority.shadow_replay_execution_authorized, true);
   assert.equal(review.authority.model_inference_authorized, false);
   assert.equal(review.authority.second_phi4_c4_cell_authorized, false);
   assert.equal(review.authority.qwen3_5_download_authorized, false);
@@ -89,9 +90,10 @@ test("Phase C freezes model execution while v1.1 contract architecture review is
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.qwen3_5_download_authorized, false);
   assert.equal(entry.v1_1_contract_change_authorized, false);
-  assert.equal(entry.v1_1_shadow_validator_implementation_authorized, false);
+  assert.equal(entry.v1_1_shadow_validator_implementation_authorized, true);
+  assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
   assert.equal(
     entry.next_action,
-    "REVIEW_V1_1_CONTRACT_ARCHITECTURE_NO_INFERENCE",
+    "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
   );
 });
