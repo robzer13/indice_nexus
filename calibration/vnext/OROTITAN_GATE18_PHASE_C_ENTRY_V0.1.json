@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "REVIEW_V1_1_CONTRACT_ARCHITECTURE_NO_INFERENCE",
+  "next_action": "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1062,7 +1062,12 @@
   "phi4_mini_model_switch_authorized": false,
   "qwen3_5_download_authorized": false,
   "contract_architecture_review": "G18-PHASEC-V1_1-CONTRACT-ARCHITECTURE-REVIEW-001",
-  "contract_architecture_review_status": "OPEN_NO_IMPLEMENTATION_NO_INFERENCE",
+  "contract_architecture_review_status": "SHADOW_REPLAY_AUTHORIZED_PENDING_NO_INFERENCE",
   "v1_1_contract_change_authorized": false,
-  "v1_1_shadow_validator_implementation_authorized": false
+  "v1_1_shadow_validator_implementation_authorized": true,
+  "v1_1_shadow_replay_execution_authorized": true,
+  "v1_1_shadow_replay_authorization_id": "G18-PHASEC-V1_1-SHADOW-REPLAY-AUTH-001",
+  "v1_1_shadow_replay_manifest": "G18-PHASEC-V1_1-SHADOW-REPLAY-MANIFEST-001",
+  "v1_1_shadow_replay_runner": "scripts/vnext-gate18-v1-1-shadow-replay-existing-artifacts.ts",
+  "v1_1_shadow_replay_case_count": 6
 }
