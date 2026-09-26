@@ -4,7 +4,7 @@
   "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
-  "status": "CHECKPOINT_TRIGGERED_DISCRIMINATING_FORENSIC_SELECTED",
+  "status": "CHECKPOINT_COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SELECTED",
   "trigger_evidence": {
     "adyen": {
       "original_status": "FAIL",
@@ -89,6 +89,27 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "OPEN_VERSIONED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_NO_EXECUTION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "discriminating_forensic_result": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
+  "discriminating_forensic_outcome": {
+    "narrative_field_count": 13,
+    "missing_terminal_punctuation_count": 13,
+    "saturation_boundary_count": 0,
+    "schema_pass_after_safe_punctuation_normalization": true,
+    "semantic_pass_after_safe_punctuation_normalization": true,
+    "non_punctuation_deterministic_semantic_error_remaining": false
+  },
+  "final_checkpoint_decision": {
+    "action": "STOP_PHI4_V1_0_C4_EXPANSION_AND_OPEN_VERSIONED_CONTRACT_ARCHITECTURE_REVIEW_BEFORE_MORE_MODEL_TESTING",
+    "second_phi4_c4_cell_authorized": false,
+    "immediate_qwen3_5_pivot_authorized": false,
+    "contract_change_executed": false,
+    "rationale": [
+      "The original Phi-4 STMicro output violated explicit terminal-punctuation instructions in all 13 assertCompleteNarrative-governed fields.",
+      "After punctuation-only normalization on an in-memory copy, the full v1.0 schema and full deterministic semantic validator both pass.",
+      "No saturation boundary was hit, so the observed failure sequence is not explained by field-length exhaustion.",
+      "The v1.0 semantic validator currently mixes presentation-compliance checks with substantive semantic checks, so more model comparisons under the unchanged failure label would confound candidate quality with contract architecture."
+    ]
+  }
 }

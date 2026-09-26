@@ -47,7 +47,7 @@ test("Strategy checkpoint selects one zero-inference discriminator before any se
 
   assert.equal(
     decision.status,
-    "CHECKPOINT_TRIGGERED_DISCRIMINATING_FORENSIC_SELECTED",
+    "CHECKPOINT_COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SELECTED",
   );
   assert.equal(decision.diagnosis.same_defect_family_recurrent, true);
   assert.equal(decision.diagnosis.across_multiple_cases, true);
@@ -96,7 +96,7 @@ test("Global narrative forensic covers every assertCompleteNarrative field and p
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|127\.0\.0\.1:11434/);
 });
 
-test("Phase C blocks second Phi-4 C4 cell while strategy discriminator is pending", () => {
+test("Phase C keeps second Phi-4 C4 cell blocked after the strategy discriminator completes", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -106,7 +106,7 @@ test("Phase C blocks second Phi-4 C4 cell while strategy discriminator is pendin
 
   assert.equal(
     entry.phi4_mini_c4_strategy_checkpoint_status,
-    "TRIGGERED_DISCRIMINATING_FORENSIC_PENDING",
+    "COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SELECTED",
   );
   assert.equal(
     entry.phi4_mini_c4_strategy_checkpoint_decision,
@@ -118,6 +118,6 @@ test("Phase C blocks second Phi-4 C4 cell while strategy discriminator is pendin
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
+    "REVIEW_V1_1_CONTRACT_ARCHITECTURE_NO_INFERENCE",
   );
 });

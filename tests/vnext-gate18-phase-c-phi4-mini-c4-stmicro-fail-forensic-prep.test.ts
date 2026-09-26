@@ -108,6 +108,6 @@ test("Phase C preserves STMicro FAIL while strategy checkpoint supersedes the si
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.phi4_mini_c4_strategy_checkpoint_status,
-    "TRIGGERED_DISCRIMINATING_FORENSIC_PENDING",
+    "COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SELECTED",
   );
 });

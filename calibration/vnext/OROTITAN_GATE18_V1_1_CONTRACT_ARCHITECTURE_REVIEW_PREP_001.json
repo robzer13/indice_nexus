@@ -1,0 +1,139 @@
+{
+  "format": "OROTITAN_GATE18_V1_1_CONTRACT_ARCHITECTURE_REVIEW_PREP_V0.1",
+  "review_id": "G18-PHASEC-V1_1-CONTRACT-ARCHITECTURE-REVIEW-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "VERSIONED_CONTRACT_ARCHITECTURE_REVIEW",
+  "status": "REVIEW_OPEN_NO_IMPLEMENTATION_NO_INFERENCE",
+  "trigger": {
+    "checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+    "global_forensic_result": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
+    "observed_field_count": 13,
+    "observed_missing_terminal_punctuation_count": 13,
+    "observed_saturation_boundary_count": 0,
+    "full_schema_pass_after_punctuation_only_normalization": true,
+    "full_deterministic_semantic_pass_after_punctuation_only_normalization": true
+  },
+  "current_v1_0_architecture": {
+    "prompt_requirement": [
+      "Every narrative sentence field must be complete and self-contained.",
+      "Do not end a narrative sentence field without terminal punctuation."
+    ],
+    "schema_boundary": {
+      "narrative_string_max_chars": 180,
+      "terminal_punctuation_encoded_in_generation_schema": false
+    },
+    "validator_boundary": {
+      "function": "assertCompleteNarrative",
+      "checks": [
+        "TERMINAL_PUNCTUATION",
+        "LENGTH_LT_178"
+      ],
+      "called_from": "assertGate18PhaseBV10Semantics",
+      "semantic_completeness_actually_proven": false
+    },
+    "architecture_problem": [
+      "Presentation compliance is classified inside the semantic validator.",
+      "Narrative boundary saturation is classified inside the semantic validator.",
+      "A punctuation-only failure can block access to downstream substantive semantic checks.",
+      "The name assertCompleteNarrative overstates what the function proves."
+    ]
+  },
+  "preserved_truths": {
+    "phi4_raw_v1_0_stmicro_status": "FAIL",
+    "phi4_instruction_following_defect_real": true,
+    "phi4_instruction_following_defect": "13_OF_13_ASSERT_COMPLETE_NARRATIVE_FIELDS_MISSING_TERMINAL_PUNCTUATION",
+    "retroactive_pass_forbidden": true,
+    "human_quality_not_assessed": true,
+    "qwen3_4b_prior_critical_semantic_and_human_failures_not_erased": true,
+    "historical_v1_0_results_immutable": true
+  },
+  "candidate_architectures": [
+    {
+      "id": "A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION",
+      "components": [
+        "RAW_OUTPUT_SCHEMA_VALIDATION",
+        "RAW_PRESENTATION_COMPLIANCE_VALIDATION",
+        "STRICT_SAFE_PRESENTATION_NORMALIZER",
+        "SUBSTANTIVE_DETERMINISTIC_SEMANTIC_VALIDATION_ON_NORMALIZED_COPY",
+        "HUMAN_QUALITY_ADJUDICATION"
+      ],
+      "normalization_scope": "Append terminal punctuation only when the field is non-empty, below schema-safe length, and no lexical content is changed.",
+      "raw_failure_preserved": true,
+      "semantic_evaluation_unblocked": true,
+      "auditability": "HIGH",
+      "risk": "Normalization policy must remain extremely narrow or it becomes hidden repair."
+    },
+    {
+      "id": "B_KEEP_V1_0_STRICT_WITHOUT_NORMALIZATION",
+      "components": [
+        "RAW_SCHEMA_VALIDATION",
+        "CURRENT_COMBINED_SEMANTIC_VALIDATOR",
+        "HUMAN_QUALITY_ADJUDICATION"
+      ],
+      "raw_failure_preserved": true,
+      "semantic_evaluation_unblocked": false,
+      "auditability": "HIGH",
+      "risk": "Candidate comparisons remain confounded by cosmetic punctuation reliability."
+    },
+    {
+      "id": "C_ENFORCE_PUNCTUATION_IN_GENERATION_SCHEMA",
+      "components": [
+        "STRUCTURAL_PATTERN_CONSTRAINTS_ON_NARRATIVE_FIELDS",
+        "SEMANTIC_VALIDATION"
+      ],
+      "raw_failure_preserved": "NOT_COMPARABLE_WITH_V1_0_GENERATION_BEHAVIOR",
+      "semantic_evaluation_unblocked": true,
+      "auditability": "MEDIUM",
+      "risk": "Changes constrained decoding behavior and must be validated against Ollama/JSON-schema support before use."
+    },
+    {
+      "id": "D_REMOVE_SENTENCE_PUNCTUATION_REQUIREMENT_FROM_MODEL_CONTRACT",
+      "components": [
+        "SEMANTIC_CONTENT_ONLY_MODEL_FIELDS",
+        "DOWNSTREAM_PRESENTATION_RENDERING"
+      ],
+      "raw_failure_preserved": "NEW_VERSION_ONLY",
+      "semantic_evaluation_unblocked": true,
+      "auditability": "HIGH",
+      "risk": "May reduce human-readable self-containedness unless field semantics are redesigned."
+    }
+  ],
+  "review_criteria": [
+    "PRESERVE_RAW_MODEL_OUTPUT_AND_ORIGINAL_FAILURES",
+    "DO_NOT_HIDE_MODEL_INSTRUCTION_FOLLOWING_WEAKNESS",
+    "SEPARATE_COSMETIC_COMPLIANCE_FROM_SUBSTANTIVE_SEMANTICS",
+    "NO_LEXICAL_OR_MEANING_CHANGING_AUTO_REPAIR",
+    "PROVIDER_INDEPENDENT_DETERMINISTIC_BEHAVIOR",
+    "VERSIONED_CONTRACT_IDS_AND_HASHES",
+    "REPLAYABLE_ON_EXISTING_ARTIFACTS_WITHOUT_NEW_INFERENCE",
+    "HUMAN_QUALITY_REMAINS_SEPARATE_FROM_DETERMINISTIC_VALIDATION",
+    "HISTORICAL_V1_0_RESULTS_REMAIN_IMMUTABLE"
+  ],
+  "preferred_review_hypothesis": {
+    "architecture_id": "A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION",
+    "status": "HYPOTHESIS_NOT_IMPLEMENTED",
+    "reason": "It preserves the real raw instruction-following defect while preventing punctuation-only failures from masking substantive deterministic semantics.",
+    "required_next_experiment": "SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_WITHOUT_INFERENCE"
+  },
+  "shadow_replay_requirements": {
+    "no_new_model_inference": true,
+    "no_source_artifact_mutation": true,
+    "v1_0_result_immutability": true,
+    "report_raw_compliance_and_normalized_semantic_results_separately": true,
+    "include_qwen3_4b_and_phi4_existing_failures": true,
+    "purpose": "Measure how much candidate disposition changes when cosmetic narrative compliance is separated from substantive deterministic semantics."
+  },
+  "authority": {
+    "v1_1_contract_change_authorized": false,
+    "shadow_validator_implementation_authorized": false,
+    "model_inference_authorized": false,
+    "second_phi4_c4_cell_authorized": false,
+    "qwen3_5_download_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REVIEW_V1_1_ARCHITECTURE_AND_PREPARE_NO_INFERENCE_SHADOW_REPLAY_IF_JUSTIFIED",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
