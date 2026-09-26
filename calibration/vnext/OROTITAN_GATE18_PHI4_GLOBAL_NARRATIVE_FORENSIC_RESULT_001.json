@@ -102,12 +102,12 @@
     "safe_punctuation_normalization_exhausted_all_observed_deterministic_validator_failures_for_this_stmicro_run": true,
     "architecture_review_required": true
   },
-  "strategy_discriminator": {
+  "next_action": "OPEN_VERSIONED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_NO_EXECUTION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "strategic_discriminator": {
     "contract_architecture_review_signal": true,
     "model_pivot_signal": false,
     "second_phi4_c4_cell_authorized": false,
     "immediate_qwen3_5_pivot_authorized": false
-  },
-  "next_action": "OPEN_VERSIONED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_NO_EXECUTION",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  }
 }
