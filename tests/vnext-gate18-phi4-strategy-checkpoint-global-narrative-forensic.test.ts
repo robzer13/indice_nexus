@@ -116,8 +116,6 @@ test("Phase C keeps second Phi-4 C4 cell blocked after the strategy discriminato
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(
-    entry.next_action,
-    "REVIEW_V1_1_CONTRACT_ARCHITECTURE_NO_INFERENCE",
-  );
+  assert.equal(entry.v1_1_contract_change_authorized, false);
+  assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
 });
