@@ -57,6 +57,6 @@ test("Phase C requires the strategy checkpoint after the corrected STMicro foren
   assert.equal(entry.phi4_mini_c4_strategy_checkpoint_before_second_matrix_cell, true);
   assert.equal(
     entry.phi4_mini_c4_strategy_checkpoint_status,
-    "PENDING_CORRECTED_STMICRO_FORENSIC",
+    "TRIGGERED_DISCRIMINATING_FORENSIC_PENDING",
   );
 });
