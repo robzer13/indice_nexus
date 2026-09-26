@@ -71,7 +71,10 @@ test("Phi-4 STMicro finding-claim forensic normalizes only in-memory claims and 
   assert.match(raw, /STMicroelectronics/);
   assert.match(raw, /IN_MEMORY_DIAGNOSTIC_ONLY_NO_ARTIFACT_MUTATION_NO_INFERENCE/);
   assert.match(raw, /normalizedFindingIndexes/);
-  assert.match(raw, /Append one period only when finding\.claim terminal punctuation is absent/);
+  assert.match(raw, /parsed\.data\.priority_findings\.map/);
+  assert.match(raw, /normalized\.priority_findings\.forEach/);
+  assert.doesNotMatch(raw, /parsed\.data\.findings\.map/);
+  assert.match(raw, /Append one period only when priority_findings\[\*\]\.claim terminal punctuation is absent/);
   assert.match(raw, /gate18PhaseBV10OutputSchema\.safeParse/);
   assert.match(raw, /assertGate18PhaseBV10Semantics/);
   assert.doesNotMatch(raw, /fetch\(/);

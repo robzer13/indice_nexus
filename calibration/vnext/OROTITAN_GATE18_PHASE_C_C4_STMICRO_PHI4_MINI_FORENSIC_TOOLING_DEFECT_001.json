@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_PHI4_MINI_FORENSIC_TOOLING_DEFECT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-TOOLING-DEFECT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_SEMANTIC_FORENSICS",
+  "status": "TOOLING_DEFECT_IDENTIFIED_AND_FIXED_RERUN_REQUIRED",
+  "attempted_forensic": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-PREP-001",
+  "observed_error": {
+    "type": "TypeError",
+    "message": "Cannot read properties of undefined (reading 'map')",
+    "location": "scripts/vnext-gate18-phase-c-c4-stmicro-phi4-mini-finding-claim-punctuation-forensic.ts",
+    "failing_expression": "parsed.data.findings.map(...)"
+  },
+  "root_cause": {
+    "canonical_schema_field": "priority_findings",
+    "erroneous_tooling_field": "findings",
+    "classification": "FORENSIC_TOOLING_FIELD_NAME_BUG",
+    "model_defect": false,
+    "source_artifact_defect": false,
+    "validator_defect": false
+  },
+  "impact": {
+    "forensic_completed": false,
+    "diagnostic_normalization_executed": false,
+    "inference_executed": false,
+    "source_artifact_mutated": false,
+    "generated_content_published": false,
+    "original_stmicro_run_status_changed": false,
+    "model_capability_conclusion_changed": false
+  },
+  "remediation": {
+    "corrected_expression": "parsed.data.priority_findings.map(...)",
+    "corrected_normalization_expression": "normalized.priority_findings.forEach(...)",
+    "corrected_script": "scripts/vnext-gate18-phase-c-c4-stmicro-phi4-mini-finding-claim-punctuation-forensic.ts",
+    "rerun_required": true
+  },
+  "strategy_checkpoint": {
+    "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
+    "checkpoint_required_after_corrected_forensic": true,
+    "checkpoint_before_second_phi4_c4_cell": true
+  },
+  "next_action": "RERUN_CORRECTED_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

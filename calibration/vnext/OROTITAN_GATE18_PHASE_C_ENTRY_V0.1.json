@@ -1037,5 +1037,9 @@
   "phi4_mini_c4_stmicro_finding_claim_forensic_is_inference": false,
   "phi4_mini_c4_stmicro_retroactive_pass_allowed": false,
   "phi4_mini_c4_matrix_cells_completed": 0,
-  "phi4_mini_c4_matrix_cells_remaining": 5
+  "phi4_mini_c4_matrix_cells_remaining": 5,
+  "strategy_checkpoint_policy": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
+  "phi4_mini_c4_strategy_checkpoint_required_after_stmicro_forensic": true,
+  "phi4_mini_c4_strategy_checkpoint_before_second_matrix_cell": true,
+  "phi4_mini_c4_strategy_checkpoint_status": "PENDING_CORRECTED_STMICRO_FORENSIC"
 }
