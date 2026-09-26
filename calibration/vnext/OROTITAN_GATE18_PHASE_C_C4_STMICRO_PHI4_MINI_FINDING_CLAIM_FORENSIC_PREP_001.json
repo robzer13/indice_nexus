@@ -14,7 +14,11 @@
     "source_artifact_mutated": false,
     "inference_executed": false,
     "network_request_executed": false,
-    "model_loaded": false
+    "model_loaded": false,
+    "canonical_output_field": "priority_findings",
+    "tooling_bug_fixed": true,
+    "tooling_bug": "FORENSIC_USED_NONEXISTENT_FINDINGS_FIELD_INSTEAD_OF_PRIORITY_FINDINGS",
+    "tooling_bug_effect": "FORENSIC_CRASHED_BEFORE_DIAGNOSTIC_NORMALIZATION_NO_SOURCE_ARTIFACT_MUTATION_NO_INFERENCE"
   },
   "diagnostic_questions": [
     "Which finding claims fail terminal-punctuation completeness?",
@@ -41,5 +45,10 @@
     "publication_authority": false
   },
   "next_action": "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "strategy_checkpoint": {
+    "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
+    "required_after_corrected_forensic": true,
+    "before_any_second_c4_matrix_cell": true
+  }
 }
