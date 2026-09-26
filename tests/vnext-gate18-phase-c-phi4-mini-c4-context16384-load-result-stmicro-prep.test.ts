@@ -130,9 +130,8 @@ test("Phase C preserves the first Phi-4 STMicro C4 execution history after seman
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(entry.phi4_mini_c4_stmicro_result_status, "SEMANTIC_FAIL_FORENSICS_REQUIRED");
-  assert.equal(entry.phi4_mini_c4_stmicro_forensics_required, true);
   assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+    entry.phi4_mini_c4_stmicro_finding_claim_forensic_status,
+    "FORENSIC_COMPLETE_ADDITIONAL_NARRATIVE_COMPLETENESS_DEFECT_FOUND",
   );
 });

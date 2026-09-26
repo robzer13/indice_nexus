@@ -44,7 +44,7 @@ test("Phi-4 STMicro finding-claim forensic prep is read-only and non-inference",
     ),
   );
 
-  assert.equal(prep.status, "PREPARED_NO_INFERENCE_REQUIRED");
+  assert.equal(prep.status, "EXECUTED_FORENSIC_COMPLETE_ADDITIONAL_DEFECT_FOUND");
   assert.equal(
     prep.source_run_result,
     "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
@@ -85,7 +85,7 @@ test("Phi-4 STMicro finding-claim forensic normalizes only in-memory claims and 
   assert.match(raw, /inferenceExecuted: false/);
 });
 
-test("Phase C current state blocks broader Phi-4 C4 execution pending read-only STMicro forensic", () => {
+test("Phase C preserves STMicro FAIL while strategy checkpoint supersedes the single-field forensic", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -100,7 +100,6 @@ test("Phase C current state blocks broader Phi-4 C4 execution pending read-only 
     entry.phi4_mini_c4_stmicro_semantic_error,
     "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
   );
-  assert.equal(entry.phi4_mini_c4_stmicro_forensics_required, true);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_c4_matrix_cells_completed, 0);
@@ -108,7 +107,7 @@ test("Phase C current state blocks broader Phi-4 C4 execution pending read-only 
   assert.equal(entry.phi4_mini_automatic_retry_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
-    entry.next_action,
-    "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+    entry.phi4_mini_c4_strategy_checkpoint_status,
+    "TRIGGERED_DISCRIMINATING_FORENSIC_PENDING",
   );
 });

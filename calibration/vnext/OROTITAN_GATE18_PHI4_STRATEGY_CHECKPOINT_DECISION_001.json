@@ -1,0 +1,94 @@
+{
+  "format": "OROTITAN_GATE18_PHI4_STRATEGY_CHECKPOINT_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+  "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "CHECKPOINT_TRIGGERED_DISCRIMINATING_FORENSIC_SELECTED",
+  "trigger_evidence": {
+    "adyen": {
+      "original_status": "FAIL",
+      "original_error": "VNEXT_GATE18_V10_CONFLICT_IMPLICATION_INCOMPLETE",
+      "normalized_fields": [
+        "material_conflicts[C-005].implication",
+        "material_conflicts[C-010].implication"
+      ],
+      "downstream_full_targeted_validator_pass_after_punctuation_only_normalization": true
+    },
+    "stmicro": {
+      "original_status": "FAIL",
+      "original_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
+      "missing_terminal_punctuation_claim_count": 3,
+      "total_priority_finding_count": 3,
+      "next_error_after_claim_normalization": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE"
+    }
+  },
+  "diagnosis": {
+    "same_defect_family_recurrent": true,
+    "defect_family": "NARRATIVE_COMPLETENESS_TERMINAL_PUNCTUATION_OR_RELATED_COMPLETE_SENTENCE_CONTRACT",
+    "across_multiple_cases": true,
+    "across_multiple_output_fields": true,
+    "current_information_gain_from_field_by_field_forensics": "DECLINING",
+    "sunk_cost_continuation_rejected": true
+  },
+  "options_considered": [
+    {
+      "option": "CONTINUE_PHI4_C4_UNCHANGED",
+      "disposition": "REJECT_BEFORE_SECOND_CELL",
+      "reason": "Would spend additional inference on a candidate already showing recurrent narrative-contract failures without first determining whether the validator architecture is the root issue."
+    },
+    {
+      "option": "IMMEDIATE_SWITCH_TO_QWEN3_5_4B_SAME_CONTRACT",
+      "disposition": "PLAUSIBLE_BUT_DEFER_ONE_ZERO_INFERENCE_DIAGNOSTIC",
+      "reason": "A model pivot is rational if a non-cosmetic semantic defect remains, but one cheap in-memory global narrative normalization can first determine whether the current contract is over-penalizing cosmetic punctuation."
+    },
+    {
+      "option": "CHANGE_CONTRACT_OR_OUTPUT_ARCHITECTURE",
+      "disposition": "PLAUSIBLE_IF_GLOBAL_NORMALIZATION_CLEARS_ALL_SEMANTIC_ERRORS",
+      "reason": "If the exact full validator passes after punctuation-only normalization across all narrative fields, the evidence would support separating cosmetic normalization from substantive semantic validation in a new versioned contract."
+    },
+    {
+      "option": "SIMPLIFY_OR_SPLIT_MODEL_DEPENDENT_TASK",
+      "disposition": "HOLD",
+      "reason": "No evidence yet that task decomposition is required; first isolate contract-vs-model cause."
+    },
+    {
+      "option": "STOP_PHI4_AND_ADVANCE_ESCALATION_SEQUENCE",
+      "disposition": "TRIGGER_IF_NON_COSMETIC_ERROR_REMAINS_AFTER_GLOBAL_NARRATIVE_NORMALIZATION",
+      "next_candidate": "QWEN3_5_4B_OLLAMA_Q4_K_M"
+    }
+  ],
+  "selected_next_experiment": {
+    "type": "ZERO_INFERENCE_GLOBAL_NARRATIVE_COMPLETENESS_FORENSIC",
+    "scope": [
+      "priority_findings[*].claim",
+      "priority_findings[*].causal_link",
+      "priority_findings[*].evidence_qualifications[*].qualification",
+      "priority_findings[*].counterevidence_link",
+      "material_conflicts[*].implication",
+      "weak_link_candidates[*].why_uncertain",
+      "unresolved_points[*].question"
+    ],
+    "operation": "Inventory all narrative completeness violations, append one period only to missing-terminal-punctuation fields when schema-safe, then rerun full schema and full semantic validator once.",
+    "source_artifact_mutation": false,
+    "inference": false,
+    "expected_information_gain": "HIGH",
+    "marginal_execution_cost": "NEAR_ZERO"
+  },
+  "decision_tree": {
+    "if_full_validator_passes_after_global_punctuation_only_normalization": "STOP_PHI4_V1_0_C4_EXPANSION_AND_OPEN_VERSIONED_CONTRACT_ARCHITECTURE_REVIEW_BEFORE_MORE_MODEL_TESTING",
+    "if_non_punctuation_or_non_narrative_semantic_error_remains": "STOP_PHI4_C4_EXPANSION_AND_ADVANCE_TO_QWEN3_5_4B_HARDWARE_PREFLIGHT_UNDER_SAME_V1_0_CONTRACT",
+    "if_saturation_boundary_error_remains": "OPEN_CONTRACT_ARCHITECTURE_REVIEW_BEFORE_MODEL_PIVOT_BECAUSE_COMPLETENESS_RULE_AND_LENGTH_BOUNDARY_ARE_COUPLED"
+  },
+  "constraints": {
+    "second_phi4_c4_cell_authorized": false,
+    "phi4_retry_authorized": false,
+    "model_switch_executed": false,
+    "contract_change_executed": false,
+    "inference_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

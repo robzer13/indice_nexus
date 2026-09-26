@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "POST_C4_PHI4_MINI_STMICRO_SEMANTIC_FAIL_FORENSICS_PENDING",
+  "status": "POST_C4_PHI4_MINI_STRATEGY_CHECKPOINT_GLOBAL_NARRATIVE_FORENSIC_PENDING",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -111,7 +111,7 @@
       "license": "MIT",
       "observed_ollama_artifact_size": "2.5GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_1",
-      "admission_state": "C4_STMICRO_SEMANTIC_FAIL_FORENSICS_PENDING_WITH_RELIABILITY_CARRY",
+      "admission_state": "STRATEGY_CHECKPOINT_GLOBAL_NARRATIVE_FORENSIC_PENDING",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
       "source_url": "https://ollama.com/library/phi4-mini/tags",
@@ -160,7 +160,11 @@
       "c4_stmicro_schema_valid": true,
       "c4_stmicro_semantic_valid": false,
       "c4_stmicro_semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
-      "c4_stmicro_forensics_required": true
+      "c4_stmicro_forensics_required": false,
+      "c4_stmicro_finding_claim_forensic_result": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-RESULT-001",
+      "c4_stmicro_downstream_error_after_claim_normalization": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE",
+      "strategy_checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+      "second_c4_cell_authorized": false
     },
     {
       "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
