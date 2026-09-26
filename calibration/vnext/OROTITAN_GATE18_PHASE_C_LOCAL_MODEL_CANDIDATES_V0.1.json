@@ -1,6 +1,6 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_CANDIDATES_V0.1",
-  "status": "POST_C4_PHI4_MINI_STRATEGY_CHECKPOINT_GLOBAL_NARRATIVE_FORENSIC_PENDING",
+  "status": "POST_C4_PHI4_MINI_CONTRACT_ARCHITECTURE_REVIEW_OPEN",
   "target_economics": {
     "external_model_api_cost_per_call_usd": 0,
     "note": "Local execution may still consume electricity, storage, RAM/VRAM, CPU/GPU time and owned hardware."
@@ -111,7 +111,7 @@
       "license": "MIT",
       "observed_ollama_artifact_size": "2.5GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_1",
-      "admission_state": "STRATEGY_CHECKPOINT_GLOBAL_NARRATIVE_FORENSIC_PENDING",
+      "admission_state": "C4_EXPANSION_STOPPED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_OPEN",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Same observed artifact-size class as Qwen3 4B but a different model family; selected first for bounded hardware preflight to maximize information gain without increasing weight size.",
       "source_url": "https://ollama.com/library/phi4-mini/tags",
@@ -164,7 +164,15 @@
       "c4_stmicro_finding_claim_forensic_result": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-RESULT-001",
       "c4_stmicro_downstream_error_after_claim_normalization": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE",
       "strategy_checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
-      "second_c4_cell_authorized": false
+      "second_c4_cell_authorized": false,
+      "c4_global_narrative_forensic_result": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
+      "c4_global_narrative_missing_punctuation_count": 13,
+      "c4_global_narrative_semantic_pass_after_normalization": true,
+      "raw_v1_0_stmicro_status_remains": "FAIL",
+      "systematic_instruction_following_defect": true,
+      "contract_architecture_review": "G18-PHASEC-V1_1-CONTRACT-ARCHITECTURE-REVIEW-001",
+      "model_capability_failure_concluded": false,
+      "clean_candidate_pass_concluded": false
     },
     {
       "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
@@ -176,7 +184,7 @@
       "license": "Apache-2.0",
       "observed_ollama_artifact_size": "3.4GB",
       "role": "POST_C4_ESCALATION_CANDIDATE_2",
-      "admission_state": "STATIC_RESEARCHED_NOT_DOWNLOADED",
+      "admission_state": "STATIC_RESEARCHED_NOT_DOWNLOADED_CONTRACT_REVIEW_PRECEDES_PIVOT",
       "planned_runtime": "OLLAMA_LOCAL",
       "rationale": "Current Qwen successor in the same parameter class; artifact is larger than the current Qwen3 4B candidate so memory fit must be proven before inference.",
       "source_url": "https://ollama.com/library/qwen3.5/tags"
