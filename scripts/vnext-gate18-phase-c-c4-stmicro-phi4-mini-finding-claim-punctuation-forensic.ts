@@ -127,7 +127,7 @@ function main(): void {
     artifactReader(privateRepoRoot),
   );
 
-  const originalFindingSummary = parsed.data.findings.map(
+  const originalFindingSummary = parsed.data.priority_findings.map(
     (item, index) => ({
       findingIndex: index + 1,
       claimLength: item.claim.trim().length,
@@ -138,7 +138,7 @@ function main(): void {
   const normalized = structuredClone(parsed.data);
   const normalizedFindingIndexes: number[] = [];
 
-  normalized.findings.forEach((finding, index) => {
+  normalized.priority_findings.forEach((finding, index) => {
     const trimmed = finding.claim.trim();
     if (!terminalPunctuation(trimmed)) {
       finding.claim = `${trimmed}.`;
@@ -181,7 +181,7 @@ function main(): void {
         diagnosticNormalization: {
           normalizedFindingIndexes,
           normalizationRule:
-            "Append one period only when finding.claim terminal punctuation is absent.",
+            "Append one period only when priority_findings[*].claim terminal punctuation is absent.",
           sourceArtifactMutated: false,
           generatedContentPublished: false,
         },
