@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_STMICRO_PHI4_MINI_FINDING_CLAIM_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ADDITIONAL_NARRATIVE_COMPLETENESS_DEFECT_FOUND",
+  "mode": "IN_MEMORY_DIAGNOSTIC_ONLY_NO_ARTIFACT_MUTATION_NO_INFERENCE",
+  "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+  "original": {
+    "priority_findings": [
+      {
+        "finding_index": 1,
+        "claim_length": 85,
+        "ends_with_terminal_punctuation": false
+      },
+      {
+        "finding_index": 2,
+        "claim_length": 117,
+        "ends_with_terminal_punctuation": false
+      },
+      {
+        "finding_index": 3,
+        "claim_length": 81,
+        "ends_with_terminal_punctuation": false
+      }
+    ]
+  },
+  "diagnostic_normalization": {
+    "normalized_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "normalization_rule": "Append one period only when priority_findings[*].claim terminal punctuation is absent.",
+    "source_artifact_mutated": false,
+    "generated_content_published": false
+  },
+  "downstream_validation": {
+    "full_schema_validator_executed_on_in_memory_copy": true,
+    "schema_pass": true,
+    "schema_error": null,
+    "full_semantic_validator_executed_on_in_memory_copy": true,
+    "semantic_pass": false,
+    "semantic_error": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE"
+  },
+  "interpretation_boundary": {
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "inference_executed": false,
+    "model_capability_conclusion_made": false,
+    "punctuation_only_defect_set_exhausted": false,
+    "additional_narrative_completeness_defect_observed": true
+  },
+  "strategic_significance": {
+    "recurrent_narrative_completeness_failure_across_fields": true,
+    "recurrent_narrative_completeness_failure_across_cases": true,
+    "adyen_precedent": "MISSING_TERMINAL_PUNCTUATION_ON_C005_AND_C010_IMPLICATIONS",
+    "stmicro_current_sequence": [
+      "FINDING_CLAIM_INCOMPLETE",
+      "CAUSAL_LINK_INCOMPLETE_AFTER_CLAIM_PUNCTUATION_NORMALIZATION"
+    ],
+    "second_c4_cell_should_not_start_before_strategy_checkpoint": true
+  },
+  "next_action": "RUN_ONE_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_THEN_DECIDE_CONTRACT_REVIEW_VS_MODEL_PIVOT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
