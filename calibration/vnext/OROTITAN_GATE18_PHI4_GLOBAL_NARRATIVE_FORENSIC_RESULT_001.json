@@ -1,0 +1,113 @@
+{
+  "format": "OROTITAN_GATE18_PHI4_GLOBAL_NARRATIVE_COMPLETENESS_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "STRATEGY_CHECKPOINT_DISCRIMINATING_FORENSIC",
+  "status": "FORENSIC_COMPLETE_CONTRACT_ARCHITECTURE_REVIEW_SIGNAL",
+  "mode": "IN_MEMORY_DIAGNOSTIC_ONLY_NO_ARTIFACT_MUTATION_NO_INFERENCE",
+  "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+  "checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+  "inventory": {
+    "field_count": 13,
+    "missing_terminal_punctuation_count": 13,
+    "saturation_boundary_count": 0,
+    "missing_terminal_punctuation_ratio": 1,
+    "fields": [
+      {
+        "path": "priority_findings[1].claim",
+        "length": 85
+      },
+      {
+        "path": "priority_findings[1].causal_link",
+        "length": 5
+      },
+      {
+        "path": "priority_findings[1].evidence_qualifications[1].qualification",
+        "length": 60
+      },
+      {
+        "path": "priority_findings[2].claim",
+        "length": 117
+      },
+      {
+        "path": "priority_findings[2].causal_link",
+        "length": 5
+      },
+      {
+        "path": "priority_findings[2].evidence_qualifications[1].qualification",
+        "length": 60
+      },
+      {
+        "path": "priority_findings[3].claim",
+        "length": 81
+      },
+      {
+        "path": "priority_findings[3].causal_link",
+        "length": 5
+      },
+      {
+        "path": "priority_findings[3].evidence_qualifications[1].qualification",
+        "length": 67
+      },
+      {
+        "path": "material_conflicts[1].implication",
+        "length": 51
+      },
+      {
+        "path": "weak_link_candidates[1].why_uncertain",
+        "length": 55
+      },
+      {
+        "path": "weak_link_candidates[2].why_uncertain",
+        "length": 65
+      },
+      {
+        "path": "unresolved_points[1].question",
+        "length": 125
+      }
+    ]
+  },
+  "diagnostic_normalization": {
+    "normalized_count": 13,
+    "operation": "APPEND_ONE_PERIOD_ONLY_TO_ASSERT_COMPLETE_NARRATIVE_FIELDS_MISSING_TERMINAL_PUNCTUATION",
+    "blocked_by_schema_max_paths": [],
+    "source_artifact_mutated": false,
+    "generated_content_published": false
+  },
+  "downstream_validation": {
+    "full_schema_validator_executed_on_in_memory_copy": true,
+    "schema_pass": true,
+    "schema_error": null,
+    "full_semantic_validator_executed_on_in_memory_copy": true,
+    "semantic_pass": true,
+    "semantic_error": null
+  },
+  "interpretation": {
+    "original_run_status_changed": false,
+    "retroactive_pass_allowed": false,
+    "inference_executed": false,
+    "substantive_deterministic_semantic_defect_observed_after_safe_punctuation_normalization": false,
+    "systematic_instruction_following_defect_observed": true,
+    "instruction_following_defect": "ALL_13_ASSERT_COMPLETE_NARRATIVE_FIELDS_MISSING_TERMINAL_PUNCTUATION",
+    "human_quality_assessed": false,
+    "model_capability_failure_concluded": false,
+    "clean_candidate_pass_concluded": false
+  },
+  "architectural_finding": {
+    "current_v1_0_issue": "assertCompleteNarrative is executed inside assertGate18PhaseBV10Semantics but checks terminal punctuation and saturation only.",
+    "semantic_and_presentation_compliance_are_conflated": true,
+    "current_error_codes_can_label_cosmetic_punctuation_failures_as_semantic_failures": true,
+    "safe_punctuation_normalization_exhausted_all_observed_deterministic_validator_failures_for_this_stmicro_run": true,
+    "architecture_review_required": true
+  },
+  "strategy_discriminator": {
+    "contract_architecture_review_signal": true,
+    "model_pivot_signal": false,
+    "second_phi4_c4_cell_authorized": false,
+    "immediate_qwen3_5_pivot_authorized": false
+  },
+  "next_action": "OPEN_VERSIONED_V1_1_CONTRACT_ARCHITECTURE_REVIEW_NO_EXECUTION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
