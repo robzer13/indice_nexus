@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "VERSIONED_CONTRACT_ARCHITECTURE_REVIEW",
-  "status": "REVIEW_OPEN_NO_IMPLEMENTATION_NO_INFERENCE",
+  "status": "SHADOW_REPLAY_AUTHORIZED_PENDING_NO_INFERENCE",
   "trigger": {
     "checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
     "global_forensic_result": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-RESULT-001",
@@ -126,14 +126,25 @@
   },
   "authority": {
     "v1_1_contract_change_authorized": false,
-    "shadow_validator_implementation_authorized": false,
+    "shadow_validator_implementation_authorized": true,
     "model_inference_authorized": false,
     "second_phi4_c4_cell_authorized": false,
     "qwen3_5_download_authorized": false,
     "model_switch_authorized": false,
     "production_mutation": false,
-    "publication_authority": false
+    "publication_authority": false,
+    "shadow_replay_execution_authorized": true
   },
-  "next_action": "REVIEW_V1_1_ARCHITECTURE_AND_PREPARE_NO_INFERENCE_SHADOW_REPLAY_IF_JUSTIFIED",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "shadow_replay": {
+    "authorization_id": "G18-PHASEC-V1_1-SHADOW-REPLAY-AUTH-001",
+    "manifest_id": "G18-PHASEC-V1_1-SHADOW-REPLAY-MANIFEST-001",
+    "runner": "scripts/vnext-gate18-v1-1-shadow-replay-existing-artifacts.ts",
+    "case_count": 6,
+    "new_inference": false,
+    "source_artifact_mutation": false,
+    "historical_v1_0_result_mutation": false,
+    "contract_implementation": false
+  }
 }
