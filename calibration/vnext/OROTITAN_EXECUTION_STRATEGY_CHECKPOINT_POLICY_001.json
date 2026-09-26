@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_EXECUTION_STRATEGY_CHECKPOINT_POLICY_V0.1",
+  "policy_id": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
+  "status": "ACTIVE",
+  "purpose": "Prevent local optimization traps, sunk-cost continuation, and forensic overfitting during OroTitan execution.",
+  "trigger_conditions": [
+    "SAME_DEFECT_FAMILY_RECURS_ACROSS_MULTIPLE_PROBES_OR_MATRIX_CELLS",
+    "TWO_OR_MORE_CONSECUTIVE_FORENSIC_STEPS_ON_ONE_CANDIDATE_WITH_DECLINING_INFORMATION_GAIN",
+    "NEXT_LOCAL_FIX_DOES_NOT_MATERIALLY_CHANGE_PRODUCTION_RELIABILITY_OR_DECISION_QUALITY",
+    "ESTIMATED_COST_OF_CONTINUING_CURRENT_PATH_EXCEEDS_COST_OF_TESTING_A_PLAUSIBLE_ALTERNATIVE",
+    "PIPELINE_COMPLEXITY_INCREASES_FASTER_THAN DECISION_RELEVANT_INFORMATION"
+  ],
+  "checkpoint_questions": [
+    "Are we learning something decision-relevant, or only making the current path pass its own machinery?",
+    "Would a different model, contract, validator split, or pipeline architecture solve the root problem more directly?",
+    "Is the defect candidate-specific, prompt-contract-specific, validator-specific, or architecture-induced?",
+    "What is the cheapest experiment that could falsify the current path?",
+    "What evidence would justify continuing versus pivoting?"
+  ],
+  "options_to_compare": [
+    "CONTINUE_CURRENT_CANDIDATE_UNCHANGED",
+    "CHANGE_MODEL_WITH_SAME_CONTRACT",
+    "CHANGE_CONTRACT_OR_OUTPUT_ARCHITECTURE",
+    "SIMPLIFY_OR_SPLIT_MODEL_DEPENDENT_TASK",
+    "STOP_CANDIDATE_AND_ADVANCE_ESCALATION_SEQUENCE"
+  ],
+  "decision_rules": {
+    "sunk_cost_is_not_a_reason_to_continue": true,
+    "prior_investment_does_not_raise_candidate_merit": true,
+    "preserve_original_failures": true,
+    "no_retroactive_pass": true,
+    "prefer_information_gain_per_execution_cost": true,
+    "require_explicit_reason_for_continuing_after_trigger": true
+  },
+  "current_application": {
+    "candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "checkpoint_timing": "AFTER_CORRECTED_STMICRO_FINDING_CLAIM_FORENSIC_BEFORE_ANY_SECOND_C4_MATRIX_CELL",
+    "rationale": "Phi-4 mini has already shown one confirmed terminal-punctuation reliability defect on Adyen and a new first-error finding-claim completeness failure on the first full C4 cell. The corrected forensic should determine whether this is the same shallow reliability class or evidence of broader semantic unreliability before more C4 cells are spent."
+  },
+  "authority": {
+    "automatic_model_switch": false,
+    "automatic_contract_change": false,
+    "automatic_candidate_rejection": false,
+    "strategy_review_required_at_trigger": true
+  }
+}
