@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RUN_LOCAL_READ_ONLY_STMICRO_FINDING_CLAIM_PUNCTUATION_FORENSIC",
+  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1031,7 +1031,7 @@
   "phi4_mini_c4_stmicro_schema_valid": true,
   "phi4_mini_c4_stmicro_semantic_valid": false,
   "phi4_mini_c4_stmicro_semantic_error": "VNEXT_GATE18_V10_FINDING_CLAIM_INCOMPLETE",
-  "phi4_mini_c4_stmicro_forensics_required": true,
+  "phi4_mini_c4_stmicro_forensics_required": false,
   "phi4_mini_c4_stmicro_finding_claim_forensic_prep": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-PREP-001",
   "phi4_mini_c4_stmicro_finding_claim_forensic_script": "scripts/vnext-gate18-phase-c-c4-stmicro-phi4-mini-finding-claim-punctuation-forensic.ts",
   "phi4_mini_c4_stmicro_finding_claim_forensic_is_inference": false,
@@ -1041,5 +1041,13 @@
   "strategy_checkpoint_policy": "OROTITAN-EXECUTION-STRATEGY-CHECKPOINT-POLICY-001",
   "phi4_mini_c4_strategy_checkpoint_required_after_stmicro_forensic": true,
   "phi4_mini_c4_strategy_checkpoint_before_second_matrix_cell": true,
-  "phi4_mini_c4_strategy_checkpoint_status": "PENDING_CORRECTED_STMICRO_FORENSIC"
+  "phi4_mini_c4_strategy_checkpoint_status": "TRIGGERED_DISCRIMINATING_FORENSIC_PENDING",
+  "phi4_mini_c4_stmicro_finding_claim_forensic_result": "G18-PHASEC-C4-STM-PHI4MINI-FINDING-CLAIM-FORENSIC-RESULT-001",
+  "phi4_mini_c4_stmicro_finding_claim_forensic_status": "FORENSIC_COMPLETE_ADDITIONAL_NARRATIVE_COMPLETENESS_DEFECT_FOUND",
+  "phi4_mini_c4_stmicro_claims_missing_terminal_punctuation_count": 3,
+  "phi4_mini_c4_stmicro_downstream_semantic_error_after_claim_normalization": "VNEXT_GATE18_V10_CAUSAL_LINK_INCOMPLETE",
+  "phi4_mini_c4_strategy_checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+  "phi4_mini_global_narrative_forensic_prep": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-PREP-001",
+  "phi4_mini_global_narrative_forensic_script": "scripts/vnext-gate18-phase-c-phi4-global-narrative-completeness-forensic.ts",
+  "phi4_mini_second_c4_cell_authorized": false
 }
