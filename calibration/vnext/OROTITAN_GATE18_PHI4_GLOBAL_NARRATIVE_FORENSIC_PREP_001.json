@@ -1,0 +1,49 @@
+{
+  "format": "OROTITAN_GATE18_PHI4_GLOBAL_NARRATIVE_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-PHI4-GLOBAL-NARRATIVE-FORENSIC-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "STRATEGY_CHECKPOINT_DISCRIMINATING_FORENSIC",
+  "status": "PREPARED_NO_INFERENCE_REQUIRED",
+  "source_run_result": "G18-PHASEC-C4-STM-PHI4MINI-CONTEXT16384-RUN-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-09-25T203049892Z__C4_STMICRO_MOAT_EVIDENCE_AUDIT_PHI4MINI_CONTEXT16384_001.json",
+  "checkpoint_decision": "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
+  "forensic": {
+    "script": "scripts/vnext-gate18-phase-c-phi4-global-narrative-completeness-forensic.ts",
+    "operation": "INVENTORY_ALL_ASSERT_COMPLETE_NARRATIVE_FIELDS_NORMALIZE_ONLY_MISSING_TERMINAL_PUNCTUATION_WHEN_SCHEMA_SAFE_REVALIDATE_SCHEMA_AND_FULL_SEMANTICS_ONCE",
+    "source_artifact_mutated": false,
+    "inference_executed": false,
+    "network_request_executed": false,
+    "model_loaded": false
+  },
+  "narrative_fields": [
+    "priority_findings[*].claim",
+    "priority_findings[*].causal_link",
+    "priority_findings[*].evidence_qualifications[*].qualification",
+    "priority_findings[*].counterevidence_link",
+    "material_conflicts[*].implication",
+    "weak_link_candidates[*].why_uncertain",
+    "unresolved_points[*].question"
+  ],
+  "decision_use": {
+    "full_semantic_pass_after_only_punctuation_normalization": "CONTRACT_ARCHITECTURE_REVIEW",
+    "non_punctuation_semantic_error_remains": "PIVOT_TO_QWEN3_5_4B_HARDWARE_PREFLIGHT",
+    "saturation_error_remains": "CONTRACT_ARCHITECTURE_REVIEW"
+  },
+  "interpretation_boundary": {
+    "original_run_remains_fail": true,
+    "retroactive_pass_allowed": false,
+    "model_capability_conclusion_deferred_until_checkpoint_result": true,
+    "second_phi4_c4_cell_blocked": true
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_switch_authorized": false,
+    "contract_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_GLOBAL_NARRATIVE_COMPLETENESS_DISCRIMINATING_FORENSIC_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
