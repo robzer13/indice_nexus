@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Gemma 3 4B download authorization permits one pinned download and forbids load/inference", () => {
+test("Gemma 3 4B download authorization is consumed after one pinned download", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_DOWNLOAD_AUTH_001.json",
@@ -10,7 +10,7 @@ test("Gemma 3 4B download authorization permits one pinned download and forbids 
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY");
+  assert.equal(auth.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(auth.user_authorization.explicit, true);
   assert.equal(auth.user_authorization.gemma_terms_accepted, true);
   assert.equal(auth.model.ollama_model_name, "gemma3:4b-it-q4_K_M");
@@ -20,6 +20,11 @@ test("Gemma 3 4B download authorization permits one pinned download and forbids 
   assert.equal(auth.constraints.inference_after_download, false);
   assert.equal(auth.constraints.load_smoke_after_download, false);
   assert.equal(auth.constraints.automatic_retry, false);
+  assert.equal(auth.consumption.consumed, true);
+  assert.equal(auth.consumption.result_status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(auth.authority.gemma3_download_authorized, false);
+  assert.equal(auth.authority.gemma3_load_smoke_authorized, false);
+  assert.equal(auth.authority.gemma3_inference_authorized, false);
 });
 
 test("Gemma 3 4B download runner pulls exact tag and contains no generation or load-smoke execution", () => {
@@ -41,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances explicitly to the Gemma 3 pinned download checkpoint", () => {
+test("Phase C advances explicitly from Gemma 3 download to context4096 load-only", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -49,11 +54,14 @@ test("Phase C advances explicitly to the Gemma 3 pinned download checkpoint", ()
     ),
   );
 
-  assert.equal(entry.next_action, "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY");
+  assert.equal(
+    entry.next_action,
+    "EXECUTE_GEMMA3_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  );
   assert.equal(entry.gemma3_terms_user_accepted, true);
-  assert.equal(entry.gemma3_download_authorized, true);
-  assert.equal(entry.gemma3_download_executed, false);
-  assert.equal(entry.gemma3_load_smoke_authorized, false);
+  assert.equal(entry.gemma3_download_authorized, false);
+  assert.equal(entry.gemma3_download_executed, true);
+  assert.equal(entry.gemma3_context4096_load_authorized, true);
+  assert.equal(entry.gemma3_context4096_load_authorized_run_count, 1);
   assert.equal(entry.gemma3_inference_authorized, false);
 });
-
