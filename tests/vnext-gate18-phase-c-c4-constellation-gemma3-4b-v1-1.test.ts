@@ -23,7 +23,7 @@ test("Gemma 3 first C4 discriminator is same-packet Constellation", () => {
   assert.equal(d.boundaries.model_ranking_authority, false);
 });
 
-test("Gemma 3 Constellation authorization permits exactly one local C4 inference", () => {
+test("Gemma 3 Constellation authorization is consumed after one local C4 inference", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_AUTH_001.json",
@@ -31,8 +31,8 @@ test("Gemma 3 Constellation authorization permits exactly one local C4 inference
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.company, "Constellation Software");
   assert.equal(a.c4_inference.model_name, "gemma3:4b-it-q4_K_M");
   assert.equal(
@@ -43,7 +43,8 @@ test("Gemma 3 Constellation authorization permits exactly one local C4 inference
   assert.equal(a.c4_inference.max_output_tokens, 1024);
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
+  assert.equal(a.execution_result, "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-RESULT-001");
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.gemma_terms_boundary.assist_only, true);
   assert.equal(a.gemma_terms_boundary.autonomous_financial_decision_authority, false);
@@ -94,4 +95,28 @@ test("Gemma 3 Constellation prep keeps generation and validation contracts uncha
   assert.equal(p.contract.validation_contract, "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1");
   assert.equal(p.contract.raw_output_preserved, true);
   assert.equal(p.contract.human_adjudication_required, true);
+});
+
+
+test("Gemma 3 Constellation result is a schema-valid deterministic semantic failure", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT");
+  assert.equal(r.execution.done_reason, "stop");
+  assert.equal(r.execution.eval_count, 683);
+  assert.equal(r.execution.schema_valid, true);
+  assert.equal(r.execution.semantic_valid, false);
+  assert.equal(
+    r.execution.semantic_error,
+    "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+  );
+  assert.equal(r.validation_v1_1.normalized_path_count, 13);
+  assert.equal(r.validation_v1_1.substantive_status, "FAIL");
+  assert.equal(r.interpretation.retry_authorized, false);
+  assert.equal(r.authority.additional_inference_authorized, false);
 });
