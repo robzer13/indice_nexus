@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "PASS_PINNED_DOWNLOAD_ONLY",
+  "model": {
+    "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "qwen3.5:4b-q4_K_M",
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "size_bytes": 3389983735,
+    "format": "gguf",
+    "ollama_reported_family": "qwen35",
+    "ollama_reported_parameter_size": "4.7B",
+    "expected_product_label": "Qwen3.5-4B",
+    "quantization": "Q4_K_M"
+  },
+  "verification": {
+    "exact_tag_present": true,
+    "digest_captured": true,
+    "expected_digest_prefix_matched": true,
+    "api_show_reachable": true,
+    "expected_quantization_matched": true
+  },
+  "safety": {
+    "load_smoke_executed": false,
+    "prompt_provided": false,
+    "model_inference_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "paid_execution_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "identity_pin_status": "PASS",
+    "runtime_memory_fit": "NOT_YET_PROVEN",
+    "semantic_quality_assessed": false,
+    "parameter_metadata_note": "Exact tag, full digest and Q4_K_M quantization matched the authorized target. Ollama reported parameterSize=4.7B; this observed metadata is retained without treating it as an identity failure."
+  },
+  "authority": {
+    "download_authorized": false,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false
+  },
+  "next_action": "REQUEST_SEPARATE_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
