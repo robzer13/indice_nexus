@@ -125,7 +125,7 @@ test("Qwen3 8B pinned download result is exact and non-inferential", () => {
   assert.equal(r.safety.model_inference_executed, false);
 });
 
-test("Qwen3 8B context4096 load-only authorization allows exactly one guarded run", () => {
+test("Qwen3 8B context4096 load-only authorization is consumed after measured pass", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_AUTH_001.json",
@@ -133,11 +133,12 @@ test("Qwen3 8B context4096 load-only authorization allows exactly one guarded ru
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 4096);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
+  assert.equal(a.execution_result, "G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-RESULT-001");
   assert.equal(a.hardware_boundary.risk_class, "HIGH_MEMORY_PRESSURE_EXPECTED");
   assert.equal(a.hardware_boundary.direct_inference_forbidden, true);
 });
@@ -159,6 +160,58 @@ test("Qwen3 8B context4096 runner is exact-digest load-only", () => {
   assert.match(raw, /keep_alive:\s*"2m"/);
   assert.match(raw, /keep_alive:\s*0/);
   assert.match(raw, /semanticInferenceExecuted:\s*false/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
+  assert.doesNotMatch(raw, /prompt\s*:/);
+});
+
+
+test("Qwen3 8B context4096 result records critical RAM pressure and only justifies diagnostic 8192 load", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 4096);
+  assert.equal(r.measured.loaded_free_ram_gib, 0.21);
+  assert.equal(r.measured.loaded_vram_used_mib, 2279);
+  assert.equal(r.measured.loaded_vram_free_mib, 1684);
+  assert.equal(r.measured.processor_split, "61%/39% CPU/GPU");
+  assert.equal(r.interpretation.hardware_fit_at_4096, "PASS_WITH_CRITICAL_RAM_PRESSURE");
+  assert.equal(r.interpretation.inference_fit_proven, false);
+  assert.equal(r.interpretation.context8192_load_only_justified, true);
+  assert.equal(r.interpretation.context16384_authorized, false);
+  assert.equal(r.interpretation.direct_inference_authorized, false);
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 8192);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.safety_rationale.risk_class, "CRITICAL_RAM_PRESSURE_DIAGNOSTIC_ONLY");
+  assert.equal(a.safety_rationale.context16384_not_pre_authorized, true);
+});
+
+test("Qwen3 8B context8192 runner is exact-digest load-only", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context8192-load-smoke.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /qwen3:8b-q4_K_M/);
+  assert.match(raw, /CONTEXT_TOKENS = 8192/);
+  assert.match(raw, /500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41/);
+  assert.match(raw, /AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED/);
+  assert.match(raw, /keep_alive:\s*"2m"/);
+  assert.match(raw, /keep_alive:\s*0/);
   assert.doesNotMatch(raw, /\/api\/chat/);
   assert.doesNotMatch(raw, /prompt\s*:/);
 });
