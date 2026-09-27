@@ -1051,3 +1051,39 @@ A private local bundle builder is prepared to combine:
 
 The bundle remains under `calibration/vnext/private-runs/` and must not be committed or published.
 
+## D-2026-09-27-058 — Qwen3 8B clean engineering PASS does not survive human adjudication
+
+Human adjudication of the exact private Constellation packet/output finds a critical quality failure.
+
+Observed defects:
+- E-045 replacement RFP/process is overstated as eventual replacement;
+- E-063 is re-opened as a retention/churn question despite the packet already defining nondisclosure as not evidence of low retention;
+- priority selection omits stronger direct evidence, including E-043 and E-067;
+- E-066 is surfaced only as an unresolved point rather than used as a direct serial-acquirer moat input.
+
+Positive controls:
+- no evidence-ID invention;
+- no conflict-ID invention;
+- C-005 remains surfaced and unresolved;
+- no final moat judgment is emitted;
+- engineering validation remains a clean PASS with zero normalization.
+
+Disposition:
+`STOP_QWEN3_8B_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`.
+
+This is not a global Qwen3-family failure conclusion.
+
+## D-2026-09-27-059 — Ministral 3 3B becomes the next local candidate
+
+The refreshed candidate registry selects `ministral-3:3b-instruct-2512-q4_K_M` after completion of the explicit Granite -> Qwen3 8B sequence.
+
+Pinned public identity:
+- digest prefix f04aa1c738f6;
+- ~3.0 GB artifact;
+- 3.85B parameters;
+- Q4_K_M;
+- 256K context;
+- Apache-2.0.
+
+Exactly one zero-cost pinned download and identity verification is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`. Load and inference remain unauthorized.
+
