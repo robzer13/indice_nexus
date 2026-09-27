@@ -93,6 +93,8 @@ test("Phase C permits authorized v1.1 implementation while keeping model executi
   );
   assert.equal(entry.v1_1_shadow_validator_implementation_authorized, true);
   assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
+  assert.equal(entry.v1_1_contract_implemented, true);
+  assert.equal(entry.v1_1_contract_ci_status, "PASS");
 
   assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
@@ -101,6 +103,6 @@ test("Phase C permits authorized v1.1 implementation while keeping model executi
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "VERIFY_V1_1_CONTRACT_IMPLEMENTATION_CI",
+    "DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1",
   );
 });
