@@ -73,7 +73,13 @@ test("v1.1 shadow replay runner performs punctuation-only normalization and no m
   assert.match(raw, /assertGate18PhaseBV10Semantics/);
   assert.match(raw, /assertGate18V10TargetedProbeSemantics/);
   assert.match(raw, /RAW_FAIL_TO_SHADOW_SEMANTIC_PASS_AFTER_PRESENTATION_ONLY_NORMALIZATION/);
-  assert.match(raw, /RAW_PRESENTATION_FAILURE_MASKED_DOWNSTREAM_SUBSTANTIVE_FAILURE/);
+  assert.match(raw, /classifyValidatorError/);
+  assert.match(raw, /PRESENTATION_COMPLIANCE/);
+  assert.match(raw, /PRESENTATION_BOUNDARY/);
+  assert.match(raw, /SUBSTANTIVE_SEMANTIC/);
+  assert.match(raw, /RAW_PRESENTATION_FAILURE_ADVANCED_TO_DOWNSTREAM_FAILURE/);
+  assert.match(raw, /downstreamPresentationFailureRevealedCount/);
+  assert.match(raw, /downstreamSubstantiveFailureRevealedCount/);
   assert.match(raw, /CONTROL_PASS_STABLE/);
   assert.match(raw, /historicalV10ResultsChanged: false/);
   assert.match(raw, /retroactivePassAllowed: false/);
