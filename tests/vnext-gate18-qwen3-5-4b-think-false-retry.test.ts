@@ -19,6 +19,7 @@ test("Qwen3.5 think-false retry authorization freezes a single same-cell compati
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
   assert.equal(a.c4_inference.think, false);
+  assert.equal(a.c4_inference.sleep_guard_required, true);
   assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(a.constraints.automatic_second_retry_authorized, false);
   assert.equal(a.invariants.only_runtime_change, "think:false");
