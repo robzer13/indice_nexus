@@ -11,35 +11,40 @@ Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
 No global Qwen3.5-family failure inferred.
 
-## OI-004 — Gemma 3 hardware qualification
-Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
+## OI-004 — Gemma 3 qualification
+Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-## OI-005 — Gemma 3 first Constellation C4 run
-Status: COMPLETE_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT
+Observed deterministic defect classes on the first Constellation C4 run:
+- non-null counterevidence links with empty counterevidence IDs on all three priority findings;
+- invented unknown conflict ID `C-006` reused across one material conflict and two unresolved points.
 
-First semantic error:
-`VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`
+After cumulative diagnostic-only normalization, the frozen validator passes. The historical run remains FAIL. Engineering PASS and human adjudication were not reached.
 
-## OI-006 — Gemma 3 first deterministic forensic
-Status: COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND
+No global Gemma-family failure inferred.
 
-Observed:
-- all 3 priority findings had empty counterevidence IDs with non-null counterevidence links;
-- after narrow in-memory normalization, downstream error:
-  `VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`.
+## OI-005 — Local candidate registry refresh
+Status: COMPLETE
 
-## OI-007 — Gemma 3 unknown-conflict-reference forensic
+Selected:
+`GRANITE4_3B_OLLAMA_Q4_K_M`
+
+Alternates retained:
+- Ministral 3 3B Instruct Q4_K_M;
+- Llama 3.2 3B;
+- Qwen3 8B remains on poor-hardware-fit hold.
+
+## OI-006 — Granite 4 3B pinned download
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Audit conflict references against the canonical packet, remove only unknown refs on an in-memory diagnostic copy, and rerun the frozen validator.
+Exactly one zero-cost download of `granite4:3b` is authorized, followed by identity verification only.
 
-## OI-008 — Gemma 3 post-Constellation disposition
-Status: BLOCKED_BY_OI-007
+## OI-007 — Granite 4 3B memory qualification
+Status: BLOCKED_BY_OI-006
 
-No retry or additional Gemma inference is authorized.
+If download identity passes, prepare a separate context4096 load-only memory preflight.
 
-## OI-009 — Model winner and routing
+## OI-008 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
