@@ -1,51 +1,52 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-007`
+Resume ID: `VNEXT-G18-C-20260927-009`
 
-## Current state
+## Standing execution authority
 
-Gate 18 remains `IN_PROGRESS_NOT_FROZEN`.
+`OROTITAN-STANDING-TECHNICAL-AUTH-002` is ACTIVE.
 
-The authorized single Phi-4 / Constellation Software C4 run has been executed exactly once and the authorization is consumed.
+The user has permanently authorized OroTitan zero-cost execution steps without repeated confirmation.
 
-## Engineering result
+Operational rule:
 
-Result: `ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING`
+- zero-cost local or repository execution: proceed without reprompt;
+- nonzero external monetary cost: obtain explicit user authorization before spending.
 
-- runtime: PASS
-- wall clock: 209989 ms
-- done reason: `stop`
-- prompt eval count: 3169
-- output eval count: 681 / 1024
-- output token margin: 343
-- runtime error: none
-- schema: PASS
-- raw presentation compliance: FAIL
-- v1.1 normalized paths: 3
-- v1.1 substantive deterministic semantics: PASS
+This includes zero-cost model downloads, memory/load preflights, local inference, methodologically justified bounded retries, candidate/model changes, diagnostics, tests, PR/CI/merge operations, and continuity maintenance.
 
-Raw private output:
+Protocol guards remain in force: historical results are immutable, no retroactive pass, private evidence remains private, identity/contract mismatches fail closed, and methodology changes remain versioned.
 
-`calibration/vnext/private-runs/2026-09-27T085515615Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001.json`
+## Current Gate 18 state
 
-The raw private content is not persisted publicly.
+Phi-4 C4 expansion has been stopped and Phi-4 is retained as calibration evidence.
 
-## Interpretation boundary
+Qwen3.5 4B has been downloaded and identity-pinned:
 
-The run demonstrates that Phi-4 can produce a schema-valid, substantively valid Constellation output under v1.1 after three safe presentation normalizations.
+- model: `qwen3.5:4b-q4_K_M`
+- digest: `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`
+- size: 3,389,983,735 bytes
+- quantization: `Q4_K_M`
+- Ollama reported parameter size: `4.7B`
 
-It does not yet complete the matrix cell because human-quality adjudication is mandatory.
+No Qwen3.5 inference has occurred.
 
-The recurring presentation-compliance defect remains real and must be carried separately.
+## Current authorized step
 
-## Authorization state
+A single context-4096 load-only memory preflight is authorized under the standing zero-cost authorization.
 
-The single-run authorization is consumed.
+The runner must:
 
-No retry, second attempt, new inference, model switch, production mutation, or publication is authorized.
+- verify exact model identity;
+- load without prompt or semantic generation;
+- measure RAM/VRAM and `ollama ps`;
+- unload explicitly;
+- stop.
 
 ## Exact next action
 
 ```text
-REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION
+EXECUTE_QWEN3_5_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
+
+No further authorization prompt is required for subsequent zero-cost steps. Only a proposed nonzero external cost requires explicit user approval.

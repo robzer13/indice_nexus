@@ -34,3 +34,14 @@ The user authorized a standing continuity mechanism so that context, steps, obje
 - mutation of authoritative analytical results.
 
 Any action outside the authorized continuity scope still requires its normal OroTitan authority.
+
+
+## Execution authorization override — 2026-09-27
+
+The user subsequently established `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+For OroTitan technical execution, zero-cost actions no longer require repeated user confirmation. This includes local downloads, load/memory preflights, local inference, bounded retries, model/candidate changes, testing, GitHub PR/CI/merge operations, and other zero-cost protocol steps.
+
+A new user authorization is required only when the next action would incur a nonzero external monetary cost.
+
+This execution authorization does not weaken the protocol guards on historical immutability, private evidence handling, fail-closed identity/contract checks, CI-before-merge, or versioned methodology changes.

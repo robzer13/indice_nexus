@@ -13,12 +13,12 @@ test("Qwen3.5 4B pinned download result is exact and non-inferential", () => {
   assert.equal(r.safety.model_inference_executed,false);
 });
 
-test("Qwen3.5 load-only preflight is prepared but not authorized",()=>{
+test("Qwen3.5 load-only preflight is authorized under standing zero-cost authority",()=>{
   const a=JSON.parse(readFileSync("calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_LOAD_SMOKE_AUTH_001.json","utf8"));
-  assert.equal(a.status,"PREPARED_NOT_AUTHORIZED");
-  assert.equal(a.authority.load_smoke_authorized,false);
+  assert.equal(a.status,"AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.authority.load_smoke_authorized,true);
   assert.equal(a.authority.inference_authorized,false);
-  assert.equal(a.authority.authorized_run_count,0);
+  assert.equal(a.authority.authorized_run_count,1);
 });
 
 test("Qwen3.5 load-only runner requires explicit authorization and requests no prompt",()=>{
