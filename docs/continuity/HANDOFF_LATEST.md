@@ -1,84 +1,68 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-004`
+Resume ID: `VNEXT-G18-C-20260927-005`
 
-## Where we are
+## Current state
 
-Repository: `robzer13/indice_nexus`  
-Branch: `vnext`  
-Gate 18: `IN_PROGRESS_NOT_FROZEN`
+Gate 18 remains `IN_PROGRESS_NOT_FROZEN`.
 
-## v1.1 validation contract
+The versioned v1.1 validation contract is implemented and CI-verified.
 
-The user explicitly authorized the versioned v1.1 validation-contract change.
+The post-v1.1 Phi-4 C4 resumption decision has been completed.
 
-Implementation:
+## Selected next discriminator
 
-`runtime/vnext/model-calibration-validation-v11.ts`
+Company: `Constellation Software`  
+Archetype: `SERIAL_ACQUIRER`  
+Model: `phi4-mini:3.8b-q4_K_M`  
+Validation: `GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`
 
-Contract:
+Selection basis:
 
-`calibration/vnext/OROTITAN_GATE18_V1_1_VALIDATION_CONTRACT_001.json`
+- smallest remaining Phi-4 C4 workload after the already-run STMicro cell;
+- closest workload size to STMicro, reducing runtime-size confounding;
+- distinct archetype;
+- absent from the six-case shadow replay, so it adds genuinely new model-behavior information;
+- Qwen3 4B had engineering PASS / human PASS_WITH_CARRY on the same company, providing descriptive cross-candidate context.
 
-Authorization:
+This is not a model ranking or routing decision.
 
-`calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_CHANGE_AUTH_001.json`
+## Frozen planned cell
 
-Status: `IMPLEMENTED_CI_PASS`.
+- context: 16384
+- max output: 1024
+- temperature: 0
+- client timeout: 480000 ms
+- transport: NODE_HTTP_REQUEST_LOOPBACK
+- one run maximum
+- automatic retry: forbidden
+- raw output: preserved
+- human adjudication: required
 
-PR: #257.
+Runner:
 
-## Verified architecture
+`scripts/vnext-gate18-phase-c-c4-constellation-phi4-mini-v1-1-context16384-output1024-timeout480-loopback-guarded.ts`
 
-v1.1 is additive. The v1.0 runtime, prompt, generation schema, and historical results are not rewritten.
+Preparation:
 
-Validation order:
+`calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_PHI4_MINI_V1_1_PREP_001.json`
 
-1. raw schema;
-2. raw presentation compliance;
-3. safe presentation normalization on a copy;
-4. presentation compliance re-check;
-5. frozen v1.0 substantive semantic validator;
-6. human-quality adjudication remains separate.
+Authorization template:
 
-Safe normalization is restricted to appending one period while preserving all existing characters. It is forbidden when the normalized trimmed field would reach or exceed the frozen 178-character boundary.
+`calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_PHI4_MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_AUTH_001.json`
 
-If presentation remains noncompliant, substantive semantics are `NOT_EVALUATED_PRESENTATION_BLOCKER`, not semantic FAIL.
+The template is intentionally `PREPARED_NOT_AUTHORIZED`; the runner requires `AUTHORIZED_SINGLE_LOCAL_INFERENCE` and therefore fails closed before Ollama inference.
 
-An invariant guard throws if a v1.0 presentation error leaks through after the v1.1 presentation layer.
+## Preserved boundaries
 
-## CI verification
+No inference has been executed in this step.
 
-- VNext lint: PASS
-- VNext typecheck: PASS
-- VNext unit/contract tests: PASS
-- PostgreSQL migration tests: PASS
-- production build: PASS
-- Screener CI: PASS
+No retry is authorized.
 
-## Preserved truths
-
-- historical v1.0 statuses remain immutable;
-- no retroactive PASS;
-- Phi-4 STMicro raw v1.0 remains FAIL;
-- Qwen3 4B Brookfield and RATIONAL substantive failures remain;
-- no human-quality reassessment;
-- no model winner;
-- routing is not frozen.
-
-## Still not authorized
-
-- new model inference;
-- second Phi-4 C4 cell;
-- Qwen3.5 download;
-- model switch;
-- production mutation;
-- publication.
+No model switch, Qwen3.5 download, production mutation, publication, or historical v1.0 result mutation is authorized.
 
 ## Exact next action
 
 ```text
-DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1
+AWAIT_EXPLICIT_SINGLE_RUN_PHI4_CONSTELLATION_V1_1_INFERENCE_AUTHORIZATION
 ```
-
-The v1.1 contract is complete. The next decision is separate: whether to resume Phi-4 C4 qualification under this contract and, if so, which exact bounded cell is authorized.
