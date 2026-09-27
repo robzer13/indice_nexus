@@ -6,32 +6,28 @@ Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 ## OI-002 — Qwen3 8B pinned download
 Status: COMPLETE_PASS_PINNED
 
-## OI-003 — Qwen3 8B context4096 load-only
+## OI-003 — Qwen3 8B context4096
+Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+
+## OI-004 — Qwen3 8B context8192
 Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
 
 Measured:
-- loaded free RAM: 0.21 GiB;
-- loaded free VRAM: 1684 MiB;
-- processor split: 61%/39% CPU/GPU;
-- explicit unload: complete.
+- loaded free RAM: 0.22 GiB;
+- loaded free VRAM: 1640 MiB;
+- processor split: 64%/36% CPU/GPU;
+- unload complete.
 
-This is not inference qualification.
-
-## OI-004 — Qwen3 8B context8192 diagnostic load-only
+## OI-005 — Qwen3 8B context16384 final diagnostic
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded context8192 load-only run is authorized. No prompt or inference.
-
-## OI-005 — Qwen3 8B context16384
-Status: NOT_AUTHORIZED
-
-Any further context growth requires review of the 8192 measurement.
+Exactly one guarded load-only run is authorized.
 
 ## OI-006 — Qwen3 8B semantic inference
-Status: NOT_AUTHORIZED
+Status: BLOCKED_BY_OI-005
 
-No inference until hardware fit is explicitly re-evaluated.
+No inference is authorized before explicit review of context16384.
 
 ## OI-007 — Model winner and routing
 Status: OPEN_GUARDED
