@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Gemma 3 first forensic to unknown-conflict-reference forensic", () => {
+test("Phase C advances from completed Gemma forensics to Granite 4 3B pinned download", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Gemma 3 first forensic to unknown-conflict-reference
 
   assert.equal(
     entry.next_action,
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
+    "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -90,4 +90,22 @@ test("Phase C advances from Gemma 3 first forensic to unknown-conflict-reference
     "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF",
   );
   assert.equal(entry.gemma3_first_c4_second_forensic_required, true);
+  assert.equal(
+    entry.gemma3_first_c4_second_forensic_status,
+    "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+  );
+  assert.equal(entry.gemma3_first_c4_unknown_conflict_id, "C-006");
+  assert.equal(entry.gemma3_first_c4_unknown_conflict_ref_count, 3);
+  assert.equal(
+    entry.gemma3_first_c4_downstream_semantic_pass_after_cumulative_diagnostic_normalization,
+    true,
+  );
+  assert.equal(entry.gemma3_c4_expansion_status, "STOPPED_RETAIN_CALIBRATION_EVIDENCE");
+  assert.equal(entry.gemma3_family_global_failure_concluded, false);
+  assert.equal(entry.next_candidate, "GRANITE4_3B_OLLAMA_Q4_K_M");
+  assert.equal(entry.granite4_3b_model_name, "granite4:3b");
+  assert.equal(entry.granite4_3b_download_authorized, true);
+  assert.equal(entry.granite4_3b_download_executed, false);
+  assert.equal(entry.granite4_3b_load_smoke_authorized, false);
+  assert.equal(entry.granite4_3b_inference_authorized, false);
 });
