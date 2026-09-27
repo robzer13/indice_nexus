@@ -1,67 +1,56 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-029`
+Resume ID: `VNEXT-G18-C-20260927-030`
 
-## Granite 4 Constellation result
+## Qwen3 8B pinned download
 
-Engineering:
-- runtime PASS;
-- schema PASS;
-- v1.1 substantive semantics PASS;
-- raw presentation non-compliant only on 5 safely normalizable terminal-punctuation paths;
-- wall clock 117903 ms;
-- eval count 536 / 1024 max;
-- no runtime error.
+Status:
 
-Human-quality adjudication:
-- exact evidence grounding: FAIL;
-- conflict handling: PASS;
-- weak-link usefulness: PASS;
-- unresolved-point usefulness: FAIL;
-- priority-selection usefulness: FAIL;
-- overall: `CRITICAL_FAILURE`.
+`PASS_PINNED_DOWNLOAD_ONLY`
 
-Key defects:
-- E-029 overgeneralized stated acquisition criteria into verified properties of every acquired company;
-- no qualification attached to that universal claim;
-- two of three priority slots are near-duplicate recurring-revenue share metrics;
-- E-063 is used as an unresolved retention-disclosure question although the same pinned packet's prior adjudication established that E-063 answers it;
-- direct serial-acquirer moat inputs E-066/E-067 are omitted from priority selection.
+Exact local identity:
+- model: `qwen3:8b-q4_K_M`;
+- full digest: `500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`;
+- size: 5,225,388,164 bytes;
+- format: `gguf`;
+- family: `qwen3`;
+- parameter size: `8.2B`;
+- quantization: `Q4_K_M`.
 
-Disposition:
-`STOP_GRANITE4_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`.
+No load smoke, prompt, inference, retry, model switch, paid execution, or production mutation occurred during download.
 
-This is not a global Granite-family failure.
-
-## Qwen3 8B active next candidate
-
-Exact public target:
-- tag: `qwen3:8b-q4_K_M`;
-- expected digest prefix: `500a1f067a9f`;
-- expected quantization: `Q4_K_M`;
-- expected artifact: ~5.2GB;
-- parameter size: 8.19B;
-- context window: 40K;
-- license: Apache-2.0.
+## Qwen3 8B context4096 load-only
 
 Authorization:
-`G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001`.
+
+`G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-AUTH-001`
 
 Runner:
-`scripts/vnext-gate18-phase-c-qwen3-8b-download-verify.ts`.
 
-Boundaries:
-- one pinned download only;
-- exact tag only;
-- identity verification only;
-- no load smoke in same run;
+`scripts/vnext-gate18-phase-c-qwen3-8b-context4096-load-smoke.ts`
+
+Hardware boundary:
+- system RAM: ~7.84 GiB;
+- GPU VRAM: 4096 MiB;
+- model artifact: ~5.23 GB;
+- risk: `HIGH_MEMORY_PRESSURE_EXPECTED`.
+
+Guards:
+- exact full digest required;
+- context exactly 4096;
+- one load-only run;
 - no prompt;
-- no inference;
-- no automatic retry/model switch;
-- no paid execution or production mutation.
+- no semantic inference;
+- explicit unload;
+- no automatic retry;
+- no context change;
+- no model switch;
+- no production mutation.
+
+Do not authorize context8192 or inference before reviewing the measured 4096 result.
 
 ## Exact next action
 
 ```text
-EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY
+EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
