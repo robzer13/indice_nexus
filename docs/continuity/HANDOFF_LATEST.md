@@ -1,72 +1,69 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-017`
+Resume ID: `VNEXT-G18-C-20260927-018`
 
 ## Standing authority
 
 `OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE for zero-cost technical execution. Nonzero external monetary cost still requires explicit user authorization.
 
-## Qwen3.5 disposition
+## Gemma 3 4B pinned download
 
-The clean `think:false` Constellation retry remains an engineering PASS, but human adjudication found a critical evidence-grounding failure.
+The authorized local download completed successfully.
 
-Material defect:
-- `E-045` states a replacement RFP;
-- the model output stated a completed replacement after approximately 20 years.
+Exact local identity:
+- model: `gemma3:4b-it-q4_K_M`;
+- full digest: `a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`;
+- size: 3,338,801,804 bytes;
+- format: `gguf`;
+- family: `gemma3`;
+- Ollama parameter size: `4.3B`;
+- quantization: `Q4_K_M`.
 
-Additional quality defects included duplicated weak-link candidates, low-information unresolved points, and priority selection that underweighted serial-acquirer-specific moat evidence.
+Verification:
+- exact tag present;
+- expected public digest prefix matched;
+- exact full digest captured;
+- API show reachable;
+- expected quantization matched;
+- no load smoke during download;
+- no prompt;
+- no inference;
+- no automatic retry;
+- no paid execution;
+- no production mutation.
 
-Disposition:
+Public result artifact:
 
-`STOP_QWEN3_5_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+`calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_DOWNLOAD_RESULT_001.json`
 
-No global Qwen3.5-family failure is inferred. No model winner or routing decision exists.
+## Context4096 load-only authorization
 
-## Gemma 3 4B static review
+A separate zero-cost load-only preflight is authorized under the standing technical authorization.
 
-Candidate:
+Authorization:
 
-`gemma3:4b-it-q4_K_M`
-
-Public identity checked 2026-09-27:
-- Ollama public digest prefix `a2af6cc3eb7f`;
-- approximately 3.3GB;
-- 128K context;
-- Q4_K_M target;
-- text and image input.
-
-Gemma Terms of Use last modified 2026-04-01 were reviewed. The user explicitly accepted the Gemma Terms for this OroTitan calibration path.
-
-Static hardware fit:
-
-`PLAUSIBLE_BUT_TIGHT_UNPROVEN`
-
-## Authorized next action
-
-Exactly one pinned local download is authorized:
-
-`G18-PHASEC-GEMMA3-4B-DOWNLOAD-AUTH-001`
+`G18-PHASEC-GEMMA3-4B-LOAD-SMOKE-AUTH-001`
 
 Runner:
 
-`scripts/vnext-gate18-phase-c-gemma3-4b-download-verify.ts`
+`scripts/vnext-gate18-phase-c-gemma3-4b-load-smoke.ts`
 
-Scope:
-- pull only `gemma3:4b-it-q4_K_M`;
-- verify exact local tag;
-- capture full digest, size and Ollama metadata;
-- require digest prefix `a2af6cc3eb7f`;
-- verify Q4_K_M if exposed;
-- no load smoke;
+Guards:
+- exact full digest required;
+- context exactly 4096;
+- one load-only run;
 - no prompt;
-- no model inference;
+- no semantic inference;
+- explicit unload after measurement;
 - no automatic retry;
+- no context change;
+- no model switch;
 - no production mutation.
 
 ## Exact next action
 
 ```text
-EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY
+EXECUTE_GEMMA3_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
 
-If and only if the pinned download passes, prepare a separate context-4096 load-only memory preflight using the observed full digest.
+After the measured result is returned, decide whether an intermediate context8192 load-only preflight is justified before any larger-context load or inference.

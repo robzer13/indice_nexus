@@ -383,3 +383,41 @@ Exactly one local pinned download plus identity verification. No load smoke, pro
 Next:
 After a successful pinned download and full digest capture, prepare a separate context4096 load-only memory preflight.
 
+## D-2026-09-27-022 — Gemma 3 pinned download passes exact identity verification
+
+Local execution result:
+- model `gemma3:4b-it-q4_K_M`;
+- full digest `a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`;
+- size 3,338,801,804 bytes;
+- format `gguf`;
+- family `gemma3`;
+- parameter size `4.3B`;
+- quantization `Q4_K_M`.
+
+Verification:
+Exact tag, expected digest prefix, API-show reachability, and quantization all PASS.
+
+Safety:
+The download run performed no load smoke, prompt, semantic inference, retry, paid execution, production mutation, or publication.
+
+## D-2026-09-27-023 — Gemma 3 context4096 load-only preflight authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+One zero-cost load-only execution at context 4096 using the exact full digest captured above.
+
+Guards:
+- no prompt;
+- no semantic inference;
+- exact model identity required;
+- explicit unload;
+- no automatic retry;
+- no context change;
+- no model switch;
+- no production mutation.
+
+Next:
+Execute the context4096 load-only preflight and use the measured RAM/VRAM/process split to decide whether an intermediate context8192 load-only step is justified.
+
