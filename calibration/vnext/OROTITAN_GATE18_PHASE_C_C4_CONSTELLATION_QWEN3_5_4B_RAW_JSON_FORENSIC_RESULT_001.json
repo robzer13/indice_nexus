@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_RAW_JSON_TERMINATION_FORENSIC_RESULT_V0.2",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-RAW-JSON-FORENSIC-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-RAW-JSON-FORENSIC-AUTH-001",
+  "status": "PASS_ARTIFACT_SHAPE_DISCOVERY_RAW_TEXT_EMPTY",
+  "source_run": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-RESULT-001",
+  "source_run_observed": {
+    "done_reason": "stop",
+    "eval_count": 842,
+    "max_output_tokens": 1024,
+    "schema_error": "Unexpected end of JSON input"
+  },
+  "artifact_shape": {
+    "response_keys": [
+      "parsedJson",
+      "rawText"
+    ],
+    "raw_text_path": "$.response.rawText",
+    "raw_text_kind": "string",
+    "raw_text_length": 0,
+    "raw_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "parsed_json_kind": "null"
+  },
+  "diagnosis": {
+    "partial_json_recovery_possible": false,
+    "reason": "The persisted response.rawText is exactly empty, so there is no partial JSON body to structurally close or semantically inspect.",
+    "first_run_adapter_compatibility_confounded": true,
+    "thinking_tokens_proven": false,
+    "model_structured_output_capability_failure_proven": false,
+    "bounded_same_cell_retry_with_explicit_think_false_justified": true
+  },
+  "external_runtime_evidence": {
+    "ollama_generate_api_supports_explicit_think_false": true,
+    "qwen3_5_is_thinking_capable": true,
+    "note": "External documentation is used only to identify a runtime compatibility confound; it does not reclassify the historical model output."
+  },
+  "interpretation_boundary": {
+    "source_run_status_changed": false,
+    "source_artifact_mutated": false,
+    "retroactive_pass_allowed": false,
+    "human_quality_adjudication_possible": false,
+    "model_ranking_authority": false
+  },
+  "safety": {
+    "inference_executed": false,
+    "ollama_called": false,
+    "network_called_by_forensic": false,
+    "raw_content_published": false,
+    "production_mutation": false
+  },
+  "next_action": "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE"
+}

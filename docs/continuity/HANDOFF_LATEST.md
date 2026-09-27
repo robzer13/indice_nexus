@@ -1,62 +1,64 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-014`
+Resume ID: `VNEXT-G18-C-20260927-015`
 
-## Standing execution authority
+## Standing authority
 
-`OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE.
+`OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE. Zero-cost execution proceeds without reprompt.
 
-Zero-cost OroTitan execution proceeds without repeated user confirmation. Explicit confirmation is required only before nonzero external monetary cost.
+## Qwen3.5 first Constellation attempt
 
-## Qwen3.5 first C4 run
-
-The Constellation Software run remains:
-
-`FAIL_RAW_JSON_INCOMPLETE_FORENSICS_REQUIRED`
+Historical result remains FAIL.
 
 Observed:
+- done reason `stop`;
+- eval count 842 / 1024;
+- runtime error none;
+- persisted `$.response.rawText` exists but is exactly empty;
+- SHA-256 equals the empty-string hash;
+- `parsedJson` is null.
 
-- done reason: `stop`
-- eval count: 842 / 1024
-- runtime error: none
-- schema error: `Unexpected end of JSON input`
-- v1.1 semantic validation not reached
+No partial JSON exists to repair or inspect.
 
-No model-result reclassification has occurred.
+## Runtime compatibility diagnosis
 
-## Forensic tooling defect
+Qwen3.5 is thinking-capable, and Ollama supports an explicit `think` control. The first runner omitted this setting and did not persist provider thinking output.
 
-The first read-only forensic attempt failed with:
+Therefore:
+- thinking content from the historical run is not recoverable;
+- the 842 tokens are not attributed to thinking as a proven fact;
+- the historical FAIL is preserved;
+- structured-output capability failure is not yet concluded;
+- the first attempt is runtime-adapter confounded.
 
-`VNEXT_GATE18_QWEN35_JSON_FORENSIC_RAW_TEXT_MISSING`
+## Clean retry
 
-This is classified as:
+One same-cell retry is authorized with exactly one runtime change:
 
-`FORENSIC_INPUT_SCHEMA_MISMATCH`
+`think: false`
 
-The forensic expected `$.response.rawText`, but the private artifact on the user machine does not expose a non-empty string at that path despite passing the run-identity guards.
+Everything else is frozen:
+- Constellation Software;
+- same model and digest;
+- same packet and prompt hashes;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600 seconds;
+- generation prompt/schema v1.0 unchanged;
+- validation v1.1;
+- no automatic second retry.
 
-This is a tooling issue, not new evidence about Qwen3.5.
+Runner:
 
-## Remediation
+`scripts/vnext-gate18-phase-c-c4-constellation-qwen3-5-4b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts`
 
-The forensic runner now has a safe artifact-shape discovery fallback.
+Authorization:
 
-If `$.response.rawText` is unavailable, it reports only:
-
-- top-level key names;
-- response-object key names;
-- interesting object/string paths;
-- string lengths;
-- whether a string begins with `{`;
-- SHA-256 hashes.
-
-It does not print string values or raw generated content.
-
-No model inference, Ollama call, network access, source mutation, or retry occurs.
+`G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001`
 
 ## Exact next action
 
 ```text
-RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY
+EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE
 ```

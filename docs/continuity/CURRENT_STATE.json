@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-014",
+  "resume_id": "VNEXT-G18-C-20260927-015",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "6e80534a5fe2f22071fde9cb2e87c2fbca929689",
+  "last_verified_head_sha": "cced428c81ef0f3747dfcb02c8c16d9d55895f4b",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -38,16 +38,16 @@
     "QWEN3_5_FORENSIC_TOOLING_SCHEMA_MISMATCH_OBSERVED"
   ],
   "active_work": [
-    "RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY"
+    "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE"
   ],
   "blockers": [
-    "PRIVATE_ARTIFACT_SCHEMA_PATH_UNRESOLVED_ON_USER_MACHINE"
+    "LOCAL_OLLAMA_AND_PRIVATE_PINNED_PACKET_REQUIRED_ON_USER_MACHINE"
   ],
   "open_issues": [
-    "RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY",
-    "LOCATE_PERSISTED_RAW_MODEL_RESPONSE_PATH_WITHOUT_PRINTING_RAW_CONTENT",
-    "COMPLETE_STRUCTURAL_TERMINATION_FORENSIC",
-    "DECIDE_BOUNDED_SAME_CELL_RELIABILITY_RETRY_OR_STOP_QWEN3_5"
+    "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE",
+    "REVIEW_V1_1_ENGINEERING_RESULT",
+    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
+    "DECIDE_QWEN3_5_EXPANSION_OR_STOP"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
@@ -114,7 +114,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY",
+  "next_action": "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -198,9 +198,14 @@
     "first_c4_retry_authorized": false,
     "first_c4_model_capability_failure_concluded": false,
     "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T124959277Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_001.json",
-    "forensic_status": "TOOLING_SCHEMA_MISMATCH_FIX_PREPARED",
+    "forensic_status": "PASS_ARTIFACT_SHAPE_DISCOVERY_RAW_TEXT_EMPTY",
     "forensic_observed_error": "VNEXT_GATE18_QWEN35_JSON_FORENSIC_RAW_TEXT_MISSING",
     "forensic_model_result_reclassified": false,
-    "forensic_inference_executed": false
+    "forensic_inference_executed": false,
+    "first_c4_raw_text_length": 0,
+    "first_c4_runtime_adapter_confound": true,
+    "first_c4_thinking_tokens_proven": false,
+    "think_false_retry_status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+    "think_false_retry_run_count": 1
   }
 }

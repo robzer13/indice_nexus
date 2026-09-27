@@ -1,0 +1,19 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_THINK_FALSE_RETRY_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-THINKFALSE-RETRY-PREP-001",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "source_diagnosis": "G18-PHASEC-QWEN3_5-4B-THINKING-MODE-DIAGNOSIS-001",
+  "authorization": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-5-4b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts",
+  "frozen": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "company": "Constellation Software",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "timeout_ms": 600000,
+    "think": false,
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1"
+  },
+  "next_action": "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE"
+}
