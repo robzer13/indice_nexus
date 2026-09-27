@@ -1,61 +1,62 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-025`
+Resume ID: `VNEXT-G18-C-20260927-026`
 
-## Granite 4 3B pinned download
+## Granite 4 3B context4096 result
 
 Status:
 
-`PASS_PINNED_DOWNLOAD_ONLY`
+`PASS_LOAD_ONLY_MEASURED`
 
-Exact local identity:
+Exact identity:
 - model: `granite4:3b`;
-- full digest: `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
-- size: 2,099,521,385 bytes;
-- format: `gguf`;
-- family: `granite`;
-- parameter size: `3.4B`;
-- quantization: `Q4_K_M`.
+- digest: `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
+- context: 4096.
 
-No load smoke, prompt, inference, retry, model switch, paid execution, or production mutation occurred in the download run.
+Measured:
+- free RAM before: 1.48 GiB;
+- free RAM loaded: 1.06 GiB;
+- free RAM after unload: 1.71 GiB;
+- VRAM used loaded: 2313 MiB;
+- VRAM free loaded: 1650 MiB;
+- Ollama processor split: `15%/85% CPU/GPU`;
+- Ollama reported resident size: 2.7 GB;
+- explicit unload: complete;
+- inference: none.
 
-## Granite 4 context4096 load-only
+Relative to Gemma 3 at context4096, Granite retains +0.48 GiB more free RAM, +136 MiB more free VRAM, and substantially higher GPU residency.
+
+Conclusion:
+context4096 hardware fit passes with materially better headroom than recent candidates. One bounded context8192 load-only measurement is justified.
+
+## Granite 4 context8192 authorization
 
 Authorization:
 
-`G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-AUTH-001`
+`G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001`
 
 Runner:
 
-`scripts/vnext-gate18-phase-c-granite4-3b-load-smoke.ts`
+`scripts/vnext-gate18-phase-c-granite4-3b-context8192-load-smoke.ts`
 
 Guards:
 - exact full digest required;
-- context exactly 4096;
+- context exactly 8192;
 - one load-only run;
 - no prompt;
 - no semantic inference;
 - explicit unload;
 - no automatic retry;
-- no context change;
+- no context growth beyond 8192 in this run;
 - no model switch;
 - no production mutation.
 
-## User-directed candidate sequence
+## User-directed next candidate
 
-The user explicitly requires Qwen3 8B to be tested after Granite.
-
-Sequence now preserved:
-1. current: `GRANITE4_3B_OLLAMA_Q4_K_M`;
-2. next after Granite: `QWEN3_8B_LOCAL`.
-
-Ministral 3 3B and Llama 3.2 3B are deferred until after the Qwen3 8B test.
-
-Qwen3 8B will not be jumped directly into inference. Required sequence:
-`pinned download -> context4096 load-only -> context8192 if supported -> context16384 if supported -> inference only if hardware qualification supports it`.
+Qwen3 8B remains explicitly queued immediately after the Granite sequence. Ministral 3 and Llama 3.2 remain deferred until after Qwen3 8B.
 
 ## Exact next action
 
 ```text
-EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT
+EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
