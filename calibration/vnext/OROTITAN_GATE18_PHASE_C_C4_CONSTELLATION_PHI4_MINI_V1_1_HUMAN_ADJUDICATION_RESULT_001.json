@@ -1,0 +1,97 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001",
+  "source": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI_V1_1-RESULT-001",
+    "private_run_attachment_reviewed": true,
+    "pinned_private_evidence_packet_reviewed": true,
+    "original_output_adjudicated_as_emitted": true,
+    "private_packet_content_persisted_publicly": false,
+    "private_raw_output_content_persisted_publicly": false
+  },
+  "engineering_disposition": {
+    "runtime_pass": true,
+    "schema_valid": true,
+    "v1_1_raw_presentation_compliant": false,
+    "v1_1_safe_normalization_count": 3,
+    "v1_1_substantive_semantic_pass": true,
+    "deterministic_semantic_failure": false,
+    "output_budget_fully_consumed": false,
+    "done_reason": "stop",
+    "eval_count": 681,
+    "max_output_tokens": 1024,
+    "output_token_margin": 343,
+    "disposition": "ENGINEERING_PASS_WITH_PRESENTATION_COMPLIANCE_CARRY"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "FAIL",
+    "claim_atomicity": "PASS_WITH_DEFECT",
+    "claim_target_alignment": "PASS_WITH_DEFECT",
+    "support_counterevidence_polarity": "PASS_WITH_DEFECT",
+    "qualification_orthogonality": "PASS_WITH_DEFECT",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "FAIL",
+    "unresolved_point_usefulness": "FAIL",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "FAIL"
+  },
+  "failure_codes": [
+    "FINDINGS_2_AND_3_DUPLICATE_THE_SAME_PRIORITY_CLAIM",
+    "FINDINGS_2_AND_3_MISGROUND_20_YEAR_DEEPLY_INTEGRATED_REPLACEMENT_CLAIM_TO_E043_E044_INSTEAD_OF_E045",
+    "FINDINGS_2_AND_3_OVERSTATE_REPLACEMENT_AS_COMPLETED_WHILE_PACKET_SUPPORTS_REPLACEMENT_RFP_OR_EVALUATION",
+    "FINDING_1_CITES_E010_H1_2026_ALONGSIDE_E009_FOR_AN_EXACT_Q2_2026_76_6_PERCENT_CLAIM",
+    "ALL_THREE_CAUSAL_LINKS_ARE_LITERAL_UNRESOLVED_NOT_CAUSAL_EXPLANATIONS",
+    "FINDINGS_2_AND_3_OMIT_SCOPE_LIMITATIONS_FOR_SINGLE_CUSTOMER_HISTORICAL_CASE_EVIDENCE",
+    "WEAK_LINKS_ARE_NEAR_DUPLICATE_RESTATEMENTS_OF_RECURRING_REVENUE_LIMITATIONS",
+    "UNRESOLVED_POINT_IS_A_DECLARATIVE_LIMITATION_NOT_AN_ACTIONABLE_QUESTION",
+    "PRIORITY_SELECTION_WASTES_ONE_OF_THREE_SLOTS_ON_A_DUPLICATE",
+    "PRIORITY_SELECTION_OMITS_DIRECT_SERIAL_ACQUIRER_MOAT_INPUTS_INCLUDING_SELLER_REPUTATION_AND_DECENTRALIZATION"
+  ],
+  "positive_observations": [
+    "NO_EVIDENCE_ID_INVENTION",
+    "NO_CONFLICT_ID_INVENTION",
+    "C005_UNRESOLVED_CONFLICT_SURFACED_WITH_CORRECT_DIRECTIONAL_IMPLICATION",
+    "E009_RECURRING_REVENUE_LIMITATION_CORRECTLY_SURFACED",
+    "E063_DISCLOSURE_GAP_NOT_MISCAST_AS_LOW_RETENTION_EVIDENCE",
+    "NO_FINAL_MOAT_JUDGMENT_EMITTED",
+    "V1_1_SUBSTANTIVE_DETERMINISTIC_VALIDATION_PASSED_AFTER_SAFE_PRESENTATION_NORMALIZATION"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "exact_evidence_grounding_failure": true,
+    "unsupported_counterevidence_polarity": false,
+    "claim_atomicity_critical_failure": false,
+    "duplicate_priority_finding_critical_failure": true,
+    "priority_selection_critical_failure": true,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": false
+  },
+  "disposition": {
+    "automated_engineering_pass": true,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": true,
+    "clean_pass": false,
+    "pass_with_carry": false,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "new_inference_authorized": false,
+    "model_switch_authorized": false,
+    "production_candidate_decision_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "DECIDE_POST_CONSTELLATION_PHI4_STRATEGY_DISPOSITION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
