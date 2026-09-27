@@ -1,0 +1,28 @@
+{
+  "format": "OROTITAN_GATE18_V1_1_CONTRACT_CHANGE_AUTH_V0.1",
+  "authorization_id": "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "authorized_at": "2026-09-27",
+  "authority_source": "USER_EXPLICIT_AUTHORIZATION_IN_CHAT",
+  "user_message": "ok autorisation",
+  "scope": {
+    "versioned_v1_1_validation_contract_change": true,
+    "additive_implementation_only": true,
+    "preserve_v1_0_runtime_and_historical_results": true,
+    "safe_terminal_punctuation_normalization": true,
+    "separate_presentation_from_substantive_semantics": true,
+    "keep_human_quality_separate": true
+  },
+  "not_authorized": {
+    "new_model_inference": true,
+    "second_phi4_c4_cell": true,
+    "qwen3_5_download": true,
+    "model_switch": true,
+    "production_mutation": true,
+    "publication": true,
+    "retroactive_v1_0_pass": true,
+    "source_artifact_mutation": true
+  },
+  "status": "AUTHORIZED_IMPLEMENTATION_PENDING_CI"
+}
