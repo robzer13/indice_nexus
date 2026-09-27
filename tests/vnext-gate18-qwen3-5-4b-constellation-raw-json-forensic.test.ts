@@ -31,7 +31,7 @@ test("Qwen3.5 raw JSON forensic is read-only and non-inferential", () => {
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_READ_ONLY_NO_INFERENCE");
+  assert.equal(a.status, "CONSUMED_READ_ONLY_FORENSIC_COMPLETE");
   assert.equal(a.scope.read_existing_private_artifact, true);
   assert.equal(a.scope.inspect_raw_json_structure, true);
   assert.equal(a.scope.diagnostic_structural_closure_probe_on_copy, true);
@@ -80,10 +80,28 @@ test("Qwen3.5 forensic tooling mismatch is persisted without reclassifying the m
     ),
   );
 
-  assert.equal(d.status, "OPEN_FIX_PREPARED");
+  assert.equal(d.status, "RESOLVED");
   assert.equal(d.classification, "FORENSIC_INPUT_SCHEMA_MISMATCH");
   assert.equal(d.model_result_reclassification, false);
   assert.equal(d.source_run_status_changed, false);
   assert.equal(d.source_artifact_mutated, false);
   assert.equal(d.inference_executed, false);
+});
+
+
+test("Qwen3.5 empty-response forensic result justifies one explicit think-false retry without reclassifying history", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_5_4B_RAW_JSON_FORENSIC_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(r.status, "PASS_ARTIFACT_SHAPE_DISCOVERY_RAW_TEXT_EMPTY");
+  assert.equal(r.artifact_shape.raw_text_length, 0);
+  assert.equal(r.artifact_shape.raw_text_sha256, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
+  assert.equal(r.diagnosis.partial_json_recovery_possible, false);
+  assert.equal(r.diagnosis.thinking_tokens_proven, false);
+  assert.equal(r.diagnosis.model_structured_output_capability_failure_proven, false);
+  assert.equal(r.diagnosis.bounded_same_cell_retry_with_explicit_think_false_justified, true);
+  assert.equal(r.interpretation_boundary.source_run_status_changed, false);
 });
