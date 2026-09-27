@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-011",
+  "resume_id": "VNEXT-G18-C-20260927-012",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "13d091332242c63888be88526445a672bd43f711",
+  "last_verified_head_sha": "5e3b944ffbb9943e8d5326959b04a386a0201a83",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -32,19 +32,20 @@
     "PHI4_CONSTELLATION_V1_1_HUMAN_ADJUDICATION_CRITICAL_FAILURE",
     "PHI4_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
     "QWEN3_5_4B_PINNED_DOWNLOAD_PASS",
-    "STANDING_ZERO_COST_EXECUTION_AUTHORIZATION_V2_ACTIVE"
+    "STANDING_ZERO_COST_EXECUTION_AUTHORIZATION_V2_ACTIVE",
+    "QWEN3_5_CONTEXT16384_LOAD_ONLY_PASS"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_LOAD_PREFLIGHT_REQUIRES_USER_MACHINE_EXECUTION"
+    "LOCAL_OLLAMA_AND_PRIVATE_PINNED_PACKET_REQUIRED_ON_USER_MACHINE"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "COMPARE_4096_8192_16384_MEMORY_AND_OFFLOAD_SCALING",
-    "IF_16384_LOAD_FIT_IS_ACCEPTABLE_PREPARE_FIRST_BOUNDED_QWEN3_5_C4_INFERENCE",
-    "MODEL_WINNER_AND_ROUTING_REMAIN_UNRESOLVED"
+    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
+    "REVIEW_V1_1_ENGINEERING_RESULT",
+    "COMPLETE_HUMAN_QUALITY_ADJUDICATION_ON_PRIVATE_RAW_OUTPUT",
+    "DECIDE_QWEN3_5_EXPANSION_AFTER_FIRST_DISCRIMINATOR"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
@@ -111,7 +112,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -171,6 +172,18 @@
     "context8192_loaded_free_ram_gib": 0.56,
     "context8192_ollama_reported_size": "3.9 GB",
     "context8192_full_unload_release": true,
-    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED"
+    "context16384_load_status": "PASS_LOAD_ONLY_MEASURED",
+    "context16384_vram_used_mib": 2589,
+    "context16384_vram_headroom_mib": 1374,
+    "context16384_processor_split": "56%/44% CPU/GPU",
+    "context16384_loaded_free_ram_gib": 0.51,
+    "context16384_ollama_reported_size": "4.2 GB",
+    "context16384_full_unload_release": true,
+    "first_c4_company": "Constellation Software",
+    "first_c4_status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+    "first_c4_context_tokens": 16384,
+    "first_c4_max_output_tokens": 1024,
+    "first_c4_timeout_ms": 600000,
+    "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1"
   }
 }
