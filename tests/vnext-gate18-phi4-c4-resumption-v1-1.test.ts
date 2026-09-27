@@ -38,9 +38,16 @@ test("Phi-4 C4 resumption selects one bounded Constellation discriminator under 
   assert.equal(decision.execution_boundary.authorized_run_count, 0);
   assert.equal(decision.execution_boundary.automatic_retry_authorized, false);
 
-  assert.equal(prep.status, "AUTHORIZED_SINGLE_RUN_READY_TO_EXECUTE");
-  assert.equal(prep.constraints.inference_authorized, true);
-  assert.equal(prep.constraints.authorized_run_count, 1);
+  assert.equal(
+    prep.status,
+    "SINGLE_RUN_CONSUMED_ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
+  );
+  assert.equal(prep.constraints.inference_authorized, false);
+  assert.equal(prep.constraints.authorized_run_count, 0);
+  assert.equal(
+    prep.execution_result,
+    "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-RESULT-001",
+  );
   assert.equal(prep.evaluation_contract.raw_output_must_be_preserved, true);
   assert.equal(
     prep.evaluation_contract.validation_contract,
@@ -49,7 +56,7 @@ test("Phi-4 C4 resumption selects one bounded Constellation discriminator under 
 });
 
 
-test("Phi-4 Constellation v1.1 runner accepts exactly the explicitly authorized single-run contract", () => {
+test("Phi-4 Constellation v1.1 single-run authority is consumed after the observed engineering pass", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_PHI4_MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_AUTH_001.json",
@@ -61,12 +68,20 @@ test("Phi-4 Constellation v1.1 runner accepts exactly the explicitly authorized 
     "utf8",
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(auth.status, "CONSUMED_SINGLE_RUN_COMPLETE");
   assert.equal(auth.authorization_source.type, "EXPLICIT_USER_AUTHORIZATION_IN_CHAT");
   assert.equal(auth.authorization_source.user_message, "autorisé");
-  assert.equal(auth.c4_inference.authorized, true);
-  assert.equal(auth.constraints.authorized_run_count, 1);
+  assert.equal(auth.c4_inference.authorized, false);
+  assert.equal(auth.constraints.authorized_run_count, 0);
   assert.equal(auth.constraints.automatic_retry_authorized, false);
+  assert.equal(
+    auth.execution_result,
+    "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-RESULT-001",
+  );
+  assert.equal(auth.execution_observed.schema_valid, true);
+  assert.equal(auth.execution_observed.raw_presentation_compliant, false);
+  assert.equal(auth.execution_observed.normalized_path_count, 3);
+  assert.equal(auth.execution_observed.substantive_status, "PASS");
 
   assert.match(runner, /evaluateGate18V11Validation/);
   assert.match(
