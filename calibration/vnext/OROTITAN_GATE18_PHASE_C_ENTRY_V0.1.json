@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION",
+  "next_action": "DECIDE_POST_CONSTELLATION_PHI4_STRATEGY_DISPOSITION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1082,7 +1082,7 @@
   "v1_1_new_inference_executed": false,
   "v1_1_implementation_pr": 257,
   "phi4_mini_c4_resumption_decision": "G18-PHASEC-PHI4-C4-RESUMPTION-DECISION-001",
-  "phi4_mini_c4_resumption_status": "CONSTELLATION_ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
+  "phi4_mini_c4_resumption_status": "CONSTELLATION_CELL_COMPLETE_ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE",
   "phi4_mini_c4_next_cell": "Constellation Software",
   "phi4_mini_c4_next_cell_archetype": "SERIAL_ACQUIRER",
   "phi4_mini_c4_next_cell_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
@@ -1101,5 +1101,11 @@
   "phi4_mini_c4_constellation_v1_1_raw_presentation_compliant": false,
   "phi4_mini_c4_constellation_v1_1_normalized_path_count": 3,
   "phi4_mini_c4_constellation_v1_1_substantive_status": "PASS",
-  "phi4_mini_c4_constellation_v1_1_human_adjudication_completed": false
+  "phi4_mini_c4_constellation_v1_1_human_adjudication_completed": true,
+  "phi4_mini_c4_constellation_v1_1_human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+  "phi4_mini_c4_constellation_v1_1_human_adjudication_status": "COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "phi4_mini_c4_constellation_v1_1_critical_human_quality_failure": true,
+  "phi4_mini_c4_constellation_v1_1_matrix_cell_completed": true,
+  "phi4_mini_post_constellation_strategy_checkpoint": "G18-PHASEC-PHI4-POST-CONSTELLATION-STRATEGY-CHECKPOINT-001",
+  "phi4_mini_additional_c4_cell_authorized": false
 }
