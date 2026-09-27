@@ -10,7 +10,7 @@ test("Qwen3.5 4B download authorization permits one pinned download and forbids 
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY");
+  assert.equal(auth.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(auth.user_authorization.explicit, true);
   assert.equal(auth.model.ollama_model_name, "qwen3.5:4b-q4_K_M");
   assert.equal(auth.model.expected_digest_prefix, "2a654d98e6fb");
@@ -19,7 +19,7 @@ test("Qwen3.5 4B download authorization permits one pinned download and forbids 
   assert.equal(auth.constraints.inference_after_download, false);
   assert.equal(auth.constraints.load_smoke_after_download, false);
   assert.equal(auth.constraints.automatic_retry, false);
-  assert.equal(auth.authority.qwen3_5_download_authorized, true);
+  assert.equal(auth.authority.qwen3_5_download_authorized, false);
   assert.equal(auth.authority.qwen3_5_load_smoke_authorized, false);
   assert.equal(auth.authority.qwen3_5_inference_authorized, false);
 });

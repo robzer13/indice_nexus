@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_PHI4_CANDIDATE_ESCALATION_DOWNLOAD",
-  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
+  "status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "user_authorization": {
     "explicit": true,
     "authorized_action": "VERIFY_EXACT_TAG_THEN_DOWNLOAD_LOCAL_MODEL_AND_VERIFY_IDENTITY_ONLY",
@@ -75,7 +75,7 @@
     "no_load_or_inference_until_separate_authorization": true
   },
   "authority": {
-    "qwen3_5_download_authorized": true,
+    "qwen3_5_download_authorized": false,
     "qwen3_5_load_smoke_authorized": false,
     "qwen3_5_inference_authorized": false,
     "model_switch_authorized": false,
@@ -84,6 +84,12 @@
     "publication_authority": false
   },
   "base_vnext_sha": "85c1fb6ab92e5992fa859dbaba792886dbc86b64",
-  "next_action": "EXECUTE_ONE_QWEN3_5_4B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFICATION",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "REQUEST_SEPARATE_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "retry_authorized": false
+  }
 }

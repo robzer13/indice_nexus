@@ -1,0 +1,36 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-QWEN3_5-4B-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PREPARED_NOT_AUTHORIZED",
+  "model": {
+    "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "qwen3.5:4b-q4_K_M",
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "quantization": "Q4_K_M"
+  },
+  "planned_execution": {
+    "context_tokens": 4096,
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
+    "keep_alive_load": "2m",
+    "explicit_unload": true,
+    "prompt_provided": false,
+    "semantic_inference_requested": false
+  },
+  "authority": {
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "download_authorized": false,
+    "authorized_run_count": 0
+  },
+  "constraints": {
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "AWAIT_EXPLICIT_QWEN3_5_4B_CONTEXT4096_LOAD_ONLY_AUTHORIZATION"
+}
