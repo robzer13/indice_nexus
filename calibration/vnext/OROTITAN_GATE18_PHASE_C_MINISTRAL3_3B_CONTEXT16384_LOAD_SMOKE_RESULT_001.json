@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_8B_CANDIDATE_FINAL_CONTEXT_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "ministral-3:3b-instruct-2512-q4_K_M",
+    "digest": "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 1.45,
+    "loaded_free_ram_gib": 1.21,
+    "after_free_ram_gib": 3.88,
+    "loaded_vram_used_mib": 2399,
+    "loaded_vram_free_mib": 1564,
+    "processor_split": "63%/37% CPU/GPU",
+    "ollama_reported_size": "4.4 GB",
+    "load_only_confirmed": true,
+    "explicit_unload_complete": true,
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 0.24,
+    "vram_increment_mib": 2399,
+    "vram_headroom_mib": 1564,
+    "comparison_to_context8192": {
+      "loaded_free_ram_delta_gib": 0.83,
+      "vram_headroom_delta_mib": 8,
+      "gpu_residency_delta_percentage_points": -9,
+      "resident_size_delta_gb": 0.9,
+      "ram_comparison_caveat": "Free RAM is OS-state-sensitive across runs; the positive delta must not be interpreted as lower intrinsic model memory use."
+    },
+    "comparison_to_granite_context16384": {
+      "loaded_free_ram_delta_gib": 0.8,
+      "vram_headroom_delta_mib": -94,
+      "gpu_residency_delta_percentage_points": -25
+    },
+    "comparison_to_qwen3_8b_context16384": {
+      "loaded_free_ram_delta_gib": 1.07,
+      "vram_headroom_delta_mib": -54,
+      "gpu_residency_delta_percentage_points": 7
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_16384": "PASS_WITH_USEFUL_HEADROOM",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "no_further_context_growth": true,
+    "first_c4_constellation_same_packet_justified": true,
+    "pre_inference_minimum_free_ram_gib": 1
+  },
+  "next_action": "PREPARE_FIRST_BOUNDED_MINISTRAL3_CONSTELLATION_C4_INFERENCE_V1_1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
