@@ -1179,3 +1179,47 @@ Boundary:
 - no automatic retry/model switch;
 - explicit post-run decision required before any C4 inference.
 
+## D-2026-09-27-066 — Ministral 3 3B context16384 load-only passes
+
+Measured:
+- free RAM before: 1.45 GiB;
+- free RAM loaded: 1.21 GiB;
+- free RAM after unload: 3.88 GiB;
+- VRAM used loaded: 2399 MiB;
+- VRAM free loaded: 1564 MiB;
+- processor split: 63%/37% CPU/GPU;
+- resident size: 4.4 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_USEFUL_HEADROOM`.
+
+Caveat:
+free system RAM is host-state-sensitive across separate runs. The 1.21 GiB observation supports bounded execution but is not an intrinsic model memory-footprint estimate.
+
+No context growth beyond 16384 is authorized.
+
+## D-2026-09-27-067 — One bounded Ministral Constellation C4 inference authorized
+
+The same pinned Constellation Software packet is selected for direct protocol comparability.
+
+Execution envelope:
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- keep-alive 0s;
+- loopback transport only;
+- minimum baseline free RAM 1.0 GiB;
+- no other Ollama model loaded.
+
+Boundary:
+- exactly one inference;
+- no automatic retry;
+- no prompt/schema/packet/context/output/temperature/timeout/model change;
+- raw generated content remains private;
+- human adjudication is required if engineering validation passes;
+- no production, ranking or routing authority.
+
