@@ -1,0 +1,56 @@
+{
+  "format": "OROTITAN_GATE18_QWEN3_8B_POST_HARDWARE_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-QWEN3-8B-POST-HARDWARE-DECISION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "ONE_BOUNDED_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT_SELECTED",
+  "hardware_basis": {
+    "context4096": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "context8192": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "context16384": "PASS_WITH_EXTREME_RAM_PRESSURE",
+    "context16384_loaded_free_ram_gib": 0.14,
+    "context16384_vram_headroom_mib": 1618,
+    "context16384_processor_split": "70%/30% CPU/GPU",
+    "context16384_resident_size": "7.8 GB",
+    "no_further_context_growth": true
+  },
+  "selected_experiment": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "think": false
+  },
+  "rationale": [
+    "The user explicitly required Qwen3 8B to be tested after Granite.",
+    "The model completed staged load-only qualification at 4096, 8192 and 16384 without runtime failure.",
+    "The 16384 load is under extreme RAM pressure, so this authorizes only one experimental inference and does not establish production fit.",
+    "The same pinned Constellation packet preserves the strongest available comparability with prior candidates.",
+    "Qwen3 supports disabling thinking through Ollama; think=false avoids spending the bounded output budget on reasoning-mode behavior and follows the already-established Qwen-family runtime compatibility pattern."
+  ],
+  "safeguards": {
+    "pre_inference_minimum_free_ram_gib": 1,
+    "no_other_loaded_model": true,
+    "exact_digest_required": true,
+    "sleep_guard_required": true,
+    "keep_alive": "0s",
+    "automatic_retry": false,
+    "no_context_change": true,
+    "no_model_switch": true,
+    "no_production_mutation": true
+  },
+  "interpretation_boundary": {
+    "experimental_hardware_fit_only": true,
+    "production_fit": false,
+    "human_adjudication_required_if_engineering_pass": true,
+    "model_ranking_authority": false,
+    "routing_authority": false
+  },
+  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT"
+}
