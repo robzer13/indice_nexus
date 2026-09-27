@@ -719,3 +719,51 @@ Not authorized:
 
 Qwen3 8B remains the user-directed candidate immediately after Granite.
 
+## D-2026-09-27-041 — Granite 4 context8192 load-only passes with useful headroom
+
+Measured:
+- free RAM before: 1.84 GiB;
+- free RAM loaded: 0.94 GiB;
+- free RAM after unload: 1.80 GiB;
+- VRAM used loaded: 2355 MiB;
+- VRAM free loaded: 1608 MiB;
+- processor split: 22%/78% CPU/GPU;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Relative to Granite 4096:
+- loaded free RAM -0.12 GiB;
+- VRAM headroom -42 MiB;
+- GPU residency remains 78%.
+
+Relative to Gemma 3 at context8192:
+- +0.17 GiB loaded free RAM;
+- +68 MiB VRAM headroom;
+- materially higher GPU residency.
+
+Conclusion:
+Granite 4 context8192 hardware fit passes and supports one bounded context16384 load-only preflight.
+
+## D-2026-09-27-042 — Granite 4 context16384 load-only authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+- exact model `granite4:3b`;
+- exact digest `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
+- context 16384;
+- one load-only execution;
+- explicit unload.
+
+Not authorized:
+- prompt;
+- semantic inference;
+- context growth beyond 16384;
+- automatic retry;
+- model switch;
+- production mutation.
+
+Qwen3 8B remains the user-directed candidate immediately after Granite.
+
