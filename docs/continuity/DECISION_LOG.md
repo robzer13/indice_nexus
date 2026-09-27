@@ -815,3 +815,54 @@ One zero-cost local inference under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
 Boundary:
 No automatic retry, no additional Granite C4 cell, no model ranking, no routing freeze, and no production mutation before the result is evaluated. Qwen3 8B remains next after Granite.
 
+## D-2026-09-27-045 — Granite 4 Constellation reaches engineering PASS
+
+Observed:
+- schema valid;
+- v1.1 substantive semantics PASS;
+- five missing-terminal-punctuation issues safely normalized;
+- wall clock 117903 ms;
+- eval count 536;
+- runtime error null.
+
+Engineering disposition:
+`ENGINEERING_PASS_WITH_PRESENTATION_COMPLIANCE_CARRY`.
+
+## D-2026-09-27-046 — Granite 4 human adjudication is critical failure
+
+Human defects:
+- E-029 overgeneralizes acquisition criteria into verified properties of every acquired company;
+- the universal E-029 claim has no qualification;
+- two of three priority findings are near-duplicate recurring-revenue share metrics;
+- unresolved retention question reuses E-063 although prior same-packet adjudication established the disclosure is already answered;
+- E-066/E-067 direct serial-acquirer moat inputs are omitted.
+
+Positive:
+- no evidence-ID invention;
+- no conflict-ID invention;
+- C-005 is surfaced;
+- the recurring-revenue-vs-retention weak link is directionally useful;
+- no final moat judgment emitted.
+
+Disposition:
+`STOP_GRANITE4_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`.
+
+No global Granite-family failure inferred.
+
+## D-2026-09-27-047 — Qwen3 8B user-directed sequence becomes active
+
+Public Ollama target:
+`qwen3:8b-q4_K_M`
+
+Verified public metadata:
+- digest prefix `500a1f067a9f`;
+- ~5.2GB;
+- 8.19B parameters;
+- Q4_K_M;
+- 40K context;
+- Apache-2.0.
+
+Exactly one zero-cost pinned download is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+No load smoke, inference, retry, model switch, paid execution, or production mutation is authorized in the download step.
+
