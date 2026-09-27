@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-015",
+  "resume_id": "VNEXT-G18-C-20260927-016",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "cced428c81ef0f3747dfcb02c8c16d9d55895f4b",
+  "last_verified_head_sha": "48af9d7270f3606f96df46715efa1e8c12e9bb73",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -35,18 +35,17 @@
     "STANDING_ZERO_COST_EXECUTION_AUTHORIZATION_V2_ACTIVE",
     "QWEN3_5_CONTEXT16384_LOAD_ONLY_PASS",
     "QWEN3_5_FIRST_CONSTELLATION_C4_RUN_FAIL_RAW_JSON_INCOMPLETE",
-    "QWEN3_5_FORENSIC_TOOLING_SCHEMA_MISMATCH_OBSERVED"
+    "QWEN3_5_FORENSIC_TOOLING_SCHEMA_MISMATCH_OBSERVED",
+    "QWEN3_5_CONSTELLATION_THINK_FALSE_RETRY_ENGINEERING_PASS"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE"
+    "COMPLETE_QWEN3_5_CONSTELLATION_HUMAN_QUALITY_ADJUDICATION"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_AND_PRIVATE_PINNED_PACKET_REQUIRED_ON_USER_MACHINE"
+    "PRIVATE_RAW_OUTPUT_AND_PINNED_PACKET_REQUIRED_FOR_HUMAN_ADJUDICATION"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE",
-    "REVIEW_V1_1_ENGINEERING_RESULT",
-    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
+    "COMPLETE_QWEN3_5_CONSTELLATION_HUMAN_QUALITY_ADJUDICATION",
     "DECIDE_QWEN3_5_EXPANSION_OR_STOP"
   ],
   "preserved_decisions": [
@@ -83,7 +82,8 @@
     "runtime/vnext/model-calibration-pilot-v10.ts",
     "calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_CHANGE_AUTH_001.json",
     "calibration/vnext/OROTITAN_GATE18_V1_1_VALIDATION_CONTRACT_001.json",
-    "runtime/vnext/model-calibration-validation-v11.ts"
+    "runtime/vnext/model-calibration-validation-v11.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_5_4B_V1_1_THINK_FALSE_RESULT_001.json"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -114,7 +114,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE",
+  "next_action": "COMPLETE_QWEN3_5_CONSTELLATION_HUMAN_QUALITY_ADJUDICATION",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -205,7 +205,23 @@
     "first_c4_raw_text_length": 0,
     "first_c4_runtime_adapter_confound": true,
     "first_c4_thinking_tokens_proven": false,
-    "think_false_retry_status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
-    "think_false_retry_run_count": 1
+    "think_false_retry_status": "ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
+    "think_false_retry_run_count": 1,
+    "think_false_retry_authorized_run_consumed": true,
+    "think_false_retry_wall_clock_ms": 283571,
+    "think_false_retry_done_reason": "stop",
+    "think_false_retry_prompt_eval_count": 3351,
+    "think_false_retry_eval_count": 953,
+    "think_false_retry_output_token_margin": 71,
+    "think_false_retry_schema_valid": true,
+    "think_false_retry_raw_presentation_compliant": true,
+    "think_false_retry_normalized_path_count": 0,
+    "think_false_retry_substantive_status": "PASS",
+    "think_false_retry_semantic_valid": true,
+    "think_false_retry_runtime_error": null,
+    "think_false_retry_private_output_path": "calibration/vnext/private-runs/2026-09-27T143133027Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_THINKFALSE_001.json",
+    "think_false_retry_human_adjudication_completed": false,
+    "think_false_retry_comparison_admissible": false,
+    "think_false_retry_model_ranking_authority": false
   }
 }

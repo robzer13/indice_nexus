@@ -1,0 +1,56 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_CONSTELLATION_V1_1_THINK_FALSE_EXECUTION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-THINKFALSE-RESULT-001",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_THINKFALSE_001",
+  "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_THINKFALSE_LOOPBACK_GUARDED_001",
+  "company": "Constellation Software",
+  "archetype": "SERIAL_ACQUIRER",
+  "model": "qwen3.5:4b-q4_K_M",
+  "model_digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+  "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+  "execution": {
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false,
+    "wall_clock_ms": 283571,
+    "done_reason": "stop",
+    "prompt_eval_count": 3351,
+    "eval_count": 953,
+    "max_output_tokens": 1024,
+    "output_token_margin": 71,
+    "runtime_error": null
+  },
+  "engineering": {
+    "schema_valid": true,
+    "schema_error": null,
+    "raw_presentation_compliant": true,
+    "normalized_path_count": 0,
+    "substantive_status": "PASS",
+    "semantic_valid": true,
+    "semantic_error": null,
+    "output_budget_saturated": false
+  },
+  "raw_private_output": {
+    "local_path": "calibration/vnext/private-runs/2026-09-27T143133027Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_THINKFALSE_001.json",
+    "content_persisted_publicly": false
+  },
+  "historical_boundary": {
+    "prior_runtime_adapter_confounded_attempt_preserved_as_fail": true,
+    "prior_result_reclassified": false
+  },
+  "boundaries": {
+    "authorized_run_consumed": true,
+    "retry_authorized": false,
+    "second_attempt_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "human_adjudication_completed": false,
+    "matrix_cell_completed": false
+  },
+  "next_action": "REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION"
+}
