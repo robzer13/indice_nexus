@@ -189,6 +189,67 @@ function countPattern(value: string, pattern: RegExp): number {
   return Array.from(value.matchAll(pattern)).length;
 }
 
+
+interface ShapeEntry {
+  path: string;
+  kind: string;
+  stringLength?: number;
+  startsWithObject?: boolean;
+  sha256?: string;
+}
+
+function collectArtifactShape(
+  value: unknown,
+  path = "$",
+  depth = 0,
+  out: ShapeEntry[] = [],
+): ShapeEntry[] {
+  if (depth > 5) return out;
+
+  if (typeof value === "string") {
+    if (
+      value.length >= 256 ||
+      /(raw|response|output|content|text|provider|generation)/i.test(path)
+    ) {
+      out.push({
+        path,
+        kind: "string",
+        stringLength: value.length,
+        startsWithObject: value.trimStart().startsWith("{"),
+        sha256: sha256(value),
+      });
+    }
+    return out;
+  }
+
+  if (value === null) {
+    if (/(raw|response|output|content|text|provider|generation)/i.test(path)) {
+      out.push({ path, kind: "null" });
+    }
+    return out;
+  }
+
+  if (Array.isArray(value)) {
+    out.push({ path, kind: "array" });
+    value.slice(0, 5).forEach((item, index) => {
+      collectArtifactShape(item, `${path}[${index}]`, depth + 1, out);
+    });
+    return out;
+  }
+
+  if (typeof value === "object") {
+    if (depth <= 2 || /(raw|response|output|content|text|provider|generation)/i.test(path)) {
+      out.push({ path, kind: "object" });
+    }
+    for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+      collectArtifactShape(child, `${path}.${key}`, depth + 1, out);
+    }
+    return out;
+  }
+
+  return out;
+}
+
 function structuralClosureProbe(rawText: string) {
   const scan = scanStructure(rawText);
   let suffix = "";
@@ -288,7 +349,66 @@ function main(): void {
 
   const rawText = run.response?.rawText;
   if (typeof rawText !== "string" || rawText.length === 0) {
-    throw new Error("VNEXT_GATE18_QWEN35_JSON_FORENSIC_RAW_TEXT_MISSING");
+    const root = run as unknown as Record<string, unknown>;
+    const responseObject =
+      root.response && typeof root.response === "object"
+        ? (root.response as Record<string, unknown>)
+        : null;
+
+    console.log(
+      JSON.stringify(
+        {
+          format:
+            "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_RAW_JSON_TERMINATION_FORENSIC_V0.2",
+          status:
+            "PASS_ARTIFACT_SHAPE_DISCOVERY_RAW_TEXT_PATH_UNRESOLVED",
+          mode: "LOCAL_READ_ONLY_NO_INFERENCE",
+          sourceRun: {
+            matrixCellId: EXPECTED_MATRIX_CELL_ID,
+            attemptId: EXPECTED_ATTEMPT_ID,
+            company: EXPECTED_COMPANY,
+            model: EXPECTED_MODEL,
+            doneReason: run.execution?.doneReason ?? null,
+            evalCount: run.execution?.evalCount ?? null,
+            maxOutputTokens:
+              run.localRuntime?.generation?.maxOutputTokens ?? null,
+            schemaError: run.execution?.schemaError ?? null,
+          },
+          artifactShape: {
+            topLevelKeys: Object.keys(root).sort(),
+            responseKeys: responseObject
+              ? Object.keys(responseObject).sort()
+              : [],
+            interestingPaths: collectArtifactShape(run),
+          },
+          diagnosis: {
+            expectedRawTextPath: "$.response.rawText",
+            expectedRawTextPresent: false,
+            forensicToolingSchemaMismatchObserved: true,
+            modelFailureReclassified: false,
+            retryAutomaticallyJustified: false,
+          },
+          interpretationBoundary: {
+            sourceArtifactMutated: false,
+            rawValuesPrinted: false,
+            rawOutputPublished: false,
+            nextAction:
+              "Use artifact-shape metadata to locate the persisted raw model response path, then rerun the structural forensic without new inference.",
+          },
+          safety: {
+            externalNetworkAccessRequested: false,
+            ollamaApiCalled: false,
+            modelInferenceExecuted: false,
+            modelLoadRequested: false,
+            productionMutation: false,
+            publicationAuthority: false,
+          },
+        },
+        null,
+        2,
+      ),
+    );
+    return;
   }
 
   const sectionKeys = [
