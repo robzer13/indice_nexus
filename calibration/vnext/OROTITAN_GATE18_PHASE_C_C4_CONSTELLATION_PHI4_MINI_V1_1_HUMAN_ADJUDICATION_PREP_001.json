@@ -1,0 +1,60 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_CONSTELLATION_HUMAN_ADJUDICATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-HUMAN-ADJUDICATION-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "READY_PRIVATE_RAW_REVIEW_REQUIRED",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001",
+  "engineering_result": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-RESULT-001",
+  "private_raw_output_path": "calibration/vnext/private-runs/2026-09-27T085515615Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001.json",
+  "private_raw_content_persist_publicly": false,
+  "engineering_carry": {
+    "raw_presentation_compliant": false,
+    "normalized_path_count": 3,
+    "substantive_status": "PASS",
+    "done_reason": "stop",
+    "eval_count": 681,
+    "max_output_tokens": 1024,
+    "output_token_margin": 343
+  },
+  "human_quality_dimensions": [
+    "exact_evidence_grounding",
+    "claim_atomicity",
+    "claim_target_alignment",
+    "support_counterevidence_polarity",
+    "qualification_orthogonality",
+    "conflict_handling",
+    "weak_link_usefulness",
+    "unresolved_point_usefulness",
+    "judgment_boundary_compliance",
+    "priority_selection_usefulness"
+  ],
+  "critical_failure_checks": [
+    "evidence_id_invention",
+    "conflict_id_invention",
+    "unsupported_counterevidence_polarity",
+    "claim_atomicity_critical_failure",
+    "unresolved_conflict_suppressed",
+    "final_moat_judgment_emitted",
+    "schema_failure",
+    "deterministic_semantic_failure"
+  ],
+  "allowed_dispositions": [
+    "CLEAN_PASS",
+    "PASS_WITH_CARRY",
+    "CRITICAL_HUMAN_QUALITY_FAILURE"
+  ],
+  "authority": {
+    "new_inference_authorized": false,
+    "retry_authorized": false,
+    "auto_repair_authorized": false,
+    "model_switch_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION"
+}
