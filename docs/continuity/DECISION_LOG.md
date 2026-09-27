@@ -641,3 +641,38 @@ Not authorized in this step:
 - paid execution;
 - production mutation.
 
+## D-2026-09-27-036 — Granite 4 3B pinned download passes exact identity verification
+
+Observed local identity:
+- model `granite4:3b`;
+- full digest `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
+- size 2,099,521,385 bytes;
+- format `gguf`;
+- family `granite`;
+- parameter size `3.4B`;
+- quantization `Q4_K_M`.
+
+No load or inference occurred.
+
+## D-2026-09-27-037 — Granite 4 context4096 load-only preflight authorized
+
+One zero-cost load-only execution is authorized at context 4096 using the exact full digest.
+
+No prompt, semantic inference, retry, model switch, context change, or production mutation is authorized.
+
+## D-2026-09-27-038 — Qwen3 8B explicitly queued immediately after Granite
+
+User direction:
+Test Qwen3 8B after Granite.
+
+This overrides the prior informational ordering that placed Ministral 3 3B and Llama 3.2 3B before Qwen3 8B.
+
+Required Qwen3 8B sequence:
+1. pinned download and identity verification;
+2. context4096 load-only;
+3. context8192 load-only only if 4096 supports it;
+4. context16384 load-only only if 8192 supports it;
+5. inference only if the measured hardware qualification supports it.
+
+Qwen3 8B remains recognized as a high-risk hardware candidate, but it is no longer deferred behind Ministral/Llama.
+
