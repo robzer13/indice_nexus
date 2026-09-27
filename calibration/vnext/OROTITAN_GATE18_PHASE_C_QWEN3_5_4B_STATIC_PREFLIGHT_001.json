@@ -1,0 +1,89 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_STATIC_PREFLIGHT_V0.1",
+  "preflight_id": "G18-PHASEC-QWEN3_5-4B-STATIC-PREFLIGHT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_STATIC_CANDIDATE_PREFLIGHT",
+  "status": "STATIC_REVIEW_COMPLETE_NO_DOWNLOAD_NO_INFERENCE",
+  "source_options": "G18-PHASEC-LOCAL-CANDIDATE-ESCALATION-OPTIONS-001",
+  "candidate": {
+    "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "family": "Qwen3.5",
+    "model_id": "qwen3.5:4b-q4_K_M",
+    "parameters": "4B",
+    "architecture_class": "multimodal",
+    "ollama_artifact_size_gb": 3.4,
+    "context_window_tokens": 256000,
+    "expected_ollama_digest_prefix": "2a654d98e6fb",
+    "license": "Apache-2.0",
+    "registry_order_after_phi4": 2
+  },
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "prior_qwen3_4b_artifact_size_gb": 2.5,
+    "prior_qwen3_4b_context16384_loaded_vram_mib": 2359,
+    "prior_qwen3_4b_context16384_vram_headroom_mib": 1604,
+    "prior_qwen3_4b_system_ram_pressure": "HIGH",
+    "qwen3_5_artifact_delta_vs_qwen3_4b_gb": 0.9,
+    "qwen3_5_artifact_delta_vs_qwen3_4b_pct": 36,
+    "interpretation": [
+      "Artifact size remains below total discrete VRAM but runtime memory is not equal to artifact size.",
+      "Runtime overhead and KV cache make full-GPU context16384 fit unproven.",
+      "Existing 8GB system RAM constraint makes CPU offload materially risky.",
+      "Static hardware fit is plausible but materially tighter than Qwen3 4B and requires a bounded load-only memory preflight before any inference."
+    ],
+    "static_fit": "PLAUSIBLE_BUT_TIGHT_UNPROVEN"
+  },
+  "contract_basis": {
+    "generation_prompt_contract": "V1_0_UNCHANGED_FOR_FUTURE_COMPARABILITY",
+    "generation_schema_contract": "V1_0_UNCHANGED_FOR_FUTURE_COMPARABILITY",
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "semantic_quality_inferred_from_public_benchmarks": false,
+    "oro_titan_semantic_contract_tested_on_candidate": false
+  },
+  "information_gain": {
+    "rationale": "Tests whether a newer Qwen generation can improve evidence-grounding and human-quality reliability under the same v1.1 architecture without moving to a materially larger 8B artifact.",
+    "relation_to_qwen3_4b": "SUCCESSOR_LINEAGE_NOT_INDEPENDENT_FAMILY",
+    "relation_to_phi4": "DIFFERENT_FAMILY_FROM_PHI4_BUT_SAME_QWEN_LINEAGE_AS_PRIOR_QWEN3_4B",
+    "expected_information_gain": "MEDIUM"
+  },
+  "recommended_if_future_download_is_separately_authorized": {
+    "step_1": "VERIFY_EXACT_OLLAMA_TAG_SIZE_DIGEST_AND_LICENSE_METADATA",
+    "step_2": "DOWNLOAD_EXACT_Q4_K_M_TAG_ONLY",
+    "step_3": "VERIFY_LOCAL_MODEL_ID_AND_FULL_DIGEST",
+    "step_4": "RUN_LOAD_ONLY_MEMORY_PREFLIGHT_AT_CONTEXT4096_NO_PROMPT_NO_GENERATION",
+    "step_5": "UNLOAD_AND_VERIFY_MEMORY_RELEASE",
+    "step_6": "REVIEW_MEASURED_FIT_BEFORE_ANY_CONTEXT16384_OR_MODEL_INFERENCE"
+  },
+  "fail_closed_conditions": [
+    "UNEXPECTED_TAG_OR_DIGEST",
+    "MATERIAL_SOURCE_METADATA_DRIFT",
+    "INSUFFICIENT_MEMORY_HEADROOM",
+    "HIDDEN_CLOUD_FALLBACK",
+    "UNAUTHORIZED_GENERATION",
+    "UNAUTHORIZED_CONTEXT_ESCALATION"
+  ],
+  "authority": {
+    "static_review_authorized": true,
+    "download_authorized": false,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "conclusion": {
+    "candidate_remains_plausible_for_download_consideration": true,
+    "candidate_hardware_fit_proven": false,
+    "inference_fit_proven": false,
+    "candidate_selected_as_model_winner": false,
+    "routing_frozen": false
+  },
+  "next_action": "DECIDE_WHETHER_TO_AUTHORIZE_QWEN3_5_4B_EXACT_TAG_VERIFICATION_AND_DOWNLOAD_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
