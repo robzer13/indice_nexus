@@ -1257,3 +1257,48 @@ A non-inferential local bundle builder is prepared to:
 
 No retry, parameter change, second cell, production mutation, ranking or routing authority is granted.
 
+## D-2026-09-27-070 — Ministral 3 3B human adjudication is a critical quality failure
+
+The private Constellation bundle was reviewed against the exact pinned packet.
+
+Engineering remains a clean pass with zero normalization and a 33-token output margin.
+
+Human-quality adjudication:
+- exact evidence grounding: FAIL;
+- claim atomicity: PASS;
+- claim target alignment: PASS_WITH_DEFECT;
+- support/counterevidence polarity: PASS;
+- qualification orthogonality: PASS_WITH_DEFECT;
+- conflict handling: PASS;
+- weak-link usefulness: PASS;
+- unresolved-point usefulness: FAIL;
+- judgment-boundary compliance: PASS;
+- priority-selection usefulness: PASS_WITH_DEFECT.
+
+Critical defects:
+1. E-066 is misattributed to Trapeze replacement evidence; the packet defines E-066 as seller-reputation evidence, while Trapeze replacement is E-046.
+2. E-045 is a replacement RFP, not a completed or eventual replacement outcome.
+3. E-043 supports a sole-source support situation with no practical alternatives at record; it does not by itself prove deep integration or low churn risk.
+
+Positive observations include correct C-005 handling, explicit E-029 qualification, non-misuse of E-063, distinct weak links, non-duplicate priority findings, and no final moat judgment.
+
+Disposition:
+
+`COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE`.
+
+No retry is authorized.
+
+## D-2026-09-27-071 — Stop Ministral C4 expansion and retain calibration evidence
+
+Status:
+
+`STOP_MINISTRAL3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+
+The engineering pass is preserved and is not retroactively reclassified.
+
+The human-quality failure is sufficient to stop additional C4 cells for this candidate under the current screening sequence.
+
+The result does not establish a global Mistral-family failure.
+
+No next local candidate is selected in this disposition. The next protocol step is to refresh the current local candidate registry and select the next same-weight-class candidate before any new download or inference.
+

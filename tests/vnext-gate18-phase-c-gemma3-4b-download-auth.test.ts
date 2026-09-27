@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Ministral 3 3B context16384 hardware pass to first bounded Constellation C4 inference", () => {
+test("Phase C advances from Ministral 3 3B human adjudication to next-candidate registry refresh", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Ministral 3 3B context16384 hardware pass to first b
 
   assert.equal(
     entry.next_action,
-    "GENERATE_AND_REVIEW_PRIVATE_MINISTRAL3_HUMAN_ADJUDICATION_BUNDLE",
+    "REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_SELECT_NEXT_SAME_WEIGHT_CLASS_CANDIDATE",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -102,7 +102,7 @@ test("Phase C advances from Ministral 3 3B context16384 hardware pass to first b
   );
   assert.equal(entry.gemma3_c4_expansion_status, "STOPPED_RETAIN_CALIBRATION_EVIDENCE");
   assert.equal(entry.gemma3_family_global_failure_concluded, false);
-  assert.equal(entry.next_candidate, "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M");
+  assert.equal(entry.next_candidate, "NOT_SELECTED");
   assert.equal(entry.granite4_3b_model_name, "granite4:3b");
   assert.equal(entry.granite4_3b_download_authorized, false);
   assert.equal(entry.granite4_3b_download_executed, true);

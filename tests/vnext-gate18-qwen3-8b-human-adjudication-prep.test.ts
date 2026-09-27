@@ -394,7 +394,7 @@ test("Ministral 3 3B private human-adjudication prep authorizes no new inference
     ),
   );
 
-  assert.equal(p.status, "PRIVATE_BUNDLE_GENERATION_READY");
+  assert.equal(p.status, "COMPLETED_PRIVATE_BUNDLE_GENERATED_AND_REVIEWED");
   assert.equal(p.authority.new_model_inference_authorized, false);
   assert.equal(p.authority.retry_authorized, false);
   assert.equal(p.privacy.public_repo_generated_content_forbidden, true);
@@ -418,4 +418,57 @@ test("Ministral 3 3B human-adjudication bundle builder is private and non-infere
   assert.match(raw, /inferenceExecuted: false/);
   assert.doesNotMatch(raw, /\/api\/generate/);
   assert.doesNotMatch(raw, /\/api\/chat/);
+});
+
+
+test("Ministral 3 3B human adjudication fails exact grounding despite clean engineering", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_MINISTRAL3_3B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    r.status,
+    "COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  );
+  assert.equal(
+    r.engineering_disposition.disposition,
+    "CLEAN_ENGINEERING_PASS_WITH_NEAR_SATURATION_CARRY",
+  );
+  assert.equal(r.human_quality.exact_evidence_grounding, "FAIL");
+  assert.equal(r.human_quality.conflict_handling, "PASS");
+  assert.equal(r.human_quality.weak_link_usefulness, "PASS");
+  assert.equal(r.human_quality.unresolved_point_usefulness, "FAIL");
+  assert.equal(r.human_quality.priority_selection_usefulness, "PASS_WITH_DEFECT");
+  assert.equal(r.critical_failures.exact_evidence_grounding_failure, true);
+  assert.equal(r.critical_failures.unresolved_point_usefulness_critical_failure, true);
+  assert.equal(r.critical_failures.priority_selection_critical_failure, false);
+  assert.equal(r.disposition.critical_human_quality_failure, true);
+  assert.equal(r.authority.retry_authorized, false);
+  assert.equal(r.authority.new_ministral3_inference_authorized, false);
+});
+
+test("Ministral 3 3B post-Constellation disposition stops expansion without family-global failure", () => {
+  const d = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_MINISTRAL3_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    d.status,
+    "STOP_MINISTRAL3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  );
+  assert.equal(d.boundaries.ministral3_candidate_admitted, false);
+  assert.equal(d.boundaries.mistral3_family_global_failure_concluded, false);
+  assert.equal(d.boundaries.retry_authorized, false);
+  assert.equal(d.boundaries.new_ministral3_inference_authorized, false);
+  assert.equal(d.next_candidate, "NOT_SELECTED");
+  assert.equal(
+    d.next_action,
+    "REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_SELECT_NEXT_SAME_WEIGHT_CLASS_CANDIDATE",
+  );
 });

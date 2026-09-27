@@ -1,0 +1,38 @@
+{
+  "format": "OROTITAN_GATE18_MINISTRAL3_POST_CONSTELLATION_STRATEGY_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-MINISTRAL3-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_MINISTRAL3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "basis": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-MINISTRAL3-3B-V1_1-RESULT-001",
+    "human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-MINISTRAL3-3B-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+    "engineering_pass": true,
+    "human_quality": "CRITICAL_FAILURE",
+    "hardware_fit": "PASS_WITH_USEFUL_HEADROOM",
+    "output_token_margin": 33
+  },
+  "rationale": [
+    "Clean engineering compliance does not compensate for critical exact-evidence grounding defects.",
+    "The same-packet E-045 replacement-RFP regression remains present.",
+    "The output additionally misattributes Trapeze replacement evidence to E-066, which is the seller-reputation evidence state; the actual Trapeze evidence is E-046.",
+    "The E-043 sole-source support case is overextended into deep integration and low-churn conclusions not directly established by that evidence item.",
+    "Despite better handling of E-029, E-063, C-005, weak links and non-duplicate priorities, one same-packet critical human-quality failure is sufficient to stop C4 expansion under the current candidate-screening sequence.",
+    "The 33-token output margin is retained as a near-saturation carry but does not explain or excuse the evidence-identity errors."
+  ],
+  "boundaries": {
+    "ministral3_candidate_admitted": false,
+    "mistral3_family_global_failure_concluded": false,
+    "retry_authorized": false,
+    "new_ministral3_inference_authorized": false,
+    "production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "model_winner_selected": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "routing_frozen": false,
+    "production_mutation": false
+  },
+  "next_candidate": "NOT_SELECTED",
+  "next_action": "REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_SELECT_NEXT_SAME_WEIGHT_CLASS_CANDIDATE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
