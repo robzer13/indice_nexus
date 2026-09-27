@@ -24,5 +24,14 @@
     "retroactive_v1_0_pass": true,
     "source_artifact_mutation": true
   },
-  "status": "AUTHORIZED_IMPLEMENTATION_PENDING_CI"
+  "status": "CONSUMED_IMPLEMENTATION_COMPLETE_CI_PASS",
+  "implementation": {
+    "runtime": "runtime/vnext/model-calibration-validation-v11.ts",
+    "contract_artifact": "OROTITAN_GATE18_V1_1_VALIDATION_CONTRACT_001",
+    "pull_request": 257,
+    "vnext_ci": "PASS",
+    "screener_ci": "PASS",
+    "inference_executed": false,
+    "historical_v1_0_results_changed": false
+  }
 }
