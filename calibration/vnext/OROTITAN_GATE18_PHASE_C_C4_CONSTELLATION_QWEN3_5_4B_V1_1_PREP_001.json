@@ -1,0 +1,57 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_CONSTELLATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "candidate": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "quantization": "Q4_K_M"
+  },
+  "cell": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_001",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041
+  },
+  "parameters": {
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "keep_alive": "0s",
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "contract": {
+    "generation_prompt_contract": "V1_0_UNCHANGED",
+    "generation_schema_contract": "V1_0_UNCHANGED",
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "raw_output_preserved": true,
+    "human_adjudication_required": true
+  },
+  "discriminator_rationale": {
+    "qwen3_4b_same_cell": "ENGINEERING_PASS_HUMAN_PASS_WITH_CARRY",
+    "phi4_same_cell": "ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "purpose": "Measure whether Qwen3.5 improves exact grounding and priority selection on the same packet while preserving deterministic contract compliance.",
+    "comparison_is_descriptive_until_human_adjudication": true
+  },
+  "runtime_basis": {
+    "context16384_load_fit": "PASS",
+    "context16384_vram_used_mib": 2589,
+    "context16384_vram_headroom_mib": 1374,
+    "context16384_processor_split": "56%/44% CPU/GPU",
+    "context16384_loaded_free_ram_gib": 0.51,
+    "inference_fit": "PLAUSIBLE_NOT_YET_PROVEN"
+  },
+  "authorization": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-5-4b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+  "next_action": "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1"
+}
