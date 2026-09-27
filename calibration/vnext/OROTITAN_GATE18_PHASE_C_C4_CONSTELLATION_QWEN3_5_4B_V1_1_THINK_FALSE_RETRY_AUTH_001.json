@@ -36,6 +36,7 @@
     "client_timeout_ms": 600000,
     "keep_alive": "0s",
     "think": false,
+    "sleep_guard_required": true,
     "transport": "NODE_HTTP_REQUEST_LOOPBACK"
   },
   "invariants": {
