@@ -312,3 +312,31 @@ Frozen:
 - validation v1.1.
 
 No automatic second retry.
+
+## D-2026-09-27-019 — Qwen3.5 think-false compatibility retry reaches engineering PASS
+
+Observed execution:
+- exactly one authorized same-cell local retry;
+- model `qwen3.5:4b-q4_K_M` with pinned digest unchanged;
+- Constellation Software / SERIAL_ACQUIRER;
+- `think:false` as the sole runtime-compatibility change;
+- wall clock 283571 ms;
+- done reason `stop`;
+- 953 / 1024 output tokens;
+- 71 configured output tokens remained;
+- no runtime error;
+- schema PASS;
+- raw presentation compliance PASS;
+- v1.1 safe normalization count 0;
+- substantive deterministic semantics PASS;
+- zero external model API cost.
+
+Disposition:
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING`.
+
+Boundary:
+The historical first attempt remains FAIL and is not reclassified. The retry authorization is consumed. No automatic second retry, broader Qwen3.5 expansion, model ranking, routing decision, production mutation, or publication authority follows from this engineering result.
+
+Next action:
+Human-quality adjudication of the private raw output against the pinned private evidence packet.
+
