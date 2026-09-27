@@ -34,7 +34,7 @@ test("Gemma 3 context4096 load-only authority is consumed", () => {
   assert.equal(a.execution_result, "G18-PHASEC-GEMMA3-4B-LOAD-SMOKE-RESULT-001");
 });
 
-test("Gemma 3 context8192 load-only authorization allows one guarded run", () => {
+test("Gemma 3 context8192 load-only authorization is consumed after measured pass", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
@@ -42,11 +42,12 @@ test("Gemma 3 context8192 load-only authorization allows one guarded run", () =>
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 8192);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
+  assert.equal(a.execution_result, "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-RESULT-001");
 });
 
 test("Gemma 3 context8192 runner requires exact digest and requests no prompt", () => {

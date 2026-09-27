@@ -421,3 +421,43 @@ Guards:
 Next:
 Execute the context4096 load-only preflight and use the measured RAM/VRAM/process split to decide whether an intermediate context8192 load-only step is justified.
 
+## D-2026-09-27-024 — Gemma 3 context8192 load-only preflight passes
+
+Observed:
+- context 8192;
+- VRAM used 2423 MiB;
+- VRAM headroom 1540 MiB;
+- free system RAM while loaded 0.77 GiB;
+- processor split 56%/44% CPU/GPU;
+- load-only guard PASS;
+- explicit unload PASS;
+- no prompt;
+- no semantic inference.
+
+Reference:
+At context8192, Qwen3.5 used 2525 MiB VRAM with 1438 MiB headroom and 0.56 GiB loaded free RAM.
+
+Interpretation:
+Gemma 3 is not hardware-rejected at 8192 and has modestly better observed memory headroom than the Qwen3.5 reference. System RAM pressure remains high, so inference is still not authorized.
+
+## D-2026-09-27-025 — Gemma 3 context16384 load-only preflight authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+One zero-cost load-only execution at context 16384 using the exact pinned digest.
+
+Guards:
+- exact model identity required;
+- no prompt;
+- no semantic inference;
+- explicit unload;
+- no automatic retry;
+- no context growth beyond 16384;
+- no model switch;
+- no production mutation.
+
+Next:
+If context16384 load fit passes, close the hardware qualification for the intended C4 target context and decide the first bounded Gemma 3 C4 discriminator separately.
+

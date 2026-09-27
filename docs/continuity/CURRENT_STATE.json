@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-019",
+  "resume_id": "VNEXT-G18-C-20260927-020",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "4c5b6fdd1262593c2dc649e1c518c6e5a4abf135",
+  "last_verified_head_sha": "e5cfaa611ef194aafbceac61224e699d52f6e2c4",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -46,18 +46,20 @@
     "GEMMA3_4B_FULL_DIGEST_CAPTURED",
     "GEMMA3_4B_CONTEXT4096_LOAD_ONLY_AUTHORIZED",
     "GEMMA3_4B_CONTEXT4096_LOAD_ONLY_PASS",
-    "GEMMA3_4B_CONTEXT8192_LOAD_ONLY_AUTHORIZED"
+    "GEMMA3_4B_CONTEXT8192_LOAD_ONLY_AUTHORIZED",
+    "GEMMA3_4B_CONTEXT8192_LOAD_ONLY_PASS",
+    "GEMMA3_4B_CONTEXT16384_LOAD_ONLY_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_GEMMA3_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GEMMA3_CONTEXT8192_LOAD_ONLY_PREFLIGHT"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GEMMA3_CONTEXT16384_LOAD_ONLY_PREFLIGHT"
   ],
   "open_issues": [
-    "EXECUTE_GEMMA3_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "IF_CONTEXT8192_PASS_DECIDE_CONTEXT16384_LOAD_ONLY_OR_STOP",
-    "IF_TARGET_CONTEXT_FIT_PASS_DECIDE_GEMMA3_FIRST_C4_DISCRIMINATOR"
+    "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "IF_CONTEXT16384_PASS_DECIDE_FIRST_GEMMA3_C4_DISCRIMINATOR",
+    "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
@@ -108,7 +110,10 @@
     "scripts/vnext-gate18-phase-c-gemma3-4b-load-smoke.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_LOAD_SMOKE_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-gemma3-4b-context8192-load-smoke.ts"
+    "scripts/vnext-gate18-phase-c-gemma3-4b-context8192-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-gemma3-4b-context16384-load-smoke.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -139,7 +144,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -272,8 +277,16 @@
     "context4096_loaded_free_ram_gib": 0.58,
     "context4096_processor_split": "54%/46% CPU/GPU",
     "context4096_full_unload_release": true,
-    "context8192_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context8192_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context8192_load_authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
-    "context8192_load_authorized_run_count": 1
+    "context8192_load_authorized_run_count": 0,
+    "context8192_vram_used_mib": 2423,
+    "context8192_vram_headroom_mib": 1540,
+    "context8192_loaded_free_ram_gib": 0.77,
+    "context8192_processor_split": "56%/44% CPU/GPU",
+    "context8192_full_unload_release": true,
+    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context16384_load_authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+    "context16384_load_authorized_run_count": 1
   }
 }

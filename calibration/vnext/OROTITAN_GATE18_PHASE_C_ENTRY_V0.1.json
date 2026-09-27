@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1185,6 +1185,15 @@
   "gemma3_context4096_loaded_free_ram_gib": 0.58,
   "gemma3_context4096_processor_split": "54%/46% CPU/GPU",
   "gemma3_context8192_load_authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
-  "gemma3_context8192_load_authorized": true,
-  "gemma3_context8192_load_authorized_run_count": 1
+  "gemma3_context8192_load_authorized": false,
+  "gemma3_context8192_load_authorized_run_count": 0,
+  "gemma3_context8192_load_result": "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "gemma3_context8192_load_status": "PASS_LOAD_ONLY_MEASURED",
+  "gemma3_context8192_vram_used_mib": 2423,
+  "gemma3_context8192_vram_free_mib": 1540,
+  "gemma3_context8192_loaded_free_ram_gib": 0.77,
+  "gemma3_context8192_processor_split": "56%/44% CPU/GPU",
+  "gemma3_context16384_load_authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gemma3_context16384_load_authorized": true,
+  "gemma3_context16384_load_authorized_run_count": 1
 }
