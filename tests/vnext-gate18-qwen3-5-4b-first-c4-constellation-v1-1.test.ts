@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Qwen3.5 Constellation C4 authorization freezes the first bounded v1.1 cell", () => {
+test("Qwen3.5 Constellation C4 authorization is consumed while preserving the frozen cell", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_5_4B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_AUTH_001.json",
@@ -10,8 +10,8 @@ test("Qwen3.5 Constellation C4 authorization freezes the first bounded v1.1 cell
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE_FAIL_RAW_JSON_INCOMPLETE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.company, "Constellation Software");
   assert.equal(a.c4_inference.archetype, "SERIAL_ACQUIRER");
   assert.equal(a.c4_inference.model_name, "qwen3.5:4b-q4_K_M");
@@ -26,7 +26,7 @@ test("Qwen3.5 Constellation C4 authorization freezes the first bounded v1.1 cell
   assert.equal(a.c4_inference.max_output_tokens, 1024);
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.prompt_change_authorized, false);
   assert.equal(a.constraints.schema_change_authorized, false);
