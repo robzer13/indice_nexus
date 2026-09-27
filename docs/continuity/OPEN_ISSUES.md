@@ -8,21 +8,25 @@ Status: COMPLETE_PASS
 
 Qualification: `PASS_WITH_USEFUL_HEADROOM`
 
-Loaded free RAM: 0.84 GiB.
-Loaded VRAM free: 1658 MiB.
-Processor split: 38%/62% CPU/GPU.
-Explicit unload complete.
-
 ## OI-003 — Granite 4.1 first Constellation C4
-Status: AUTHORIZED_READY_LOCAL_EXECUTION
-Priority: P0
+Status: ENGINEERING_PASS_COMPLETE
 
-One exact same-packet local inference is authorized.
+Clean engineering result:
+- schema valid;
+- semantic valid;
+- raw presentation compliant;
+- normalized path count 0;
+- output margin 589 tokens.
 
-No retry or contract change is authorized.
+The single inference authorization is consumed.
 
 ## OI-004 — Granite 4.1 human adjudication
-Status: REQUIRED_IF_ENGINEERING_PASS
+Status: PRIVATE_BUNDLE_REQUIRED
+Priority: P0
+
+Generate and review the private adjudication bundle from the existing run.
+
+No retry or new inference is authorized.
 
 ## OI-005 — Llama 3.2 3B
 Status: DEFERRED_AFTER_GRANITE4_1_3B
