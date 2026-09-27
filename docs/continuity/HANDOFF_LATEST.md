@@ -1,72 +1,78 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-023`
+Resume ID: `VNEXT-G18-C-20260927-024`
 
-## Standing authority
+## Gemma 3 final disposition
 
-`OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE for zero-cost technical execution. Nonzero external monetary cost still requires explicit user authorization.
-
-## Gemma 3 Constellation historical run
-
-Status remains:
+Historical Constellation run remains:
 
 `FAIL_DETERMINISTIC_SEMANTIC_CONTRACT`
 
-First substantive error:
-`VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`
+Deterministic forensic chain:
+1. all three priority findings had non-null `counterevidence_link` with empty `counterevidence_ids`;
+2. after narrow in-memory normalization, the validator exposed `VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`;
+3. the only canonical conflict ID is `C-005`, while the model invented `C-006`;
+4. `C-006` appeared in one material-conflict entry and two unresolved points;
+5. after removing only those unknown references on the in-memory diagnostic copy, the frozen v1.0 semantic validator passed.
 
-The historical run is immutable and no retry is authorized.
+Therefore:
+- two deterministic substantive defect classes are established;
+- no third known deterministic defect remains;
+- the historical run is not reclassified;
+- engineering PASS was not reached;
+- formal human-quality adjudication was not reached;
+- no Gemma retry or additional Gemma C4 cell is authorized.
 
-## First deterministic forensic result
+Disposition:
 
-Status:
+`STOP_GEMMA3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
 
-`FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND`
+This does not imply global Gemma-family failure.
 
-After reproducing the 13 v1.1 presentation normalizations:
-- finding 1: counterevidence IDs empty, counterevidence link present;
-- finding 2: counterevidence IDs empty, counterevidence link present;
-- finding 3: counterevidence IDs empty, counterevidence link present.
+## Candidate-registry refresh
 
-All three findings violate the same structural rule.
+The previous fallback `qwen3:8b` remains on hold because its ~5.2GB artifact is a poor fit for the observed 7.84 GiB RAM / 4 GiB VRAM envelope.
 
-The diagnostic in-memory normalization set those three links to null only.
+Refreshed zero-cost candidates:
+1. `granite4:3b` — ~2.1GB, 3.4B, Q4_K_M, 128K, Apache-2.0;
+2. `ministral-3:3b-instruct-2512-q4_K_M` — ~3.0GB, 256K, Apache-2.0;
+3. `llama3.2:3b` — ~2.0GB, 128K, older family option;
+4. `qwen3:8b` — retained on hardware-fit hold.
 
-The frozen semantic validator then returned:
+Selected next candidate:
 
-`VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`
+`GRANITE4_3B_OLLAMA_Q4_K_M`
 
-Therefore the first semantic defect is not isolated.
+Selection basis:
+- new model family;
+- materially smaller artifact than recent candidates;
+- Apache-2.0;
+- current Granite 4 documentation emphasizes instruction following and tool calling;
+- highest expected information gain per memory cost among refreshed options.
 
-## Second deterministic forensic
+## Granite 4 3B download authorization
 
-Prepared runner:
+Authorization:
 
-`scripts/vnext-gate18-phase-c-c4-constellation-gemma3-unknown-conflict-ref-forensic.ts`
+`G18-PHASEC-GRANITE4-3B-DOWNLOAD-AUTH-001`
 
-Purpose:
-1. reproduce v1.1 presentation normalization;
-2. reproduce the first narrow counterevidence-link diagnostic normalization;
-3. audit conflict references by section;
-4. identify IDs absent from the canonical packet;
-5. remove only unknown conflict refs/entries on an in-memory diagnostic copy;
-6. rerun the frozen v1.0 semantic validator.
-
-Boundaries:
-- no Ollama call;
+Exact public target:
+- tag: `granite4:3b`;
+- expected digest prefix: `89962fcc7523`;
+- expected quantization: `Q4_K_M`;
+- expected artifact class: ~2.1GB;
+- no load smoke;
+- no prompt;
 - no inference;
-- no external network;
-- no private narrative text printed;
-- no artifact mutation;
-- no auto-repair;
-- no retroactive pass;
-- no retry authority.
+- no automatic retry;
+- no automatic model switch.
+
+Runner:
+
+`scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts`
 
 ## Exact next action
 
 ```text
-RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC
+EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY
 ```
-
-Private source artifact:
-`calibration/vnext/private-runs/2026-09-27T160225776Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GEMMA3_4B_V1_1_CONTEXT16384_001.json`.
