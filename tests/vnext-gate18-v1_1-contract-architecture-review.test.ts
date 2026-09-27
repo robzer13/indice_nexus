@@ -111,6 +111,6 @@ test("Phase C preserves v1.1 history after the dedicated Phi-4 Constellation aut
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC",
+    "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE",
   );
 });
