@@ -3,35 +3,40 @@
 ## OI-001 — Prior local candidate calibration paths
 Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-## OI-002 — Ministral 3 3B pinned download
-Status: COMPLETE_PASS_PINNED
+## OI-002 — Ministral 3 3B staged hardware qualification
+Status: COMPLETE_PASS_WITH_USEFUL_HEADROOM_AT_CONTEXT16384
 
-## OI-003 — Ministral 3 3B context4096
-Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+Measured context16384:
+- loaded free RAM: 1.21 GiB;
+- loaded free VRAM: 1564 MiB;
+- processor split: 63%/37% CPU/GPU;
+- explicit unload: complete.
 
-## OI-004 — Ministral 3 3B context8192
-Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+This proves loadability, not production fit.
 
-Measured:
-- loaded free RAM: 0.38 GiB;
-- loaded free VRAM: 1556 MiB;
-- processor split: 54%/46% CPU/GPU;
-- unload complete.
-
-This is not inference qualification.
-
-## OI-005 — Ministral 3 3B context16384 final diagnostic
+## OI-003 — Ministral 3 3B first bounded Constellation C4 inference
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded context16384 load-only run is authorized. No prompt or inference.
+Exactly one same-packet context16384 inference is authorized.
 
-## OI-006 — Ministral 3 3B semantic inference
-Status: BLOCKED_BY_OI-005
+Required baseline guard:
+- free RAM >= 1.0 GiB;
+- no other loaded Ollama model.
 
-No inference is authorized before explicit review of context16384.
+No automatic retry or parameter change is authorized.
 
-## OI-007 — Model winner and routing
+## OI-004 — Ministral 3 3B human adjudication
+Status: BLOCKED_BY_OI-003
+
+Required only if the engineering/validation run completes sufficiently for human-quality review.
+
+## OI-005 — Ministral 3 3B C4 expansion
+Status: NOT_AUTHORIZED
+
+No second company/cell or retry is pre-authorized.
+
+## OI-006 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
