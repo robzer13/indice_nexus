@@ -1,0 +1,47 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-RESULT-001",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_8B_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "PASS_PINNED_DOWNLOAD_ONLY",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "model": {
+    "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+    "ollama_model_name": "ministral-3:3b-instruct-2512-q4_K_M",
+    "digest": "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d",
+    "size_bytes": 2953840808,
+    "format": "gguf",
+    "family": "mistral3",
+    "ollama_reported_parameter_size": "3.8B",
+    "public_registry_parameter_size": "3.85B",
+    "quantization": "Q4_K_M"
+  },
+  "verification": {
+    "exact_tag_present": true,
+    "digest_captured": true,
+    "expected_digest_prefix_matched": true,
+    "api_show_reachable": true,
+    "expected_quantization_matched": true
+  },
+  "safety": {
+    "download_executed": true,
+    "other_model_download_executed": false,
+    "load_smoke_executed": false,
+    "prompt_provided": false,
+    "model_inference_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "paid_execution_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "exact_local_identity_pinned": true,
+    "load_fit_proven": false,
+    "inference_fit_proven": false
+  },
+  "next_action": "PREPARE_MINISTRAL3_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
