@@ -1,0 +1,41 @@
+{
+  "format": "OROTITAN_GATE18_GEMMA3_FIRST_C4_DISCRIMINATOR_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-GEMMA3-FIRST-C4-DISCRIMINATOR-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "CONSTELLATION_SAME_PACKET_SELECTED",
+  "hardware_basis": {
+    "context16384_load_result": "G18-PHASEC-GEMMA3-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "context16384_load_fit": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "vram_used_mib": 2449,
+    "vram_headroom_mib": 1514,
+    "loaded_free_ram_gib": 0.33,
+    "processor_split": "57%/43% CPU/GPU",
+    "context_growth_beyond_16384": false
+  },
+  "selected_cell": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "evidence_count": 11,
+    "conflict_count": 1
+  },
+  "rationale": [
+    "The same Constellation packet has already exposed materially different human-quality behavior across prior candidates.",
+    "Qwen3.5 passed deterministic engineering validation on this packet but failed human adjudication on exact evidence grounding and priority selection.",
+    "Reusing the identical packet maximizes diagnostic comparability and information gain before spending additional matrix cells.",
+    "No context increase is required or permitted."
+  ],
+  "boundaries": {
+    "comparison_descriptive_until_human_adjudication": true,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "public_generated_content_forbidden": true
+  },
+  "next_action": "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1"
+}
