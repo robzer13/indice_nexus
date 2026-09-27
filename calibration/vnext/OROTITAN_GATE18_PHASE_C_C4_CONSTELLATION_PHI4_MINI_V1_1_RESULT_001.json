@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_PHI4_CONSTELLATION_V1_1_EXECUTION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-RESULT-001",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001",
+  "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001",
+  "company": "Constellation Software",
+  "archetype": "SERIAL_ACQUIRER",
+  "model": "phi4-mini:3.8b-q4_K_M",
+  "model_digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+  "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+  "execution": {
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false,
+    "wall_clock_ms": 209989,
+    "done_reason": "stop",
+    "prompt_eval_count": 3169,
+    "eval_count": 681,
+    "max_output_tokens": 1024,
+    "output_token_margin": 343,
+    "runtime_error": null
+  },
+  "engineering": {
+    "schema_valid": true,
+    "schema_error": null,
+    "raw_presentation_compliant": false,
+    "normalized_path_count": 3,
+    "substantive_status": "PASS",
+    "semantic_valid": true,
+    "semantic_error": null,
+    "output_budget_saturated": false
+  },
+  "raw_private_output": {
+    "local_path": "calibration/vnext/private-runs/2026-09-27T085515615Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001.json",
+    "content_persisted_publicly": false
+  },
+  "boundaries": {
+    "authorized_run_consumed": true,
+    "retry_authorized": false,
+    "second_attempt_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "human_adjudication_completed": false,
+    "matrix_cell_completed": false
+  },
+  "next_action": "REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION"
+}
