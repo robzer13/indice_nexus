@@ -1,0 +1,59 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GEMMA3_CANDIDATE_ESCALATION_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "granite4:3b",
+    "digest": "89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f",
+    "context_tokens": 8192,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 1.84,
+    "loaded_free_ram_gib": 0.94,
+    "after_free_ram_gib": 1.8,
+    "loaded_vram_used_mib": 2355,
+    "loaded_vram_free_mib": 1608,
+    "processor_split": "22%/78% CPU/GPU",
+    "ollama_reported_size": "3.1 GB",
+    "load_only_confirmed": true,
+    "explicit_unload_complete": true,
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 0.9,
+    "vram_increment_mib": 2355,
+    "vram_headroom_mib": 1608,
+    "comparison_to_granite_context4096": {
+      "loaded_free_ram_delta_gib": -0.12,
+      "vram_headroom_delta_mib": -42,
+      "gpu_residency_delta_percentage_points": -7
+    },
+    "comparison_to_gemma3_context8192": {
+      "loaded_free_ram_delta_gib": 0.17,
+      "vram_headroom_delta_mib": 68,
+      "granite_gpu_residency_percent": 78,
+      "gemma_gpu_residency_percent": 44
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_8192": "PASS_WITH_USEFUL_HEADROOM",
+    "inference_fit_proven": false,
+    "context16384_load_only_justified": true
+  },
+  "next_action": "PREPARE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
