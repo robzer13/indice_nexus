@@ -17,35 +17,40 @@ Status: COMPLETE_TERMS_ACCEPTED
 ## OI-005 — Gemma 3 pinned download
 Status: COMPLETE_PASS_PINNED
 
-Exact digest:
-`a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`
-
 ## OI-006 — Gemma 3 context4096 load-only
 Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
 
 ## OI-007 — Gemma 3 context8192 load-only
 Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
 
+## OI-008 — Gemma 3 context16384 load-only
+Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
+
 Measured:
-- VRAM used 2423 MiB;
-- VRAM headroom 1540 MiB;
-- loaded free RAM 0.77 GiB;
-- processor split 56%/44% CPU/GPU;
+- VRAM used 2449 MiB;
+- VRAM headroom 1514 MiB;
+- loaded free RAM 0.33 GiB;
+- processor split 57%/43% CPU/GPU;
 - full unload release confirmed;
 - no semantic inference.
 
-## OI-008 — Gemma 3 context16384 load-only
+No further context growth is authorized.
+
+## OI-009 — Gemma 3 first C4 discriminator
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded load-only run is authorized.
+Selected:
+`Constellation Software / SERIAL_ACQUIRER`
 
-## OI-009 — Gemma 3 first C4 discriminator
-Status: BLOCKED_BY_OI-008
+Exactly one same-packet local inference is authorized. Human adjudication is mandatory after an engineering PASS.
 
-No inference authorized yet.
+## OI-010 — Gemma 3 post-Constellation disposition
+Status: BLOCKED_BY_OI-009
 
-## OI-010 — Model winner and routing
+No additional Gemma C4 cell is authorized until the first result and required human adjudication are complete.
+
+## OI-011 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
