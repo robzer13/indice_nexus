@@ -1020,3 +1020,34 @@ Safety/diagnostic guard:
 
 The experiment can establish a model result for this cell; it cannot by itself establish production hardware suitability.
 
+## D-2026-09-27-056 — Qwen3 8B Constellation C4 reaches clean engineering PASS
+
+Observed:
+- baseline free RAM 3.59 GiB, above 1.0 GiB guard;
+- wall clock 519551 ms;
+- done reason stop;
+- prompt eval 3356;
+- eval 860 / 1024;
+- runtime error null;
+- schema valid;
+- raw presentation compliant;
+- zero normalization paths;
+- substantive semantics PASS.
+
+Disposition:
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`.
+
+The result does not establish human-quality PASS, model ranking, routing, or production hardware suitability.
+
+## D-2026-09-27-057 — Qwen3 8B human adjudication requires private bundle review
+
+The C4 authorization is consumed. No retry or additional inference is authorized.
+
+A private local bundle builder is prepared to combine:
+- the exact persisted model response;
+- the exact pinned Constellation evidence packet;
+- validator telemetry;
+- known same-packet human-regression checks.
+
+The bundle remains under `calibration/vnext/private-runs/` and must not be committed or published.
+
