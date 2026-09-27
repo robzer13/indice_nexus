@@ -941,3 +941,36 @@ Boundary:
 - no model switch;
 - production mutation forbidden.
 
+## D-2026-09-27-052 — Qwen3 8B context8192 load-only passes with critical RAM pressure
+
+Measured:
+- free RAM before: 1.20 GiB;
+- free RAM loaded: 0.22 GiB;
+- free RAM after unload: 3.07 GiB;
+- VRAM used loaded: 2323 MiB;
+- VRAM free loaded: 1640 MiB;
+- processor split: 64%/36% CPU/GPU;
+- resident size: 6.6 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_CRITICAL_RAM_PRESSURE`.
+
+## D-2026-09-27-053 — Qwen3 8B context16384 final load-only diagnostic authorized
+
+Reason:
+- context8192 loadability is confirmed;
+- memory pressure is severe but stable relative to context4096;
+- exact Constellation comparability uses context16384;
+- a load-only measurement has high information value and zero external monetary cost.
+
+Boundary:
+- exactly one context16384 load-only execution;
+- no prompt;
+- no inference;
+- no further context growth;
+- no automatic retry/model switch;
+- explicit post-run decision required before any C4 inference.
+
