@@ -4,34 +4,55 @@
 
 Status: COMPLETE
 
-## OI-002 — Phi-4 C4 Constellation single-run execution
+## OI-002 — Phi-4 C4 Constellation qualification
 
 Status: COMPLETE
 
-Exactly one authorized run executed.
+Disposition:
 
-Engineering result:
+`ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE`
 
-`ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING`
+Phi-4 C4 expansion is stopped and retained as calibration evidence.
 
-## OI-003 — Phi-4 Constellation human-quality adjudication
+## OI-003 — Qwen3.5 4B hardware qualification
 
-Status: READY_FOR_REVIEW  
+Status: COMPLETE_FOR_TARGET_CONTEXT
+
+Load-only PASS at:
+
+- context 4096;
+- context 8192;
+- context 16384.
+
+The target context 16384 is loadable. RAM pressure is high and CPU offload is material.
+
+## OI-004 — First Qwen3.5 C4 discriminator
+
+Status: READY_LOCAL_EXECUTION  
 Priority: P0
 
-Required private artifact:
+Selected cell:
 
-`calibration/vnext/private-runs/2026-09-27T085515615Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001.json`
+`Constellation Software / SERIAL_ACQUIRER`
 
-Review the raw output against the established C4 human-quality dimensions before declaring the matrix cell complete.
+Frozen parameters:
 
-## OI-004 — Post-Constellation Phi-4 qualification disposition
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600 seconds;
+- loopback transport;
+- validation v1.1;
+- one run;
+- no automatic retry.
 
-Status: BLOCKED_BY_OI-003
+## OI-005 — Human-quality adjudication
 
-No additional model inference is authorized.
+Status: BLOCKED_BY_OI-004
 
-## OI-005 — Model winner and routing
+After the first Qwen3.5 cell, review exact evidence grounding, atomicity, polarity, qualifications, conflict handling, weak links, unresolved points, judgment boundary, and priority selection.
+
+## OI-006 — Model winner and routing
 
 Status: OPEN_GUARDED
 
