@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -18,7 +18,7 @@
     "reason": "One same-packet think=false inference is permitted as an experimental capability test despite extreme RAM pressure; it does not establish production fit."
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "experiment_kind": "USER_DIRECTED_EXPERIMENTAL_SAME_PACKET_C4",
     "company": "Constellation Software",
     "archetype": "SERIAL_ACQUIRER",
@@ -41,7 +41,7 @@
     "transport": "NODE_HTTP_REQUEST_LOOPBACK"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "external_model_api_cost_usd": 0,
     "automatic_retry_authorized": false,
     "prompt_change_authorized": false,
@@ -68,6 +68,7 @@
     "routing_authority": false,
     "production_candidate_decision_authority": false
   },
-  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_AND_REVIEW_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "execution_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-THINKFALSE-RESULT-001"
 }
