@@ -1,0 +1,56 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT4096_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_MINISTRAL3_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "granite4.1:3b-q4_K_M",
+    "digest": "6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb",
+    "context_tokens": 4096,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 1.69,
+    "loaded_free_ram_gib": 1.39,
+    "after_free_ram_gib": 1.95,
+    "loaded_vram_used_mib": 2321,
+    "loaded_vram_free_mib": 1642,
+    "processor_split": "15%/85% CPU/GPU",
+    "ollama_reported_size": "2.7 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload",
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 0.3,
+    "vram_increment_mib": 2321,
+    "vram_headroom_mib": 1642,
+    "comparison_to_granite4_context4096": {
+      "loaded_free_ram_delta_gib": 0.33,
+      "vram_headroom_delta_mib": -8,
+      "processor_split_same": true
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_4096": "PASS_WITH_COMFORTABLE_RELATIVE_HEADROOM",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context8192_load_only_justified": true
+  },
+  "next_action": "EXECUTE_GRANITE4_1_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
