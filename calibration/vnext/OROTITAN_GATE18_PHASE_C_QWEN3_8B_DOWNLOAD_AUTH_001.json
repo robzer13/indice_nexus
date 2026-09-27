@@ -1,0 +1,80 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_USER_DIRECTED_CANDIDATE_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "public_verification": {
+    "checked_at": "2026-09-27",
+    "ollama_tag": "qwen3:8b-q4_K_M",
+    "ollama_size": "5.2GB",
+    "ollama_context_window": "40K",
+    "ollama_input_modalities": [
+      "Text"
+    ],
+    "ollama_digest_prefix": "500a1f067a9f",
+    "parameter_size": "8.19B",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "source_urls": [
+      "https://ollama.com/library/qwen3:8b",
+      "https://ollama.com/library/qwen3/tags"
+    ]
+  },
+  "model": {
+    "candidate_id": "QWEN3_8B_LOCAL",
+    "ollama_model_name": "qwen3:8b-q4_K_M",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~5.2GB",
+    "expected_digest_prefix": "500a1f067a9f",
+    "license": "Apache-2.0",
+    "role": "USER_DIRECTED_POST_GRANITE_CANDIDATE"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-qwen3-8b-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_load_only_step": true
+  },
+  "authority": {
+    "qwen3_8b_download_authorized": true,
+    "qwen3_8b_load_smoke_authorized": false,
+    "qwen3_8b_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
