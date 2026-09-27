@@ -1,0 +1,86 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GEMMA3-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "gemma3:4b-it-q4_K_M",
+    "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.42,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.33,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1514,
+    "vram_used_mib": 2449,
+    "ollama_reported_size": "3.5 GB",
+    "processor_split": "57%/43% CPU/GPU",
+    "context_tokens": 16384,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.42,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2449,
+    "vram_headroom_while_loaded_mib": 1514,
+    "free_ram_delta_before_to_loaded_gib": -1.09,
+    "full_vram_release_after_unload": true,
+    "qwen3_5_context16384_vram_used_reference_mib": 2589,
+    "vram_delta_vs_qwen3_5_context16384_mib": -140,
+    "qwen3_5_context16384_vram_headroom_reference_mib": 1374,
+    "vram_headroom_delta_vs_qwen3_5_context16384_mib": 140,
+    "qwen3_5_context16384_loaded_free_ram_reference_gib": 0.51,
+    "loaded_free_ram_delta_vs_qwen3_5_context16384_gib": -0.18,
+    "qwen3_5_context16384_processor_split_reference": "56%/44% CPU/GPU",
+    "gemma3_context16384_processor_split": "57%/43% CPU/GPU"
+  },
+  "interpretation": {
+    "context16384_load_fit": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "hardware_qualification_for_c4_target_context": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "inference_fit": "PLAUSIBLE_NOT_YET_PROVEN",
+    "context_growth_beyond_16384_recommended": false,
+    "next_discriminator": "CONSTELLATION_SOFTWARE_SAME_PACKET_C4_V1_1",
+    "note": "Target context loads and unloads cleanly. GPU headroom is adequate, but observed system free RAM falls to 0.33 GiB. Do not grow context further. One bounded same-packet C4 inference is justified under standing zero-cost authority."
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
