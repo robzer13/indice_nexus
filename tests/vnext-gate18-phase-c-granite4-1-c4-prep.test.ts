@@ -73,7 +73,7 @@ test("Granite 4.1 Constellation C4 prep preserves the frozen comparison cell", (
   assert.equal(p.contract.human_adjudication_required, true);
 });
 
-test("Granite 4.1 C4 authorization is one local run only", () => {
+test("Granite 4.1 C4 authorization is consumed after the single local run", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_V1_1_AUTH_001.json",
@@ -81,15 +81,15 @@ test("Granite 4.1 C4 authorization is one local run only", () => {
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.model_name, "granite4.1:3b-q4_K_M");
   assert.equal(a.c4_inference.context_tokens, 16384);
   assert.equal(a.c4_inference.max_output_tokens, 1024);
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
   assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.prompt_change_authorized, false);
   assert.equal(a.constraints.packet_change_authorized, false);
@@ -118,4 +118,69 @@ test("Granite 4.1 C4 runner is pinned, guarded, and private-output only", () => 
   assert.match(raw, /calibration\/vnext\/private-runs/);
   assert.match(raw, /humanAdjudicationRequired: true/);
   assert.doesNotMatch(raw, /MINISTRAL3|ministral-3|Ministral/);
+});
+
+
+test("Granite 4.1 C4 result is a clean engineering pass requiring human adjudication", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_V1_1_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED");
+  assert.equal(r.execution.wall_clock_ms, 72819);
+  assert.equal(r.execution.done_reason, "stop");
+  assert.equal(r.execution.prompt_eval_count, 3145);
+  assert.equal(r.execution.eval_count, 435);
+  assert.equal(r.execution.output_token_margin, 589);
+  assert.equal(r.execution.output_budget_near_saturation, false);
+  assert.equal(r.execution.schema_valid, true);
+  assert.equal(r.execution.semantic_valid, true);
+  assert.equal(r.validation_v1_1.raw_presentation_compliant, true);
+  assert.equal(r.validation_v1_1.normalized_path_count, 0);
+  assert.equal(r.validation_v1_1.substantive_status, "PASS");
+  assert.equal(r.interpretation.human_adjudication_required, true);
+  assert.equal(r.interpretation.comparison_admissible, false);
+  assert.equal(r.interpretation.model_ranking_authority, false);
+});
+
+test("Granite 4.1 human adjudication prep forbids new inference and publication", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_HUMAN_ADJUDICATION_PREP_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(p.status, "READY_PRIVATE_BUNDLE_GENERATION");
+  assert.equal(p.engineering_carry.eval_count, 435);
+  assert.equal(p.engineering_carry.output_token_margin, 589);
+  assert.equal(p.engineering_carry.raw_presentation_compliant, true);
+  assert.equal(p.engineering_carry.normalized_path_count, 0);
+  assert.equal(p.authority.new_model_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.privacy.public_repo_generated_content_forbidden, true);
+});
+
+test("Granite 4.1 human adjudication bundle builder is non-inferential", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-granite4-1-3b-human-adjudication-bundle.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /const EXPECTED_MODEL = "granite4\.1:3b-q4_K_M";/);
+  assert.match(
+    raw,
+    /6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb/,
+  );
+  assert.match(
+    raw,
+    /2026-09-27T214331230Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_1_3B_V1_1_CONTEXT16384_001\.json/,
+  );
+  assert.match(raw, /inferenceExecuted: false/);
+  assert.match(raw, /privatePacketPublished: false/);
+  assert.match(raw, /rawOutputPublished: false/);
+  assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|requestLoopbackJson/);
 });
