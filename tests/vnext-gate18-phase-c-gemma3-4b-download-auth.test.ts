@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Qwen3 8B context16384 extreme-RAM pass to one bounded think-false C4 experiment", () => {
+test("Phase C advances from Qwen3 8B clean engineering pass to private human adjudication bundle generation", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Qwen3 8B context16384 extreme-RAM pass to one bounde
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
+    "GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -178,9 +178,17 @@ test("Phase C advances from Qwen3 8B context16384 extreme-RAM pass to one bounde
   assert.equal(entry.qwen3_8b_first_c4_max_output_tokens, 1024);
   assert.equal(entry.qwen3_8b_first_c4_think, false);
   assert.equal(entry.qwen3_8b_first_c4_minimum_free_ram_gib, 1.0);
-  assert.equal(entry.qwen3_8b_first_c4_inference_authorized, true);
-  assert.equal(entry.qwen3_8b_first_c4_authorized_run_count, 1);
-  assert.equal(entry.qwen3_8b_inference_authorized, true);
+  assert.equal(entry.qwen3_8b_first_c4_inference_authorized, false);
+  assert.equal(entry.qwen3_8b_first_c4_authorized_run_count, 0);
+  assert.equal(entry.qwen3_8b_first_c4_result_status, "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED");
+  assert.equal(entry.qwen3_8b_first_c4_engineering_pass, true);
+  assert.equal(entry.qwen3_8b_first_c4_raw_presentation_compliant, true);
+  assert.equal(entry.qwen3_8b_first_c4_normalized_path_count, 0);
+  assert.equal(entry.qwen3_8b_first_c4_semantic_valid, true);
+  assert.equal(entry.qwen3_8b_first_c4_eval_count, 860);
+  assert.equal(entry.qwen3_8b_first_c4_output_token_margin, 164);
+  assert.equal(entry.qwen3_8b_first_c4_human_adjudication_completed, false);
+  assert.equal(entry.qwen3_8b_inference_authorized, false);
   assert.equal(entry.next_candidate_after_granite, "QWEN3_8B_LOCAL");
   assert.equal(entry.qwen3_8b_user_directed_test_after_granite, true);
   assert.equal(entry.qwen3_8b_direct_inference_authorized, false);
