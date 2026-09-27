@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_GRANITE4_1_POST_CONTEXT16384_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-GRANITE4_1-POST-CONTEXT16384-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "HARDWARE_QUALIFIED_C4_PREP_REQUIRED_NOT_AUTHORIZED",
+  "basis": {
+    "context4096_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+    "context8192_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+    "context16384_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "context16384_fit": "PASS_WITH_USEFUL_HEADROOM",
+    "loaded_free_ram_gib": 0.84,
+    "loaded_vram_used_mib": 2305,
+    "loaded_vram_free_mib": 1658,
+    "processor_split": "38%/62% CPU/GPU"
+  },
+  "comparison": {
+    "granite4_3b_context16384_loaded_free_ram_gib": 0.41,
+    "granite4_1_delta_gib": 0.43,
+    "same_vram_used_mib": true,
+    "same_vram_free_mib": true,
+    "same_processor_split": true,
+    "ram_difference_interpretation": "USEFUL_CURRENT_HOST_HEADROOM_BUT_HOST_STATE_SENSITIVE"
+  },
+  "methodological_disposition": {
+    "same_packet_constellation_c4_justified": true,
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "proposed_context_tokens": 16384,
+    "proposed_max_output_tokens": 1024,
+    "proposed_temperature": 0,
+    "proposed_client_timeout_ms": 600000,
+    "proposed_pre_inference_minimum_free_ram_gib": 1
+  },
+  "authority": {
+    "c4_execution_authorized": false,
+    "retry_authorized": false,
+    "context_growth_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "MATERIALIZE_GRANITE4_1_C4_PREP_AND_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
