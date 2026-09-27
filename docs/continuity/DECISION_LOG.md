@@ -1106,3 +1106,41 @@ Exactly one context4096 load-only run is authorized under `OROTITAN-STANDING-TEC
 
 No prompt, inference, retry, context growth, model switch, paid execution, or production mutation is authorized.
 
+## D-2026-09-27-062 — Ministral 3 3B context4096 load-only passes with critical RAM pressure
+
+Measured:
+- free RAM before: 1.14 GiB;
+- free RAM loaded: 0.35 GiB;
+- free RAM after unload: 1.85 GiB;
+- VRAM used loaded: 2397 MiB;
+- VRAM free loaded: 1566 MiB;
+- processor split: 48%/52% CPU/GPU;
+- resident size: 3.1 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_CRITICAL_RAM_PRESSURE`.
+
+The result proves loadability only, not inference fit or production fit.
+
+## D-2026-09-27-063 — Ministral 3 3B context8192 diagnostic load-only authorized
+
+A single context8192 load-only diagnostic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Reason:
+- context4096 loaded successfully;
+- target C4 prompt plus output envelope is not comfortably represented by a 4096 context budget;
+- the measured state is memory-constrained but remains comparable to prior candidates that proceeded through bounded staged qualification;
+- empirical 8192 loadability is more informative than extrapolation alone.
+
+Boundary:
+- diagnostic-only;
+- no prompt;
+- no inference;
+- no context16384 pre-authorization;
+- no automatic retry;
+- no model switch;
+- production mutation forbidden.
+
