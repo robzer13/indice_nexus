@@ -22,7 +22,7 @@ test("Gemma 3 pinned download result is exact and non-inferential", () => {
   assert.equal(result.safety.model_inference_executed, false);
 });
 
-test("Gemma 3 context4096 load-only authorization allows one non-inferential run", () => {
+test("Gemma 3 context4096 load-only authorization is consumed after the measured pass", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_LOAD_SMOKE_AUTH_001.json",
@@ -30,11 +30,12 @@ test("Gemma 3 context4096 load-only authorization allows one non-inferential run
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
-  assert.equal(auth.authority.load_smoke_authorized, true);
+  assert.equal(auth.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
+  assert.equal(auth.authority.load_smoke_authorized, false);
   assert.equal(auth.authority.inference_authorized, false);
-  assert.equal(auth.authority.authorized_run_count, 1);
+  assert.equal(auth.authority.authorized_run_count, 0);
   assert.equal(auth.planned_execution.context_tokens, 4096);
+  assert.equal(auth.execution_result, "G18-PHASEC-GEMMA3-4B-LOAD-SMOKE-RESULT-001");
 });
 
 test("Gemma 3 load-only runner requires exact digest and requests no prompt", () => {
