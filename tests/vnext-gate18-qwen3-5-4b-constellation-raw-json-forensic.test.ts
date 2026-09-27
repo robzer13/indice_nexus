@@ -54,6 +54,9 @@ test("Qwen3.5 raw JSON forensic runner cannot call model or publish raw content"
   assert.match(raw, /Unexpected end of JSON input/);
   assert.match(raw, /MODEL_STOPPED_WITH_INCOMPLETE_JSON_BEFORE_OUTPUT_BUDGET_EXHAUSTION/);
   assert.match(raw, /structuralClosureProbe/);
+  assert.match(raw, /collectArtifactShape/);
+  assert.match(raw, /PASS_ARTIFACT_SHAPE_DISCOVERY_RAW_TEXT_PATH_UNRESOLVED/);
+  assert.match(raw, /rawValuesPrinted: false/);
   assert.match(raw, /missingRequiredSections/);
   assert.match(raw, /rawOutputPublished: false/);
   assert.match(raw, /modelInferenceExecuted: false/);
@@ -66,4 +69,21 @@ test("Qwen3.5 raw JSON forensic runner cannot call model or publish raw content"
   assert.ok(rawOutputEnd > rawOutputStart);
   const rawOutputBlock = raw.slice(rawOutputStart, rawOutputEnd);
   assert.doesNotMatch(rawOutputBlock, /\brawText\s*:/);
+});
+
+
+test("Qwen3.5 forensic tooling mismatch is persisted without reclassifying the model run", () => {
+  const d = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_5_4B_FORENSIC_TOOLING_DEFECT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(d.status, "OPEN_FIX_PREPARED");
+  assert.equal(d.classification, "FORENSIC_INPUT_SCHEMA_MISMATCH");
+  assert.equal(d.model_result_reclassification, false);
+  assert.equal(d.source_run_status_changed, false);
+  assert.equal(d.source_artifact_mutated, false);
+  assert.equal(d.inference_executed, false);
 });
