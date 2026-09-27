@@ -12,52 +12,51 @@ Status: COMPLETE_STOPPED_AFTER_HUMAN_CRITICAL_FAILURE
 
 Status: COMPLETE_FOR_TARGET_CONTEXT
 
-Load-only PASS at 4096, 8192, and 16384.
-
-## OI-004 — First Qwen3.5 Constellation attempt
-
-Status: FAIL_PRESERVED_RUNTIME_ADAPTER_CONFOUNDED
-
-The historical first run remains FAIL and is not reclassified.
-
-## OI-005 — Clean same-cell Qwen3.5 retry
-
-Status: COMPLETE_ENGINEERING_PASS_HUMAN_CRITICAL_FAILURE
-
-The `think:false` retry passed engineering validation but failed human-quality adjudication on exact evidence grounding.
-
-## OI-006 — Qwen3.5 human-quality adjudication
-
-Status: COMPLETE_CRITICAL_FAILURE
-
-The material defect is an E-045 replacement-RFP state overstated as completed replacement.
-
-## OI-007 — Qwen3.5 expansion/stop disposition
+## OI-004 — Qwen3.5 qualification disposition
 
 Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-No broader Qwen3.5 C4 expansion. No global family failure inferred.
+No global Qwen3.5-family failure inferred.
 
-## OI-008 — Gemma 3 4B terms and static review
+## OI-005 — Gemma 3 4B terms/static review
 
 Status: COMPLETE_TERMS_ACCEPTED
 
-Exact public tag verified as `gemma3:4b-it-q4_K_M`; static hardware fit remains plausible but unproven.
+## OI-006 — Gemma 3 4B pinned download
 
-## OI-009 — Gemma 3 4B pinned download
+Status: COMPLETE_PASS_PINNED
+
+Exact full digest:
+
+`a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`
+
+Observed local identity:
+- 3,338,801,804 bytes;
+- `gguf`;
+- family `gemma3`;
+- parameter size `4.3B`;
+- `Q4_K_M`.
+
+## OI-007 — Gemma 3 context4096 load-only memory preflight
 
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Run exactly one pinned download and identity verification. No load or inference is authorized by the download runner.
+Exactly one load-only run is authorized. No prompt or semantic inference.
 
-## OI-010 — Gemma 3 4B context4096 load-only memory preflight
+## OI-008 — Gemma 3 higher-context hardware fit
 
-Status: BLOCKED_BY_OI-009
+Status: BLOCKED_BY_OI-007
 
-Prepare only after the full local model digest is captured from a successful download.
+Decide whether context8192 load-only is justified only after the measured context4096 result.
 
-## OI-011 — Model winner and routing
+## OI-009 — Gemma 3 first C4 discriminator
+
+Status: BLOCKED_BY_HARDWARE_QUALIFICATION
+
+No inference authorized yet.
+
+## OI-010 — Model winner and routing
 
 Status: OPEN_GUARDED
 
