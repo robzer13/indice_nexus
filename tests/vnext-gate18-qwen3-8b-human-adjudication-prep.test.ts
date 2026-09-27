@@ -267,11 +267,15 @@ test("Ministral 3 3B context8192 result remains critically RAM-constrained but j
   assert.equal(r.interpretation.context16384_load_only_justified, true);
   assert.equal(r.interpretation.direct_inference_authorized, false);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 16384);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
+  assert.equal(
+    a.execution_result,
+    "G18-PHASEC-MINISTRAL3-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  );
   assert.equal(a.safety_rationale.risk_class, "CRITICAL_RAM_PRESSURE_FINAL_DIAGNOSTIC");
   assert.equal(a.safety_rationale.no_further_context_growth, true);
 });
@@ -290,4 +294,71 @@ test("Ministral 3 3B context16384 runner is exact-digest load-only", () => {
   assert.match(raw, /keep_alive:\s*0/);
   assert.doesNotMatch(raw, /\/api\/chat/);
   assert.doesNotMatch(raw, /prompt\s*:/);
+});
+
+
+test("Ministral 3 3B context16384 result supports one bounded same-packet C4 inference", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT16384_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  const d = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_MINISTRAL3_FIRST_C4_DISCRIMINATOR_DECISION_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_MINISTRAL3_3B_V1_1_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 16384);
+  assert.equal(r.measured.loaded_free_ram_gib, 1.21);
+  assert.equal(r.measured.loaded_vram_used_mib, 2399);
+  assert.equal(r.measured.loaded_vram_free_mib, 1564);
+  assert.equal(r.measured.processor_split, "63%/37% CPU/GPU");
+  assert.equal(r.interpretation.hardware_fit_at_16384, "PASS_WITH_USEFUL_HEADROOM");
+  assert.equal(r.interpretation.inference_fit_proven, false);
+  assert.equal(r.interpretation.first_c4_constellation_same_packet_justified, true);
+
+  assert.equal(d.status, "CONSTELLATION_SAME_PACKET_SELECTED");
+  assert.equal(d.selected_cell.company, "Constellation Software");
+  assert.equal(d.safeguards.pre_inference_minimum_free_ram_gib, 1.0);
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.c4_inference.context_tokens, 16384);
+  assert.equal(a.c4_inference.max_output_tokens, 1024);
+  assert.equal(a.c4_inference.temperature, 0);
+  assert.equal(a.c4_inference.client_timeout_ms, 600000);
+  assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1.0);
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_authorized, false);
+  assert.equal(a.constraints.model_switch_authorized, false);
+});
+
+test("Ministral 3 3B bounded Constellation runner preserves exact protocol and RAM guard", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-c4-constellation-ministral3-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /ministral-3:3b-instruct-2512-q4_K_M/);
+  assert.match(raw, /f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d/);
+  assert.match(raw, /CONTEXT_TOKENS = 16384/);
+  assert.match(raw, /MAX_OUTPUT_TOKENS = 1024/);
+  assert.match(raw, /CLIENT_TIMEOUT_MS = 600_000/);
+  assert.match(raw, /pre_inference_minimum_free_ram_gib !== 1\.0/);
+  assert.match(raw, /baselineFreeRamGiB < minimumFreeRamGiB/);
+  assert.match(raw, /keep_alive: "0s"/);
+  assert.match(raw, /temperature: 0/);
+  assert.match(raw, /NODE_HTTP_REQUEST_LOOPBACK/);
+  assert.doesNotMatch(raw, /think:\s*false/);
 });
