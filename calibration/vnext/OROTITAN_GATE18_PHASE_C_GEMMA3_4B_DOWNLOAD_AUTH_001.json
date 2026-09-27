@@ -1,0 +1,72 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-GEMMA3-4B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_5_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
+  "user_authorization": {
+    "explicit": true,
+    "gemma_terms_accepted": true,
+    "user_message": "j’accepte les Gemma Terms",
+    "authorized_action": "VERIFY_EXACT_TAG_THEN_DOWNLOAD_LOCAL_MODEL_AND_VERIFY_IDENTITY_ONLY",
+    "authorized_model": "gemma3:4b-it-q4_K_M",
+    "authorization_scope": "ONE_MODEL_ONE_DOWNLOAD_NO_LOAD_NO_INFERENCE"
+  },
+  "public_verification": {
+    "checked_at": "2026-09-27",
+    "ollama_tag": "gemma3:4b-it-q4_K_M",
+    "ollama_size": "3.3GB",
+    "ollama_context_window": "128K",
+    "ollama_input_modalities": [
+      "Text",
+      "Image"
+    ],
+    "ollama_digest_prefix": "a2af6cc3eb7f",
+    "terms_last_modified": "2026-04-01",
+    "source_urls": [
+      "https://ollama.com/library/gemma3/tags",
+      "https://ai.google.dev/gemma/terms"
+    ]
+  },
+  "model": {
+    "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "gemma3:4b-it-q4_K_M",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~3.3GB",
+    "expected_digest_prefix": "a2af6cc3eb7f",
+    "license": "Gemma Terms of Use",
+    "role": "POST_QWEN3_5_ESCALATION_CANDIDATE_3"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-gemma3-4b-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_load_only_step": true
+  },
+  "next_action": "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
