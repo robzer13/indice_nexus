@@ -3,38 +3,34 @@
 ## OI-001 — Phi-4, Qwen3.5 and Gemma 3 calibration paths
 Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-## OI-002 — Granite 4 3B pinned download
-Status: COMPLETE_PASS_PINNED
+## OI-002 — Granite 4 staged hardware qualification
+Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 
-## OI-003 — Granite 4 context4096 load-only
-Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
-
-## OI-004 — Granite 4 context8192 load-only
-Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
-
-Measured headroom:
-- loaded free RAM: 0.94 GiB;
-- loaded free VRAM: 1608 MiB;
-- processor split: 22%/78% CPU/GPU;
+Context4096, 8192 and 16384 load-only runs all passed. At 16384:
+- loaded free RAM: 0.41 GiB;
+- loaded free VRAM: 1658 MiB;
+- processor split: 38%/62% CPU/GPU;
 - explicit unload: complete.
 
-## OI-005 — Granite 4 context16384 load-only
+No context growth beyond 16384 is authorized.
+
+## OI-003 — Granite 4 first Constellation C4 inference
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded context16384 load-only run is authorized. No prompt or inference.
+Exactly one same-packet local inference is authorized at context16384.
 
-## OI-006 — Granite 4 first C4 discriminator
-Status: BLOCKED_BY_OI-005
+## OI-004 — Granite 4 human-quality adjudication
+Status: BLOCKED_BY_OI-003
 
-Do not authorize inference until the context16384 measurement is reviewed.
+Required only if engineering semantics pass.
 
-## OI-007 — Qwen3 8B post-Granite qualification
+## OI-005 — Qwen3 8B post-Granite qualification
 Status: QUEUED_BY_EXPLICIT_USER_DIRECTION
 
-Qwen3 8B remains next immediately after the Granite sequence, with staged hardware preflight before inference.
+Qwen3 8B is the next candidate immediately after the Granite result, using staged hardware preflight.
 
-## OI-008 — Model winner and routing
+## OI-006 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
