@@ -1,0 +1,34 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "PREPARED_LOCAL_READ_ONLY_NO_INFERENCE",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-RESULT-001",
+  "expected_semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+  "purpose": [
+    "Identify which priority findings contain a non-null counterevidence_link while counterevidence_ids is empty.",
+    "Apply the narrow diagnostic normalization in memory only.",
+    "Run the full frozen v1.0 substantive semantic validator on the diagnostic copy to reveal whether any downstream deterministic defect remains."
+  ],
+  "diagnostic_normalization": {
+    "rule": "Set counterevidence_link to null only when counterevidence_ids is empty.",
+    "in_memory_only": true,
+    "source_artifact_mutation": false,
+    "generated_content_publication": false,
+    "retroactive_pass_allowed": false,
+    "auto_repair": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC"
+}
