@@ -1,0 +1,44 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_DOWNLOAD_MEMORY_PREFLIGHT_PREP_V0.1",
+  "prep_id": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-MEMORY-PREFLIGHT-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "DOWNLOAD_AUTHORIZED_MEMORY_LOAD_PREFLIGHT_NOT_AUTHORIZED",
+  "source_static_preflight": "G18-PHASEC-QWEN3_5-4B-STATIC-PREFLIGHT-001",
+  "download_authorization": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-AUTH-001",
+  "candidate": {
+    "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "model_id": "qwen3.5:4b-q4_K_M",
+    "expected_artifact_size_gb": 3.4,
+    "expected_digest_prefix": "2a654d98e6fb",
+    "expected_quantization": "Q4_K_M",
+    "context_capability_tokens": 256000,
+    "license": "Apache-2.0"
+  },
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "static_artifact_fit": "PLAUSIBLE_BUT_TIGHT_UNPROVEN",
+    "runtime_memory_fit": "NOT_YET_PROVEN"
+  },
+  "planned_sequence": [
+    "PULL_EXACT_QWEN3_5_4B_Q4_K_M_TAG_ONLY",
+    "VERIFY_EXACT_LOCAL_MODEL_ID",
+    "CAPTURE_FULL_LOCAL_DIGEST_AND_SIZE",
+    "VERIFY_DIGEST_PREFIX_AND_QUANTIZATION_IF_EXPOSED",
+    "STOP_WITHOUT_LOAD_OR_GENERATION",
+    "REQUEST_SEPARATE_AUTHORIZATION_FOR_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT"
+  ],
+  "authority": {
+    "download_authorized": true,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_ONE_QWEN3_5_4B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFICATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

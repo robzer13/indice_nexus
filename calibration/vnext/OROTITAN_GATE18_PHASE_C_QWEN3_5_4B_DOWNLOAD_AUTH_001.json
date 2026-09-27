@@ -1,0 +1,89 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-QWEN3_5-4B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
+  "user_authorization": {
+    "explicit": true,
+    "authorized_action": "VERIFY_EXACT_TAG_THEN_DOWNLOAD_LOCAL_MODEL_AND_VERIFY_IDENTITY_ONLY",
+    "authorized_model": "qwen3.5:4b-q4_K_M",
+    "authorization_scope": "ONE_MODEL_ONE_DOWNLOAD_NO_LOAD_NO_INFERENCE",
+    "user_message": "vérification finale du tag puis téléchargement de Qwen3.5 4B Q4_K_M pour un preflight mémoire — sans inférence."
+  },
+  "public_verification": {
+    "checked_at": "2026-09-27",
+    "ollama_tag": "qwen3.5:4b-q4_K_M",
+    "ollama_size": "3.4GB",
+    "ollama_context_window": "256K",
+    "ollama_input_modalities": [
+      "Text",
+      "Image"
+    ],
+    "ollama_digest_prefix": "2a654d98e6fb",
+    "huggingface_model": "Qwen/Qwen3.5-4B",
+    "license": "Apache-2.0",
+    "source_urls": [
+      "https://ollama.com/library/qwen3.5/tags",
+      "https://huggingface.co/Qwen/Qwen3.5-4B"
+    ]
+  },
+  "basis": {
+    "phi4_disposition": "G18-PHASEC-POST-CONSTELLATION-PHI4-DISPOSITION-001",
+    "qwen3_5_static_preflight": "G18-PHASEC-QWEN3_5-4B-STATIC-PREFLIGHT-001",
+    "static_fit": "PLAUSIBLE_BUT_TIGHT_UNPROVEN",
+    "runtime_memory_fit": "NOT_YET_PROVEN"
+  },
+  "model": {
+    "candidate_id": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "qwen3.5:4b-q4_K_M",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~3.4GB",
+    "expected_digest_prefix": "2a654d98e6fb",
+    "license": "Apache-2.0",
+    "role": "POST_PHI4_ESCALATION_CANDIDATE_2"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-qwen3-5-4b-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "context_change_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_authorization": true
+  },
+  "authority": {
+    "qwen3_5_download_authorized": true,
+    "qwen3_5_load_smoke_authorized": false,
+    "qwen3_5_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "base_vnext_sha": "85c1fb6ab92e5992fa859dbaba792886dbc86b64",
+  "next_action": "EXECUTE_ONE_QWEN3_5_4B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFICATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
