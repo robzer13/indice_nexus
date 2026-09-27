@@ -132,11 +132,13 @@ test("historical shadow review remains immutable while current Phase C records l
   );
   assert.equal(entry.v1_1_contract_implemented, true);
   assert.equal(entry.v1_1_contract_ci_status, "PASS");
-  assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
+  assert.equal(entry.phi4_mini_second_c4_cell_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_inference_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_authorized_run_count, 1);
   assert.equal(entry.qwen3_5_download_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "AWAIT_EXPLICIT_SINGLE_RUN_PHI4_CONSTELLATION_V1_1_INFERENCE_AUTHORIZATION",
+    "EXECUTE_EXACTLY_ONE_LOCAL_PHI4_CONSTELLATION_V1_1_INFERENCE",
   );
 });

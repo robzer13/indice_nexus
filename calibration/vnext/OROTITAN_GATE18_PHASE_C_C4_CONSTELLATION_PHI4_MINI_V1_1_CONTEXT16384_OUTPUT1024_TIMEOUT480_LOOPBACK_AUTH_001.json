@@ -4,13 +4,15 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "PREPARED_NOT_AUTHORIZED",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
   "authorization_source": {
-    "type": "PENDING_EXPLICIT_SINGLE_RUN_USER_AUTHORIZATION",
-    "separate_user_reprompt_required": true
+    "type": "EXPLICIT_USER_AUTHORIZATION_IN_CHAT",
+    "user_message": "autorisé",
+    "authorized_at": "2026-09-27",
+    "separate_user_reprompt_required": false
   },
   "c4_inference": {
-    "authorized": false,
+    "authorized": true,
     "company": "Constellation Software",
     "archetype": "SERIAL_ACQUIRER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -36,7 +38,7 @@
     "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1"
   },
   "constraints": {
-    "authorized_run_count": 0,
+    "authorized_run_count": 1,
     "external_model_api_call": false,
     "external_model_api_cost_usd": 0,
     "model_download_authorized": false,
@@ -59,6 +61,6 @@
     "raw_output_preserved": true,
     "human_adjudication_required": true
   },
-  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_INFERENCE_AUTHORIZATION",
+  "next_action": "EXECUTE_EXACTLY_ONE_LOCAL_PHI4_CONSTELLATION_V1_1_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }

@@ -10,34 +10,39 @@ The versioned v1.1 contract is implemented and CI-verified.
 
 Status: COMPLETE
 
-One bounded Constellation Software cell is selected as the next discriminator.
+Constellation Software / SERIAL_ACQUIRER is selected as the next bounded discriminator.
 
 ## OI-003 — Phi-4 Constellation v1.1 inference authorization
 
-Status: OPEN_DECISION_REQUIRED  
+Status: COMPLETE
+
+Exactly one frozen local inference is explicitly authorized.
+
+## OI-004 — Execute the authorized local inference
+
+Status: READY_LOCAL_EXECUTION  
 Priority: P0
 
-The guarded runner and authorization template are prepared.
+Run exactly one invocation of the guarded runner with the exact authorization ID.
 
-Inference remains blocked because the authorization template is `PREPARED_NOT_AUTHORIZED`.
+No automatic retry is authorized if execution fails or times out.
 
-Required decision:
-Explicitly authorize or reject exactly one frozen local inference.
+## OI-005 — Post-run engineering and human adjudication
 
-## OI-004 — Post-run adjudication
+Status: BLOCKED_BY_OI-004
 
-Status: BLOCKED_BY_OI-003
+After execution, inspect:
 
-If the run is authorized and completed, evaluate:
-
+- runtime status;
+- raw schema status;
 - raw presentation compliance;
-- safe normalization count;
-- v1.1 substantive deterministic semantics;
-- runtime result;
-- human-quality adjudication.
+- v1.1 safe normalization count;
+- v1.1 substantive deterministic semantic result;
+- output budget / finish reason;
+- human-quality criteria.
 
-## OI-005 — Model winner and routing
+## OI-006 — Model winner and routing
 
 Status: OPEN_GUARDED
 
-No winner is selected and routing remains unfrozen.
+No model winner is selected and routing remains unfrozen.
