@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Qwen3 8B human-quality failure to Ministral 3 3B pinned download", () => {
+test("Phase C advances from Ministral 3 3B pinned download to context4096 load-only", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Qwen3 8B human-quality failure to Ministral 3 3B pin
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_MINISTRAL3_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "EXECUTE_MINISTRAL3_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -197,7 +197,10 @@ test("Phase C advances from Qwen3 8B human-quality failure to Ministral 3 3B pin
   assert.equal(entry.qwen3_8b_direct_inference_authorized, false);
   assert.equal(entry.ministral3_3b_model_name, "ministral-3:3b-instruct-2512-q4_K_M");
   assert.equal(entry.ministral3_3b_expected_digest_prefix, "f04aa1c738f6");
-  assert.equal(entry.ministral3_3b_download_authorized, true);
-  assert.equal(entry.ministral3_3b_load_smoke_authorized, false);
+  assert.equal(entry.ministral3_3b_download_authorized, false);
+  assert.equal(entry.ministral3_3b_download_executed, true);
+  assert.equal(entry.ministral3_3b_download_status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(entry.ministral3_3b_load_smoke_authorized, true);
+  assert.equal(entry.ministral3_3b_context4096_load_authorized_run_count, 1);
   assert.equal(entry.ministral3_3b_inference_authorized, false);
 });

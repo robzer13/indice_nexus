@@ -1087,3 +1087,22 @@ Pinned public identity:
 
 Exactly one zero-cost pinned download and identity verification is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`. Load and inference remain unauthorized.
 
+## D-2026-09-27-060 — Ministral 3 3B pinned download passes exact local identity verification
+
+Observed:
+- exact tag `ministral-3:3b-instruct-2512-q4_K_M`;
+- full digest `f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d`;
+- size 2,953,840,808 bytes;
+- format `gguf`;
+- family `mistral3`;
+- Ollama parameter size `3.8B`;
+- quantization `Q4_K_M`.
+
+No load or inference occurred.
+
+## D-2026-09-27-061 — Ministral 3 3B context4096 load-only preflight authorized
+
+Exactly one context4096 load-only run is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+No prompt, inference, retry, context growth, model switch, paid execution, or production mutation is authorized.
+
