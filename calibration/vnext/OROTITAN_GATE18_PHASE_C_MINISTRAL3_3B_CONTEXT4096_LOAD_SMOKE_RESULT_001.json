@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT4096_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_8B_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "ministral-3:3b-instruct-2512-q4_K_M",
+    "digest": "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d",
+    "context_tokens": 4096,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 1.14,
+    "loaded_free_ram_gib": 0.35,
+    "after_free_ram_gib": 1.85,
+    "loaded_vram_used_mib": 2397,
+    "loaded_vram_free_mib": 1566,
+    "processor_split": "48%/52% CPU/GPU",
+    "ollama_reported_size": "3.1 GB",
+    "load_only_confirmed": true,
+    "explicit_unload_complete": true,
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 0.79,
+    "vram_increment_mib": 2397,
+    "vram_headroom_mib": 1566,
+    "comparison_to_granite_context4096": {
+      "loaded_free_ram_delta_gib": -0.71,
+      "vram_headroom_delta_mib": -84,
+      "gpu_residency_delta_percentage_points": -33
+    },
+    "comparison_to_qwen3_8b_context4096": {
+      "loaded_free_ram_delta_gib": 0.14,
+      "vram_headroom_delta_mib": -118,
+      "gpu_residency_delta_percentage_points": 13
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_4096": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context8192_load_only_justified": true,
+    "context16384_authorized": false,
+    "direct_inference_authorized": false
+  },
+  "next_action": "PREPARE_MINISTRAL3_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
