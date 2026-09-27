@@ -1,56 +1,57 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-010`
+Resume ID: `VNEXT-G18-C-20260927-011`
 
 ## Standing execution authority
 
 `OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE.
 
-Zero-cost OroTitan execution proceeds without repeated user confirmation. A new confirmation is required only before a nonzero external monetary cost.
+Zero-cost execution proceeds without repeated user confirmation. Explicit confirmation is required only before nonzero external monetary cost.
 
 ## Qwen3.5 4B identity
 
 - model: `qwen3.5:4b-q4_K_M`
 - digest: `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`
 - quantization: `Q4_K_M`
-- download identity: PASS
 
 ## Context 4096 load-only result
 
-Status: `PASS_LOAD_ONLY_MEASURED`
-
-Observed:
-
-- total RAM: 7.84 GiB
-- free RAM before: 1.33 GiB
-- free RAM loaded: 0.69 GiB
-- free RAM after unload: 2.58 GiB
-- VRAM used loaded: 2601 MiB
-- VRAM headroom loaded: 1362 MiB
-- Ollama loaded size: 3.7 GB
+- status: PASS
+- VRAM used: 2601 MiB
+- VRAM headroom: 1362 MiB
+- Ollama size: 3.7 GB
 - processor split: `50%/50% CPU/GPU`
-- prompt: none
-- semantic inference: none
+- loaded free RAM: 0.69 GiB
+
+## Context 8192 load-only result
+
+- status: PASS
+- VRAM used: 2525 MiB
+- VRAM headroom: 1438 MiB
+- Ollama size: 3.9 GB
+- processor split: `54%/46% CPU/GPU`
+- loaded free RAM: 0.56 GiB
 - unload: PASS
-- full VRAM release: PASS
+- semantic inference: none
 
-RAM free-memory snapshots are treated as noisy OS-level measurements because the post-unload value exceeded the pre-load baseline.
+## Scaling interpretation
 
-Compared with Qwen3 4B at context 4096, Qwen3.5 used 290 MiB more VRAM and shifted materially toward CPU offload.
+From 4096 to 8192:
 
-## Interpretation
+- Ollama loaded size increased by about 0.2 GB;
+- CPU offload increased from 50% to 54%;
+- measured VRAM use decreased by 76 MiB;
+- RAM pressure remained high.
 
-The context-4096 load fit is real, but headroom is tighter than the Qwen3 4B reference.
+This indicates that Ollama is absorbing context growth by moving more of the model/runtime burden to CPU/RAM rather than driving VRAM toward saturation.
 
-A direct jump to context 16384 is not the cheapest discriminating next step.
-
-The bounded next step is an intermediate context-8192 load-only memory measurement.
+The target C4 context is 16384, so the next cheapest discriminating step is one direct load-only measurement at 16384 before any inference.
 
 ## Current authorized step
 
-`G18-PHASEC-QWEN3_5-4B-CONTEXT8192-LOAD-SMOKE-AUTH-001`
+`G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001`
 
-- context: 8192
+- context: 16384
 - load only
 - no prompt
 - no semantic generation
@@ -62,5 +63,5 @@ The bounded next step is an intermediate context-8192 load-only memory measureme
 ## Exact next action
 
 ```text
-EXECUTE_QWEN3_5_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT
+EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
