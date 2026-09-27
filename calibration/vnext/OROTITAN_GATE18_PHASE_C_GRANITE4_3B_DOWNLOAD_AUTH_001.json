@@ -1,0 +1,80 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-GRANITE4-3B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GEMMA3_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "public_verification": {
+    "checked_at": "2026-09-27",
+    "ollama_tag": "granite4:3b",
+    "ollama_size": "2.1GB",
+    "ollama_context_window": "128K",
+    "ollama_input_modalities": [
+      "Text"
+    ],
+    "ollama_digest_prefix": "89962fcc7523",
+    "parameter_size": "3.4B",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "source_urls": [
+      "https://ollama.com/library/granite4:3b",
+      "https://ollama.com/library/granite4/tags"
+    ]
+  },
+  "model": {
+    "candidate_id": "GRANITE4_3B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "granite4:3b",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~2.1GB",
+    "expected_digest_prefix": "89962fcc7523",
+    "license": "Apache-2.0",
+    "role": "POST_GEMMA3_ESCALATION_CANDIDATE"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_load_only_step": true
+  },
+  "authority": {
+    "granite4_download_authorized": true,
+    "granite4_load_smoke_authorized": false,
+    "granite4_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
