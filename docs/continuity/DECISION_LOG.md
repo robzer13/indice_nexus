@@ -150,3 +150,22 @@ Frozen parameters:
 
 Execution boundary:
 One run maximum. No automatic retry. No parameter change. No model switch. No production mutation. No publication. Historical v1.0 results remain immutable.
+
+
+## D-2026-09-27-010 — Authorized Phi-4 Constellation v1.1 run consumed with engineering PASS
+
+Observed execution:
+- exactly one authorized local run;
+- done reason `stop`;
+- 681 / 1024 output tokens;
+- no runtime error;
+- schema PASS;
+- raw presentation noncompliant;
+- 3 safe v1.1 normalization paths;
+- substantive deterministic semantics PASS.
+
+Disposition:
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING`.
+
+Boundary:
+The authorization is consumed. No retry is authorized. The matrix cell is not complete until the private raw output receives human-quality adjudication.
