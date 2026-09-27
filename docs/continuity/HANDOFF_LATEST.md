@@ -1,78 +1,61 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-024`
+Resume ID: `VNEXT-G18-C-20260927-025`
 
-## Gemma 3 final disposition
+## Granite 4 3B pinned download
 
-Historical Constellation run remains:
+Status:
 
-`FAIL_DETERMINISTIC_SEMANTIC_CONTRACT`
+`PASS_PINNED_DOWNLOAD_ONLY`
 
-Deterministic forensic chain:
-1. all three priority findings had non-null `counterevidence_link` with empty `counterevidence_ids`;
-2. after narrow in-memory normalization, the validator exposed `VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`;
-3. the only canonical conflict ID is `C-005`, while the model invented `C-006`;
-4. `C-006` appeared in one material-conflict entry and two unresolved points;
-5. after removing only those unknown references on the in-memory diagnostic copy, the frozen v1.0 semantic validator passed.
+Exact local identity:
+- model: `granite4:3b`;
+- full digest: `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
+- size: 2,099,521,385 bytes;
+- format: `gguf`;
+- family: `granite`;
+- parameter size: `3.4B`;
+- quantization: `Q4_K_M`.
 
-Therefore:
-- two deterministic substantive defect classes are established;
-- no third known deterministic defect remains;
-- the historical run is not reclassified;
-- engineering PASS was not reached;
-- formal human-quality adjudication was not reached;
-- no Gemma retry or additional Gemma C4 cell is authorized.
+No load smoke, prompt, inference, retry, model switch, paid execution, or production mutation occurred in the download run.
 
-Disposition:
-
-`STOP_GEMMA3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
-
-This does not imply global Gemma-family failure.
-
-## Candidate-registry refresh
-
-The previous fallback `qwen3:8b` remains on hold because its ~5.2GB artifact is a poor fit for the observed 7.84 GiB RAM / 4 GiB VRAM envelope.
-
-Refreshed zero-cost candidates:
-1. `granite4:3b` — ~2.1GB, 3.4B, Q4_K_M, 128K, Apache-2.0;
-2. `ministral-3:3b-instruct-2512-q4_K_M` — ~3.0GB, 256K, Apache-2.0;
-3. `llama3.2:3b` — ~2.0GB, 128K, older family option;
-4. `qwen3:8b` — retained on hardware-fit hold.
-
-Selected next candidate:
-
-`GRANITE4_3B_OLLAMA_Q4_K_M`
-
-Selection basis:
-- new model family;
-- materially smaller artifact than recent candidates;
-- Apache-2.0;
-- current Granite 4 documentation emphasizes instruction following and tool calling;
-- highest expected information gain per memory cost among refreshed options.
-
-## Granite 4 3B download authorization
+## Granite 4 context4096 load-only
 
 Authorization:
 
-`G18-PHASEC-GRANITE4-3B-DOWNLOAD-AUTH-001`
-
-Exact public target:
-- tag: `granite4:3b`;
-- expected digest prefix: `89962fcc7523`;
-- expected quantization: `Q4_K_M`;
-- expected artifact class: ~2.1GB;
-- no load smoke;
-- no prompt;
-- no inference;
-- no automatic retry;
-- no automatic model switch.
+`G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-AUTH-001`
 
 Runner:
 
-`scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts`
+`scripts/vnext-gate18-phase-c-granite4-3b-load-smoke.ts`
+
+Guards:
+- exact full digest required;
+- context exactly 4096;
+- one load-only run;
+- no prompt;
+- no semantic inference;
+- explicit unload;
+- no automatic retry;
+- no context change;
+- no model switch;
+- no production mutation.
+
+## User-directed candidate sequence
+
+The user explicitly requires Qwen3 8B to be tested after Granite.
+
+Sequence now preserved:
+1. current: `GRANITE4_3B_OLLAMA_Q4_K_M`;
+2. next after Granite: `QWEN3_8B_LOCAL`.
+
+Ministral 3 3B and Llama 3.2 3B are deferred until after the Qwen3 8B test.
+
+Qwen3 8B will not be jumped directly into inference. Required sequence:
+`pinned download -> context4096 load-only -> context8192 if supported -> context16384 if supported -> inference only if hardware qualification supports it`.
 
 ## Exact next action
 
 ```text
-EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY
+EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT
 ```
