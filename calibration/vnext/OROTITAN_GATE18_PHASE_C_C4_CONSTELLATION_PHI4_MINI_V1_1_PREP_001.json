@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "RUNNER_PREPARED_AWAITING_EXPLICIT_SINGLE_RUN_AUTHORIZATION",
+  "status": "AUTHORIZED_SINGLE_RUN_READY_TO_EXECUTE",
   "decision_basis": "G18-PHASEC-PHI4-C4-RESUMPTION-DECISION-001",
   "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001",
   "future_attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_GUARDED_001",
@@ -42,8 +42,8 @@
     "auto_repair_beyond_v1_1_safe_normalization": false
   },
   "constraints": {
-    "authorized_run_count": 0,
-    "inference_authorized": false,
+    "authorized_run_count": 1,
+    "inference_authorized": true,
     "automatic_retry_authorized": false,
     "second_retry_authorized": false,
     "automatic_model_switch_authorized": false,
@@ -59,7 +59,7 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_INFERENCE_AUTHORIZATION",
+  "next_action": "EXECUTE_EXACTLY_ONE_LOCAL_PHI4_CONSTELLATION_V1_1_INFERENCE",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "authorization_template": "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_PHI4_MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_AUTH_001.json"
 }
