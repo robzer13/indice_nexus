@@ -1,0 +1,64 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_MINISTRAL3_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "granite4.1:3b-q4_K_M",
+    "digest": "6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 1.06,
+    "loaded_free_ram_gib": 0.84,
+    "after_free_ram_gib": 2.16,
+    "loaded_vram_used_mib": 2305,
+    "loaded_vram_free_mib": 1658,
+    "processor_split": "38%/62% CPU/GPU",
+    "ollama_reported_size": "3.8 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload",
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 0.22,
+    "vram_increment_mib": 2305,
+    "vram_headroom_mib": 1658,
+    "comparison_to_granite4_1_context8192": {
+      "loaded_free_ram_delta_gib": -0.07,
+      "vram_headroom_delta_mib": 50,
+      "gpu_residency_delta_percentage_points": -16
+    },
+    "comparison_to_granite4_context16384": {
+      "loaded_free_ram_delta_gib": 0.43,
+      "vram_headroom_delta_mib": 0,
+      "processor_split_same": true,
+      "interpretation": "RAM_OBSERVATION_SUPPORTS_BETTER_CURRENT_HOST_HEADROOM_BUT_REMAINS_HOST_STATE_SENSITIVE"
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_16384": "PASS_WITH_USEFUL_HEADROOM",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context_growth_beyond_16384": false,
+    "first_c4_constellation_same_packet_justified": true,
+    "pre_inference_minimum_free_ram_gib": 1
+  },
+  "next_action": "PREPARE_FIRST_BOUNDED_GRANITE4_1_CONSTELLATION_C4_INFERENCE_V1_1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
