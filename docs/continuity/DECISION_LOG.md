@@ -274,3 +274,41 @@ This is a forensic-tooling defect. It does not change the Qwen3.5 model-run resu
 
 Remediation:
 Add a read-only shape-discovery fallback that reports paths, types, string lengths, object-start flags, and SHA-256 hashes without printing raw values. Then rerun the same private artifact with no inference or Ollama call.
+
+
+## D-2026-09-27-017 — Qwen3.5 forensic confirms empty final response, not partial JSON
+
+Observed:
+- `$.response.rawText` exists;
+- type is string;
+- length is 0;
+- SHA-256 is the empty-string digest;
+- `$.response.parsedJson` is null.
+
+Conclusion:
+There is no partial JSON body to structurally repair or semantically inspect.
+
+Boundary:
+The 842 generated tokens are not attributed to a thinking field as a proven fact because the original runner did not persist provider thinking output.
+
+## D-2026-09-27-018 — First Qwen3.5 attempt is runtime-adapter confounded; authorize one think-false retry
+
+External runtime evidence:
+Ollama exposes explicit thinking-mode control for thinking-capable models, and Qwen3.5 is marked thinking-capable.
+
+Decision:
+Preserve the first run as FAIL, but do not treat it as a clean structured-output capability test because the runner omitted explicit thinking-mode control.
+
+Authorize exactly one same-cell retry with `think:false`.
+
+Frozen:
+- same model/digest;
+- same company;
+- same packet/prompt/schema;
+- context 16384;
+- output 1024;
+- temperature 0;
+- timeout 600 seconds;
+- validation v1.1.
+
+No automatic second retry.
