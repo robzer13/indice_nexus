@@ -1079,7 +1079,7 @@
   "v1_1_generation_prompt_changed": false,
   "v1_1_generation_schema_changed": false,
   "v1_1_historical_v1_0_results_changed": false,
-  "v1_1_new_inference_executed": false,
+  "v1_1_new_inference_executed": true,
   "v1_1_implementation_pr": 257,
   "phi4_mini_c4_resumption_decision": "G18-PHASEC-PHI4-C4-RESUMPTION-DECISION-001",
   "phi4_mini_c4_resumption_status": "CONSTELLATION_ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
