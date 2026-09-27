@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-023",
+  "resume_id": "VNEXT-G18-C-20260927-024",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "f26e740e70122b8be39389c9e189e961613fe2ae",
+  "last_verified_head_sha": "eca80a99a8ea0d79bbe1fad109d8e84d20932b5d",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -58,18 +58,23 @@
     "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_PREPARED",
     "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_COMPLETE",
     "GEMMA3_CONSTELLATION_SECOND_DETERMINISTIC_SEMANTIC_DEFECT_FOUND",
-    "GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC_PREPARED"
+    "GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC_PREPARED",
+    "GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC_COMPLETE",
+    "GEMMA3_CONSTELLATION_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+    "GEMMA3_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
+    "LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_COMPLETE",
+    "GRANITE4_3B_SELECTED_AS_NEXT_CANDIDATE",
+    "GRANITE4_3B_PINNED_DOWNLOAD_AUTHORIZED"
   ],
   "active_work": [
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC"
+    "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
   ],
   "blockers": [
-    "LOCAL_PRIVATE_GEMMA3_RUN_ARTIFACT_REQUIRED_FOR_UNKNOWN_CONFLICT_REF_FORENSIC"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_PINNED_DOWNLOAD"
   ],
   "open_issues": [
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
-    "CLASSIFY_FURTHER_DOWNSTREAM_DETERMINISTIC_SEMANTIC_DEFECTS_IF_ANY",
-    "POST_GEMMA3_CONSTELLATION_STRATEGY_DISPOSITION",
+    "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "IF_DOWNLOAD_PASS_PREPARE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -85,7 +90,11 @@
     "GEMMA3_CONTEXT_GROWTH_STOPS_AT_16384",
     "GEMMA3_FIRST_C4_CELL_CONSTELLATION_SAME_PACKET_SELECTED",
     "GEMMA3_FIRST_C4_RUN_REMAINS_FAIL_NO_RETROACTIVE_PASS",
-    "NO_GEMMA3_RETRY_AUTHORIZED_PENDING_FORENSIC"
+    "NO_GEMMA3_RETRY_AUTHORIZED_PENDING_FORENSIC",
+    "GEMMA3_C4_EXPANSION_STOPPED",
+    "GEMMA3_FAMILY_GLOBAL_FAILURE_NOT_CONCLUDED",
+    "QWEN3_8B_REMAINS_HOLD_POOR_CURRENT_HARDWARE_FIT",
+    "GRANITE4_3B_SELECTED_NEXT_BY_INFORMATION_GAIN_PER_MEMORY"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -139,7 +148,12 @@
     "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-counterevidence-link-forensic.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_FORENSIC_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_UNKNOWN_CONFLICT_REF_FORENSIC_PREP_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-unknown-conflict-ref-forensic.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-unknown-conflict-ref-forensic.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_UNKNOWN_CONFLICT_REF_FORENSIC_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_GEMMA3_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_DOWNLOAD_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -170,7 +184,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
+  "next_action": "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -359,6 +373,32 @@
     "first_c4_counterevidence_link_violating_finding_count": 3,
     "first_c4_downstream_semantic_error_after_first_forensic": "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF",
     "first_c4_second_forensic_prep": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-UNKNOWN-CONFLICT-REF-FORENSIC-PREP-001",
-    "first_c4_second_forensic_required": true
+    "first_c4_second_forensic_required": true,
+    "first_c4_second_forensic_result": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-UNKNOWN-CONFLICT-REF-FORENSIC-RESULT-001",
+    "first_c4_second_forensic_status": "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+    "first_c4_unknown_conflict_id": "C-006",
+    "first_c4_unknown_conflict_ref_count": 3,
+    "first_c4_downstream_semantic_pass_after_cumulative_diagnostic_normalization": true,
+    "all_known_deterministic_defects_exhausted": true,
+    "c4_expansion_status": "STOPPED_RETAIN_CALIBRATION_EVIDENCE",
+    "production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "family_global_failure_concluded": false,
+    "human_quality_adjudication_reached": false
+  },
+  "latest_granite4_3b": {
+    "candidate_id": "GRANITE4_3B_OLLAMA_Q4_K_M",
+    "model": "granite4:3b",
+    "public_digest_prefix": "89962fcc7523",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_size": "2.1GB",
+    "parameter_size": "3.4B",
+    "context_window": "128K",
+    "license": "Apache-2.0",
+    "selection_status": "SELECTED_NEXT_CANDIDATE",
+    "download_authorization_id": "G18-PHASEC-GRANITE4-3B-DOWNLOAD-AUTH-001",
+    "download_authorized": true,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "download_executed": false
   }
 }
