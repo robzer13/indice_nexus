@@ -33,8 +33,8 @@ test("Qwen3 8B Constellation C4 authorization freezes one experimental local inf
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.experiment_kind, "USER_DIRECTED_EXPERIMENTAL_SAME_PACKET_C4");
   assert.equal(a.c4_inference.company, "Constellation Software");
   assert.equal(a.c4_inference.model_name, "qwen3:8b-q4_K_M");
@@ -48,8 +48,9 @@ test("Qwen3 8B Constellation C4 authorization freezes one experimental local inf
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
   assert.equal(a.c4_inference.think, false);
   assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1.0);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.execution_result, "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-THINKFALSE-RESULT-001");
   assert.equal(a.constraints.thinking_mode_change_authorized, false);
   assert.equal(a.interpretation_boundary.production_candidate_decision_authority, false);
 });
