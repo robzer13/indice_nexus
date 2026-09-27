@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Granite 4.1 context16384 hardware pass to first bounded C4", () => {
+test("Phase C advances from Granite 4.1 C4 engineering pass to private human adjudication", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Granite 4.1 context16384 hardware pass to first boun
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_FIRST_BOUNDED_GRANITE4_1_CONSTELLATION_C4_INFERENCE_V1_1",
+    "GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
