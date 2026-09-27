@@ -1302,3 +1302,49 @@ The result does not establish a global Mistral-family failure.
 
 No next local candidate is selected in this disposition. The next protocol step is to refresh the current local candidate registry and select the next same-weight-class candidate before any new download or inference.
 
+## D-2026-09-27-072 — Refresh local candidate registry after Ministral stop
+
+The current same-weight-class registry was refreshed before any new download or inference.
+
+Current candidates considered include:
+- Granite 4.1 3B Q4_K_M;
+- Llama 3.2 3B instruct Q4_K_M;
+- Qwen3.5 2B Q4_K_M;
+- SmolLM3 3B as an upstream research-only option without a pinned official Ollama tag in this refresh.
+
+Public model documentation is used only for static candidate selection and identity planning. It is not evidence that a model will satisfy the OroTitan semantic contract.
+
+## D-2026-09-27-073 — Select Granite 4.1 3B as next same-weight discriminator
+
+Selected:
+
+`GRANITE4_1_3B_OLLAMA_Q4_K_M`
+
+Exact tag:
+
+`granite4.1:3b-q4_K_M`
+
+Static basis:
+- 2.1GB Q4_K_M artifact;
+- 128K context;
+- Apache-2.0;
+- current 2026 Granite successor;
+- explicit structured JSON output support in the current Ollama model description;
+- same artifact class as the already characterized Granite 4 3B path.
+
+This selection does not reverse the Granite 4 human-quality failure and does not conclude that the 4.1 revision will pass.
+
+Llama 3.2 3B remains deferred as the next different-family candidate.
+
+## D-2026-09-27-074 — Authorize one pinned Granite 4.1 3B download only
+
+Standing zero-cost technical authorization permits one exact pull and identity verification for:
+
+`granite4.1:3b-q4_K_M`
+
+Expected digest prefix:
+
+`6fd349357287`
+
+No load smoke, inference, retry, parameter change, model switch, production mutation, ranking or routing authority is granted.
+
