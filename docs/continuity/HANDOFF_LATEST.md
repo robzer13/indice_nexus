@@ -1,68 +1,50 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-039`
+Resume ID: `VNEXT-G18-C-20260927-040`
 
-## Ministral 3 3B context16384 result
+## Ministral 3 3B — first Constellation C4 engineering result
 
 Status:
 
-`PASS_LOAD_ONLY_MEASURED`
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
 
-Measured:
-- free RAM before: 1.45 GiB;
-- free RAM loaded: 1.21 GiB;
-- free RAM after unload: 3.88 GiB;
-- VRAM used loaded: 2399 MiB;
-- VRAM free loaded: 1564 MiB;
-- processor split: `63%/37% CPU/GPU`;
-- Ollama resident size: 4.4 GB;
-- explicit unload: complete;
-- semantic inference: none.
+Observed execution:
+- runtime error: none;
+- done reason: `stop`;
+- wall clock: 344396 ms;
+- prompt eval: 3722 tokens;
+- output eval: 991 / 1024 tokens;
+- output margin: 33 tokens;
+- schema valid: true;
+- semantic valid: true;
+- V1.1 raw presentation compliant: true;
+- normalized paths: 0;
+- substantive validation: PASS.
 
 Interpretation:
 
-`PASS_WITH_USEFUL_HEADROOM`
+This is a clean deterministic engineering pass. It does **not** establish human analytical quality, model ranking, production fit or routing authority.
 
-The absolute free-RAM comparison across runs is host-state-sensitive, so it must not be treated as an intrinsic memory-footprint estimate. The relevant conclusion is narrower: context16384 loaded and unloaded cleanly, retained 1.21 GiB free RAM in the measured state, and supports one bounded C4 capability test.
+The output budget is near saturation (33 tokens remaining), so human review must also check whether useful nuance, unresolved questions or priority selection were compressed or omitted.
 
-No context growth beyond 16384 is authorized.
+No retry or second C4 cell is authorized.
 
-## First bounded Ministral C4 inference
+## Private human-adjudication bundle
 
-Selected cell:
-- company: Constellation Software;
-- archetype: SERIAL_ACQUIRER;
-- module: `MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`;
-- exact same pinned packet and prompt as prior candidates;
-- context: 16384;
-- max output: 1024;
-- temperature: 0;
-- timeout: 600000 ms;
-- keep-alive: 0s.
+Source private run:
 
-Authorization:
+`calibration/vnext/private-runs/2026-09-27T195934460Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_MINISTRAL3_3B_V1_1_CONTEXT16384_001.json`
 
-`G18-PHASEC-C4-CONSTELLATION-MINISTRAL3-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001`
+Bundle runner:
 
-Runner:
+`scripts/vnext-gate18-phase-c-ministral3-3b-human-adjudication-bundle.ts`
 
-`scripts/vnext-gate18-phase-c-c4-constellation-ministral3-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts`
+The bundle reconstructs the exact pinned packet locally, verifies packet/prompt/model identity, and combines it with the original raw model output for human review.
 
-Pre-inference guards:
-- exact full model digest;
-- no other Ollama model loaded;
-- free system RAM must be at least 1.0 GiB;
-- exact packet and prompt hashes;
-- loopback transport only;
-- Windows sleep guard;
-- one authorized inference only;
-- no automatic retry;
-- no prompt/schema/packet/context/output/temperature/timeout/model change;
-- generated content remains private;
-- no production or routing authority.
+It performs no inference and must remain private.
 
 ## Exact next action
 
 ```text
-EXECUTE_FIRST_BOUNDED_MINISTRAL3_CONSTELLATION_C4_INFERENCE_V1_1
+GENERATE_AND_REVIEW_PRIVATE_MINISTRAL3_HUMAN_ADJUDICATION_BUNDLE
 ```
