@@ -1,0 +1,19 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_CONTEXT16384_LOAD_SMOKE_PREP_V0.1",
+  "prep_id": "G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-PREP-001",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "source_result_8192": "G18-PHASEC-QWEN3_5-4B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "authorization": "G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-qwen3-5-4b-context16384-load-smoke.ts",
+  "context_tokens": 16384,
+  "measurements": [
+    "RAM_BEFORE_DURING_AFTER",
+    "VRAM_BEFORE_DURING_AFTER",
+    "OLLAMA_PS_BEFORE_DURING_AFTER"
+  ],
+  "no_prompt": true,
+  "no_generation": true,
+  "explicit_unload": true,
+  "inference_authorized": false,
+  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
+}
