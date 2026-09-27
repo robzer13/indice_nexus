@@ -24,7 +24,7 @@ test("Granite 4 first C4 discriminator is same-packet Constellation", () => {
   assert.equal(d.boundaries.model_ranking_authority, false);
 });
 
-test("Granite 4 Constellation authorization permits exactly one local C4 inference", () => {
+test("Granite 4 Constellation authorization is consumed after one local C4 inference", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_AUTH_001.json",
@@ -32,8 +32,8 @@ test("Granite 4 Constellation authorization permits exactly one local C4 inferen
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.company, "Constellation Software");
   assert.equal(a.c4_inference.model_name, "granite4:3b");
   assert.equal(
@@ -44,8 +44,9 @@ test("Granite 4 Constellation authorization permits exactly one local C4 inferen
   assert.equal(a.c4_inference.max_output_tokens, 1024);
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.execution_result, "G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B_V1_1-RESULT-001");
   assert.equal(a.license_boundary.license, "Apache-2.0");
   assert.equal(a.license_boundary.assist_only, true);
 });

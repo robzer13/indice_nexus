@@ -1,0 +1,23 @@
+{
+  "format": "OROTITAN_GATE18_GRANITE4_POST_CONSTELLATION_STRATEGY_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-GRANITE4-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_GRANITE4_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "evidence_basis": [
+    "Granite 4 passed runtime, schema and v1.1 substantive deterministic validation on the same Constellation packet.",
+    "Human adjudication found a universalized E-029 claim not justified by stated acquisition criteria, duplicate use of two priority slots on recurring-revenue share metrics, an E-063 unresolved question already answered on the same packet, and omission of E-066/E-067 direct serial-acquirer moat inputs.",
+    "The weak-link and conflict-handling sections were materially cleaner than prior Gemma and Phi-4 runs, but priority selection and exact grounding remain critical."
+  ],
+  "boundaries": {
+    "granite4_candidate_admitted": false,
+    "granite4_family_global_failure_concluded": false,
+    "historical_run_reclassified": false,
+    "retry_authorized": false,
+    "additional_granite_inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false
+  },
+  "next_action": "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+}

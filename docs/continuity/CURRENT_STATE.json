@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-028",
+  "resume_id": "VNEXT-G18-C-20260927-029",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "6390bfdc71aab45dba43a9ee213df5bbf5579825",
+  "last_verified_head_sha": "a70650d7a7c8f6016eb584294a6a2c05e03bab55",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -78,18 +78,21 @@
     "GRANITE4_3B_CONTEXT16384_LOAD_ONLY_PASS",
     "GRANITE4_3B_HARDWARE_QUALIFICATION_PASS_WITH_HIGH_RAM_PRESSURE",
     "GRANITE4_FIRST_C4_DISCRIMINATOR_CONSTELLATION_SELECTED",
-    "GRANITE4_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED"
+    "GRANITE4_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED",
+    "GRANITE4_FIRST_CONSTELLATION_C4_ENGINEERING_PASS",
+    "GRANITE4_FIRST_CONSTELLATION_C4_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GRANITE4_C4_EXPANSION_STOPPED_RETAIN_CALIBRATION_EVIDENCE",
+    "QWEN3_8B_PINNED_DOWNLOAD_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1"
+    "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
   ],
   "blockers": [
-    "LOCAL_PRIVATE_REPO_AND_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_CONSTELLATION_C4"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_PINNED_DOWNLOAD"
   ],
   "open_issues": [
-    "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
-    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
-    "AFTER_GRANITE_RESULT_ADVANCE_TO_QWEN3_8B_USER_DIRECTED_SEQUENCE",
+    "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "IF_DOWNLOAD_PASS_PREPARE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -114,7 +117,10 @@
     "MINISTRAL3_AND_LLAMA3_2_DEFERRED_UNTIL_AFTER_QWEN3_8B",
     "GRANITE4_CONTEXT_GROWTH_STOPS_AT_16384",
     "GRANITE4_FIRST_C4_CELL_CONSTELLATION_SAME_PACKET_SELECTED",
-    "QWEN3_8B_REMAINS_NEXT_AFTER_GRANITE"
+    "QWEN3_8B_REMAINS_NEXT_AFTER_GRANITE",
+    "GRANITE4_ENGINEERING_PASS_DOES_NOT_OVERRIDE_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GRANITE4_FAMILY_GLOBAL_FAILURE_NOT_CONCLUDED",
+    "QWEN3_8B_USER_DIRECTED_SEQUENCE_NOW_ACTIVE"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -188,7 +194,12 @@
     "calibration/vnext/OROTITAN_GATE18_GRANITE4_FIRST_C4_DISCRIMINATOR_DECISION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_PREP_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-granite4-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-granite4-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_GRANITE4_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_DOWNLOAD_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-qwen3-8b-download-verify.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -219,7 +230,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
+  "next_action": "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -435,7 +446,7 @@
     "context4096_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context4096_load_authorization_id": "G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-AUTH-001",
     "context4096_load_authorized_run_count": 0,
-    "inference_authorized": true,
+    "inference_authorized": false,
     "context4096_vram_used_mib": 2313,
     "context4096_vram_headroom_mib": 1650,
     "context4096_loaded_free_ram_gib": 1.06,
@@ -468,9 +479,18 @@
     "first_c4_timeout_ms": 600000,
     "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
     "first_c4_authorization_id": "G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
-    "first_c4_inference_authorized": true,
-    "first_c4_authorized_run_count": 1,
-    "first_c4_result_status": "NOT_EXECUTED"
+    "first_c4_inference_authorized": false,
+    "first_c4_authorized_run_count": 0,
+    "first_c4_result_status": "ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "first_c4_engineering_pass": true,
+    "first_c4_human_adjudication_completed": true,
+    "first_c4_human_quality": "CRITICAL_FAILURE",
+    "first_c4_normalized_path_count": 5,
+    "first_c4_eval_count": 536,
+    "first_c4_wall_clock_ms": 117903,
+    "c4_expansion_status": "STOPPED_RETAIN_CALIBRATION_EVIDENCE",
+    "production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "family_global_failure_concluded": false
   },
   "post_granite_candidate_queue": {
     "next_candidate": "QWEN3_8B_LOCAL",
@@ -479,5 +499,21 @@
     "direct_inference_authorized": false,
     "ministral3_3b_deferred": true,
     "llama3_2_3b_deferred": true
+  },
+  "latest_qwen3_8b": {
+    "candidate_id": "QWEN3_8B_LOCAL",
+    "model": "qwen3:8b-q4_K_M",
+    "public_digest_prefix": "500a1f067a9f",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_size": "5.2GB",
+    "parameter_size": "8.19B",
+    "context_window": "40K",
+    "license": "Apache-2.0",
+    "selection_status": "ACTIVE_USER_DIRECTED_NEXT_CANDIDATE",
+    "download_authorization_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001",
+    "download_authorized": true,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "download_executed": false
   }
 }

@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -12,7 +12,7 @@
     "cost_usd": 0
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "Constellation Software",
     "archetype": "SERIAL_ACQUIRER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -32,7 +32,7 @@
     "transport": "NODE_HTTP_REQUEST_LOOPBACK"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "external_model_api_cost_usd": 0,
     "automatic_retry_authorized": false,
     "prompt_change_authorized": false,
@@ -57,6 +57,7 @@
     "assist_only": true,
     "autonomous_financial_decision_authority": false
   },
-  "next_action": "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "STOP_GRANITE4_C4_EXPANSION_AND_ADVANCE_TO_QWEN3_8B_USER_DIRECTED_SEQUENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "execution_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B_V1_1-RESULT-001"
 }
