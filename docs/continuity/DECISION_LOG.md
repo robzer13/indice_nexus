@@ -903,3 +903,41 @@ Not authorized:
 
 Any context8192 step requires review of the measured 4096 result first.
 
+## D-2026-09-27-050 — Qwen3 8B context4096 load-only passes with critical RAM pressure
+
+Measured:
+- free RAM before: 1.38 GiB;
+- free RAM loaded: 0.21 GiB;
+- free RAM after unload: 3.75 GiB;
+- VRAM used loaded: 2279 MiB;
+- VRAM free loaded: 1684 MiB;
+- processor split: 61%/39% CPU/GPU;
+- Ollama resident size: 6.0 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_CRITICAL_RAM_PRESSURE`.
+
+The result proves loadability only, not inference fit or production fit.
+
+## D-2026-09-27-051 — Qwen3 8B context8192 diagnostic load-only authorized
+
+A single context8192 load-only diagnostic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Reason:
+- context4096 loaded successfully;
+- target C4 prompt plus output envelope is not comfortably represented by a 4096 context budget;
+- measured VRAM headroom remains substantial;
+- empirical 8192 loadability is more informative than extrapolation alone.
+
+Boundary:
+- diagnostic-only;
+- no prompt;
+- no inference;
+- no context16384 pre-authorization;
+- no automatic retry;
+- no model switch;
+- production mutation forbidden.
+

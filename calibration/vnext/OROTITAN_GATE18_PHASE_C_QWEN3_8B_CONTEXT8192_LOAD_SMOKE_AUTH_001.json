@@ -1,17 +1,17 @@
 {
-  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_AUTHORIZATION_V0.1",
-  "authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-AUTH-001",
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT8192_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
-  "stage": "POST_GRANITE4_USER_DIRECTED_CANDIDATE_LOAD_SMOKE",
-  "status": "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE",
+  "stage": "POST_GRANITE4_USER_DIRECTED_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
     "separate_user_reprompt_required": false,
     "cost_usd": 0
   },
-  "source_result": "G18-PHASEC-QWEN3-8B-DOWNLOAD-RESULT-001",
+  "source_result": "G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
   "model": {
     "candidate_id": "QWEN3_8B_LOCAL",
     "ollama_model_name": "qwen3:8b-q4_K_M",
@@ -19,7 +19,7 @@
     "quantization": "Q4_K_M"
   },
   "planned_execution": {
-    "context_tokens": 4096,
+    "context_tokens": 8192,
     "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
     "keep_alive_load": "2m",
     "explicit_unload": true,
@@ -27,26 +27,26 @@
     "semantic_inference_requested": false
   },
   "authority": {
-    "load_smoke_authorized": false,
+    "load_smoke_authorized": true,
     "inference_authorized": false,
     "download_authorized": false,
-    "authorized_run_count": 0
+    "authorized_run_count": 1
   },
   "constraints": {
     "automatic_retry_authorized": false,
     "automatic_model_switch_authorized": false,
-    "context_change_authorized": false,
+    "context_change_beyond_8192_authorized": false,
     "production_mutation": false,
     "publication_authority": false
   },
-  "hardware_boundary": {
-    "total_system_ram_gib": 7.84,
-    "gpu_vram_mib": 4096,
-    "model_artifact_size_bytes": 5225388164,
-    "risk_class": "HIGH_MEMORY_PRESSURE_EXPECTED",
-    "direct_inference_forbidden": true
+  "safety_rationale": {
+    "source_loaded_free_ram_gib": 0.21,
+    "source_vram_headroom_mib": 1684,
+    "risk_class": "CRITICAL_RAM_PRESSURE_DIAGNOSTIC_ONLY",
+    "purpose": "Empirically determine whether target-sized prompt context is loadable before any inference decision.",
+    "direct_inference_forbidden": true,
+    "context16384_not_pre_authorized": true
   },
   "next_action": "EXECUTE_QWEN3_8B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN",
-  "execution_result": "G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-RESULT-001"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }
