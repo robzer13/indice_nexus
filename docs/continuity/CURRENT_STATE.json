@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-017",
+  "resume_id": "VNEXT-G18-C-20260927-018",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "8d7a555a91c75a136f23154af0747bffe80e6fda",
+  "last_verified_head_sha": "f7a24f8d5a1ca7e0c7f788f111103e880be10271",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -41,18 +41,21 @@
     "QWEN3_5_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
     "GEMMA3_4B_STATIC_LICENSE_HARDWARE_REVIEW_COMPLETE",
     "GEMMA3_TERMS_ACCEPTED_BY_USER",
-    "GEMMA3_4B_PINNED_DOWNLOAD_AUTHORIZED"
+    "GEMMA3_4B_PINNED_DOWNLOAD_AUTHORIZED",
+    "GEMMA3_4B_PINNED_DOWNLOAD_PASS",
+    "GEMMA3_4B_FULL_DIGEST_CAPTURED",
+    "GEMMA3_4B_CONTEXT4096_LOAD_ONLY_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY"
+    "EXECUTE_GEMMA3_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GEMMA3_DOWNLOAD"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GEMMA3_CONTEXT4096_LOAD_ONLY_PREFLIGHT"
   ],
   "open_issues": [
-    "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY",
-    "IF_DOWNLOAD_PASS_PREPARE_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "IF_HARDWARE_FIT_PASS_DECIDE_GEMMA3_FIRST_C4_DISCRIMINATOR"
+    "EXECUTE_GEMMA3_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "IF_CONTEXT4096_PASS_DECIDE_CONTEXT8192_LOAD_ONLY_OR_STOP",
+    "IF_TARGET_CONTEXT_FIT_PASS_DECIDE_GEMMA3_FIRST_C4_DISCRIMINATOR"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
@@ -97,7 +100,10 @@
     "calibration/vnext/OROTITAN_GATE18_QWEN3_5_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
     "calibration/vnext/OROTITAN_GATE18_GEMMA3_4B_STATIC_LICENSE_HARDWARE_REVIEW_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_DOWNLOAD_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-gemma3-4b-download-verify.ts"
+    "scripts/vnext-gate18-phase-c-gemma3-4b-download-verify.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_DOWNLOAD_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GEMMA3_4B_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-gemma3-4b-load-smoke.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -128,7 +134,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY",
+  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -245,16 +251,16 @@
   "latest_gemma3_4b": {
     "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
     "model": "gemma3:4b-it-q4_K_M",
-    "expected_digest_prefix": "a2af6cc3eb7f",
-    "expected_artifact_size": "3.3GB",
-    "expected_context_window": "128K",
-    "expected_quantization": "Q4_K_M",
-    "terms_last_modified": "2026-04-01",
+    "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+    "size_bytes": 3338801804,
+    "quantization": "Q4_K_M",
+    "ollama_reported_parameter_size": "4.3B",
     "terms_user_accepted": true,
-    "static_hardware_fit": "PLAUSIBLE_BUT_TIGHT_UNPROVEN",
-    "download_status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
-    "download_executed": false,
-    "load_smoke_authorized": false,
+    "download_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "download_executed": true,
+    "context4096_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context4096_load_authorization_id": "G18-PHASEC-GEMMA3-4B-LOAD-SMOKE-AUTH-001",
+    "context4096_load_authorized_run_count": 1,
     "inference_authorized": false
   }
 }
