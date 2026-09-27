@@ -6,25 +6,31 @@ Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 ## OI-002 — Qwen3 8B staged hardware qualification
 Status: COMPLETE_LOADABLE_WITH_EXTREME_RAM_PRESSURE
 
-Production fit remains NOT ESTABLISHED.
-
-## OI-003 — Qwen3 8B Constellation C4 engineering
+## OI-003 — Qwen3 8B Constellation engineering
 Status: COMPLETE_CLEAN_ENGINEERING_PASS
 
-Runtime, schema, raw presentation and substantive semantics all passed with zero normalization.
-
 ## OI-004 — Qwen3 8B human-quality adjudication
-Status: READY_PRIVATE_BUNDLE_GENERATION
+Status: COMPLETE_CRITICAL_FAILURE
+
+Known same-packet regressions remain on E-045 and E-063. Priority selection also omits stronger direct inputs.
+
+## OI-005 — Qwen3 8B expansion
+Status: STOPPED_RETAIN_CALIBRATION_EVIDENCE
+
+No retry or additional Qwen3 8B inference is authorized. No global family failure is inferred.
+
+## OI-006 — Ministral 3 3B pinned download
+Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Generate the private bundle from the exact private run plus pinned evidence packet, then adjudicate the content.
+Execute exactly one pinned download and identity verification for `ministral-3:3b-instruct-2512-q4_K_M`.
 
-## OI-005 — Additional Qwen3 8B inference
+## OI-007 — Ministral load/inference
 Status: NOT_AUTHORIZED
 
-No retry or new cell is authorized before human adjudication.
+Separate staged load-only qualification is required after download.
 
-## OI-006 — Model winner and routing
+## OI-008 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.

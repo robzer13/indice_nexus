@@ -1,0 +1,33 @@
+{
+  "format": "OROTITAN_GATE18_QWEN3_8B_POST_CONSTELLATION_STRATEGY_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-QWEN3-8B-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_QWEN3_8B_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "basis": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-THINKFALSE-RESULT-001",
+    "human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-THINKFALSE-HUMAN-ADJUDICATION-RESULT-001",
+    "engineering_pass": true,
+    "human_quality": "CRITICAL_FAILURE",
+    "hardware_fit": "PASS_WITH_EXTREME_RAM_PRESSURE"
+  },
+  "rationale": [
+    "Clean engineering compliance does not compensate for critical human-quality defects on exact evidence grounding and priority usefulness.",
+    "Known same-packet E-045 and E-063 regressions remain present.",
+    "The candidate is materially expensive on the current 8 GiB RAM / 4 GiB VRAM host, with 0.14 GiB free RAM in the context16384 load-only measurement.",
+    "Additional Qwen3 8B C4 cells would therefore have low information value relative to hardware cost after a critical human-quality failure."
+  ],
+  "boundaries": {
+    "qwen3_8b_candidate_admitted": false,
+    "qwen3_family_global_failure_concluded": false,
+    "retry_authorized": false,
+    "new_qwen3_8b_inference_authorized": false,
+    "production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false
+  },
+  "next_candidate": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+  "next_action": "EXECUTE_MINISTRAL3_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
