@@ -30,7 +30,7 @@ test("standing zero-cost execution authorization v2 removes free-action reprompt
 test("current Qwen3.5 load-only step derives authority from standing v2", () => {
   const auth = JSON.parse(
     readFileSync(
-      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_LOAD_SMOKE_AUTH_001.json",
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
       "utf8",
     ),
   );
