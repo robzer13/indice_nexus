@@ -135,3 +135,18 @@ Frozen execution proposal:
 
 Authority boundary:
 The decision and runner preparation are authorized. The model inference itself is not yet authorized.
+
+
+## D-2026-09-27-009 — User authorizes exactly one Phi-4 Constellation v1.1 inference
+
+Authority:
+Explicit user authorization in chat: `autorisé`.
+
+Authorized execution:
+Exactly one local `phi4-mini:3.8b-q4_K_M` C4 inference on Constellation Software using the frozen v1.1 cell.
+
+Frozen parameters:
+16384 context, 1024 max output tokens, temperature 0, 480-second client timeout, loopback transport, keep_alive 0s.
+
+Execution boundary:
+One run maximum. No automatic retry. No parameter change. No model switch. No production mutation. No publication. Historical v1.0 results remain immutable.
