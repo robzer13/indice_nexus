@@ -6,30 +6,23 @@ Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 ## OI-002 — Qwen3 8B staged hardware qualification
 Status: COMPLETE_LOADABLE_WITH_EXTREME_RAM_PRESSURE
 
-4096, 8192 and 16384 load-only runs passed. At 16384:
-- loaded free RAM: 0.14 GiB;
-- loaded free VRAM: 1618 MiB;
-- processor split: 70%/30% CPU/GPU;
-- resident size: 7.8 GB;
-- explicit unload: complete.
+Production fit remains NOT ESTABLISHED.
 
-No further context growth is authorized.
+## OI-003 — Qwen3 8B Constellation C4 engineering
+Status: COMPLETE_CLEAN_ENGINEERING_PASS
 
-## OI-003 — Qwen3 8B first Constellation C4 experiment
-Status: READY_LOCAL_EXECUTION
-Priority: P0
-
-Exactly one same-packet local inference is authorized with `think:false` and a 1.0 GiB pre-inference baseline-free-RAM guard.
+Runtime, schema, raw presentation and substantive semantics all passed with zero normalization.
 
 ## OI-004 — Qwen3 8B human-quality adjudication
-Status: BLOCKED_BY_OI-003
+Status: READY_PRIVATE_BUNDLE_GENERATION
+Priority: P0
 
-Required only if engineering semantics pass.
+Generate the private bundle from the exact private run plus pinned evidence packet, then adjudicate the content.
 
-## OI-005 — Qwen3 8B production fit
-Status: NOT_ESTABLISHED
+## OI-005 — Additional Qwen3 8B inference
+Status: NOT_AUTHORIZED
 
-Hardware loadability under extreme RAM pressure must not be interpreted as production suitability.
+No retry or new cell is authorized before human adjudication.
 
 ## OI-006 — Model winner and routing
 Status: OPEN_GUARDED
