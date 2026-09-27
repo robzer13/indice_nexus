@@ -1,0 +1,93 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_LINK_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+  "source_run": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-RESULT-001",
+  "source_run_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+  "source_run_semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+  "source_run_v11_normalized_path_count": 13,
+  "observed": {
+    "finding_summaries": [
+      {
+        "finding_index": 1,
+        "support_state": "SUPPORTED",
+        "evidence_ids": [
+          "E-009"
+        ],
+        "conflict_ids": [],
+        "counterevidence_ids": [],
+        "counterevidence_link_present": true,
+        "counterevidence_link_length": 5,
+        "qualification_evidence_ids": [
+          "E-009"
+        ]
+      },
+      {
+        "finding_index": 2,
+        "support_state": "SUPPORTED",
+        "evidence_ids": [
+          "E-043",
+          "E-044"
+        ],
+        "conflict_ids": [],
+        "counterevidence_ids": [],
+        "counterevidence_link_present": true,
+        "counterevidence_link_length": 5,
+        "qualification_evidence_ids": [
+          "E-043"
+        ]
+      },
+      {
+        "finding_index": 3,
+        "support_state": "SUPPORTED",
+        "evidence_ids": [
+          "E-045"
+        ],
+        "conflict_ids": [],
+        "counterevidence_ids": [],
+        "counterevidence_link_present": true,
+        "counterevidence_link_length": 5,
+        "qualification_evidence_ids": [
+          "E-045"
+        ]
+      }
+    ],
+    "violating_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "violating_finding_count": 3
+  },
+  "diagnostic_normalization": {
+    "rule": "Set counterevidence_link to null only when counterevidence_ids is empty.",
+    "normalized_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "source_artifact_mutated": false,
+    "raw_output_mutated": false,
+    "generated_content_published": false,
+    "auto_repair_executed": false
+  },
+  "downstream_validation": {
+    "full_frozen_v10_semantic_validator_executed_on_in_memory_copy": true,
+    "pass": false,
+    "error": "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF"
+  },
+  "interpretation": {
+    "first_defect_isolated": false,
+    "additional_deterministic_semantic_defect_found": true,
+    "second_defect_class": "UNKNOWN_CONFLICT_REFERENCE",
+    "retroactive_pass_allowed": false,
+    "original_run_status_changed": false,
+    "inference_executed": false,
+    "retry_authorized": false,
+    "model_capability_failure_concluded": false
+  },
+  "next_action": "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC"
+}

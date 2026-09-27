@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-022",
+  "resume_id": "VNEXT-G18-C-20260927-023",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "72d6c864eb4f1d36bfa81db669d15e0dc7b76278",
+  "last_verified_head_sha": "f26e740e70122b8be39389c9e189e961613fe2ae",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -55,17 +55,20 @@
     "GEMMA3_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED",
     "GEMMA3_FIRST_CONSTELLATION_C4_RUN_DETERMINISTIC_SEMANTIC_FAIL",
     "GEMMA3_FIRST_CONSTELLATION_C4_AUTHORIZATION_CONSUMED",
-    "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_PREPARED"
+    "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_PREPARED",
+    "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_COMPLETE",
+    "GEMMA3_CONSTELLATION_SECOND_DETERMINISTIC_SEMANTIC_DEFECT_FOUND",
+    "GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC_PREPARED"
   ],
   "active_work": [
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC"
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC"
   ],
   "blockers": [
-    "LOCAL_PRIVATE_GEMMA3_RUN_ARTIFACT_REQUIRED_FOR_DETERMINISTIC_FORENSIC"
+    "LOCAL_PRIVATE_GEMMA3_RUN_ARTIFACT_REQUIRED_FOR_UNKNOWN_CONFLICT_REF_FORENSIC"
   ],
   "open_issues": [
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
-    "CLASSIFY_DOWNSTREAM_DETERMINISTIC_SEMANTIC_DEFECTS_IF_ANY",
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
+    "CLASSIFY_FURTHER_DOWNSTREAM_DETERMINISTIC_SEMANTIC_DEFECTS_IF_ANY",
     "POST_GEMMA3_CONSTELLATION_STRATEGY_DISPOSITION",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
@@ -133,7 +136,10 @@
     "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-4b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_FORENSIC_PREP_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-counterevidence-link-forensic.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-counterevidence-link-forensic.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_FORENSIC_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_UNKNOWN_CONFLICT_REF_FORENSIC_PREP_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-unknown-conflict-ref-forensic.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -164,7 +170,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
+  "next_action": "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -342,6 +348,17 @@
     "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T160225776Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GEMMA3_4B_V1_1_CONTEXT16384_001.json",
     "first_c4_forensic_required": true,
     "first_c4_forensic_prep": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-PREP-001",
-    "retry_authorized": false
+    "retry_authorized": false,
+    "first_c4_first_forensic_result": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-RESULT-001",
+    "first_c4_first_forensic_status": "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+    "first_c4_counterevidence_link_violating_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "first_c4_counterevidence_link_violating_finding_count": 3,
+    "first_c4_downstream_semantic_error_after_first_forensic": "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF",
+    "first_c4_second_forensic_prep": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-UNKNOWN-CONFLICT-REF-FORENSIC-PREP-001",
+    "first_c4_second_forensic_required": true
   }
 }

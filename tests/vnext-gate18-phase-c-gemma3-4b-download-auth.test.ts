@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Gemma 3 Constellation semantic failure to deterministic forensic", () => {
+test("Phase C advances from Gemma 3 first forensic to unknown-conflict-reference forensic", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Gemma 3 Constellation semantic failure to determinis
 
   assert.equal(
     entry.next_action,
-    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -77,4 +77,17 @@ test("Phase C advances from Gemma 3 Constellation semantic failure to determinis
   assert.equal(entry.gemma3_first_c4_result_status, "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT");
   assert.equal(entry.gemma3_first_c4_semantic_error, "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS");
   assert.equal(entry.gemma3_first_c4_forensic_required, true);
+  assert.equal(
+    entry.gemma3_first_c4_first_forensic_status,
+    "FORENSIC_COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND",
+  );
+  assert.deepEqual(
+    entry.gemma3_first_c4_counterevidence_link_violating_finding_indexes,
+    [1, 2, 3],
+  );
+  assert.equal(
+    entry.gemma3_first_c4_downstream_semantic_error_after_first_forensic,
+    "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF",
+  );
+  assert.equal(entry.gemma3_first_c4_second_forensic_required, true);
 });
