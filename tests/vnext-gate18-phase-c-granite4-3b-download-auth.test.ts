@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-test("Granite 4 3B pinned download authorization is zero-cost and download-only", () => {
+test("Granite 4 3B pinned download authorization is consumed after exact identity pass", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_DOWNLOAD_AUTH_001.json",
@@ -10,7 +10,7 @@ test("Granite 4 3B pinned download authorization is zero-cost and download-only"
     ),
   );
 
-  assert.equal(auth.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED");
+  assert.equal(auth.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(auth.authorization_source.authorization_id, "OROTITAN-STANDING-TECHNICAL-AUTH-002");
   assert.equal(auth.authorization_source.cost_usd, 0);
   assert.equal(auth.model.ollama_model_name, "granite4:3b");
@@ -20,9 +20,11 @@ test("Granite 4 3B pinned download authorization is zero-cost and download-only"
   assert.equal(auth.constraints.inference_after_download, false);
   assert.equal(auth.constraints.load_smoke_after_download, false);
   assert.equal(auth.constraints.automatic_retry, false);
-  assert.equal(auth.authority.granite4_download_authorized, true);
+  assert.equal(auth.authority.granite4_download_authorized, false);
   assert.equal(auth.authority.granite4_load_smoke_authorized, false);
   assert.equal(auth.authority.granite4_inference_authorized, false);
+  assert.equal(auth.consumption.consumed, true);
+  assert.equal(auth.consumption.result_status, "PASS_PINNED_DOWNLOAD_ONLY");
 });
 
 test("Granite 4 3B download verifier pulls only the exact tag and performs no inference", () => {
