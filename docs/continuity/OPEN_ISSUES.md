@@ -21,7 +21,7 @@ Priority: P0
 
 One exact load-only execution is authorized.
 
-No prompt, inference, retry, context change or model switch is authorized.
+No semantic inference, retry, context change or model switch is authorized.
 
 ## OI-004 — Granite 4.1 inference
 Status: NOT_AUTHORIZED
