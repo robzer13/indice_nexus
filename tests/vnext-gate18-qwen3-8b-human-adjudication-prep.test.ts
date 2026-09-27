@@ -331,14 +331,14 @@ test("Ministral 3 3B context16384 result supports one bounded same-packet C4 inf
   assert.equal(d.selected_cell.company, "Constellation Software");
   assert.equal(d.safeguards.pre_inference_minimum_free_ram_gib, 1.0);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.context_tokens, 16384);
   assert.equal(a.c4_inference.max_output_tokens, 1024);
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
   assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1.0);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.context_change_authorized, false);
   assert.equal(a.constraints.model_switch_authorized, false);
@@ -361,4 +361,61 @@ test("Ministral 3 3B bounded Constellation runner preserves exact protocol and R
   assert.match(raw, /temperature: 0/);
   assert.match(raw, /NODE_HTTP_REQUEST_LOOPBACK/);
   assert.doesNotMatch(raw, /think:\s*false/);
+});
+
+
+test("Ministral 3 3B Constellation engineering result is a clean pass with near-saturation carry", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_MINISTRAL3_3B_V1_1_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED");
+  assert.equal(r.execution.runtime_error, null);
+  assert.equal(r.execution.schema_valid, true);
+  assert.equal(r.execution.semantic_valid, true);
+  assert.equal(r.validation_v1_1.raw_presentation_compliant, true);
+  assert.equal(r.validation_v1_1.normalized_path_count, 0);
+  assert.equal(r.validation_v1_1.substantive_status, "PASS");
+  assert.equal(r.execution.eval_count, 991);
+  assert.equal(r.execution.output_token_margin, 33);
+  assert.equal(r.execution.output_budget_near_saturation, true);
+  assert.equal(r.interpretation.human_adjudication_required, true);
+  assert.equal(r.interpretation.hardware_production_fit_established, false);
+});
+
+test("Ministral 3 3B private human-adjudication prep authorizes no new inference", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_MINISTRAL3_3B_HUMAN_ADJUDICATION_PREP_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(p.status, "PRIVATE_BUNDLE_GENERATION_READY");
+  assert.equal(p.authority.new_model_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.privacy.public_repo_generated_content_forbidden, true);
+  assert.equal(p.known_same_packet_checks.length, 6);
+  assert.equal(p.engineering_carry.output_token_margin, 33);
+});
+
+test("Ministral 3 3B human-adjudication bundle builder is private and non-inferential", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-ministral3-3b-human-adjudication-bundle.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /MINISTRAL3_3B_PRIVATE_HUMAN_ADJUDICATION_BUNDLE/);
+  assert.match(raw, /buildVerifiedGate18V10MoatPacket/);
+  assert.match(raw, /EXPECTED_PACKET_SHA256/);
+  assert.match(raw, /EXPECTED_PROMPT_SHA256/);
+  assert.match(raw, /2026-09-27T195934460Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_MINISTRAL3_3B_V1_1_CONTEXT16384_001\.json/);
+  assert.match(raw, /privateArtifact: true/);
+  assert.match(raw, /publication: false/);
+  assert.match(raw, /inferenceExecuted: false/);
+  assert.doesNotMatch(raw, /\/api\/generate/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
 });
