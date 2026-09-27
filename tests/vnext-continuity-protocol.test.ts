@@ -38,9 +38,22 @@ test("VNExT continuity state exposes the minimum resume contract", () => {
   assert.equal(state.branch, "vnext");
   assert.equal(state.current_gate, 18);
   assert.equal(state.status, "IN_PROGRESS_NOT_FROZEN");
-  assert.equal(
-    state.next_action,
-    "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
+  assert.equal(typeof state.next_action, "string");
+  assert.ok(state.next_action.trim().length > 0, "next_action must be non-empty");
+});
+
+test("latest handoff and machine-readable state agree on next action", () => {
+  const state = JSON.parse(
+    readFileSync("docs/continuity/CURRENT_STATE.json", "utf8"),
+  );
+  const handoff = readFileSync(
+    "docs/continuity/HANDOFF_LATEST.md",
+    "utf8",
+  );
+
+  assert.ok(
+    handoff.includes(state.next_action),
+    "HANDOFF_LATEST.md must include CURRENT_STATE.next_action exactly",
   );
 });
 
