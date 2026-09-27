@@ -38,7 +38,7 @@ test("Phi-4 C4 resumption selects one bounded Constellation discriminator under 
   assert.equal(decision.execution_boundary.authorized_run_count, 0);
   assert.equal(decision.execution_boundary.automatic_retry_authorized, false);
 
-  assert.equal(prep.status, "PREPARED_NO_INFERENCE_NOT_AUTHORIZED");
+  assert.equal(prep.status, "RUNNER_PREPARED_AWAITING_EXPLICIT_SINGLE_RUN_AUTHORIZATION");
   assert.equal(prep.constraints.inference_authorized, false);
   assert.equal(prep.constraints.authorized_run_count, 0);
   assert.equal(prep.evaluation_contract.raw_output_must_be_preserved, true);
