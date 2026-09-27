@@ -577,3 +577,67 @@ Diagnostic procedure:
 Boundary:
 No model call, no inference, no network, no artifact mutation, no auto-repair, no retroactive pass, and no retry authority.
 
+## D-2026-09-27-032 — Gemma Constellation deterministic forensics exhausted
+
+Second read-only forensic result:
+- canonical conflict IDs: `C-005` only;
+- model-generated unknown conflict ID: `C-006`;
+- unknown `C-006` material-conflict entry count: 1;
+- unknown `C-006` unresolved-point references: 2;
+- total unknown conflict references removed on diagnostic copy: 3;
+- cumulative diagnostic normalization also includes the three invalid counterevidence links from the first forensic;
+- frozen v1.0 semantic validator after cumulative diagnostic normalization: PASS.
+
+Conclusion:
+Two deterministic substantive defect classes are established and no third known deterministic defect remains. The historical run remains FAIL. Engineering PASS and human-quality adjudication were not reached.
+
+## D-2026-09-27-033 — Stop Gemma 3 C4 expansion
+
+Disposition:
+
+`STOP_GEMMA3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+
+Reason:
+The first same-packet Constellation run failed engineering semantics with two independent substantive defect classes, including a fabricated conflict ID reused across multiple output sections. A same-prompt temperature-zero retry has low expected information gain relative to testing a new family.
+
+Boundary:
+No global Gemma-family failure is inferred. No winner is selected. Routing remains unfrozen.
+
+## D-2026-09-27-034 — Refresh local candidate registry before Qwen3 8B
+
+The registered `qwen3:8b` fallback remains on hold because its ~5.2GB artifact is a poor fit for the current 7.84 GiB RAM / 4 GiB VRAM envelope.
+
+Refreshed candidates:
+1. Granite 4 3B;
+2. Ministral 3 3B Instruct;
+3. Llama 3.2 3B;
+4. Qwen3 8B on hardware-fit hold.
+
+Selected next candidate:
+
+`GRANITE4_3B_OLLAMA_Q4_K_M`
+
+Selection basis:
+new family diversity, ~2.1GB Q4_K_M artifact, Apache-2.0 license, 128K context, and strong instruction-following/tool-calling positioning.
+
+## D-2026-09-27-035 — Granite 4 3B pinned download authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+- exact tag `granite4:3b`;
+- expected digest prefix `89962fcc7523`;
+- expected quantization `Q4_K_M`;
+- one download only;
+- identity verification after download.
+
+Not authorized in this step:
+- load smoke;
+- prompt;
+- inference;
+- automatic retry;
+- automatic model switch;
+- paid execution;
+- production mutation.
+

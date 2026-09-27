@@ -1,0 +1,90 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_V0.1",
+  "refresh_id": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20260927-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "checked_at": "2026-09-27",
+  "trigger": "G18-PHASEC-GEMMA3-POST-CONSTELLATION-DISPOSITION-001",
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "gemma3_context16384_loaded_free_ram_gib": 0.33,
+    "qwen3_8b_existing_state": "HOLD_POOR_CURRENT_HARDWARE_FIT"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "candidate_id": "GRANITE4_3B_OLLAMA_Q4_K_M",
+      "family": "Granite 4",
+      "model_id": "granite4:3b",
+      "ollama_digest_prefix": "89962fcc7523",
+      "ollama_artifact_size_gb": 2.1,
+      "parameters": "3.4B",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 128000,
+      "input_mode": "TEXT",
+      "license": "Apache-2.0",
+      "hardware_fit_static": "STRONGEST_OF_REFRESHED_OPTIONS",
+      "information_gain": "HIGH_NEW_FAMILY_AND_INSTRUCTION_FOLLOWING_FOCUS",
+      "rationale": "Smaller artifact than Phi-4, Qwen3.5 and Gemma 3 candidates; current family documentation emphasizes improved instruction following and tool calling. Best information-gain-per-memory next candidate."
+    },
+    {
+      "order": 2,
+      "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+      "family": "Ministral 3",
+      "model_id": "ministral-3:3b-instruct-2512-q4_K_M",
+      "ollama_digest_prefix": "f04aa1c738f6",
+      "ollama_artifact_size_gb": 3,
+      "parameters": "3B",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 256000,
+      "input_mode": "TEXT_IMAGE",
+      "license": "Apache-2.0",
+      "hardware_fit_static": "PLAUSIBLE_TIGHTER_THAN_GRANITE4_3B",
+      "information_gain": "HIGH_NEW_FAMILY",
+      "rationale": "Modern edge-oriented 3B family with 256K context, but materially heavier than Granite 4 3B on the current RAM-constrained machine."
+    },
+    {
+      "order": 3,
+      "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+      "family": "Llama 3.2",
+      "model_id": "llama3.2:3b",
+      "ollama_digest_prefix": "a80c4f17acd5",
+      "ollama_artifact_size_gb": 2,
+      "parameters": "3.21B",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 128000,
+      "input_mode": "TEXT",
+      "license": "Llama 3.2 Community License",
+      "hardware_fit_static": "STRONG",
+      "information_gain": "MEDIUM_OLDER_MODEL",
+      "rationale": "Excellent hardware fit and different family, but materially older than Granite 4 and Ministral 3."
+    },
+    {
+      "order": 4,
+      "candidate_id": "QWEN3_8B_LOCAL",
+      "family": "Qwen3",
+      "model_id": "qwen3:8b",
+      "ollama_artifact_size_gb": 5.2,
+      "hardware_fit_static": "POOR",
+      "state": "HOLD_POOR_CURRENT_HARDWARE_FIT",
+      "information_gain": "LOWER_PER_HARDWARE_COST"
+    }
+  ],
+  "selected_next_candidate": "GRANITE4_3B_OLLAMA_Q4_K_M",
+  "selection_basis": [
+    "New family diversity after Phi-4, Qwen3.5 and Gemma 3 failures.",
+    "2.1GB Q4_K_M artifact is materially smaller than recent failed candidates.",
+    "Apache-2.0 licensing reduces legal friction.",
+    "Granite 4 documentation specifically emphasizes improved instruction following and tool-calling capabilities.",
+    "Qwen3 8B remains a poor fit for the observed 8GB RAM / 4GB VRAM envelope."
+  ],
+  "authority": {
+    "static_registry_refresh_executed": true,
+    "download_authorized_under_standing_zero_cost_authority": true,
+    "inference_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_GRANITE4_3B_PINNED_DOWNLOAD_AND_STATIC_HARDWARE_REVIEW"
+}

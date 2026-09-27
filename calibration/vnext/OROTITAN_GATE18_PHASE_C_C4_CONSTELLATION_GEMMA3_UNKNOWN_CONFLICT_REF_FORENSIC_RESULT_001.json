@@ -1,0 +1,101 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_UNKNOWN_CONFLICT_REF_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-UNKNOWN-CONFLICT-REF-FORENSIC-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "FORENSIC_COMPLETE_ALL_KNOWN_DETERMINISTIC_DEFECTS_EXHAUSTED",
+  "source_run": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-RESULT-001",
+  "first_diagnostic_rule": {
+    "normalized_finding_indexes": [
+      1,
+      2,
+      3
+    ],
+    "downstream_error": "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF"
+  },
+  "conflict_reference_audit": {
+    "canonical_conflict_ids": [
+      "C-005"
+    ],
+    "priority_findings_unknown_refs": [],
+    "material_conflicts": [
+      {
+        "item_index": 1,
+        "conflict_id": "C-005",
+        "unknown": false
+      },
+      {
+        "item_index": 2,
+        "conflict_id": "C-006",
+        "unknown": true
+      }
+    ],
+    "weak_link_unknown_refs": [],
+    "unresolved_points": [
+      {
+        "item_index": 1,
+        "conflict_ids": [
+          "C-006"
+        ],
+        "unknown_conflict_ids": [
+          "C-006"
+        ]
+      },
+      {
+        "item_index": 2,
+        "conflict_ids": [
+          "C-006"
+        ],
+        "unknown_conflict_ids": [
+          "C-006"
+        ]
+      }
+    ]
+  },
+  "diagnostic_normalization": {
+    "unknown_material_conflict_entries_removed": [
+      {
+        "item_index": 2,
+        "conflict_id": "C-006"
+      }
+    ],
+    "unknown_unresolved_point_refs_removed": [
+      {
+        "item_index": 1,
+        "conflict_id": "C-006"
+      },
+      {
+        "item_index": 2,
+        "conflict_id": "C-006"
+      }
+    ],
+    "removed_unknown_conflict_ref_count": 3,
+    "cumulative_with_counterevidence_link_rule": true,
+    "source_artifact_mutated": false,
+    "raw_output_mutated": false,
+    "generated_content_published": false,
+    "auto_repair_executed": false
+  },
+  "downstream_validation": {
+    "full_frozen_v10_semantic_validator_executed_on_in_memory_copy": true,
+    "pass": true,
+    "error": null
+  },
+  "interpretation": {
+    "deterministic_defect_classes": [
+      "COUNTEREVIDENCE_LINK_PRESENT_WITH_EMPTY_COUNTEREVIDENCE_IDS",
+      "UNKNOWN_CONFLICT_REFERENCE_C006"
+    ],
+    "first_defect_affected_all_three_priority_findings": true,
+    "unknown_conflict_id_reused_across_multiple_sections": true,
+    "all_known_deterministic_defects_exhausted": true,
+    "engineering_pass_reached": false,
+    "human_quality_adjudication_reached": false,
+    "retroactive_pass_allowed": false,
+    "original_run_status_changed": false,
+    "inference_executed": false,
+    "retry_authorized": false
+  },
+  "next_action": "STOP_GEMMA3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE"
+}
