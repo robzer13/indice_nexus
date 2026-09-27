@@ -30,6 +30,17 @@
     },
     {
       "order": 2,
+      "candidate_id": "QWEN3_8B_LOCAL",
+      "family": "Qwen3",
+      "model_id": "qwen3:8b",
+      "ollama_artifact_size_gb": 5.2,
+      "hardware_fit_static": "POOR_BUT_TO_BE_MEASURED_WITH_STAGED_PREFLIGHT",
+      "state": "QUEUED_AFTER_GRANITE_BY_EXPLICIT_USER_DIRECTION",
+      "information_gain": "HIGH_SIZE_SCALING_DISCRIMINATOR",
+      "rationale": "Explicitly queued by the user after Granite 4 3B to test whether a larger 8B model resolves semantic-contract failures despite a materially tighter hardware envelope."
+    },
+    {
+      "order": 3,
       "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
       "family": "Ministral 3",
       "model_id": "ministral-3:3b-instruct-2512-q4_K_M",
@@ -42,10 +53,11 @@
       "license": "Apache-2.0",
       "hardware_fit_static": "PLAUSIBLE_TIGHTER_THAN_GRANITE4_3B",
       "information_gain": "HIGH_NEW_FAMILY",
-      "rationale": "Modern edge-oriented 3B family with 256K context, but materially heavier than Granite 4 3B on the current RAM-constrained machine."
+      "rationale": "Modern edge-oriented 3B family with 256K context, but materially heavier than Granite 4 3B on the current RAM-constrained machine.",
+      "state": "DEFERRED_UNTIL_AFTER_QWEN3_8B"
     },
     {
-      "order": 3,
+      "order": 4,
       "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
       "family": "Llama 3.2",
       "model_id": "llama3.2:3b",
@@ -58,17 +70,8 @@
       "license": "Llama 3.2 Community License",
       "hardware_fit_static": "STRONG",
       "information_gain": "MEDIUM_OLDER_MODEL",
-      "rationale": "Excellent hardware fit and different family, but materially older than Granite 4 and Ministral 3."
-    },
-    {
-      "order": 4,
-      "candidate_id": "QWEN3_8B_LOCAL",
-      "family": "Qwen3",
-      "model_id": "qwen3:8b",
-      "ollama_artifact_size_gb": 5.2,
-      "hardware_fit_static": "POOR",
-      "state": "HOLD_POOR_CURRENT_HARDWARE_FIT",
-      "information_gain": "LOWER_PER_HARDWARE_COST"
+      "rationale": "Excellent hardware fit and different family, but materially older than Granite 4 and Ministral 3.",
+      "state": "DEFERRED_UNTIL_AFTER_QWEN3_8B"
     }
   ],
   "selected_next_candidate": "GRANITE4_3B_OLLAMA_Q4_K_M",
@@ -86,5 +89,15 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "PREPARE_GRANITE4_3B_PINNED_DOWNLOAD_AND_STATIC_HARDWARE_REVIEW"
+  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_candidate_after_selected": "QWEN3_8B_LOCAL",
+  "user_directed_sequence": {
+    "explicit": true,
+    "sequence": [
+      "GRANITE4_3B_OLLAMA_Q4_K_M",
+      "QWEN3_8B_LOCAL"
+    ],
+    "ministral3_3b_deferred": true,
+    "llama3_2_3b_deferred": true
+  }
 }
