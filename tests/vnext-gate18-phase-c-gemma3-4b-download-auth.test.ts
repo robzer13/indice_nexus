@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Granite 4.1 context4096 pass to context8192 load-only preflight", () => {
+test("Phase C advances from Granite 4.1 context8192 pass to context16384 load-only preflight", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Granite 4.1 context4096 pass to context8192 load-onl
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_GRANITE4_1_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_GRANITE4_1_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -380,20 +380,24 @@ test("Granite 4.1 context4096 result records comfortable relative headroom", () 
   assert.equal(r.safety.semantic_inference_executed, false);
 });
 
-test("Granite 4.1 context8192 authorization is single-use and non-inferential", () => {
+test("Granite 4.1 context8192 authorization is consumed after one load-only run", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
       "utf8",
     ),
   );
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 8192);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.context_change_beyond_8192_authorized, false);
+  assert.equal(
+    a.execution_result,
+    "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  );
 });
 
 test("Granite 4.1 context8192 protocol keeps context growth bounded", () => {
@@ -409,4 +413,59 @@ test("Granite 4.1 context8192 protocol keeps context growth bounded", () => {
   assert.equal(p.authority.semantic_inference_authorized, false);
   assert.equal(p.authority.retry_authorized, false);
   assert.equal(p.authority.context_change_beyond_8192_authorized, false);
+});
+
+
+test("Granite 4.1 context8192 result records useful headroom", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 8192);
+  assert.equal(r.measured.loaded_free_ram_gib, 0.91);
+  assert.equal(r.measured.loaded_vram_used_mib, 2355);
+  assert.equal(r.measured.loaded_vram_free_mib, 1608);
+  assert.equal(r.measured.processor_split, "22%/78% CPU/GPU");
+  assert.equal(r.measured.load_only_confirmed, true);
+  assert.equal(r.measured.explicit_unload_complete, true);
+  assert.equal(
+    r.interpretation.hardware_fit_at_8192,
+    "PASS_WITH_USEFUL_HEADROOM",
+  );
+  assert.equal(r.interpretation.context16384_load_only_justified, true);
+  assert.equal(r.safety.semantic_inference_executed, false);
+});
+
+test("Granite 4.1 context16384 authorization is single-use and non-inferential", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 16384);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_beyond_16384_authorized, false);
+});
+
+test("Granite 4.1 context16384 protocol keeps context growth bounded", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT16384_LOAD_ONLY_PROTOCOL_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(p.status, "AUTHORIZED_READY_FOR_MANUAL_POWERSHELL_EXECUTION");
+  assert.equal(p.target.context_tokens, 16384);
+  assert.equal(p.authority.load_only_authorized, true);
+  assert.equal(p.authority.semantic_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.authority.context_change_beyond_16384_authorized, false);
 });
