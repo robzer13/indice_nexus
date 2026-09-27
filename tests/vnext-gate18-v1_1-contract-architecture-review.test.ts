@@ -65,7 +65,7 @@ test("v1.1 architecture review separates raw compliance, safe normalization, sem
   assert.equal(review.authority.qwen3_5_download_authorized, false);
 });
 
-test("Phase C permits authorized v1.1 implementation while keeping model execution frozen", () => {
+test("Phase C preserves v1.1 history while authorizing only the dedicated Phi-4 Constellation cell", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -96,13 +96,15 @@ test("Phase C permits authorized v1.1 implementation while keeping model executi
   assert.equal(entry.v1_1_contract_implemented, true);
   assert.equal(entry.v1_1_contract_ci_status, "PASS");
 
-  assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
+  assert.equal(entry.phi4_mini_second_c4_cell_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_inference_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_authorized_run_count, 1);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.qwen3_5_download_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "AWAIT_EXPLICIT_SINGLE_RUN_PHI4_CONSTELLATION_V1_1_INFERENCE_AUTHORIZATION",
+    "EXECUTE_EXACTLY_ONE_LOCAL_PHI4_CONSTELLATION_V1_1_INFERENCE",
   );
 });
