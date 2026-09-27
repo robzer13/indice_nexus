@@ -1,0 +1,18 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_JSON_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-RAW-JSON-FORENSIC-PREP-001",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-RESULT-001",
+  "authorization": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-RAW-JSON-FORENSIC-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-5-4b-raw-json-forensic.ts",
+  "purpose": "Determine why raw JSON ended incomplete despite done_reason=stop and 182-token output margin, without rerunning the model.",
+  "constraints": {
+    "no_inference": true,
+    "no_ollama_call": true,
+    "no_network": true,
+    "no_source_mutation": true,
+    "no_raw_content_publication": true,
+    "no_retroactive_pass": true
+  },
+  "next_action": "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC"
+}

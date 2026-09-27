@@ -4,55 +4,58 @@
 
 Status: COMPLETE
 
-## OI-002 — Phi-4 C4 Constellation qualification
+## OI-002 — Phi-4 C4 qualification
 
-Status: COMPLETE
+Status: COMPLETE_STOPPED_AFTER_HUMAN_CRITICAL_FAILURE
 
-Disposition:
-
-`ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE`
-
-Phi-4 C4 expansion is stopped and retained as calibration evidence.
+Phi-4 remains calibration evidence.
 
 ## OI-003 — Qwen3.5 4B hardware qualification
 
 Status: COMPLETE_FOR_TARGET_CONTEXT
 
-Load-only PASS at:
+Load-only PASS at context 4096, 8192, and 16384.
 
-- context 4096;
-- context 8192;
-- context 16384.
+## OI-004 — First Qwen3.5 C4 Constellation run
 
-The target context 16384 is loadable. RAM pressure is high and CPU offload is material.
+Status: FAIL_RAW_JSON_INCOMPLETE_FORENSICS_REQUIRED  
+Priority: P0
 
-## OI-004 — First Qwen3.5 C4 discriminator
+Observed:
+
+- runtime completed;
+- done reason `stop`;
+- eval count 842 / 1024;
+- runtime error none;
+- JSON parse failed with `Unexpected end of JSON input`;
+- deterministic semantic validation was not reached.
+
+## OI-005 — Qwen3.5 raw JSON termination forensic
 
 Status: READY_LOCAL_EXECUTION  
 Priority: P0
 
-Selected cell:
+Read the existing private artifact only and measure:
 
-`Constellation Software / SERIAL_ACQUIRER`
+- required-section progress;
+- terminal string/delimiter state;
+- structural closure feasibility on an in-memory copy;
+- whether the output ended before completing required schema sections.
 
-Frozen parameters:
+No inference, Ollama call, network access, raw-content publication, or source mutation.
 
-- context 16384;
-- max output 1024;
-- temperature 0;
-- timeout 600 seconds;
-- loopback transport;
-- validation v1.1;
-- one run;
-- no automatic retry.
+## OI-006 — Qwen3.5 retry/stop disposition
 
-## OI-005 — Human-quality adjudication
+Status: BLOCKED_BY_OI-005
 
-Status: BLOCKED_BY_OI-004
+After forensic results, decide between:
 
-After the first Qwen3.5 cell, review exact evidence grounding, atomicity, polarity, qualifications, conflict handling, weak links, unresolved points, judgment boundary, and priority selection.
+- one bounded same-cell reliability retry if diagnostically informative; or
+- stop Qwen3.5 as insufficiently reliable for structured-output C4.
 
-## OI-006 — Model winner and routing
+No automatic retry is currently authorized by the cell artifact.
+
+## OI-007 — Model winner and routing
 
 Status: OPEN_GUARDED
 

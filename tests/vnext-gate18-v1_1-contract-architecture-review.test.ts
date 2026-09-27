@@ -106,11 +106,11 @@ test("Phase C preserves v1.1 history after the dedicated Phi-4 Constellation aut
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.qwen3_5_download_authorized, false);
-  assert.equal(entry.qwen3_5_first_c4_inference_authorized, true);
-  assert.equal(entry.qwen3_5_first_c4_authorized_run_count, 1);
+  assert.equal(entry.qwen3_5_first_c4_inference_authorized, false);
+  assert.equal(entry.qwen3_5_first_c4_authorized_run_count, 0);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
+    "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC",
   );
 });
