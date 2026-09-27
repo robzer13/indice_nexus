@@ -1,0 +1,38 @@
+{
+  "format": "OROTITAN_GATE18_POST_GRANITE_USER_DIRECTED_CANDIDATE_QUEUE_V0.1",
+  "decision_id": "G18-PHASEC-POST-GRANITE-QWEN3-8B-QUEUE-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "QWEN3_8B_QUEUED_AFTER_GRANITE",
+  "user_direction": {
+    "explicit": true,
+    "intent": "TEST_QWEN3_8B_AFTER_GRANITE",
+    "recorded_at": "2026-09-27"
+  },
+  "sequence": {
+    "current_candidate": "GRANITE4_3B_OLLAMA_Q4_K_M",
+    "next_candidate_after_granite": "QWEN3_8B_LOCAL",
+    "ministral3_3b_status": "DEFERRED_BY_USER_SEQUENCE",
+    "llama3_2_3b_status": "DEFERRED_BY_USER_SEQUENCE"
+  },
+  "qwen3_8b_plan": {
+    "model_id": "qwen3:8b",
+    "existing_registry_artifact_size_gb": 5.2,
+    "hardware_state": "HIGH_RISK_BUT_EXPLICITLY_TO_BE_TESTED",
+    "required_sequence": [
+      "PINNED_DOWNLOAD_IDENTITY_VERIFY",
+      "CONTEXT4096_LOAD_ONLY",
+      "CONTEXT8192_LOAD_ONLY_IF_4096_SUPPORTS",
+      "CONTEXT16384_LOAD_ONLY_IF_8192_SUPPORTS",
+      "INFERENCE_ONLY_IF_HARDWARE_QUALIFICATION_SUPPORTS"
+    ],
+    "direct_inference_authorized": false,
+    "context_jump_authorized": false
+  },
+  "boundaries": {
+    "qwen3_8b_download_authorized_now": false,
+    "qwen3_8b_load_authorized_now": false,
+    "qwen3_8b_inference_authorized_now": false,
+    "granite_sequence_remains_current": true
+  }
+}
