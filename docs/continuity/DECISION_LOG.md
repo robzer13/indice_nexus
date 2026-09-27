@@ -259,3 +259,18 @@ Preserve the run as FAIL. Do not reach v1.1 deterministic semantic or human-qual
 
 Authority:
 The inference authorization is consumed. The forensic is zero-cost and authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+
+## D-2026-09-27-016 — Qwen3.5 forensic fails on private-artifact schema mismatch
+
+Observed:
+The read-only forensic passed the run identity checks but could not find a non-empty string at `$.response.rawText`, raising `VNEXT_GATE18_QWEN35_JSON_FORENSIC_RAW_TEXT_MISSING`.
+
+Classification:
+`FORENSIC_INPUT_SCHEMA_MISMATCH`.
+
+Boundary:
+This is a forensic-tooling defect. It does not change the Qwen3.5 model-run result, does not add evidence about model capability, and does not authorize a retry.
+
+Remediation:
+Add a read-only shape-discovery fallback that reports paths, types, string lengths, object-start flags, and SHA-256 hashes without printing raw values. Then rerun the same private artifact with no inference or Ollama call.

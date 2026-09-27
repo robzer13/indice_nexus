@@ -32,10 +32,12 @@ Observed:
 
 ## OI-005 — Qwen3.5 raw JSON termination forensic
 
-Status: READY_LOCAL_EXECUTION  
+Status: TOOLING_SCHEMA_MISMATCH_FIX_PREPARED  
 Priority: P0
 
-Read the existing private artifact only and measure:
+The first forensic attempt passed run-identity checks but failed because `$.response.rawText` was unavailable on the private artifact shape observed on the user machine.
+
+Rerun the existing private artifact with shape discovery enabled, then measure:
 
 - required-section progress;
 - terminal string/delimiter state;
