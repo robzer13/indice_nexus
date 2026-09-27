@@ -545,3 +545,35 @@ Procedure:
 Boundary:
 No inference, no Ollama call, no external network, no artifact mutation, no auto-repair, no retroactive pass, and no retry authority.
 
+## D-2026-09-27-030 — Gemma Constellation first semantic defect affects all three findings
+
+Read-only forensic result:
+- v1.1 presentation normalization reproduced exactly with 13 normalized paths;
+- finding indexes 1, 2, and 3 each had empty `counterevidence_ids` with a non-null `counterevidence_link`;
+- the source artifact was not mutated;
+- no inference was executed.
+
+After setting only those structurally invalid links to null on an in-memory diagnostic copy, the frozen v1.0 semantic validator still failed.
+
+Downstream error:
+
+`VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`
+
+Conclusion:
+The first deterministic semantic defect is not isolated. The historical Gemma run remains FAIL and no retry is authorized.
+
+## D-2026-09-27-031 — Gemma Constellation unknown-conflict-reference forensic selected
+
+Purpose:
+Audit all conflict references by output section against the canonical packet conflict IDs, without printing private narrative text.
+
+Diagnostic procedure:
+- reproduce v1.1 presentation normalization;
+- reproduce the first narrow counterevidence-link normalization;
+- identify unknown conflict refs in priority findings, material conflicts, weak links, and unresolved points;
+- remove only unknown conflict refs or unknown material-conflict entries on an in-memory copy;
+- rerun the frozen v1.0 semantic validator.
+
+Boundary:
+No model call, no inference, no network, no artifact mutation, no auto-repair, no retroactive pass, and no retry authority.
+
