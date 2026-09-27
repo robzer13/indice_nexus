@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances explicitly from Gemma 3 context8192 pass to context16384 load-only", () => {
+test("Phase C advances from Gemma 3 context16384 hardware pass to one Constellation C4 inference", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances explicitly from Gemma 3 context8192 pass to context16384 
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -67,7 +67,11 @@ test("Phase C advances explicitly from Gemma 3 context8192 pass to context16384 
   assert.equal(entry.gemma3_context8192_load_authorized, false);
   assert.equal(entry.gemma3_context8192_load_authorized_run_count, 0);
   assert.equal(entry.gemma3_context8192_load_status, "PASS_LOAD_ONLY_MEASURED");
-  assert.equal(entry.gemma3_context16384_load_authorized, true);
-  assert.equal(entry.gemma3_context16384_load_authorized_run_count, 1);
-  assert.equal(entry.gemma3_inference_authorized, false);
+  assert.equal(entry.gemma3_context16384_load_authorized, false);
+  assert.equal(entry.gemma3_context16384_load_authorized_run_count, 0);
+  assert.equal(entry.gemma3_context16384_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.gemma3_hardware_qualification, "PASS_WITH_HIGH_RAM_PRESSURE");
+  assert.equal(entry.gemma3_first_c4_company, "Constellation Software");
+  assert.equal(entry.gemma3_first_c4_inference_authorized, true);
+  assert.equal(entry.gemma3_first_c4_authorized_run_count, 1);
 });
