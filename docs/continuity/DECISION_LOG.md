@@ -461,3 +461,46 @@ Guards:
 Next:
 If context16384 load fit passes, close the hardware qualification for the intended C4 target context and decide the first bounded Gemma 3 C4 discriminator separately.
 
+## D-2026-09-27-026 — Gemma 3 context16384 load-only passes with high RAM pressure
+
+Observed:
+- context 16384;
+- VRAM used 2449 MiB;
+- VRAM headroom 1514 MiB;
+- free system RAM while loaded 0.33 GiB;
+- processor split 57%/43% CPU/GPU;
+- load-only guard PASS;
+- explicit unload PASS;
+- no prompt;
+- no semantic inference.
+
+Reference:
+At context16384, Qwen3.5 used 2589 MiB VRAM with 1374 MiB headroom and 0.51 GiB loaded free RAM.
+
+Disposition:
+Gemma 3 is hardware-admissible for the intended C4 context, but only with a HIGH_RAM_PRESSURE carry. Context growth beyond 16384 is not justified.
+
+## D-2026-09-27-027 — Gemma 3 first C4 discriminator selects Constellation same packet
+
+Selected:
+`Constellation Software / SERIAL_ACQUIRER`.
+
+Pinned invariants:
+- packet SHA256 `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
+- prompt SHA256 `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`;
+- prompt bytes 9041;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- validation contract v1.1.
+
+Rationale:
+The identical packet directly tests whether Gemma 3 improves the exact-grounding and priority-selection defects that caused the clean Qwen3.5 retry to fail human adjudication.
+
+Authority:
+One zero-cost local inference under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Boundary:
+No automatic retry, no second Gemma cell, no model ranking, no routing freeze, no production mutation, and no public generated content. Human adjudication is mandatory after an engineering PASS.
+
