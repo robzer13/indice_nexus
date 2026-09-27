@@ -56,7 +56,7 @@ test("Phase C advances from Ministral 3 3B context16384 hardware pass to first b
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_FIRST_BOUNDED_MINISTRAL3_CONSTELLATION_C4_INFERENCE_V1_1",
+    "GENERATE_AND_REVIEW_PRIVATE_MINISTRAL3_HUMAN_ADJUDICATION_BUNDLE",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -230,7 +230,19 @@ test("Phase C advances from Ministral 3 3B context16384 hardware pass to first b
   assert.equal(entry.ministral3_first_c4_context_tokens, 16384);
   assert.equal(entry.ministral3_first_c4_max_output_tokens, 1024);
   assert.equal(entry.ministral3_first_c4_minimum_free_ram_gib, 1.0);
-  assert.equal(entry.ministral3_first_c4_inference_authorized, true);
-  assert.equal(entry.ministral3_first_c4_authorized_run_count, 1);
-  assert.equal(entry.ministral3_3b_inference_authorized, true);
+  assert.equal(entry.ministral3_first_c4_inference_authorized, false);
+  assert.equal(entry.ministral3_first_c4_authorized_run_count, 0);
+  assert.equal(entry.ministral3_3b_inference_authorized, false);
+  assert.equal(
+    entry.ministral3_first_c4_result_status,
+    "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED",
+  );
+  assert.equal(entry.ministral3_first_c4_eval_count, 991);
+  assert.equal(entry.ministral3_first_c4_output_token_margin, 33);
+  assert.equal(entry.ministral3_first_c4_output_budget_near_saturation, true);
+  assert.equal(entry.ministral3_first_c4_schema_valid, true);
+  assert.equal(entry.ministral3_first_c4_semantic_valid, true);
+  assert.equal(entry.ministral3_first_c4_raw_presentation_compliant, true);
+  assert.equal(entry.ministral3_first_c4_normalized_path_count, 0);
+  assert.equal(entry.ministral3_first_c4_human_adjudication_required, true);
 });
