@@ -40,3 +40,20 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /loadSmokeExecuted: false/);
 });
+
+test("Phase C advances explicitly to the Gemma 3 pinned download checkpoint", () => {
+  const entry = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(entry.next_action, "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY");
+  assert.equal(entry.gemma3_terms_user_accepted, true);
+  assert.equal(entry.gemma3_download_authorized, true);
+  assert.equal(entry.gemma3_download_executed, false);
+  assert.equal(entry.gemma3_load_smoke_authorized, false);
+  assert.equal(entry.gemma3_inference_authorized, false);
+});
+
