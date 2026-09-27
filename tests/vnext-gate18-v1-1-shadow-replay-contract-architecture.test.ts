@@ -137,6 +137,6 @@ test("historical shadow review remains immutable while current Phase C records l
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1",
+    "AWAIT_EXPLICIT_SINGLE_RUN_PHI4_CONSTELLATION_V1_1_INFERENCE_AUTHORIZATION",
   );
 });

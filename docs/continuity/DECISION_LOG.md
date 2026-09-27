@@ -117,3 +117,21 @@ No model inference was executed. A second Phi-4 C4 cell remains unauthorized.
 
 Next decision:
 `DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1`.
+
+
+## D-2026-09-27-008 — Resume Phi-4 C4 with one Constellation discriminator under v1.1
+
+Decision:
+Resume qualification is methodologically justified after the v1.1 architecture fix, but only through one bounded discriminator before any broader matrix continuation.
+
+Selected cell:
+Constellation Software / SERIAL_ACQUIRER.
+
+Rationale:
+It is the smallest remaining workload, closest to the STMicro reference cell, adds a distinct archetype, is absent from the shadow replay, and had a Qwen3 4B engineering PASS / human PASS_WITH_CARRY reference result.
+
+Frozen execution proposal:
+16384 context, 1024 output tokens, temperature 0, 480-second client timeout, loopback transport, one run, no automatic retry.
+
+Authority boundary:
+The decision and runner preparation are authorized. The model inference itself is not yet authorized.
