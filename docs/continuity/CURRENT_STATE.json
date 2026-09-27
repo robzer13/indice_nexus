@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-024",
+  "resume_id": "VNEXT-G18-C-20260927-025",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "eca80a99a8ea0d79bbe1fad109d8e84d20932b5d",
+  "last_verified_head_sha": "da280798062b4e4a282f12e95aac638c85d2e257",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -64,17 +64,22 @@
     "GEMMA3_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
     "LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_COMPLETE",
     "GRANITE4_3B_SELECTED_AS_NEXT_CANDIDATE",
-    "GRANITE4_3B_PINNED_DOWNLOAD_AUTHORIZED"
+    "GRANITE4_3B_PINNED_DOWNLOAD_AUTHORIZED",
+    "GRANITE4_3B_PINNED_DOWNLOAD_PASS",
+    "GRANITE4_3B_FULL_DIGEST_CAPTURED",
+    "GRANITE4_3B_CONTEXT4096_LOAD_ONLY_AUTHORIZED",
+    "QWEN3_8B_EXPLICITLY_QUEUED_AFTER_GRANITE"
   ],
   "active_work": [
-    "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+    "EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_PINNED_DOWNLOAD"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_PREFLIGHT"
   ],
   "open_issues": [
-    "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
-    "IF_DOWNLOAD_PASS_PREPARE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "IF_GRANITE4096_PASS_DECIDE_GRANITE8192_LOAD_ONLY_OR_STOP",
+    "AFTER_GRANITE_SEQUENCE_TEST_QWEN3_8B_WITH_STAGED_HARDWARE_PREFLIGHT",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -94,7 +99,9 @@
     "GEMMA3_C4_EXPANSION_STOPPED",
     "GEMMA3_FAMILY_GLOBAL_FAILURE_NOT_CONCLUDED",
     "QWEN3_8B_REMAINS_HOLD_POOR_CURRENT_HARDWARE_FIT",
-    "GRANITE4_3B_SELECTED_NEXT_BY_INFORMATION_GAIN_PER_MEMORY"
+    "GRANITE4_3B_SELECTED_NEXT_BY_INFORMATION_GAIN_PER_MEMORY",
+    "QWEN3_8B_WILL_BE_TESTED_AFTER_GRANITE_BY_EXPLICIT_USER_DIRECTION",
+    "MINISTRAL3_AND_LLAMA3_2_DEFERRED_UNTIL_AFTER_QWEN3_8B"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -153,7 +160,11 @@
     "calibration/vnext/OROTITAN_GATE18_GEMMA3_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_DOWNLOAD_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts"
+    "scripts/vnext-gate18-phase-c-granite4-3b-download-verify.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_DOWNLOAD_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-granite4-3b-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_POST_GRANITE_QWEN3_8B_QUEUE_001.json"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -184,7 +195,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_GRANITE4_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -388,17 +399,26 @@
   "latest_granite4_3b": {
     "candidate_id": "GRANITE4_3B_OLLAMA_Q4_K_M",
     "model": "granite4:3b",
-    "public_digest_prefix": "89962fcc7523",
-    "expected_quantization": "Q4_K_M",
-    "expected_artifact_size": "2.1GB",
+    "digest": "89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f",
+    "size_bytes": 2099521385,
+    "format": "gguf",
+    "family": "granite",
     "parameter_size": "3.4B",
-    "context_window": "128K",
+    "quantization": "Q4_K_M",
     "license": "Apache-2.0",
-    "selection_status": "SELECTED_NEXT_CANDIDATE",
-    "download_authorization_id": "G18-PHASEC-GRANITE4-3B-DOWNLOAD-AUTH-001",
-    "download_authorized": true,
-    "load_smoke_authorized": false,
-    "inference_authorized": false,
-    "download_executed": false
+    "download_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "download_executed": true,
+    "context4096_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context4096_load_authorization_id": "G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-AUTH-001",
+    "context4096_load_authorized_run_count": 1,
+    "inference_authorized": false
+  },
+  "post_granite_candidate_queue": {
+    "next_candidate": "QWEN3_8B_LOCAL",
+    "user_directed": true,
+    "staged_hardware_preflight_required": true,
+    "direct_inference_authorized": false,
+    "ministral3_3b_deferred": true,
+    "llama3_2_3b_deferred": true
   }
 }
