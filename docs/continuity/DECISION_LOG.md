@@ -234,3 +234,28 @@ Frozen execution:
 - one run;
 - no automatic retry;
 - zero external model API cost.
+
+
+## D-2026-09-27-015 — First Qwen3.5 C4 Constellation run fails raw JSON completeness
+
+Observed execution:
+- model `qwen3.5:4b-q4_K_M`;
+- Constellation Software full pinned packet;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600 seconds;
+- wall clock 249631 ms;
+- done reason `stop`;
+- eval count 842;
+- no runtime error;
+- JSON parse error `Unexpected end of JSON input`.
+
+Interpretation:
+This is not classified as a timeout and output-budget exhaustion is not proven because generation stopped with 182 tokens of configured output headroom remaining.
+
+Disposition:
+Preserve the run as FAIL. Do not reach v1.1 deterministic semantic or human-quality conclusions from malformed JSON. Run a read-only structural forensic on the existing private output before deciding whether a bounded reliability retry is informative.
+
+Authority:
+The inference authorization is consumed. The forensic is zero-cost and authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
