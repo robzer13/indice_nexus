@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-033",
+  "resume_id": "VNEXT-G18-C-20260927-034",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "21c24e93b83bc92e2b2930d1328c10411c425b57",
+  "last_verified_head_sha": "2faa53a725e95dbb1d05f2a5a9ba555017de9027",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -94,18 +94,22 @@
     "QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC_AUTHORIZED",
     "QWEN3_8B_CONTEXT16384_LOAD_ONLY_PASS",
     "QWEN3_8B_CONTEXT16384_EXTREME_RAM_PRESSURE_RECORDED",
-    "QWEN3_8B_ONE_BOUNDED_CONSTELLATION_C4_THINK_FALSE_AUTHORIZED"
+    "QWEN3_8B_ONE_BOUNDED_CONSTELLATION_C4_THINK_FALSE_AUTHORIZED",
+    "QWEN3_8B_CONSTELLATION_C4_ENGINEERING_PASS",
+    "QWEN3_8B_CONSTELLATION_C4_RAW_PRESENTATION_PASS",
+    "QWEN3_8B_CONSTELLATION_C4_SEMANTIC_PASS",
+    "QWEN3_8B_CONSTELLATION_C4_AUTHORIZATION_CONSUMED",
+    "QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE_PREPARED"
   ],
   "active_work": [
-    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT"
+    "GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE"
   ],
   "blockers": [
-    "LOCAL_PRIVATE_REPO_AND_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONSTELLATION_C4"
+    "PRIVATE_QWEN3_8B_RUN_AND_PINNED_PRIVATE_EVIDENCE_REQUIRED_FOR_HUMAN_ADJUDICATION"
   ],
   "open_issues": [
-    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
-    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
-    "IF_RUNTIME_FAIL_CLASSIFY_HARDWARE_RUNTIME_CONFOUND_WITHOUT_RETRY",
+    "GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE",
+    "COMPLETE_QWEN3_8B_HUMAN_QUALITY_ADJUDICATION",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -241,7 +245,10 @@
     "calibration/vnext/OROTITAN_GATE18_QWEN3_8B_POST_HARDWARE_DECISION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_PREP_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-8b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-8b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_HUMAN_ADJUDICATION_PREP_001.json",
+    "scripts/vnext-gate18-phase-c-qwen3-8b-human-adjudication-bundle.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -272,7 +279,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
+  "next_action": "GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -555,7 +562,7 @@
     "download_authorization_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001",
     "download_authorized": false,
     "load_smoke_authorized": true,
-    "inference_authorized": true,
+    "inference_authorized": false,
     "download_executed": true,
     "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
     "size_bytes": 5225388164,
@@ -604,9 +611,18 @@
     "first_c4_think": false,
     "first_c4_minimum_free_ram_gib": 1,
     "first_c4_authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001",
-    "first_c4_inference_authorized": true,
-    "first_c4_authorized_run_count": 1,
-    "first_c4_result_status": "NOT_EXECUTED",
-    "production_fit": false
+    "first_c4_inference_authorized": false,
+    "first_c4_authorized_run_count": 0,
+    "first_c4_result_status": "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED",
+    "production_fit": false,
+    "first_c4_engineering_pass": true,
+    "first_c4_raw_presentation_compliant": true,
+    "first_c4_normalized_path_count": 0,
+    "first_c4_semantic_valid": true,
+    "first_c4_eval_count": 860,
+    "first_c4_output_token_margin": 164,
+    "first_c4_wall_clock_ms": 519551,
+    "first_c4_baseline_free_ram_gib": 3.59,
+    "human_adjudication_completed": false
   }
 }
