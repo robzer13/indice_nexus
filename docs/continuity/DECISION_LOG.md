@@ -1392,3 +1392,24 @@ The 4096 result justifies one separate context8192 load-only measurement.
 
 No inference, retry, model switch or context growth beyond 8192 is authorized.
 
+## D-2026-09-27-079 — Granite 4.1 context8192 load-only passes with useful headroom
+
+Observed:
+- loaded free RAM: 0.91 GiB;
+- loaded VRAM used/free: 2355 / 1608 MiB;
+- processor split: 22%/78% CPU/GPU;
+- explicit unload complete;
+- no semantic inference.
+
+Disposition:
+
+`PASS_WITH_USEFUL_HEADROOM`
+
+Granite 4 3B at 8192 previously measured 0.94 GiB loaded free RAM with the same VRAM use and processor split. The 0.03 GiB difference is retained as host-state-sensitive and is not treated as a structural regression.
+
+## D-2026-09-27-080 — Authorize one Granite 4.1 context16384 load-only preflight
+
+The 8192 result justifies one separate context16384 load-only measurement because 16384 is the target-sized C4 context class.
+
+No inference, retry, model switch or context growth beyond 16384 is authorized.
+
