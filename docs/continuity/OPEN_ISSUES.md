@@ -3,35 +3,35 @@
 ## OI-001 — Completed/stopped candidate calibration evidence
 Status: RETAINED_IMMUTABLE
 
-Prior candidate outcomes remain calibration evidence. No stopped candidate is retroactively reclassified.
-
 ## OI-002 — Granite 4.1 3B pinned identity
-Status: READY_FOR_SINGLE_DOWNLOAD_ONLY
+Status: COMPLETE_PASS
+
+Pinned identity:
+- `granite4.1:3b-q4_K_M`
+- digest `6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb`
+- 2099520281 bytes
+- GGUF
+- granite
+- 3.4B reported
+- Q4_K_M
+
+## OI-003 — Granite 4.1 context4096 load-only preflight
+Status: AUTHORIZED_READY_LOCAL_EXECUTION
 Priority: P0
 
-Exact target:
-- `granite4.1:3b-q4_K_M`
-- digest prefix `6fd349357287`
-- ~2.1GB
-- Q4_K_M
-- 128K
-- Apache-2.0
+One exact load-only execution is authorized.
 
-One zero-cost exact download plus identity verification is authorized.
+No prompt, inference, retry, context change or model switch is authorized.
 
-No load smoke or inference is authorized in the same step.
+## OI-004 — Granite 4.1 inference
+Status: NOT_AUTHORIZED
 
-## OI-003 — Granite 4.1 hardware qualification
-Status: NOT_STARTED
+Hardware fit must be measured separately first.
 
-Must remain separate from download identity verification.
-
-## OI-004 — Llama 3.2 3B
+## OI-005 — Llama 3.2 3B
 Status: DEFERRED_AFTER_GRANITE4_1_3B
 
-Retained as the next different-family same-weight option.
-
-## OI-005 — Model winner and routing
+## OI-006 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
