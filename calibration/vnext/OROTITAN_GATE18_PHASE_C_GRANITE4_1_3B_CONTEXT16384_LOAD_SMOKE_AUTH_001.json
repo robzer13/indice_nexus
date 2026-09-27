@@ -1,17 +1,17 @@
 {
-  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT8192_LOAD_SMOKE_AUTHORIZATION_V0.1",
-  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT16384_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_MINISTRAL3_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
-  "status": "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
     "separate_user_reprompt_required": false,
     "cost_usd": 0
   },
-  "source_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+  "source_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
   "model": {
     "candidate_id": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
     "ollama_model_name": "granite4.1:3b-q4_K_M",
@@ -19,7 +19,7 @@
     "quantization": "Q4_K_M"
   },
   "planned_execution": {
-    "context_tokens": 8192,
+    "context_tokens": 16384,
     "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
     "keep_alive_load": "2m",
     "explicit_unload": true,
@@ -27,28 +27,27 @@
     "semantic_inference_requested": false
   },
   "authority": {
-    "load_smoke_authorized": false,
+    "load_smoke_authorized": true,
     "inference_authorized": false,
     "download_authorized": false,
-    "authorized_run_count": 0
+    "authorized_run_count": 1
   },
   "constraints": {
     "automatic_retry_authorized": false,
     "automatic_model_switch_authorized": false,
-    "context_change_beyond_8192_authorized": false,
+    "context_change_beyond_16384_authorized": false,
     "production_mutation": false,
     "publication_authority": false
   },
   "safety_rationale": {
-    "source_loaded_free_ram_gib": 1.39,
-    "source_vram_headroom_mib": 1642,
-    "source_processor_split": "15%/85% CPU/GPU",
-    "risk_class": "COMFORTABLE_RELATIVE_HEADROOM",
-    "purpose": "Measure context growth to 8192 before any inference decision.",
+    "source_loaded_free_ram_gib": 0.91,
+    "source_vram_headroom_mib": 1608,
+    "source_processor_split": "22%/78% CPU/GPU",
+    "risk_class": "USEFUL_HEADROOM_DIAGNOSTIC_ONLY",
+    "purpose": "Measure target C4-sized context loadability before any inference decision.",
     "direct_inference_forbidden": true,
-    "context16384_not_pre_authorized": true
+    "context_growth_beyond_16384_not_pre_authorized": true
   },
   "next_action": "EXECUTE_GRANITE4_1_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN",
-  "execution_result": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }
