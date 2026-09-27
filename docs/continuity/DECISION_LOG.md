@@ -1430,3 +1430,34 @@ The first Granite 4.1 C4 uses the identical Constellation packet and prompt used
 
 Authorization is single-run only. Automatic retry and all contract changes are forbidden. Human adjudication is mandatory if engineering validation passes.
 
+## D-2026-09-27-083 — Granite 4.1 first Constellation C4 is a clean engineering pass
+
+Observed:
+- wall clock: 72819 ms;
+- done reason: stop;
+- prompt eval count: 3145;
+- eval count: 435 / 1024;
+- output margin: 589;
+- runtime error: none;
+- schema valid: true;
+- semantic valid: true;
+- V1.1 raw presentation compliant: true;
+- normalized path count: 0;
+- substantive status: PASS.
+
+Disposition:
+
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`.
+
+The result has no saturation carry and no presentation-normalization carry. It does not establish human analytical quality, ranking, routing, production admission, or model winner status.
+
+## D-2026-09-27-084 — Granite 4.1 C4 authorization is consumed; private human adjudication is mandatory
+
+Exactly one Granite 4.1 C4 inference was executed.
+
+The preceding PowerShell parser error occurred before script execution and did not consume the authorization.
+
+No retry or new Granite 4.1 inference is authorized.
+
+The next protocol step is non-inferential: generate a private adjudication bundle from the existing run and exact pinned Constellation packet, then perform human-quality review using the same regression checks applied to prior candidates.
+
