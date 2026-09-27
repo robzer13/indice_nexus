@@ -1,58 +1,68 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-038`
+Resume ID: `VNEXT-G18-C-20260927-039`
 
-## Ministral 3 3B context8192 result
+## Ministral 3 3B context16384 result
 
 Status:
 
 `PASS_LOAD_ONLY_MEASURED`
 
 Measured:
-- free RAM before: 1.00 GiB;
-- free RAM loaded: 0.38 GiB;
-- free RAM after unload: 2.06 GiB;
-- VRAM used loaded: 2407 MiB;
-- VRAM free loaded: 1556 MiB;
-- processor split: `54%/46% CPU/GPU`;
-- resident size: 3.5 GB;
+- free RAM before: 1.45 GiB;
+- free RAM loaded: 1.21 GiB;
+- free RAM after unload: 3.88 GiB;
+- VRAM used loaded: 2399 MiB;
+- VRAM free loaded: 1564 MiB;
+- processor split: `63%/37% CPU/GPU`;
+- Ollama resident size: 4.4 GB;
 - explicit unload: complete;
 - semantic inference: none.
 
 Interpretation:
 
-`PASS_WITH_CRITICAL_RAM_PRESSURE`
+`PASS_WITH_USEFUL_HEADROOM`
 
-Relative to context4096, loaded free RAM is effectively stable (+0.03 GiB), VRAM headroom declines by only 10 MiB, and GPU residency declines by 6 percentage points. This supports one final context16384 load-only diagnostic for direct C4 protocol comparability. It does not prove inference fit.
+The absolute free-RAM comparison across runs is host-state-sensitive, so it must not be treated as an intrinsic memory-footprint estimate. The relevant conclusion is narrower: context16384 loaded and unloaded cleanly, retained 1.21 GiB free RAM in the measured state, and supports one bounded C4 capability test.
 
-## Ministral 3 3B context16384 final diagnostic
+No context growth beyond 16384 is authorized.
+
+## First bounded Ministral C4 inference
+
+Selected cell:
+- company: Constellation Software;
+- archetype: SERIAL_ACQUIRER;
+- module: `MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`;
+- exact same pinned packet and prompt as prior candidates;
+- context: 16384;
+- max output: 1024;
+- temperature: 0;
+- timeout: 600000 ms;
+- keep-alive: 0s.
 
 Authorization:
 
-`G18-PHASEC-MINISTRAL3-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001`
+`G18-PHASEC-C4-CONSTELLATION-MINISTRAL3-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001`
 
 Runner:
 
-`scripts/vnext-gate18-phase-c-ministral3-3b-context16384-load-smoke.ts`
+`scripts/vnext-gate18-phase-c-c4-constellation-ministral3-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts`
 
-Guards:
-- exact digest required;
-- context exactly 16384;
-- one load-only run;
-- no prompt;
-- no semantic inference;
-- explicit unload;
+Pre-inference guards:
+- exact full model digest;
+- no other Ollama model loaded;
+- free system RAM must be at least 1.0 GiB;
+- exact packet and prompt hashes;
+- loopback transport only;
+- Windows sleep guard;
+- one authorized inference only;
 - no automatic retry;
-- no model switch;
-- no context growth beyond 16384;
-- no production mutation.
-
-After this measurement, explicitly decide between:
-1. one bounded comparable C4 inference; or
-2. hardware-stop disposition.
+- no prompt/schema/packet/context/output/temperature/timeout/model change;
+- generated content remains private;
+- no production or routing authority.
 
 ## Exact next action
 
 ```text
-EXECUTE_MINISTRAL3_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT
+EXECUTE_FIRST_BOUNDED_MINISTRAL3_CONSTELLATION_C4_INFERENCE_V1_1
 ```
