@@ -1,0 +1,81 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_MODEL_DOWNLOAD_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_8B_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "public_verification": {
+    "checked_at": "2026-09-27",
+    "ollama_tag": "ministral-3:3b-instruct-2512-q4_K_M",
+    "ollama_size": "3.0GB",
+    "ollama_context_window": "256K",
+    "ollama_input_modalities": [
+      "Text",
+      "Image"
+    ],
+    "ollama_digest_prefix": "f04aa1c738f6",
+    "parameter_size": "3.85B",
+    "quantization": "Q4_K_M",
+    "license": "Apache-2.0",
+    "source_urls": [
+      "https://ollama.com/library/ministral-3:3b-instruct-2512-q4_K_M",
+      "https://ollama.com/library/ministral-3/tags"
+    ]
+  },
+  "model": {
+    "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+    "ollama_model_name": "ministral-3:3b-instruct-2512-q4_K_M",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_class": "~3.0GB",
+    "expected_digest_prefix": "f04aa1c738f6",
+    "license": "Apache-2.0",
+    "role": "POST_QWEN3_8B_ESCALATION_CANDIDATE"
+  },
+  "execution": {
+    "script": "scripts/vnext-gate18-phase-c-ministral3-3b-download-verify.ts",
+    "command_family": "ollama pull",
+    "action_count_authorized": 1,
+    "exact_model_only": true,
+    "remote_download_required": true,
+    "identity_verification_after_download": true
+  },
+  "constraints": {
+    "inference_after_download": false,
+    "load_smoke_after_download": false,
+    "prompt_authorized": false,
+    "messages_authorized": false,
+    "automatic_pull_of_other_models": false,
+    "automatic_retry": false,
+    "automatic_model_switch": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "post_download_requirements": {
+    "exact_model_presence_check": true,
+    "exact_digest_capture": true,
+    "expected_digest_prefix_check": true,
+    "model_size_capture": true,
+    "quantization_capture_if_exposed": true,
+    "api_show_capture": true,
+    "no_load_or_inference_until_separate_load_only_step": true
+  },
+  "authority": {
+    "ministral3_download_authorized": true,
+    "ministral3_load_smoke_authorized": false,
+    "ministral3_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_MINISTRAL3_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
