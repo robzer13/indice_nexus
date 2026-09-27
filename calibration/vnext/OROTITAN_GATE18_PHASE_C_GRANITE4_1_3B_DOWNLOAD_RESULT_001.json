@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_DOWNLOAD_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GRANITE4_1-3B-DOWNLOAD-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_MINISTRAL3_CANDIDATE_ESCALATION_DOWNLOAD",
+  "status": "PASS_PINNED_DOWNLOAD_ONLY",
+  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-DOWNLOAD-AUTH-001",
+  "model": {
+    "candidate_id": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "granite4.1:3b-q4_K_M",
+    "digest": "6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb",
+    "size_bytes": 2099520281,
+    "format": "gguf",
+    "family": "granite",
+    "ollama_reported_parameter_size": "3.4B",
+    "quantization": "Q4_K_M"
+  },
+  "verification": {
+    "exact_tag_present": true,
+    "digest_captured": true,
+    "expected_digest_prefix_matched": true,
+    "api_show_reachable": true,
+    "expected_quantization_matched": true
+  },
+  "safety": {
+    "download_executed": true,
+    "other_model_download_executed": false,
+    "load_smoke_executed": false,
+    "prompt_provided": false,
+    "model_inference_executed": false,
+    "automatic_retry_executed": false,
+    "automatic_model_switch_executed": false,
+    "paid_execution_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "identity_pass": true,
+    "hardware_fit_proven": false,
+    "inference_fit_proven": false,
+    "context4096_load_only_justified": true
+  },
+  "next_action": "EXECUTE_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

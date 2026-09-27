@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Ministral stop to Granite 4.1 pinned download", () => {
+test("Phase C advances from Granite 4.1 pinned download to context4096 load-only preflight", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Ministral stop to Granite 4.1 pinned download", () =
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_GRANITE4_1_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "EXECUTE_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -274,12 +274,12 @@ test("Granite 4.1 3B download authorization is exact and non-inferential", () =>
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY");
+  assert.equal(a.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(a.model.ollama_model_name, "granite4.1:3b-q4_K_M");
   assert.equal(a.model.expected_digest_prefix, "6fd349357287");
   assert.equal(a.model.expected_quantization, "Q4_K_M");
   assert.equal(a.execution.action_count_authorized, 1);
-  assert.equal(a.authority.granite4_1_download_authorized, true);
+  assert.equal(a.authority.granite4_1_download_authorized, false);
   assert.equal(a.authority.granite4_1_load_smoke_authorized, false);
   assert.equal(a.authority.granite4_1_inference_authorized, false);
   assert.equal(a.constraints.automatic_retry, false);
@@ -302,4 +302,56 @@ test("Granite 4.1 3B download verifier pulls exact tag and performs no inference
   assert.doesNotMatch(raw, /prompt\s*:/);
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /loadSmokeExecuted: false/);
+});
+
+
+test("Granite 4.1 pinned download result captures exact local identity", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_DOWNLOAD_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(r.status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(r.model.ollama_model_name, "granite4.1:3b-q4_K_M");
+  assert.equal(
+    r.model.digest,
+    "6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb",
+  );
+  assert.equal(r.model.size_bytes, 2099520281);
+  assert.equal(r.model.ollama_reported_parameter_size, "3.4B");
+  assert.equal(r.model.quantization, "Q4_K_M");
+  assert.equal(r.safety.load_smoke_executed, false);
+  assert.equal(r.safety.model_inference_executed, false);
+});
+
+test("Granite 4.1 context4096 authorization remains load-only and single-use", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 4096);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_authorized, false);
+});
+
+test("Granite 4.1 context4096 protocol preserves non-inference boundaries", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(p.status, "AUTHORIZED_READY_FOR_MANUAL_POWERSHELL_EXECUTION");
+  assert.equal(p.target.context_tokens, 4096);
+  assert.equal(p.authority.load_only_authorized, true);
+  assert.equal(p.authority.semantic_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.authority.context_change_authorized, false);
 });

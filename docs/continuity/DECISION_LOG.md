@@ -1348,3 +1348,26 @@ Expected digest prefix:
 
 No load smoke, inference, retry, parameter change, model switch, production mutation, ranking or routing authority is granted.
 
+## D-2026-09-27-075 — Granite 4.1 3B pinned download passes exact identity verification
+
+Observed local identity:
+- model: `granite4.1:3b-q4_K_M`;
+- digest: `6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb`;
+- size: 2099520281 bytes;
+- format: GGUF;
+- family: granite;
+- Ollama-reported parameter size: 3.4B;
+- quantization: Q4_K_M.
+
+The single download-only authorization is consumed. No load or inference occurred in that step.
+
+## D-2026-09-27-076 — Authorize one Granite 4.1 context4096 load-only preflight
+
+One exact local load-only preflight is authorized at 4096 context tokens.
+
+The step must capture resource state before load, while loaded, and after explicit unload.
+
+No semantic inference, retry, context change, model switch, production mutation or publication authority is granted.
+
+Execution contract: `G18-PHASEC-GRANITE4_1-3B-CONTEXT4096-LOAD-ONLY-PROTOCOL-001`.
+
