@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Granite 4.1 context8192 pass to context16384 load-only preflight", () => {
+test("Phase C advances from Granite 4.1 context16384 hardware pass to first bounded C4", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Granite 4.1 context8192 pass to context16384 load-on
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_GRANITE4_1_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_FIRST_BOUNDED_GRANITE4_1_CONSTELLATION_C4_INFERENCE_V1_1",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -439,18 +439,18 @@ test("Granite 4.1 context8192 result records useful headroom", () => {
   assert.equal(r.safety.semantic_inference_executed, false);
 });
 
-test("Granite 4.1 context16384 authorization is single-use and non-inferential", () => {
+test("Granite 4.1 context16384 load authorization is consumed after the measured run", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
       "utf8",
     ),
   );
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 16384);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.context_change_beyond_16384_authorized, false);
 });
