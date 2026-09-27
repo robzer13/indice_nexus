@@ -1,0 +1,13 @@
+{
+  "format": "OROTITAN_GATE18_PHI4_POST_CONSTELLATION_STRATEGY_CHECKPOINT_V0.1",
+  "checkpoint_id": "G18-PHASEC-PHI4-POST-CONSTELLATION-STRATEGY-CHECKPOINT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STRATEGY_REVIEW_REQUIRED_NO_NEW_INFERENCE",
+  "trigger_result": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+  "trigger_summary": "Engineering PASS under v1.1, human-quality critical failure on evidence grounding and priority selection.",
+  "new_inference_authorized": false,
+  "additional_phi4_cell_authorized": false,
+  "model_switch_authorized": false,
+  "next_action": "DECIDE_POST_CONSTELLATION_PHI4_STRATEGY_DISPOSITION"
+}
