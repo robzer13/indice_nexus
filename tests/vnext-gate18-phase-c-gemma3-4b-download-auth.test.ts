@@ -102,7 +102,7 @@ test("Phase C advances from Ministral 3 3B human adjudication to next-candidate 
   );
   assert.equal(entry.gemma3_c4_expansion_status, "STOPPED_RETAIN_CALIBRATION_EVIDENCE");
   assert.equal(entry.gemma3_family_global_failure_concluded, false);
-  assert.equal(entry.next_candidate, "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M");
+  assert.equal(entry.next_candidate, "NOT_SELECTED");
   assert.equal(entry.granite4_3b_model_name, "granite4:3b");
   assert.equal(entry.granite4_3b_download_authorized, false);
   assert.equal(entry.granite4_3b_download_executed, true);
