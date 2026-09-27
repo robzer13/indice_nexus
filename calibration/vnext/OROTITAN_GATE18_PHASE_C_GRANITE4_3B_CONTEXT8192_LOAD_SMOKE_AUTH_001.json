@@ -1,0 +1,42 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GEMMA3_CANDIDATE_ESCALATION_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "source_result": "G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-RESULT-001",
+  "model": {
+    "ollama_model_name": "granite4:3b",
+    "digest": "89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f",
+    "quantization": "Q4_K_M"
+  },
+  "planned_execution": {
+    "context_tokens": 8192,
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
+    "keep_alive_load": "2m",
+    "explicit_unload": true,
+    "prompt_provided": false,
+    "semantic_inference_requested": false
+  },
+  "authority": {
+    "load_smoke_authorized": true,
+    "inference_authorized": false,
+    "download_authorized": false,
+    "authorized_run_count": 1
+  },
+  "constraints": {
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_change_beyond_8192_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT"
+}

@@ -676,3 +676,46 @@ Required Qwen3 8B sequence:
 
 Qwen3 8B remains recognized as a high-risk hardware candidate, but it is no longer deferred behind Ministral/Llama.
 
+## D-2026-09-27-039 — Granite 4 context4096 load-only passes with strong relative headroom
+
+Measured:
+- free RAM before: 1.48 GiB;
+- free RAM loaded: 1.06 GiB;
+- free RAM after unload: 1.71 GiB;
+- VRAM used loaded: 2313 MiB;
+- VRAM free loaded: 1650 MiB;
+- processor split: 15%/85% CPU/GPU;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Relative to Gemma 3 at context4096:
+- +0.48 GiB free RAM headroom;
+- +136 MiB free VRAM headroom;
+- materially higher GPU residency.
+
+Conclusion:
+Granite 4 context4096 hardware fit passes and supports one bounded context8192 load-only preflight.
+
+## D-2026-09-27-040 — Granite 4 context8192 load-only authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+- exact model `granite4:3b`;
+- exact digest `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`;
+- context 8192;
+- one load-only execution;
+- explicit unload.
+
+Not authorized:
+- prompt;
+- semantic inference;
+- context growth beyond 8192;
+- automatic retry;
+- model switch;
+- production mutation.
+
+Qwen3 8B remains the user-directed candidate immediately after Granite.
+

@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Granite download pass to Granite context4096 load-only with Qwen3 8B queued next", () => {
+test("Phase C advances from Granite context4096 pass to context8192 load-only with Qwen3 8B queued next", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Granite download pass to Granite context4096 load-on
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_GRANITE4_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -111,8 +111,15 @@ test("Phase C advances from Granite download pass to Granite context4096 load-on
     entry.granite4_3b_full_digest,
     "89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f",
   );
-  assert.equal(entry.granite4_3b_context4096_load_authorized, true);
-  assert.equal(entry.granite4_3b_context4096_load_authorized_run_count, 1);
+  assert.equal(entry.granite4_3b_context4096_load_authorized, false);
+  assert.equal(entry.granite4_3b_context4096_load_authorized_run_count, 0);
+  assert.equal(entry.granite4_3b_context4096_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.granite4_3b_context4096_vram_used_mib, 2313);
+  assert.equal(entry.granite4_3b_context4096_vram_free_mib, 1650);
+  assert.equal(entry.granite4_3b_context4096_loaded_free_ram_gib, 1.06);
+  assert.equal(entry.granite4_3b_context4096_processor_split, "15%/85% CPU/GPU");
+  assert.equal(entry.granite4_3b_context8192_load_authorized, true);
+  assert.equal(entry.granite4_3b_context8192_load_authorized_run_count, 1);
   assert.equal(entry.granite4_3b_inference_authorized, false);
   assert.equal(entry.next_candidate_after_granite, "QWEN3_8B_LOCAL");
   assert.equal(entry.qwen3_8b_user_directed_test_after_granite, true);
