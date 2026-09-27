@@ -1,0 +1,91 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GEMMA3_4B_CONTEXT8192_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GEMMA3-4B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_5_CANDIDATE_ESCALATION_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "gemma3:4b-it-q4_K_M",
+    "digest": "a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a",
+    "quantization": "Q4_K_M",
+    "context_tokens": 8192,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.07,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.77,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1540,
+    "vram_used_mib": 2423,
+    "ollama_reported_size": "3.5 GB",
+    "processor_split": "56%/44% CPU/GPU",
+    "context_tokens": 8192,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.67,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2423,
+    "vram_headroom_while_loaded_mib": 1540,
+    "free_ram_delta_before_to_loaded_gib": -0.3,
+    "full_vram_release_after_unload": true,
+    "qwen3_5_context8192_vram_used_reference_mib": 2525,
+    "vram_delta_vs_qwen3_5_context8192_mib": -102,
+    "qwen3_5_context8192_vram_headroom_reference_mib": 1438,
+    "vram_headroom_delta_vs_qwen3_5_context8192_mib": 102,
+    "qwen3_5_context8192_loaded_free_ram_reference_gib": 0.56,
+    "loaded_free_ram_delta_vs_qwen3_5_context8192_gib": 0.21,
+    "qwen3_5_context8192_processor_split_reference": "54%/46% CPU/GPU",
+    "gemma3_context8192_processor_split": "56%/44% CPU/GPU"
+  },
+  "interpretation": {
+    "context8192_load_fit": "PASS",
+    "context8192_inference_fit": "NOT_YET_PROVEN",
+    "gpu_headroom_while_loaded": "MATERIAL",
+    "system_ram_pressure": "HIGH_BUT_IMPROVED_VS_REFERENCE_RUN",
+    "cpu_offload_pressure": "MATERIAL",
+    "context16384_load_only_preflight_recommended": true,
+    "note": "Gemma 3 loads and unloads cleanly at context 8192. Relative to Qwen3.5 at the same context it uses 102 MiB less VRAM and retains 0.21 GiB more free RAM in this observed run. A bounded context16384 load-only preflight is justified before any inference."
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GEMMA3_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "standing_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
