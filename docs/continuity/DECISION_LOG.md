@@ -866,3 +866,40 @@ Exactly one zero-cost pinned download is authorized under `OROTITAN-STANDING-TEC
 
 No load smoke, inference, retry, model switch, paid execution, or production mutation is authorized in the download step.
 
+## D-2026-09-27-048 — Qwen3 8B pinned download passes exact identity verification
+
+Observed local identity:
+- model `qwen3:8b-q4_K_M`;
+- full digest `500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41`;
+- size 5,225,388,164 bytes;
+- format `gguf`;
+- family `qwen3`;
+- parameter size `8.2B`;
+- quantization `Q4_K_M`.
+
+No load or inference occurred.
+
+## D-2026-09-27-049 — Qwen3 8B context4096 load-only preflight authorized
+
+Authority:
+`OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Scope:
+- exact pinned model digest;
+- context 4096;
+- one load-only execution;
+- explicit unload.
+
+Hardware risk:
+`HIGH_MEMORY_PRESSURE_EXPECTED`.
+
+Not authorized:
+- prompt;
+- semantic inference;
+- context growth;
+- automatic retry;
+- model switch;
+- production mutation.
+
+Any context8192 step requires review of the measured 4096 result first.
+

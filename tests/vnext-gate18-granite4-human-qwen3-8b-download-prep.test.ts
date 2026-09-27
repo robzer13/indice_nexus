@@ -61,7 +61,7 @@ test("Granite 4 post-Constellation disposition stops expansion without global fa
   assert.equal(d.next_action, "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY");
 });
 
-test("Qwen3 8B pinned download authorization is exact, zero-cost, and non-inferential", () => {
+test("Qwen3 8B pinned download authorization is consumed after exact identity pass", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_DOWNLOAD_AUTH_001.json",
@@ -69,17 +69,19 @@ test("Qwen3 8B pinned download authorization is exact, zero-cost, and non-infere
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(a.model.ollama_model_name, "qwen3:8b-q4_K_M");
   assert.equal(a.model.expected_digest_prefix, "500a1f067a9f");
   assert.equal(a.model.expected_quantization, "Q4_K_M");
   assert.equal(a.model.expected_artifact_class, "~5.2GB");
   assert.equal(a.public_verification.parameter_size, "8.19B");
   assert.equal(a.authorization_source.cost_usd, 0);
-  assert.equal(a.authority.qwen3_8b_download_authorized, true);
+  assert.equal(a.authority.qwen3_8b_download_authorized, false);
   assert.equal(a.authority.qwen3_8b_load_smoke_authorized, false);
   assert.equal(a.authority.qwen3_8b_inference_authorized, false);
   assert.equal(a.constraints.automatic_retry, false);
+  assert.equal(a.consumption.consumed, true);
+  assert.equal(a.consumption.result_status, "PASS_PINNED_DOWNLOAD_ONLY");
 });
 
 test("Qwen3 8B download verifier pulls exact Q4_K_M tag and performs no inference", () => {
@@ -99,4 +101,64 @@ test("Qwen3 8B download verifier pulls exact Q4_K_M tag and performs no inferenc
   assert.doesNotMatch(raw, /prompt\s*:/);
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /loadSmokeExecuted: false/);
+});
+
+
+test("Qwen3 8B pinned download result is exact and non-inferential", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_DOWNLOAD_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(r.model.ollama_model_name, "qwen3:8b-q4_K_M");
+  assert.equal(
+    r.model.digest,
+    "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  );
+  assert.equal(r.model.size_bytes, 5225388164);
+  assert.equal(r.model.ollama_reported_parameter_size, "8.2B");
+  assert.equal(r.model.quantization, "Q4_K_M");
+  assert.equal(r.safety.load_smoke_executed, false);
+  assert.equal(r.safety.model_inference_executed, false);
+});
+
+test("Qwen3 8B context4096 load-only authorization allows exactly one guarded run", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 4096);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.hardware_boundary.risk_class, "HIGH_MEMORY_PRESSURE_EXPECTED");
+  assert.equal(a.hardware_boundary.direct_inference_forbidden, true);
+});
+
+test("Qwen3 8B context4096 runner is exact-digest load-only", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context4096-load-smoke.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /qwen3:8b-q4_K_M/);
+  assert.match(
+    raw,
+    /500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41/,
+  );
+  assert.match(raw, /CONTEXT_TOKENS = 4096/);
+  assert.match(raw, /num_ctx:\s*CONTEXT_TOKENS/);
+  assert.match(raw, /AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED/);
+  assert.match(raw, /keep_alive:\s*"2m"/);
+  assert.match(raw, /keep_alive:\s*0/);
+  assert.match(raw, /semanticInferenceExecuted:\s*false/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
+  assert.doesNotMatch(raw, /prompt\s*:/);
 });

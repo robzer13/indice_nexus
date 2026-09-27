@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_GRANITE4_USER_DIRECTED_CANDIDATE_DOWNLOAD",
-  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED",
+  "status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -67,7 +67,7 @@
     "no_load_or_inference_until_separate_load_only_step": true
   },
   "authority": {
-    "qwen3_8b_download_authorized": true,
+    "qwen3_8b_download_authorized": false,
     "qwen3_8b_load_smoke_authorized": false,
     "qwen3_8b_inference_authorized": false,
     "model_switch_authorized": false,
@@ -75,6 +75,12 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "retry_authorized": false
+  }
 }

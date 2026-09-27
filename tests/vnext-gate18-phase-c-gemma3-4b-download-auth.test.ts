@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Granite human-quality failure to Qwen3 8B pinned download", () => {
+test("Phase C advances from Qwen3 8B pinned download pass to context4096 load-only", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Granite human-quality failure to Qwen3 8B pinned dow
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -138,9 +138,19 @@ test("Phase C advances from Granite human-quality failure to Qwen3 8B pinned dow
   assert.equal(entry.granite4_first_c4_authorized_run_count, 0);
   assert.equal(entry.granite4_first_c4_result_status, "ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE");
   assert.equal(entry.granite4_3b_inference_authorized, false);
-  assert.equal(entry.qwen3_8b_download_authorized, true);
+  assert.equal(entry.qwen3_8b_download_authorized, false);
+  assert.equal(entry.qwen3_8b_download_executed, true);
+  assert.equal(entry.qwen3_8b_download_status, "PASS_PINNED_DOWNLOAD_ONLY");
   assert.equal(entry.qwen3_8b_model_name, "qwen3:8b-q4_K_M");
   assert.equal(entry.qwen3_8b_expected_digest_prefix, "500a1f067a9f");
+  assert.equal(
+    entry.qwen3_8b_full_digest,
+    "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+  );
+  assert.equal(entry.qwen3_8b_size_bytes, 5225388164);
+  assert.equal(entry.qwen3_8b_context4096_load_authorized, true);
+  assert.equal(entry.qwen3_8b_context4096_load_authorized_run_count, 1);
+  assert.equal(entry.qwen3_8b_inference_authorized, false);
   assert.equal(entry.next_candidate_after_granite, "QWEN3_8B_LOCAL");
   assert.equal(entry.qwen3_8b_user_directed_test_after_granite, true);
   assert.equal(entry.qwen3_8b_direct_inference_authorized, false);
