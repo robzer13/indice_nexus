@@ -22,24 +22,22 @@ The historical run remains FAIL. Its persisted final response is exactly empty w
 
 ## OI-005 — Clean same-cell Qwen3.5 retry
 
-Status: READY_LOCAL_EXECUTION  
-Priority: P0
+Status: COMPLETE_ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING
 
-Run exactly one same-cell retry with `think:false`.
-
-All other experimental identity is frozen.
+The one authorized same-cell retry with `think:false` was consumed. It passed schema, raw-presentation, and deterministic semantic validation with zero safe-normalization paths. No automatic second retry is authorized.
 
 ## OI-006 — Qwen3.5 human-quality adjudication
 
-Status: BLOCKED_BY_OI-005
+Status: READY_PRIVATE_REVIEW
+Priority: P0
 
-Required only if the retry reaches engineering PASS.
+Review the private raw output as emitted against the pinned Constellation evidence packet. Do not infer a clean qualification result from the engineering PASS alone.
 
 ## OI-007 — Qwen3.5 expansion/stop disposition
 
-Status: BLOCKED_BY_OI-005
+Status: BLOCKED_BY_OI-006
 
-No automatic second retry.
+Decide expansion or stop only after human-quality adjudication of the Constellation discriminator.
 
 ## OI-008 — Model winner and routing
 
