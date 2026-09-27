@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_GRANITE4_3B_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "c4_inference": {
+    "authorized": true,
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "execution_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_3B_V1_1_CONTEXT16384_001",
+    "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_3B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+    "model_name": "granite4:3b",
+    "model_digest": "89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "keep_alive": "0s",
+    "sleep_guard_required": true,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "constraints": {
+    "authorized_run_count": 1,
+    "external_model_api_cost_usd": 0,
+    "automatic_retry_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "temperature_change_authorized": false,
+    "timeout_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "output_policy": {
+    "generated_content_destination": "calibration/vnext/private-runs/",
+    "raw_output_preserved": true,
+    "human_adjudication_required_if_engineering_pass": true,
+    "public_repo_generated_content_forbidden": true
+  },
+  "license_boundary": {
+    "license": "Apache-2.0",
+    "assist_only": true,
+    "autonomous_financial_decision_authority": false
+  },
+  "next_action": "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

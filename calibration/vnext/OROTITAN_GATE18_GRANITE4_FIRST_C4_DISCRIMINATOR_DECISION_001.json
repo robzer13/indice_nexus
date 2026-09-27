@@ -1,0 +1,41 @@
+{
+  "format": "OROTITAN_GATE18_GRANITE4_FIRST_C4_DISCRIMINATOR_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-GRANITE4-FIRST-C4-DISCRIMINATOR-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "CONSTELLATION_SAME_PACKET_SELECTED",
+  "hardware_basis": {
+    "context16384_load_result": "G18-PHASEC-GRANITE4-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "context16384_load_fit": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "vram_used_mib": 2305,
+    "vram_headroom_mib": 1658,
+    "loaded_free_ram_gib": 0.41,
+    "processor_split": "38%/62% CPU/GPU",
+    "context_growth_beyond_16384": false
+  },
+  "selected_cell": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "evidence_count": 11,
+    "conflict_count": 1
+  },
+  "rationale": [
+    "The same Constellation packet preserves direct comparability with Phi-4, Qwen3.5 and Gemma 3.",
+    "Granite 4 completed staged hardware qualification through context16384.",
+    "One same-packet C4 inference has higher information gain than expanding to a different company before establishing basic engineering and human-quality behavior.",
+    "No context increase is required or permitted."
+  ],
+  "boundaries": {
+    "comparison_descriptive_until_human_adjudication": true,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "public_generated_content_forbidden": true
+  },
+  "next_action": "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1"
+}

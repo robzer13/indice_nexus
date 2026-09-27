@@ -767,3 +767,51 @@ Not authorized:
 
 Qwen3 8B remains the user-directed candidate immediately after Granite.
 
+## D-2026-09-27-043 — Granite 4 context16384 load-only passes with high RAM pressure
+
+Measured:
+- free RAM before: 1.30 GiB;
+- free RAM loaded: 0.41 GiB;
+- free RAM after unload: 1.82 GiB;
+- VRAM used loaded: 2305 MiB;
+- VRAM free loaded: 1658 MiB;
+- processor split: 38%/62% CPU/GPU;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Relative to Granite 8192:
+- loaded free RAM -0.53 GiB;
+- VRAM headroom +50 MiB due to greater CPU offload;
+- GPU residency decreases from 78% to 62%.
+
+Relative to Gemma 3 at context16384:
+- +0.08 GiB loaded free RAM;
+- +144 MiB VRAM headroom;
+- higher GPU residency.
+
+Disposition:
+`PASS_WITH_HIGH_RAM_PRESSURE`.
+
+No context growth beyond 16384 is authorized.
+
+## D-2026-09-27-044 — Granite 4 first C4 discriminator selects Constellation same packet
+
+Selected:
+`Constellation Software / SERIAL_ACQUIRER`.
+
+Pinned:
+- packet SHA256 `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
+- prompt SHA256 `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- validation v1.1.
+
+Authority:
+One zero-cost local inference under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Boundary:
+No automatic retry, no additional Granite C4 cell, no model ranking, no routing freeze, and no production mutation before the result is evaluated. Qwen3 8B remains next after Granite.
+

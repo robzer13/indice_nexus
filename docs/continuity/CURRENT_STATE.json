@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-027",
+  "resume_id": "VNEXT-G18-C-20260927-028",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "67e6a3b2777c949ff58695ab1f9480861553baec",
+  "last_verified_head_sha": "6390bfdc71aab45dba43a9ee213df5bbf5579825",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -74,18 +74,22 @@
     "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_AUTHORIZED",
     "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_PASS",
     "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_AUTHORIZATION_CONSUMED",
-    "GRANITE4_3B_CONTEXT16384_LOAD_ONLY_AUTHORIZED"
+    "GRANITE4_3B_CONTEXT16384_LOAD_ONLY_AUTHORIZED",
+    "GRANITE4_3B_CONTEXT16384_LOAD_ONLY_PASS",
+    "GRANITE4_3B_HARDWARE_QUALIFICATION_PASS_WITH_HIGH_RAM_PRESSURE",
+    "GRANITE4_FIRST_C4_DISCRIMINATOR_CONSTELLATION_SELECTED",
+    "GRANITE4_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_PREFLIGHT"
+    "LOCAL_PRIVATE_REPO_AND_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_CONSTELLATION_C4"
   ],
   "open_issues": [
-    "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "AFTER_GRANITE16384_DECIDE_FIRST_C4_DISCRIMINATOR_OR_STOP",
-    "AFTER_GRANITE_SEQUENCE_TEST_QWEN3_8B_WITH_STAGED_HARDWARE_PREFLIGHT",
+    "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
+    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
+    "AFTER_GRANITE_RESULT_ADVANCE_TO_QWEN3_8B_USER_DIRECTED_SEQUENCE",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -107,7 +111,10 @@
     "QWEN3_8B_REMAINS_HOLD_POOR_CURRENT_HARDWARE_FIT",
     "GRANITE4_3B_SELECTED_NEXT_BY_INFORMATION_GAIN_PER_MEMORY",
     "QWEN3_8B_WILL_BE_TESTED_AFTER_GRANITE_BY_EXPLICIT_USER_DIRECTION",
-    "MINISTRAL3_AND_LLAMA3_2_DEFERRED_UNTIL_AFTER_QWEN3_8B"
+    "MINISTRAL3_AND_LLAMA3_2_DEFERRED_UNTIL_AFTER_QWEN3_8B",
+    "GRANITE4_CONTEXT_GROWTH_STOPS_AT_16384",
+    "GRANITE4_FIRST_C4_CELL_CONSTELLATION_SAME_PACKET_SELECTED",
+    "QWEN3_8B_REMAINS_NEXT_AFTER_GRANITE"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -176,7 +183,12 @@
     "scripts/vnext-gate18-phase-c-granite4-3b-context8192-load-smoke.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-granite4-3b-context16384-load-smoke.ts"
+    "scripts/vnext-gate18-phase-c-granite4-3b-context16384-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT16384_LOAD_SMOKE_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_GRANITE4_FIRST_C4_DISCRIMINATOR_DECISION_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_PREP_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-granite4-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -207,7 +219,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -423,7 +435,7 @@
     "context4096_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context4096_load_authorization_id": "G18-PHASEC-GRANITE4-3B-LOAD-SMOKE-AUTH-001",
     "context4096_load_authorized_run_count": 0,
-    "inference_authorized": false,
+    "inference_authorized": true,
     "context4096_vram_used_mib": 2313,
     "context4096_vram_headroom_mib": 1650,
     "context4096_loaded_free_ram_gib": 1.06,
@@ -437,9 +449,28 @@
     "context8192_loaded_free_ram_gib": 0.94,
     "context8192_processor_split": "22%/78% CPU/GPU",
     "context8192_full_unload_release": true,
-    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context16384_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context16384_load_authorization_id": "G18-PHASEC-GRANITE4-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
-    "context16384_load_authorized_run_count": 1
+    "context16384_load_authorized_run_count": 0,
+    "context16384_vram_used_mib": 2305,
+    "context16384_vram_headroom_mib": 1658,
+    "context16384_loaded_free_ram_gib": 0.41,
+    "context16384_processor_split": "38%/62% CPU/GPU",
+    "context16384_full_unload_release": true,
+    "hardware_qualification": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "context_growth_beyond_16384": false,
+    "first_c4_company": "Constellation Software",
+    "first_c4_archetype": "SERIAL_ACQUIRER",
+    "first_c4_packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "first_c4_prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "first_c4_context_tokens": 16384,
+    "first_c4_max_output_tokens": 1024,
+    "first_c4_timeout_ms": 600000,
+    "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "first_c4_authorization_id": "G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+    "first_c4_inference_authorized": true,
+    "first_c4_authorized_run_count": 1,
+    "first_c4_result_status": "NOT_EXECUTED"
   },
   "post_granite_candidate_queue": {
     "next_candidate": "QWEN3_8B_LOCAL",

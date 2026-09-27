@@ -155,11 +155,12 @@ test("Granite 4 context8192 measured result supports one context16384 load-only 
   assert.equal(r.measured.explicit_unload_complete, true);
   assert.equal(r.interpretation.context16384_load_only_justified, true);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 16384);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
+  assert.equal(a.execution_result, "G18-PHASEC-GRANITE4-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001");
 });
 
 test("Granite 4 context16384 runner is exact-digest load-only", () => {
@@ -175,4 +176,25 @@ test("Granite 4 context16384 runner is exact-digest load-only", () => {
   assert.match(raw, /keep_alive:\s*0/);
   assert.doesNotMatch(raw, /\/api\/chat/);
   assert.doesNotMatch(raw, /prompt\s*:/);
+});
+
+
+test("Granite 4 context16384 measured result qualifies same-packet Constellation C4", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT16384_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 16384);
+  assert.equal(r.measured.loaded_free_ram_gib, 0.41);
+  assert.equal(r.measured.loaded_vram_used_mib, 2305);
+  assert.equal(r.measured.loaded_vram_free_mib, 1658);
+  assert.equal(r.measured.processor_split, "38%/62% CPU/GPU");
+  assert.equal(r.measured.explicit_unload_complete, true);
+  assert.equal(r.interpretation.hardware_fit_at_16384, "PASS_WITH_HIGH_RAM_PRESSURE");
+  assert.equal(r.interpretation.context_growth_beyond_16384, false);
+  assert.equal(r.interpretation.first_c4_constellation_same_packet_justified, true);
 });
