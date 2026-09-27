@@ -1,0 +1,47 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_POST_CONSTELLATION_PHI4_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-POST-CONSTELLATION-PHI4-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_CONSTELLATION_PHI4_STRATEGY_DISPOSITION",
+  "status": "PHI4_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
+  "authority_source": {
+    "type": "USER_ACCEPTED_RECOMMENDATION_IN_CHAT",
+    "user_message": "ok",
+    "accepted_recommendation": "STOP_PHI4_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE_THEN_STATICALLY_STUDY_NEXT_CANDIDATE"
+  },
+  "evidence_basis": {
+    "historical_v1_0_stmicro_raw_status": "FAIL",
+    "v1_1_constellation_engineering": "PASS_WITH_PRESENTATION_COMPLIANCE_CARRY",
+    "v1_1_constellation_human_quality": "CRITICAL_FAILURE",
+    "v1_1_constellation_human_result": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+    "defect_family": "EVIDENCE_GROUNDING_PRIORITY_SELECTION_AND_CAUSAL_USEFULNESS",
+    "distinct_from_punctuation_architecture_issue": true
+  },
+  "disposition": {
+    "phi4_candidate_capability_failure_concluded": false,
+    "phi4_c4_expansion": "STOP",
+    "phi4_retained_as_calibration_evidence": true,
+    "c5_repeatability_admission": "NOT_AUTHORIZED",
+    "production_candidate_status": "NOT_QUALIFIED",
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "rationale": [
+    "The v1.1 architecture isolated presentation compliance successfully.",
+    "The post-v1.1 Constellation discriminator exposed a separate critical human-quality failure.",
+    "A third Phi-4 C4 cell would have lower expected information gain than testing a plausible alternative family under the same v1.1 architecture.",
+    "Stopping expansion preserves evidence without inferring a global Phi-4 family failure from one post-v1.1 cell."
+  ],
+  "execution_boundary": {
+    "additional_phi4_inference_authorized": false,
+    "phi4_retry_authorized": false,
+    "qwen3_5_download_authorized": false,
+    "qwen3_5_inference_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_QWEN3_5_4B_STATIC_HARDWARE_AND_CONTRACT_PREFLIGHT_NO_DOWNLOAD_NO_INFERENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
