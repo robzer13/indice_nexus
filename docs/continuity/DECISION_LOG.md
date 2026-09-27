@@ -1144,3 +1144,38 @@ Boundary:
 - no model switch;
 - production mutation forbidden.
 
+## D-2026-09-27-064 — Ministral 3 3B context8192 load-only passes with critical RAM pressure
+
+Measured:
+- free RAM before: 1.00 GiB;
+- free RAM loaded: 0.38 GiB;
+- free RAM after unload: 2.06 GiB;
+- VRAM used loaded: 2407 MiB;
+- VRAM free loaded: 1556 MiB;
+- processor split: 54%/46% CPU/GPU;
+- resident size: 3.5 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_CRITICAL_RAM_PRESSURE`.
+
+Relative to context4096, memory pressure is severe but stable enough to justify one final load-only measurement at context16384.
+
+## D-2026-09-27-065 — Ministral 3 3B context16384 final load-only diagnostic authorized
+
+Reason:
+- context8192 loadability is confirmed;
+- memory pressure is critical but does not materially degrade from context4096 to context8192;
+- exact C4 comparability uses context16384;
+- one final load-only measurement has high information value and zero external monetary cost.
+
+Boundary:
+- exactly one context16384 load-only execution;
+- no prompt;
+- no inference;
+- no further context growth;
+- no automatic retry/model switch;
+- explicit post-run decision required before any C4 inference.
+
