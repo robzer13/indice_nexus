@@ -1,0 +1,57 @@
+{
+  "format": "OROTITAN_GATE18_MINISTRAL3_FIRST_C4_DISCRIMINATOR_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-MINISTRAL3-FIRST-C4-DISCRIMINATOR-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "CONSTELLATION_SAME_PACKET_SELECTED",
+  "hardware_basis": {
+    "context4096": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "context8192": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "context16384": "PASS_WITH_USEFUL_HEADROOM",
+    "context16384_load_result": "G18-PHASEC-MINISTRAL3-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "context16384_loaded_free_ram_gib": 1.21,
+    "context16384_vram_headroom_mib": 1564,
+    "context16384_processor_split": "63%/37% CPU/GPU",
+    "context16384_resident_size": "4.4 GB",
+    "no_further_context_growth": true
+  },
+  "selected_cell": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "evidence_count": 11,
+    "conflict_count": 1
+  },
+  "rationale": [
+    "The identical Constellation packet preserves direct comparability with prior local candidates.",
+    "Ministral 3 3B completed staged load-only qualification at context4096, context8192 and context16384 without runtime failure.",
+    "At context16384 the measured state retained 1.21 GiB free RAM and 1564 MiB VRAM headroom, which is sufficient to justify one bounded capability test under the existing Gate 18 precedent.",
+    "A pre-inference free-RAM guard of 1.0 GiB is required because host free RAM is state-sensitive across runs.",
+    "No context increase is required or permitted."
+  ],
+  "safeguards": {
+    "pre_inference_minimum_free_ram_gib": 1,
+    "no_other_loaded_model": true,
+    "exact_digest_required": true,
+    "sleep_guard_required": true,
+    "keep_alive": "0s",
+    "automatic_retry": false,
+    "no_prompt_change": true,
+    "no_schema_change": true,
+    "no_context_change": true,
+    "no_model_switch": true,
+    "no_production_mutation": true
+  },
+  "boundaries": {
+    "comparison_descriptive_until_human_adjudication": true,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "public_generated_content_forbidden": true
+  },
+  "next_action": "EXECUTE_FIRST_BOUNDED_MINISTRAL3_CONSTELLATION_C4_INFERENCE_V1_1"
+}
