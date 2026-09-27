@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-021",
+  "resume_id": "VNEXT-G18-C-20260927-022",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "9952e19dd59fc122231a5adcf798b2c706b162d9",
+  "last_verified_head_sha": "72d6c864eb4f1d36bfa81db669d15e0dc7b76278",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -52,17 +52,20 @@
     "GEMMA3_4B_CONTEXT16384_LOAD_ONLY_PASS",
     "GEMMA3_4B_HARDWARE_QUALIFICATION_PASS_WITH_HIGH_RAM_PRESSURE",
     "GEMMA3_FIRST_C4_DISCRIMINATOR_CONSTELLATION_SELECTED",
-    "GEMMA3_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED"
+    "GEMMA3_FIRST_CONSTELLATION_C4_SINGLE_INFERENCE_AUTHORIZED",
+    "GEMMA3_FIRST_CONSTELLATION_C4_RUN_DETERMINISTIC_SEMANTIC_FAIL",
+    "GEMMA3_FIRST_CONSTELLATION_C4_AUTHORIZATION_CONSUMED",
+    "GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC_PREPARED"
   ],
   "active_work": [
-    "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1"
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC"
   ],
   "blockers": [
-    "LOCAL_PRIVATE_REPO_AND_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GEMMA3_CONSTELLATION_C4"
+    "LOCAL_PRIVATE_GEMMA3_RUN_ARTIFACT_REQUIRED_FOR_DETERMINISTIC_FORENSIC"
   ],
   "open_issues": [
-    "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1",
-    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
+    "CLASSIFY_DOWNSTREAM_DETERMINISTIC_SEMANTIC_DEFECTS_IF_ANY",
     "POST_GEMMA3_CONSTELLATION_STRATEGY_DISPOSITION",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
@@ -77,7 +80,9 @@
     "QWEN3_5_FAMILY_GLOBAL_FAILURE_NOT_CONCLUDED",
     "GEMMA3_TERMS_ACCEPTED_FOR_OROTITAN_CALIBRATION",
     "GEMMA3_CONTEXT_GROWTH_STOPS_AT_16384",
-    "GEMMA3_FIRST_C4_CELL_CONSTELLATION_SAME_PACKET_SELECTED"
+    "GEMMA3_FIRST_C4_CELL_CONSTELLATION_SAME_PACKET_SELECTED",
+    "GEMMA3_FIRST_C4_RUN_REMAINS_FAIL_NO_RETROACTIVE_PASS",
+    "NO_GEMMA3_RETRY_AUTHORIZED_PENDING_FORENSIC"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -125,7 +130,10 @@
     "calibration/vnext/OROTITAN_GATE18_GEMMA3_FIRST_C4_DISCRIMINATOR_DECISION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_PREP_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-4b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-4b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_4B_V1_1_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_COUNTEREVIDENCE_FORENSIC_PREP_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-gemma3-counterevidence-link-forensic.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -156,7 +164,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1",
+  "next_action": "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -283,7 +291,7 @@
     "context4096_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context4096_load_authorization_id": "G18-PHASEC-GEMMA3-4B-LOAD-SMOKE-AUTH-001",
     "context4096_load_authorized_run_count": 0,
-    "inference_authorized": true,
+    "inference_authorized": false,
     "context4096_vram_used_mib": 2449,
     "context4096_vram_headroom_mib": 1514,
     "context4096_loaded_free_ram_gib": 0.58,
@@ -316,8 +324,24 @@
     "first_c4_timeout_ms": 600000,
     "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
     "first_c4_authorization_id": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
-    "first_c4_inference_authorized": true,
-    "first_c4_authorized_run_count": 1,
-    "first_c4_result_status": "NOT_EXECUTED"
+    "first_c4_inference_authorized": false,
+    "first_c4_authorized_run_count": 0,
+    "first_c4_result_status": "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT",
+    "first_c4_result": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-RESULT-001",
+    "first_c4_wall_clock_ms": 142518,
+    "first_c4_done_reason": "stop",
+    "first_c4_prompt_eval_count": 3558,
+    "first_c4_eval_count": 683,
+    "first_c4_output_token_margin": 341,
+    "first_c4_schema_valid": true,
+    "first_c4_semantic_valid": false,
+    "first_c4_semantic_error": "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS",
+    "first_c4_v11_raw_presentation_compliant": false,
+    "first_c4_v11_normalized_path_count": 13,
+    "first_c4_v11_substantive_status": "FAIL",
+    "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T160225776Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GEMMA3_4B_V1_1_CONTEXT16384_001.json",
+    "first_c4_forensic_required": true,
+    "first_c4_forensic_prep": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-PREP-001",
+    "retry_authorized": false
   }
 }

@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Gemma 3 context16384 hardware pass to one Constellation C4 inference", () => {
+test("Phase C advances from Gemma 3 Constellation semantic failure to deterministic forensic", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Gemma 3 context16384 hardware pass to one Constellat
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1",
+    "RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -72,6 +72,9 @@ test("Phase C advances from Gemma 3 context16384 hardware pass to one Constellat
   assert.equal(entry.gemma3_context16384_load_status, "PASS_LOAD_ONLY_MEASURED");
   assert.equal(entry.gemma3_hardware_qualification, "PASS_WITH_HIGH_RAM_PRESSURE");
   assert.equal(entry.gemma3_first_c4_company, "Constellation Software");
-  assert.equal(entry.gemma3_first_c4_inference_authorized, true);
-  assert.equal(entry.gemma3_first_c4_authorized_run_count, 1);
+  assert.equal(entry.gemma3_first_c4_inference_authorized, false);
+  assert.equal(entry.gemma3_first_c4_authorized_run_count, 0);
+  assert.equal(entry.gemma3_first_c4_result_status, "FAIL_DETERMINISTIC_SEMANTIC_CONTRACT");
+  assert.equal(entry.gemma3_first_c4_semantic_error, "VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS");
+  assert.equal(entry.gemma3_first_c4_forensic_required, true);
 });

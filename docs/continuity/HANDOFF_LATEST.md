@@ -1,87 +1,73 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-021`
+Resume ID: `VNEXT-G18-C-20260927-022`
 
 ## Standing authority
 
 `OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE for zero-cost technical execution. Nonzero external monetary cost still requires explicit user authorization.
 
-## Gemma 3 target-context hardware qualification
+## Gemma 3 first Constellation C4 result
 
-Exact model:
-- `gemma3:4b-it-q4_K_M`
-- digest `a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`
-- `Q4_K_M`
+Historical run status:
 
-Context 16384 load-only result:
+`FAIL_DETERMINISTIC_SEMANTIC_CONTRACT`
 
-`PASS_LOAD_ONLY_MEASURED`
+Identity:
+- company: Constellation Software;
+- model: `gemma3:4b-it-q4_K_M`;
+- digest: `a2af6cc3eb7fa8be8504abaf9b04e88f17a119ec3f04a3addf55f92841195f5a`;
+- packet SHA256: `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
+- prompt SHA256: `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`.
 
-Measured:
-- VRAM used: 2449 MiB;
-- VRAM headroom: 1514 MiB;
-- free system RAM while loaded: 0.33 GiB;
-- processor split: 57%/43% CPU/GPU;
-- load-only guard confirmed;
-- explicit unload confirmed;
-- full GPU-memory release after unload: yes;
-- prompt provided: no;
-- semantic inference: no.
+Execution:
+- wall clock: 142518 ms;
+- done reason: `stop`;
+- prompt eval count: 3558;
+- eval count: 683;
+- output token margin: 341;
+- runtime error: none;
+- schema valid: true;
+- semantic valid: false;
+- semantic error: `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`.
 
-Hardware disposition:
+Validation v1.1:
+- raw presentation compliant: false;
+- normalized path count: 13;
+- substantive status: FAIL.
 
-`PASS_WITH_HIGH_RAM_PRESSURE`
+Interpretation:
+The run is complete and schema-valid. The failure is deterministic and substantive after v1.1 presentation normalization. It is not an output-budget exhaustion or runtime failure.
 
-Context growth beyond 16384 is not recommended or authorized.
+The historical run remains FAIL. No retry is authorized.
 
-## First Gemma 3 C4 discriminator
+## Deterministic forensic
 
-Selected cell:
+Prepared runner:
 
-`Constellation Software / SERIAL_ACQUIRER`
+`scripts/vnext-gate18-phase-c-c4-constellation-gemma3-counterevidence-link-forensic.ts`
 
-Reason:
-Use the identical Constellation packet already used for prior candidates to maximize diagnostic comparability on exact evidence grounding, conflict handling, weak-link usefulness, unresolved-point usefulness, and priority selection.
+Purpose:
+1. reproduce the frozen v1.1 presentation normalization in memory;
+2. identify findings where `counterevidence_ids` is empty while `counterevidence_link` is non-null;
+3. set only those links to null on an in-memory diagnostic copy;
+4. rerun the frozen v1.0 substantive semantic validator;
+5. report whether another deterministic semantic defect remains.
 
-Pinned invariants:
-- packet SHA256 `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
-- prompt SHA256 `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`;
-- prompt bytes 9041;
-- evidence count 11;
-- conflict count 1;
-- context 16384;
-- max output 1024;
-- temperature 0;
-- timeout 600000 ms;
-- generation prompt contract unchanged;
-- generation schema contract unchanged;
-- validation contract `GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`.
-
-Authorization:
-
-`G18-PHASEC-C4-CONSTELLATION-GEMMA3-4B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001`
-
-Runner:
-
-`scripts/vnext-gate18-phase-c-c4-constellation-gemma3-4b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts`
-
-Execution boundaries:
-- exactly one local inference;
-- exact pinned model digest required;
-- exact pinned private packet required;
-- no automatic retry;
-- no prompt/schema/packet/context/output/temperature/timeout change;
-- generated content stays under `calibration/vnext/private-runs/`;
-- human adjudication required if engineering PASS;
-- no model-ranking authority;
-- no routing authority;
-- no production mutation;
-- Gemma use remains ASSIST-only.
+Boundaries:
+- no Ollama call;
+- no model inference;
+- no external network;
+- no source artifact mutation;
+- no raw narrative text printed;
+- no retroactive pass;
+- no automatic repair;
+- no retry authority.
 
 ## Exact next action
 
 ```text
-EXECUTE_FIRST_BOUNDED_GEMMA3_CONSTELLATION_C4_INFERENCE_V1_1
+RUN_LOCAL_READ_ONLY_GEMMA3_CONSTELLATION_COUNTEREVIDENCE_LINK_FORENSIC
 ```
 
-If the run is an engineering PASS, perform human-quality adjudication before any additional Gemma C4 cell.
+Use the private run artifact:
+`calibration/vnext/private-runs/2026-09-27T160225776Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GEMMA3_4B_V1_1_CONTEXT16384_001.json`.

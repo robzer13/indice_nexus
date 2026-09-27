@@ -11,46 +11,37 @@ Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
 No global Qwen3.5-family failure inferred.
 
-## OI-004 — Gemma 3 terms/static review
-Status: COMPLETE_TERMS_ACCEPTED
-
-## OI-005 — Gemma 3 pinned download
-Status: COMPLETE_PASS_PINNED
-
-## OI-006 — Gemma 3 context4096 load-only
-Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
-
-## OI-007 — Gemma 3 context8192 load-only
-Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
-
-## OI-008 — Gemma 3 context16384 load-only
+## OI-004 — Gemma 3 hardware qualification
 Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 
-Measured:
-- VRAM used 2449 MiB;
-- VRAM headroom 1514 MiB;
-- loaded free RAM 0.33 GiB;
-- processor split 57%/43% CPU/GPU;
-- full unload release confirmed;
-- no semantic inference.
+Target context 16384 loads and unloads cleanly. No further context growth is authorized.
 
-No further context growth is authorized.
+## OI-005 — Gemma 3 first Constellation C4 run
+Status: COMPLETE_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT
 
-## OI-009 — Gemma 3 first C4 discriminator
+Observed:
+- runtime error: none;
+- schema valid: true;
+- semantic valid: false;
+- semantic error: `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`;
+- v1.1 normalized path count: 13;
+- substantive status: FAIL;
+- output token margin: 341.
+
+No retry is authorized.
+
+## OI-006 — Gemma 3 Constellation deterministic semantic forensic
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Selected:
-`Constellation Software / SERIAL_ACQUIRER`
+Run the prepared read-only forensic against the private artifact. No inference or source mutation.
 
-Exactly one same-packet local inference is authorized. Human adjudication is mandatory after an engineering PASS.
+## OI-007 — Gemma 3 post-Constellation disposition
+Status: BLOCKED_BY_OI-006
 
-## OI-010 — Gemma 3 post-Constellation disposition
-Status: BLOCKED_BY_OI-009
+Decide whether the first deterministic defect is isolated or whether additional semantic defects remain. Human-quality adjudication is not reached while engineering semantics fail.
 
-No additional Gemma C4 cell is authorized until the first result and required human adjudication are complete.
-
-## OI-011 — Model winner and routing
+## OI-008 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
