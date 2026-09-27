@@ -1,72 +1,54 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-033`
+Resume ID: `VNEXT-G18-C-20260927-034`
 
-## Qwen3 8B context16384 result
+## Qwen3 8B Constellation C4
 
-Status:
+Engineering status:
 
-`PASS_LOAD_ONLY_MEASURED`
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
 
-Measured:
-- free RAM before: 2.16 GiB;
-- free RAM loaded: 0.14 GiB;
-- free RAM after unload: 1.31 GiB;
-- VRAM used loaded: 2345 MiB;
-- VRAM free loaded: 1618 MiB;
-- processor split: `70%/30% CPU/GPU`;
-- Ollama resident size: 7.8 GB;
-- explicit unload: complete;
-- semantic inference: none.
-
-Interpretation:
-
-`PASS_WITH_EXTREME_RAM_PRESSURE`
-
-This proves loadability at the exact comparable context but does not prove production fit or inference stability. No further context growth is allowed.
-
-## One bounded Qwen3 8B C4 experiment
-
-Selected cell:
-
-`Constellation Software / SERIAL_ACQUIRER`
-
-Pinned invariants:
-- packet SHA256 `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
-- prompt SHA256 `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`;
-- prompt bytes 9041;
-- context 16384;
-- max output 1024;
-- temperature 0;
-- timeout 600000 ms;
+Observed:
+- model: `qwen3:8b-q4_K_M`;
+- exact digest preserved;
 - `think:false`;
-- validation contract `GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`.
+- baseline free RAM: 3.59 GiB;
+- minimum guard: 1.0 GiB;
+- wall clock: 519551 ms;
+- done reason: `stop`;
+- prompt eval: 3356;
+- eval: 860 / 1024;
+- output margin: 164;
+- runtime error: null;
+- schema PASS;
+- semantic PASS;
+- raw presentation PASS;
+- normalized paths: 0.
 
-Authorization:
+This is the strongest engineering result observed so far on the same Constellation C4 cell, but human quality is not yet adjudicated and production hardware fit remains unproven.
 
-`G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001`
+## Human adjudication next step
 
-Runner:
+Public prep:
+`G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-HUMAN-ADJUDICATION-PREP-001`
 
-`scripts/vnext-gate18-phase-c-c4-constellation-qwen3-8b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts`
+Private bundle runner:
+`scripts/vnext-gate18-phase-c-qwen3-8b-human-adjudication-bundle.ts`
 
-Additional memory guard:
-- baseline free RAM must be at least 1.0 GiB before inference begins;
-- otherwise the runner blocks before inference and does not consume a model result.
+The bundle reconstructs the exact pinned Constellation packet from the private repo and combines it with the original private model response. It writes only under `calibration/vnext/private-runs/`; it performs no inference and publishes no private source content.
 
-Boundaries:
-- exactly one local inference;
-- no automatic retry;
-- no prompt/schema/packet/context/output/temperature/timeout/thinking-mode change;
-- generated content remains private under `calibration/vnext/private-runs/`;
-- human adjudication required if engineering PASS;
-- no production-fit conclusion from hardware loadability;
-- no model-ranking authority;
-- no routing authority;
-- no production mutation.
+Required checks include:
+- E-045 RFP overstatement;
+- E-029 acquisition-criteria universalization;
+- E-063 false unresolved-retention question;
+- duplicate recurring-revenue priority slots;
+- omission of E-066/E-067;
+- handling of C-005.
+
+No further Qwen3 8B inference or retry is authorized.
 
 ## Exact next action
 
 ```text
-EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT
+GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE
 ```
