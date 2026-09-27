@@ -4,45 +4,35 @@
 
 Status: COMPLETE
 
-The versioned v1.1 contract is implemented and CI-verified.
-
-## OI-002 — Phi-4 C4 resumption decision
+## OI-002 — Phi-4 C4 Constellation single-run execution
 
 Status: COMPLETE
 
-Constellation Software / SERIAL_ACQUIRER is selected as the next bounded discriminator.
+Exactly one authorized run executed.
 
-## OI-003 — Phi-4 Constellation v1.1 inference authorization
+Engineering result:
 
-Status: COMPLETE
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING`
 
-Exactly one frozen local inference is explicitly authorized.
+## OI-003 — Phi-4 Constellation human-quality adjudication
 
-## OI-004 — Execute the authorized local inference
-
-Status: READY_LOCAL_EXECUTION  
+Status: READY_FOR_REVIEW  
 Priority: P0
 
-Run exactly one invocation of the guarded runner with the exact authorization ID.
+Required private artifact:
 
-No automatic retry is authorized if execution fails or times out.
+`calibration/vnext/private-runs/2026-09-27T085515615Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_PHI4MINI_V1_1_CONTEXT16384_001.json`
 
-## OI-005 — Post-run engineering and human adjudication
+Review the raw output against the established C4 human-quality dimensions before declaring the matrix cell complete.
 
-Status: BLOCKED_BY_OI-004
+## OI-004 — Post-Constellation Phi-4 qualification disposition
 
-After execution, inspect:
+Status: BLOCKED_BY_OI-003
 
-- runtime status;
-- raw schema status;
-- raw presentation compliance;
-- v1.1 safe normalization count;
-- v1.1 substantive deterministic semantic result;
-- output budget / finish reason;
-- human-quality criteria.
+No additional model inference is authorized.
 
-## OI-006 — Model winner and routing
+## OI-005 — Model winner and routing
 
 Status: OPEN_GUARDED
 
-No model winner is selected and routing remains unfrozen.
+No winner is selected and routing remains unfrozen.
