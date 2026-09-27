@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1",
+  "next_action": "AWAIT_EXPLICIT_SINGLE_RUN_PHI4_CONSTELLATION_V1_1_INFERENCE_AUTHORIZATION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1080,5 +1080,15 @@
   "v1_1_generation_schema_changed": false,
   "v1_1_historical_v1_0_results_changed": false,
   "v1_1_new_inference_executed": false,
-  "v1_1_implementation_pr": 257
+  "v1_1_implementation_pr": 257,
+  "phi4_mini_c4_resumption_decision": "G18-PHASEC-PHI4-C4-RESUMPTION-DECISION-001",
+  "phi4_mini_c4_resumption_status": "ONE_CONSTELLATION_CELL_SELECTED_RUNNER_PREPARED_AWAITING_EXPLICIT_INFERENCE_AUTHORIZATION",
+  "phi4_mini_c4_next_cell": "Constellation Software",
+  "phi4_mini_c4_next_cell_archetype": "SERIAL_ACQUIRER",
+  "phi4_mini_c4_next_cell_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+  "phi4_mini_c4_constellation_v1_1_prep": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-PREP-001",
+  "phi4_mini_c4_constellation_v1_1_runner": "scripts/vnext-gate18-phase-c-c4-constellation-phi4-mini-v1-1-context16384-output1024-timeout480-loopback-guarded.ts",
+  "phi4_mini_c4_constellation_v1_1_authorization_id": "G18-PHASEC-C4-CONSTELLATION-PHI4MINI-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT480-LOOPBACK-AUTH-001",
+  "phi4_mini_c4_constellation_v1_1_inference_authorized": false,
+  "phi4_mini_c4_constellation_v1_1_authorized_run_count": 0
 }
