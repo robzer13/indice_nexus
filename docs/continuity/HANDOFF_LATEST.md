@@ -1,65 +1,80 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-027`
+Resume ID: `VNEXT-G18-C-20260927-028`
 
-## Granite 4 3B context8192 result
+## Granite 4 target-context hardware qualification
 
-Status:
+Exact model:
+- `granite4:3b`
+- digest `89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f`
+- `Q4_K_M`
+
+Context16384 load-only result:
 
 `PASS_LOAD_ONLY_MEASURED`
 
 Measured:
-- free RAM before: 1.84 GiB;
-- free RAM loaded: 0.94 GiB;
-- free RAM after unload: 1.80 GiB;
-- VRAM used loaded: 2355 MiB;
-- VRAM free loaded: 1608 MiB;
-- Ollama processor split: `22%/78% CPU/GPU`;
-- Ollama reported resident size: 3.1 GB;
-- explicit unload: complete;
-- semantic inference: none.
+- VRAM used: 2305 MiB;
+- VRAM headroom: 1658 MiB;
+- free system RAM while loaded: 0.41 GiB;
+- processor split: 38%/62% CPU/GPU;
+- load-only guard confirmed;
+- explicit unload confirmed;
+- full GPU-memory release after unload: yes;
+- prompt provided: no;
+- semantic inference: no.
 
-Relative to Granite context4096:
-- loaded free RAM decreased by 0.12 GiB;
-- VRAM headroom decreased by 42 MiB;
-- GPU residency remains high at 78%.
+Hardware disposition:
 
-Relative to Gemma 3 at context8192:
-- Granite retains +0.17 GiB more free RAM;
-- Granite retains +68 MiB more free VRAM;
-- Granite GPU residency is 78% vs 44%.
+`PASS_WITH_HIGH_RAM_PRESSURE`
 
-Conclusion:
-Granite context8192 hardware fit passes with useful remaining headroom. One bounded context16384 load-only measurement is justified before any inference.
+No context growth beyond 16384 is authorized.
 
-## Granite 4 context16384 authorization
+## First Granite 4 C4 discriminator
+
+Selected cell:
+
+`Constellation Software / SERIAL_ACQUIRER`
+
+Pinned invariants:
+- packet SHA256 `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
+- prompt SHA256 `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`;
+- prompt bytes 9041;
+- evidence count 11;
+- conflict count 1;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- generation prompt/schema unchanged;
+- validation contract `GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`.
 
 Authorization:
 
-`G18-PHASEC-GRANITE4-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001`
+`G18-PHASEC-C4-CONSTELLATION-GRANITE4-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001`
 
 Runner:
 
-`scripts/vnext-gate18-phase-c-granite4-3b-context16384-load-smoke.ts`
+`scripts/vnext-gate18-phase-c-c4-constellation-granite4-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts`
 
-Guards:
-- exact full digest required;
-- context exactly 16384;
-- one load-only run;
-- no prompt;
-- no semantic inference;
-- explicit unload;
+Execution boundaries:
+- exactly one local inference;
+- exact pinned model digest required;
+- exact pinned private packet required;
 - no automatic retry;
-- no context growth beyond 16384 in this run;
-- no model switch;
+- no prompt/schema/packet/context/output/temperature/timeout change;
+- generated content remains under `calibration/vnext/private-runs/`;
+- human adjudication required if engineering PASS;
+- no model-ranking authority;
+- no routing authority;
 - no production mutation.
 
 ## User-directed next candidate
 
-Qwen3 8B remains explicitly queued immediately after the Granite sequence. Ministral 3 and Llama 3.2 remain deferred until after Qwen3 8B.
+Qwen3 8B remains immediately after the Granite result. No Ministral/Llama detour is permitted before that user-directed test.
 
 ## Exact next action
 
 ```text
-EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT
+EXECUTE_FIRST_BOUNDED_GRANITE4_CONSTELLATION_C4_INFERENCE_V1_1
 ```
