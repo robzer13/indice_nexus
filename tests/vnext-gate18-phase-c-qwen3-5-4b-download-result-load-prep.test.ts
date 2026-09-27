@@ -25,9 +25,9 @@ test("Qwen3.5 load-only runner requires explicit authorization and requests no p
   const raw=readFileSync("scripts/vnext-gate18-phase-c-qwen3-5-4b-load-smoke.ts","utf8");
   assert.match(raw,/AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED/);
   assert.match(raw,/CONTEXT_TOKENS = 4096/);
-  assert.match(raw,/num_ctx:\\s*CONTEXT_TOKENS/);
-  assert.match(raw,/keep_alive:\\s*"2m"/);
-  assert.match(raw,/keep_alive:\\s*0/);
+  assert.match(raw,/num_ctx:\s*CONTEXT_TOKENS/);
+  assert.match(raw,/keep_alive:\s*"2m"/);
+  assert.match(raw,/keep_alive:\s*0/);
   assert.match(raw,/semanticInferenceExecuted:false/);
   assert.doesNotMatch(raw,/\/api\/chat/);
   assert.doesNotMatch(raw,/prompt\s*:/);
