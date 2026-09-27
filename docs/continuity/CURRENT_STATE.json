@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-031",
+  "resume_id": "VNEXT-G18-C-20260927-032",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "e7a5ce462c7e5aeb14a6d614da4adabfa6b29892",
+  "last_verified_head_sha": "2cd66442e53d59ea901ef4edcfc6dcc796dbfbb1",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -88,19 +88,21 @@
     "QWEN3_8B_CONTEXT4096_LOAD_ONLY_AUTHORIZED",
     "QWEN3_8B_CONTEXT4096_LOAD_ONLY_PASS",
     "QWEN3_8B_CONTEXT4096_CRITICAL_RAM_PRESSURE_RECORDED",
-    "QWEN3_8B_CONTEXT8192_DIAGNOSTIC_LOAD_ONLY_AUTHORIZED"
+    "QWEN3_8B_CONTEXT8192_DIAGNOSTIC_LOAD_ONLY_AUTHORIZED",
+    "QWEN3_8B_CONTEXT8192_LOAD_ONLY_PASS",
+    "QWEN3_8B_CONTEXT8192_CRITICAL_RAM_PRESSURE_RECORDED",
+    "QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_8B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONTEXT8192_DIAGNOSTIC_LOAD_ONLY"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_8B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "AFTER_QWEN3_8B_8192_MEASUREMENT_DECIDE_STOP_OR_FURTHER_HARDWARE_QUALIFICATION",
-    "NO_QWEN3_8B_INFERENCE_AUTHORIZED",
-    "NO_QWEN3_8B_CONTEXT16384_AUTHORIZED",
+    "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "AFTER_QWEN3_8B_16384_MEASUREMENT_DECIDE_INFERENCE_OR_HARDWARE_STOP",
+    "NO_QWEN3_8B_INFERENCE_AUTHORIZED_YET",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -135,7 +137,11 @@
     "QWEN3_8B_4096_PASS_DOES_NOT_PROVE_INFERENCE_FIT",
     "QWEN3_8B_4096_HAS_CRITICAL_RAM_PRESSURE",
     "QWEN3_8B_8192_IS_DIAGNOSTIC_ONLY",
-    "QWEN3_8B_16384_NOT_PREAUTHORIZED"
+    "QWEN3_8B_16384_NOT_PREAUTHORIZED",
+    "QWEN3_8B_8192_PASS_DOES_NOT_PROVE_INFERENCE_FIT",
+    "QWEN3_8B_8192_REMAINS_CRITICAL_RAM_PRESSURE",
+    "QWEN3_8B_16384_IS_FINAL_LOAD_ONLY_DIAGNOSTIC",
+    "NO_CONTEXT_GROWTH_BEYOND_16384"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -220,7 +226,10 @@
     "scripts/vnext-gate18-phase-c-qwen3-8b-context4096-load-smoke.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-qwen3-8b-context8192-load-smoke.ts"
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context8192-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context16384-load-smoke.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -251,7 +260,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_8B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -552,10 +561,20 @@
     "context4096_processor_split": "61%/39% CPU/GPU",
     "context4096_hardware_fit": "PASS_WITH_CRITICAL_RAM_PRESSURE",
     "context4096_full_unload_release": true,
-    "context8192_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context8192_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context8192_load_authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
-    "context8192_load_authorized_run_count": 1,
+    "context8192_load_authorized_run_count": 0,
     "context8192_purpose": "DIAGNOSTIC_ONLY",
-    "context16384_load_authorized": false
+    "context16384_load_authorized": false,
+    "context8192_loaded_free_ram_gib": 0.22,
+    "context8192_vram_used_mib": 2323,
+    "context8192_vram_headroom_mib": 1640,
+    "context8192_processor_split": "64%/36% CPU/GPU",
+    "context8192_hardware_fit": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "context8192_full_unload_release": true,
+    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context16384_load_authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+    "context16384_load_authorized_run_count": 1,
+    "context16384_purpose": "FINAL_DIAGNOSTIC_ONLY"
   }
 }
