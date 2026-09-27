@@ -1,0 +1,94 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.62,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.51,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1374,
+    "vram_used_mib": 2589,
+    "ollama_reported_size": "4.2 GB",
+    "processor_split": "56%/44% CPU/GPU",
+    "context_tokens": 16384,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.73,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2589,
+    "vram_headroom_while_loaded_mib": 1374,
+    "free_ram_delta_before_to_loaded_gib": -2.11,
+    "full_vram_release_after_unload": true,
+    "ram_measurement_stability": "NOISY_OS_LEVEL_FREE_MEMORY_NOT_DIRECTLY_COMPARABLE",
+    "context4096_vram_used_mib": 2601,
+    "context8192_vram_used_mib": 2525,
+    "vram_delta_vs_context8192_mib": 64,
+    "context4096_processor_split": "50%/50% CPU/GPU",
+    "context8192_processor_split": "54%/46% CPU/GPU",
+    "context16384_processor_split": "56%/44% CPU/GPU",
+    "context4096_ollama_reported_size": "3.7 GB",
+    "context8192_ollama_reported_size": "3.9 GB",
+    "context16384_ollama_reported_size": "4.2 GB"
+  },
+  "interpretation": {
+    "context16384_load_fit": "PASS",
+    "context16384_inference_fit": "PLAUSIBLE_NOT_YET_PROVEN",
+    "gpu_headroom_while_loaded": "MATERIAL",
+    "system_ram_pressure": "HIGH",
+    "cpu_offload_pressure": "HIGH",
+    "observed_scaling": "CONTEXT_GROWTH_PRIMARILY_INCREASES_CPU_RAM_OFFLOAD_WHILE_VRAM_REMAINS_AROUND_2_5_TO_2_6_GIB",
+    "first_bounded_c4_inference_recommended": true,
+    "first_discriminator_company": "Constellation Software",
+    "rationale": "Constellation provides the strongest direct cross-candidate discriminator: Qwen3 4B previously passed engineering with human-quality carry, while Phi-4 passed v1.1 engineering but failed human quality on evidence grounding and priority selection."
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
+  "standing_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

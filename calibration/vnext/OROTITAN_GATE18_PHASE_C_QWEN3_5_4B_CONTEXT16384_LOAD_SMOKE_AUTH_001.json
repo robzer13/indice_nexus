@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_PHI4_CANDIDATE_ESCALATION_CONTEXT_GROWTH_LOAD_SMOKE",
-  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "status": "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -26,10 +26,10 @@
     "semantic_inference_requested": false
   },
   "authority": {
-    "load_smoke_authorized": true,
+    "load_smoke_authorized": false,
     "inference_authorized": false,
     "download_authorized": false,
-    "authorized_run_count": 1
+    "authorized_run_count": 0
   },
   "constraints": {
     "automatic_retry_authorized": false,
@@ -38,5 +38,6 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
+  "next_action": "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
+  "execution_result": "G18-PHASEC-QWEN3_5-4B-CONTEXT16384-LOAD-SMOKE-RESULT-001"
 }

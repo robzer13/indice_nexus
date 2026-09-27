@@ -169,3 +169,68 @@ Disposition:
 
 Boundary:
 The authorization is consumed. No retry is authorized. The matrix cell is not complete until the private raw output receives human-quality adjudication.
+
+
+## D-2026-09-27-011 — Phi-4 expansion stopped after Constellation human critical failure
+
+Decision:
+Stop further Phi-4 C4 expansion and retain the model as calibration evidence.
+
+Reason:
+The v1.1 architecture resolved the presentation-layer confound, but the Constellation cell exposed a separate critical human-quality failure in evidence grounding, causal usefulness, and priority selection.
+
+Boundary:
+No global Phi-4 family failure is inferred from this single post-v1.1 cell.
+
+## D-2026-09-27-012 — Standing zero-cost execution authorization activated
+
+Authority:
+The user instructed that OroTitan zero-cost technical execution should proceed without repeated confirmation.
+
+Operational rule:
+- zero-cost execution: proceed under `OROTITAN-STANDING-TECHNICAL-AUTH-002`;
+- nonzero external monetary cost: obtain explicit user approval before spending.
+
+Protocol guards remain unchanged.
+
+## D-2026-09-27-013 — Qwen3.5 4B target-context hardware path passes load-only qualification
+
+Observed:
+- context 4096 PASS;
+- context 8192 PASS;
+- context 16384 PASS;
+- exact model identity and digest pinned;
+- no semantic inference during load preflights;
+- full unload confirmed after each measurement.
+
+At context 16384:
+- VRAM used: 2589 MiB;
+- VRAM headroom: 1374 MiB;
+- Ollama processor split: 56% CPU / 44% GPU;
+- loaded free RAM observed: 0.51 GiB.
+
+Interpretation:
+Target context is loadable, but RAM pressure and CPU offload are material.
+
+## D-2026-09-27-014 — Select Constellation as first bounded Qwen3.5 C4 discriminator
+
+Decision:
+Use Constellation Software / SERIAL_ACQUIRER as the first Qwen3.5 C4 cell.
+
+Rationale:
+The same pinned packet already separates prior candidates:
+- Qwen3 4B: engineering PASS / human PASS_WITH_CARRY;
+- Phi-4: engineering PASS under v1.1 / human CRITICAL_FAILURE.
+
+This makes Constellation the highest-information first discriminator for Qwen3.5 grounding and priority-selection quality.
+
+Frozen execution:
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600 seconds;
+- generation prompt/schema v1.0 unchanged;
+- validation v1.1;
+- one run;
+- no automatic retry;
+- zero external model API cost.

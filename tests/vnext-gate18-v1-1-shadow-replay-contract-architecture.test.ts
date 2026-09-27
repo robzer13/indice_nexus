@@ -140,9 +140,11 @@ test("historical shadow review remains immutable while current Phase C records l
     "ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING",
   );
   assert.equal(entry.qwen3_5_download_authorized, false);
+  assert.equal(entry.qwen3_5_first_c4_inference_authorized, true);
+  assert.equal(entry.qwen3_5_first_c4_authorized_run_count, 1);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "REVIEW_PRIVATE_RAW_OUTPUT_AND_COMPLETE_HUMAN_ADJUDICATION",
+    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
   );
 });
