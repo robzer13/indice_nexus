@@ -149,6 +149,33 @@ function terminalPunctuation(value: string): boolean {
   return /[.!?]$/.test(value.trim());
 }
 
+type ValidatorFailureLayer =
+  | "NONE"
+  | "SCHEMA"
+  | "PRESENTATION_COMPLIANCE"
+  | "PRESENTATION_BOUNDARY"
+  | "SUBSTANTIVE_SEMANTIC"
+  | "UNKNOWN";
+
+function classifyValidatorError(error: string | null): ValidatorFailureLayer {
+  if (error === null) {
+    return "NONE";
+  }
+  if (error === "NORMALIZED_COPY_SCHEMA_INVALID") {
+    return "SCHEMA";
+  }
+  if (error === "VNEXT_GATE18_V10_NARRATIVE_BOUNDARY_SATURATION") {
+    return "PRESENTATION_BOUNDARY";
+  }
+  if (error.endsWith("_INCOMPLETE")) {
+    return "PRESENTATION_COMPLIANCE";
+  }
+  if (error.startsWith("VNEXT_GATE18_V10_")) {
+    return "SUBSTANTIVE_SEMANTIC";
+  }
+  return "UNKNOWN";
+}
+
 function collectNarrativeFields(output: any): NarrativeField[] {
   const fields: NarrativeField[] = [];
 
@@ -352,7 +379,7 @@ function main(): void {
       rawValidatorReplay.error !== normalizedSemantic.error
     ) {
       dispositionDelta =
-        "RAW_PRESENTATION_FAILURE_MASKED_DOWNSTREAM_SUBSTANTIVE_FAILURE";
+        "RAW_PRESENTATION_FAILURE_ADVANCED_TO_DOWNSTREAM_FAILURE";
     } else if (rawValidatorReplay.pass && normalizedSemantic.pass) {
       dispositionDelta = "CONTROL_PASS_STABLE";
     }
@@ -374,7 +401,10 @@ function main(): void {
           rawMissingPunctuationCount === 0 &&
           rawSaturationBoundaryCount === 0,
       },
-      rawValidatorReplay,
+      rawValidatorReplay: {
+        ...rawValidatorReplay,
+        errorLayer: classifyValidatorError(rawValidatorReplay.error),
+      },
       normalizedCopy: {
         normalizationPolicy:
           "APPEND_PERIOD_ONLY_NO_LEXICAL_CHANGE_BELOW_FROZEN_178_CHAR_COMPLETENESS_BOUNDARY",
@@ -387,6 +417,7 @@ function main(): void {
           : normalizedSchema.error.message,
         semanticPass: normalizedSemantic.pass,
         semanticError: normalizedSemantic.error,
+        semanticErrorLayer: classifyValidatorError(normalizedSemantic.error),
       },
       dispositionDelta,
     };
@@ -404,10 +435,24 @@ function main(): void {
         item.dispositionDelta ===
         "RAW_FAIL_TO_SHADOW_SEMANTIC_PASS_AFTER_PRESENTATION_ONLY_NORMALIZATION",
     ).length,
+    downstreamFailureRevealedCount: results.filter(
+      (item: any) =>
+        item.dispositionDelta ===
+        "RAW_PRESENTATION_FAILURE_ADVANCED_TO_DOWNSTREAM_FAILURE",
+    ).length,
+    downstreamPresentationFailureRevealedCount: results.filter(
+      (item: any) =>
+        item.dispositionDelta ===
+          "RAW_PRESENTATION_FAILURE_ADVANCED_TO_DOWNSTREAM_FAILURE" &&
+        (item.normalizedCopy?.semanticErrorLayer ===
+          "PRESENTATION_COMPLIANCE" ||
+          item.normalizedCopy?.semanticErrorLayer === "PRESENTATION_BOUNDARY"),
+    ).length,
     downstreamSubstantiveFailureRevealedCount: results.filter(
       (item: any) =>
         item.dispositionDelta ===
-        "RAW_PRESENTATION_FAILURE_MASKED_DOWNSTREAM_SUBSTANTIVE_FAILURE",
+          "RAW_PRESENTATION_FAILURE_ADVANCED_TO_DOWNSTREAM_FAILURE" &&
+        item.normalizedCopy?.semanticErrorLayer === "SUBSTANTIVE_SEMANTIC",
     ).length,
     stableControlPassCount: results.filter(
       (item: any) => item.dispositionDelta === "CONTROL_PASS_STABLE",
