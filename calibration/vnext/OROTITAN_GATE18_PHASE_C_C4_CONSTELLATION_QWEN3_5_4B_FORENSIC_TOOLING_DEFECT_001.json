@@ -1,7 +1,7 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_5_4B_FORENSIC_TOOLING_DEFECT_V0.1",
   "defect_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-FORENSIC-TOOLING-DEFECT-001",
-  "status": "OPEN_FIX_PREPARED",
+  "status": "RESOLVED",
   "observed_on": "2026-09-27",
   "source_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-RESULT-001",
   "forensic_authorization": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-RAW-JSON-FORENSIC-AUTH-001",
@@ -12,5 +12,6 @@
   "source_artifact_mutated": false,
   "inference_executed": false,
   "remediation": "Replace fail-fast rawText lookup with safe artifact-shape discovery that prints paths/types/lengths/hashes only, never raw values.",
-  "next_action": "RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY"
+  "next_action": "RERUN_READ_ONLY_QWEN3_5_CONSTELLATION_FORENSIC_WITH_SHAPE_DISCOVERY",
+  "resolution": "Shape discovery confirmed $.response.rawText exists and is exactly empty; no alternate raw response string is persisted."
 }
