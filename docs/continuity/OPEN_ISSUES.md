@@ -1,36 +1,25 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Phi-4, Qwen3.5 and Gemma 3 calibration paths
+## OI-001 — Phi-4, Qwen3.5, Gemma 3 and Granite 4 calibration paths
 Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-## OI-002 — Granite 4 staged hardware qualification
-Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
+Granite 4 reached engineering PASS on Constellation but failed human-quality adjudication critically. No global family failure inferred.
 
-Context4096, 8192 and 16384 load-only runs all passed. At 16384:
-- loaded free RAM: 0.41 GiB;
-- loaded free VRAM: 1658 MiB;
-- processor split: 38%/62% CPU/GPU;
-- explicit unload: complete.
-
-No context growth beyond 16384 is authorized.
-
-## OI-003 — Granite 4 first Constellation C4 inference
+## OI-002 — Qwen3 8B pinned download
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one same-packet local inference is authorized at context16384.
+Exactly one zero-cost download of `qwen3:8b-q4_K_M` is authorized, followed by identity verification only.
 
-## OI-004 — Granite 4 human-quality adjudication
-Status: BLOCKED_BY_OI-003
+## OI-003 — Qwen3 8B memory qualification
+Status: BLOCKED_BY_OI-002
 
-Required only if engineering semantics pass.
+If download identity passes, prepare a separate context4096 load-only memory preflight. No direct inference.
 
-## OI-005 — Qwen3 8B post-Granite qualification
-Status: QUEUED_BY_EXPLICIT_USER_DIRECTION
+## OI-004 — Qwen3 8B first C4 discriminator
+Status: BLOCKED_BY_HARDWARE_QUALIFICATION
 
-Qwen3 8B is the next candidate immediately after the Granite result, using staged hardware preflight.
-
-## OI-006 — Model winner and routing
+## OI-005 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
