@@ -38,9 +38,9 @@ test("Phi-4 C4 resumption selects one bounded Constellation discriminator under 
   assert.equal(decision.execution_boundary.authorized_run_count, 0);
   assert.equal(decision.execution_boundary.automatic_retry_authorized, false);
 
-  assert.equal(prep.status, "RUNNER_PREPARED_AWAITING_EXPLICIT_SINGLE_RUN_AUTHORIZATION");
-  assert.equal(prep.constraints.inference_authorized, false);
-  assert.equal(prep.constraints.authorized_run_count, 0);
+  assert.equal(prep.status, "AUTHORIZED_SINGLE_RUN_READY_TO_EXECUTE");
+  assert.equal(prep.constraints.inference_authorized, true);
+  assert.equal(prep.constraints.authorized_run_count, 1);
   assert.equal(prep.evaluation_contract.raw_output_must_be_preserved, true);
   assert.equal(
     prep.evaluation_contract.validation_contract,
@@ -49,7 +49,7 @@ test("Phi-4 C4 resumption selects one bounded Constellation discriminator under 
 });
 
 
-test("Phi-4 Constellation v1.1 runner is prepared but inference remains fail-closed", () => {
+test("Phi-4 Constellation v1.1 runner accepts exactly the explicitly authorized single-run contract", () => {
   const auth = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_PHI4_MINI_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT480_LOOPBACK_AUTH_001.json",
@@ -61,9 +61,12 @@ test("Phi-4 Constellation v1.1 runner is prepared but inference remains fail-clo
     "utf8",
   );
 
-  assert.equal(auth.status, "PREPARED_NOT_AUTHORIZED");
-  assert.equal(auth.c4_inference.authorized, false);
-  assert.equal(auth.constraints.authorized_run_count, 0);
+  assert.equal(auth.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(auth.authorization_source.type, "EXPLICIT_USER_AUTHORIZATION_IN_CHAT");
+  assert.equal(auth.authorization_source.user_message, "autorisé");
+  assert.equal(auth.c4_inference.authorized, true);
+  assert.equal(auth.constraints.authorized_run_count, 1);
+  assert.equal(auth.constraints.automatic_retry_authorized, false);
 
   assert.match(runner, /evaluateGate18V11Validation/);
   assert.match(
