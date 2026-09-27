@@ -1,63 +1,59 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-041`
+Resume ID: `VNEXT-G18-C-20260927-042`
 
-## Ministral 3 3B — first Constellation C4 final disposition
+## Post-Ministral local candidate registry refresh
 
-Engineering status:
+The 2026 registry was refreshed after the Ministral 3 3B human-quality critical failure.
 
-`CLEAN_ENGINEERING_PASS_WITH_NEAR_SATURATION_CARRY`
+Selected next candidate:
 
-Human-quality status:
+`GRANITE4_1_3B_OLLAMA_Q4_K_M`
 
-`CRITICAL_FAILURE`
+Exact Ollama target:
 
-Observed engineering facts:
-- runtime error: none;
-- schema valid: true;
-- semantic valid: true;
-- V1.1 raw presentation compliant: true;
-- normalized paths: 0;
-- eval count: 991 / 1024;
-- output margin: 33 tokens.
+`granite4.1:3b-q4_K_M`
 
-Human adjudication:
-- exact evidence grounding: FAIL;
-- claim atomicity: PASS;
-- claim target alignment: PASS_WITH_DEFECT;
-- support/counterevidence polarity: PASS;
-- qualification orthogonality: PASS_WITH_DEFECT;
-- conflict handling: PASS;
-- weak-link usefulness: PASS;
-- unresolved-point usefulness: FAIL;
-- judgment-boundary compliance: PASS;
-- priority-selection usefulness: PASS_WITH_DEFECT.
+Public identity:
+- digest prefix: `6fd349357287`;
+- artifact class: ~2.1GB;
+- quantization: Q4_K_M;
+- context: 128K;
+- input: text;
+- license: Apache-2.0;
+- release date: 2026-04-28;
+- current Ollama documentation explicitly lists structured JSON output support.
 
-Critical defects:
-- E-066 was misidentified as Trapeze replacement evidence even though E-066 is the seller-reputation evidence state; Trapeze replacement evidence is E-046.
-- E-045 was described as eventual replacement although the packet state is replacement RFP.
-- E-043 sole-source support was overextended into deep integration and low-churn risk beyond the exact support scope.
+Selection logic:
+- same low-memory artifact class as the already measured Granite 4 3B candidate;
+- current 2026 successor release;
+- targeted discriminator for contract/structured-output behavior without increasing hardware pressure;
+- public capability claims are not treated as OroTitan semantic-quality evidence.
 
-Positive observations:
-- E-029 is explicitly qualified against universalization;
-- E-063 is not miscast as evidence of low retention;
-- C-005 is surfaced and left unresolved;
-- weak links are distinct;
-- priority findings are non-duplicate;
-- no final moat judgment is emitted.
+Deferred next option:
 
-## Strategy disposition
+`LLAMA3_2_3B_OLLAMA_Q4_K_M`
 
-`STOP_MINISTRAL3_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+Llama 3.2 remains the next different-family candidate if Granite 4.1 is stopped.
 
-No retry, additional Ministral inference, ranking, routing, publication, or production authority is granted.
+## Current authority
 
-This does not establish a global Mistral-family failure.
+Authorized:
+- one exact zero-cost `ollama pull` of `granite4.1:3b-q4_K_M`;
+- local identity verification after download.
+
+Not authorized:
+- model inference;
+- prompt/messages;
+- load smoke;
+- retry;
+- context change;
+- model switch;
+- production mutation;
+- publication.
 
 ## Exact next action
 
 ```text
-REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_SELECT_NEXT_SAME_WEIGHT_CLASS_CANDIDATE
+EXECUTE_GRANITE4_1_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY
 ```
-
-No next candidate is selected yet.
