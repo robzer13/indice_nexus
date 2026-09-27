@@ -1,17 +1,17 @@
 {
-  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT4096_LOAD_SMOKE_AUTHORIZATION_V0.1",
-  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-AUTH-001",
+  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT8192_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
-  "stage": "POST_QWEN3_8B_CANDIDATE_ESCALATION_LOAD_SMOKE",
-  "status": "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE",
+  "stage": "POST_QWEN3_8B_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
     "separate_user_reprompt_required": false,
     "cost_usd": 0
   },
-  "source_download_result": "G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-RESULT-001",
+  "source_result": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
   "model": {
     "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
     "ollama_model_name": "ministral-3:3b-instruct-2512-q4_K_M",
@@ -19,7 +19,7 @@
     "quantization": "Q4_K_M"
   },
   "planned_execution": {
-    "context_tokens": 4096,
+    "context_tokens": 8192,
     "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
     "keep_alive_load": "2m",
     "explicit_unload": true,
@@ -27,26 +27,27 @@
     "semantic_inference_requested": false
   },
   "authority": {
-    "load_smoke_authorized": false,
+    "load_smoke_authorized": true,
     "inference_authorized": false,
     "download_authorized": false,
-    "authorized_run_count": 0
+    "authorized_run_count": 1
   },
   "constraints": {
     "automatic_retry_authorized": false,
     "automatic_model_switch_authorized": false,
-    "context_change_authorized": false,
+    "context_change_beyond_8192_authorized": false,
     "production_mutation": false,
     "publication_authority": false
   },
-  "hardware_boundary": {
-    "system_ram_gib": 7.84,
-    "discrete_vram_mib": 4096,
-    "expected_model_artifact_gb": 3,
-    "risk_class": "MODERATE_TO_HIGH_MEMORY_PRESSURE_EXPECTED",
-    "direct_inference_forbidden": true
+  "safety_rationale": {
+    "source_loaded_free_ram_gib": 0.35,
+    "source_vram_headroom_mib": 1566,
+    "source_processor_split": "48%/52% CPU/GPU",
+    "risk_class": "CRITICAL_RAM_PRESSURE_DIAGNOSTIC_ONLY",
+    "purpose": "Empirically determine whether target-sized prompt context is loadable before any inference decision.",
+    "direct_inference_forbidden": true,
+    "context16384_not_pre_authorized": true
   },
   "next_action": "EXECUTE_MINISTRAL3_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN",
-  "execution_result": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }
