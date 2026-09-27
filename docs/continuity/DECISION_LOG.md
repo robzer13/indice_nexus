@@ -974,3 +974,49 @@ Boundary:
 - no automatic retry/model switch;
 - explicit post-run decision required before any C4 inference.
 
+## D-2026-09-27-054 — Qwen3 8B context16384 load-only passes with extreme RAM pressure
+
+Measured:
+- free RAM before: 2.16 GiB;
+- free RAM loaded: 0.14 GiB;
+- free RAM after unload: 1.31 GiB;
+- VRAM used loaded: 2345 MiB;
+- VRAM free loaded: 1618 MiB;
+- processor split: 70%/30% CPU/GPU;
+- resident size: 7.8 GB;
+- explicit unload: complete.
+
+No prompt or inference occurred.
+
+Disposition:
+`PASS_WITH_EXTREME_RAM_PRESSURE`.
+
+No further context growth is authorized. Production fit is not established.
+
+## D-2026-09-27-055 — One bounded Qwen3 8B Constellation think-false experiment authorized
+
+Reason:
+- the user explicitly required Qwen3 8B to be tested after Granite;
+- Qwen3 8B completed staged load-only qualification through context16384;
+- the exact comparable Constellation packet fits the selected context;
+- Ollama supports explicit Qwen3 thinking disablement;
+- `think:false` follows the already-established Qwen-family structured-output compatibility control.
+
+Pinned:
+- exact model digest;
+- Constellation packet/prompt hashes unchanged;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- `think:false`;
+- validation v1.1.
+
+Safety/diagnostic guard:
+- minimum 1.0 GiB free system RAM before inference begins;
+- no other loaded Ollama model;
+- one run only;
+- no retry, context change, model switch, or production mutation.
+
+The experiment can establish a model result for this cell; it cannot by itself establish production hardware suitability.
+

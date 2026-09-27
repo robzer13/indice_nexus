@@ -3,33 +3,35 @@
 ## OI-001 — Prior local candidate calibration paths
 Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-## OI-002 — Qwen3 8B pinned download
-Status: COMPLETE_PASS_PINNED
+## OI-002 — Qwen3 8B staged hardware qualification
+Status: COMPLETE_LOADABLE_WITH_EXTREME_RAM_PRESSURE
 
-## OI-003 — Qwen3 8B context4096
-Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+4096, 8192 and 16384 load-only runs passed. At 16384:
+- loaded free RAM: 0.14 GiB;
+- loaded free VRAM: 1618 MiB;
+- processor split: 70%/30% CPU/GPU;
+- resident size: 7.8 GB;
+- explicit unload: complete.
 
-## OI-004 — Qwen3 8B context8192
-Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+No further context growth is authorized.
 
-Measured:
-- loaded free RAM: 0.22 GiB;
-- loaded free VRAM: 1640 MiB;
-- processor split: 64%/36% CPU/GPU;
-- unload complete.
-
-## OI-005 — Qwen3 8B context16384 final diagnostic
+## OI-003 — Qwen3 8B first Constellation C4 experiment
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded load-only run is authorized.
+Exactly one same-packet local inference is authorized with `think:false` and a 1.0 GiB pre-inference baseline-free-RAM guard.
 
-## OI-006 — Qwen3 8B semantic inference
-Status: BLOCKED_BY_OI-005
+## OI-004 — Qwen3 8B human-quality adjudication
+Status: BLOCKED_BY_OI-003
 
-No inference is authorized before explicit review of context16384.
+Required only if engineering semantics pass.
 
-## OI-007 — Model winner and routing
+## OI-005 — Qwen3 8B production fit
+Status: NOT_ESTABLISHED
+
+Hardware loadability under extreme RAM pressure must not be interpreted as production suitability.
+
+## OI-006 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.

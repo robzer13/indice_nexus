@@ -1,0 +1,73 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_8B_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "basis": {
+    "hardware_result": "G18-PHASEC-QWEN3-8B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+    "hardware_fit": "PASS_WITH_EXTREME_RAM_PRESSURE",
+    "user_directed_test": true,
+    "reason": "One same-packet think=false inference is permitted as an experimental capability test despite extreme RAM pressure; it does not establish production fit."
+  },
+  "c4_inference": {
+    "authorized": true,
+    "experiment_kind": "USER_DIRECTED_EXPERIMENTAL_SAME_PACKET_C4",
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "execution_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_8B_V1_1_CONTEXT16384_THINKFALSE_001",
+    "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_8B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_THINKFALSE_LOOPBACK_GUARDED_001",
+    "model_name": "qwen3:8b-q4_K_M",
+    "model_digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "keep_alive": "0s",
+    "think": false,
+    "sleep_guard_required": true,
+    "pre_inference_minimum_free_ram_gib": 1,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "constraints": {
+    "authorized_run_count": 1,
+    "external_model_api_cost_usd": 0,
+    "automatic_retry_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "temperature_change_authorized": false,
+    "timeout_change_authorized": false,
+    "thinking_mode_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "output_policy": {
+    "generated_content_destination": "calibration/vnext/private-runs/",
+    "raw_output_preserved": true,
+    "human_adjudication_required_if_engineering_pass": true,
+    "public_repo_generated_content_forbidden": true
+  },
+  "interpretation_boundary": {
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_candidate_decision_authority": false
+  },
+  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

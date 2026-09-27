@@ -1,0 +1,51 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_QWEN3_8B_CONSTELLATION_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-THINKFALSE-V1_1-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "candidate": {
+    "model": "qwen3:8b-q4_K_M",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "quantization": "Q4_K_M"
+  },
+  "cell": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_8B_V1_1_CONTEXT16384_THINKFALSE_001",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041
+  },
+  "parameters": {
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "keep_alive": "0s",
+    "think": false,
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK"
+  },
+  "contract": {
+    "generation_prompt_contract": "V1_0_UNCHANGED",
+    "generation_schema_contract": "V1_0_UNCHANGED",
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "raw_output_preserved": true,
+    "human_adjudication_required": true
+  },
+  "hardware_carry": {
+    "context16384_fit": "PASS_WITH_EXTREME_RAM_PRESSURE",
+    "context16384_loaded_free_ram_gib": 0.14,
+    "context16384_vram_headroom_mib": 1618,
+    "inference_fit": "EXPERIMENTAL_ONLY_NOT_PROVEN",
+    "pre_inference_minimum_free_ram_gib": 1
+  },
+  "authorization": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-8b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts",
+  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT"
+}

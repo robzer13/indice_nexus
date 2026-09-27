@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3-8B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_USER_DIRECTED_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "qwen3:8b-q4_K_M",
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 2.16,
+    "loaded_free_ram_gib": 0.14,
+    "after_free_ram_gib": 1.31,
+    "loaded_vram_used_mib": 2345,
+    "loaded_vram_free_mib": 1618,
+    "processor_split": "70%/30% CPU/GPU",
+    "ollama_reported_size": "7.8 GB",
+    "load_only_confirmed": true,
+    "explicit_unload_complete": true,
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 2.02,
+    "vram_increment_mib": 2345,
+    "vram_headroom_mib": 1618,
+    "comparison_to_context8192": {
+      "loaded_free_ram_delta_gib": -0.08,
+      "vram_headroom_delta_mib": -22,
+      "gpu_residency_delta_percentage_points": -6,
+      "resident_size_delta_gb": 1.2
+    },
+    "comparison_to_granite_context16384": {
+      "loaded_free_ram_delta_gib": -0.27,
+      "vram_headroom_delta_mib": -40,
+      "gpu_residency_delta_percentage_points": -32
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_16384": "PASS_WITH_EXTREME_RAM_PRESSURE",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "no_further_context_growth": true,
+    "one_bounded_think_false_c4_experiment_justified": true,
+    "direct_production_use_authorized": false
+  },
+  "next_action": "PREPARE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

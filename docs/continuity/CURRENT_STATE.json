@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-032",
+  "resume_id": "VNEXT-G18-C-20260927-033",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "2cd66442e53d59ea901ef4edcfc6dcc796dbfbb1",
+  "last_verified_head_sha": "21c24e93b83bc92e2b2930d1328c10411c425b57",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -91,18 +91,21 @@
     "QWEN3_8B_CONTEXT8192_DIAGNOSTIC_LOAD_ONLY_AUTHORIZED",
     "QWEN3_8B_CONTEXT8192_LOAD_ONLY_PASS",
     "QWEN3_8B_CONTEXT8192_CRITICAL_RAM_PRESSURE_RECORDED",
-    "QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC_AUTHORIZED"
+    "QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC_AUTHORIZED",
+    "QWEN3_8B_CONTEXT16384_LOAD_ONLY_PASS",
+    "QWEN3_8B_CONTEXT16384_EXTREME_RAM_PRESSURE_RECORDED",
+    "QWEN3_8B_ONE_BOUNDED_CONSTELLATION_C4_THINK_FALSE_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONTEXT16384_FINAL_DIAGNOSTIC"
+    "LOCAL_PRIVATE_REPO_AND_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONSTELLATION_C4"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "AFTER_QWEN3_8B_16384_MEASUREMENT_DECIDE_INFERENCE_OR_HARDWARE_STOP",
-    "NO_QWEN3_8B_INFERENCE_AUTHORIZED_YET",
+    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
+    "IF_ENGINEERING_PASS_COMPLETE_HUMAN_QUALITY_ADJUDICATION",
+    "IF_RUNTIME_FAIL_CLASSIFY_HARDWARE_RUNTIME_CONFOUND_WITHOUT_RETRY",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -141,7 +144,11 @@
     "QWEN3_8B_8192_PASS_DOES_NOT_PROVE_INFERENCE_FIT",
     "QWEN3_8B_8192_REMAINS_CRITICAL_RAM_PRESSURE",
     "QWEN3_8B_16384_IS_FINAL_LOAD_ONLY_DIAGNOSTIC",
-    "NO_CONTEXT_GROWTH_BEYOND_16384"
+    "NO_CONTEXT_GROWTH_BEYOND_16384",
+    "QWEN3_8B_16384_PASS_DOES_NOT_PROVE_PRODUCTION_FIT",
+    "QWEN3_8B_HARDWARE_PRESSURE_IS_EXTREME",
+    "QWEN3_8B_C4_THINK_FALSE_IS_SINGLE_EXPERIMENTAL_RUN",
+    "QWEN3_8B_NO_AUTOMATIC_RETRY_OR_CONTEXT_CHANGE"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -229,7 +236,12 @@
     "scripts/vnext-gate18-phase-c-qwen3-8b-context8192-load-smoke.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-qwen3-8b-context16384-load-smoke.ts"
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context16384-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT16384_LOAD_SMOKE_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_QWEN3_8B_POST_HARDWARE_DECISION_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_PREP_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-qwen3-8b-v1-1-context16384-output1024-timeout600-thinkfalse-loopback-guarded.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -260,7 +272,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -543,7 +555,7 @@
     "download_authorization_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001",
     "download_authorized": false,
     "load_smoke_authorized": true,
-    "inference_authorized": false,
+    "inference_authorized": true,
     "download_executed": true,
     "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
     "size_bytes": 5225388164,
@@ -572,9 +584,29 @@
     "context8192_processor_split": "64%/36% CPU/GPU",
     "context8192_hardware_fit": "PASS_WITH_CRITICAL_RAM_PRESSURE",
     "context8192_full_unload_release": true,
-    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context16384_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context16384_load_authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
-    "context16384_load_authorized_run_count": 1,
-    "context16384_purpose": "FINAL_DIAGNOSTIC_ONLY"
+    "context16384_load_authorized_run_count": 0,
+    "context16384_purpose": "FINAL_DIAGNOSTIC_ONLY",
+    "context16384_loaded_free_ram_gib": 0.14,
+    "context16384_vram_used_mib": 2345,
+    "context16384_vram_headroom_mib": 1618,
+    "context16384_processor_split": "70%/30% CPU/GPU",
+    "context16384_hardware_fit": "PASS_WITH_EXTREME_RAM_PRESSURE",
+    "context16384_full_unload_release": true,
+    "hardware_qualification": "EXPERIMENTAL_INFERENCE_ONLY_EXTREME_RAM_PRESSURE",
+    "no_further_context_growth": true,
+    "first_c4_company": "Constellation Software",
+    "first_c4_archetype": "SERIAL_ACQUIRER",
+    "first_c4_context_tokens": 16384,
+    "first_c4_max_output_tokens": 1024,
+    "first_c4_timeout_ms": 600000,
+    "first_c4_think": false,
+    "first_c4_minimum_free_ram_gib": 1,
+    "first_c4_authorization_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-THINKFALSE-LOOPBACK-AUTH-001",
+    "first_c4_inference_authorized": true,
+    "first_c4_authorized_run_count": 1,
+    "first_c4_result_status": "NOT_EXECUTED",
+    "production_fit": false
   }
 }
