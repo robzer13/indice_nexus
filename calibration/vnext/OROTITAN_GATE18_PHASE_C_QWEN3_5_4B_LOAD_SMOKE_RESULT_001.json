@@ -1,0 +1,89 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-QWEN3_5-4B-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-QWEN3_5-4B-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_PHI4_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "target": {
+    "model": "qwen3.5:4b-q4_K_M",
+    "digest": "2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "before": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 1.33,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0
+  },
+  "loaded": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 0.69,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 1362,
+    "vram_used_mib": 2601,
+    "ollama_reported_size": "3.7 GB",
+    "processor_split": "50%/50% CPU/GPU",
+    "context_tokens": 4096,
+    "model_loaded": true
+  },
+  "load_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "load",
+    "eval_count": null,
+    "load_only_confirmed": true
+  },
+  "unload_response": {
+    "response": "",
+    "done": true,
+    "done_reason": "unload"
+  },
+  "after": {
+    "total_ram_gib": 7.84,
+    "free_ram_gib": 2.58,
+    "vram_total_mib": 4096,
+    "vram_free_mib": 3962,
+    "vram_used_mib": 0,
+    "ollama_loaded_model_count": 0,
+    "model_unloaded": true
+  },
+  "derived_measurements": {
+    "incremental_vram_used_mib": 2601,
+    "vram_headroom_while_loaded_mib": 1362,
+    "free_ram_delta_before_to_loaded_gib": -0.64,
+    "full_vram_release_after_unload": true,
+    "ram_measurement_stability": "NOISY_OS_LEVEL_FREE_MEMORY_NOT_DIRECTLY_COMPARABLE",
+    "qwen3_4b_context4096_vram_used_reference_mib": 2311,
+    "vram_delta_vs_qwen3_4b_context4096_mib": 290,
+    "qwen3_4b_context4096_processor_split_reference": "33%/67% CPU/GPU",
+    "qwen3_5_context4096_processor_split": "50%/50% CPU/GPU"
+  },
+  "interpretation": {
+    "context4096_load_fit": "PASS",
+    "context4096_inference_fit": "NOT_YET_PROVEN",
+    "gpu_headroom_while_loaded": "MATERIAL_BUT_TIGHTER_THAN_QWEN3_4B_REFERENCE",
+    "system_ram_pressure": "HIGH",
+    "cpu_offload_pressure": "MATERIAL",
+    "direct_context16384_jump_recommended": false,
+    "bounded_context8192_load_only_preflight_recommended": true,
+    "note": "The model loads and unloads cleanly at context 4096, but it uses 2601 MiB VRAM and Ollama reports a 50/50 CPU/GPU split. The 1362 MiB VRAM headroom and low observed free RAM justify measuring an intermediate 8192 load-only point before any 16384 load or inference."
+  },
+  "safety": {
+    "loopback_only": true,
+    "model_download_executed": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "standing_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
