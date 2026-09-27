@@ -23,27 +23,25 @@ Exact digest:
 ## OI-006 — Gemma 3 context4096 load-only
 Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
 
+## OI-007 — Gemma 3 context8192 load-only
+Status: COMPLETE_PASS_LOAD_ONLY_MEASURED
+
 Measured:
-- VRAM used 2449 MiB;
-- VRAM headroom 1514 MiB;
-- loaded free RAM 0.58 GiB;
-- processor split 54%/46% CPU/GPU;
+- VRAM used 2423 MiB;
+- VRAM headroom 1540 MiB;
+- loaded free RAM 0.77 GiB;
+- processor split 56%/44% CPU/GPU;
 - full unload release confirmed;
 - no semantic inference.
 
-## OI-007 — Gemma 3 context8192 load-only
+## OI-008 — Gemma 3 context16384 load-only
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
 Exactly one guarded load-only run is authorized.
 
-## OI-008 — Gemma 3 context16384 hardware fit
-Status: BLOCKED_BY_OI-007
-
-Decide only after the context8192 measurements.
-
 ## OI-009 — Gemma 3 first C4 discriminator
-Status: BLOCKED_BY_HARDWARE_QUALIFICATION
+Status: BLOCKED_BY_OI-008
 
 No inference authorized yet.
 
