@@ -259,7 +259,8 @@
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_8B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_QWEN3_8B_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_DOWNLOAD_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-ministral3-3b-download-verify.ts"
+    "scripts/vnext-gate18-phase-c-ministral3-3b-download-verify.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_002.json"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -655,5 +656,6 @@
     "download_executed": false,
     "load_smoke_authorized": false,
     "inference_authorized": false
-  }
+  },
+  "latest_candidate_registry_refresh": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20260927-002"
 }
