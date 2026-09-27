@@ -69,3 +69,27 @@ The replay supports `A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION` as the pref
 
 Authority boundary:
 This is not a v1.1 contract implementation or authorization. Historical v1.0 results remain immutable; human quality and model winner/routing are unchanged.
+
+
+## D-2026-09-27-006 — User authorizes versioned v1.1 validation contract change
+
+Authority:
+Explicit user authorization in chat: `ok autorisation`.
+
+Authorized implementation:
+`GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`.
+
+Normative boundary:
+- keep v1.0 prompt and generation schema unchanged;
+- preserve raw output and raw presentation-compliance result;
+- safe normalization may append one period only;
+- preserve all existing characters;
+- no lexical repair, deletion, replacement, or reordering;
+- never normalize into the >=178 saturation boundary;
+- do not run substantive semantic validation while a presentation blocker remains;
+- reuse frozen v1.0 semantic validators only after presentation compliance;
+- keep human-quality adjudication separate;
+- preserve all historical v1.0 results.
+
+Not authorized:
+New inference, second Phi-4 C4 cell, Qwen3.5 download, model switch, production mutation, publication, or retroactive pass.
