@@ -98,16 +98,18 @@ test("Ministral 3 3B download authorization is exact and non-inferential", () =>
       "utf8",
     ),
   );
-  assert.equal(a.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(a.model.ollama_model_name, "ministral-3:3b-instruct-2512-q4_K_M");
   assert.equal(a.model.expected_digest_prefix, "f04aa1c738f6");
   assert.equal(a.model.expected_quantization, "Q4_K_M");
   assert.equal(a.model.expected_artifact_class, "~3.0GB");
   assert.equal(a.public_verification.parameter_size, "3.85B");
-  assert.equal(a.authority.ministral3_download_authorized, true);
+  assert.equal(a.authority.ministral3_download_authorized, false);
   assert.equal(a.authority.ministral3_load_smoke_authorized, false);
   assert.equal(a.authority.ministral3_inference_authorized, false);
   assert.equal(a.constraints.automatic_retry, false);
+  assert.equal(a.consumption.consumed, true);
+  assert.equal(a.consumption.result_status, "PASS_PINNED_DOWNLOAD_ONLY");
 });
 
 test("Ministral 3 3B download verifier pulls exact tag and performs no inference", () => {
@@ -126,4 +128,56 @@ test("Ministral 3 3B download verifier pulls exact tag and performs no inference
   assert.doesNotMatch(raw, /prompt\s*:/);
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /loadSmokeExecuted: false/);
+});
+
+
+test("Ministral 3 3B pinned download result captures exact local identity", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_DOWNLOAD_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(r.status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(r.model.ollama_model_name, "ministral-3:3b-instruct-2512-q4_K_M");
+  assert.equal(
+    r.model.digest,
+    "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d",
+  );
+  assert.equal(r.model.size_bytes, 2953840808);
+  assert.equal(r.model.family, "mistral3");
+  assert.equal(r.model.ollama_reported_parameter_size, "3.8B");
+  assert.equal(r.model.quantization, "Q4_K_M");
+  assert.equal(r.safety.load_smoke_executed, false);
+  assert.equal(r.safety.model_inference_executed, false);
+});
+
+test("Ministral 3 3B context4096 load-only authorization is exact and single-use", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT4096_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 4096);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_authorized, false);
+});
+
+test("Ministral 3 3B context4096 runner is exact-digest load-only", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-ministral3-3b-context4096-load-smoke.ts",
+    "utf8",
+  );
+  assert.match(raw, /ministral-3:3b-instruct-2512-q4_K_M/);
+  assert.match(raw, /f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d/);
+  assert.match(raw, /CONTEXT_TOKENS = 4096/);
+  assert.match(raw, /keep_alive:\s*"2m"/);
+  assert.match(raw, /keep_alive:\s*0/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
+  assert.doesNotMatch(raw, /prompt\s*:/);
 });
