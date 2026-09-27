@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-012",
+  "resume_id": "VNEXT-G18-C-20260927-013",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "5e3b944ffbb9943e8d5326959b04a386a0201a83",
+  "last_verified_head_sha": "90224cf5f91e360f2350f863edadc3774c40e4cf",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -33,19 +33,20 @@
     "PHI4_C4_EXPANSION_STOPPED_RETAINED_AS_CALIBRATION_EVIDENCE",
     "QWEN3_5_4B_PINNED_DOWNLOAD_PASS",
     "STANDING_ZERO_COST_EXECUTION_AUTHORIZATION_V2_ACTIVE",
-    "QWEN3_5_CONTEXT16384_LOAD_ONLY_PASS"
+    "QWEN3_5_CONTEXT16384_LOAD_ONLY_PASS",
+    "QWEN3_5_FIRST_CONSTELLATION_C4_RUN_FAIL_RAW_JSON_INCOMPLETE"
   ],
   "active_work": [
-    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1"
+    "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_AND_PRIVATE_PINNED_PACKET_REQUIRED_ON_USER_MACHINE"
+    "PRIVATE_RAW_OUTPUT_AVAILABLE_ONLY_ON_USER_MACHINE"
   ],
   "open_issues": [
-    "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
-    "REVIEW_V1_1_ENGINEERING_RESULT",
-    "COMPLETE_HUMAN_QUALITY_ADJUDICATION_ON_PRIVATE_RAW_OUTPUT",
-    "DECIDE_QWEN3_5_EXPANSION_AFTER_FIRST_DISCRIMINATOR"
+    "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC",
+    "DETERMINE_STRUCTURAL_PROGRESS_AND_TERMINATION_MODE",
+    "DECIDE_BOUNDED_SAME_CELL_RELIABILITY_RETRY_OR_STOP_QWEN3_5",
+    "MODEL_WINNER_AND_ROUTING_REMAIN_UNRESOLVED"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
@@ -112,7 +113,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_FIRST_BOUNDED_QWEN3_5_CONSTELLATION_C4_INFERENCE_V1_1",
+  "next_action": "RUN_READ_ONLY_QWEN3_5_CONSTELLATION_RAW_JSON_TERMINATION_FORENSIC",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -158,7 +159,7 @@
     "download_status": "PASS_PINNED_DOWNLOAD_ONLY",
     "load_smoke_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
     "load_context_tokens": 4096,
-    "inference_executed": false,
+    "inference_executed": true,
     "context4096_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context4096_vram_used_mib": 2601,
     "context4096_vram_headroom_mib": 1362,
@@ -180,10 +181,21 @@
     "context16384_ollama_reported_size": "4.2 GB",
     "context16384_full_unload_release": true,
     "first_c4_company": "Constellation Software",
-    "first_c4_status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+    "first_c4_status": "FAIL_RAW_JSON_INCOMPLETE_FORENSICS_REQUIRED",
     "first_c4_context_tokens": 16384,
     "first_c4_max_output_tokens": 1024,
     "first_c4_timeout_ms": 600000,
-    "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1"
+    "first_c4_validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "first_c4_wall_clock_ms": 249631,
+    "first_c4_done_reason": "stop",
+    "first_c4_prompt_eval_count": 3349,
+    "first_c4_eval_count": 842,
+    "first_c4_output_token_margin": 182,
+    "first_c4_schema_valid": false,
+    "first_c4_schema_error": "Unexpected end of JSON input",
+    "first_c4_runtime_error": null,
+    "first_c4_retry_authorized": false,
+    "first_c4_model_capability_failure_concluded": false,
+    "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T124959277Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_001.json"
   }
 }
