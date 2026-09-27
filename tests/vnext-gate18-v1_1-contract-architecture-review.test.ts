@@ -65,7 +65,7 @@ test("v1.1 architecture review separates raw compliance, safe normalization, sem
   assert.equal(review.authority.qwen3_5_download_authorized, false);
 });
 
-test("Phase C freezes model execution while v1.1 contract architecture review is open", () => {
+test("Phase C permits authorized v1.1 implementation while keeping model execution frozen", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -85,15 +85,22 @@ test("Phase C freezes model execution while v1.1 contract architecture review is
   assert.equal(entry.phi4_mini_global_narrative_missing_punctuation_count, 13);
   assert.equal(entry.phi4_mini_global_narrative_semantic_pass_after_normalization, true);
   assert.equal(entry.phi4_mini_raw_v1_0_stmicro_status_remains, "FAIL");
+
+  assert.equal(entry.v1_1_contract_change_authorized, true);
+  assert.equal(
+    entry.v1_1_contract_change_authorization_id,
+    "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  );
+  assert.equal(entry.v1_1_shadow_validator_implementation_authorized, true);
+  assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
+
   assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.qwen3_5_download_authorized, false);
-  assert.equal(entry.v1_1_contract_change_authorized, false);
-  assert.equal(entry.v1_1_shadow_validator_implementation_authorized, true);
-  assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
+  assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
+    "VERIFY_V1_1_CONTRACT_IMPLEMENTATION_CI",
   );
 });
