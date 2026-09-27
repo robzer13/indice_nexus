@@ -1223,3 +1223,37 @@ Boundary:
 - human adjudication is required if engineering validation passes;
 - no production, ranking or routing authority.
 
+## D-2026-09-27-068 — Ministral 3 3B first Constellation C4 is a clean engineering pass
+
+Observed:
+- wall clock: 344396 ms;
+- done reason: stop;
+- prompt eval count: 3722;
+- eval count: 991 / 1024;
+- output margin: 33;
+- runtime error: none;
+- schema valid: true;
+- semantic valid: true;
+- V1.1 raw presentation compliant: true;
+- normalized path count: 0;
+- substantive status: PASS.
+
+Disposition:
+
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`.
+
+The 33-token output margin is retained as an engineering carry for human review. No conclusion about human analytical quality, production fit, ranking or routing follows from the automated PASS.
+
+## D-2026-09-27-069 — Private Ministral human-adjudication bundle is the next protocol step
+
+The original local raw output and pinned evidence packet remain private.
+
+A non-inferential local bundle builder is prepared to:
+- verify exact model/digest;
+- verify the pinned packet and prompt hashes;
+- reconstruct the exact Constellation evidence packet from the private repository;
+- attach the original raw response and V1.1 engineering metadata;
+- surface the same human-review checklist used for prior candidates.
+
+No retry, parameter change, second cell, production mutation, ranking or routing authority is granted.
+

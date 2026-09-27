@@ -1,0 +1,55 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_MINISTRAL3_3B_V1_1_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-MINISTRAL3-3B-V1_1-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_MINISTRAL3_3B_V1_1_CONTEXT16384_001",
+  "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_MINISTRAL3_3B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "model": {
+    "name": "ministral-3:3b-instruct-2512-q4_K_M",
+    "digest": "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d"
+  },
+  "execution": {
+    "minimum_free_ram_gib": 1,
+    "baseline_free_ram_guard_passed": true,
+    "wall_clock_ms": 344396,
+    "done_reason": "stop",
+    "prompt_eval_count": 3722,
+    "eval_count": 991,
+    "max_output_tokens": 1024,
+    "output_token_margin": 33,
+    "output_budget_near_saturation": true,
+    "runtime_error": null,
+    "schema_valid": true,
+    "schema_error": null,
+    "semantic_valid": true,
+    "semantic_error": null
+  },
+  "validation_v1_1": {
+    "raw_presentation_compliant": true,
+    "normalized_path_count": 0,
+    "substantive_status": "PASS",
+    "clean_engineering_pass": true
+  },
+  "private_run": {
+    "local_private_path": "calibration/vnext/private-runs/2026-09-27T195934460Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_MINISTRAL3_3B_V1_1_CONTEXT16384_001.json",
+    "raw_output_persisted_publicly": false,
+    "human_adjudication_bundle_required": true
+  },
+  "interpretation": {
+    "engineering_pass": true,
+    "human_quality_reassessed": false,
+    "human_adjudication_required": true,
+    "output_budget_near_saturation_carry": true,
+    "hardware_production_fit_established": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false
+  },
+  "next_action": "GENERATE_AND_REVIEW_PRIVATE_MINISTRAL3_HUMAN_ADJUDICATION_BUNDLE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
