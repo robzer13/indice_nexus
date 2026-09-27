@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-029",
+  "resume_id": "VNEXT-G18-C-20260927-030",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "a70650d7a7c8f6016eb584294a6a2c05e03bab55",
+  "last_verified_head_sha": "51a1e04ae3d2b51cde35933dee475ffb3d733490",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -82,17 +82,21 @@
     "GRANITE4_FIRST_CONSTELLATION_C4_ENGINEERING_PASS",
     "GRANITE4_FIRST_CONSTELLATION_C4_HUMAN_QUALITY_CRITICAL_FAILURE",
     "GRANITE4_C4_EXPANSION_STOPPED_RETAIN_CALIBRATION_EVIDENCE",
-    "QWEN3_8B_PINNED_DOWNLOAD_AUTHORIZED"
+    "QWEN3_8B_PINNED_DOWNLOAD_AUTHORIZED",
+    "QWEN3_8B_PINNED_DOWNLOAD_PASS",
+    "QWEN3_8B_FULL_DIGEST_CAPTURED",
+    "QWEN3_8B_CONTEXT4096_LOAD_ONLY_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+    "EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_PINNED_DOWNLOAD"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_QWEN3_8B_CONTEXT4096_LOAD_ONLY_PREFLIGHT"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
-    "IF_DOWNLOAD_PASS_PREPARE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "IF_QWEN3_8B_4096_PASS_DECIDE_CONTEXT8192_OR_STOP",
+    "NO_QWEN3_8B_INFERENCE_BEFORE_STAGED_HARDWARE_QUALIFICATION",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -120,7 +124,10 @@
     "QWEN3_8B_REMAINS_NEXT_AFTER_GRANITE",
     "GRANITE4_ENGINEERING_PASS_DOES_NOT_OVERRIDE_HUMAN_QUALITY_CRITICAL_FAILURE",
     "GRANITE4_FAMILY_GLOBAL_FAILURE_NOT_CONCLUDED",
-    "QWEN3_8B_USER_DIRECTED_SEQUENCE_NOW_ACTIVE"
+    "QWEN3_8B_USER_DIRECTED_SEQUENCE_NOW_ACTIVE",
+    "QWEN3_8B_DOWNLOAD_IDENTITY_PINNED",
+    "QWEN3_8B_DIRECT_INFERENCE_REMAINS_FORBIDDEN",
+    "QWEN3_8B_CONTEXT_GROWTH_REQUIRES_MEASURED_STEPWISE_REVIEW"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -199,7 +206,10 @@
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_3B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_GRANITE4_POST_CONSTELLATION_STRATEGY_DISPOSITION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_DOWNLOAD_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-qwen3-8b-download-verify.ts"
+    "scripts/vnext-gate18-phase-c-qwen3-8b-download-verify.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_DOWNLOAD_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_QWEN3_8B_CONTEXT4096_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-qwen3-8b-context4096-load-smoke.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -230,7 +240,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_8B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "next_action": "EXECUTE_QWEN3_8B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -506,14 +516,24 @@
     "public_digest_prefix": "500a1f067a9f",
     "expected_quantization": "Q4_K_M",
     "expected_artifact_size": "5.2GB",
-    "parameter_size": "8.19B",
+    "parameter_size": "8.2B",
     "context_window": "40K",
     "license": "Apache-2.0",
     "selection_status": "ACTIVE_USER_DIRECTED_NEXT_CANDIDATE",
     "download_authorization_id": "G18-PHASEC-QWEN3-8B-DOWNLOAD-AUTH-001",
-    "download_authorized": true,
-    "load_smoke_authorized": false,
+    "download_authorized": false,
+    "load_smoke_authorized": true,
     "inference_authorized": false,
-    "download_executed": false
+    "download_executed": true,
+    "digest": "500a1f067a9f782620b40bee6f7b0c89e17ae61f686b92c24933e4ca4b2b8b41",
+    "size_bytes": 5225388164,
+    "format": "gguf",
+    "family": "qwen3",
+    "quantization": "Q4_K_M",
+    "download_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "context4096_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context4096_load_authorization_id": "G18-PHASEC-QWEN3-8B-CONTEXT4096-LOAD-SMOKE-AUTH-001",
+    "context4096_load_authorized_run_count": 1,
+    "risk_class": "HIGH_MEMORY_PRESSURE_EXPECTED"
   }
 }
