@@ -93,3 +93,27 @@ Normative boundary:
 
 Not authorized:
 New inference, second Phi-4 C4 cell, Qwen3.5 download, model switch, production mutation, publication, or retroactive pass.
+
+
+## D-2026-09-27-007 — Versioned v1.1 validation contract implemented and CI-verified
+
+Result:
+`GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1` is implemented as an additive validation layer.
+
+Verification:
+- VNext CI PASS;
+- Screener CI PASS;
+- lint PASS;
+- typecheck PASS;
+- unit and contract tests PASS;
+- PostgreSQL migration tests PASS;
+- production build PASS.
+
+Preserved boundary:
+v1.0 remains unchanged and historical v1.0 outcomes are not reclassified.
+
+Execution boundary:
+No model inference was executed. A second Phi-4 C4 cell remains unauthorized.
+
+Next decision:
+`DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1`.
