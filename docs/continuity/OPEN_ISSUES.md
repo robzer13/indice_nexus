@@ -18,28 +18,46 @@ Load-only PASS at 4096, 8192, and 16384.
 
 Status: FAIL_PRESERVED_RUNTIME_ADAPTER_CONFOUNDED
 
-The historical run remains FAIL. Its persisted final response is exactly empty while 842 tokens were evaluated. The original runner omitted explicit thinking-mode control and did not persist provider thinking output.
+The historical first run remains FAIL and is not reclassified.
 
 ## OI-005 — Clean same-cell Qwen3.5 retry
 
-Status: COMPLETE_ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING
+Status: COMPLETE_ENGINEERING_PASS_HUMAN_CRITICAL_FAILURE
 
-The one authorized same-cell retry with `think:false` was consumed. It passed schema, raw-presentation, and deterministic semantic validation with zero safe-normalization paths. No automatic second retry is authorized.
+The `think:false` retry passed engineering validation but failed human-quality adjudication on exact evidence grounding.
 
 ## OI-006 — Qwen3.5 human-quality adjudication
 
-Status: READY_PRIVATE_REVIEW
-Priority: P0
+Status: COMPLETE_CRITICAL_FAILURE
 
-Review the private raw output as emitted against the pinned Constellation evidence packet. Do not infer a clean qualification result from the engineering PASS alone.
+The material defect is an E-045 replacement-RFP state overstated as completed replacement.
 
 ## OI-007 — Qwen3.5 expansion/stop disposition
 
-Status: BLOCKED_BY_OI-006
+Status: COMPLETE_STOPPED_RETAIN_CALIBRATION_EVIDENCE
 
-Decide expansion or stop only after human-quality adjudication of the Constellation discriminator.
+No broader Qwen3.5 C4 expansion. No global family failure inferred.
 
-## OI-008 — Model winner and routing
+## OI-008 — Gemma 3 4B terms and static review
+
+Status: COMPLETE_TERMS_ACCEPTED
+
+Exact public tag verified as `gemma3:4b-it-q4_K_M`; static hardware fit remains plausible but unproven.
+
+## OI-009 — Gemma 3 4B pinned download
+
+Status: READY_LOCAL_EXECUTION
+Priority: P0
+
+Run exactly one pinned download and identity verification. No load or inference is authorized by the download runner.
+
+## OI-010 — Gemma 3 4B context4096 load-only memory preflight
+
+Status: BLOCKED_BY_OI-009
+
+Prepare only after the full local model digest is captured from a successful download.
+
+## OI-011 — Model winner and routing
 
 Status: OPEN_GUARDED
 

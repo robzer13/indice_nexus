@@ -1,0 +1,49 @@
+{
+  "format": "OROTITAN_GATE18_GEMMA3_4B_STATIC_LICENSE_HARDWARE_REVIEW_V0.1",
+  "review_id": "G18-PHASEC-GEMMA3-4B-STATIC-REVIEW-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STATIC_REVIEW_COMPLETE_TERMS_ACCEPTED_DOWNLOAD_AUTHORIZED",
+  "checked_at": "2026-09-27",
+  "model": {
+    "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "gemma3:4b-it-q4_K_M",
+    "public_digest_prefix": "a2af6cc3eb7f",
+    "artifact_size": "3.3GB",
+    "context_window": "128K",
+    "modalities": [
+      "Text",
+      "Image"
+    ],
+    "expected_quantization": "Q4_K_M"
+  },
+  "terms": {
+    "governing_terms": "Gemma Terms of Use",
+    "last_modified": "2026-04-01",
+    "user_acceptance_recorded": true,
+    "user_message": "j’accepte les Gemma Terms",
+    "production_boundary": "Any future production/distribution use must remain subject to the applicable Gemma terms and prohibited-use policy.",
+    "finance_boundary": "OroTitan qualification remains ASSIST-only with human adjudication; no autonomous financial decision authority is created by this review."
+  },
+  "hardware": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "static_fit": "PLAUSIBLE_BUT_TIGHT_UNPROVEN",
+    "comparison_basis": "Similar artifact class to Qwen3.5 4B, which loaded at context 16384 with high system-RAM pressure.",
+    "required_next_measurement": "PINNED_DOWNLOAD_THEN_CONTEXT4096_LOAD_ONLY"
+  },
+  "structured_output": {
+    "ollama_json_schema_path_available": true,
+    "orotitan_semantic_contract_tested": false
+  },
+  "authority": {
+    "download_authorized": true,
+    "load_smoke_authorized": false,
+    "inference_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false
+  },
+  "next_action": "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

@@ -1,0 +1,46 @@
+{
+  "format": "OROTITAN_GATE18_QWEN3_5_POST_CONSTELLATION_STRATEGY_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-QWEN3_5-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_QWEN3_5_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "trigger": {
+    "engineering_result": "ENGINEERING_PASS",
+    "human_adjudication_result": "CRITICAL_HUMAN_QUALITY_FAILURE",
+    "runtime_adapter_confound_removed": true,
+    "raw_presentation_compliant": true,
+    "substantive_deterministic_semantics_pass": true,
+    "critical_human_grounding_failure": true
+  },
+  "decision": {
+    "qwen3_5_c4_expansion": "STOP",
+    "retain_as_calibration_evidence": true,
+    "additional_qwen3_5_c4_inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "qwen3_5_candidate_production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "qwen3_5_family_global_failure_concluded": false,
+    "model_winner_selected": false,
+    "routing_frozen": false
+  },
+  "rationale": [
+    "The clean think-false retry removed runtime-adapter and presentation confounds.",
+    "The remaining critical defect is human-quality evidence grounding, including overstatement of an E-045 replacement RFP as completed replacement.",
+    "Weak-link coverage duplicated one candidate and unresolved-point usefulness was low.",
+    "Further Qwen3.5 matrix expansion has lower information gain than advancing the pre-registered escalation sequence."
+  ],
+  "next_candidate": {
+    "candidate_id": "GEMMA3_4B_OLLAMA_Q4_K_M",
+    "first_step": "LICENSE_AND_STATIC_HARDWARE_REVIEW_THEN_PINNED_DOWNLOAD",
+    "download_executed": false,
+    "inference_executed": false
+  },
+  "preserved_boundaries": {
+    "historical_first_qwen3_5_attempt_remains_fail": true,
+    "no_retroactive_pass": true,
+    "no_global_qwen3_5_family_failure_inferred": true,
+    "no_production_mutation": true,
+    "no_private_content_publication": true
+  },
+  "next_action": "PREPARE_GEMMA3_4B_PINNED_DOWNLOAD",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

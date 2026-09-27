@@ -1,0 +1,66 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-THINKFALSE-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_THINKFALSE_001",
+  "source": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-QWEN3_5-4B-V1_1-THINKFALSE-RESULT-001",
+    "private_run_attachment_reviewed": true,
+    "pinned_private_evidence_packet_reviewed": true,
+    "original_output_adjudicated_as_emitted": true,
+    "private_packet_content_persisted_publicly": false,
+    "private_raw_output_content_persisted_publicly": false
+  },
+  "engineering_disposition": {
+    "runtime_pass": true,
+    "schema_valid": true,
+    "v1_1_raw_presentation_compliant": true,
+    "v1_1_safe_normalization_count": 0,
+    "v1_1_substantive_semantic_pass": true,
+    "deterministic_semantic_failure": false,
+    "output_budget_fully_consumed": false,
+    "output_token_margin": 71,
+    "disposition": "CLEAN_ENGINEERING_PASS"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "FAIL",
+    "claim_atomicity": "PASS",
+    "claim_target_alignment": "PASS_WITH_DEFECT",
+    "support_counterevidence_polarity": "PASS",
+    "qualification_orthogonality": "PASS_WITH_DEFECT",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "FAIL",
+    "unresolved_point_usefulness": "FAIL",
+    "judgment_boundary_compliance": "PASS",
+    "priority_selection_usefulness": "FAIL"
+  },
+  "failure_codes": [
+    "E045_REPLACEMENT_RFP_OVERSTATED_AS_COMPLETED_REPLACEMENT",
+    "E045_CAUSAL_LINK_OVERSTATES_RFP_STATE_AS_EVENTUAL_REPLACEMENT_OUTCOME",
+    "WEAK_LINK_CANDIDATES_EXACT_DUPLICATES",
+    "UNRESOLVED_RETENTION_DISCLOSURE_QUESTION_ALREADY_ANSWERED_BY_E063",
+    "PRIORITY_SELECTION_OMITS_DIRECT_SERIAL_ACQUIRER_MOAT_INPUTS_E066_AND_E067"
+  ],
+  "disposition": {
+    "automated_engineering_pass": true,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": true,
+    "clean_pass": false,
+    "pass_with_carry": false,
+    "matrix_cell_completed": true
+  },
+  "authority": {
+    "retry_authorized": false,
+    "new_inference_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "STOP_QWEN3_5_C4_EXPANSION_AND_ADVANCE_ESCALATION_SEQUENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
