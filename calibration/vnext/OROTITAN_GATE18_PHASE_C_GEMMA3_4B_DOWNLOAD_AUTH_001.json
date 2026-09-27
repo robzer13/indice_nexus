@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_QWEN3_5_CANDIDATE_ESCALATION_DOWNLOAD",
-  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
+  "status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "user_authorization": {
     "explicit": true,
     "gemma_terms_accepted": true,
@@ -67,6 +67,21 @@
     "api_show_capture": true,
     "no_load_or_inference_until_separate_load_only_step": true
   },
-  "next_action": "EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "PREPARE_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "authority": {
+    "gemma3_download_authorized": false,
+    "gemma3_load_smoke_authorized": false,
+    "gemma3_inference_authorized": false,
+    "model_switch_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-GEMMA3-4B-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "retry_authorized": false
+  }
 }
