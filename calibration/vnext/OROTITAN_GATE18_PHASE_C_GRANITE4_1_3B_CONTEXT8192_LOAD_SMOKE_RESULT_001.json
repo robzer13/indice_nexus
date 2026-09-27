@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT8192_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_MINISTRAL3_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "granite4.1:3b-q4_K_M",
+    "digest": "6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb",
+    "context_tokens": 8192,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 2.09,
+    "loaded_free_ram_gib": 0.91,
+    "after_free_ram_gib": 1.68,
+    "loaded_vram_used_mib": 2355,
+    "loaded_vram_free_mib": 1608,
+    "processor_split": "22%/78% CPU/GPU",
+    "ollama_reported_size": "3.1 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload",
+    "after_vram_used_mib": 0,
+    "after_vram_free_mib": 3962
+  },
+  "derived": {
+    "ram_delta_before_to_loaded_gib": 1.18,
+    "vram_increment_mib": 2355,
+    "vram_headroom_mib": 1608,
+    "comparison_to_granite4_1_context4096": {
+      "loaded_free_ram_delta_gib": -0.48,
+      "vram_headroom_delta_mib": -34,
+      "gpu_residency_delta_percentage_points": -7
+    },
+    "comparison_to_granite4_context8192": {
+      "loaded_free_ram_delta_gib": -0.03,
+      "vram_headroom_delta_mib": 0,
+      "processor_split_same": true,
+      "interpretation": "HOST_STATE_SENSITIVE_RAM_DIFFERENCE_NOT_TREATED_AS_STRUCTURAL"
+    }
+  },
+  "safety": {
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_8192": "PASS_WITH_USEFUL_HEADROOM",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context16384_load_only_justified": true
+  },
+  "next_action": "EXECUTE_GRANITE4_1_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
