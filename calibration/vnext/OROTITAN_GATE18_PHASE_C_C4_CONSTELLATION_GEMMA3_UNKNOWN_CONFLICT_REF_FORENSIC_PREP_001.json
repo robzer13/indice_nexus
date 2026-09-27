@@ -1,0 +1,37 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GEMMA3_UNKNOWN_CONFLICT_REF_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-UNKNOWN-CONFLICT-REF-FORENSIC-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DETERMINISTIC_SEMANTIC_FORENSICS",
+  "status": "PREPARED_LOCAL_READ_ONLY_NO_INFERENCE",
+  "source_forensic": "G18-PHASEC-C4-CONSTELLATION-GEMMA3-COUNTEREVIDENCE-LINK-FORENSIC-RESULT-001",
+  "expected_downstream_error": "VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF",
+  "purpose": [
+    "Enumerate conflict references by output section after reproducing v1.1 presentation normalization and the first narrow counterevidence-link diagnostic normalization.",
+    "Identify conflict references absent from the canonical packet without printing private narrative text.",
+    "Remove only unknown conflict references or unknown material-conflict entries on an in-memory diagnostic copy.",
+    "Rerun the frozen v1.0 semantic validator to reveal whether another downstream deterministic defect remains."
+  ],
+  "diagnostic_normalization": {
+    "cumulative": true,
+    "first_rule": "Set counterevidence_link to null only when counterevidence_ids is empty.",
+    "second_rule": "Remove only conflict references not present in the canonical packet; drop a material_conflicts entry only when its conflict_id is unknown.",
+    "in_memory_only": true,
+    "source_artifact_mutation": false,
+    "generated_content_publication": false,
+    "retroactive_pass_allowed": false,
+    "auto_repair": false
+  },
+  "authority": {
+    "inference_authorized": false,
+    "retry_authorized": false,
+    "model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GEMMA3_CONSTELLATION_UNKNOWN_CONFLICT_REF_FORENSIC"
+}
