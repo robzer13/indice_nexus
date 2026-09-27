@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Ministral 3 3B context4096 critical-RAM pass to diagnostic context8192 load-only", () => {
+test("Phase C advances from Ministral 3 3B context8192 critical-RAM pass to final context16384 load-only", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Ministral 3 3B context4096 critical-RAM pass to diag
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_MINISTRAL3_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_MINISTRAL3_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -209,8 +209,15 @@ test("Phase C advances from Ministral 3 3B context4096 critical-RAM pass to diag
   assert.equal(entry.ministral3_3b_context4096_vram_free_mib, 1566);
   assert.equal(entry.ministral3_3b_context4096_processor_split, "48%/52% CPU/GPU");
   assert.equal(entry.ministral3_3b_context4096_hardware_fit, "PASS_WITH_CRITICAL_RAM_PRESSURE");
-  assert.equal(entry.ministral3_3b_context8192_load_authorized, true);
-  assert.equal(entry.ministral3_3b_context8192_load_authorized_run_count, 1);
-  assert.equal(entry.ministral3_3b_context16384_load_authorized, false);
+  assert.equal(entry.ministral3_3b_context8192_load_authorized, false);
+  assert.equal(entry.ministral3_3b_context8192_load_authorized_run_count, 0);
+  assert.equal(entry.ministral3_3b_context8192_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.ministral3_3b_context8192_loaded_free_ram_gib, 0.38);
+  assert.equal(entry.ministral3_3b_context8192_vram_used_mib, 2407);
+  assert.equal(entry.ministral3_3b_context8192_vram_free_mib, 1556);
+  assert.equal(entry.ministral3_3b_context8192_processor_split, "54%/46% CPU/GPU");
+  assert.equal(entry.ministral3_3b_context8192_hardware_fit, "PASS_WITH_CRITICAL_RAM_PRESSURE");
+  assert.equal(entry.ministral3_3b_context16384_load_authorized, true);
+  assert.equal(entry.ministral3_3b_context16384_load_authorized_run_count, 1);
   assert.equal(entry.ministral3_3b_inference_authorized, false);
 });

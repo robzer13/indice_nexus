@@ -9,29 +9,27 @@ Status: COMPLETE_PASS_PINNED
 ## OI-003 — Ministral 3 3B context4096
 Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
 
+## OI-004 — Ministral 3 3B context8192
+Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+
 Measured:
-- loaded free RAM: 0.35 GiB;
-- loaded free VRAM: 1566 MiB;
-- processor split: 48%/52% CPU/GPU;
-- explicit unload: complete.
+- loaded free RAM: 0.38 GiB;
+- loaded free VRAM: 1556 MiB;
+- processor split: 54%/46% CPU/GPU;
+- unload complete.
 
 This is not inference qualification.
 
-## OI-004 — Ministral 3 3B context8192 diagnostic load-only
+## OI-005 — Ministral 3 3B context16384 final diagnostic
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Exactly one guarded context8192 load-only run is authorized. No prompt or inference.
-
-## OI-005 — Ministral 3 3B context16384
-Status: NOT_AUTHORIZED
-
-Any further context growth requires review of the 8192 measurement.
+Exactly one guarded context16384 load-only run is authorized. No prompt or inference.
 
 ## OI-006 — Ministral 3 3B semantic inference
-Status: NOT_AUTHORIZED
+Status: BLOCKED_BY_OI-005
 
-No inference until hardware fit is explicitly re-evaluated.
+No inference is authorized before explicit review of context16384.
 
 ## OI-007 — Model winner and routing
 Status: OPEN_GUARDED
