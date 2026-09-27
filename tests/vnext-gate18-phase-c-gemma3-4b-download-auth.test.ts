@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Ministral 3 3B human adjudication to next-candidate registry refresh", () => {
+test("Phase C advances from Ministral stop to Granite 4.1 pinned download", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Ministral 3 3B human adjudication to next-candidate 
 
   assert.equal(
     entry.next_action,
-    "REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_SELECT_NEXT_SAME_WEIGHT_CLASS_CANDIDATE",
+    "EXECUTE_GRANITE4_1_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -102,7 +102,7 @@ test("Phase C advances from Ministral 3 3B human adjudication to next-candidate 
   );
   assert.equal(entry.gemma3_c4_expansion_status, "STOPPED_RETAIN_CALIBRATION_EVIDENCE");
   assert.equal(entry.gemma3_family_global_failure_concluded, false);
-  assert.equal(entry.next_candidate, "NOT_SELECTED");
+  assert.equal(entry.next_candidate, "GRANITE4_1_3B_OLLAMA_Q4_K_M");
   assert.equal(entry.granite4_3b_model_name, "granite4:3b");
   assert.equal(entry.granite4_3b_download_authorized, false);
   assert.equal(entry.granite4_3b_download_executed, true);
@@ -245,4 +245,61 @@ test("Phase C advances from Ministral 3 3B human adjudication to next-candidate 
   assert.equal(entry.ministral3_first_c4_raw_presentation_compliant, true);
   assert.equal(entry.ministral3_first_c4_normalized_path_count, 0);
   assert.equal(entry.ministral3_first_c4_human_adjudication_required, true);
+});
+
+
+test("2026 registry refresh selects Granite 4.1 3B before Llama 3.2", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_003.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.selected_next_candidate, "GRANITE4_1_3B_OLLAMA_Q4_K_M");
+  assert.equal(r.candidates[0].model_id, "granite4.1:3b-q4_K_M");
+  assert.equal(r.candidates[0].ollama_digest_prefix, "6fd349357287");
+  assert.equal(r.candidates[0].ollama_artifact_size_gb, 2.1);
+  assert.equal(r.candidates[0].quantization, "Q4_K_M");
+  assert.equal(r.candidates[0].context_window_tokens, 128000);
+  assert.equal(r.candidates[1].candidate_id, "LLAMA3_2_3B_OLLAMA_Q4_K_M");
+  assert.equal(r.authority.inference_authorized, false);
+});
+
+test("Granite 4.1 3B download authorization is exact and non-inferential", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_DOWNLOAD_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY");
+  assert.equal(a.model.ollama_model_name, "granite4.1:3b-q4_K_M");
+  assert.equal(a.model.expected_digest_prefix, "6fd349357287");
+  assert.equal(a.model.expected_quantization, "Q4_K_M");
+  assert.equal(a.execution.action_count_authorized, 1);
+  assert.equal(a.authority.granite4_1_download_authorized, true);
+  assert.equal(a.authority.granite4_1_load_smoke_authorized, false);
+  assert.equal(a.authority.granite4_1_inference_authorized, false);
+  assert.equal(a.constraints.automatic_retry, false);
+});
+
+test("Granite 4.1 3B download verifier pulls exact tag and performs no inference", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-granite4-1-3b-download-verify.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /const MODEL = "granite4\.1:3b-q4_K_M"/);
+  assert.match(raw, /const EXPECTED_DIGEST_PREFIX = "6fd349357287"/);
+  assert.match(raw, /const EXPECTED_QUANTIZATION = "Q4_K_M"/);
+  assert.match(raw, /ollama", \["pull", MODEL\]/);
+  assert.match(raw, /\/api\/tags/);
+  assert.match(raw, /\/api\/show/);
+  assert.doesNotMatch(raw, /\/api\/generate/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
+  assert.doesNotMatch(raw, /prompt\s*:/);
+  assert.match(raw, /modelInferenceExecuted: false/);
+  assert.match(raw, /loadSmokeExecuted: false/);
 });
