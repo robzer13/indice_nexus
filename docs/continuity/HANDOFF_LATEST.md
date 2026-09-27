@@ -1,45 +1,44 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-043`
+Resume ID: `VNEXT-G18-C-20260927-044`
 
-## Granite 4.1 3B — pinned download result
+## Granite 4.1 3B — context4096 load-only result
 
-Status: `PASS_PINNED_DOWNLOAD_ONLY`
+Status: `PASS_LOAD_ONLY_MEASURED`
 
-Exact local identity:
-- model: `granite4.1:3b-q4_K_M`;
-- digest: `6fd349357287c7ffc9e38189a93b48ea175d24fc566b38f09cfc564fb7f303eb`;
-- size: 2099520281 bytes;
-- format: GGUF;
-- family: granite;
-- Ollama-reported parameter size: 3.4B;
-- quantization: Q4_K_M.
+Measured:
+- before free RAM: 1.69 GiB;
+- loaded free RAM: 1.39 GiB;
+- after free RAM: 1.95 GiB;
+- loaded VRAM used/free: 2321 / 1642 MiB;
+- processor split: 15%/85% CPU/GPU;
+- Ollama reported loaded size: 2.7 GB;
+- load-only confirmed;
+- explicit unload complete;
+- post-unload VRAM used/free: 0 / 3962 MiB.
 
-The download authorization is consumed. No inference occurred.
+Interpretation:
+
+`PASS_WITH_COMFORTABLE_RELATIVE_HEADROOM`
+
+The 4096 authorization is consumed.
 
 ## Current authorized step
 
-`EXECUTE_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT`
+`EXECUTE_GRANITE4_1_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT`
 
-Authorization: `G18-PHASEC-GRANITE4_1-3B-LOAD-SMOKE-AUTH-001`
+Authorization:
 
-Target:
-- exact pinned digest above;
-- context 4096;
-- load only;
-- resource snapshots before / loaded / after;
-- explicit unload.
+`G18-PHASEC-GRANITE4_1-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001`
 
-No semantic inference, retry, context growth or model switch is authorized.
+One exact load-only execution at 8192 context tokens is authorized.
 
-Execution contract:
+No semantic inference, retry, model switch or context growth beyond 8192 is authorized.
 
-`calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_001.json`
+Protocol:
 
-## Deferred candidate
-
-`LLAMA3_2_3B_OLLAMA_Q4_K_M` remains deferred after Granite 4.1.
+`calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_3B_CONTEXT8192_LOAD_ONLY_PROTOCOL_001.json`
 
 ## Exact next action
 
-`EXECUTE_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT`
+`EXECUTE_GRANITE4_1_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT`

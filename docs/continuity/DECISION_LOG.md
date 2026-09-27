@@ -1371,3 +1371,24 @@ No semantic inference, retry, context change, model switch, production mutation 
 
 Execution contract: `G18-PHASEC-GRANITE4_1-3B-CONTEXT4096-LOAD-ONLY-PROTOCOL-001`.
 
+## D-2026-09-27-077 — Granite 4.1 context4096 load-only passes with comfortable relative headroom
+
+Observed:
+- loaded free RAM: 1.39 GiB;
+- loaded VRAM used/free: 2321 / 1642 MiB;
+- processor split: 15%/85% CPU/GPU;
+- explicit unload complete;
+- no semantic inference.
+
+Disposition:
+
+`PASS_WITH_COMFORTABLE_RELATIVE_HEADROOM`
+
+Compared with Granite 4 3B at 4096, free RAM while loaded is 0.33 GiB higher while VRAM headroom is effectively unchanged.
+
+## D-2026-09-27-078 — Authorize one Granite 4.1 context8192 load-only preflight
+
+The 4096 result justifies one separate context8192 load-only measurement.
+
+No inference, retry, model switch or context growth beyond 8192 is authorized.
+
