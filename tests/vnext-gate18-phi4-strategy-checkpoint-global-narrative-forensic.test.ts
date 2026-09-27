@@ -116,6 +116,10 @@ test("Phase C keeps second Phi-4 C4 cell blocked after the strategy discriminato
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
-  assert.equal(entry.v1_1_contract_change_authorized, false);
+  assert.equal(entry.v1_1_contract_change_authorized, true);
+  assert.equal(
+    entry.v1_1_contract_change_authorization_id,
+    "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  );
   assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
 });

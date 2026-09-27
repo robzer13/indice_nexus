@@ -69,3 +69,51 @@ The replay supports `A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION` as the pref
 
 Authority boundary:
 This is not a v1.1 contract implementation or authorization. Historical v1.0 results remain immutable; human quality and model winner/routing are unchanged.
+
+
+## D-2026-09-27-006 — User authorizes versioned v1.1 validation contract change
+
+Authority:
+Explicit user authorization in chat: `ok autorisation`.
+
+Authorized implementation:
+`GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1`.
+
+Normative boundary:
+- keep v1.0 prompt and generation schema unchanged;
+- preserve raw output and raw presentation-compliance result;
+- safe normalization may append one period only;
+- preserve all existing characters;
+- no lexical repair, deletion, replacement, or reordering;
+- never normalize into the >=178 saturation boundary;
+- do not run substantive semantic validation while a presentation blocker remains;
+- reuse frozen v1.0 semantic validators only after presentation compliance;
+- keep human-quality adjudication separate;
+- preserve all historical v1.0 results.
+
+Not authorized:
+New inference, second Phi-4 C4 cell, Qwen3.5 download, model switch, production mutation, publication, or retroactive pass.
+
+
+## D-2026-09-27-007 — Versioned v1.1 validation contract implemented and CI-verified
+
+Result:
+`GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1` is implemented as an additive validation layer.
+
+Verification:
+- VNext CI PASS;
+- Screener CI PASS;
+- lint PASS;
+- typecheck PASS;
+- unit and contract tests PASS;
+- PostgreSQL migration tests PASS;
+- production build PASS.
+
+Preserved boundary:
+v1.0 remains unchanged and historical v1.0 outcomes are not reclassified.
+
+Execution boundary:
+No model inference was executed. A second Phi-4 C4 cell remains unauthorized.
+
+Next decision:
+`DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1`.

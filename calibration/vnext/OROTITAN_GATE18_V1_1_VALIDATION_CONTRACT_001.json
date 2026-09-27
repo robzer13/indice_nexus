@@ -1,0 +1,72 @@
+{
+  "format": "OROTITAN_GATE18_V1_1_VALIDATION_CONTRACT_V0.1",
+  "contract_id": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+  "contract_version": "1.1",
+  "status": "IMPLEMENTED_CI_PASS",
+  "architecture": "A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION",
+  "evidence_basis": {
+    "shadow_replay_case_count": 6,
+    "punctuation_only_fail_to_shadow_semantic_pass_count": 3,
+    "retained_substantive_semantic_failure_count": 2,
+    "stable_positive_control_count": 1,
+    "human_quality_reassessed": false
+  },
+  "generation_contract": {
+    "prompt": "UNCHANGED_FROM_V1_0",
+    "generation_schema": "UNCHANGED_FROM_V1_0",
+    "reason": "Preserve generation comparability; v1.1 changes validation architecture rather than model-generation behavior."
+  },
+  "layers": [
+    "RAW_OUTPUT_SCHEMA_VALIDATION",
+    "RAW_PRESENTATION_COMPLIANCE_VALIDATION",
+    "STRICT_SAFE_PRESENTATION_NORMALIZER",
+    "SUBSTANTIVE_DETERMINISTIC_SEMANTIC_VALIDATION_ON_NORMALIZED_COPY",
+    "HUMAN_QUALITY_ADJUDICATION_SEPARATE"
+  ],
+  "raw_presentation_compliance": {
+    "narrative_fields": [
+      "priority_findings[].claim",
+      "priority_findings[].causal_link",
+      "priority_findings[].evidence_qualifications[].qualification",
+      "priority_findings[].counterevidence_link when non-null",
+      "material_conflicts[].implication",
+      "weak_link_candidates[].why_uncertain",
+      "unresolved_points[].question"
+    ],
+    "terminal_punctuation_regex": "[.!?]$",
+    "safe_narrative_boundary_exclusive": 178
+  },
+  "safe_normalization": {
+    "only_operation": "APPEND_SINGLE_PERIOD",
+    "preserves_all_existing_characters": true,
+    "raw_output_mutation": false,
+    "lexical_change": false,
+    "removal": false,
+    "replacement": false,
+    "reorder": false,
+    "precondition": "TRIMMED_LENGTH_PLUS_ONE_LT_178",
+    "saturation_repair": false
+  },
+  "substantive_validation": {
+    "implementation": "REUSE_FROZEN_V1_0_SEMANTIC_VALIDATORS_AFTER_PRESENTATION_COMPLIANCE",
+    "presentation_blocker_disposition": "NOT_EVALUATED_PRESENTATION_BLOCKER",
+    "semantic_failure_disposition": "FAIL",
+    "presentation_failure_must_not_be_labeled_semantic": true
+  },
+  "history": {
+    "historical_v1_0_results_immutable": true,
+    "retroactive_pass": false
+  },
+  "runtime_file": "runtime/vnext/model-calibration-validation-v11.ts",
+  "authority": "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  "verification": {
+    "vnext_ci": "PASS",
+    "screener_ci": "PASS",
+    "lint": "PASS",
+    "typecheck": "PASS",
+    "unit_and_contract_tests": "PASS",
+    "postgres_migration_tests": "PASS",
+    "production_build": "PASS",
+    "model_inference_executed": false
+  }
+}

@@ -1,90 +1,84 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-002`
+Resume ID: `VNEXT-G18-C-20260927-004`
 
 ## Where we are
 
 Repository: `robzer13/indice_nexus`  
 Branch: `vnext`  
-Last verified HEAD before this checkpoint: `0bfcec7cc76862def15da10b0d4cfb563747d94d`
+Gate 18: `IN_PROGRESS_NOT_FROZEN`
 
-Gate 18 remains `IN_PROGRESS_NOT_FROZEN`.
+## v1.1 validation contract
 
-Current phase: `C_LOCAL_FIRST_MODEL_QUALIFICATION`.
+The user explicitly authorized the versioned v1.1 validation-contract change.
 
-The authorized no-inference v1.1 shadow replay has completed locally.
+Implementation:
 
-## Shadow replay result
+`runtime/vnext/model-calibration-validation-v11.ts`
 
-Six existing artifacts were replayed. No new inference was executed and no source artifact or historical v1.0 result was mutated.
+Contract:
 
-### Presentation-only failures cleared in shadow semantics
+`calibration/vnext/OROTITAN_GATE18_V1_1_VALIDATION_CONTRACT_001.json`
 
-- `PHI4_ADYEN_TARGETED_001`: 2 missing terminal punctuation fields; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
-- `PHI4_STMICRO_FULL_001`: 13/13 narrative fields missing terminal punctuation; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
-- `QWEN3_4B_ADYEN_TARGETED_001`: 2 missing terminal punctuation fields; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
+Authorization:
 
-Historical raw v1.0 statuses remain unchanged.
+`calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_CHANGE_AUTH_001.json`
 
-### Substantive semantic failures retained
+Status: `IMPLEMENTED_CI_PASS`.
 
-- `QWEN3_4B_BROOKFIELD_FULL_001`: remains `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS` after safe punctuation normalization.
-- `QWEN3_4B_RATIONAL_FULL_001`: remains `VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS`. One separate narrative field is at the saturation boundary and is intentionally not normalized.
+PR: #257.
 
-### Positive control
+## Verified architecture
 
-- `QWEN3_4B_STMICRO_FULL_CONTROL_001`: raw automated PASS remains PASS; no normalization required.
+v1.1 is additive. The v1.0 runtime, prompt, generation schema, and historical results are not rewritten.
 
-## Validator-source verification
+Validation order:
 
-The v1.0 source confirms that `assertCompleteNarrative` checks only:
+1. raw schema;
+2. raw presentation compliance;
+3. safe presentation normalization on a copy;
+4. presentation compliance re-check;
+5. frozen v1.0 substantive semantic validator;
+6. human-quality adjudication remains separate.
 
-1. terminal punctuation `[.!?]`; and
-2. narrative saturation at length >= 178.
+Safe normalization is restricted to appending one period while preserving all existing characters. It is forbidden when the normalized trimmed field would reach or exceed the frozen 178-character boundary.
 
-The field-specific `*_INCOMPLETE` codes used in the replay are emitted by the terminal-punctuation branch. Saturation uses the distinct `VNEXT_GATE18_V10_NARRATIVE_BOUNDARY_SATURATION` code. The targeted Adyen validator delegates to the same full semantic validator.
+If presentation remains noncompliant, substantive semantics are `NOT_EVALUATED_PRESENTATION_BLOCKER`, not semantic FAIL.
 
-Therefore the shadow replay's classification of these observed `*_INCOMPLETE` failures as presentation compliance is supported by the implementation.
+An invariant guard throws if a v1.0 presentation error leaks through after the v1.1 presentation layer.
 
-## Diagnostic conclusion
+## CI verification
 
-The evidence supports the architecture hypothesis `A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION` for the limited purpose tested:
-
-- it unblocks deterministic semantic evaluation when the raw defect is punctuation-only;
-- it does not erase retained substantive semantic failures;
-- it leaves a clean positive control unchanged;
-- it preserves raw output and historical v1.0 disposition.
-
-This does not constitute authorization to implement v1.1 and does not reassess human quality or model fitness.
+- VNext lint: PASS
+- VNext typecheck: PASS
+- VNext unit/contract tests: PASS
+- PostgreSQL migration tests: PASS
+- production build: PASS
+- Screener CI: PASS
 
 ## Preserved truths
 
-- No retroactive PASS.
-- Historical v1.0 results remain immutable.
-- Phi-4 STMicro raw v1.0 status remains FAIL.
-- Qwen3 4B Brookfield and RATIONAL substantive failures remain.
-- Human quality was not reassessed.
-- No model winner is selected.
-- Routing is not frozen.
+- historical v1.0 statuses remain immutable;
+- no retroactive PASS;
+- Phi-4 STMicro raw v1.0 remains FAIL;
+- Qwen3 4B Brookfield and RATIONAL substantive failures remain;
+- no human-quality reassessment;
+- no model winner;
+- routing is not frozen.
 
-## Explicitly not authorized
+## Still not authorized
 
 - new model inference;
 - second Phi-4 C4 cell;
 - Qwen3.5 download;
 - model switch;
-- v1.1 contract implementation;
 - production mutation;
 - publication.
 
 ## Exact next action
 
 ```text
-DECIDE_AND_AUTHORIZE_OR_REJECT_VERSIONED_V1_1_CONTRACT_CHANGE
+DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1
 ```
 
-If a v1.1 contract change is authorized, its normative specification must be versioned, narrowly limit normalization to non-lexical terminal punctuation, preserve raw compliance separately, preserve historical v1.0 outcomes, and keep human-quality adjudication separate.
-
-## Resume rule
-
-On a new chat, load `CURRENT_STATE.json`, this file, recent decision-log entries, and open issues. Verify Git HEAD and reconcile any commits after the stored `last_verified_head_sha` before continuing.
+The v1.1 contract is complete. The next decision is separate: whether to resume Phi-4 C4 qualification under this contract and, if so, which exact bounded cell is authorized.

@@ -90,10 +90,16 @@ test("v1.1 shadow replay runner performs punctuation-only normalization and no m
   assert.doesNotMatch(raw, /fetch\(/);
 });
 
-test("contract review advances only to shadow replay, not v1.1 implementation or another model", () => {
+test("historical shadow review remains immutable while current Phase C records later v1.1 authorization", () => {
   const review = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_ARCHITECTURE_REVIEW_PREP_001.json",
+      "utf8",
+    ),
+  );
+  const auth = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_CHANGE_AUTH_001.json",
       "utf8",
     ),
   );
@@ -111,13 +117,26 @@ test("contract review advances only to shadow replay, not v1.1 implementation or
   assert.equal(review.authority.shadow_validator_implementation_authorized, true);
   assert.equal(review.authority.shadow_replay_execution_authorized, true);
   assert.equal(review.authority.v1_1_contract_change_authorized, false);
+
+  assert.equal(
+    auth.authorization_id,
+    "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  );
+  assert.equal(auth.scope.versioned_v1_1_validation_contract_change, true);
+
   assert.equal(entry.v1_1_shadow_replay_execution_authorized, true);
-  assert.equal(entry.v1_1_contract_change_authorized, false);
+  assert.equal(entry.v1_1_contract_change_authorized, true);
+  assert.equal(
+    entry.v1_1_contract_change_authorization_id,
+    "G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001",
+  );
+  assert.equal(entry.v1_1_contract_implemented, true);
+  assert.equal(entry.v1_1_contract_ci_status, "PASS");
   assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
   assert.equal(entry.qwen3_5_download_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
   assert.equal(
     entry.next_action,
-    "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
+    "DECIDE_PHI4_C4_RESUMPTION_UNDER_V1_1",
   );
 });
