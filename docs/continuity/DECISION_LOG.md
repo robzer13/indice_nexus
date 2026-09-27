@@ -340,3 +340,46 @@ The historical first attempt remains FAIL and is not reclassified. The retry aut
 Next action:
 Human-quality adjudication of the private raw output against the pinned private evidence packet.
 
+## D-2026-09-27-020 — Qwen3.5 Constellation human adjudication finds critical grounding failure
+
+Observed:
+- the clean `think:false` retry remains an engineering PASS;
+- raw presentation compliance PASS with zero normalization;
+- substantive deterministic semantics PASS;
+- human adjudication finds exact-evidence-grounding failure.
+
+Material defect:
+`E-045` describes a replacement RFP after approximately 20 years of operation, while the generated finding states that the customer replaced the system.
+
+Additional defects:
+- exact duplicate weak-link candidates;
+- low-information unresolved points;
+- priority selection underweights serial-acquirer-specific moat evidence.
+
+Disposition:
+Stop Qwen3.5 C4 expansion and retain the candidate as calibration evidence.
+
+Boundary:
+No global Qwen3.5-family failure is inferred. No model ranking, routing freeze, production mutation, retry, or retroactive pass follows.
+
+## D-2026-09-27-021 — Gemma 3 terms accepted and pinned download authorized
+
+Public verification:
+- exact Ollama tag `gemma3:4b-it-q4_K_M`;
+- public digest prefix `a2af6cc3eb7f`;
+- approximately 3.3GB;
+- 128K context;
+- Q4_K_M target.
+
+Terms:
+Gemma Terms of Use last modified 2026-04-01 were reviewed. The user explicitly stated `j’accepte les Gemma Terms`.
+
+Static hardware disposition:
+`PLAUSIBLE_BUT_TIGHT_UNPROVEN`.
+
+Authorized action:
+Exactly one local pinned download plus identity verification. No load smoke, prompt, inference, automatic retry, model switch, production mutation, or paid action.
+
+Next:
+After a successful pinned download and full digest capture, prepare a separate context4096 load-only memory preflight.
+
