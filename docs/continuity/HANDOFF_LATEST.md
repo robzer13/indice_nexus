@@ -1,54 +1,68 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-034`
+Resume ID: `VNEXT-G18-C-20260927-035`
 
 ## Qwen3 8B Constellation C4
 
-Engineering status:
+Engineering:
 
-`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
+`CLEAN_ENGINEERING_PASS`
 
-Observed:
-- model: `qwen3:8b-q4_K_M`;
-- exact digest preserved;
-- `think:false`;
-- baseline free RAM: 3.59 GiB;
-- minimum guard: 1.0 GiB;
-- wall clock: 519551 ms;
-- done reason: `stop`;
-- prompt eval: 3356;
-- eval: 860 / 1024;
-- output margin: 164;
-- runtime error: null;
-- schema PASS;
-- semantic PASS;
-- raw presentation PASS;
-- normalized paths: 0.
+Human adjudication:
 
-This is the strongest engineering result observed so far on the same Constellation C4 cell, but human quality is not yet adjudicated and production hardware fit remains unproven.
+`CRITICAL_FAILURE`
 
-## Human adjudication next step
+Key adjudication findings:
+- E-045 is still overstated from a replacement RFP/process into an eventual replacement outcome;
+- E-063 is re-asked as an unresolved low-retention/transparency question even though the packet already fixes the epistemic boundary: nondisclosure is not evidence of low retention;
+- C-005 is surfaced correctly and remains unresolved;
+- no evidence/conflict IDs are invented;
+- priority selection remains weak: direct switching-cost / serial-acquirer inputs such as E-043 and E-067 are omitted from priority findings, while E-066 is relegated to an unresolved point.
 
-Public prep:
-`G18-PHASEC-C4-CONSTELLATION-QWEN3-8B-HUMAN-ADJUDICATION-PREP-001`
+Disposition:
 
-Private bundle runner:
-`scripts/vnext-gate18-phase-c-qwen3-8b-human-adjudication-bundle.ts`
+`STOP_QWEN3_8B_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
 
-The bundle reconstructs the exact pinned Constellation packet from the private repo and combines it with the original private model response. It writes only under `calibration/vnext/private-runs/`; it performs no inference and publishes no private source content.
+No global Qwen3-family failure is inferred. Qwen3 8B is not admitted for production from current evidence. No retry or further Qwen3 8B inference is authorized.
 
-Required checks include:
-- E-045 RFP overstatement;
-- E-029 acquisition-criteria universalization;
-- E-063 false unresolved-retention question;
-- duplicate recurring-revenue priority slots;
-- omission of E-066/E-067;
-- handling of C-005.
+## Next candidate — Ministral 3 3B
 
-No further Qwen3 8B inference or retry is authorized.
+Candidate:
+
+`MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M`
+
+Exact Ollama tag:
+
+`ministral-3:3b-instruct-2512-q4_K_M`
+
+Pinned public identity:
+- digest prefix: `f04aa1c738f6`;
+- artifact: ~3.0 GB;
+- parameters: 3.85B;
+- quantization: Q4_K_M;
+- context: 256K;
+- license: Apache-2.0.
+
+Authorization:
+
+`G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-AUTH-001`
+
+Runner:
+
+`scripts/vnext-gate18-phase-c-ministral3-3b-download-verify.ts`
+
+Boundaries:
+- one exact-model download only;
+- identity verification only;
+- no load smoke;
+- no inference;
+- no automatic retry;
+- no model switch;
+- no paid execution;
+- no production mutation.
 
 ## Exact next action
 
 ```text
-GENERATE_PRIVATE_QWEN3_8B_HUMAN_ADJUDICATION_BUNDLE
+EXECUTE_MINISTRAL3_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY
 ```
