@@ -1,0 +1,125 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_V0.1",
+  "refresh_id": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20260927-003",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "checked_at": "2026-09-27",
+  "trigger": "G18-PHASEC-MINISTRAL3-POST-CONSTELLATION-DISPOSITION-001",
+  "completed_sequence": [
+    "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "GEMMA3_4B_OLLAMA_Q4_K_M",
+    "GRANITE4_3B_OLLAMA_Q4_K_M",
+    "QWEN3_8B_LOCAL",
+    "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M"
+  ],
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "granite4_3b_artifact_size_gb": 2.1,
+    "granite4_3b_context16384_loaded_free_ram_gib": 0.41,
+    "ministral3_3b_context16384_loaded_free_ram_gib": 1.21,
+    "target_weight_class": "~2.0GB_TO_3.0GB_Q4_CLASS",
+    "selection_implication": "Prefer a current same-weight candidate before revisiting materially larger 8B-class artifacts."
+  },
+  "candidate_outcomes": {
+    "PHI4_MINI_3_8B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "QWEN3_5_4B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GEMMA3_4B_OLLAMA_Q4_K_M": "STOPPED_DETERMINISTIC_SEMANTIC_FAILURE",
+    "GRANITE4_3B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "QWEN3_8B_LOCAL": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE_AND_EXTREME_RAM_PRESSURE",
+    "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+  },
+  "candidates": [
+    {
+      "order": 1,
+      "candidate_id": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+      "family": "Granite 4.1",
+      "model_id": "granite4.1:3b-q4_K_M",
+      "ollama_digest_prefix": "6fd349357287",
+      "ollama_artifact_size_gb": 2.1,
+      "parameters": "3B",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 128000,
+      "input_mode": "TEXT",
+      "license": "Apache-2.0",
+      "release_date": "2026-04-28",
+      "hardware_fit_static": "STRONG_BY_SAME_ARTIFACT_CLASS_AS_GRANITE4_3B",
+      "information_gain": "HIGH_SUCCESSOR_GENERATION_STRUCTURED_JSON_DISCRIMINATOR",
+      "state": "ACTIVE_NEXT_CANDIDATE",
+      "rationale": "Current 2026 Granite successor at the same 2.1GB Q4_K_M artifact class as the already measured Granite 4 3B path. Public Ollama documentation explicitly states structured JSON output support, making it a targeted discriminator for whether the 4.1 revision improves contract-following without increasing hardware pressure."
+    },
+    {
+      "order": 2,
+      "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+      "family": "Llama 3.2",
+      "model_id": "llama3.2:3b-instruct-q4_K_M",
+      "ollama_digest_prefix": "a80c4f17acd5",
+      "ollama_artifact_size_gb": 2,
+      "parameters": "3.21B",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 128000,
+      "input_mode": "TEXT",
+      "license": "Llama 3.2 Community License",
+      "hardware_fit_static": "STRONG",
+      "information_gain": "MEDIUM_HIGH_NEW_FAMILY_BUT_OLDER_GENERATION",
+      "state": "DEFERRED_AFTER_GRANITE4_1_3B",
+      "rationale": "Different model family and excellent hardware fit, but materially older than Granite 4.1 and without the same explicit structured-JSON positioning in the current Ollama registry."
+    },
+    {
+      "order": 3,
+      "candidate_id": "QWEN3_5_2B_OLLAMA_Q4_K_M",
+      "family": "Qwen3.5",
+      "model_id": "qwen3.5:2b-q4_K_M",
+      "ollama_digest_prefix": "124a03c34777",
+      "ollama_artifact_size_gb": 1.9,
+      "parameters": "2.27B class",
+      "quantization": "Q4_K_M",
+      "context_window_tokens": 256000,
+      "input_mode": "TEXT_IMAGE",
+      "license": "Apache-2.0",
+      "hardware_fit_static": "STRONG",
+      "information_gain": "LOWER_SAME_FAILED_FAMILY_SMALLER_SCALE",
+      "state": "DEFERRED",
+      "rationale": "Current low-memory Qwen3.5 option, but the 4B candidate already failed human-quality adjudication and a smaller same-family model is lower-information than a current successor or new family."
+    },
+    {
+      "order": 4,
+      "candidate_id": "SMOLLM3_3B_UPSTREAM_RESEARCH_ONLY",
+      "family": "SmolLM3",
+      "model_id": "HuggingFaceTB/SmolLM3-3B",
+      "parameters": "3B",
+      "quantization": null,
+      "context_window_tokens": null,
+      "input_mode": "TEXT",
+      "license": "Apache-2.0",
+      "hardware_fit_static": "PLAUSIBLE",
+      "information_gain": "POTENTIALLY_HIGH_NEW_FAMILY",
+      "state": "DEFERRED_NO_OFFICIAL_OLLAMA_TAG_PINNED",
+      "rationale": "Upstream 3B Apache-2.0 model is relevant, but this refresh did not verify an official Ollama library tag with stable digest/quantization. Introducing a community GGUF would add packaging variance to the model-quality experiment."
+    }
+  ],
+  "selected_next_candidate": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+  "selection_basis": [
+    "Granite 4.1 3B is a current 2026 release and remains in the measured low-memory artifact class.",
+    "The exact Q4_K_M Ollama tag is 2.1GB with 128K context and digest prefix 6fd349357287.",
+    "Ollama explicitly documents structured JSON output support for Granite 4.1.",
+    "The selection does not infer OroTitan semantic quality from public benchmarks; it only selects the next controlled local discriminator.",
+    "Llama 3.2 3B remains the next different-family candidate if Granite 4.1 fails."
+  ],
+  "source_urls": [
+    "https://ollama.com/library/granite4.1",
+    "https://ollama.com/library/granite4.1/tags",
+    "https://ollama.com/library/llama3.2:3b-instruct-q4_K_M",
+    "https://ollama.com/library/qwen3.5/tags",
+    "https://huggingface.co/HuggingFaceTB/SmolLM3-3B"
+  ],
+  "authority": {
+    "static_registry_refresh_executed": true,
+    "download_authorized_under_standing_zero_cost_authority": true,
+    "inference_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_GRANITE4_1_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+}
