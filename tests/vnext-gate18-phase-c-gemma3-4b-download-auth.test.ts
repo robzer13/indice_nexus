@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Qwen3 8B context8192 critical-RAM pass to final context16384 load-only", () => {
+test("Phase C advances from Qwen3 8B context16384 extreme-RAM pass to one bounded think-false C4 experiment", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Qwen3 8B context8192 critical-RAM pass to final cont
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_QWEN3_8B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_ONE_BOUNDED_QWEN3_8B_CONSTELLATION_C4_THINK_FALSE_EXPERIMENT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
@@ -164,9 +164,23 @@ test("Phase C advances from Qwen3 8B context8192 critical-RAM pass to final cont
   assert.equal(entry.qwen3_8b_context8192_vram_free_mib, 1640);
   assert.equal(entry.qwen3_8b_context8192_processor_split, "64%/36% CPU/GPU");
   assert.equal(entry.qwen3_8b_context8192_hardware_fit, "PASS_WITH_CRITICAL_RAM_PRESSURE");
-  assert.equal(entry.qwen3_8b_context16384_load_authorized, true);
-  assert.equal(entry.qwen3_8b_context16384_load_authorized_run_count, 1);
-  assert.equal(entry.qwen3_8b_inference_authorized, false);
+  assert.equal(entry.qwen3_8b_context16384_load_authorized, false);
+  assert.equal(entry.qwen3_8b_context16384_load_authorized_run_count, 0);
+  assert.equal(entry.qwen3_8b_context16384_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.qwen3_8b_context16384_loaded_free_ram_gib, 0.14);
+  assert.equal(entry.qwen3_8b_context16384_vram_used_mib, 2345);
+  assert.equal(entry.qwen3_8b_context16384_vram_free_mib, 1618);
+  assert.equal(entry.qwen3_8b_context16384_processor_split, "70%/30% CPU/GPU");
+  assert.equal(entry.qwen3_8b_context16384_hardware_fit, "PASS_WITH_EXTREME_RAM_PRESSURE");
+  assert.equal(entry.qwen3_8b_hardware_qualification, "EXPERIMENTAL_INFERENCE_ONLY_EXTREME_RAM_PRESSURE");
+  assert.equal(entry.qwen3_8b_first_c4_company, "Constellation Software");
+  assert.equal(entry.qwen3_8b_first_c4_context_tokens, 16384);
+  assert.equal(entry.qwen3_8b_first_c4_max_output_tokens, 1024);
+  assert.equal(entry.qwen3_8b_first_c4_think, false);
+  assert.equal(entry.qwen3_8b_first_c4_minimum_free_ram_gib, 1.0);
+  assert.equal(entry.qwen3_8b_first_c4_inference_authorized, true);
+  assert.equal(entry.qwen3_8b_first_c4_authorized_run_count, 1);
+  assert.equal(entry.qwen3_8b_inference_authorized, true);
   assert.equal(entry.next_candidate_after_granite, "QWEN3_8B_LOCAL");
   assert.equal(entry.qwen3_8b_user_directed_test_after_granite, true);
   assert.equal(entry.qwen3_8b_direct_inference_authorized, false);
