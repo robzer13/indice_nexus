@@ -1,0 +1,43 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_QWEN3_5_4B_THINKING_MODE_COMPATIBILITY_DIAGNOSIS_V0.1",
+  "diagnosis_id": "G18-PHASEC-QWEN3_5-4B-THINKING-MODE-DIAGNOSIS-001",
+  "status": "RUNTIME_ADAPTER_CONFOUND_IDENTIFIED",
+  "model": "qwen3.5:4b-q4_K_M",
+  "source_attempt": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "observed": {
+    "request_think_parameter": "OMITTED",
+    "response_raw_text_length": 0,
+    "response_raw_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "eval_count": 842,
+    "done_reason": "stop",
+    "runtime_error": null,
+    "structured_output_parse_error": "Unexpected end of JSON input",
+    "provider_thinking_field_persisted": false
+  },
+  "evidence_boundary": {
+    "qwen3_5_thinking_capable": true,
+    "ollama_think_parameter_can_disable_thinking": true,
+    "historical_thinking_content_recoverable": false,
+    "historical_tokens_attributed_to_thinking": false
+  },
+  "disposition": {
+    "historical_attempt_remains_fail": true,
+    "historical_attempt_reclassified_as_pass": false,
+    "capability_failure_concluded": false,
+    "same_cell_retry_required_for_clean_test": true,
+    "only_runtime_change": "EXPLICIT_THINK_FALSE"
+  },
+  "retry_invariant": {
+    "company": "Constellation Software",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000,
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "generation_prompt_contract": "V1_0_UNCHANGED",
+    "generation_schema_contract": "V1_0_UNCHANGED"
+  },
+  "next_action": "EXECUTE_QWEN3_5_CONSTELLATION_SAME_CELL_RETRY_WITH_EXPLICIT_THINK_FALSE"
+}
