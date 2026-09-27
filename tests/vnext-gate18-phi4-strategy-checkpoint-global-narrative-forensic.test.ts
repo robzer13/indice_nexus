@@ -96,7 +96,7 @@ test("Global narrative forensic covers every assertCompleteNarrative field and p
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|127\.0\.0\.1:11434/);
 });
 
-test("Phase C keeps second Phi-4 C4 cell blocked after the strategy discriminator completes", () => {
+test("Historical checkpoint remains immutable while current Phase C carries one later explicit Phi-4 cell authorization", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -112,7 +112,9 @@ test("Phase C keeps second Phi-4 C4 cell blocked after the strategy discriminato
     entry.phi4_mini_c4_strategy_checkpoint_decision,
     "G18-PHASEC-PHI4-STRATEGY-CHECKPOINT-001",
   );
-  assert.equal(entry.phi4_mini_second_c4_cell_authorized, false);
+  assert.equal(entry.phi4_mini_second_c4_cell_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_inference_authorized, true);
+  assert.equal(entry.phi4_mini_c4_constellation_v1_1_authorized_run_count, 1);
   assert.equal(entry.phi4_mini_inference_authorized, false);
   assert.equal(entry.phi4_mini_c4_inference_authorized, false);
   assert.equal(entry.model_switch_authorized, false);
