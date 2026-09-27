@@ -504,3 +504,44 @@ One zero-cost local inference under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
 Boundary:
 No automatic retry, no second Gemma cell, no model ranking, no routing freeze, no production mutation, and no public generated content. Human adjudication is mandatory after an engineering PASS.
 
+## D-2026-09-27-028 — Gemma 3 first Constellation C4 run fails deterministic substantive semantics
+
+Observed:
+- same pinned Constellation packet and prompt;
+- context 16384;
+- max output 1024;
+- temperature 0;
+- timeout 600000 ms;
+- wall clock 142518 ms;
+- done reason `stop`;
+- prompt eval count 3558;
+- eval count 683;
+- output token margin 341;
+- runtime error null;
+- schema valid true;
+- semantic valid false;
+- semantic error `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`.
+
+Validation v1.1:
+- raw presentation compliant false;
+- 13 presentation-only paths normalized;
+- substantive validation remains FAIL.
+
+Interpretation:
+This is not runtime failure, schema failure, or output-budget exhaustion. The run remains historical FAIL and no retry is authorized.
+
+## D-2026-09-27-029 — Read-only Gemma Constellation counterevidence forensic selected
+
+Reason:
+The first frozen semantic error means at least one priority finding contains a non-null `counterevidence_link` with an empty `counterevidence_ids` array.
+
+Procedure:
+- reproduce v1.1 presentation normalization in memory;
+- identify violating finding indexes without printing private narrative text;
+- set only the structurally invalid links to null on an in-memory copy;
+- rerun the frozen v1.0 semantic validator;
+- report any downstream deterministic error.
+
+Boundary:
+No inference, no Ollama call, no external network, no artifact mutation, no auto-repair, no retroactive pass, and no retry authority.
+
