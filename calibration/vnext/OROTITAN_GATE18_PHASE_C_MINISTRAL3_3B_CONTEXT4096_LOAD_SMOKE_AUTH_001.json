@@ -1,0 +1,51 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_MINISTRAL3_3B_CONTEXT4096_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-MINISTRAL3-3B-CONTEXT4096-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_QWEN3_8B_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "source_download_result": "G18-PHASEC-MINISTRAL3-3B-DOWNLOAD-RESULT-001",
+  "model": {
+    "candidate_id": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+    "ollama_model_name": "ministral-3:3b-instruct-2512-q4_K_M",
+    "digest": "f04aa1c738f64e13c625b82ae92504fc0260fa6723b509ed1ece0fa188179b1d",
+    "quantization": "Q4_K_M"
+  },
+  "planned_execution": {
+    "context_tokens": 4096,
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
+    "keep_alive_load": "2m",
+    "explicit_unload": true,
+    "prompt_provided": false,
+    "semantic_inference_requested": false
+  },
+  "authority": {
+    "load_smoke_authorized": true,
+    "inference_authorized": false,
+    "download_authorized": false,
+    "authorized_run_count": 1
+  },
+  "constraints": {
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_change_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "hardware_boundary": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "expected_model_artifact_gb": 3,
+    "risk_class": "MODERATE_TO_HIGH_MEMORY_PRESSURE_EXPECTED",
+    "direct_inference_forbidden": true
+  },
+  "next_action": "EXECUTE_MINISTRAL3_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
