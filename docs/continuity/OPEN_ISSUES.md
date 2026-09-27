@@ -14,34 +14,32 @@ No global Qwen3.5-family failure inferred.
 ## OI-004 — Gemma 3 hardware qualification
 Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 
-Target context 16384 loads and unloads cleanly. No further context growth is authorized.
-
 ## OI-005 — Gemma 3 first Constellation C4 run
 Status: COMPLETE_FAIL_DETERMINISTIC_SEMANTIC_CONTRACT
 
+First semantic error:
+`VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`
+
+## OI-006 — Gemma 3 first deterministic forensic
+Status: COMPLETE_ADDITIONAL_SEMANTIC_DEFECT_FOUND
+
 Observed:
-- runtime error: none;
-- schema valid: true;
-- semantic valid: false;
-- semantic error: `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS`;
-- v1.1 normalized path count: 13;
-- substantive status: FAIL;
-- output token margin: 341.
+- all 3 priority findings had empty counterevidence IDs with non-null counterevidence links;
+- after narrow in-memory normalization, downstream error:
+  `VNEXT_GATE18_V10_UNKNOWN_CONFLICT_REF`.
 
-No retry is authorized.
-
-## OI-006 — Gemma 3 Constellation deterministic semantic forensic
+## OI-007 — Gemma 3 unknown-conflict-reference forensic
 Status: READY_LOCAL_EXECUTION
 Priority: P0
 
-Run the prepared read-only forensic against the private artifact. No inference or source mutation.
+Audit conflict references against the canonical packet, remove only unknown refs on an in-memory diagnostic copy, and rerun the frozen validator.
 
-## OI-007 — Gemma 3 post-Constellation disposition
-Status: BLOCKED_BY_OI-006
+## OI-008 — Gemma 3 post-Constellation disposition
+Status: BLOCKED_BY_OI-007
 
-Decide whether the first deterministic defect is isolated or whether additional semantic defects remain. Human-quality adjudication is not reached while engineering semantics fail.
+No retry or additional Gemma inference is authorized.
 
-## OI-008 — Model winner and routing
+## OI-009 — Model winner and routing
 Status: OPEN_GUARDED
 
 No winner selected. Routing remains unfrozen.
