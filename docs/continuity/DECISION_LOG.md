@@ -1413,3 +1413,20 @@ The 8192 result justifies one separate context16384 load-only measurement becaus
 
 No inference, retry, model switch or context growth beyond 16384 is authorized.
 
+## D-2026-09-27-081 — Granite 4.1 context16384 load-only passes with useful headroom
+
+Observed:
+- loaded free RAM: 0.84 GiB;
+- loaded VRAM used/free: 2305 / 1658 MiB;
+- processor split: 38%/62% CPU/GPU;
+- explicit unload complete;
+- no semantic inference.
+
+Disposition: `PASS_WITH_USEFUL_HEADROOM`.
+
+## D-2026-09-27-082 — Authorize one Granite 4.1 same-packet Constellation C4 inference
+
+The first Granite 4.1 C4 uses the identical Constellation packet and prompt used for prior candidate discrimination, with context16384, output1024, temperature 0, timeout 600000 ms and a 1.0 GiB pre-inference free-RAM floor.
+
+Authorization is single-run only. Automatic retry and all contract changes are forbidden. Human adjudication is mandatory if engineering validation passes.
+
