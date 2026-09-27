@@ -60,5 +60,5 @@ test("Qwen3.5 raw JSON forensic runner cannot call model or publish raw content"
   assert.match(raw, /ollamaApiCalled: false/);
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|11434/);
   assert.doesNotMatch(raw, /fetch\(/);
-  assert.doesNotMatch(raw, /console\.log\([^)]*rawText/);
+  assert.doesNotMatch(raw, /rawOutput:\s*\{[^}]*rawText/s);
 });
