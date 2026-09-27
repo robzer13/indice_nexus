@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "POST_MINISTRAL3_CANDIDATE_ESCALATION_DOWNLOAD",
-  "status": "AUTHORIZED_SINGLE_DOWNLOAD_ONLY",
+  "status": "CONSUMED_SINGLE_DOWNLOAD_ONLY",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -69,7 +69,7 @@
     "no_load_or_inference_until_separate_load_only_step": true
   },
   "authority": {
-    "granite4_1_download_authorized": true,
+    "granite4_1_download_authorized": false,
     "granite4_1_load_smoke_authorized": false,
     "granite4_1_inference_authorized": false,
     "model_switch_authorized": false,
@@ -77,6 +77,12 @@
     "production_mutation": false,
     "publication_authority": false
   },
-  "next_action": "EXECUTE_GRANITE4_1_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "EXECUTE_GRANITE4_1_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "consumption": {
+    "consumed": true,
+    "result_id": "G18-PHASEC-GRANITE4_1-3B-DOWNLOAD-RESULT-001",
+    "result_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "retry_authorized": false
+  }
 }
