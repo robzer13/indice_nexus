@@ -1,0 +1,78 @@
+{
+  "format": "OROTITAN_GATE18_PHI4_C4_RESUMPTION_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-PHI4-C4-RESUMPTION-DECISION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "RESUME_ONE_DISCRIMINATING_CELL_PREPARED_INFERENCE_NOT_AUTHORIZED",
+  "decision": "RESUME_PHI4_C4_UNDER_V1_1_WITH_ONE_CONSTELLATION_CELL",
+  "basis": {
+    "v1_1_contract_status": "IMPLEMENTED_CI_PASS",
+    "first_phi4_c4_cell": "STMicroelectronics",
+    "first_phi4_raw_v1_0_status": "FAIL",
+    "first_phi4_shadow_v1_1_semantic_status": "PASS_AFTER_PRESENTATION_ONLY_NORMALIZATION",
+    "historical_v1_0_result_changed": false,
+    "qwen3_4b_constellation_engineering": "PASS",
+    "qwen3_4b_constellation_human_quality": "PASS_WITH_CARRY"
+  },
+  "selection": {
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "matrix_index": 2,
+    "rationale": [
+      "Smallest remaining Phi-4 C4 workload after the already-run STMicro cell.",
+      "Closest remaining workload size to STMicro, reducing runtime-size confounding.",
+      "Distinct SERIAL_ACQUIRER archetype not represented by the Phi-4 STMicro cell.",
+      "Not included among the six v1.1 shadow-replay raw artifacts, so it adds new model-behavior information rather than replaying known output.",
+      "Qwen3 4B passed automated engineering on this company with human PASS_WITH_CARRY, providing a useful cross-candidate reference without making a model-ranking conclusion."
+    ],
+    "selection_is_model_ranking": false,
+    "selection_is_production_routing": false
+  },
+  "frozen_cell": {
+    "model_name": "phi4-mini:3.8b-q4_K_M",
+    "model_digest": "78fad5d182a7c33065e153a5f8ba210754207ba9d91973f57dffa7f487363753",
+    "company": "Constellation Software",
+    "archetype": "SERIAL_ACQUIRER",
+    "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "packet_mode": "FULL_PINNED_PACKET",
+    "packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "evidence_count": 11,
+    "conflict_count": 1,
+    "prompt_sha256": "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+    "prompt_bytes": 9041,
+    "prompt_contract": "UNCHANGED_V1_0",
+    "generation_schema": "UNCHANGED_V1_0",
+    "validation_contract": "GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 480000,
+    "keep_alive": "0s",
+    "transport": "NODE_HTTP_REQUEST_LOOPBACK",
+    "sleep_guard_required": true
+  },
+  "execution_boundary": {
+    "authorized_run_count": 0,
+    "inference_authorized": false,
+    "automatic_retry_authorized": false,
+    "model_switch_authorized": false,
+    "prompt_change_authorized": false,
+    "generation_schema_change_authorized": false,
+    "packet_change_authorized": false,
+    "context_change_authorized": false,
+    "max_output_change_authorized": false,
+    "temperature_change_authorized": false,
+    "paid_execution_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "evaluation": {
+    "raw_output_preserved": true,
+    "v1_1_presentation_compliance_required": true,
+    "v1_1_safe_normalization_only": true,
+    "v1_1_substantive_semantics_required": true,
+    "human_adjudication_required": true,
+    "historical_v1_0_comparison_is_descriptive_only": true
+  },
+  "next_action": "PREPARE_PHI4_CONSTELLATION_V1_1_RUNNER_AND_AWAIT_EXPLICIT_SINGLE_RUN_INFERENCE_AUTHORIZATION"
+}
