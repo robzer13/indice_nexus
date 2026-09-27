@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-010",
+  "resume_id": "VNEXT-G18-C-20260927-011",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "bf16dd4bab44c76e5e0c54dc124393f923e5bb3a",
+  "last_verified_head_sha": "13d091332242c63888be88526445a672bd43f711",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -35,15 +35,15 @@
     "STANDING_ZERO_COST_EXECUTION_AUTHORIZATION_V2_ACTIVE"
   ],
   "active_work": [
-    "EXECUTE_QWEN3_5_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
     "LOCAL_OLLAMA_LOAD_PREFLIGHT_REQUIRES_USER_MACHINE_EXECUTION"
   ],
   "open_issues": [
-    "EXECUTE_QWEN3_5_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "COMPARE_4096_AND_8192_MEMORY_SLOPE",
-    "DECIDE_CONTEXT16384_LOAD_ONLY_OR_BOUNDED_INFERENCE_BASED_ON_MEASURED_FIT",
+    "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "COMPARE_4096_8192_16384_MEMORY_AND_OFFLOAD_SCALING",
+    "IF_16384_LOAD_FIT_IS_ACCEPTABLE_PREPARE_FIRST_BOUNDED_QWEN3_5_C4_INFERENCE",
     "MODEL_WINNER_AND_ROUTING_REMAIN_UNRESOLVED"
   ],
   "preserved_decisions": [
@@ -111,7 +111,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_QWEN3_5_4B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -164,6 +164,13 @@
     "context4096_processor_split": "50%/50% CPU/GPU",
     "context4096_loaded_free_ram_gib": 0.69,
     "context4096_full_unload_release": true,
-    "context8192_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED"
+    "context8192_load_status": "PASS_LOAD_ONLY_MEASURED",
+    "context8192_vram_used_mib": 2525,
+    "context8192_vram_headroom_mib": 1438,
+    "context8192_processor_split": "54%/46% CPU/GPU",
+    "context8192_loaded_free_ram_gib": 0.56,
+    "context8192_ollama_reported_size": "3.9 GB",
+    "context8192_full_unload_release": true,
+    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED"
   }
 }
