@@ -4,40 +4,34 @@
 
 Status: COMPLETE
 
-The six-case no-inference replay supports the two-layer validation architecture.
+Six-case no-inference replay supports the two-layer validation architecture.
 
-## OI-002 — Versioned v1.1 contract authorization
+## OI-002 — v1.1 contract authorization
 
 Status: COMPLETE
 
-Explicit user authorization received on 2026-09-27.
-
-Authorization ID:
+Explicit user authorization recorded as:
 
 `G18-PHASEC-V1_1-CONTRACT-CHANGE-AUTH-001`
 
-## OI-003 — Verify v1.1 implementation
+## OI-003 — v1.1 implementation and CI
 
-Status: IN_PROGRESS  
+Status: COMPLETE
+
+`GATE18_MOAT_EVIDENCE_AUDIT_VALIDATION_V1_1` is implemented and both VNext CI and Screener CI pass.
+
+## OI-004 — Phi-4 C4 resumption under v1.1
+
+Status: OPEN_DECISION_REQUIRED  
 Priority: P0
 
-Required close condition:
+A second Phi-4 C4 cell remains unauthorized.
 
-- lint PASS;
-- typecheck PASS;
-- v1.1 contract/unit tests PASS;
-- existing VNext tests PASS;
-- migration tests PASS;
-- production build PASS.
+Required decision:
+Whether to resume Phi-4 qualification under v1.1. If authorized, define the exact next cell and keep the execution bounded.
 
-## OI-004 — Decide whether Phi-4 C4 qualification resumes under v1.1
-
-Status: BLOCKED_BY_OI-003
-
-No second Phi-4 C4 cell is currently authorized.
-
-## OI-005 — Model routing and winner
+## OI-005 — Model winner and routing
 
 Status: OPEN_GUARDED
 
-No winner is selected and routing remains unfrozen.
+No model winner is selected. Routing remains unfrozen.
