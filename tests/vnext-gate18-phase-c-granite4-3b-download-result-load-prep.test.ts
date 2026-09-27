@@ -108,11 +108,12 @@ test("Granite 4 context4096 measured result supports one context8192 load-only p
   assert.equal(r.measured.explicit_unload_complete, true);
   assert.equal(r.interpretation.context8192_load_only_justified, true);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 8192);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
+  assert.equal(a.execution_result, "G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001");
 });
 
 test("Granite 4 context8192 runner is exact-digest load-only", () => {
@@ -122,6 +123,52 @@ test("Granite 4 context8192 runner is exact-digest load-only", () => {
   );
 
   assert.match(raw, /CONTEXT_TOKENS = 8192/);
+  assert.match(raw, /89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f/);
+  assert.match(raw, /AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED/);
+  assert.match(raw, /keep_alive:\s*"2m"/);
+  assert.match(raw, /keep_alive:\s*0/);
+  assert.doesNotMatch(raw, /\/api\/chat/);
+  assert.doesNotMatch(raw, /prompt\s*:/);
+});
+
+
+test("Granite 4 context8192 measured result supports one context16384 load-only preflight", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 8192);
+  assert.equal(r.measured.loaded_free_ram_gib, 0.94);
+  assert.equal(r.measured.loaded_vram_used_mib, 2355);
+  assert.equal(r.measured.loaded_vram_free_mib, 1608);
+  assert.equal(r.measured.processor_split, "22%/78% CPU/GPU");
+  assert.equal(r.measured.explicit_unload_complete, true);
+  assert.equal(r.interpretation.context16384_load_only_justified, true);
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 16384);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+});
+
+test("Granite 4 context16384 runner is exact-digest load-only", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-granite4-3b-context16384-load-smoke.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /CONTEXT_TOKENS = 16384/);
   assert.match(raw, /89962fcc75239ac434cdebceb6b7e0669397f92eaef9c487774b718bc36a3e5f/);
   assert.match(raw, /AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED/);
   assert.match(raw, /keep_alive:\s*"2m"/);

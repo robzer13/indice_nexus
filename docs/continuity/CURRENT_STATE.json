@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-026",
+  "resume_id": "VNEXT-G18-C-20260927-027",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "13d539e3ac305089d840d0407295fee8db888feb",
+  "last_verified_head_sha": "67e6a3b2777c949ff58695ab1f9480861553baec",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -71,17 +71,20 @@
     "QWEN3_8B_EXPLICITLY_QUEUED_AFTER_GRANITE",
     "GRANITE4_3B_CONTEXT4096_LOAD_ONLY_PASS",
     "GRANITE4_3B_CONTEXT4096_LOAD_ONLY_AUTHORIZATION_CONSUMED",
-    "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_AUTHORIZED"
+    "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_AUTHORIZED",
+    "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_PASS",
+    "GRANITE4_3B_CONTEXT8192_LOAD_ONLY_AUTHORIZATION_CONSUMED",
+    "GRANITE4_3B_CONTEXT16384_LOAD_ONLY_AUTHORIZED"
   ],
   "active_work": [
-    "EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT"
+    "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_PREFLIGHT"
+    "LOCAL_OLLAMA_REQUIRED_ON_USER_MACHINE_FOR_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_PREFLIGHT"
   ],
   "open_issues": [
-    "EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
-    "IF_GRANITE8192_PASS_DECIDE_GRANITE16384_LOAD_ONLY_OR_STOP",
+    "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "AFTER_GRANITE16384_DECIDE_FIRST_C4_DISCRIMINATOR_OR_STOP",
     "AFTER_GRANITE_SEQUENCE_TEST_QWEN3_8B_WITH_STAGED_HARDWARE_PREFLIGHT",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
@@ -170,7 +173,10 @@
     "calibration/vnext/OROTITAN_GATE18_POST_GRANITE_QWEN3_8B_QUEUE_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_LOAD_SMOKE_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-granite4-3b-context8192-load-smoke.ts"
+    "scripts/vnext-gate18-phase-c-granite4-3b-context8192-load-smoke.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-granite4-3b-context16384-load-smoke.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -201,7 +207,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_GRANITE4_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -423,9 +429,17 @@
     "context4096_loaded_free_ram_gib": 1.06,
     "context4096_processor_split": "15%/85% CPU/GPU",
     "context4096_full_unload_release": true,
-    "context8192_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context8192_load_status": "PASS_LOAD_ONLY_MEASURED",
     "context8192_load_authorization_id": "G18-PHASEC-GRANITE4-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
-    "context8192_load_authorized_run_count": 1
+    "context8192_load_authorized_run_count": 0,
+    "context8192_vram_used_mib": 2355,
+    "context8192_vram_headroom_mib": 1608,
+    "context8192_loaded_free_ram_gib": 0.94,
+    "context8192_processor_split": "22%/78% CPU/GPU",
+    "context8192_full_unload_release": true,
+    "context16384_load_status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+    "context16384_load_authorization_id": "G18-PHASEC-GRANITE4-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+    "context16384_load_authorized_run_count": 1
   },
   "post_granite_candidate_queue": {
     "next_candidate": "QWEN3_8B_LOCAL",
