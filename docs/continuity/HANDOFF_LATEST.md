@@ -1,64 +1,72 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-016`
+Resume ID: `VNEXT-G18-C-20260927-017`
 
 ## Standing authority
 
-`OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE. Zero-cost execution proceeds without reprompt. Any action with nonzero external monetary cost still requires explicit user authorization.
+`OROTITAN-STANDING-TECHNICAL-AUTH-002` remains ACTIVE for zero-cost technical execution. Nonzero external monetary cost still requires explicit user authorization.
 
-## Qwen3.5 Constellation same-cell retry
+## Qwen3.5 disposition
 
-The historical first Qwen3.5 Constellation attempt remains FAIL and runtime-adapter confounded. It is not reclassified.
+The clean `think:false` Constellation retry remains an engineering PASS, but human adjudication found a critical evidence-grounding failure.
 
-The separately authorized same-cell compatibility retry with `think:false` was executed locally and reached an engineering PASS.
+Material defect:
+- `E-045` states a replacement RFP;
+- the model output stated a completed replacement after approximately 20 years.
 
-Observed:
-- model `qwen3.5:4b-q4_K_M`;
-- exact pinned digest `2a654d98e6fba55d452b7043684e9b57a947e393bbffa62485a7aac05ee4eefd`;
-- Constellation Software / SERIAL_ACQUIRER;
-- context 16384;
-- max output 1024;
-- temperature 0;
-- timeout 600 seconds;
-- wall clock 283571 ms;
-- done reason `stop`;
-- prompt eval count 3351;
-- eval count 953;
-- output-token margin 71;
-- runtime error none;
-- schema valid;
-- raw presentation compliant;
-- safe normalization count 0;
-- substantive deterministic status PASS;
-- semantic valid;
-- external model API cost USD 0.
+Additional quality defects included duplicated weak-link candidates, low-information unresolved points, and priority selection that underweighted serial-acquirer-specific moat evidence.
 
-Public result artifact:
+Disposition:
 
-`calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_QWEN3_5_4B_V1_1_THINK_FALSE_RESULT_001.json`
+`STOP_QWEN3_5_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
 
-Private raw output remains local and is not published:
+No global Qwen3.5-family failure is inferred. No model winner or routing decision exists.
 
-`calibration/vnext/private-runs/2026-09-27T143133027Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_QWEN3_5_4B_V1_1_CONTEXT16384_THINKFALSE_001.json`
+## Gemma 3 4B static review
 
-## Interpretation boundary
+Candidate:
 
-This result is `ENGINEERING_PASS_HUMAN_ADJUDICATION_PENDING` only.
+`gemma3:4b-it-q4_K_M`
 
-It does not authorize:
-- a model winner;
-- model ranking;
-- routing freeze;
-- production mutation;
-- publication of private source material;
-- broader Qwen3.5 C4 expansion.
+Public identity checked 2026-09-27:
+- Ollama public digest prefix `a2af6cc3eb7f`;
+- approximately 3.3GB;
+- 128K context;
+- Q4_K_M target;
+- text and image input.
 
-No automatic second retry is authorized.
+Gemma Terms of Use last modified 2026-04-01 were reviewed. The user explicitly accepted the Gemma Terms for this OroTitan calibration path.
+
+Static hardware fit:
+
+`PLAUSIBLE_BUT_TIGHT_UNPROVEN`
+
+## Authorized next action
+
+Exactly one pinned local download is authorized:
+
+`G18-PHASEC-GEMMA3-4B-DOWNLOAD-AUTH-001`
+
+Runner:
+
+`scripts/vnext-gate18-phase-c-gemma3-4b-download-verify.ts`
+
+Scope:
+- pull only `gemma3:4b-it-q4_K_M`;
+- verify exact local tag;
+- capture full digest, size and Ollama metadata;
+- require digest prefix `a2af6cc3eb7f`;
+- verify Q4_K_M if exposed;
+- no load smoke;
+- no prompt;
+- no model inference;
+- no automatic retry;
+- no production mutation.
 
 ## Exact next action
 
 ```text
-COMPLETE_QWEN3_5_CONSTELLATION_HUMAN_QUALITY_ADJUDICATION
+EXECUTE_GEMMA3_4B_PINNED_DOWNLOAD_VERIFY
 ```
 
-Human adjudication must review the private raw output as emitted against the pinned private evidence packet before deciding Qwen3.5 expansion or stop.
+If and only if the pinned download passes, prepare a separate context-4096 load-only memory preflight using the observed full digest.
