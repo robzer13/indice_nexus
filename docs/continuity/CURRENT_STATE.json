@@ -1,15 +1,15 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-001",
+  "resume_id": "VNEXT-G18-C-20260927-002",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "223ba0052d5ad2b6b5e14b64290347463df904f0",
+  "last_verified_head_sha": "0bfcec7cc76862def15da10b0d4cfb563747d94d",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "status": "IN_PROGRESS_NOT_FROZEN",
-  "objective": "Complete Gate 18 Phase C local-model qualification while separating raw presentation compliance from substantive deterministic semantics before any further model expansion or contract implementation.",
+  "objective": "Complete Gate 18 Phase C local-model qualification using a validation architecture that separates raw presentation compliance from substantive deterministic semantics without rewriting historical v1.0 outcomes.",
   "completed": [
     "PHASE_A_PASS",
     "PHASE_B_PASS",
@@ -20,33 +20,35 @@
     "PHI4_MINI_GLOBAL_NARRATIVE_FORENSIC_COMPLETE",
     "V1_1_CONTRACT_ARCHITECTURE_REVIEW_SELECTED",
     "V1_1_SHADOW_REPLAY_AUTHORIZED_AND_PREPARED_NO_INFERENCE",
-    "V1_1_SHADOW_REPLAY_FAILURE_LAYER_TAXONOMY_FIX_MERGED_PR_254"
+    "V1_1_SHADOW_REPLAY_FAILURE_LAYER_TAXONOMY_FIX_MERGED_PR_254",
+    "V1_1_SHADOW_REPLAY_COMPLETE_NO_INFERENCE_NO_SOURCE_MUTATION",
+    "V1_1_SHADOW_REPLAY_SOURCE_CODE_TAXONOMY_CHECK_COMPLETE"
   ],
   "active_work": [
-    "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE"
+    "POST_REPLAY_CONTRACT_ARCHITECTURE_DISPOSITION"
   ],
   "blockers": [
-    "SHADOW_REPLAY_REQUIRES_LOCAL_PRIVATE_RUN_ARTIFACTS_PRESENT_ON_USER_MACHINE",
-    "REMOTE_CHAT_ENVIRONMENT_DOES_NOT_HAVE_THE_SIX_PRIVATE_RUN_FILES"
+    "V1_1_CONTRACT_CHANGE_NOT_AUTHORIZED",
+    "AUTHORITATIVE_PHASE_C_ENTRY_STILL_POINTS_TO_COMPLETED_SHADOW_REPLAY_AND_REQUIRES_AUTHORIZED_RECONCILIATION_BEFORE_ADVANCING_EXECUTION"
   ],
   "open_issues": [
-    "MEASURE_PRESENTATION_ONLY_VS_DOWNSTREAM_PRESENTATION_VS_SUBSTANTIVE_FAILURES_ACROSS_SIX_SHADOW_REPLAY_CASES",
-    "VERIFY_QWEN3_4B_STMICRO_POSITIVE_CONTROL_REMAINS_STABLE",
-    "DECIDE_POST_REPLAY_WHETHER_V1_1_CONTRACT_CHANGE_IS_JUSTIFIED",
-    "DO_NOT_ADVANCE_MODEL_MATRIX_BEFORE_REPLAY_DECISION"
+    "DECIDE_WHETHER_TO_AUTHORIZE_VERSIONED_V1_1_CONTRACT_CHANGE_BASED_ON_SHADOW_REPLAY",
+    "DEFINE_EXACT_V1_1_NORMATIVE_BOUNDARY_IF_AUTHORIZED",
+    "DECIDE_WHETHER_PHI4_QUALIFICATION_RESUMES_AFTER_CONTRACT_DISPOSITION",
+    "DO_NOT_ADVANCE_MODEL_MATRIX_BEFORE_CONTRACT_ARCHITECTURE_DECISION"
   ],
   "preserved_decisions": [
     "HISTORICAL_V1_0_RESULTS_IMMUTABLE",
     "NO_RETROACTIVE_PASS",
     "PHI4_MINI_RAW_V1_0_STMICRO_STATUS_REMAINS_FAIL",
+    "QWEN3_4B_BROOKFIELD_AND_RATIONAL_SUBSTANTIVE_FAILURES_REMAIN",
     "SECOND_PHI4_C4_CELL_NOT_AUTHORIZED",
     "MODEL_WINNER_NOT_SELECTED",
     "ROUTING_NOT_FROZEN"
   ],
   "authorized_actions": [
-    "DIAGNOSTIC_ONLY_V1_1_SHADOW_REPLAY_ON_EXISTING_ARTIFACTS",
-    "PUNCTUATION_ONLY_SAFE_NORMALIZATION_IN_SHADOW_COPY",
-    "CONTINUITY_METADATA_MAINTENANCE_UNDER_STANDING_AUTH"
+    "CONTINUITY_METADATA_MAINTENANCE_UNDER_STANDING_AUTH",
+    "READ_ONLY_POST_REPLAY_ANALYSIS"
   ],
   "forbidden_actions": [
     "NEW_MODEL_INFERENCE",
@@ -66,9 +68,39 @@
     "calibration/vnext/OROTITAN_GATE18_V1_1_CONTRACT_ARCHITECTURE_REVIEW_PREP_001.json",
     "calibration/vnext/OROTITAN_GATE18_V1_1_SHADOW_REPLAY_AUTH_001.json",
     "calibration/vnext/OROTITAN_GATE18_V1_1_SHADOW_REPLAY_MANIFEST_001.json",
-    "scripts/vnext-gate18-v1-1-shadow-replay-existing-artifacts.ts"
+    "scripts/vnext-gate18-v1-1-shadow-replay-existing-artifacts.ts",
+    "runtime/vnext/model-calibration-pilot-v10.ts"
   ],
-  "next_action": "RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE",
+  "latest_shadow_replay": {
+    "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
+    "local_path": "calibration/vnext/private-runs/OROTITAN_GATE18_V1_1_SHADOW_REPLAY_RESULT_001.json",
+    "status": "SHADOW_REPLAY_COMPLETE",
+    "case_count": 6,
+    "raw_presentation_noncompliant_count": 5,
+    "raw_fail_to_shadow_semantic_pass_after_presentation_only_normalization_count": 3,
+    "stable_control_pass_count": 1,
+    "retained_substantive_semantic_failure_cases": [
+      "QWEN3_4B_BROOKFIELD_FULL_001",
+      "QWEN3_4B_RATIONAL_FULL_001"
+    ],
+    "presentation_only_cleared_cases": [
+      "PHI4_ADYEN_TARGETED_001",
+      "PHI4_STMICRO_FULL_001",
+      "QWEN3_4B_ADYEN_TARGETED_001"
+    ],
+    "stable_control_case": "QWEN3_4B_STMICRO_FULL_CONTROL_001",
+    "inference_executed": false,
+    "source_artifacts_mutated": false,
+    "historical_v1_0_results_changed": false,
+    "human_quality_reassessed": false
+  },
+  "diagnostic_conclusion": {
+    "architecture_hypothesis": "A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION",
+    "evidence_status": "SUPPORTED_BY_SIX_CASE_SHADOW_REPLAY_FOR_CONTRACT_ARCHITECTURE_PURPOSE",
+    "implementation_status": "NOT_AUTHORIZED_NOT_IMPLEMENTED",
+    "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
+  },
+  "next_action": "DECIDE_AND_AUTHORIZE_OR_REJECT_VERSIONED_V1_1_CONTRACT_CHANGE",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -78,6 +110,7 @@
     "COMPARE_HEAD_TO_LAST_VERIFIED_HEAD",
     "RECONCILE_INTERVENING_COMMITS",
     "VERIFY_MATERIAL_REFERENCED_ARTIFACTS",
+    "PRESERVE_HISTORICAL_V1_0_RESULTS",
     "RESUME_EXACT_NEXT_ACTION"
   ]
 }

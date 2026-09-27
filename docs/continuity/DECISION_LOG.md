@@ -49,3 +49,23 @@ Merge:
 
 Methodology change:
 NO.
+
+
+## D-2026-09-27-005 — Shadow replay completes and supports two-layer architecture hypothesis
+
+Evidence:
+Six existing private artifacts were replayed with no inference and no source mutation.
+
+Observed:
+- three raw FAIL cases become deterministic semantic PASS after terminal-punctuation-only normalization;
+- two Qwen3 4B full cases retain substantive semantic failures;
+- one Qwen3 4B STMicro positive control remains PASS without normalization.
+
+Source-code verification:
+The relevant v1.0 `*_INCOMPLETE` errors are emitted by `assertCompleteNarrative` when terminal punctuation is missing. Narrative saturation has a separate error code.
+
+Diagnostic conclusion:
+The replay supports `A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION` as the preferred contract-architecture hypothesis for separating raw presentation compliance from substantive deterministic semantics.
+
+Authority boundary:
+This is not a v1.1 contract implementation or authorization. Historical v1.0 results remain immutable; human quality and model winner/routing are unchanged.

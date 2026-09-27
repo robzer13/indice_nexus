@@ -1,42 +1,70 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-001`
+Resume ID: `VNEXT-G18-C-20260927-002`
 
 ## Where we are
 
 Repository: `robzer13/indice_nexus`  
 Branch: `vnext`  
-Last verified HEAD before this checkpoint: `223ba0052d5ad2b6b5e14b64290347463df904f0`
+Last verified HEAD before this checkpoint: `0bfcec7cc76862def15da10b0d4cfb563747d94d`
 
-Gate 18 is `IN_PROGRESS_NOT_FROZEN`.
+Gate 18 remains `IN_PROGRESS_NOT_FROZEN`.
 
 Current phase: `C_LOCAL_FIRST_MODEL_QUALIFICATION`.
 
-## Objective
+The authorized no-inference v1.1 shadow replay has completed locally.
 
-Complete Gate 18 Phase C local-model qualification while preventing presentation-format defects from being confused with substantive semantic failures.
+## Shadow replay result
 
-## Established state
+Six existing artifacts were replayed. No new inference was executed and no source artifact or historical v1.0 result was mutated.
 
-- Phase A: PASS.
-- Phase B: PASS.
-- Phase C C0-C3: PASS.
-- Qwen3 4B completed the C4 five-company matrix with recurrent critical failures and was not admitted to C5.
-- Phi-4 mini passed earlier bounded regressions with a reliability carry.
-- The first full Phi-4 C4 cell, STMicroelectronics, remains a historical v1.0 FAIL.
-- Global Phi-4 narrative forensic found 13/13 `assertCompleteNarrative` fields missing terminal punctuation; after punctuation-only in-memory normalization the STMicro output passed schema and deterministic semantic validation.
-- This triggered contract-architecture review rather than a second Phi-4 C4 cell.
-- A no-inference v1.1 shadow replay over six existing artifacts is authorized and prepared.
-- PR #254 corrected the replay's diagnostic taxonomy so downstream presentation/boundary failures are not automatically mislabeled substantive semantic failures.
-- Both Screener CI and VNext CI passed before PR #254 was merged.
+### Presentation-only failures cleared in shadow semantics
+
+- `PHI4_ADYEN_TARGETED_001`: 2 missing terminal punctuation fields; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
+- `PHI4_STMICRO_FULL_001`: 13/13 narrative fields missing terminal punctuation; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
+- `QWEN3_4B_ADYEN_TARGETED_001`: 2 missing terminal punctuation fields; punctuation-only normalization -> schema PASS + deterministic semantic PASS.
+
+Historical raw v1.0 statuses remain unchanged.
+
+### Substantive semantic failures retained
+
+- `QWEN3_4B_BROOKFIELD_FULL_001`: remains `VNEXT_GATE18_V10_COUNTEREVIDENCE_LINK_WITHOUT_IDS` after safe punctuation normalization.
+- `QWEN3_4B_RATIONAL_FULL_001`: remains `VNEXT_GATE18_V10_CONFLICT_NOT_GROUNDED_IN_FINDING_REFS`. One separate narrative field is at the saturation boundary and is intentionally not normalized.
+
+### Positive control
+
+- `QWEN3_4B_STMICRO_FULL_CONTROL_001`: raw automated PASS remains PASS; no normalization required.
+
+## Validator-source verification
+
+The v1.0 source confirms that `assertCompleteNarrative` checks only:
+
+1. terminal punctuation `[.!?]`; and
+2. narrative saturation at length >= 178.
+
+The field-specific `*_INCOMPLETE` codes used in the replay are emitted by the terminal-punctuation branch. Saturation uses the distinct `VNEXT_GATE18_V10_NARRATIVE_BOUNDARY_SATURATION` code. The targeted Adyen validator delegates to the same full semantic validator.
+
+Therefore the shadow replay's classification of these observed `*_INCOMPLETE` failures as presentation compliance is supported by the implementation.
+
+## Diagnostic conclusion
+
+The evidence supports the architecture hypothesis `A_TWO_LAYER_VALIDATION_WITH_SAFE_NORMALIZATION` for the limited purpose tested:
+
+- it unblocks deterministic semantic evaluation when the raw defect is punctuation-only;
+- it does not erase retained substantive semantic failures;
+- it leaves a clean positive control unchanged;
+- it preserves raw output and historical v1.0 disposition.
+
+This does not constitute authorization to implement v1.1 and does not reassess human quality or model fitness.
 
 ## Preserved truths
 
 - No retroactive PASS.
 - Historical v1.0 results remain immutable.
-- Phi-4 raw STMicro status remains FAIL.
-- Human quality has not been reassessed by the shadow replay.
-- No winner is selected.
+- Phi-4 STMicro raw v1.0 status remains FAIL.
+- Qwen3 4B Brookfield and RATIONAL substantive failures remain.
+- Human quality was not reassessed.
+- No model winner is selected.
 - Routing is not frozen.
 
 ## Explicitly not authorized
@@ -49,31 +77,14 @@ Complete Gate 18 Phase C local-model qualification while preventing presentation
 - production mutation;
 - publication.
 
-## Current blocker
-
-The six `calibration/vnext/private-runs/*.json` artifacts required by the replay are available on the user's local machine but not in the remote chat execution environment.
-
 ## Exact next action
 
 ```text
-RUN_V1_1_SHADOW_REPLAY_ON_EXISTING_PRIVATE_ARTIFACTS_NO_INFERENCE
+DECIDE_AND_AUTHORIZE_OR_REJECT_VERSIONED_V1_1_CONTRACT_CHANGE
 ```
 
-Expected local output:
-
-```text
-calibration/vnext/private-runs/OROTITAN_GATE18_V1_1_SHADOW_REPLAY_RESULT_001.json
-```
-
-After the result exists, classify each case into:
-
-- presentation-only fail cleared by safe normalization;
-- downstream presentation/boundary fail revealed;
-- substantive semantic fail revealed;
-- stable control pass.
-
-Then decide whether a versioned v1.1 contract change is justified. Do not implement that contract merely because the replay exists.
+If a v1.1 contract change is authorized, its normative specification must be versioned, narrowly limit normalization to non-lexical terminal punctuation, preserve raw compliance separately, preserve historical v1.0 outcomes, and keep human-quality adjudication separate.
 
 ## Resume rule
 
-On a new chat, load `CURRENT_STATE.json`, this file, recent decision log entries, and open issues. Verify Git HEAD and reconcile any commits after the stored `last_verified_head_sha` before continuing.
+On a new chat, load `CURRENT_STATE.json`, this file, recent decision-log entries, and open issues. Verify Git HEAD and reconcile any commits after the stored `last_verified_head_sha` before continuing.
