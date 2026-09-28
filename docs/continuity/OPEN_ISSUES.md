@@ -3,33 +3,20 @@
 ## OI-001 — Completed/stopped candidate calibration evidence
 Status: RETAINED_IMMUTABLE
 
-## OI-002 — Granite 4.1 context16384 hardware qualification
-Status: COMPLETE_PASS
+## OI-002 — Granite 4.1 first Constellation C4
+Status: COMPLETE_ENGINEERING_PASS_HUMAN_QUALITY_CRITICAL_FAILURE
 
-Qualification: `PASS_WITH_USEFUL_HEADROOM`
+Expansion: STOPPED
+Retry: NOT_AUTHORIZED
 
-## OI-003 — Granite 4.1 first Constellation C4
-Status: ENGINEERING_PASS_COMPLETE
-
-Clean engineering result:
-- schema valid;
-- semantic valid;
-- raw presentation compliant;
-- normalized path count 0;
-- output margin 589 tokens.
-
-The single inference authorization is consumed.
-
-## OI-004 — Granite 4.1 human adjudication
-Status: PRIVATE_BUNDLE_REQUIRED
+## OI-003 — Llama 3.2 3B pinned download
+Status: AUTHORIZED_READY_LOCAL_EXECUTION
 Priority: P0
 
-Generate and review the private adjudication bundle from the existing run.
+One exact download/identity verification is authorized for:
+`llama3.2:3b-instruct-q4_K_M`
 
-No retry or new inference is authorized.
+No load or inference is authorized.
 
-## OI-005 — Llama 3.2 3B
-Status: DEFERRED_AFTER_GRANITE4_1_3B
-
-## OI-006 — Model winner and routing
+## OI-004 — Model winner and routing
 Status: OPEN_GUARDED
