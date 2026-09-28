@@ -1,46 +1,65 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260927-047`
+Resume ID: `VNEXT-G18-C-20260928-048`
 
-## Granite 4.1 3B — first Constellation C4 engineering result
+## Granite 4.1 3B — human adjudication complete
 
-Status: `ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
+Engineering result remains:
 
-Observed:
-- wall clock: 72819 ms;
-- done reason: stop;
-- prompt eval count: 3145;
-- eval count: 435 / 1024;
-- output token margin: 589;
-- runtime error: none;
-- schema valid: true;
-- semantic valid: true;
-- V1.1 raw presentation compliant: true;
-- normalized path count: 0;
-- substantive status: PASS.
+`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
 
-The single C4 authorization is consumed.
+Human-quality result:
 
-No retry or new Granite 4.1 inference is authorized.
+`COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE`
 
-## Current required step
+Critical issues retained:
+- two of three priority slots are near-duplicate recurring-revenue share findings;
+- the unresolved retention-disclosure question is already answered by E-063;
+- the second unresolved churn question is analytical rather than a new packet fact;
+- priority selection omits stronger switching/serial-acquirer inputs including E-043, E-045, E-066 and E-067.
 
-`GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE`
+Positive controls:
+- no evidence-ID invention;
+- no conflict-ID invention;
+- C-005 surfaced unresolved;
+- no E-045 replacement overstatement;
+- no E-043 deep-integration/low-churn overstatement;
+- no E-066 misattribution;
+- no final moat judgment;
+- clean V1.1 engineering pass with zero normalization and 589-token output margin.
 
-Source private run:
+Disposition:
 
-`calibration/vnext/private-runs/2026-09-27T214331230Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_1_3B_V1_1_CONTEXT16384_001.json`
+`STOP_GRANITE4_1_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
 
-Bundle builder:
+No Granite 4.1 retry or new inference is authorized.
 
-`scripts/vnext-gate18-phase-c-granite4-1-3b-human-adjudication-bundle.ts`
+## Current authorized step
 
-The builder performs no model inference. It verifies the existing private run, reconstructs the exact pinned Constellation packet from the private repository, and emits a private human-adjudication bundle.
+Next candidate:
 
-The private run, packet and bundle must not be committed or published.
+`LLAMA3_2_3B_OLLAMA_Q4_K_M`
 
-Engineering PASS does not establish human-quality PASS, model ranking, routing, or production admission.
+Exact model:
+
+`llama3.2:3b-instruct-q4_K_M`
+
+Authorization:
+
+`G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001`
+
+Exactly one pinned download and identity verification is authorized.
+
+Expected digest prefix:
+
+`a80c4f17acd5`
+
+No load smoke, prompt, inference, automatic retry, model switch, production mutation or publication authority is granted.
+
+Runner:
+
+`scripts/vnext-gate18-phase-c-llama3-2-3b-download-verify.ts`
 
 ## Exact next action
 
-`GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE`
+`EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY`
