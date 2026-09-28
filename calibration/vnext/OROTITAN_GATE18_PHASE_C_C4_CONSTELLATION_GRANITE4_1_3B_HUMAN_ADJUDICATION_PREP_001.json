@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
-  "status": "READY_PRIVATE_BUNDLE_GENERATION",
+  "status": "COMPLETED_PRIVATE_BUNDLE_GENERATED_AND_REVIEWED",
   "engineering_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-RESULT-001",
   "company": "Constellation Software",
   "pinned_packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
@@ -55,5 +55,7 @@
     "routing_authority": false,
     "production_mutation": false
   },
-  "next_action": "GENERATE_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE"
+  "next_action": "STOP_GRANITE4_1_C4_EXPANSION_AND_ACTIVATE_LLAMA3_2_3B",
+  "bundle_generation_result": "PASS_PRIVATE_BUNDLE_READY",
+  "human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-HUMAN-ADJUDICATION-RESULT-001"
 }
