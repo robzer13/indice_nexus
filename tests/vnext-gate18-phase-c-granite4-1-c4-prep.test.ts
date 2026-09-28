@@ -154,7 +154,7 @@ test("Granite 4.1 human adjudication prep forbids new inference and publication"
     ),
   );
 
-  assert.equal(p.status, "READY_PRIVATE_BUNDLE_GENERATION");
+  assert.equal(p.status, "COMPLETED_PRIVATE_BUNDLE_GENERATED_AND_REVIEWED");
   assert.equal(p.engineering_carry.eval_count, 435);
   assert.equal(p.engineering_carry.output_token_margin, 589);
   assert.equal(p.engineering_carry.raw_presentation_compliant, true);
