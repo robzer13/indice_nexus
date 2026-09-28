@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260928-048",
+  "resume_id": "VNEXT-G18-C-20260928-049",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "4b16309814f1cbc7bd72557fde37fa1a56d0fb86",
+  "last_verified_head_sha": "b7e52958579afa1cf8365f66056424a15d641fd8",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -151,18 +151,21 @@
     "GRANITE4_1_HUMAN_ADJUDICATION_COMPLETE_CRITICAL_FAILURE",
     "GRANITE4_1_C4_EXPANSION_STOPPED",
     "LLAMA3_2_3B_SELECTED_NEXT_CANDIDATE",
-    "LLAMA3_2_3B_PINNED_DOWNLOAD_AUTHORIZED"
+    "LLAMA3_2_3B_PINNED_DOWNLOAD_AUTHORIZED",
+    "LLAMA3_2_3B_PINNED_DOWNLOAD_PASS",
+    "LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_AUTHORIZED",
+    "LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_PREPARED"
   ],
   "active_work": [
-    "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+    "EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT"
   ],
   "blockers": [
-    "LOCAL_OLLAMA_LLAMA3_2_3B_DOWNLOAD_REQUIRED"
+    "LOCAL_OLLAMA_LLAMA3_2_CONTEXT4096_LOAD_ONLY_EXECUTION_REQUIRED"
   ],
   "open_issues": [
-    "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
-    "NO_GRANITE4_1_RETRY_OR_NEW_INFERENCE_AUTHORIZED",
-    "NO_LLAMA3_2_LOAD_OR_INFERENCE_AUTHORIZED",
+    "EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "NO_LLAMA3_2_INFERENCE_AUTHORIZED",
+    "NO_LLAMA3_2_CONTEXT_CHANGE_OR_RETRY_AUTHORIZED",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -264,7 +267,10 @@
     "GRANITE4_1_HUMAN_QUALITY_CRITICAL_FAILURE",
     "GRANITE4_1_NOT_ADMITTED",
     "LLAMA3_2_IS_NEXT_DIFFERENT_FAMILY_CANDIDATE",
-    "LLAMA3_2_DOWNLOAD_ONLY_SINGLE_RUN"
+    "LLAMA3_2_DOWNLOAD_ONLY_SINGLE_RUN",
+    "LLAMA3_2_DOWNLOAD_IDENTITY_PASS",
+    "LLAMA3_2_CONTEXT4096_LOAD_ONLY_SINGLE_RUN",
+    "LLAMA3_2_INFERENCE_NOT_AUTHORIZED"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -407,7 +413,10 @@
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_POST_CONSTELLATION_DISPOSITION_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_DOWNLOAD_AUTH_001.json",
-    "scripts/vnext-gate18-phase-c-llama3-2-3b-download-verify.ts"
+    "scripts/vnext-gate18-phase-c-llama3-2-3b-download-verify.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_DOWNLOAD_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_001.json"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -438,7 +447,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -984,13 +993,23 @@
     "expected_digest_prefix": "a80c4f17acd5",
     "expected_quantization": "Q4_K_M",
     "expected_artifact_size": "2.0GB",
-    "parameter_size": "3.21B",
+    "parameter_size": "3.2B",
     "context_window": "128K",
     "license": "Llama 3.2 Community License",
     "selection_status": "ACTIVE_POST_GRANITE4_1_CANDIDATE",
     "download_authorization_id": "G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001",
-    "download_authorized": true,
+    "download_authorized": false,
     "load_smoke_authorized": false,
-    "inference_authorized": false
+    "inference_authorized": false,
+    "full_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "size_bytes": 2019393189,
+    "format": "gguf",
+    "family": "llama",
+    "quantization": "Q4_K_M",
+    "download_status": "PASS_PINNED_DOWNLOAD_ONLY",
+    "download_executed": true,
+    "context4096_load_authorization_id": "G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001",
+    "context4096_load_authorized": true,
+    "context4096_load_authorized_run_count": 1
   }
 }
