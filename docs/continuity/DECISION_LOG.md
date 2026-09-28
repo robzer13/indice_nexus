@@ -1526,3 +1526,33 @@ Expected digest prefix:
 
 No load, prompt, inference, retry, model switch, production mutation, ranking or routing authority is granted.
 
+## D-2026-09-28-087 — Llama 3.2 3B pinned download passes exact identity verification
+
+Observed local identity:
+- model: `llama3.2:3b-instruct-q4_K_M`;
+- full digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
+- size: 2019393189 bytes;
+- format: GGUF;
+- family: llama;
+- Ollama-reported parameter size: 3.2B;
+- quantization: Q4_K_M.
+
+The exact tag is present, the expected digest prefix matches, API show is reachable, and quantization matches.
+
+No load or inference occurred.
+
+The single download-only authorization is consumed.
+
+## D-2026-09-28-088 — Authorize one Llama 3.2 context4096 load-only preflight
+
+One exact local load-only preflight is authorized at 4096 context tokens under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+The step must:
+- verify the exact tag and full digest;
+- require no other loaded Ollama model;
+- load without a prompt;
+- capture RAM, VRAM and `ollama ps` before, while loaded and after unload;
+- explicitly unload after measurement.
+
+No semantic inference, retry, context change, model switch, paid execution, production mutation, ranking, routing or publication authority is granted.
+
