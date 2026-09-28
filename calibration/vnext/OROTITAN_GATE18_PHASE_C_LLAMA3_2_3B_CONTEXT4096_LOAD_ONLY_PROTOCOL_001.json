@@ -1,0 +1,65 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_V0.1",
+  "protocol_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-LOAD-ONLY-PROTOCOL-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "AUTHORIZED_READY_FOR_MANUAL_POWERSHELL_EXECUTION",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001",
+  "target": {
+    "model": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096
+  },
+  "execution_contract": {
+    "transport": "OLLAMA_LOOPBACK_HTTP",
+    "endpoint": "http://127.0.0.1:11434/api/generate",
+    "load_request": {
+      "model": "llama3.2:3b-instruct-q4_K_M",
+      "stream": false,
+      "keep_alive": "2m",
+      "options": {
+        "num_ctx": 4096
+      },
+      "prompt_field_present": false
+    },
+    "load_only_success_condition": [
+      "response is empty",
+      "done is true",
+      "eval_count is absent or zero"
+    ],
+    "unload_request": {
+      "model": "llama3.2:3b-instruct-q4_K_M",
+      "stream": false,
+      "keep_alive": 0,
+      "prompt_field_present": false
+    },
+    "snapshots": [
+      "before",
+      "loaded",
+      "after"
+    ],
+    "snapshot_requirements": [
+      "system total/free RAM GiB",
+      "GPU total/free/used MiB",
+      "ollama ps rows"
+    ]
+  },
+  "preconditions": {
+    "exact_tag_present": true,
+    "exact_digest_required": true,
+    "no_other_loaded_model_required": true,
+    "no_download_in_this_step": true
+  },
+  "authority": {
+    "load_only_authorized": true,
+    "semantic_inference_authorized": false,
+    "retry_authorized": false,
+    "context_change_authorized": false,
+    "model_switch_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "expected_console_result_format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_SMOKE_V0.1",
+  "next_action": "PASTE_COMPLETE_CONTEXT4096_LOAD_ONLY_JSON_FOR_ADJUDICATION"
+}

@@ -10,13 +10,18 @@ Expansion: STOPPED
 Retry: NOT_AUTHORIZED
 
 ## OI-003 — Llama 3.2 3B pinned download
+Status: COMPLETE_PASS
+
+Exact digest:
+`a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`
+
+## OI-004 — Llama 3.2 context4096 load-only preflight
 Status: AUTHORIZED_READY_LOCAL_EXECUTION
 Priority: P0
 
-One exact download/identity verification is authorized for:
-`llama3.2:3b-instruct-q4_K_M`
+Exactly one load-only execution is authorized at 4096 context tokens.
 
-No load or inference is authorized.
+No prompt, inference, retry or context change is authorized.
 
-## OI-004 — Model winner and routing
+## OI-005 — Model winner and routing
 Status: OPEN_GUARDED

@@ -1,65 +1,46 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260928-048`
+Resume ID: `VNEXT-G18-C-20260928-049`
 
-## Granite 4.1 3B — human adjudication complete
+## Llama 3.2 3B — pinned download complete
 
-Engineering result remains:
+Status: `PASS_PINNED_DOWNLOAD_ONLY`
 
-`ENGINEERING_PASS_HUMAN_ADJUDICATION_REQUIRED`
+Observed local identity:
+- model: `llama3.2:3b-instruct-q4_K_M`;
+- digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
+- size: 2019393189 bytes;
+- format: gguf;
+- family: llama;
+- Ollama-reported parameter size: 3.2B;
+- quantization: Q4_K_M.
 
-Human-quality result:
+Verification:
+- exact tag present;
+- expected digest prefix matched;
+- API show reachable;
+- expected quantization matched.
 
-`COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE`
+No model load or inference occurred in the download step.
 
-Critical issues retained:
-- two of three priority slots are near-duplicate recurring-revenue share findings;
-- the unresolved retention-disclosure question is already answered by E-063;
-- the second unresolved churn question is analytical rather than a new packet fact;
-- priority selection omits stronger switching/serial-acquirer inputs including E-043, E-045, E-066 and E-067.
-
-Positive controls:
-- no evidence-ID invention;
-- no conflict-ID invention;
-- C-005 surfaced unresolved;
-- no E-045 replacement overstatement;
-- no E-043 deep-integration/low-churn overstatement;
-- no E-066 misattribution;
-- no final moat judgment;
-- clean V1.1 engineering pass with zero normalization and 589-token output margin.
-
-Disposition:
-
-`STOP_GRANITE4_1_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
-
-No Granite 4.1 retry or new inference is authorized.
+The download authorization is consumed.
 
 ## Current authorized step
 
-Next candidate:
-
-`LLAMA3_2_3B_OLLAMA_Q4_K_M`
-
-Exact model:
-
-`llama3.2:3b-instruct-q4_K_M`
+`EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT`
 
 Authorization:
 
-`G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001`
+`G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001`
 
-Exactly one pinned download and identity verification is authorized.
+Protocol:
 
-Expected digest prefix:
+`calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_001.json`
 
-`a80c4f17acd5`
+Exactly one local load-only execution at 4096 context tokens is authorized.
 
-No load smoke, prompt, inference, automatic retry, model switch, production mutation or publication authority is granted.
-
-Runner:
-
-`scripts/vnext-gate18-phase-c-llama3-2-3b-download-verify.ts`
+No prompt, semantic inference, retry, context change, model switch, production mutation or publication authority is granted.
 
 ## Exact next action
 
-`EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY`
+`EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT`
