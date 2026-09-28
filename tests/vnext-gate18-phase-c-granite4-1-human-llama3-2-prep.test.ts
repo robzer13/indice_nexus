@@ -46,7 +46,7 @@ test("Granite 4.1 post-Constellation disposition activates Llama 3.2", () => {
   assert.equal(d.next_candidate.model_id, "llama3.2:3b-instruct-q4_K_M");
 });
 
-test("Llama 3.2 download authorization is pinned and download-only", () => {
+test("Llama 3.2 download authorization is consumed after exact pinned download", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_DOWNLOAD_AUTH_001.json",
@@ -54,12 +54,12 @@ test("Llama 3.2 download authorization is pinned and download-only", () => {
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_DOWNLOAD_ONLY");
+  assert.equal(a.status, "CONSUMED_SINGLE_DOWNLOAD_ONLY");
   assert.equal(a.model.ollama_model_name, "llama3.2:3b-instruct-q4_K_M");
   assert.equal(a.model.expected_digest_prefix, "a80c4f17acd5");
   assert.equal(a.model.expected_quantization, "Q4_K_M");
   assert.equal(a.execution.action_count_authorized, 1);
-  assert.equal(a.authority.llama3_2_download_authorized, true);
+  assert.equal(a.authority.llama3_2_download_authorized, false);
   assert.equal(a.authority.llama3_2_load_smoke_authorized, false);
   assert.equal(a.authority.llama3_2_inference_authorized, false);
   assert.equal(a.constraints.automatic_retry, false);
@@ -78,4 +78,69 @@ test("Llama 3.2 download verifier contains no load or inference path", () => {
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat/);
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /loadSmokeExecuted: false/);
+});
+
+
+test("Llama 3.2 pinned download result records exact local identity", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_DOWNLOAD_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_PINNED_DOWNLOAD_ONLY");
+  assert.equal(r.model.ollama_model_name, "llama3.2:3b-instruct-q4_K_M");
+  assert.equal(
+    r.model.digest,
+    "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  );
+  assert.equal(r.model.size_bytes, 2019393189);
+  assert.equal(r.model.family, "llama");
+  assert.equal(r.model.ollama_reported_parameter_size, "3.2B");
+  assert.equal(r.model.quantization, "Q4_K_M");
+  assert.equal(r.verification.expected_digest_prefix_matched, true);
+  assert.equal(r.verification.expected_quantization_matched, true);
+  assert.equal(r.safety.load_smoke_executed, false);
+  assert.equal(r.safety.model_inference_executed, false);
+});
+
+test("Llama 3.2 context4096 load-only authorization is single-use and non-inferential", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 4096);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.download_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_authorized, false);
+});
+
+test("Llama 3.2 context4096 protocol contains no prompt or semantic inference", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_PROTOCOL_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(p.status, "AUTHORIZED_READY_FOR_MANUAL_POWERSHELL_EXECUTION");
+  assert.equal(p.target.context_tokens, 4096);
+  assert.equal(p.target.model, "llama3.2:3b-instruct-q4_K_M");
+  assert.equal(
+    p.target.digest,
+    "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  );
+  assert.equal(p.execution_contract.load_request.prompt_field_present, false);
+  assert.equal(p.execution_contract.unload_request.prompt_field_present, false);
+  assert.equal(p.authority.semantic_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.authority.context_change_authorized, false);
 });
