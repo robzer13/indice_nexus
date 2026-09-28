@@ -1,0 +1,104 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_HUMAN_ADJUDICATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_HUMAN_QUALITY_ADJUDICATION",
+  "status": "COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE",
+  "company": "Constellation Software",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_1_3B_V1_1_CONTEXT16384_001",
+  "source": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-RESULT-001",
+    "private_run_attachment_reviewed": true,
+    "private_adjudication_bundle_reviewed": true,
+    "pinned_private_evidence_packet_reviewed": true,
+    "same_pinned_packet_sha256": "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+    "original_output_adjudicated_as_emitted": true,
+    "private_packet_content_persisted_publicly": false,
+    "private_raw_output_content_persisted_publicly": false
+  },
+  "engineering_disposition": {
+    "runtime_pass": true,
+    "schema_valid": true,
+    "v1_1_raw_presentation_compliant": true,
+    "v1_1_safe_normalization_count": 0,
+    "v1_1_substantive_semantic_pass": true,
+    "deterministic_semantic_failure": false,
+    "output_budget_fully_consumed": false,
+    "output_budget_near_saturation": false,
+    "done_reason": "stop",
+    "eval_count": 435,
+    "max_output_tokens": 1024,
+    "output_token_margin": 589,
+    "wall_clock_ms": 72819,
+    "disposition": "CLEAN_ENGINEERING_PASS"
+  },
+  "human_quality": {
+    "exact_evidence_grounding": "PASS_WITH_DEFECT",
+    "claim_atomicity": "PASS",
+    "claim_target_alignment": "PASS_WITH_DEFECT",
+    "support_counterevidence_polarity": "PASS",
+    "qualification_orthogonality": "PASS_WITH_DEFECT",
+    "conflict_handling": "PASS",
+    "weak_link_usefulness": "PASS",
+    "unresolved_point_usefulness": "FAIL",
+    "judgment_boundary_compliance": "PASS_WITH_DEFECT",
+    "priority_selection_usefulness": "FAIL"
+  },
+  "failure_codes": [
+    "PRIORITY_FINDINGS_1_AND_2_SPEND_TWO_OF_THREE_SLOTS_ON_NEAR_DUPLICATE_RECURRING_REVENUE_SHARE_METRICS",
+    "UNRESOLVED_RETENTION_DISCLOSURE_QUESTION_ALREADY_ANSWERED_BY_E063",
+    "UNRESOLVED_CHURN_IMPACT_QUESTION_IS_ANALYTICAL_AND_DOES_NOT_TARGET_A_NEW_PACKET_FACT",
+    "PRIORITY_SELECTION_OMITS_DIRECT_SWITCHING_AND_SERIAL_ACQUIRER_INPUTS_E043_E045_E066_E067"
+  ],
+  "carry_codes": [
+    "E029_PORTFOLIO_COUNT_AND_ACQUISITION_CRITERIA_ARE_COMPRESSED_INTO_ONE_AMBIGUOUS_CLAIM",
+    "E029_LIMITATION_NOT_CARRIED_FORWARD_BUYER_STATED_CRITERIA_NOT_VERIFIED_PROPERTIES_OF_EVERY_ACQUIRED_COMPANY",
+    "E029_CAUSAL_LINK_HIGH_MOAT_POTENTIAL_IS_BROADER_THAN_THE_REPORTED_TARGET_CRITERIA"
+  ],
+  "positive_observations": [
+    "NO_EVIDENCE_ID_INVENTION",
+    "NO_CONFLICT_ID_INVENTION",
+    "C005_UNRESOLVED_CONFLICT_SURFACED_WITH_CORRECT_DIRECTIONAL_IMPLICATION",
+    "E045_RFP_NOT_OVERSTATED_AS_COMPLETED_REPLACEMENT",
+    "E043_NOT_OVERSTATED_AS_DEEP_INTEGRATION_OR_LOW_CHURN",
+    "E066_NOT_MISATTRIBUTED",
+    "E063_DISCLOSURE_GAP_NOT_MISCAST_AS_EVIDENCE_OF_LOW_RETENTION",
+    "NO_FINAL_MOAT_JUDGMENT_EMITTED",
+    "CLEAN_V1_1_ENGINEERING_PASS_WITH_ZERO_NORMALIZATION",
+    "OUTPUT_MARGIN_589_TOKENS_NOT_NEAR_SATURATION"
+  ],
+  "critical_failures": {
+    "evidence_id_invention": false,
+    "conflict_id_invention": false,
+    "exact_evidence_grounding_failure": false,
+    "unsupported_counterevidence_polarity": false,
+    "claim_atomicity_critical_failure": false,
+    "duplicate_priority_finding_critical_failure": true,
+    "unresolved_point_usefulness_critical_failure": true,
+    "priority_selection_critical_failure": true,
+    "unresolved_conflict_suppressed": false,
+    "final_moat_judgment_emitted": false,
+    "schema_failure": false,
+    "deterministic_semantic_failure": false
+  },
+  "disposition": {
+    "automated_engineering_pass": true,
+    "human_adjudication_completed": true,
+    "critical_human_quality_failure": true,
+    "clean_pass": false,
+    "pass_with_carry": false,
+    "matrix_cell_completed": true,
+    "c4_candidate_overall_decision_authorized": false
+  },
+  "authority": {
+    "retry_authorized": false,
+    "new_granite4_1_inference_authorized": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "STOP_GRANITE4_1_C4_EXPANSION_AND_ACTIVATE_LLAMA3_2_3B",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

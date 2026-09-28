@@ -1461,3 +1461,68 @@ No retry or new Granite 4.1 inference is authorized.
 
 The next protocol step is non-inferential: generate a private adjudication bundle from the existing run and exact pinned Constellation packet, then perform human-quality review using the same regression checks applied to prior candidates.
 
+## D-2026-09-28-085 — Granite 4.1 human adjudication is a critical quality failure
+
+The exact private Constellation packet and emitted Granite 4.1 output were reviewed.
+
+Engineering remains a clean pass:
+- schema valid;
+- semantic valid;
+- raw presentation compliant;
+- zero normalization;
+- 435 / 1024 generated tokens;
+- 589-token output margin.
+
+Human-quality adjudication:
+- exact evidence grounding: PASS_WITH_DEFECT;
+- claim atomicity: PASS;
+- claim target alignment: PASS_WITH_DEFECT;
+- support/counterevidence polarity: PASS;
+- qualification orthogonality: PASS_WITH_DEFECT;
+- conflict handling: PASS;
+- weak-link usefulness: PASS;
+- unresolved-point usefulness: FAIL;
+- judgment-boundary compliance: PASS_WITH_DEFECT;
+- priority-selection usefulness: FAIL.
+
+Critical defects:
+1. Two of three priority slots are near-duplicate recurring-revenue share metrics.
+2. The unresolved question asking whether consolidated retention is disclosed is already answered by E-063.
+3. The second unresolved churn question is analytical rather than a new packet-evidence gap.
+4. Priority selection omits stronger direct switching and serial-acquirer inputs E-043, E-045, E-066 and E-067.
+
+Positive controls:
+- no evidence-ID invention;
+- no conflict-ID invention;
+- C-005 remains unresolved and directionally correct;
+- E-045 is not overstated into a completed replacement;
+- E-043 is not overstated into deep integration or low churn;
+- E-066 is not misattributed;
+- no final moat judgment is emitted.
+
+Disposition:
+
+`COMPLETED_WITH_ENGINEERING_PASS_AND_HUMAN_QUALITY_CRITICAL_FAILURE`.
+
+## D-2026-09-28-086 — Stop Granite 4.1 expansion and activate Llama 3.2 3B
+
+Status:
+
+`STOP_GRANITE4_1_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+
+The engineering pass is preserved and is not retroactively changed.
+
+No Granite 4.1 retry or additional C4 cell is authorized.
+
+The existing registry refresh already defines Llama 3.2 3B as the next different-family candidate after Granite 4.1. Therefore the next candidate is activated without reopening Discovery or the frozen methodology.
+
+Exactly one pinned download and identity verification is authorized for:
+
+`llama3.2:3b-instruct-q4_K_M`
+
+Expected digest prefix:
+
+`a80c4f17acd5`
+
+No load, prompt, inference, retry, model switch, production mutation, ranking or routing authority is granted.
+

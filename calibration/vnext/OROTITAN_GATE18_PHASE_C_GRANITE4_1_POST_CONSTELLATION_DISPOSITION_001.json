@@ -1,0 +1,25 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_GRANITE4_1_POST_CONSTELLATION_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-GRANITE4_1-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_GRANITE4_1_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "basis": {
+    "engineering_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-RESULT-001",
+    "human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+    "engineering_pass": true,
+    "human_quality_critical_failure": true
+  },
+  "interpretation": {
+    "granite4_1_candidate_admitted": false,
+    "family_global_failure_concluded": false,
+    "retry_authorized": false,
+    "additional_c4_cells_authorized": false
+  },
+  "next_candidate": {
+    "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+    "model_id": "llama3.2:3b-instruct-q4_K_M",
+    "basis": "DEFERRED_AFTER_GRANITE4_1_3B_IN_REGISTRY_REFRESH_20260927_003"
+  },
+  "next_action": "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
+}

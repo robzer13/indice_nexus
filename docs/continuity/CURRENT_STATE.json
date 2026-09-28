@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20260927-047",
+  "resume_id": "VNEXT-G18-C-20260928-048",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "f8ff063dabadb6cf15526d5bc90342f4afebd6ed",
+  "last_verified_head_sha": "4b16309814f1cbc7bd72557fde37fa1a56d0fb86",
   "last_verified_at": "2026-09-27",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -147,19 +147,22 @@
     "GRANITE4_1_FIRST_CONSTELLATION_C4_EXECUTED_ONCE",
     "GRANITE4_1_FIRST_CONSTELLATION_C4_CLEAN_ENGINEERING_PASS",
     "GRANITE4_1_FIRST_CONSTELLATION_C4_AUTHORIZATION_CONSUMED",
-    "GRANITE4_1_PRIVATE_HUMAN_ADJUDICATION_PREPARED"
+    "GRANITE4_1_PRIVATE_HUMAN_ADJUDICATION_PREPARED",
+    "GRANITE4_1_HUMAN_ADJUDICATION_COMPLETE_CRITICAL_FAILURE",
+    "GRANITE4_1_C4_EXPANSION_STOPPED",
+    "LLAMA3_2_3B_SELECTED_NEXT_CANDIDATE",
+    "LLAMA3_2_3B_PINNED_DOWNLOAD_AUTHORIZED"
   ],
   "active_work": [
-    "GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE"
+    "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY"
   ],
   "blockers": [
-    "PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE_REQUIRED"
+    "LOCAL_OLLAMA_LLAMA3_2_3B_DOWNLOAD_REQUIRED"
   ],
   "open_issues": [
-    "GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE",
-    "NO_GRANITE4_1_C4_RETRY_AUTHORIZED",
-    "NO_NEW_GRANITE4_1_INFERENCE_AUTHORIZED",
-    "LLAMA3_2_3B_DEFERRED_AFTER_GRANITE4_1",
+    "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
+    "NO_GRANITE4_1_RETRY_OR_NEW_INFERENCE_AUTHORIZED",
+    "NO_LLAMA3_2_LOAD_OR_INFERENCE_AUTHORIZED",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -256,7 +259,12 @@
     "GRANITE4_1_FIRST_C4_ENGINEERING_PASS_DOES_NOT_EQUAL_HUMAN_QUALITY_PASS",
     "GRANITE4_1_FIRST_C4_RAW_PRESENTATION_COMPLIANT_ZERO_NORMALIZATION",
     "GRANITE4_1_FIRST_C4_OUTPUT_MARGIN_589_NOT_NEAR_SATURATION",
-    "GRANITE4_1_NO_RETRY_BEFORE_HUMAN_ADJUDICATION"
+    "GRANITE4_1_NO_RETRY_BEFORE_HUMAN_ADJUDICATION",
+    "GRANITE4_1_ENGINEERING_PASS_PRESERVED",
+    "GRANITE4_1_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GRANITE4_1_NOT_ADMITTED",
+    "LLAMA3_2_IS_NEXT_DIFFERENT_FAMILY_CANDIDATE",
+    "LLAMA3_2_DOWNLOAD_ONLY_SINGLE_RUN"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -395,7 +403,11 @@
     "scripts/vnext-gate18-phase-c-c4-constellation-granite4-1-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_V1_1_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_HUMAN_ADJUDICATION_PREP_001.json",
-    "scripts/vnext-gate18-phase-c-granite4-1-3b-human-adjudication-bundle.ts"
+    "scripts/vnext-gate18-phase-c-granite4-1-3b-human-adjudication-bundle.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_GRANITE4_1_3B_V1_1_HUMAN_ADJUDICATION_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_GRANITE4_1_POST_CONSTELLATION_DISPOSITION_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_DOWNLOAD_AUTH_001.json",
+    "scripts/vnext-gate18-phase-c-llama3-2-3b-download-verify.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -426,7 +438,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "GENERATE_AND_REVIEW_PRIVATE_GRANITE4_1_HUMAN_ADJUDICATION_BUNDLE",
+  "next_action": "EXECUTE_LLAMA3_2_3B_PINNED_DOWNLOAD_AND_IDENTITY_VERIFY",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -956,7 +968,29 @@
     "first_c4_raw_presentation_compliant": true,
     "first_c4_normalized_path_count": 0,
     "first_c4_human_adjudication_required": true,
-    "first_c4_human_adjudication_completed": false,
-    "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T214331230Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_1_3B_V1_1_CONTEXT16384_001.json"
+    "first_c4_human_adjudication_completed": true,
+    "first_c4_private_output_path": "calibration/vnext/private-runs/2026-09-27T214331230Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_GRANITE4_1_3B_V1_1_CONTEXT16384_001.json",
+    "first_c4_human_quality": "CRITICAL_FAILURE",
+    "first_c4_human_adjudication_result": "G18-PHASEC-C4-CONSTELLATION-GRANITE4_1-3B-V1_1-HUMAN-ADJUDICATION-RESULT-001",
+    "c4_expansion_status": "STOPPED_RETAIN_CALIBRATION_EVIDENCE",
+    "candidate_admitted": false,
+    "family_global_failure_concluded": false,
+    "retry_authorized": false,
+    "new_inference_authorized": false
+  },
+  "latest_llama3_2_3b": {
+    "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+    "model": "llama3.2:3b-instruct-q4_K_M",
+    "expected_digest_prefix": "a80c4f17acd5",
+    "expected_quantization": "Q4_K_M",
+    "expected_artifact_size": "2.0GB",
+    "parameter_size": "3.21B",
+    "context_window": "128K",
+    "license": "Llama 3.2 Community License",
+    "selection_status": "ACTIVE_POST_GRANITE4_1_CANDIDATE",
+    "download_authorization_id": "G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001",
+    "download_authorized": true,
+    "load_smoke_authorized": false,
+    "inference_authorized": false
   }
 }
