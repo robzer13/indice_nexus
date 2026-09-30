@@ -1,0 +1,71 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_1_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "quantization": "Q4_K_M",
+    "context_tokens": 8192,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 0.39,
+    "loaded_free_ram_gib": 0.47,
+    "after_free_ram_gib": 1.67,
+    "before_vram_used_mib": 431,
+    "before_vram_free_mib": 3532,
+    "loaded_vram_used_mib": 2751,
+    "loaded_vram_free_mib": 1212,
+    "after_vram_used_mib": 481,
+    "after_vram_free_mib": 3482,
+    "processor_split": "32%/68% CPU/GPU",
+    "ollama_reported_size": "3.4 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload"
+  },
+  "derived": {
+    "free_ram_delta_before_to_loaded_gib": 0.08,
+    "vram_increment_mib": 2320,
+    "vram_headroom_mib": 1212,
+    "ram_snapshot_non_monotonic": true,
+    "comparison_to_context4096": {
+      "loaded_free_ram_delta_gib": 0.13,
+      "vram_headroom_delta_mib": -68,
+      "gpu_residency_delta_percentage_points": -12,
+      "resident_size_delta_gb": 0.5,
+      "ram_comparison_caveat": "Free RAM is OS-state-sensitive across runs; the positive delta must not be interpreted as lower intrinsic model memory use."
+    },
+    "comparison_to_ministral3_context8192": {
+      "loaded_free_ram_delta_gib": 0.09,
+      "vram_headroom_delta_mib": -344,
+      "gpu_residency_delta_percentage_points": 22
+    }
+  },
+  "safety": {
+    "network_scope": "LOOPBACK_ONLY",
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "retry_executed": false,
+    "context_changed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_8192": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context16384_load_only_justified": true,
+    "direct_inference_authorized": false
+  },
+  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
