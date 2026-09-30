@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "EXECUTE_SAME_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_PREFLIGHT_WITH_CORRECTED_RUNNER",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1624,5 +1624,8 @@
   "llama3_2_3b_context8192_load_authorized_run_count": 1,
   "llama3_2_3b_context8192_load_protocol": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-ONLY-PROTOCOL-001",
   "llama3_2_3b_context8192_purpose": "DIAGNOSTIC_ONLY",
-  "llama3_2_3b_context16384_load_authorized": false
+  "llama3_2_3b_context16384_load_authorized": false,
+  "llama3_2_3b_context8192_runner_preexecution_block": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-RUNNER-AUTH-PATH-BLOCK-001",
+  "llama3_2_3b_context8192_runner_preexecution_status": "HISTORICAL_TOOLING_BLOCK_RESOLVED_BY_AUTH_PATH_FIX",
+  "llama3_2_3b_context8192_authorization_consumed": false
 }
