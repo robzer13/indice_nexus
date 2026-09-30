@@ -1793,3 +1793,27 @@ Disposition:
 This does not create or authorize an automatic retry. The same unconsumed single-run authorization may be manually executed after the precondition is satisfied.
 
 No prompt, schema, packet, context, max-output, temperature, timeout, model, routing, ranking, production or publication change is authorized.
+
+## D-2026-09-30-098 — Second Llama 3.2 C4 precondition block reveals insufficient external RAM margin
+
+Before the second manual execution, PowerShell reported 1.09 GiB free physical RAM and `ollama ps` was empty.
+
+The guarded runner subsequently measured only 0.70 GiB at its actual baseline-memory guard and stopped with:
+
+`VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_INSUFFICIENT_BASELINE_FREE_RAM:0.7`
+
+The observed external-to-runner free-RAM delta is -0.39 GiB. Root cause attribution is not proven.
+
+The runner again stopped before provider generation:
+- packet build not reached;
+- `/api/generate` not reached;
+- no semantic inference;
+- no generated private model output.
+
+Therefore the single inference authorization remains unconsumed with one run available.
+
+The fixed protocol threshold remains 1.0 GiB at the runner guard. It is not relaxed.
+
+For operational execution only, an external pre-launch target of at least 1.5 GiB is adopted to provide margin against the observed startup/system-state delta. This is not a protocol or model-parameter change.
+
+No automatic retry, parameter change, model switch, ranking, routing, production mutation or publication is authorized.
