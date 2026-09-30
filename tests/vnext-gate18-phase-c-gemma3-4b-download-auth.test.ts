@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Llama 3.2 download pass to context4096 load-only preflight", () => {
+test("Phase C advances from Llama 3.2 context4096 pass to context8192 load-only diagnostic", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,8 +56,24 @@ test("Phase C advances from Llama 3.2 download pass to context4096 load-only pre
 
   assert.equal(
     entry.next_action,
-    "RESTORE_OLLAMA_RUNTIME_THEN_EXECUTE_SAME_LLAMA3_2_CONTEXT4096_LOAD_ONLY_PREFLIGHT",
+    "EXECUTE_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
   );
+  assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
+  assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
+  assert.equal(entry.llama3_2_3b_context4096_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.llama3_2_3b_context4096_loaded_free_ram_gib, 0.34);
+  assert.equal(entry.llama3_2_3b_context4096_vram_used_mib, 2683);
+  assert.equal(entry.llama3_2_3b_context4096_vram_free_mib, 1280);
+  assert.equal(entry.llama3_2_3b_context4096_processor_split, "20%/80% CPU/GPU");
+  assert.equal(
+    entry.llama3_2_3b_context4096_hardware_fit,
+    "PASS_WITH_CRITICAL_RAM_PRESSURE",
+  );
+  assert.equal(entry.llama3_2_3b_context8192_load_authorized, true);
+  assert.equal(entry.llama3_2_3b_context8192_load_authorized_run_count, 1);
+  assert.equal(entry.llama3_2_3b_context8192_purpose, "DIAGNOSTIC_ONLY");
+  assert.equal(entry.llama3_2_3b_context16384_load_authorized, false);
+  assert.equal(entry.llama3_2_3b_inference_authorized, false);
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);
