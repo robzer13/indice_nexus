@@ -445,3 +445,38 @@ test("Llama 3.2 first Constellation C4 prep and guarded runner pin the same pack
   assert.match(raw, /private-runs/);
   assert.doesNotMatch(raw, /think:\s*false/);
 });
+
+test("Llama 3.2 first C4 baseline RAM block preserves the single inference authorization", () => {
+  const b = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_BASELINE_RAM_PRECONDITION_BLOCK_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    b.status,
+    "BLOCKED_BEFORE_INFERENCE_INSUFFICIENT_BASELINE_FREE_RAM",
+  );
+  assert.equal(b.precondition.required_baseline_free_ram_gib, 1);
+  assert.equal(b.precondition.observed_baseline_free_ram_gib, 0.75);
+  assert.equal(b.execution_boundary.provider_generate_request_reached, false);
+  assert.equal(b.execution_boundary.semantic_inference_executed, false);
+  assert.equal(b.authorization_consumption.consumed, false);
+  assert.equal(b.authorization_consumption.authorized_run_count_remaining, 1);
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(
+    a.precondition_block,
+    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
+  );
+});
+
