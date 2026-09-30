@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "next_action": "RESTORE_OLLAMA_RUNTIME_THEN_EXECUTE_SAME_LLAMA3_2_CONTEXT4096_LOAD_ONLY_PREFLIGHT",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1607,5 +1607,7 @@
   "llama3_2_3b_quantization": "Q4_K_M",
   "llama3_2_3b_load_smoke_authorization_id": "G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001",
   "llama3_2_3b_load_smoke_authorized_run_count": 1,
-  "llama3_2_3b_context4096_load_protocol": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-LOAD-ONLY-PROTOCOL-001"
+  "llama3_2_3b_context4096_load_protocol": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-LOAD-ONLY-PROTOCOL-001",
+  "llama3_2_3b_context4096_precondition_block": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-PRECONDITION-BLOCK-001",
+  "llama3_2_3b_context4096_precondition_status": "BLOCKED_PRE_EXECUTION_OLLAMA_RUNTIME_UNREACHABLE"
 }

@@ -144,3 +144,30 @@ test("Llama 3.2 context4096 protocol contains no prompt or semantic inference", 
   assert.equal(p.authority.retry_authorized, false);
   assert.equal(p.authority.context_change_authorized, false);
 });
+
+
+test("Llama 3.2 runtime precondition block does not consume the context4096 load authorization", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_PRECONDITION_BLOCK_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "BLOCKED_PRE_EXECUTION_OLLAMA_RUNTIME_UNREACHABLE");
+  assert.equal(r.execution_boundary.model_load_attempted, false);
+  assert.equal(r.execution_boundary.prompt_provided, false);
+  assert.equal(r.execution_boundary.semantic_inference_executed, false);
+  assert.equal(r.authorization_consumption.consumed, false);
+  assert.equal(r.authorization_consumption.authorized_run_count_remaining, 1);
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.inference_authorized, false);
+});

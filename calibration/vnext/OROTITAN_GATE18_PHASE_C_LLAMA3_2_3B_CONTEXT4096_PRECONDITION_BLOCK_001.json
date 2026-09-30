@@ -1,0 +1,37 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_PRECONDITION_BLOCK_RESULT_V0.1",
+  "result_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-PRECONDITION-BLOCK-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "LLAMA3_2_CONTEXT4096_LOAD_ONLY_PREFLIGHT",
+  "status": "BLOCKED_PRE_EXECUTION_OLLAMA_RUNTIME_UNREACHABLE",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001",
+  "observed": {
+    "api_endpoint": "http://127.0.0.1:11434/api/tags",
+    "api_reachable": false,
+    "primary_error": "Invoke-RestMethod: Impossible de se connecter au serveur distant",
+    "secondary_error": "LLAMA3_2_3B_EXACT_TAG_NOT_FOUND",
+    "secondary_error_interpretation": "DERIVED_FROM_MISSING_TAG_RESPONSE_NOT_MODEL_IDENTITY_FAILURE"
+  },
+  "execution_boundary": {
+    "exact_tag_check_completed": false,
+    "digest_check_completed": false,
+    "model_load_attempted": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "unload_required": false
+  },
+  "authorization_consumption": {
+    "consumed": false,
+    "authorized_run_count_remaining": 1,
+    "reason": "Load request was never reached; failure occurred on initial runtime reachability precondition."
+  },
+  "remediation": {
+    "required": "RESTORE_OLLAMA_LOCAL_RUNTIME_REACHABILITY",
+    "verify_endpoint": "http://127.0.0.1:11434/api/version",
+    "same_context4096_load_only_authorization_remains_valid": true,
+    "automatic_retry_authorized": false
+  },
+  "next_action": "RESTORE_OLLAMA_RUNTIME_THEN_EXECUTE_SAME_LLAMA3_2_CONTEXT4096_LOAD_ONLY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
