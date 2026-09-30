@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "RESTORE_BASELINE_FREE_RAM_GIB_GTE_1_0_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
+  "next_action": "RESTORE_EXTERNAL_FREE_RAM_GIB_GTE_1_5_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1660,9 +1660,12 @@
   "llama3_2_first_c4_authorized_run_count": 1,
   "llama3_2_first_c4_prep": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-PREP-001",
   "llama3_2_first_c4_runner": "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
-  "llama3_2_first_c4_precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
+  "llama3_2_first_c4_precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
   "llama3_2_first_c4_precondition_status": "BLOCKED_BEFORE_INFERENCE_INSUFFICIENT_BASELINE_FREE_RAM",
-  "llama3_2_first_c4_observed_baseline_free_ram_gib": 0.75,
+  "llama3_2_first_c4_observed_baseline_free_ram_gib": 0.7,
   "llama3_2_first_c4_required_baseline_free_ram_gib": 1,
-  "llama3_2_first_c4_authorization_consumed": false
+  "llama3_2_first_c4_authorization_consumed": false,
+  "llama3_2_first_c4_precondition_block_count": 2,
+  "llama3_2_first_c4_external_prelaunch_free_ram_gib": 1.09,
+  "llama3_2_first_c4_recommended_external_prelaunch_free_ram_gib": 1.5
 }

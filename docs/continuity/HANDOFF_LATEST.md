@@ -1,42 +1,33 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260930-055`
+Resume ID: `VNEXT-G18-C-20260930-056`
 
-## Llama 3.2 3B — first Constellation C4 blocked before inference by RAM guard
+## Llama 3.2 first Constellation C4 — second RAM precondition block
 
-The first bounded C4 authorization remains valid and unconsumed.
+The same single C4 inference authorization remains valid and unconsumed.
 
-Observed local summary:
+Second observed sequence:
+- external PowerShell free RAM immediately before launch: 1.09 GiB;
+- runner baseline free RAM at the actual guard: 0.70 GiB;
+- protocol requirement at the runner guard: >= 1.00 GiB;
 - status: `BLOCKED_BEFORE_INFERENCE`;
-- error: `VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_INSUFFICIENT_BASELINE_FREE_RAM:0.75`;
-- required baseline free RAM: 1.0 GiB;
-- observed baseline free RAM: 0.75 GiB.
+- provider generation request: not reached;
+- semantic inference: not executed.
 
-Execution boundary:
-- authorization validation reached;
-- exact model identity validation reached;
-- baseline RAM guard reached;
-- packet build not reached;
-- provider generation request not reached;
-- no prompt was sent to the model;
-- no semantic inference occurred;
-- no private generated output was created.
+Observed external-to-runner delta: -0.39 GiB.
 
-Therefore the single C4 inference authorization is NOT consumed and retains exactly one authorized run.
+This delta is an observation only; root cause attribution is not proven. It is consistent with startup/system-state overhead and means that a narrow external margin above 1.0 GiB is operationally insufficient.
 
-No new retry authorization is created. This is a precondition recovery, not a second inference attempt.
+The protocol threshold remains unchanged at 1.0 GiB.
 
-The exact fixed C4 contract remains unchanged:
-- model: `llama3.2:3b-instruct-q4_K_M`;
-- context: 16384;
-- max output: 1024;
-- temperature: 0;
-- timeout: 600000 ms;
-- packet and prompt hashes unchanged;
-- minimum baseline free RAM: 1.0 GiB;
-- private raw output only;
-- no automatic retry or parameter change.
+Operational pre-launch target before the next manual execution: >= 1.5 GiB external free RAM.
+
+Authorization state:
+- consumed: false;
+- authorized runs remaining: 1;
+- automatic retry: not authorized;
+- parameter change: not authorized.
 
 ## Current exact next action
 
-`RESTORE_BASELINE_FREE_RAM_GIB_GTE_1_0_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION`
+`RESTORE_EXTERNAL_FREE_RAM_GIB_GTE_1_5_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION`

@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "RESTORE_BASELINE_FREE_RAM_GIB_GTE_1_0_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
+    "RESTORE_EXTERNAL_FREE_RAM_GIB_GTE_1_5_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);

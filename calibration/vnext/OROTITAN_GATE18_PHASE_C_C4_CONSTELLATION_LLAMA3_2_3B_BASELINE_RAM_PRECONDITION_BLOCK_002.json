@@ -1,0 +1,58 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_BASELINE_RAM_PRECONDITION_BLOCK_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "BLOCKED_BEFORE_INFERENCE_INSUFFICIENT_BASELINE_FREE_RAM",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "observed_external_prelaunch_free_ram_gib": 1.09,
+  "observed_error": "VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_INSUFFICIENT_BASELINE_FREE_RAM:0.7",
+  "precondition": {
+    "required_baseline_free_ram_gib": 1.0,
+    "observed_runner_baseline_free_ram_gib": 0.7,
+    "shortfall_gib": 0.3,
+    "external_to_runner_free_ram_delta_gib": -0.39,
+    "delta_attribution": "OBSERVED_BETWEEN_PRELAUNCH_POWERSHELL_CHECK_AND_IN_RUNNER_GUARD_NOT_ROOT_CAUSE_PROVEN"
+  },
+  "execution_boundary": {
+    "authorization_validated": true,
+    "model_identity_validated": true,
+    "baseline_memory_guard_reached": true,
+    "packet_build_reached": false,
+    "provider_generate_request_reached": false,
+    "semantic_inference_executed": false,
+    "private_generated_output_created": false
+  },
+  "authorization_consumption": {
+    "consumed": false,
+    "authorized_run_count_remaining": 1,
+    "same_single_inference_authorization_remains_valid": true
+  },
+  "safety": {
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false,
+    "automatic_retry_executed": false,
+    "parameter_change_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "operational_interpretation": {
+    "fixed_protocol_threshold_changed": false,
+    "protocol_threshold_gib": 1.0,
+    "prelaunch_headroom_target_recommended_gib": 1.5,
+    "recommendation_basis": "Two pre-inference blocks and the observed 0.39 GiB drop between the second external check and the runner guard indicate that a wider operational margin is needed before manual execution.",
+    "recommendation_is_protocol_change": false
+  },
+  "remediation_boundary": {
+    "automatic_retry_authorized": false,
+    "new_retry_authorization_created": false,
+    "parameter_change_authorized": false,
+    "required_condition_before_manual_execution": "RUNNER_BASELINE_FREE_RAM_GIB_GTE_1_0",
+    "operational_prelaunch_target": "EXTERNAL_FREE_RAM_GIB_GTE_1_5",
+    "same_unconsumed_authorized_run_may_be_manually_executed_after_precondition_is_satisfied": true
+  },
+  "next_action": "RESTORE_EXTERNAL_FREE_RAM_GIB_GTE_1_5_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
