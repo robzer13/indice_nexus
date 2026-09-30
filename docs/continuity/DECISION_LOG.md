@@ -1768,3 +1768,28 @@ Generated content must remain in the private run destination. If engineering val
 No automatic retry, prompt/schema/packet/context/output-budget/temperature/timeout change, model switch, production mutation, ranking, routing or publication is authorized.
 
 This is a single discriminator run and does not establish model winner status.
+
+## D-2026-09-30-097 — Llama 3.2 first Constellation C4 is blocked before inference by the baseline RAM guard
+
+Observed local summary:
+- status: `BLOCKED_BEFORE_INFERENCE`;
+- error: `VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_INSUFFICIENT_BASELINE_FREE_RAM:0.75`;
+- required baseline free RAM: 1.0 GiB;
+- observed baseline free RAM: 0.75 GiB.
+
+The guarded runner validates the authorization and model identity before checking baseline free RAM, but the provider generation request occurs only after the memory guard and packet preparation.
+
+Therefore:
+- provider generation was not reached;
+- no semantic inference occurred;
+- no generated private model output was created;
+- the single C4 inference authorization is not consumed;
+- exactly one authorized inference run remains.
+
+Disposition:
+
+`BLOCKED_BEFORE_INFERENCE_INSUFFICIENT_BASELINE_FREE_RAM`
+
+This does not create or authorize an automatic retry. The same unconsumed single-run authorization may be manually executed after the precondition is satisfied.
+
+No prompt, schema, packet, context, max-output, temperature, timeout, model, routing, ranking, production or publication change is authorized.

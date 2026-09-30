@@ -1,0 +1,47 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_BASELINE_RAM_PRECONDITION_BLOCK_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "BLOCKED_BEFORE_INFERENCE_INSUFFICIENT_BASELINE_FREE_RAM",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "observed_error": "VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_INSUFFICIENT_BASELINE_FREE_RAM:0.75",
+  "precondition": {
+    "required_baseline_free_ram_gib": 1.0,
+    "observed_baseline_free_ram_gib": 0.75,
+    "shortfall_gib": 0.25
+  },
+  "execution_boundary": {
+    "authorization_validated": true,
+    "model_identity_validated": true,
+    "baseline_memory_guard_reached": true,
+    "packet_build_reached": false,
+    "provider_generate_request_reached": false,
+    "semantic_inference_executed": false,
+    "private_generated_output_created": false
+  },
+  "authorization_consumption": {
+    "consumed": false,
+    "authorized_run_count_remaining": 1,
+    "same_single_inference_authorization_remains_valid": true
+  },
+  "safety": {
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false,
+    "automatic_retry_executed": false,
+    "parameter_change_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "remediation_boundary": {
+    "automatic_retry_authorized": false,
+    "new_retry_authorization_created": false,
+    "parameter_change_authorized": false,
+    "required_condition_before_manual_execution": "BASELINE_FREE_RAM_GIB_GTE_1_0",
+    "same_unconsumed_authorized_run_may_be_manually_executed_after_precondition_is_satisfied": true
+  },
+  "next_action": "RESTORE_BASELINE_FREE_RAM_GIB_GTE_1_0_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
