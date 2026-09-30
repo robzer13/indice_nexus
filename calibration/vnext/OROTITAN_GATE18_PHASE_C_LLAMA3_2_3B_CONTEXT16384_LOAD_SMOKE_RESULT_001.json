@@ -1,0 +1,77 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT16384-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_1_CANDIDATE_FINAL_CONTEXT_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "quantization": "Q4_K_M",
+    "context_tokens": 16384,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 0.39,
+    "loaded_free_ram_gib": 0.52,
+    "after_free_ram_gib": 2.55,
+    "before_vram_used_mib": 385,
+    "before_vram_free_mib": 3578,
+    "loaded_vram_used_mib": 2746,
+    "loaded_vram_free_mib": 1217,
+    "after_vram_used_mib": 392,
+    "after_vram_free_mib": 3571,
+    "processor_split": "46%/54% CPU/GPU",
+    "ollama_reported_size": "4.4 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload"
+  },
+  "derived": {
+    "free_ram_delta_before_to_loaded_gib": 0.13,
+    "vram_increment_mib": 2361,
+    "vram_headroom_mib": 1217,
+    "ram_snapshot_non_monotonic": true,
+    "comparison_to_context8192": {
+      "loaded_free_ram_delta_gib": 0.05,
+      "vram_headroom_delta_mib": 5,
+      "gpu_residency_delta_percentage_points": -14,
+      "resident_size_delta_gb": 1.0,
+      "ram_comparison_caveat": "Free RAM is OS-state-sensitive across runs; the positive delta must not be interpreted as lower intrinsic model memory use."
+    },
+    "comparison_to_gemma3_context16384": {
+      "loaded_free_ram_delta_gib": 0.19,
+      "vram_headroom_delta_mib": -297,
+      "gpu_residency_delta_percentage_points": 11
+    },
+    "comparison_to_granite4_context16384": {
+      "loaded_free_ram_delta_gib": 0.11,
+      "vram_headroom_delta_mib": -441,
+      "gpu_residency_delta_percentage_points": -8
+    }
+  },
+  "safety": {
+    "network_scope": "LOOPBACK_ONLY",
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "retry_executed": false,
+    "context_changed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_16384": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context_growth_beyond_16384_authorized": false,
+    "same_packet_constellation_c4_justified": true,
+    "pre_inference_minimum_free_ram_gib": 1
+  },
+  "next_action": "PREPARE_FIRST_BOUNDED_LLAMA3_2_CONSTELLATION_C4_INFERENCE_V1_1",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
