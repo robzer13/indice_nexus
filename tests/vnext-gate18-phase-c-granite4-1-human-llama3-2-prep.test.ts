@@ -290,7 +290,7 @@ test("Llama 3.2 context8192 result records measured pass with critical RAM press
   assert.equal(r.safety.semantic_inference_executed, false);
 });
 
-test("Llama 3.2 context16384 authorization is one final load-only diagnostic", () => {
+test("Llama 3.2 context16384 authorization is consumed after the final load-only diagnostic", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
@@ -298,18 +298,17 @@ test("Llama 3.2 context16384 authorization is one final load-only diagnostic", (
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 16384);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.context_change_beyond_16384_authorized, false);
   assert.equal(
-    a.safety_rationale.risk_class,
-    "CRITICAL_RAM_PRESSURE_FINAL_DIAGNOSTIC",
+    a.execution_result,
+    "G18-PHASEC-LLAMA3_2-3B-CONTEXT16384-LOAD-SMOKE-RESULT-001",
   );
-  assert.equal(a.safety_rationale.no_further_context_growth, true);
 });
 
 test("Llama 3.2 context16384 protocol and runner preserve final load-only boundaries", () => {
@@ -346,3 +345,103 @@ test("Llama 3.2 context16384 protocol and runner preserve final load-only bounda
   assert.match(raw, /retryExecuted: false/);
 });
 
+test("Llama 3.2 context16384 result records measured pass with high RAM pressure", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 16384);
+  assert.equal(r.target.quantization, "Q4_K_M");
+  assert.equal(r.measured.loaded_free_ram_gib, 0.52);
+  assert.equal(r.measured.loaded_vram_used_mib, 2746);
+  assert.equal(r.measured.loaded_vram_free_mib, 1217);
+  assert.equal(r.measured.processor_split, "46%/54% CPU/GPU");
+  assert.equal(r.measured.ollama_reported_size, "4.4 GB");
+  assert.equal(r.measured.load_only_confirmed, true);
+  assert.equal(r.measured.explicit_unload_complete, true);
+  assert.equal(r.derived.ram_snapshot_non_monotonic, true);
+  assert.equal(
+    r.interpretation.hardware_fit_at_16384,
+    "PASS_WITH_HIGH_RAM_PRESSURE",
+  );
+  assert.equal(r.interpretation.context_growth_beyond_16384_authorized, false);
+  assert.equal(r.interpretation.same_packet_constellation_c4_justified, true);
+  assert.equal(r.interpretation.pre_inference_minimum_free_ram_gib, 1);
+  assert.equal(r.safety.semantic_inference_executed, false);
+});
+
+test("Llama 3.2 first Constellation C4 authorization is single-use and fixed", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.c4_inference.company, "Constellation Software");
+  assert.equal(a.c4_inference.model_name, "llama3.2:3b-instruct-q4_K_M");
+  assert.equal(
+    a.c4_inference.model_digest,
+    "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+  );
+  assert.equal(a.c4_inference.context_tokens, 16384);
+  assert.equal(a.c4_inference.max_output_tokens, 1024);
+  assert.equal(a.c4_inference.temperature, 0);
+  assert.equal(a.c4_inference.client_timeout_ms, 600000);
+  assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1);
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.prompt_change_authorized, false);
+  assert.equal(a.constraints.context_change_authorized, false);
+  assert.equal(a.constraints.timeout_change_authorized, false);
+  assert.equal(a.constraints.production_mutation, false);
+  assert.equal(a.output_policy.public_repo_generated_content_forbidden, true);
+  assert.equal(a.output_policy.human_adjudication_required_if_engineering_pass, true);
+});
+
+test("Llama 3.2 first Constellation C4 prep and guarded runner pin the same packet and memory guard", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_PREP_001.json",
+      "utf8",
+    ),
+  );
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+    "utf8",
+  );
+
+  assert.equal(p.status, "AUTHORIZED_READY_TO_EXECUTE");
+  assert.equal(p.cell.company, "Constellation Software");
+  assert.equal(
+    p.cell.packet_sha256,
+    "9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8",
+  );
+  assert.equal(
+    p.cell.prompt_sha256,
+    "0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8",
+  );
+  assert.equal(p.parameters.context_tokens, 16384);
+  assert.equal(p.parameters.max_output_tokens, 1024);
+  assert.equal(p.parameters.temperature, 0);
+  assert.equal(p.parameters.client_timeout_ms, 600000);
+  assert.equal(p.parameters.pre_inference_minimum_free_ram_gib, 1);
+  assert.equal(p.runtime_basis.context16384_load_fit, "PASS_WITH_HIGH_RAM_PRESSURE");
+
+  assert.match(raw, /llama3\.2:3b-instruct-q4_K_M/);
+  assert.match(raw, /const CONTEXT_TOKENS = 16384;/);
+  assert.match(raw, /const MAX_OUTPUT_TOKENS = 1024;/);
+  assert.match(raw, /const CLIENT_TIMEOUT_MS = 600_000;/);
+  assert.match(raw, /LLAMA3_2_3B_V1_1_AUTH_001\.json/);
+  assert.match(raw, /pre_inference_minimum_free_ram_gib/);
+  assert.match(raw, /INSUFFICIENT_BASELINE_FREE_RAM/);
+  assert.match(raw, /NODE_HTTP_REQUEST_LOOPBACK/);
+  assert.match(raw, /private-runs/);
+  assert.doesNotMatch(raw, /think:\s*false/);
+});

@@ -1704,3 +1704,67 @@ No semantic inference, automatic retry, model switch, context growth beyond 1638
 Context growth stops at 16384 for this qualification path.
 
 A successful 16384 load-only result will still not, by itself, authorize inference.
+
+## D-2026-09-30-095 — Llama 3.2 context16384 load-only preflight passes with high RAM pressure
+
+Observed:
+- exact model: `llama3.2:3b-instruct-q4_K_M`;
+- exact digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
+- context: 16384;
+- prompt provided: false;
+- semantic inference executed: false;
+- loaded free RAM: 0.52 GiB;
+- loaded VRAM: 2746 MiB used / 1217 MiB free;
+- processor split: 46% CPU / 54% GPU;
+- resident size: 4.4 GB;
+- explicit unload completed;
+- post-unload `ollama ps` empty.
+
+Disposition:
+
+`PASS_LOAD_ONLY_MEASURED`
+
+Hardware interpretation:
+
+`PASS_WITH_HIGH_RAM_PRESSURE`
+
+The single context16384 load-only authorization is consumed.
+
+The RAM snapshots are non-monotonic around the run (0.39 GiB before, 0.52 GiB loaded, 2.55 GiB after), so the before-to-loaded delta is not treated as a stable allocation estimate.
+
+Relative to context8192:
+- loaded free RAM: +0.05 GiB;
+- VRAM headroom: +5 MiB;
+- GPU residency: -14 percentage points;
+- resident size: +1.0 GB.
+
+The positive free-RAM delta across separate runs remains OS-state-sensitive and must not be interpreted as lower intrinsic memory use.
+
+The observed 0.52 GiB loaded-state free RAM is materially constrained but is above prior same-protocol candidates Gemma 3 (0.33 GiB) and Granite 4 (0.41 GiB), both of which proceeded to one bounded same-packet C4 under a separate pre-inference baseline-memory guard.
+
+Context growth stops at 16384.
+
+This result does not prove inference fit, production fit, candidate admission, winner status or routing.
+
+## D-2026-09-30-096 — Authorize one bounded Llama 3.2 Constellation C4 inference
+
+One zero-cost local inference is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002` on the identical pinned Constellation Software packet used for prior candidate discrimination.
+
+Fixed contract:
+- company: Constellation Software;
+- module: `MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`;
+- context: 16384;
+- max output: 1024;
+- temperature: 0;
+- client timeout: 600000 ms;
+- keep_alive: 0s;
+- transport: Node loopback HTTP;
+- minimum baseline free RAM before inference: 1.0 GiB;
+- exact packet SHA256: `9a47bcf15d0c90da55349cbb3fbb2da8e9645b859a535dc8909501e89a20b6d8`;
+- exact prompt SHA256: `0891fa34d02a47c83e8342d5da5e653a3566d90f1c63c1bfc662f4e6097c10b8`.
+
+Generated content must remain in the private run destination. If engineering validation passes, human adjudication is mandatory before any candidate-level conclusion.
+
+No automatic retry, prompt/schema/packet/context/output-budget/temperature/timeout change, model switch, production mutation, ranking, routing or publication is authorized.
+
+This is a single discriminator run and does not establish model winner status.
