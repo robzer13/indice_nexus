@@ -1,40 +1,42 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260930-051`
+Resume ID: `VNEXT-G18-C-20260930-052`
 
-## Llama 3.2 3B — context4096 load-only preflight passed
+## Llama 3.2 3B — context8192 preflight blocked by runner authorization-path defect
 
-Pinned identity:
-- model: `llama3.2:3b-instruct-q4_K_M`;
-- digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
-- quantization: Q4_K_M.
-
-Observed context4096 load-only result:
+The context4096 result remains unchanged:
 - status: `PASS_LOAD_ONLY_MEASURED`;
-- no prompt and no semantic inference;
-- loaded free RAM: 0.34 GiB;
-- loaded VRAM: 2683 MiB used / 1280 MiB free;
-- processor split: 20% CPU / 80% GPU;
-- Ollama reported resident size: 2.9 GB;
-- explicit unload completed;
-- post-unload `ollama ps` empty.
+- hardware interpretation: `PASS_WITH_CRITICAL_RAM_PRESSURE`;
+- context4096 authorization: consumed.
+
+The first attempted context8192 command did not reach Ollama.
+
+Observed error:
+
+`LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_NOT_AUTHORIZED`
+
+Root cause:
+- the context8192 runner incorrectly read the already-consumed generic context4096 authorization artifact;
+- it should read `OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json`.
+
+Execution boundary:
+- authorization guard failed before `/api/version`;
+- no Ollama API request was reached;
+- no model load was attempted;
+- no prompt or semantic inference occurred.
 
 Disposition:
 
-`PASS_WITH_CRITICAL_RAM_PRESSURE`
+`BLOCKED_PRE_EXECUTION_WRONG_AUTH_ARTIFACT_REFERENCE`
 
-The context4096 single-run authorization is consumed.
+The context8192 authorization remains unconsumed with exactly one run available.
 
-This result establishes loadability at 4096 only. It does not establish inference fit, production fit, model admission, winner status or routing.
+The runner reference has been corrected and an anti-regression test added.
 
-## Context8192 diagnostic authorization
+No automatic retry is authorized. The same single authorized context8192 load-only run may be executed manually after the corrected runner is merged.
 
-Exactly one context8192 load-only diagnostic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
-
-No prompt, semantic inference, automatic retry, model switch, context growth beyond 8192, production mutation, ranking, routing or publication is authorized.
-
-Context16384 is not pre-authorized.
+Context16384 remains not pre-authorized. Inference remains forbidden.
 
 ## Current exact next action
 
-`EXECUTE_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT`
+`EXECUTE_SAME_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_PREFLIGHT_WITH_CORRECTED_RUNNER`
