@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_RUNNER_AUTH_PATH_BLOCK_V0.1",
+  "result_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-RUNNER-AUTH-PATH-BLOCK-001",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "CONTEXT8192_LOAD_ONLY_PRE_EXECUTION_GUARD",
+  "status": "BLOCKED_PRE_EXECUTION_WRONG_AUTH_ARTIFACT_REFERENCE",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "observed_error": "LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_NOT_AUTHORIZED",
+  "root_cause": {
+    "runner_path": "scripts/vnext-gate18-phase-c-llama3-2-3b-context8192-load-smoke.ts",
+    "incorrect_auth_artifact": "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json",
+    "correct_auth_artifact": "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
+    "reason": "The context8192 runner inherited the context4096 generic authorization path. That artifact had already been consumed by the successful context4096 run, so the runner failed its authorization guard."
+  },
+  "execution_boundary": {
+    "authorization_guard_reached": true,
+    "ollama_version_request_reached": false,
+    "ollama_tags_request_reached": false,
+    "model_load_attempted": false,
+    "prompt_provided": false,
+    "semantic_inference_executed": false,
+    "context_changed": false
+  },
+  "authorization_consumption": {
+    "consumed": false,
+    "authorized_run_count_remaining": 1,
+    "same_context8192_authorization_remains_valid": true
+  },
+  "remediation": {
+    "runner_auth_path_corrected": true,
+    "anti_regression_test_added": true,
+    "automatic_retry_authorized": false,
+    "same_unconsumed_authorized_run_may_be_executed_after_corrected_runner_is_merged": true
+  },
+  "safety": {
+    "model_download_executed": false,
+    "semantic_inference_executed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "EXECUTE_SAME_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_PREFLIGHT_WITH_CORRECTED_RUNNER",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
