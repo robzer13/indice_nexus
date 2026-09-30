@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 download pass to context4096 load-only pre
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_LLAMA3_2_3B_CONTEXT4096_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "RESTORE_OLLAMA_RUNTIME_THEN_EXECUTE_SAME_LLAMA3_2_CONTEXT4096_LOAD_ONLY_PREFLIGHT",
   );
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
