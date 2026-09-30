@@ -1556,3 +1556,20 @@ The step must:
 
 No semantic inference, retry, context change, model switch, paid execution, production mutation, ranking, routing or publication authority is granted.
 
+## D-2026-09-30-089 — Llama 3.2 context4096 preflight blocked before execution because Ollama runtime is unreachable
+
+Observed:
+- `GET http://127.0.0.1:11434/api/tags` failed with a connection error;
+- the subsequent `LLAMA3_2_3B_EXACT_TAG_NOT_FOUND` exception was caused by the absent tag response and is not treated as a model identity failure;
+- exact-tag and digest checks were not completed in this attempt;
+- the model load request was never reached;
+- no prompt or semantic inference was executed.
+
+Disposition:
+
+`BLOCKED_PRE_EXECUTION_OLLAMA_RUNTIME_UNREACHABLE`.
+
+The single context4096 load-only authorization is not consumed and retains one authorized run.
+
+No automatic retry is authorized. The runtime must first be restored and the loopback API verified. After that, the same authorized context4096 load-only preflight may be executed once.
+
