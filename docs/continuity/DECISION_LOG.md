@@ -1573,3 +1573,48 @@ The single context4096 load-only authorization is not consumed and retains one a
 
 No automatic retry is authorized. The runtime must first be restored and the loopback API verified. After that, the same authorized context4096 load-only preflight may be executed once.
 
+## D-2026-09-30-090 — Llama 3.2 context4096 load-only preflight passes with critical RAM pressure
+
+Observed:
+- exact model: `llama3.2:3b-instruct-q4_K_M`;
+- exact digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
+- context: 4096;
+- prompt provided: false;
+- semantic inference executed: false;
+- loaded free RAM: 0.34 GiB;
+- loaded VRAM: 2683 MiB used / 1280 MiB free;
+- processor split: 20% CPU / 80% GPU;
+- resident size: 2.9 GB;
+- explicit unload completed;
+- post-unload `ollama ps` empty.
+
+Disposition:
+
+`PASS_LOAD_ONLY_MEASURED`
+
+Hardware interpretation:
+
+`PASS_WITH_CRITICAL_RAM_PRESSURE`
+
+The single context4096 load-only authorization is consumed.
+
+The RAM snapshots are non-monotonic around the run (0.29 GiB before, 0.34 GiB loaded, 1.05 GiB after), so the before-to-loaded delta is not treated as a stable allocation estimate. The loaded-state free-RAM measurement remains the controlling risk signal.
+
+This result proves loadability at 4096 only. It does not prove inference fit, production fit, candidate admission, model winner status or routing.
+
+## D-2026-09-30-091 — Authorize one Llama 3.2 context8192 load-only diagnostic
+
+Because the 4096 load-only preflight passed but retained only 0.34 GiB free RAM, the next step is a diagnostic context-growth measurement rather than semantic inference.
+
+Exactly one context8192 load-only run is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+The step must:
+- verify exact tag, full digest and Q4_K_M quantization;
+- require no other loaded Ollama model;
+- load without a prompt at `num_ctx=8192`;
+- capture RAM, VRAM and `ollama ps` before, loaded and after;
+- explicitly unload after measurement.
+
+No semantic inference, automatic retry, model switch, context growth beyond 8192, production mutation, ranking, routing or publication is authorized.
+
+Context16384 remains not pre-authorized.

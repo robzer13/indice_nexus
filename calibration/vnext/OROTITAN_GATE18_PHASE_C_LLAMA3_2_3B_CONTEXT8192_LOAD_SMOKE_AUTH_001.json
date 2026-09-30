@@ -1,0 +1,53 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_1_CANDIDATE_CONTEXT_GROWTH_LOAD_SMOKE",
+  "status": "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "source_result": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+  "model": {
+    "candidate_id": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+    "ollama_model_name": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "quantization": "Q4_K_M"
+  },
+  "planned_execution": {
+    "context_tokens": 8192,
+    "mode": "LOCAL_MODEL_LOAD_WITHOUT_INFERENCE",
+    "keep_alive_load": "2m",
+    "explicit_unload": true,
+    "prompt_provided": false,
+    "semantic_inference_requested": false
+  },
+  "authority": {
+    "load_smoke_authorized": true,
+    "inference_authorized": false,
+    "download_authorized": false,
+    "authorized_run_count": 1
+  },
+  "constraints": {
+    "automatic_retry_authorized": false,
+    "automatic_model_switch_authorized": false,
+    "context_change_beyond_8192_authorized": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "safety_rationale": {
+    "source_loaded_free_ram_gib": 0.34,
+    "source_vram_headroom_mib": 1280,
+    "source_processor_split": "20%/80% CPU/GPU",
+    "risk_class": "CRITICAL_RAM_PRESSURE_DIAGNOSTIC_ONLY",
+    "purpose": "Empirically determine whether target-sized prompt context is loadable before any inference decision.",
+    "direct_inference_forbidden": true,
+    "context16384_not_pre_authorized": true
+  },
+  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

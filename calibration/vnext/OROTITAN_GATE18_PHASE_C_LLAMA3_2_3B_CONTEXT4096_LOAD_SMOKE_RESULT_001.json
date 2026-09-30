@@ -1,0 +1,70 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT4096_LOAD_SMOKE_RESULT_V0.1",
+  "result_id": "G18-PHASEC-LLAMA3_2-3B-CONTEXT4096-LOAD-SMOKE-RESULT-001",
+  "authorization_id": "G18-PHASEC-LLAMA3_2-3B-LOAD-SMOKE-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "POST_GRANITE4_1_CANDIDATE_ESCALATION_LOAD_SMOKE",
+  "status": "PASS_LOAD_ONLY_MEASURED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "target": {
+    "model": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "quantization": "Q4_K_M",
+    "context_tokens": 4096,
+    "prompt_provided": false,
+    "inference_requested": false
+  },
+  "measured": {
+    "before_free_ram_gib": 0.29,
+    "loaded_free_ram_gib": 0.34,
+    "after_free_ram_gib": 1.05,
+    "before_vram_used_mib": 418,
+    "before_vram_free_mib": 3545,
+    "loaded_vram_used_mib": 2683,
+    "loaded_vram_free_mib": 1280,
+    "after_vram_used_mib": 412,
+    "after_vram_free_mib": 3551,
+    "processor_split": "20%/80% CPU/GPU",
+    "ollama_reported_size": "2.9 GB",
+    "load_only_confirmed": true,
+    "load_done_reason": "load",
+    "explicit_unload_complete": true,
+    "unload_done_reason": "unload"
+  },
+  "derived": {
+    "free_ram_delta_before_to_loaded_gib": 0.05,
+    "vram_increment_mib": 2265,
+    "vram_headroom_mib": 1280,
+    "ram_snapshot_non_monotonic": true,
+    "comparison_to_ministral3_context4096": {
+      "loaded_free_ram_delta_gib": -0.01,
+      "vram_headroom_delta_mib": -286,
+      "gpu_residency_delta_percentage_points": 28
+    },
+    "comparison_to_granite4_1_context4096": {
+      "loaded_free_ram_delta_gib": -1.05,
+      "vram_headroom_delta_mib": -362,
+      "gpu_residency_delta_percentage_points": -5
+    }
+  },
+  "safety": {
+    "network_scope": "LOOPBACK_ONLY",
+    "semantic_inference_executed": false,
+    "model_download_executed": false,
+    "retry_executed": false,
+    "context_changed": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "interpretation": {
+    "hardware_fit_at_4096": "PASS_WITH_CRITICAL_RAM_PRESSURE",
+    "inference_fit_proven": false,
+    "production_fit_proven": false,
+    "context8192_load_only_justified": true,
+    "context16384_authorized": false,
+    "direct_inference_authorized": false
+  },
+  "next_action": "EXECUTE_LLAMA3_2_3B_CONTEXT8192_LOAD_ONLY_MEMORY_PREFLIGHT",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
