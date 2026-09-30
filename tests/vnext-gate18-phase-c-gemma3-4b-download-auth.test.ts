@@ -46,7 +46,7 @@ test("Gemma 3 4B download runner pulls exact tag and contains no generation or l
   assert.match(raw, /loadSmokeExecuted: false/);
 });
 
-test("Phase C advances from Llama 3.2 context8192 pass to context16384 final load-only diagnostic", () => {
+test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constellation C4", () => {
   const entry = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_ENTRY_V0.1.json",
@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context8192 pass to context16384 final loa
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_LLAMA3_2_3B_CONTEXT16384_LOAD_ONLY_MEMORY_PREFLIGHT",
+    "EXECUTE_FIRST_BOUNDED_LLAMA3_2_CONSTELLATION_C4_INFERENCE_V1_1",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -81,11 +81,27 @@ test("Phase C advances from Llama 3.2 context8192 pass to context16384 final loa
     entry.llama3_2_3b_context8192_hardware_fit,
     "PASS_WITH_CRITICAL_RAM_PRESSURE",
   );
-  assert.equal(entry.llama3_2_3b_context16384_load_authorized, true);
-  assert.equal(entry.llama3_2_3b_context16384_load_authorized_run_count, 1);
-  assert.equal(entry.llama3_2_3b_context16384_purpose, "FINAL_DIAGNOSTIC_ONLY");
+  assert.equal(entry.llama3_2_3b_context16384_load_authorized, false);
+  assert.equal(entry.llama3_2_3b_context16384_load_authorized_run_count, 0);
+  assert.equal(entry.llama3_2_3b_context16384_authorization_consumed, true);
+  assert.equal(entry.llama3_2_3b_context16384_load_status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(entry.llama3_2_3b_context16384_loaded_free_ram_gib, 0.52);
+  assert.equal(entry.llama3_2_3b_context16384_vram_used_mib, 2746);
+  assert.equal(entry.llama3_2_3b_context16384_vram_free_mib, 1217);
+  assert.equal(entry.llama3_2_3b_context16384_processor_split, "46%/54% CPU/GPU");
+  assert.equal(
+    entry.llama3_2_3b_context16384_hardware_fit,
+    "PASS_WITH_HIGH_RAM_PRESSURE",
+  );
+  assert.equal(entry.llama3_2_3b_hardware_qualification, "PASS_WITH_HIGH_RAM_PRESSURE");
+  assert.equal(entry.llama3_2_first_c4_company, "Constellation Software");
+  assert.equal(entry.llama3_2_first_c4_context_tokens, 16384);
+  assert.equal(entry.llama3_2_first_c4_max_output_tokens, 1024);
+  assert.equal(entry.llama3_2_first_c4_minimum_free_ram_gib, 1);
+  assert.equal(entry.llama3_2_first_c4_inference_authorized, true);
+  assert.equal(entry.llama3_2_first_c4_authorized_run_count, 1);
   assert.equal(entry.llama3_2_3b_context_growth_beyond_16384_authorized, false);
-  assert.equal(entry.llama3_2_3b_inference_authorized, false);
+  assert.equal(entry.llama3_2_3b_inference_authorized, true);
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);
