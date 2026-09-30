@@ -24,22 +24,33 @@ Measured loaded state:
 - VRAM free: 1280 MiB;
 - processor split: 20% CPU / 80% GPU.
 
-The load-only authorization is consumed. No inference occurred.
+Authorization: CONSUMED
+Inference: NOT_EXECUTED
 
 ## OI-005 — Model winner and routing
 Status: OPEN_GUARDED
 
 ## OI-006 — Llama 3.2 context8192 load-only diagnostic
-Status: AUTHORIZED_UNCONSUMED_CORRECTED_RUNNER_READY
+Status: COMPLETE_PASS_WITH_CRITICAL_RAM_PRESSURE
+
+Measured loaded state:
+- free RAM: 0.47 GiB;
+- VRAM used: 2751 MiB;
+- VRAM free: 1212 MiB;
+- processor split: 32% CPU / 68% GPU.
+
+Authorization: CONSUMED
+Inference: NOT_EXECUTED
+
+## OI-007 — Llama 3.2 context16384 final load-only diagnostic
+Status: AUTHORIZED_UNCONSUMED
 Priority: P0
 
-The first command was blocked before any Ollama call because the runner referenced the already-consumed context4096 authorization artifact.
+Exactly one load-only run at 16384 is authorized.
 
-Authorization consumption: FALSE
-Authorized runs remaining: 1
 Inference: NOT_AUTHORIZED
 Automatic retry: NOT_AUTHORIZED
-Context16384: NOT_PREAUTHORIZED
+Context growth beyond 16384: NOT_AUTHORIZED
 
 Required action:
-execute the same context8192 load-only preflight once using the corrected runner, then submit the complete JSON result for adjudication.
+execute the exact context16384 load-only runner once and submit the complete JSON result for adjudication.

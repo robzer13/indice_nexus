@@ -1648,3 +1648,59 @@ The runner is corrected to use the exact context8192 authorization artifact and 
 This correction does not authorize automatic retry, context16384 growth, inference, model switch, production mutation, ranking, routing or publication.
 
 The same single unconsumed context8192 load-only authorization remains valid for one manual execution after the corrected runner is merged.
+
+## D-2026-09-30-093 — Llama 3.2 context8192 load-only preflight passes with critical RAM pressure
+
+Observed:
+- exact model: `llama3.2:3b-instruct-q4_K_M`;
+- exact digest: `a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72`;
+- context: 8192;
+- prompt provided: false;
+- semantic inference executed: false;
+- loaded free RAM: 0.47 GiB;
+- loaded VRAM: 2751 MiB used / 1212 MiB free;
+- processor split: 32% CPU / 68% GPU;
+- resident size: 3.4 GB;
+- explicit unload completed;
+- post-unload `ollama ps` empty.
+
+Disposition:
+
+`PASS_LOAD_ONLY_MEASURED`
+
+Hardware interpretation:
+
+`PASS_WITH_CRITICAL_RAM_PRESSURE`
+
+The single context8192 load-only authorization is consumed.
+
+The RAM snapshots are non-monotonic around the run (0.39 GiB before, 0.47 GiB loaded, 1.67 GiB after), so the before-to-loaded delta is not treated as a stable allocation estimate. The loaded-state free-RAM measurement remains the controlling risk signal.
+
+Relative to context4096:
+- loaded free RAM: +0.13 GiB;
+- VRAM headroom: -68 MiB;
+- GPU residency: -12 percentage points;
+- resident size: +0.5 GB.
+
+The positive free-RAM delta across separate runs must not be interpreted as lower intrinsic memory use because OS state differs between snapshots.
+
+This result proves loadability at 8192 only. It does not prove inference fit, production fit, candidate admission, model winner status or routing.
+
+## D-2026-09-30-094 — Authorize one Llama 3.2 context16384 final load-only diagnostic
+
+Because context8192 passed but retained only 0.47 GiB free RAM, direct inference remains inappropriate without one final context-growth measurement.
+
+The exact Constellation C4 comparison path uses 16384 context tokens. Therefore exactly one context16384 load-only diagnostic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+The step must:
+- verify exact tag, full digest and Q4_K_M quantization;
+- require no other loaded Ollama model;
+- load without a prompt at `num_ctx=16384`;
+- capture RAM, VRAM and `ollama ps` before, loaded and after;
+- explicitly unload after measurement.
+
+No semantic inference, automatic retry, model switch, context growth beyond 16384, production mutation, ranking, routing or publication is authorized.
+
+Context growth stops at 16384 for this qualification path.
+
+A successful 16384 load-only result will still not, by itself, authorize inference.

@@ -207,7 +207,7 @@ test("Llama 3.2 context4096 result records measured pass with critical RAM press
   assert.equal(r.safety.semantic_inference_executed, false);
 });
 
-test("Llama 3.2 context8192 authorization is single-use diagnostic-only and non-inferential", () => {
+test("Llama 3.2 context8192 authorization is consumed after the measured diagnostic", () => {
   const a = JSON.parse(
     readFileSync(
       "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
@@ -215,15 +215,17 @@ test("Llama 3.2 context8192 authorization is single-use diagnostic-only and non-
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.status, "CONSUMED_SINGLE_LOAD_ONLY_COMPLETE");
   assert.equal(a.planned_execution.context_tokens, 8192);
-  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.load_smoke_authorized, false);
   assert.equal(a.authority.inference_authorized, false);
-  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.authority.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.context_change_beyond_8192_authorized, false);
-  assert.equal(a.safety_rationale.risk_class, "CRITICAL_RAM_PRESSURE_DIAGNOSTIC_ONLY");
-  assert.equal(a.safety_rationale.context16384_not_pre_authorized, true);
+  assert.equal(
+    a.execution_result,
+    "G18-PHASEC-LLAMA3_2-3B-CONTEXT8192-LOAD-SMOKE-RESULT-001",
+  );
 });
 
 test("Llama 3.2 context8192 protocol and runner preserve load-only boundaries", () => {
@@ -261,3 +263,86 @@ test("Llama 3.2 context8192 protocol and runner preserve load-only boundaries", 
   assert.match(raw, /semanticInferenceExecuted: false/);
   assert.match(raw, /retryExecuted: false/);
 });
+
+test("Llama 3.2 context8192 result records measured pass with critical RAM pressure", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "PASS_LOAD_ONLY_MEASURED");
+  assert.equal(r.target.context_tokens, 8192);
+  assert.equal(r.target.quantization, "Q4_K_M");
+  assert.equal(r.measured.loaded_free_ram_gib, 0.47);
+  assert.equal(r.measured.loaded_vram_used_mib, 2751);
+  assert.equal(r.measured.loaded_vram_free_mib, 1212);
+  assert.equal(r.measured.processor_split, "32%/68% CPU/GPU");
+  assert.equal(r.measured.load_only_confirmed, true);
+  assert.equal(r.measured.explicit_unload_complete, true);
+  assert.equal(r.derived.ram_snapshot_non_monotonic, true);
+  assert.equal(
+    r.interpretation.hardware_fit_at_8192,
+    "PASS_WITH_CRITICAL_RAM_PRESSURE",
+  );
+  assert.equal(r.interpretation.context16384_load_only_justified, true);
+  assert.equal(r.safety.semantic_inference_executed, false);
+});
+
+test("Llama 3.2 context16384 authorization is one final load-only diagnostic", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOAD_ONLY_UNCONSUMED");
+  assert.equal(a.planned_execution.context_tokens, 16384);
+  assert.equal(a.authority.load_smoke_authorized, true);
+  assert.equal(a.authority.inference_authorized, false);
+  assert.equal(a.authority.authorized_run_count, 1);
+  assert.equal(a.constraints.automatic_retry_authorized, false);
+  assert.equal(a.constraints.context_change_beyond_16384_authorized, false);
+  assert.equal(
+    a.safety_rationale.risk_class,
+    "CRITICAL_RAM_PRESSURE_FINAL_DIAGNOSTIC",
+  );
+  assert.equal(a.safety_rationale.no_further_context_growth, true);
+});
+
+test("Llama 3.2 context16384 protocol and runner preserve final load-only boundaries", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_ONLY_PROTOCOL_001.json",
+      "utf8",
+    ),
+  );
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-llama3-2-3b-context16384-load-smoke.ts",
+    "utf8",
+  );
+
+  assert.equal(p.target.context_tokens, 16384);
+  assert.equal(p.execution_contract.load_request.prompt_field_present, false);
+  assert.equal(p.execution_contract.unload_request.prompt_field_present, false);
+  assert.equal(p.authority.semantic_inference_authorized, false);
+  assert.equal(p.authority.retry_authorized, false);
+  assert.equal(p.authority.context_change_beyond_16384_authorized, false);
+
+  assert.match(raw, /const CONTEXT_TOKENS = 16384;/);
+  assert.match(
+    raw,
+    /OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_SMOKE_AUTH_001\.json/,
+  );
+  assert.match(
+    raw,
+    /OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT16384_LOAD_ONLY_PROTOCOL_001\.json/,
+  );
+  assert.doesNotMatch(raw, /prompt\s*:/);
+  assert.match(raw, /OTHER_OLLAMA_MODEL_ALREADY_LOADED/);
+  assert.match(raw, /semanticInferenceExecuted: false/);
+  assert.match(raw, /retryExecuted: false/);
+});
+
