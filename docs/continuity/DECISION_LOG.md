@@ -1618,3 +1618,33 @@ The step must:
 No semantic inference, automatic retry, model switch, context growth beyond 8192, production mutation, ranking, routing or publication is authorized.
 
 Context16384 remains not pre-authorized.
+
+## D-2026-09-30-092 — Llama 3.2 context8192 command is blocked pre-execution by an authorization-path defect
+
+Observed local result:
+
+`LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_NOT_AUTHORIZED`
+
+Repository inspection establishes the cause:
+- the context8192 runner read `OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json`;
+- that artifact is the already-consumed context4096 authorization;
+- the valid unconsumed 8192 authorization is `OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json`.
+
+The authorization guard occurs before `/api/version`, `/api/tags` and any `/api/generate` request.
+
+Therefore:
+- no Ollama API request was reached;
+- no model load occurred;
+- no prompt was provided;
+- no semantic inference occurred;
+- the 8192 authorization is not consumed and retains one run.
+
+Disposition:
+
+`BLOCKED_PRE_EXECUTION_WRONG_AUTH_ARTIFACT_REFERENCE`
+
+The runner is corrected to use the exact context8192 authorization artifact and an anti-regression test is added.
+
+This correction does not authorize automatic retry, context16384 growth, inference, model switch, production mutation, ranking, routing or publication.
+
+The same single unconsumed context8192 load-only authorization remains valid for one manual execution after the corrected runner is merged.

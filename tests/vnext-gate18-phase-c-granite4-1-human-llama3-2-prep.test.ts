@@ -246,6 +246,15 @@ test("Llama 3.2 context8192 protocol and runner preserve load-only boundaries", 
   assert.equal(p.authority.context_change_beyond_8192_authorized, false);
 
   assert.match(raw, /const CONTEXT_TOKENS = 8192;/);
+  assert.match(
+    raw,
+    /OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001\.json/,
+  );
+  assert.doesNotMatch(
+    raw,
+    /readFile\(\s*"calibration\/vnext\/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001\.json"/,
+  );
+
   assert.match(raw, /a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72/);
   assert.match(raw, /OTHER_OLLAMA_MODEL_ALREADY_LOADED/);
   assert.doesNotMatch(raw, /prompt\s*:/);

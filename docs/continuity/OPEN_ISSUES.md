@@ -30,14 +30,16 @@ The load-only authorization is consumed. No inference occurred.
 Status: OPEN_GUARDED
 
 ## OI-006 — Llama 3.2 context8192 load-only diagnostic
-Status: AUTHORIZED_UNCONSUMED
+Status: AUTHORIZED_UNCONSUMED_CORRECTED_RUNNER_READY
 Priority: P0
 
-Exactly one load-only run at 8192 is authorized.
+The first command was blocked before any Ollama call because the runner referenced the already-consumed context4096 authorization artifact.
 
+Authorization consumption: FALSE
+Authorized runs remaining: 1
 Inference: NOT_AUTHORIZED
 Automatic retry: NOT_AUTHORIZED
 Context16384: NOT_PREAUTHORIZED
 
 Required action:
-execute the exact context8192 load-only runner once and submit the complete JSON result for adjudication.
+execute the same context8192 load-only preflight once using the corrected runner, then submit the complete JSON result for adjudication.

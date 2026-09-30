@@ -80,7 +80,7 @@ async function main() {
 
   const auth = JSON.parse(
     await readFile(
-      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_LOAD_SMOKE_AUTH_001.json",
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_3B_CONTEXT8192_LOAD_SMOKE_AUTH_001.json",
       "utf8",
     ),
   );
