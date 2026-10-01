@@ -1,0 +1,172 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/analytical-block-output.v0.1.json",
+  "title": "OroTitan Analytical Block Output V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "block_id",
+    "block_version",
+    "execution_status",
+    "execution_confidence",
+    "canonical_verdict_fields",
+    "core_findings",
+    "supporting_evidence_ids",
+    "contradicting_evidence_ids",
+    "calculation_ids",
+    "material_assumption_ids",
+    "conflict_ids",
+    "unresolved_points",
+    "material_dependencies",
+    "reopen_triggers",
+    "rationale",
+    "last_research_date",
+    "data_cutoff"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "block_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "block_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "execution_status": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/blockExecutionStatus"
+    },
+    "execution_confidence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/executionConfidence"
+    },
+    "canonical_verdict_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "field",
+          "value",
+          "evidence_ids",
+          "calculation_ids",
+          "assumption_ids",
+          "conflict_ids"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "calculation_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "assumption_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "conflict_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "core_findings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "supporting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "contradicting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "calculation_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "material_assumption_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "conflict_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "unresolved_points": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "material_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "reopen_triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "last_research_date": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+    },
+    "data_cutoff": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+    }
+  }
+}
