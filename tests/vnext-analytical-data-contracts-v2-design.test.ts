@@ -118,6 +118,7 @@ test("unknown Evidence ID is rejected when an authoritative reference index is s
       calculation_ids: [],
       material_assumption_ids: [],
       conflict_ids: [],
+      supporting_analysis_artifact_refs: [],
       unresolved_points: [],
       material_dependencies: ["BUSINESS_MODEL"],
       reopen_triggers: ["NEW_COMPETITOR_EVIDENCE"],
@@ -152,6 +153,7 @@ test("supporting and contradicting overlap cannot pass silently", () => {
       calculation_ids: [],
       material_assumption_ids: [],
       conflict_ids: [],
+      supporting_analysis_artifact_refs: [],
       unresolved_points: ["Same evidence is being interpreted both ways."],
       material_dependencies: ["BUSINESS_MODEL"],
       reopen_triggers: [],
@@ -320,6 +322,64 @@ test("Open Questions remains a projection rather than a second authoritative reg
     "utf8",
   );
   assert.match(raw, /Open Questions must not become a second authoritative register/);
+});
+
+test("Runway requires TAM, serviceable market and realistic capture pool as distinct scopes", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "RUNWAY_ANALYSIS",
+    body: {
+      growth_sources: [],
+      market_scopes: [
+        {
+          scope_type: "TAM",
+          value: { representation: "UNKNOWN", reason: "Not yet bounded." },
+          supporting_evidence_ids: [],
+          calculation_ids: [],
+          limitations: ["Top-down TAM alone is insufficient."],
+        },
+      ],
+      constraint_findings: [],
+    },
+  };
+
+  const result = validateAnalyticalDataArtifact(artifact);
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.ok(result.errors.some((error) => error.includes("SERVICEABLE_MARKET")));
+    assert.ok(result.errors.some((error) => error.includes("REALISTIC_CAPTURE_POOL")));
+  }
+});
+
+test("Red Team cannot complete with only a partial adversarial perspective set", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "RED_TEAM_RECORD",
+    body: {
+      perspectives: [
+        {
+          perspective: "BEAR_CASE",
+          challenge: "Growth may normalize materially below the base case.",
+          supporting_evidence_ids: [],
+          counterevidence_ids: [],
+          affected_blocks: ["RUNWAY"],
+          reopen_recommended: false,
+          outcome: "Challenge remains open.",
+          limitations: [],
+        },
+      ],
+    },
+  };
+
+  const result = validateAnalyticalDataArtifact(artifact);
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.ok(
+      result.errors.some((error) =>
+        error.includes("missing mandatory Red Team perspective"),
+      ),
+    );
+  }
 });
 
 test("material assumptions preserve qualitative as well as numeric values", () => {
