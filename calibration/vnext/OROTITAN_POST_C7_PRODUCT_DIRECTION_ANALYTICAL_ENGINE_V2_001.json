@@ -1,0 +1,80 @@
+{
+  "format": "OROTITAN_POST_C7_PRODUCT_DIRECTION_V0.1",
+  "decision_id": "POST-C7-PRODUCT-DIRECTION-ANALYTICAL-ENGINE-V2-001",
+  "decided_at": "2026-10-01",
+  "authority": {
+    "type": "EXPLICIT_USER_DIRECTION",
+    "summary": "Improve analytical depth materially, improve process fluidity materially, and redesign the interface to a premium research-workbench standard while deferring full local automation until materially stronger hardware/model capability is available."
+  },
+  "status": "ANALYTICAL_ENGINE_V2_SELECTED_AS_POST_C7_DIRECTION",
+  "strategic_objectives": [
+    "Materially deepen company-specific equity analysis.",
+    "Make sector, cyclicality, technology, industry structure and causal reasoning first-class analytical capabilities.",
+    "Prevent repetitive analysis loops and dead-end research.",
+    "Reduce user operational friction through explicit blockers and deterministic next actions.",
+    "Deliver a premium French-first equity-research workbench UI.",
+    "Preserve evidence traceability and frozen canonical semantics.",
+    "Keep AI execution provider-agnostic so manual ChatGPT assistance can later be replaced by stronger local hardware or an approved external provider without redesigning the analytical engine."
+  ],
+  "priority_order": [
+    "ANALYTICAL_QUALITY",
+    "PROCESS_CORRECTNESS_AND_FLUIDITY",
+    "UI_UX_QUALITY",
+    "AUTOMATION_RATE"
+  ],
+  "selected_architecture": "docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md",
+  "immediate_program": [
+    "ANALYTICAL_ENGINE_V2_DATA_CONTRACTS",
+    "SECTOR_INTELLIGENCE_LIBRARY_V0.1",
+    "PROCESS_ENGINE_V2_STATE_MACHINE",
+    "ANALYSIS_TASK_PROVIDER_CONTRACT",
+    "WORKBENCH_INFORMATION_ARCHITECTURE",
+    "UI_DESIGN_SYSTEM_V0.1",
+    "IMPLEMENTATION_BACKLOG_V0.1"
+  ],
+  "product_requirements": {
+    "french_first_ui": true,
+    "research_queue_shortlist": true,
+    "stage_and_block_progress_visualization": true,
+    "blockers_and_next_action": true,
+    "market_price_refresh": true,
+    "export_pdf": true,
+    "export_markdown": true,
+    "export_json": true,
+    "export_csv": true,
+    "company_analysis_map": true,
+    "open_questions": true,
+    "evidence_browser": true,
+    "history_and_monitoring": true
+  },
+  "analytical_requirements": {
+    "company_economic_dna": true,
+    "composable_sector_overlays": true,
+    "cyclicality_engine": true,
+    "technology_engine": true,
+    "industry_structure_engine": true,
+    "causal_graph": true,
+    "moat_proof_v2": true,
+    "runway_v2": true,
+    "return_quality_v2": true,
+    "forensic_fcf": true,
+    "capital_allocation_v2": true,
+    "management_governance": true,
+    "outside_view_base_rates": true,
+    "variant_perception": true,
+    "risk_resilience": true,
+    "red_team_v2": true,
+    "adaptive_valuation": true
+  },
+  "constraints": {
+    "frozen_methodology_semantics_preserved": true,
+    "no_parallel_scoring_ontology": true,
+    "no_production_mutation": true,
+    "no_routing_freeze": true,
+    "no_model_winner_selected": true,
+    "no_full_local_automation_dependency": true,
+    "no_provider_lock_in": true
+  },
+  "next_action": "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
