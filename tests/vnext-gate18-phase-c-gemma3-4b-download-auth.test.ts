@@ -99,7 +99,16 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
   assert.equal(entry.llama3_2_first_c4_max_output_tokens, 1024);
   assert.equal(entry.llama3_2_first_c4_minimum_free_ram_gib, 1);
   assert.equal(entry.llama3_2_first_c4_inference_authorized, true);
-  assert.equal(entry.llama3_2_first_c4_authorized_run_count, 1);\n  assert.equal(entry.llama3_2_first_c4_precondition_block_count, 3);\n  assert.equal(entry.llama3_2_first_c4_precondition_status, "BLOCKED_BEFORE_INFERENCE_OLLAMA_PS_CHECK_FAILED");\n  assert.equal(entry.llama3_2_first_c4_ollama_ps_guard_transport, "OLLAMA_LOOPBACK_HTTP_API_PS");
+  assert.equal(entry.llama3_2_first_c4_authorized_run_count, 1);
+  assert.equal(entry.llama3_2_first_c4_precondition_block_count, 3);
+  assert.equal(
+    entry.llama3_2_first_c4_precondition_status,
+    "BLOCKED_BEFORE_INFERENCE_OLLAMA_PS_CHECK_FAILED",
+  );
+  assert.equal(
+    entry.llama3_2_first_c4_ollama_ps_guard_transport,
+    "OLLAMA_LOOPBACK_HTTP_API_PS",
+  );
   assert.equal(entry.llama3_2_3b_context_growth_beyond_16384_authorized, false);
   assert.equal(entry.llama3_2_3b_inference_authorized, true);
   assert.equal(entry.gemma3_terms_user_accepted, true);
