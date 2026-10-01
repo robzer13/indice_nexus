@@ -93,7 +93,7 @@
           }
         },
         "best_next_source": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
