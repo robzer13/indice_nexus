@@ -10,37 +10,34 @@ Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 Status: FAIL_RAW_SCHEMA_FORENSICS_IN_PROGRESS
 Priority: P0
 
-Historical inference:
-- consumed exactly one authorized inference;
-- runtime completed;
-- 895 / 1024 generated tokens;
+Historical run:
+- inference executed once and authorization consumed;
 - raw JSON syntactically valid;
-- raw V1.1 schema failed;
-- semantics and human adjudication not reached.
+- exactly one raw-schema issue;
+- path `priority_findings.1.counterevidence_ids.0`.
 
-First read-only forensic:
+Second forensic:
 - COMPLETE;
-- exactly one schema issue;
-- path `priority_findings.1.counterevidence_ids.0`;
-- code `invalid_format`;
-- format `regex`.
+- malformed value length: 5;
+- exact `E-NNN` tokens: 0;
+- deterministic token decomposition: not admissible.
 
-## OI-004 — Llama 3.2 counterevidence-ID forensic
+## OI-004 — Llama 3.2 prefix/separator forensic
 Status: AUTHORIZED_UNCONSUMED
 Priority: P0
 
-Exactly one local read-only forensic is authorized.
+Allowed:
+- inspect suffix positions 2-4;
+- test whether digits already identify one canonical packet ID;
+- normalize only prefix/separator on an in-memory copy;
+- rerun V1.1 on that copy.
 
-It may inspect only the malformed ID structure and canonical packet IDs and may perform one in-memory diagnostic replacement if the decomposition is unambiguous.
-
-It may not:
-- print the malformed raw value;
-- print narrative content;
-- mutate the source artifact;
-- call Ollama;
-- use network access;
-- execute model inference;
-- authorize a retry.
+Forbidden:
+- digit substitution;
+- source mutation;
+- raw malformed value publication;
+- inference;
+- retry authorization.
 
 Additional Llama inference authorized: FALSE
 
