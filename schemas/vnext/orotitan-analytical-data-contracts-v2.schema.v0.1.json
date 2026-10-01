@@ -44,6 +44,30 @@
       "$ref": "#/$defs/causalGraphArtifact"
     },
     {
+      "$ref": "#/$defs/moatProofAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/runwayAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/returnQualityAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/fcfForensicAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/outsideViewAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/variantPerceptionAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/riskResilienceAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/redTeamRecordArtifact"
+    },
+    {
       "$ref": "#/$defs/technologyAnalysisArtifact"
     },
     {
@@ -1107,6 +1131,7 @@
         "calculation_ids",
         "material_assumption_ids",
         "conflict_ids",
+        "supporting_analysis_artifact_refs",
         "unresolved_points",
         "material_dependencies",
         "reopen_triggers",
@@ -1218,6 +1243,14 @@
         "last_research_date": {
           "type": "string",
           "format": "date"
+        },
+        "supporting_analysis_artifact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
         }
       }
     },
@@ -1482,6 +1515,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "deployments",
         "organic_reinvestment",
         "acquisitions",
         "buybacks",
@@ -1552,6 +1586,12 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "deployments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capitalDeploymentRecord"
           }
         }
       }
@@ -3234,6 +3274,1516 @@
             "MEDIUM",
             "LOW"
           ]
+        }
+      }
+    },
+    "moatMechanismRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism_id",
+        "claim",
+        "mechanism",
+        "issuer_evidence_ids",
+        "independent_evidence_ids",
+        "customer_evidence_ids",
+        "competitor_evidence_ids",
+        "behavioral_evidence_ids",
+        "economic_consequence",
+        "evidence_against_ids",
+        "alternative_explanation",
+        "replication_path",
+        "substitution_path",
+        "durability_horizon",
+        "moat_trend",
+        "calculation_ids",
+        "material_assumption_ids",
+        "limitations"
+      ],
+      "properties": {
+        "mechanism_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "independent_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "customer_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "competitor_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "behavioral_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "economic_consequence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_against_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "alternative_explanation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "replication_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "substitution_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "durability_horizon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "moat_trend": {
+          "type": "string",
+          "minLength": 1
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "material_assumption_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "moatProofAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanisms"
+      ],
+      "properties": {
+        "mechanisms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/moatMechanismRecord"
+          }
+        }
+      }
+    },
+    "moatProofAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "MOAT_PROOF_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/moatProofAnalysisBody"
+        }
+      }
+    },
+    "runwayGrowthSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "growth_source_id",
+        "classification",
+        "mechanism",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "calculation_ids",
+        "constraints",
+        "marginal_economics",
+        "limitations"
+      ],
+      "properties": {
+        "growth_source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "enum": [
+            "CORE",
+            "OPTIONALITY",
+            "ACQUIRED",
+            "CYCLICAL",
+            "PRICE",
+            "VOLUME",
+            "SHARE",
+            "NEW_MARKET"
+          ]
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "marginal_economics": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "marketScopeRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_type",
+        "value",
+        "supporting_evidence_ids",
+        "calculation_ids",
+        "limitations"
+      ],
+      "properties": {
+        "scope_type": {
+          "enum": [
+            "TAM",
+            "SERVICEABLE_MARKET",
+            "REALISTIC_CAPTURE_POOL"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/assumptionValue"
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "runwayAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "growth_sources",
+        "market_scopes",
+        "constraint_findings"
+      ],
+      "properties": {
+        "growth_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/runwayGrowthSource"
+          }
+        },
+        "market_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/marketScopeRecord"
+          }
+        },
+        "constraint_findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "runwayAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RUNWAY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/runwayAnalysisBody"
+        }
+      }
+    },
+    "returnQualityMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "metric_type",
+        "calculation_ids",
+        "supporting_evidence_ids",
+        "interpretability",
+        "attributability",
+        "denominator_or_basis_warning",
+        "limitations"
+      ],
+      "properties": {
+        "metric_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric_type": {
+          "enum": [
+            "STANDARD_ROIC",
+            "ALL_IN_ROIC",
+            "ROIIC",
+            "MARGINAL_RETURN",
+            "COHORT_RETURN",
+            "GROWTH_SPEND_ECONOMICS",
+            "INCREMENTAL_MARGIN",
+            "CAC_PAYBACK",
+            "UNIT_ECONOMICS",
+            "CASH_CONVERSION"
+          ]
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "interpretability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attributability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "denominator_or_basis_warning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "returnQualityAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metrics",
+        "business_model_adjustments",
+        "near_zero_invested_capital_risk"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/returnQualityMetric"
+          }
+        },
+        "business_model_adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "near_zero_invested_capital_risk": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "returnQualityAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RETURN_QUALITY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/returnQualityAnalysisBody"
+        }
+      }
+    },
+    "fcfAdjustment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adjustment_id",
+        "category",
+        "rationale",
+        "evidence_ids",
+        "recurrence",
+        "cash_nature",
+        "amount_or_range",
+        "uncertainty",
+        "calculation_id",
+        "limitations"
+      ],
+      "properties": {
+        "adjustment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "WORKING_CAPITAL",
+            "RECEIVABLES",
+            "INVENTORY",
+            "PAYABLES",
+            "FACTORING",
+            "SUPPLIER_FINANCE",
+            "PROVISIONS",
+            "CAPITALIZATION",
+            "R_AND_D_CAPITALIZATION",
+            "SOFTWARE_CAPITALIZATION",
+            "RESTRUCTURING",
+            "ACQUISITION_ADJUSTMENT",
+            "SBC",
+            "DILUTION",
+            "LEASES",
+            "CASH_TAXES",
+            "MAINTENANCE_CAPEX",
+            "DEFERRED_MAINTENANCE",
+            "GOODWILL",
+            "IMPAIRMENT",
+            "ONE_OFF",
+            "PENSION",
+            "RELATED_PARTY",
+            "DISCONTINUED_OPERATION",
+            "OTHER"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "recurrence": {
+          "enum": [
+            "RECURRING",
+            "NON_RECURRING",
+            "MIXED",
+            "UNKNOWN"
+          ]
+        },
+        "cash_nature": {
+          "enum": [
+            "CASH",
+            "NON_CASH",
+            "MIXED",
+            "UNKNOWN"
+          ]
+        },
+        "amount_or_range": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "uncertainty": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "calculation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "fcfForensicAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adjustments",
+        "reported_cash_flow_calculation_ids",
+        "standardized_fcf_calculation_ids",
+        "owner_earnings_calculation_ids",
+        "forensic_findings"
+      ],
+      "properties": {
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fcfAdjustment"
+          }
+        },
+        "reported_cash_flow_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "standardized_fcf_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "owner_earnings_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "forensic_findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "fcfForensicAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "FCF_FORENSIC_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/fcfForensicAnalysisBody"
+        }
+      }
+    },
+    "outsideViewReferenceClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_class_id",
+        "reference_class",
+        "prior",
+        "sample_quality",
+        "comparability",
+        "known_differences",
+        "company_specific_evidence_ids",
+        "updated_judgment",
+        "limitations"
+      ],
+      "properties": {
+        "reference_class_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sample_quality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "known_differences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "company_specific_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "updated_judgment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "outsideViewAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_classes"
+      ],
+      "properties": {
+        "reference_classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/outsideViewReferenceClass"
+          }
+        }
+      }
+    },
+    "outsideViewAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "OUTSIDE_VIEW_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/outsideViewAnalysisBody"
+        }
+      }
+    },
+    "variantPerceptionAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "market_expectation",
+        "orotitan_expectation",
+        "difference",
+        "why_market_may_believe_it",
+        "why_orotitan_differs",
+        "supporting_evidence_ids",
+        "disconfirming_evidence_ids",
+        "what_would_prove_orotitan_wrong",
+        "time_horizon",
+        "catalyst_not_required",
+        "confidence"
+      ],
+      "properties": {
+        "market_expectation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "orotitan_expectation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "difference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_market_may_believe_it": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_orotitan_differs": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "disconfirming_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "what_would_prove_orotitan_wrong": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time_horizon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "catalyst_not_required": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        }
+      }
+    },
+    "variantPerceptionAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "VARIANT_PERCEPTION_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/variantPerceptionAnalysisBody"
+        }
+      }
+    },
+    "riskRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_id",
+        "risk_type",
+        "evidence_ids",
+        "transmission_mechanism",
+        "severity",
+        "detectability",
+        "reversibility",
+        "thesis_impact",
+        "early_indicator",
+        "mitigation",
+        "invalidation_trigger",
+        "limitations"
+      ],
+      "properties": {
+        "risk_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_type": {
+          "enum": [
+            "TEMPORARY",
+            "CYCLICAL",
+            "STRUCTURAL",
+            "FINANCIAL",
+            "DISRUPTION",
+            "REGULATORY",
+            "GOVERNANCE",
+            "CONCENTRATION",
+            "EXECUTION"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "transmission_mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detectability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reversibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "thesis_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "early_indicator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidation_trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "riskResilienceAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risks"
+      ],
+      "properties": {
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/riskRecord"
+          }
+        }
+      }
+    },
+    "riskResilienceAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RISK_RESILIENCE_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/riskResilienceAnalysisBody"
+        }
+      }
+    },
+    "redTeamPerspective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "perspective",
+        "challenge",
+        "supporting_evidence_ids",
+        "counterevidence_ids",
+        "affected_blocks",
+        "reopen_recommended",
+        "outcome",
+        "limitations"
+      ],
+      "properties": {
+        "perspective": {
+          "enum": [
+            "BEAR_CASE",
+            "SHORT_SELLER_CASE",
+            "COMPETITOR_CASE",
+            "CUSTOMER_CASE",
+            "TECHNOLOGIST_CASE",
+            "REGULATOR_CASE",
+            "ACCOUNTING_FORENSIC_CASE",
+            "CAPITAL_ALLOCATION_CASE",
+            "CYCLE_PEAK_CASE",
+            "RUNWAY_FAILURE_CASE",
+            "ROIIC_FAILURE_CASE",
+            "REVERSE_VALUATION_CASE",
+            "PRE_MORTEM"
+          ]
+        },
+        "challenge": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "counterevidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "affected_blocks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reopen_recommended": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "redTeamRecordBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "perspectives"
+      ],
+      "properties": {
+        "perspectives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/redTeamPerspective"
+          }
+        }
+      }
+    },
+    "redTeamRecordArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RED_TEAM_RECORD"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/redTeamRecordBody"
+        }
+      }
+    },
+    "capitalDeploymentRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deployment_id",
+        "deployment_type",
+        "amount",
+        "timing",
+        "rationale",
+        "funding",
+        "realized_outcome",
+        "per_share_consequence",
+        "estimated_return",
+        "alternative_use",
+        "traceability",
+        "limitations"
+      ],
+      "properties": {
+        "deployment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deployment_type": {
+          "enum": [
+            "ORGANIC_REINVESTMENT",
+            "R_AND_D",
+            "CAPEX",
+            "M_AND_A",
+            "DIVIDENDS",
+            "BUYBACKS",
+            "DEBT_REPAYMENT",
+            "CASH_ACCUMULATION"
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "timing": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "funding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "realized_outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "per_share_consequence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "estimated_return": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternative_use": {
+          "type": "string",
+          "minLength": 1
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceRefs"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }
