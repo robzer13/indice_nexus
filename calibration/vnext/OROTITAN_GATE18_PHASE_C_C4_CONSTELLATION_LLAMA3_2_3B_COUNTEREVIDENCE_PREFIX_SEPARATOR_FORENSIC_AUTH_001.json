@@ -1,7 +1,7 @@
 {
   "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_AUTHORIZATION_V0.1",
   "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-AUTH-001",
-  "status": "AUTHORIZED_READ_ONLY_NO_INFERENCE",
+  "status": "CONSUMED_READ_ONLY_FORENSIC_COMPLETE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -28,7 +28,7 @@
     "retry_inference": false
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "no_digit_substitution": true,
     "no_model_call": true,
     "no_network": true,
@@ -37,6 +37,7 @@
     "no_retroactive_pass": true,
     "no_retry_authorization": true
   },
-  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  "next_action": "STOP_LLAMA3_2_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-RESULT-001"
 }
