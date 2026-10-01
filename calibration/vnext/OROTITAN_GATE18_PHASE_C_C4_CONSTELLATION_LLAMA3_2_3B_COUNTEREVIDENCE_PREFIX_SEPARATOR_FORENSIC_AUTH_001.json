@@ -1,25 +1,26 @@
 {
-  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_AUTHORIZATION_V0.1",
-  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-AUTH-001",
-  "status": "CONSUMED_READ_ONLY_FORENSIC_COMPLETE",
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-AUTH-001",
+  "status": "AUTHORIZED_READ_ONLY_NO_INFERENCE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
     "separate_user_reprompt_required": false,
     "cost_usd": 0
   },
-  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-RESULT-001",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001",
   "source_private_artifact": "calibration/vnext/private-runs/2026-10-01T105955292Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001.json",
   "scope": {
     "read_existing_private_artifact": true,
     "read_pinned_private_packet": true,
-    "inspect_only_malformed_counterevidence_id_path": "priority_findings.1.counterevidence_ids.0",
-    "extract_canonical_evidence_id_tokens": true,
-    "compare_extracted_ids_to_packet": true,
-    "diagnostic_in_memory_replacement_if_unambiguous": true,
+    "inspect_only_path": "priority_findings.1.counterevidence_ids.0",
+    "require_raw_value_length_5": true,
+    "inspect_suffix_digit_positions_2_4": true,
+    "compare_same_numeric_suffix_to_packet_ids": true,
+    "allow_in_memory_canonicalization_only_if_prefix_or_separator_only_mismatch": true,
     "rerun_frozen_v11_validator_on_in_memory_copy": true,
     "print_raw_malformed_value": false,
-    "print_raw_generated_narrative": false,
+    "print_generated_narrative": false,
     "mutate_source_artifact": false,
     "execute_model_inference": false,
     "call_ollama": false,
@@ -27,7 +28,8 @@
     "retry_inference": false
   },
   "constraints": {
-    "authorized_run_count": 0,
+    "authorized_run_count": 1,
+    "no_digit_substitution": true,
     "no_model_call": true,
     "no_network": true,
     "no_source_mutation": true,
@@ -36,6 +38,5 @@
     "no_retry_authorization": true
   },
   "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
-  "gate_18": "IN_PROGRESS_NOT_FROZEN",
-  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001"
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
 }

@@ -656,8 +656,8 @@ test("Llama 3.2 counterevidence ID forensic authorization is read-only and does 
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_READ_ONLY_NO_INFERENCE");
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.status, "CONSUMED_READ_ONLY_FORENSIC_COMPLETE");
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.scope.read_existing_private_artifact, true);
   assert.equal(a.scope.read_pinned_private_packet, true);
   assert.equal(
@@ -690,6 +690,77 @@ test("Llama 3.2 counterevidence ID forensic runner is in-memory, bounded, and no
   assert.match(raw, /evaluateGate18V11Validation/);
   assert.match(raw, /sourceArtifactMutated: false/);
   assert.match(raw, /rawNarrativeContentPublished: false/);
+  assert.match(raw, /modelInferenceExecuted: false/);
+  assert.match(raw, /ollamaApiCalled: false/);
+  assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|11434/);
+  assert.doesNotMatch(raw, /fetch\(/);
+});
+
+test("Llama 3.2 counterevidence ID forensic records no canonical token decomposition", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    r.status,
+    "FORENSIC_COMPLETE_NO_CANONICAL_TOKEN_DECOMPOSITION",
+  );
+  assert.equal(r.malformed_reference.raw_value_length, 5);
+  assert.equal(r.malformed_reference.extracted_canonical_token_count, 0);
+  assert.deepEqual(r.malformed_reference.extracted_canonical_ids, []);
+  assert.equal(r.malformed_reference.residual_separator_only, false);
+  assert.equal(
+    r.malformed_reference.unambiguous_deterministic_replacement,
+    false,
+  );
+  assert.equal(r.diagnostic_normalization.applied, false);
+  assert.equal(r.interpretation.retry_authorized, false);
+});
+
+test("Llama 3.2 prefix-separator forensic authorization forbids digit substitution and inference", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_READ_ONLY_NO_INFERENCE");
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.no_digit_substitution, true);
+  assert.equal(a.scope.require_raw_value_length_5, true);
+  assert.equal(a.scope.inspect_suffix_digit_positions_2_4, true);
+  assert.equal(a.scope.compare_same_numeric_suffix_to_packet_ids, true);
+  assert.equal(
+    a.scope.allow_in_memory_canonicalization_only_if_prefix_or_separator_only_mismatch,
+    true,
+  );
+  assert.equal(a.scope.print_raw_malformed_value, false);
+  assert.equal(a.scope.mutate_source_artifact, false);
+  assert.equal(a.scope.execute_model_inference, false);
+  assert.equal(a.scope.call_ollama, false);
+  assert.equal(a.scope.external_network_access, false);
+  assert.equal(a.scope.retry_inference, false);
+});
+
+test("Llama 3.2 prefix-separator forensic runner changes no digits and has no inference path", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-counterevidence-prefix-separator-forensic.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /suffixIsThreeDigits/);
+  assert.match(raw, /numericSuffixUnchanged/);
+  assert.match(raw, /mismatchOnlyPrefixOrSeparator/);
+  assert.match(raw, /formatOnlyCanonicalizationAdmissible/);
+  assert.match(raw, /position === 0 \|\| position === 1/);
+  assert.match(raw, /digitSubstitutionExecuted: false/);
+  assert.match(raw, /structuredClone/);
+  assert.match(raw, /evaluateGate18V11Validation/);
+  assert.match(raw, /sourceArtifactMutated: false/);
   assert.match(raw, /modelInferenceExecuted: false/);
   assert.match(raw, /ollamaApiCalled: false/);
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|11434/);

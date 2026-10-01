@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC",
+    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -125,11 +125,28 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
     entry.llama3_2_first_c4_forensic_result_status,
     "FORENSIC_COMPLETE_SINGLE_MALFORMED_COUNTEREVIDENCE_ID",
   );
-  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized, true);
-  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized_run_count, 1);
+  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized, false);
+  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized_run_count, 0);
+  assert.equal(entry.llama3_2_counterevidence_id_forensic_consumed, true);
   assert.equal(
-    entry.llama3_2_counterevidence_id_forensic_target_path,
+    entry.llama3_2_counterevidence_id_forensic_result_status,
+    "FORENSIC_COMPLETE_NO_CANONICAL_TOKEN_DECOMPOSITION",
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_authorized,
+    true,
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_authorized_run_count,
+    1,
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_target_path,
     "priority_findings.1.counterevidence_ids.0",
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_no_digit_substitution,
+    true,
   );
   assert.equal(entry.llama3_2_additional_inference_authorized, false);
   assert.equal(entry.gemma3_terms_user_accepted, true);
