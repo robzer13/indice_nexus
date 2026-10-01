@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:calculation-ledger:v2.0-draft",
+  "title": "OroTitan Calculation Ledger V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "calculations"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_CALCULATION_LEDGER_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "DEEP_DIVE"
+            }
+          }
+        }
+      ]
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "CALCULATION_LEDGER"
+    },
+    "calculations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/calculation"
+      }
+    }
+  },
+  "$defs": {
+    "calculationInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_id",
+        "name",
+        "value",
+        "source_kind",
+        "source_ref_id"
+      ],
+      "properties": {
+        "input_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "name": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "value": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/materialNumericValue"
+        },
+        "source_kind": {
+          "type": "string",
+          "enum": [
+            "EVIDENCE",
+            "CALCULATION",
+            "ASSUMPTION",
+            "DETERMINISTIC_CONSTANT"
+          ]
+        },
+        "source_ref_id": {
+          "anyOf": [
+            {
+              "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "NOT_APPLICABLE"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "calculation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calculation_id",
+        "name",
+        "block",
+        "formula",
+        "method_version",
+        "inputs",
+        "output",
+        "precision",
+        "evidence_ids",
+        "assumption_ids",
+        "reproducibility_status"
+      ],
+      "properties": {
+        "calculation_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "name": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "block": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "formula": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "method_version": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/calculationInput"
+          }
+        },
+        "output": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/materialNumericValue"
+        },
+        "precision": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "assumption_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "reproducibility_status": {
+          "type": "string",
+          "enum": [
+            "REPRODUCIBLE",
+            "PARTIAL",
+            "NOT_REPRODUCIBLE"
+          ]
+        }
+      }
+    }
+  }
+}
