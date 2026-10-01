@@ -78,10 +78,9 @@ Current package:
 - targeted regression tests;
 - no live Supabase mutation.
 
-Exact next action:
+Prior candidate action:
 
-`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW`
-
+`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW` — completed on PR #328.
 
 ## Data Contracts V2 design review
 
