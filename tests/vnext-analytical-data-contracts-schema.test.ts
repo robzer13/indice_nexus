@@ -84,6 +84,36 @@ test("assumption register structurally requires ASSUMPTION epistemic type", () =
   );
 });
 
+
+test("analytical block vocabulary is frozen for Process Engine routing", () => {
+  const common = loadSchema("orotitan-analytical-common.schema.v0.1.json");
+  const block = loadSchema("analytical-block-output.schema.v0.1.json");
+
+  assert.deepEqual(common.$defs.blockCode.enum, [
+    "BUSINESS_MODEL",
+    "ECONOMIC_QUALITY",
+    "INDUSTRY_STRUCTURE",
+    "TECHNOLOGY",
+    "CYCLICALITY",
+    "MOAT",
+    "RUNWAY",
+    "RETURN_QUALITY",
+    "FCF_FORENSIC",
+    "CAPITAL_ALLOCATION",
+    "MANAGEMENT_GOVERNANCE",
+    "OUTSIDE_VIEW",
+    "RISK_RESILIENCE",
+    "RED_TEAM",
+    "VALUATION",
+    "CROSS_BLOCK_RECONCILIATION",
+  ]);
+
+  assert.equal(
+    block.properties.block_id.$ref,
+    "./orotitan-analytical-common.v0.1.json#/$defs/blockCode",
+  );
+});
+
 test("French-first stays a product-layer rule and machine enums remain canonical", () => {
   const direction = JSON.parse(
     readFileSync(
