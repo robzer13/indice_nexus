@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/industry-structure.v0.1.json",
+  "title": "OroTitan Industry Structure V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "industry_structure_id",
+    "industry_version",
+    "market_structure",
+    "market_share_distribution",
+    "entry_rate",
+    "exit_rate",
+    "capacity_discipline",
+    "pricing_discipline",
+    "customer_bargaining_power",
+    "supplier_bargaining_power",
+    "distributor_power",
+    "regulatory_barriers",
+    "switching_friction",
+    "multihoming",
+    "vertical_integration",
+    "consolidation_trend",
+    "profit_pool_location",
+    "value_chain_position",
+    "historical_return_distribution",
+    "competitor_set",
+    "disruption_vectors",
+    "evidence_ids",
+    "contradicting_evidence_ids"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "industry_structure_id": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+    },
+    "industry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "market_structure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "market_share_distribution": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "entry_rate": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "exit_rate": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "capacity_discipline": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "pricing_discipline": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "customer_bargaining_power": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "supplier_bargaining_power": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "distributor_power": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "regulatory_barriers": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "switching_friction": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "multihoming": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "vertical_integration": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "consolidation_trend": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "profit_pool_location": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "value_chain_position": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "historical_return_distribution": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "competitor_set": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "disruption_vectors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "contradicting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    }
+  }
+}
