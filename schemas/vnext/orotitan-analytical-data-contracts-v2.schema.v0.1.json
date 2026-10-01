@@ -259,8 +259,15 @@
           "minLength": 1
         },
         "source_date": {
-          "type": "string",
-          "format": "date"
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "data_period": {
           "type": [
@@ -455,8 +462,15 @@
           ]
         },
         "source_date": {
-          "type": "string",
-          "format": "date"
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "data_cutoff": {
           "type": "string",
