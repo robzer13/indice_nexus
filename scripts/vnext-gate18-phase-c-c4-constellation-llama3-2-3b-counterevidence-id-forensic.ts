@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { execFileSync } from "node:child_process";
@@ -211,10 +212,7 @@ function artifactReader(
 }
 
 function sha256(value: string): string {
-  return require("node:crypto")
-    .createHash("sha256")
-    .update(value, "utf8")
-    .digest("hex");
+  return createHash("sha256").update(value, "utf8").digest("hex");
 }
 
 function main(): void {
