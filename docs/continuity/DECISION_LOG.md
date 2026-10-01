@@ -2226,3 +2226,32 @@ The protocol explicitly adds:
 - durable checkpoint recovery.
 
 These controls exist to maximize analysis quality without making ChatGPT reasoning rigid.
+
+## D-2026-10-01-118 — User approves ChatGPT operating protocol
+
+User explicitly approved the proposed operating logic.
+
+Approval text:
+
+`je valide cette logique`
+
+The protocol is frozen as:
+
+`OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0`
+
+This approval closes the post-C7 architectural planning phase.
+
+## D-2026-10-01-119 — Detailed design becomes the next phase
+
+The next authorized planning/execution boundary is:
+
+`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
+
+This is detailed design, not a reopening of architecture or Phase C.
+
+The frozen role split is preserved:
+- ChatGPT = analytical brain;
+- Supabase = canonical working memory / registry;
+- GitHub = method / code;
+- Vercel = runtime;
+- OroTitan = product surface.
