@@ -1,62 +1,53 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20261001-058`
+Resume ID: `VNEXT-G18-C-20261001-059`
 
-## Llama 3.2 first Constellation C4 — inference executed, raw schema failure
+## Llama 3.2 first Constellation C4 — schema defect isolated to one counterevidence ID
 
-The first and only authorized Llama 3.2 Constellation C4 inference executed successfully at the runtime level.
+The first read-only raw-schema forensic completed without inference.
 
-Observed execution:
-- model: `llama3.2:3b-instruct-q4_K_M`;
-- context: 16384;
-- max output: 1024;
-- temperature: 0;
-- wall clock: 299230 ms;
-- prompt eval count: 3157;
-- eval count: 895;
-- output token margin: 129;
-- done reason: `stop`;
-- runtime error: null.
+Observed:
+- syntactically valid JSON;
+- all six required top-level keys present;
+- no extra top-level key;
+- section cardinalities within the frozen contract envelope;
+- exactly one schema issue;
+- exact issue path: `priority_findings.1.counterevidence_ids.0`;
+- issue code: `invalid_format`;
+- issue origin: string;
+- issue format: regex.
 
-Validation result:
-- status: `FAIL`;
-- schema valid: false;
-- schema error: `VNEXT_GATE18_V11_RAW_SCHEMA_INVALID`;
-- semantic status: `NOT_EVALUATED_SCHEMA_FAILURE`;
-- human-quality adjudication: not reached.
+No semantic validation or human-quality adjudication was reached in the historical C4 run.
 
-Because the provider generation completed and returned 895 output tokens, the single C4 inference authorization is consumed.
+The historical C4 result remains FAIL and the inference authorization remains consumed.
 
-No additional Llama 3.2 inference or retry is authorized.
+## Second read-only forensic
 
-## Interpretation
+One additional zero-cost, no-inference forensic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
 
-The raw response was syntactically valid JSON: the runner reached the V1.1 Zod schema validator and returned `VNEXT_GATE18_V11_RAW_SCHEMA_INVALID`. If JSON parsing itself had failed, the runner would have persisted the native `JSON.parse` error instead.
+Purpose:
+determine whether the malformed counterevidence ID string is fully and unambiguously decomposable into one or two canonical packet IDs in the form `E-NNN`.
 
-Output-budget exhaustion is not proven because `done_reason=stop` and `895 < 1024`.
+The diagnostic may replace that single malformed string only on an in-memory copy and only if:
+- all extracted IDs exist in the pinned packet;
+- the malformed value contains nothing except those IDs plus separators;
+- the extracted IDs are unique;
+- the resulting `counterevidence_ids` array remains within the frozen max of two entries.
 
-The exact model capability failure is not yet concluded because the structural schema defect has not been isolated.
+If and only if those conditions hold, the runner reruns the frozen V1.1 validator on the in-memory diagnostic copy.
 
-## Read-only forensic prepared
+Forbidden:
+- source artifact mutation;
+- printing the raw malformed value;
+- printing generated narrative;
+- Ollama/model calls;
+- network access;
+- new inference;
+- retry authorization;
+- retroactive pass.
 
-One zero-cost read-only forensic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
-
-It may:
-- read the existing private run artifact;
-- verify raw-text identity by length/hash;
-- inspect parsed JSON shape;
-- report top-level keys and section cardinalities;
-- report sanitized Zod issue paths and codes.
-
-It may not:
-- print generated narrative values;
-- call Ollama;
-- use network access;
-- execute inference;
-- mutate the source artifact;
-- authorize or execute a retry;
-- reclassify the historical failure.
+No additional Llama 3.2 inference is authorized.
 
 ## Current exact next action
 
-`EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC`
+`EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC`
