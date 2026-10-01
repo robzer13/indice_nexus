@@ -19,8 +19,8 @@
     "c2_structured_output_smoke": "PASS",
     "c3_historical_semantic_regressions": "PASS_5_OF_5_WITH_OUTPUT_CONTRACT_RELIABILITY_CARRY",
     "c4_diversified_matrix": "COMPLETE_5_OF_5_SYNTHESIS_RECORDED_RECURRENT_CRITICAL_FAILURES",
-    "c5_repeatability": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
-    "c6_blinded_adjudication": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+    "c5_repeatability": "QWEN3_4B_NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
+    "c6_blinded_adjudication": "NOT_STARTED",
     "c7_local_candidate_decision": "LOCAL_CANDIDATE_REJECTED"
   },
   "initial_model_dependent_module": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -1739,5 +1739,7 @@
   "c7_current_local_production_path_admitted": false,
   "c7_current_campaign_closed": true,
   "phase_c_complete": true,
-  "local_production_candidate": null
+  "local_production_candidate": null,
+  "c7_closure_c5_repeatability": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  "c7_closure_c6_blinded_adjudication": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE"
 }
