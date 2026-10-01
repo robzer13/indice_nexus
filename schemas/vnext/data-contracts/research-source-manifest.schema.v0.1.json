@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/research-source-manifest.v0.1.json",
+  "title": "OroTitan Research Source Manifest V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "manifest_version",
+    "sources"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "manifest_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "title_or_description",
+          "source_type",
+          "issuer_or_publisher",
+          "source_date",
+          "data_period",
+          "root_source_id",
+          "url_or_file_reference",
+          "discovery_route",
+          "access_status",
+          "included_in_evidence_ledger",
+          "notes_or_limitations"
+        ],
+        "properties": {
+          "source_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "title_or_description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issuer_or_publisher": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_date": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+              },
+              {
+                "const": "UNKNOWN_DATE"
+              }
+            ]
+          },
+          "data_period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "root_source_id": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "url_or_file_reference": {
+            "type": "string",
+            "minLength": 1
+          },
+          "discovery_route": {
+            "type": "string",
+            "minLength": 1
+          },
+          "access_status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "included_in_evidence_ledger": {
+            "type": "boolean"
+          },
+          "notes_or_limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}
