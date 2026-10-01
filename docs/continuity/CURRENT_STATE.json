@@ -1,6 +1,6 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-POST-C7-20261001-065",
+  "resume_id": "VNEXT-POST-C7-20261001-066",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
@@ -216,13 +216,17 @@
     "CHATGPT_DIRECT_INFRASTRUCTURE_ACCESS_VALIDATED",
     "CHATGPT_WORK_REMOVED_FROM_REQUIRED_V2_PATH",
     "CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1_0_APPROVED",
-    "POST_C7_ARCHITECTURAL_PLANNING_PHASE_CLOSED"
+    "POST_C7_ARCHITECTURAL_PLANNING_PHASE_CLOSED",
+    "CHATGPT_PROTOCOL_ACCEPTANCE_BATTERY_V1_EXECUTED",
+    "LIVE_SUPABASE_READONLY_PREFLIGHT_PASS",
+    "PROTOCOL_ACCEPTANCE_MATRIX_25_SCENARIOS_CREATED"
   ],
   "active_work": [
     "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS"
   ],
   "blockers": [],
   "open_issues": [
+    "PR_323_HISTORICAL_TEST_EXPECTS_PRE_FREEZE_NEXT_ACTION_AND_BLOCKS_GREEN_CI",
     "ANALYTICAL_ENGINE_V2_DATA_CONTRACTS_TO_DESIGN",
     "PROCESS_ENGINE_V2_STATE_MACHINE_TO_DESIGN",
     "CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_TO_DESIGN",
@@ -603,7 +607,9 @@
     "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md",
     "calibration/vnext/OROTITAN_CHATGPT_OPERATING_PROTOCOL_CANDIDATE_001.json",
     "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md",
-    "calibration/vnext/OROTITAN_CHATGPT_OPERATING_PROTOCOL_FREEZE_V1.0_001.json"
+    "calibration/vnext/OROTITAN_CHATGPT_OPERATING_PROTOCOL_FREEZE_V1.0_001.json",
+    "docs/orotitan-equity/OROTITAN_CHATGPT_PROTOCOL_ACCEPTANCE_BATTERY_V1.0.md",
+    "calibration/vnext/OROTITAN_CHATGPT_PROTOCOL_ACCEPTANCE_MATRIX_001.json"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -1322,5 +1328,8 @@
   "analytical_engine_v2_design": "docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md",
   "chatgpt_operating_protocol": "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md",
   "chatgpt_operating_protocol_status": "FROZEN_V1_0",
-  "architectural_planning_phase_status": "CLOSED"
+  "architectural_planning_phase_status": "CLOSED",
+  "protocol_acceptance_battery_status": "FOUNDATION_IS_STRONG_BUT_NOT_VERTICAL_SLICE_READY",
+  "protocol_acceptance_total_scenarios": 25,
+  "protocol_acceptance_live_validation": "READ_ONLY_ONLY"
 }
