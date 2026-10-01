@@ -140,6 +140,24 @@ function validBundle(): AnalyticalDataBundleV2 {
         },
       ],
     },
+    calculationLedger: {
+      contract_name: "OROTITAN_CALCULATION_LEDGER_V2",
+      schema_version: "2.0.0-draft",
+      run_lock: lock("DEEP_DIVE"),
+      generated_at: "2026-10-01T12:00:00Z",
+      method_version: "v2-draft",
+      artifact_role: "CALCULATION_LEDGER",
+      calculations: [],
+    },
+    assumptionRegister: {
+      contract_name: "OROTITAN_MATERIAL_ASSUMPTION_REGISTER_V2",
+      schema_version: "2.0.0-draft",
+      run_lock: lock("DEEP_DIVE"),
+      generated_at: "2026-10-01T12:00:00Z",
+      method_version: "v2-draft",
+      artifact_role: "MATERIAL_ASSUMPTION_REGISTER",
+      assumptions: [],
+    },
     analyticalBlockOutputs: {
       contract_name: "OROTITAN_ANALYTICAL_BLOCK_OUTPUTS_V2",
       schema_version: "2.0.0-draft",
@@ -343,6 +361,64 @@ test("duplicate evidence IDs fail closed", () => {
   const result = validateAnalyticalDataBundleV2(bundle);
   assert.equal(result.valid, false);
   assert.match(result.errors.join("\n"), /duplicate evidence_id/);
+});
+
+test("claim calculation IDs must resolve", () => {
+  const bundle = validBundle();
+  const claims = bundle.analyticalBlockOutputs.claims as Array<Record<string, unknown>>;
+  claims[0].calculation_ids = ["CALC-MISSING"];
+  const result = validateAnalyticalDataBundleV2(bundle);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join("\n"), /unresolved calculation_id CALC-MISSING/);
+});
+
+test("claim assumption IDs must resolve", () => {
+  const bundle = validBundle();
+  const claims = bundle.analyticalBlockOutputs.claims as Array<Record<string, unknown>>;
+  claims[0].assumption_ids = ["ASM-MISSING"];
+  const result = validateAnalyticalDataBundleV2(bundle);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join("\n"), /unresolved assumption_id ASM-MISSING/);
+});
+
+test("calculation inputs must resolve their declared lineage", () => {
+  const bundle = validBundle();
+  const calculations = bundle.calculationLedger.calculations as Array<Record<string, unknown>>;
+  calculations.push({
+    calculation_id: "CALC-1",
+    name: "Test calculation",
+    block: "MOAT",
+    formula: "x",
+    method_version: "v2-draft",
+    inputs: [
+      {
+        input_id: "IN-1",
+        name: "x",
+        value: {
+          value_kind: "RATIO",
+          value: 1,
+          unit: "x",
+          source_evidence_ids: ["EVD-1"],
+        },
+        source_kind: "EVIDENCE",
+        source_ref_id: "EVD-MISSING",
+      },
+    ],
+    output: {
+      value_kind: "RATIO",
+      value: 1,
+      unit: "x",
+      source_evidence_ids: ["EVD-1"],
+      calculation_id: "CALC-1",
+    },
+    precision: "full",
+    evidence_ids: ["EVD-1"],
+    assumption_ids: [],
+    reproducibility_status: "REPRODUCIBLE",
+  });
+  const result = validateAnalyticalDataBundleV2(bundle);
+  assert.equal(result.valid, false);
+  assert.match(result.errors.join("\n"), /unresolved evidence input EVD-MISSING/);
 });
 
 test("material monetary flow requires currency, period and accounting basis", () => {
