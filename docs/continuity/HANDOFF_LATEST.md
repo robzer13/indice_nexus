@@ -151,3 +151,19 @@ No production mutation.
 Exact next action:
 
 `RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
+
+
+## Process Engine V2 review hardening
+
+Pre-CI semantic review patched:
+
+- authoritative dependency requirements to prevent under-specified reopen graphs;
+- direct REOPENED vs downstream STALE distinction;
+- SAVE pre-finalization decision no longer requires post-RPC registry reconciliation;
+- lifecycle guards for NOT_STARTED / PAUSED / BLOCKED / COMPLETE;
+- current executable block preserved ahead of unrelated later blockers;
+- empty process state fails closed.
+
+Exact action remains:
+
+`RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
