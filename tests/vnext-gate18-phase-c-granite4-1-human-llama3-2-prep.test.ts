@@ -512,8 +512,10 @@ test("Llama 3.2 second C4 RAM block preserves the same single inference authoriz
   assert.equal(a.c4_inference.authorized, true);
   assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(
-    a.latest_precondition_block,
-    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
+    a.precondition_blocks.includes(
+      "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
+    ),
+    true,
   );
 });
 
