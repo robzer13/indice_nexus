@@ -482,6 +482,7 @@ export function blockCompletionEligibility(
 ): { eligible: true } | { eligible: false; reasons: string[] } {
   const reasons: string[] = [];
 
+  if (block.status === "READY") reasons.push("block has not been executed");
   if (block.status === "BLOCKED") reasons.push("block status is BLOCKED");
   if (block.status === "STALE") reasons.push("block status is STALE");
   if (block.criticalUnresolvedGap) reasons.push("critical unresolved gap");
@@ -879,6 +880,24 @@ export function deriveNextBlockAction(
   }
 
   const byCode = new Map(blocks.map((block) => [block.block, block]));
+
+  for (const code of graph.topologicalOrder) {
+    const completed = byCode.get(code);
+    if (!completed || completed.status !== "COMPLETE") continue;
+    const eligibility = blockCompletionEligibility(
+      completed,
+      blocks,
+      requiredOverlays,
+      requiredDependencies,
+    );
+    if (!eligibility.eligible) {
+      return {
+        action: "FAIL_CLOSED",
+        block: null,
+        reason: `COMPLETE block ${code} violates completion conditions: ${eligibility.reasons.join("; ")}`,
+      };
+    }
+  }
 
   const upstreamProvisionallyUsable = (block: AnalyticalBlockState): boolean =>
     block.upstreamBlockRefs.every((upstream) => {
