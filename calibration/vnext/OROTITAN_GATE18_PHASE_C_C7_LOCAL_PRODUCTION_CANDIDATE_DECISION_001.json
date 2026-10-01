@@ -1,0 +1,63 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_V0.1",
+  "decision_id": "G18-PHASEC-C7-LOCAL-PRODUCTION-CANDIDATE-DECISION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C7_LOCAL_PRODUCTION_CANDIDATE_DECISION",
+  "status": "LOCAL_CANDIDATE_REJECTED",
+  "authority": {
+    "type": "EXPLICIT_USER_AUTHORIZATION",
+    "granted_at": "2026-10-01",
+    "scope": "EXECUTE_C7_NOW_AND_DRAW_FORMAL_CONCLUSION_FROM_CURRENT_LOCAL_CAMPAIGN",
+    "routing_freeze_authorized": false,
+    "production_mutation_authorized": false,
+    "publication_authority": false
+  },
+  "basis": {
+    "synthesis_result": "G18-PHASEC-CANDIDATE-SYNTHESIS-RESULT-001",
+    "registry_refresh": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+    "current_tested_candidate_set_size": 10,
+    "c7_admissible_candidate_count": 0
+  },
+  "decision": {
+    "classification": "LOCAL_CANDIDATE_REJECTED",
+    "scope": "CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT",
+    "production_candidate_selected": false,
+    "selected_candidate": null,
+    "conditional_candidate_selected": false,
+    "current_zero_per_call_local_production_path_admitted": false,
+    "current_campaign_closed": true,
+    "phase_c_complete": true
+  },
+  "rationale": [
+    "Qwen3 1.7B failed a critical historical semantic regression at C3 and was not admitted to broader qualification.",
+    "The later C4 candidates either failed deterministic semantic/schema reliability or produced critical human-quality evidence-grounding defects.",
+    "Several candidates were operationally loadable, but hardware fit does not override critical analytical contract failures.",
+    "No candidate survived with the combined structured-output reliability, semantic correctness, evidence-role discipline, judgment-boundary compliance and usefulness required to justify repeatability and final blinded comparison as a production candidate.",
+    "The refreshed registry contains no currently verified same-weight candidate with sufficient incremental information gain to justify extending the campaign before this C7 decision."
+  ],
+  "non_conclusions": [
+    "This does not conclude that all present or future local/open-weight models are unsuitable for OroTitan.",
+    "This does not infer a global failure of any model family.",
+    "This does not rank the failed candidates.",
+    "This does not select a best failed model or fallback model.",
+    "This does not authorize a paid model, hybrid architecture, new hardware purchase, or new candidate.",
+    "This does not freeze production routing."
+  ],
+  "operational_implication": {
+    "current_local_model_for_production": null,
+    "current_model_winner": null,
+    "current_routing_freeze": null,
+    "production_mutation": false,
+    "existing_production_behavior_unchanged": true,
+    "further_model_strategy_requires_new_explicit_direction": true
+  },
+  "closure": {
+    "c5_repeatability": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+    "c6_blinded_adjudication": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+    "c7_local_candidate_decision": "LOCAL_CANDIDATE_REJECTED",
+    "phase_c": "COMPLETE",
+    "gate_18": "IN_PROGRESS_NOT_FROZEN"
+  },
+  "next_action": "AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION"
+}
