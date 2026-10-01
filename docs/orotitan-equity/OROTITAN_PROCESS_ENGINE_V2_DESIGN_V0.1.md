@@ -190,11 +190,20 @@ A merely CHECKPOINTED upstream block may support provisional downstream work but
 
 ## 5. DEPENDENCY GRAPH
 
-The authoritative per-run dependency graph comes from each block's:
+The per-run dependency graph is represented by each block's:
 
 ```text
 upstream_block_refs[]
 ```
+
+Because an omitted dependency could otherwise preserve stale downstream work, the Process Engine may also receive:
+
+```text
+REQUIRED_BLOCK_DEPENDENCIES[]
+= authoritative method-plan projection
+```
+
+The engine validates that every required edge is present before using the graph for execution or refresh routing.
 
 Process Engine validates:
 
@@ -213,15 +222,17 @@ FAIL_CLOSED
 
 ### 5.1 Reopen cone
 
-A material change reopens:
+A material change produces an explicit two-part plan:
 
 ```text
-CHANGED BLOCK
-+
+DIRECTLY CHANGED BLOCKS
+→ REOPENED
+
 TRANSITIVE DOWNSTREAM DEPENDENCIES
+→ STALE
 ```
 
-and preserves unrelated blocks.
+The union is the affected dependency cone. Unrelated blocks are preserved.
 
 This is the default algorithm for:
 
@@ -335,12 +346,14 @@ NO_BLOCK_ACTION
 
 Rules:
 
-1. invalid dependency graph → `FAIL_CLOSED`;
-2. a material blocker is surfaced before normal execution;
-3. the current block is preserved when still executable;
-4. otherwise choose the first topologically executable block;
-5. CHECKPOINTED blocks are finalized only when terminal prerequisites pass;
-6. all COMPLETE / NOT_ASSESSABLE → no further block action.
+1. empty or invalid dependency state → `FAIL_CLOSED`;
+2. authoritative required dependency edges must be present;
+3. if the current block is still executable, preserve it before surfacing an unrelated later blocker;
+4. a blocker on the current block is surfaced immediately;
+5. otherwise surface the first topological blocker before ordinary new work;
+6. otherwise choose the first topologically executable block;
+7. CHECKPOINTED blocks are finalized only when terminal prerequisites pass;
+8. all COMPLETE / NOT_ASSESSABLE → no further block action.
 
 There is no artificial percentage progress.
 
@@ -379,9 +392,10 @@ Requires at least one changed fundamental block.
 ```text
 RESEARCH = TARGETED_DELTA
 FUNDAMENTALS = REOPEN_AFFECTED_BLOCKS
-REOPEN = changed block + downstream dependency cone
-       + VALUATION
-       + CROSS_BLOCK_RECONCILIATION
+DIRECT REOPEN = changed fundamental block(s)
+STALE = downstream dependency cone
+      + VALUATION
+      + CROSS_BLOCK_RECONCILIATION
 PRESERVE = unrelated prior work
 OQS MAY CHANGE = YES, only after authorized reanalysis
 ```
@@ -415,7 +429,7 @@ NOOP
 
 It does not execute persistence.
 
-Durable finalization prerequisites:
+Pre-finalization decision prerequisites:
 
 ```text
 stage self-audit passed
@@ -423,11 +437,12 @@ schema validation passed
 identity / version checks passed
 analytical reconciliation passed
 required artifacts present
-persistence verified
-registry reconciled
+artifact persistence verified
 no critical blocker
 phase gate = YES
 ```
+
+`registry reconciliation` is deliberately **not** a precondition here. The guarded checkpoint/finalize RPC performs the authoritative registry-bundle transaction; the future Bridge must verify the returned reconciled state after the RPC. Requiring post-RPC reconciliation before deciding to invoke that RPC would create a circular transition.
 
 If durability is incomplete:
 
@@ -436,6 +451,16 @@ CHECKPOINT
 ```
 
 not false finalization.
+
+Lifecycle guards:
+
+```text
+NOT_STARTED → NOOP
+PAUSED      → CHECKPOINT / RESUME REQUIRED
+BLOCKED     → BLOCK
+COMPLETE    → NOOP
+IN_PROGRESS → evaluate normal SAVE disposition
+```
 
 If `phaseGate = NO` without a true blocker:
 
@@ -565,25 +590,29 @@ Before the Process Engine V2 candidate can be considered stable:
 
 1. block vocabulary matches Data Contracts V2 exactly;
 2. dependency cycles fail closed;
-3. dependency closure does not reopen unrelated blocks;
-4. blocked blocks are surfaced as blockers, not selected for ordinary execution;
-5. NOT_ASSESSABLE is accepted as a terminally resolved upstream state;
-6. CHECKPOINTED may feed provisional downstream work but cannot satisfy terminal dependency completion;
-7. material revalidation PENDING / FAIL blocks completion;
-8. required sector overlay missing/wrong state blocks completion;
-9. PRICE_ONLY_DELTA cannot mutate fundamental blocks;
-10. PRICE_ONLY_DELTA preserves OQS-affecting fundamentals;
-11. ROUTINE_FUNDAMENTAL_DELTA requires a fundamental origin;
-12. routine refresh reopens only affected + downstream blocks plus valuation/reconciliation;
-13. FULL_REFRESH_REQUIRED reopens the full analytical set;
-14. SAVE with incomplete durability checkpoints;
-15. SAVE phase gate NO checkpoints unless a real blocker exists;
-16. only Research / Certification / Integration can return FINALIZE;
-17. no SAVE disposition authorizes publication;
-18. identical execution fingerprint cannot loop without an allowed retry reason;
-19. retry budget can fail closed;
-20. existing VNext and Screener CI remain green;
-21. no production mutation occurs.
+3. authoritative required dependency edges must be present before graph-based routing;
+4. dependency closure distinguishes directly REOPENED blocks from STALE downstream blocks and does not touch unrelated blocks;
+5. blocked blocks are surfaced as blockers, not selected for ordinary execution;
+6. current executable block is not interrupted by an unrelated later blocker;
+7. NOT_ASSESSABLE is accepted as a terminally resolved upstream state;
+8. CHECKPOINTED may feed provisional downstream work but cannot satisfy terminal dependency completion;
+9. material revalidation PENDING / FAIL blocks completion;
+10. required sector overlay missing/wrong state blocks completion;
+11. PRICE_ONLY_DELTA cannot mutate fundamental blocks;
+12. PRICE_ONLY_DELTA preserves OQS-affecting fundamentals;
+13. ROUTINE_FUNDAMENTAL_DELTA requires a fundamental origin;
+14. routine refresh reopens only affected + downstream blocks plus valuation/reconciliation;
+15. FULL_REFRESH_REQUIRED reopens the full analytical set;
+16. SAVE from NOT_STARTED / COMPLETE is NOOP and PAUSED does not terminally finalize;
+17. SAVE with incomplete pre-finalization durability checks checkpoints;
+18. registry reconciliation is verified after guarded RPC, not required circularly before it;
+19. SAVE phase gate NO checkpoints unless a real blocker exists;
+20. only Research / Certification / Integration can return FINALIZE;
+21. no SAVE disposition authorizes publication;
+22. identical execution fingerprint cannot loop without an allowed retry reason;
+23. retry budget can fail closed;
+24. existing VNext and Screener CI remain green;
+25. no production mutation occurs.
 
 ---
 
@@ -591,7 +620,7 @@ Before the Process Engine V2 candidate can be considered stable:
 
 ```text
 DOCUMENT = OROTITAN_PROCESS_ENGINE_V2_DESIGN_V0.1
-STATUS = DESIGN_CANDIDATE
+STATUS = DESIGN_CANDIDATE_REVIEW_PATCHED
 FROZEN = NO
 PRODUCTION_MUTATION = NO
 
