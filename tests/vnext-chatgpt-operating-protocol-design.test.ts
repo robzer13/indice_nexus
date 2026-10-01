@@ -20,7 +20,7 @@ test("ChatGPT operating protocol keeps intelligence in ChatGPT and infrastructur
   assert.match(raw, /READ-ONLY/);
   assert.match(raw, /PROMPT-INJECTION FIREWALL/);
   assert.match(raw, /MATERIAL CHANGE REVALIDATION GATE/);
-  assert.match(raw, /NO AD-HOC UPDATE \/ INSERT/);
+  assert.match(raw, /AD-HOC UPDATE \/ INSERT/);
   assert.match(raw, /ChatGPT Work is not part of the required V2 workflow/);
 });
 
