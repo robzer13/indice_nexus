@@ -263,6 +263,32 @@ test("technology complexity cannot become a hidden moat score", () => {
   assert.equal(result.ok, false);
 });
 
+test("material assumptions preserve qualitative as well as numeric values", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "MATERIAL_ASSUMPTION_REGISTER",
+    body: {
+      register_version: "1",
+      records: [
+        {
+          assumption_id: "A-1",
+          variable: "REGULATORY_STABILITY",
+          value_or_range: {
+            representation: "TEXT",
+            text: "No material adverse regulatory redesign during the explicit forecast period.",
+          },
+          epistemic_type: "ASSUMPTION",
+          source_or_rationale: "Scenario construction assumption.",
+          sensitivity: "HIGH",
+          used_in: ["VALUATION"],
+        },
+      ],
+    },
+  };
+
+  assert.equal(validateAnalyticalDataArtifact(artifact).ok, true);
+});
+
 test("material conclusion change requires all six revalidation checks", () => {
   const checkNames = [
     "REOPEN_MATERIAL_EVIDENCE",
