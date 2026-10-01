@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/evidence-ledger.v0.1.json",
+  "title": "OroTitan Evidence Ledger V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "ledger_version",
+    "source_manifest_ref",
+    "evidence"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "ledger_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_manifest_ref": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "claim_id",
+          "claim_or_metric",
+          "value_or_statement",
+          "period",
+          "as_of_date",
+          "source_id",
+          "root_source_id",
+          "independence_group",
+          "source_class",
+          "claim_fit",
+          "source_date",
+          "data_cutoff",
+          "epistemic_type",
+          "freshness_state",
+          "limitations",
+          "conflict_status",
+          "used_in"
+        ],
+        "properties": {
+          "evidence_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "claim_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "claim_or_metric": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_or_statement": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "period": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "as_of_date": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "source_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "root_source_id": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "independence_group": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_class": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/sourceClass"
+          },
+          "claim_fit": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/claimFit"
+          },
+          "source_date": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+              },
+              {
+                "const": "UNKNOWN_DATE"
+              }
+            ]
+          },
+          "data_cutoff": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/date"
+          },
+          "epistemic_type": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/epistemicType"
+          },
+          "freshness_state": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/freshnessState"
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "conflict_status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "used_in": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}

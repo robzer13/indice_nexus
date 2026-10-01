@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/company-economic-dna.v0.1.json",
+  "title": "OroTitan Company Economic DNA V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "dna_version",
+    "primary_sector",
+    "cost_structure",
+    "capital_intensity",
+    "working_capital_profile",
+    "fixed_cost_intensity",
+    "reinvestment_model",
+    "organic_vs_acquired_growth",
+    "cyclicality_profile",
+    "technology_exposure",
+    "regulatory_exposure",
+    "geographic_exposure",
+    "customer_concentration",
+    "supplier_concentration",
+    "distribution_model",
+    "network_effect_exposure",
+    "installed_base_exposure",
+    "intangible_intensity",
+    "m_and_a_dependence",
+    "commodity_exposure",
+    "financial_leverage_model",
+    "subsectors",
+    "business_model_archetypes",
+    "revenue_model",
+    "pricing_model",
+    "demand_drivers",
+    "key_economic_bottlenecks",
+    "key_value_drivers",
+    "key_failure_modes",
+    "evidence_ids",
+    "contradicting_evidence_ids"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "dna_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primary_sector": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "cost_structure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "capital_intensity": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "working_capital_profile": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "fixed_cost_intensity": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "reinvestment_model": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "organic_vs_acquired_growth": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "cyclicality_profile": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "technology_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "regulatory_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "geographic_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "customer_concentration": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "supplier_concentration": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "distribution_model": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "network_effect_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "installed_base_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "intangible_intensity": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "m_and_a_dependence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "commodity_exposure": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "financial_leverage_model": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "subsectors": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "business_model_archetypes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "revenue_model": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "pricing_model": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "demand_drivers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "key_economic_bottlenecks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "key_value_drivers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "key_failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "contradicting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    }
+  }
+}

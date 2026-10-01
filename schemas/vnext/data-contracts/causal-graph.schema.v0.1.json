@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/causal-graph.v0.1.json",
+  "title": "OroTitan Causal Graph V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "graph_id",
+    "graph_version",
+    "nodes",
+    "edges"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "graph_id": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+    },
+    "graph_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nodes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "node_id",
+          "claim",
+          "type",
+          "evidence_ids",
+          "contradicting_evidence_ids",
+          "confidence"
+        ],
+        "properties": {
+          "node_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "contradicting_evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "confidence": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/executionConfidence"
+          }
+        }
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "from_node",
+          "to_node",
+          "mechanism",
+          "supporting_evidence_ids",
+          "counterevidence_ids",
+          "status",
+          "confidence"
+        ],
+        "properties": {
+          "from_node": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "to_node": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "mechanism": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supporting_evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "counterevidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "status": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/causalEdgeStatus"
+          },
+          "confidence": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/executionConfidence"
+          }
+        }
+      }
+    }
+  }
+}

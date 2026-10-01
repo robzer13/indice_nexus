@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/material-research-hypothesis-register.v0.1.json",
+  "title": "OroTitan Material Research Hypothesis Register V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "register_version",
+    "hypotheses"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "register_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hypotheses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "hypothesis_id",
+          "affected_analytical_block",
+          "hypothesis",
+          "why_material",
+          "supporting_evidence_ids",
+          "contradicting_evidence_ids",
+          "unresolved_points",
+          "research_status"
+        ],
+        "properties": {
+          "hypothesis_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "affected_analytical_block": {
+            "type": "string",
+            "minLength": 1
+          },
+          "hypothesis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why_material": {
+            "type": "string",
+            "minLength": 1
+          },
+          "supporting_evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "contradicting_evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "unresolved_points": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "research_status": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

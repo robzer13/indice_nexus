@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/serial-acquirer-capital-deployment.v0.1.json",
+  "title": "OroTitan Serial Acquirer Capital Deployment V0.1",
+  "description": "Traceability structure only. It does not replace frozen Return Normalization, Capital Seasoning or Capital Allocation methodology.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "deployment_version",
+    "capital_sources",
+    "capital_uses",
+    "acquisition_cohorts",
+    "evidence_ids",
+    "calculation_ids"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "deployment_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capital_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_type",
+          "amount",
+          "period",
+          "evidence_ids"
+        ],
+        "properties": {
+          "source_type": {
+            "enum": [
+              "OPERATING_CASH",
+              "DEBT",
+              "EQUITY_ISSUANCE",
+              "ASSET_SALES"
+            ]
+          },
+          "amount": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "period": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "capital_uses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "use_type",
+          "amount",
+          "period",
+          "rationale",
+          "funding",
+          "realized_outcome",
+          "per_share_consequence",
+          "estimated_return",
+          "alternative_use",
+          "evidence_ids",
+          "calculation_ids"
+        ],
+        "properties": {
+          "use_type": {
+            "enum": [
+              "ORGANIC_REINVESTMENT",
+              "R_AND_D",
+              "CAPEX",
+              "M_AND_A",
+              "DIVIDENDS",
+              "BUYBACKS",
+              "DEBT_REPAYMENT",
+              "CASH_ACCUMULATION"
+            ]
+          },
+          "amount": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "period": {
+            "type": "string",
+            "minLength": 1
+          },
+          "rationale": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "funding": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "realized_outcome": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "per_share_consequence": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "estimated_return": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "alternative_use": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "calculation_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "acquisition_cohorts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cohort_id",
+          "period",
+          "acquisition_capital",
+          "purchase_multiple",
+          "seasoning_state",
+          "post_acquisition_economics",
+          "cohort_return",
+          "evidence_ids",
+          "calculation_ids"
+        ],
+        "properties": {
+          "cohort_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "period": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acquisition_capital": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "purchase_multiple": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "seasoning_state": {
+            "enum": [
+              "COMMITTED",
+              "DEPLOYED",
+              "IN_SERVICE",
+              "RAMPING",
+              "STABILIZING",
+              "SEASONED",
+              "UNKNOWN"
+            ]
+          },
+          "post_acquisition_economics": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "cohort_return": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "calculation_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "calculation_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    }
+  }
+}
