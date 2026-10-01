@@ -103,7 +103,7 @@
           ]
         },
         "resolution": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
@@ -120,7 +120,7 @@
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
         },
         "downstream_impact": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
