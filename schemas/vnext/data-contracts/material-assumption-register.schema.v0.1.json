@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/material-assumption-register.v0.1.json",
+  "title": "OroTitan Material Assumption Register V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "register_version",
+    "assumptions"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "register_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "assumption_id",
+          "variable",
+          "value_or_range",
+          "epistemic_type",
+          "source_or_rationale",
+          "sensitivity",
+          "used_in"
+        ],
+        "properties": {
+          "assumption_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "variable": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_or_range": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "epistemic_type": {
+            "const": "ASSUMPTION"
+          },
+          "source_or_rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sensitivity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "used_in": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
