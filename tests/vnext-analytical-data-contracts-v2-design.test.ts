@@ -16,7 +16,23 @@ function dnaDimension(summary: string | null = null, evidenceIds: string[] = [])
   return { summary, evidence_ids: evidenceIds };
 }
 
-function validPackage(): any {
+type MutableTestPackage = Record<string, unknown> & {
+  sources: Array<Record<string, unknown>>;
+  evidence: Array<Record<string, unknown> & { numeric_data: Array<Record<string, unknown>> }>;
+  gaps: Array<Record<string, unknown>>;
+  analytical_blocks: Array<Record<string, unknown> & {
+    status: string;
+    conclusion: string | null;
+    supporting_evidence_ids: string[];
+    gap_ids: string[];
+    upstream_block_refs: string[];
+    sector_overlays: Array<Record<string, unknown>>;
+  }>;
+  material_changes: Array<Record<string, unknown>>;
+  serial_acquirer_profile: Record<string, unknown> | null;
+};
+
+function validPackage(): MutableTestPackage {
   return {
     schema_version: "0.1",
     run_id: runId,
