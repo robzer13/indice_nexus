@@ -278,25 +278,27 @@ The semantic validator checks relationships.
 
 1. Run identity must match authoritative context.
 2. DATA_CUTOFF must match the run.
-3. SOURCE_DATE and observation AS_OF_DATE must not exceed cutoff.
-4. Forward estimate / guidance periods may extend beyond DATA_CUTOFF when the source and observation were available by cutoff.
-5. Evidence SOURCE_ID must exist.
-6. ROOT_SOURCE_ID must resolve, must not self-reference and must not form a cycle.
-7. Evidence/conflict/gap/assumption/material-change IDs must be unique.
-8. Analytical block code must be unique within one package.
-9. All Evidence IDs used by blocks/causal links/overlays must resolve.
-10. Conflict IDs / Gap IDs / Assumption IDs must resolve.
-11. Numeric range min <= max.
-12. Numeric period start <= end.
-13. Numeric datum must have a temporal anchor.
-14. COMPLETE block must carry traceable evidence and cannot carry a critical unresolved gap.
-15. SUPPORTED causal links require evidence; MIXED causal links require evidence and counterevidence.
-16. NOT_ASSESSABLE requires traceable exhausted/blocked gap.
-17. REQUIRED_MISSING sector overlay prevents COMPLETE.
-18. Block cannot depend on itself.
-19. Upstream block references must exist in the package.
-20. Material revalidation PASS requires all frozen checklist controls.
-21. Applicable serial acquirer profile requires actual acquisition-economics analysis.
+3. SOURCE_DATE must not exceed DATA_CUTOFF. DATA_PERIOD / AS_OF_DATE describe the datum and may be future when the source was already available by cutoff.
+4. Evidence SOURCE_ID must exist.
+5. ROOT_SOURCE_ID must resolve, must not self-reference and must not form a cycle.
+6. Evidence/conflict/gap/assumption/material-change IDs must be unique.
+7. Analytical block code must be unique within one package.
+8. All Evidence IDs used by blocks/causal links/overlays must resolve and declare matching block relevance.
+9. Conflict IDs / Gap IDs / Assumption IDs must resolve.
+10. Numeric range min <= max.
+11. Numeric period start <= end.
+12. Numeric datum must have a temporal anchor.
+13. COMPLETE block must carry traceable evidence.
+14. COMPLETE block cannot carry an OPEN / UNRESOLVED_BLOCKING conflict.
+15. COMPLETE block cannot carry a critical unresolved or exhausted-NOT_ASSESSABLE gap.
+16. SUPPORTED causal links require evidence; MIXED causal links require evidence and counterevidence.
+17. Causal link IDs and sector-overlay names must be unique within a block.
+18. NOT_ASSESSABLE requires traceable exhausted/blocked gap.
+19. REQUIRED_MISSING sector overlay prevents COMPLETE.
+20. Block cannot depend on itself.
+21. Upstream block references must exist in the package.
+22. Material revalidation PASS requires all frozen checklist controls.
+23. Applicable serial acquirer profile requires actual acquisition-economics analysis.
 
 ---
 
@@ -406,23 +408,26 @@ Before this contract is eligible to freeze:
 
 1. JSON Schema parses under AJV 2020.
 2. coherent package validates.
-3. post-cutoff source or observation fails closed.
-4. forward estimate periods known at cutoff remain valid.
+3. post-cutoff SOURCE_DATE fails closed.
+4. forward estimate / guidance periods known at cutoff remain valid.
 5. unknown Evidence ID fails closed.
-6. duplicate analytical block code fails closed.
-7. invalid root-source self-reference / cycle fails closed.
-8. critical unresolved gap blocks COMPLETE.
-9. COMPLETE block requires traceable evidence.
-10. SUPPORTED / MIXED causal links enforce evidence roles.
-11. NOT_ASSESSABLE requires traceable gap.
-12. incomplete revalidation cannot PASS.
-13. applicable serial acquirer profile cannot be empty.
-14. numeric datum requires period/as-of.
-15. absent upstream block fails.
-16. REQUIRED_MISSING overlay blocks COMPLETE.
-17. frozen Evidence Grade values remain exact.
-18. no production DB mutation is required.
-19. no existing frozen contract is modified.
+6. evidence used by a block must declare matching block relevance.
+7. duplicate analytical block code fails closed.
+8. invalid root-source self-reference / cycle fails closed.
+9. open/blocking conflict blocks COMPLETE.
+10. critical unresolved or exhausted-NOT_ASSESSABLE gap blocks COMPLETE.
+11. COMPLETE block requires traceable evidence.
+12. SUPPORTED / MIXED causal links enforce evidence roles.
+13. duplicate causal-link IDs / sector overlays fail closed.
+14. NOT_ASSESSABLE requires traceable gap.
+15. incomplete revalidation cannot PASS.
+16. applicable serial acquirer profile cannot be empty.
+17. numeric datum requires period/as-of.
+18. absent upstream block fails.
+19. REQUIRED_MISSING overlay blocks COMPLETE.
+20. frozen Evidence Grade values remain exact.
+21. no production DB mutation is required.
+22. no existing frozen contract is modified.
 
 ---
 
