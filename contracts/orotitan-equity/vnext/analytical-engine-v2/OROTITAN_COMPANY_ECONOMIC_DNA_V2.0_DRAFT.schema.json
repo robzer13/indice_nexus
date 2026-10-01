@@ -1,0 +1,282 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:company-economic-dna:v2.0-draft",
+  "title": "OroTitan Company Economic DNA V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "dna",
+    "field_provenance",
+    "overlay_activations"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_COMPANY_ECONOMIC_DNA_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "RESEARCH"
+            }
+          }
+        }
+      ]
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "COMPANY_ECONOMIC_DNA"
+    },
+    "dna": {
+      "$ref": "#/$defs/dna"
+    },
+    "field_provenance": {
+      "type": "array",
+      "items": {
+        "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/fieldProvenance"
+      }
+    },
+    "overlay_activations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/overlayActivation"
+      }
+    }
+  },
+  "$defs": {
+    "stringOrState": {
+      "oneOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/specialState"
+        }
+      ]
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "material",
+        "description"
+      ],
+      "properties": {
+        "material": {
+          "type": "boolean"
+        },
+        "description": {
+          "$ref": "#/$defs/stringOrState"
+        }
+      }
+    },
+    "dna": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "primary_sector",
+        "subsectors",
+        "business_model_archetypes",
+        "revenue_models",
+        "pricing_models",
+        "demand_drivers",
+        "cost_structure",
+        "capital_intensity",
+        "working_capital_profile",
+        "fixed_cost_intensity",
+        "reinvestment_model",
+        "organic_vs_acquired_growth",
+        "cyclicality_profile",
+        "technology_exposure",
+        "regulatory_exposure",
+        "geographic_exposure",
+        "customer_concentration",
+        "supplier_concentration",
+        "distribution_model",
+        "network_effect_exposure",
+        "installed_base_exposure",
+        "intangible_intensity",
+        "ma_dependence",
+        "commodity_exposure",
+        "financial_leverage_model",
+        "key_economic_bottlenecks",
+        "key_value_drivers",
+        "key_failure_modes"
+      ],
+      "properties": {
+        "primary_sector": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "subsectors": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "business_model_archetypes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "revenue_models": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "pricing_models": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "demand_drivers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          },
+          "uniqueItems": true
+        },
+        "cost_structure": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "capital_intensity": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "working_capital_profile": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "fixed_cost_intensity": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "reinvestment_model": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "organic_vs_acquired_growth": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "cyclicality_profile": {
+          "$ref": "#/$defs/exposure"
+        },
+        "technology_exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "regulatory_exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "geographic_exposure": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "customer_concentration": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "supplier_concentration": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "distribution_model": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "network_effect_exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "installed_base_exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "intangible_intensity": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "ma_dependence": {
+          "$ref": "#/$defs/exposure"
+        },
+        "commodity_exposure": {
+          "$ref": "#/$defs/exposure"
+        },
+        "financial_leverage_model": {
+          "$ref": "#/$defs/stringOrState"
+        },
+        "key_economic_bottlenecks": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          }
+        },
+        "key_value_drivers": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          }
+        },
+        "key_failure_modes": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "overlayActivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overlay_id",
+        "overlay_version",
+        "overlay_type",
+        "activation_reason",
+        "supporting_claim_ids",
+        "status"
+      ],
+      "properties": {
+        "overlay_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "overlay_version": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "overlay_type": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "activation_reason": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "supporting_claim_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "NOT_APPLICABLE",
+            "REJECTED"
+          ]
+        }
+      }
+    }
+  }
+}
