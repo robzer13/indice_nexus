@@ -3631,7 +3631,7 @@
           ]
         },
         "value": {
-          "$ref": "#/$defs/assumptionValue"
+          "$ref": "#/$defs/decimalValue"
         },
         "supporting_evidence_ids": {
           "type": "array",
