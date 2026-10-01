@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
+    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -118,8 +118,20 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
   assert.equal(entry.llama3_2_first_c4_schema_valid, false);
   assert.equal(entry.llama3_2_first_c4_schema_error, "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID");
   assert.equal(entry.llama3_2_first_c4_semantic_status, "NOT_EVALUATED_SCHEMA_FAILURE");
-  assert.equal(entry.llama3_2_first_c4_forensic_authorized, true);
-  assert.equal(entry.llama3_2_first_c4_forensic_authorized_run_count, 1);
+  assert.equal(entry.llama3_2_first_c4_forensic_authorized, false);
+  assert.equal(entry.llama3_2_first_c4_forensic_authorized_run_count, 0);
+  assert.equal(entry.llama3_2_first_c4_forensic_consumed, true);
+  assert.equal(
+    entry.llama3_2_first_c4_forensic_result_status,
+    "FORENSIC_COMPLETE_SINGLE_MALFORMED_COUNTEREVIDENCE_ID",
+  );
+  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized, true);
+  assert.equal(entry.llama3_2_counterevidence_id_forensic_authorized_run_count, 1);
+  assert.equal(
+    entry.llama3_2_counterevidence_id_forensic_target_path,
+    "priority_findings.1.counterevidence_ids.0",
+  );
+  assert.equal(entry.llama3_2_additional_inference_authorized, false);
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);
