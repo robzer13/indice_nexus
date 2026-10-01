@@ -2112,3 +2112,56 @@ Gate 18 remains:
 The C7 decision does not authorize a paid benchmark, hybrid architecture, hardware purchase, new candidate, routing change, or production mutation.
 
 The next step requires explicit post-C7 strategy direction.
+
+## D-2026-10-01-112 — Select interim assisted human-in-the-loop strategy
+
+After C7 rejected the current tested local candidate set, the user selected a temporary operating direction until materially stronger local hardware is available.
+
+Strategy:
+
+`ASSISTED_HUMAN_IN_THE_LOOP_ANALYSIS_BRIDGE`
+
+The objective is not to maximize automation percentage.
+
+The objective is to simplify execution while improving analytical quality.
+
+Deterministic work should remain automated:
+- source/evidence preparation;
+- packet construction;
+- ID/hash/schema pinning;
+- result import;
+- schema validation;
+- deterministic semantic validation;
+- repair-request generation;
+- persistence and technical controls.
+
+High-judgment work may be performed with an interactive high-capability LLM and human review.
+
+The analyst remains authoritative for qualitative judgment.
+
+Interactive chat prose is not a canonical Integration input. Only persisted validated/certified artifacts can flow downstream.
+
+No external API is required by this strategy.
+
+No local model is required by this strategy.
+
+No routing freeze or production mutation is authorized.
+
+## D-2026-10-01-113 — Keep the bridge provider-neutral for future local migration
+
+The interim bridge must isolate the inference step from:
+- task packet;
+- prompt contract;
+- output schema;
+- validators;
+- persistence;
+- certification;
+- Integration controls.
+
+When stronger hardware is purchased, the interactive analysis step should be replaceable by a local inference adapter without redesigning the surrounding analytical pipeline.
+
+The first implementation pilot will use:
+
+`MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`
+
+because Gate 18 already provides extensive calibration evidence and known failure modes for that module.
