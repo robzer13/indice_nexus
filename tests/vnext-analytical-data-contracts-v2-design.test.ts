@@ -24,8 +24,14 @@ type MutableTestPackage = Record<string, unknown> & {
     status: string;
     conclusion: string | null;
     supporting_evidence_ids: string[];
+    counterevidence_ids: string[];
     gap_ids: string[];
     upstream_block_refs: string[];
+    causal_links: Array<Record<string, unknown> & {
+      status: string;
+      evidence_ids: string[];
+      counterevidence_ids: string[];
+    }>;
     sector_overlays: Array<Record<string, unknown>>;
   }>;
   material_changes: Array<Record<string, unknown>>;
