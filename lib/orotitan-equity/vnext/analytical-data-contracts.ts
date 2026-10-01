@@ -202,6 +202,105 @@ function validateAnalyticalBlock(
   requireKnown(stringArray(body.material_assumption_ids), refs.assumptionIds, "ASSUMPTION", errors);
 }
 
+function validateTraceability(
+  traceability: unknown,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  if (!isObject(traceability)) return;
+  requireKnown(
+    [
+      ...stringArray(traceability.supporting_evidence_ids),
+      ...stringArray(traceability.contradicting_evidence_ids),
+    ],
+    refs.evidenceIds,
+    "EVIDENCE",
+    errors,
+  );
+  requireKnown(stringArray(traceability.calculation_ids), refs.calculationIds, "CALCULATION", errors);
+  requireKnown(stringArray(traceability.material_assumption_ids), refs.assumptionIds, "ASSUMPTION", errors);
+  requireKnown(stringArray(traceability.conflict_ids), refs.conflictIds, "CONFLICT", errors);
+}
+
+function validateTraceableFindingArrays(
+  artifact: JsonObject,
+  fields: readonly string[],
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+  for (const field of fields) {
+    const values = Array.isArray(body[field]) ? body[field] : [];
+    for (const finding of values.filter(isObject)) {
+      validateTraceability(finding.traceability, refs, errors);
+    }
+  }
+}
+
+function validateCompanyEconomicDna(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body || !Array.isArray(body.economic_mechanisms)) return;
+  for (const mechanism of body.economic_mechanisms.filter(isObject)) {
+    validateTraceability(mechanism.traceability, refs, errors);
+  }
+}
+
+function validateCausalGraph(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+
+  const nodes = Array.isArray(body.nodes) ? body.nodes.filter(isObject) : [];
+  const links = Array.isArray(body.links) ? body.links.filter(isObject) : [];
+  pushDuplicateIdErrors(nodes, "node_id", "CAUSAL_NODE", errors);
+  pushDuplicateIdErrors(links, "causal_link_id", "CAUSAL_LINK", errors);
+
+  const nodeIds = new Set(
+    nodes
+      .map((node) => node.node_id)
+      .filter((nodeId): nodeId is string => typeof nodeId === "string"),
+  );
+
+  for (const node of nodes) {
+    requireKnown(
+      [
+        ...stringArray(node.evidence_ids),
+        ...stringArray(node.contradicting_evidence_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+  }
+
+  for (const link of links) {
+    const linkId = typeof link.causal_link_id === "string" ? link.causal_link_id : "<unknown>";
+    if (typeof link.from_node_id === "string" && !nodeIds.has(link.from_node_id)) {
+      errors.push(`CAUSAL_LINK ${linkId} unresolved from_node_id: ${link.from_node_id}`);
+    }
+    if (typeof link.to_node_id === "string" && !nodeIds.has(link.to_node_id)) {
+      errors.push(`CAUSAL_LINK ${linkId} unresolved to_node_id: ${link.to_node_id}`);
+    }
+    requireKnown(
+      [
+        ...stringArray(link.supporting_evidence_ids),
+        ...stringArray(link.counterevidence_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+  }
+}
+
 function validateMaterialChangeRevalidation(
   artifact: JsonObject,
   refs: AnalyticalReferenceIndex,
@@ -276,6 +375,103 @@ export function validateAnalyticalDataArtifact(
       break;
     case "ANALYTICAL_BLOCK_OUTPUT":
       validateAnalyticalBlock(input, refs, errors);
+      break;
+    case "COMPANY_ECONOMIC_DNA":
+      validateCompanyEconomicDna(input, refs, errors);
+      break;
+    case "INDUSTRY_STRUCTURE_ANALYSIS":
+      validateTraceableFindingArrays(
+        input,
+        [
+          "market_structure",
+          "competitor_set",
+          "market_share_distribution",
+          "entry_rate",
+          "exit_rate",
+          "capacity_discipline",
+          "pricing_discipline",
+          "customer_bargaining_power",
+          "supplier_bargaining_power",
+          "distributor_power",
+          "regulatory_barriers",
+          "switching_friction",
+          "multihoming",
+          "vertical_integration",
+          "consolidation_trend",
+          "disruption_vectors",
+          "profit_pool_location",
+          "value_chain_position",
+          "historical_return_distribution",
+        ],
+        refs,
+        errors,
+      );
+      break;
+    case "TECHNOLOGY_ANALYSIS":
+      validateTraceableFindingArrays(
+        input,
+        [
+          "current_architecture",
+          "technical_bottlenecks",
+          "next_generation_path",
+          "substitution_paths",
+          "replication_difficulty",
+          "supplier_dependence",
+          "customer_dependence",
+          "standards_ecosystem",
+          "rd_economics",
+          "commoditization_risk",
+          "economic_consequence",
+        ],
+        refs,
+        errors,
+      );
+      break;
+    case "CYCLICALITY_ANALYSIS":
+      validateTraceableFindingArrays(
+        input,
+        [
+          "secular_growth",
+          "price_effect",
+          "volume_effect",
+          "inventory_cycle",
+          "capacity_cycle",
+          "end_demand_cycle",
+          "utilization",
+          "working_capital_cycle",
+          "normalized_economics",
+        ],
+        refs,
+        errors,
+      );
+      requireKnown(
+        isObject(input.body) ? stringArray(input.body.normalization_calculation_ids) : [],
+        refs.calculationIds,
+        "CALCULATION",
+        errors,
+      );
+      break;
+    case "CAPITAL_ALLOCATION_ANALYSIS":
+      validateTraceableFindingArrays(
+        input,
+        [
+          "organic_reinvestment",
+          "acquisitions",
+          "buybacks",
+          "dividends",
+          "debt_deleveraging",
+          "dilution_sbc",
+          "acquisition_economics",
+          "organic_vs_acquired_bridge",
+          "incremental_return_evidence",
+          "capital_allocation_risks",
+        ],
+        refs,
+        errors,
+      );
+      break;
+    case "CAUSAL_GRAPH":
+      validateCausalGraph(input, refs, errors);
       break;
     case "MATERIAL_CHANGE_REVALIDATION_RECORD":
       validateMaterialChangeRevalidation(input, refs, errors);
