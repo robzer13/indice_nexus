@@ -301,6 +301,251 @@ function validateCausalGraph(
   }
 }
 
+function validateMoatProof(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const mechanisms = body && Array.isArray(body.mechanisms) ? body.mechanisms.filter(isObject) : [];
+  pushDuplicateIdErrors(mechanisms, "mechanism_id", "MOAT_MECHANISM", errors);
+  for (const mechanism of mechanisms) {
+    requireKnown(
+      [
+        ...stringArray(mechanism.issuer_evidence_ids),
+        ...stringArray(mechanism.independent_evidence_ids),
+        ...stringArray(mechanism.customer_evidence_ids),
+        ...stringArray(mechanism.competitor_evidence_ids),
+        ...stringArray(mechanism.behavioral_evidence_ids),
+        ...stringArray(mechanism.evidence_against_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+    requireKnown(stringArray(mechanism.calculation_ids), refs.calculationIds, "CALCULATION", errors);
+    requireKnown(
+      stringArray(mechanism.material_assumption_ids),
+      refs.assumptionIds,
+      "ASSUMPTION",
+      errors,
+    );
+  }
+}
+
+function validateRunway(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+  const sources = Array.isArray(body.growth_sources) ? body.growth_sources.filter(isObject) : [];
+  pushDuplicateIdErrors(sources, "growth_source_id", "RUNWAY_GROWTH_SOURCE", errors);
+  for (const source of sources) {
+    requireKnown(
+      [
+        ...stringArray(source.supporting_evidence_ids),
+        ...stringArray(source.contradicting_evidence_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+    requireKnown(stringArray(source.calculation_ids), refs.calculationIds, "CALCULATION", errors);
+  }
+
+  const scopes = Array.isArray(body.market_scopes) ? body.market_scopes.filter(isObject) : [];
+  const requiredScopes = new Set(["TAM", "SERVICEABLE_MARKET", "REALISTIC_CAPTURE_POOL"]);
+  const seen = new Set<string>();
+  for (const scope of scopes) {
+    if (typeof scope.scope_type === "string") {
+      if (seen.has(scope.scope_type)) errors.push(`duplicate runway market scope: ${scope.scope_type}`);
+      seen.add(scope.scope_type);
+    }
+    requireKnown(stringArray(scope.supporting_evidence_ids), refs.evidenceIds, "EVIDENCE", errors);
+    requireKnown(stringArray(scope.calculation_ids), refs.calculationIds, "CALCULATION", errors);
+  }
+  for (const scope of requiredScopes) {
+    if (!seen.has(scope)) errors.push(`missing runway market scope: ${scope}`);
+  }
+
+  validateTraceableFindingArrays(artifact, ["constraint_findings"], refs, errors);
+}
+
+function validateReturnQuality(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+  const metrics = Array.isArray(body.metrics) ? body.metrics.filter(isObject) : [];
+  pushDuplicateIdErrors(metrics, "metric_id", "RETURN_QUALITY_METRIC", errors);
+  for (const metric of metrics) {
+    requireKnown(stringArray(metric.supporting_evidence_ids), refs.evidenceIds, "EVIDENCE", errors);
+    requireKnown(stringArray(metric.calculation_ids), refs.calculationIds, "CALCULATION", errors);
+  }
+  validateTraceableFindingArrays(
+    artifact,
+    ["business_model_adjustments", "near_zero_invested_capital_risk"],
+    refs,
+    errors,
+  );
+}
+
+function validateFcfForensic(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+  const adjustments = Array.isArray(body.adjustments) ? body.adjustments.filter(isObject) : [];
+  pushDuplicateIdErrors(adjustments, "adjustment_id", "FCF_ADJUSTMENT", errors);
+  for (const adjustment of adjustments) {
+    requireKnown(stringArray(adjustment.evidence_ids), refs.evidenceIds, "EVIDENCE", errors);
+    if (typeof adjustment.calculation_id === "string") {
+      requireKnown([adjustment.calculation_id], refs.calculationIds, "CALCULATION", errors);
+    }
+  }
+  requireKnown(
+    [
+      ...stringArray(body.reported_cash_flow_calculation_ids),
+      ...stringArray(body.standardized_fcf_calculation_ids),
+      ...stringArray(body.owner_earnings_calculation_ids),
+    ],
+    refs.calculationIds,
+    "CALCULATION",
+    errors,
+  );
+  validateTraceableFindingArrays(artifact, ["forensic_findings"], refs, errors);
+}
+
+function validateOutsideView(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const classes = body && Array.isArray(body.reference_classes) ? body.reference_classes.filter(isObject) : [];
+  pushDuplicateIdErrors(classes, "reference_class_id", "REFERENCE_CLASS", errors);
+  for (const referenceClass of classes) {
+    requireKnown(
+      stringArray(referenceClass.company_specific_evidence_ids),
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+  }
+}
+
+function validateVariantPerception(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  if (!body) return;
+  requireKnown(
+    [
+      ...stringArray(body.supporting_evidence_ids),
+      ...stringArray(body.disconfirming_evidence_ids),
+    ],
+    refs.evidenceIds,
+    "EVIDENCE",
+    errors,
+  );
+}
+
+function validateRiskResilience(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const risks = body && Array.isArray(body.risks) ? body.risks.filter(isObject) : [];
+  pushDuplicateIdErrors(risks, "risk_id", "RISK", errors);
+  for (const risk of risks) {
+    requireKnown(stringArray(risk.evidence_ids), refs.evidenceIds, "EVIDENCE", errors);
+  }
+}
+
+function validateRedTeam(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const perspectives = body && Array.isArray(body.perspectives) ? body.perspectives.filter(isObject) : [];
+  const required = new Set([
+    "BEAR_CASE",
+    "SHORT_SELLER_CASE",
+    "COMPETITOR_CASE",
+    "CUSTOMER_CASE",
+    "TECHNOLOGIST_CASE",
+    "REGULATOR_CASE",
+    "ACCOUNTING_FORENSIC_CASE",
+    "CAPITAL_ALLOCATION_CASE",
+    "CYCLE_PEAK_CASE",
+    "RUNWAY_FAILURE_CASE",
+    "ROIIC_FAILURE_CASE",
+    "REVERSE_VALUATION_CASE",
+    "PRE_MORTEM",
+  ]);
+  const seen = new Set<string>();
+  for (const perspective of perspectives) {
+    if (typeof perspective.perspective === "string") {
+      if (seen.has(perspective.perspective)) {
+        errors.push(`duplicate Red Team perspective: ${perspective.perspective}`);
+      }
+      seen.add(perspective.perspective);
+    }
+    requireKnown(
+      [
+        ...stringArray(perspective.supporting_evidence_ids),
+        ...stringArray(perspective.counterevidence_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+  }
+  for (const perspective of required) {
+    if (!seen.has(perspective)) errors.push(`missing mandatory Red Team perspective: ${perspective}`);
+  }
+}
+
+function validateCapitalAllocation(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const deployments = body && Array.isArray(body.deployments) ? body.deployments.filter(isObject) : [];
+  pushDuplicateIdErrors(deployments, "deployment_id", "CAPITAL_DEPLOYMENT", errors);
+  for (const deployment of deployments) {
+    validateTraceability(deployment.traceability, refs, errors);
+  }
+  validateTraceableFindingArrays(
+    artifact,
+    [
+      "organic_reinvestment",
+      "acquisitions",
+      "buybacks",
+      "dividends",
+      "debt_deleveraging",
+      "dilution_sbc",
+      "acquisition_economics",
+      "organic_vs_acquired_bridge",
+      "incremental_return_evidence",
+      "capital_allocation_risks",
+    ],
+    refs,
+    errors,
+  );
+}
+
 function validateMaterialChangeRevalidation(
   artifact: JsonObject,
   refs: AnalyticalReferenceIndex,
@@ -451,24 +696,32 @@ export function validateAnalyticalDataArtifact(
         errors,
       );
       break;
+    case "MOAT_PROOF_ANALYSIS":
+      validateMoatProof(input, refs, errors);
+      break;
+    case "RUNWAY_ANALYSIS":
+      validateRunway(input, refs, errors);
+      break;
+    case "RETURN_QUALITY_ANALYSIS":
+      validateReturnQuality(input, refs, errors);
+      break;
+    case "FCF_FORENSIC_ANALYSIS":
+      validateFcfForensic(input, refs, errors);
+      break;
+    case "OUTSIDE_VIEW_ANALYSIS":
+      validateOutsideView(input, refs, errors);
+      break;
+    case "VARIANT_PERCEPTION_ANALYSIS":
+      validateVariantPerception(input, refs, errors);
+      break;
+    case "RISK_RESILIENCE_ANALYSIS":
+      validateRiskResilience(input, refs, errors);
+      break;
+    case "RED_TEAM_RECORD":
+      validateRedTeam(input, refs, errors);
+      break;
     case "CAPITAL_ALLOCATION_ANALYSIS":
-      validateTraceableFindingArrays(
-        input,
-        [
-          "organic_reinvestment",
-          "acquisitions",
-          "buybacks",
-          "dividends",
-          "debt_deleveraging",
-          "dilution_sbc",
-          "acquisition_economics",
-          "organic_vs_acquired_bridge",
-          "incremental_return_evidence",
-          "capital_allocation_risks",
-        ],
-        refs,
-        errors,
-      );
+      validateCapitalAllocation(input, refs, errors);
       break;
     case "CAUSAL_GRAPH":
       validateCausalGraph(input, refs, errors);
