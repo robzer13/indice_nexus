@@ -11,7 +11,9 @@ import {
   decideRetry,
   deriveNextBlockAction,
   deriveSaveDisposition,
+  planDependencyReopen,
   planRefresh,
+  validateRequiredBlockDependencies,
   validateRequiredSectorOverlays,
   type AnalyticalBlockState,
   type BlockCode,
@@ -109,6 +111,8 @@ test("PRICE_ONLY_DELTA preserves fundamentals and forbids fundamental changes", 
   const plan = planRefresh("PRICE_ONLY_DELTA", [], blocks);
   assert.equal(plan.ok, true);
   if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, ["VALUATION"]);
+    assert.deepEqual(plan.staleBlocks, ["CROSS_BLOCK_RECONCILIATION"]);
     assert.deepEqual(plan.reopenBlocks, [
       "VALUATION",
       "CROSS_BLOCK_RECONCILIATION",
@@ -132,6 +136,12 @@ test("ROUTINE_FUNDAMENTAL_DELTA reopens affected and downstream blocks only", ()
   const plan = planRefresh("ROUTINE_FUNDAMENTAL_DELTA", ["MOAT"], blocks);
   assert.equal(plan.ok, true);
   if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, ["MOAT"]);
+    assert.deepEqual(plan.staleBlocks, [
+      "RUNWAY",
+      "VALUATION",
+      "CROSS_BLOCK_RECONCILIATION",
+    ]);
     assert.deepEqual(plan.reopenBlocks, [
       "MOAT",
       "RUNWAY",
@@ -166,10 +176,57 @@ test("FULL_REFRESH_REQUIRED reopens every analytical block", () => {
   const plan = planRefresh("FULL_REFRESH_REQUIRED", [], blocks);
   assert.equal(plan.ok, true);
   if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, blocks.map((item) => item.block));
+    assert.deepEqual(plan.staleBlocks, []);
     assert.deepEqual(plan.reopenBlocks, blocks.map((item) => item.block));
     assert.deepEqual(plan.preservedBlocks, []);
     assert.equal(plan.researchMode, "FULL");
     assert.equal(plan.fundamentalsMode, "FULL");
+  }
+});
+
+test("authoritative dependency requirements prevent under-specified graphs", () => {
+  const blocks = [
+    block("BUSINESS_MODEL"),
+    block("MOAT"),
+  ];
+
+  const invalid = validateRequiredBlockDependencies(
+    [{ block: "MOAT", upstream: "BUSINESS_MODEL" }],
+    blocks,
+  );
+  assert.equal(invalid.ok, false);
+  if (!invalid.ok) {
+    assert.match(invalid.errors.join("\n"), /missing required upstream dependency/);
+  }
+
+  const validBlocks = [
+    block("BUSINESS_MODEL"),
+    block("MOAT", "COMPLETE", ["BUSINESS_MODEL"]),
+  ];
+  assert.equal(
+    validateRequiredBlockDependencies(
+      [{ block: "MOAT", upstream: "BUSINESS_MODEL" }],
+      validBlocks,
+    ).ok,
+    true,
+  );
+});
+
+test("dependency reopen plan distinguishes direct reopen from stale downstream", () => {
+  const result = planDependencyReopen(["MOAT"], chain(), [
+    { block: "MOAT", upstream: "BUSINESS_MODEL" },
+    { block: "RUNWAY", upstream: "MOAT" },
+    { block: "VALUATION", upstream: "RUNWAY" },
+  ]);
+  assert.equal(result.ok, true);
+  if (result.ok) {
+    assert.deepEqual(result.plan.directReopenBlocks, ["MOAT"]);
+    assert.deepEqual(result.plan.staleDownstreamBlocks, [
+      "RUNWAY",
+      "VALUATION",
+      "CROSS_BLOCK_RECONCILIATION",
+    ]);
   }
 });
 
@@ -273,6 +330,30 @@ test("next-action resolver surfaces a blocker instead of re-executing it", () =>
   assert.equal(next.block, "MOAT");
 });
 
+test("current executable block is preserved before an unrelated later blocker", () => {
+  const blocks = [
+    block("BUSINESS_MODEL", "IN_PROGRESS"),
+    {
+      ...block("MANAGEMENT_GOVERNANCE", "BLOCKED"),
+      criticalUnresolvedGap: true,
+    },
+  ];
+
+  const next = deriveNextBlockAction(
+    blocks,
+    [],
+    "BUSINESS_MODEL",
+  );
+  assert.equal(next.action, "EXECUTE_BLOCK");
+  assert.equal(next.block, "BUSINESS_MODEL");
+});
+
+test("empty analytical state fails closed", () => {
+  const next = deriveNextBlockAction([]);
+  assert.equal(next.action, "FAIL_CLOSED");
+  assert.equal(next.block, null);
+});
+
 test("checkpointed upstream may feed provisional downstream execution", () => {
   const blocks = [
     block("BUSINESS_MODEL", "CHECKPOINTED"),
@@ -310,7 +391,6 @@ const saveBase = {
   analyticalReconciliationPassed: true,
   requiredArtifactsPresent: true,
   persistenceVerified: true,
-  registryReconciled: true,
   criticalBlockers: [] as string[],
   phaseGate: "YES" as const,
 };
@@ -343,6 +423,29 @@ test("SAVE finalizes only eligible stage boundaries and never publishes", () => 
   });
   assert.equal(fundamentals.action, "CHECKPOINT");
   assert.equal(fundamentals.publishAuthorized, false);
+});
+
+test("SAVE lifecycle prevents finalization from NOT_STARTED or PAUSED state", () => {
+  const notStarted = deriveSaveDisposition({
+    ...saveBase,
+    phase: "RESEARCH",
+    registryLifecycle: "NOT_STARTED",
+  });
+  assert.equal(notStarted.action, "NOOP");
+
+  const paused = deriveSaveDisposition({
+    ...saveBase,
+    phase: "RESEARCH",
+    registryLifecycle: "PAUSED",
+  });
+  assert.equal(paused.action, "CHECKPOINT");
+
+  const complete = deriveSaveDisposition({
+    ...saveBase,
+    phase: "RESEARCH",
+    registryLifecycle: "COMPLETE",
+  });
+  assert.equal(complete.action, "NOOP");
 });
 
 test("SAVE gate NO checkpoints unless a real blocker exists", () => {
