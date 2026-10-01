@@ -343,6 +343,59 @@
           }
         }
       ]
+    },
+    "stringOrSpecial": {
+      "oneOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "not": {
+            "enum": [
+              "UNKNOWN",
+              "NOT_APPLICABLE",
+              "NOT_ASSESSABLE",
+              "MISSING",
+              "NOT_AVAILABLE"
+            ]
+          }
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "numberOrSpecial": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "causalEdgeStatus": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "MIXED",
+        "NOT_SUPPORTED",
+        "LOW_CONFIDENCE",
+        "NOT_ASSESSABLE"
+      ]
+    },
+    "cycleRegime": {
+      "type": "string",
+      "enum": [
+        "PEAK",
+        "LATE_CYCLE",
+        "MID_CYCLE",
+        "DOWNTURN",
+        "TROUGH",
+        "EARLY_RECOVERY",
+        "EXPANSION",
+        "UNKNOWN"
+      ]
     }
   }
 }
