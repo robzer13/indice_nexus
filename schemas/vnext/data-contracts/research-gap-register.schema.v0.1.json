@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/research-gap-register.v0.1.json",
+  "title": "OroTitan Research Gap Register V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "register_version",
+    "gaps"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "register_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gap_id",
+          "affected_input_block",
+          "question",
+          "materiality",
+          "searches_attempted",
+          "best_next_source",
+          "status",
+          "why_not_resolved",
+          "impact_on_ready_for_deep_dive"
+        ],
+        "properties": {
+          "gap_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "affected_input_block": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question": {
+            "type": "string",
+            "minLength": 1
+          },
+          "materiality": {
+            "type": "string",
+            "minLength": 1
+          },
+          "searches_attempted": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "best_next_source": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "why_not_resolved": {
+            "type": "string",
+            "minLength": 1
+          },
+          "impact_on_ready_for_deep_dive": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
