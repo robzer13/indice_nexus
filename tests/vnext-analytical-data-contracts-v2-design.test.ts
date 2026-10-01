@@ -16,7 +16,7 @@ function dnaDimension(summary: string | null = null, evidenceIds: string[] = [])
   return { summary, evidence_ids: evidenceIds };
 }
 
-function validPackage() {
+function validPackage(): any {
   return {
     schema_version: "0.1",
     run_id: runId,
