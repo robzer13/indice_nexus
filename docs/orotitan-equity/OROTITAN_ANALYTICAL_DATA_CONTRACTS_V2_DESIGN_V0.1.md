@@ -152,7 +152,6 @@ ANALYSIS_INPUT_LOCK
 COMPANY_ECONOMIC_DNA
 ANALYTICAL_BLOCK_OUTPUT
 CAUSAL_GRAPH
-OPEN_QUESTION_REGISTER
 TECHNOLOGY_ANALYSIS
 CYCLICALITY_ANALYSIS
 CAPITAL_ALLOCATION_ANALYSIS
@@ -488,17 +487,33 @@ No acquisition quality score is introduced.
 
 # 14. OPEN QUESTIONS
 
-Research gaps and Deep Dive open questions are separate concepts.
+Open Questions must not become a second authoritative register.
+
+The Analytical Engine V2 definition is preserved:
 
 ```text
-RESEARCH_GAP
-= evidence acquisition problem
-
-OPEN_QUESTION
-= unresolved analytical question after or during analysis
+OPEN QUESTIONS
+= USER-FACING / WORKBENCH VIEW
+OVER
+RESEARCH_GAP_REGISTER
++ ANALYTICAL_BLOCK_OUTPUT.UNRESOLVED_POINTS
 ```
 
-They may reference each other but may not silently substitute for each other.
+Canonical Research gaps remain in `RESEARCH_GAP_REGISTER`.
+
+Analytical unresolved points remain inside the exact block output that owns them.
+
+The UI projection may classify questions as:
+
+```text
+OPEN
+RESOLVED
+EXHAUSTED
+NOT_ASSESSABLE
+NON_MATERIAL
+```
+
+but persistence of that view must retain source references and may not create competing analytical authority.
 
 ---
 
