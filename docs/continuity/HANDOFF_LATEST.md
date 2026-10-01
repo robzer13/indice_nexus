@@ -167,3 +167,10 @@ Pre-CI semantic review patched:
 Exact action remains:
 
 `RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
+
+
+Final Process Engine semantic hardening before review close:
+
+- READY block cannot jump directly to terminal completion;
+- persisted COMPLETE blocks are revalidated against completion / pinned method-plan conditions on resume;
+- completion-audit, required-overlay and required-dependency inputs are explicitly Bridge-resolved pinned authority, not ad-hoc Process Engine judgments.
