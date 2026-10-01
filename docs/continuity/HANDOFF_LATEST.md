@@ -1,8 +1,8 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-064`
+Resume ID: `VNEXT-POST-C7-20261001-065`
 
-## Current planning state
+## Current state
 
 Phase C remains complete.
 
@@ -10,19 +10,21 @@ C7 remains:
 
 `LOCAL_CANDIDATE_REJECTED`
 
-Post-C7 product direction remains:
+Post-C7 architecture is now complete.
 
-`ANALYTICAL_ENGINE_V2_SELECTED_AS_POST_C7_DIRECTION`
+The ChatGPT operating protocol has been explicitly approved by the user and frozen as:
 
-The final missing architectural planning layer has now been drafted:
-
-`OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1`
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
 
 Status:
 
-`DESIGN_CANDIDATE_READY_FOR_USER_REVIEW`
+`FROZEN_V1_0`
 
-## Operating architecture
+Approval date:
+
+`2026-10-01`
+
+## Frozen architecture
 
 ```text
 CHATGPT
@@ -43,7 +45,7 @@ OROTITAN
 
 ChatGPT Work is not required in the current V2 path.
 
-## Protocol command surface
+## Frozen command surface
 
 ```text
 LOAD OROTITAN <COMPANY>
@@ -54,56 +56,21 @@ REFRESH OROTITAN <COMPANY>
 GO PUBLISH <COMPANY>
 ```
 
-## Quality design
+## Planning phase
 
-The candidate includes:
-- layered context loading;
-- anti-anchoring / narrative-contamination controls;
-- question-driven Research;
-- primary/root-source recovery;
-- mandatory disconfirming research;
-- explicit numeric provenance;
-- material-change revalidation;
-- sector / cyclicality / technology-specific analysis;
-- Outside View / base rates;
-- mandatory Red Team;
-- reproducible valuation;
-- unknown preservation.
+`POST_C7_ARCHITECTURAL_PLANNING_PHASE = CLOSED`
 
-## Reliability design
-
-The candidate includes:
-- exact run / artifact / version retrieval;
-- DATA_CUTOFF enforcement;
-- durable checkpoints;
-- optimistic concurrency;
-- prompt-injection firewall;
-- guarded Supabase RPC writes;
-- no ad-hoc DML in normal company analysis;
-- no schema migration in company analysis;
-- no publication from SAVE.
-
-## Live infrastructure verification
-
-The active Supabase project already contains:
-- `orotitan_runs`;
-- `orotitan_run_stages`;
-- `orotitan_artifacts`;
-- `orotitan_artifact_edges`;
-- `orotitan_run_events`.
-
-Existing RPCs already include:
-- `checkpoint_orotitan_stage`;
-- `finalize_orotitan_stage`;
-- `pause_orotitan_stage`;
-- `reopen_orotitan_stage`;
-- `resolve_orotitan_artifact`;
-- publish authorization/result functions.
-
-Vercel project `orotitan-vnext-pilotage` is connected and deployable.
+No further architecture planning is required before detailed design.
 
 ## Exact next action
 
-`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
+`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
 
-Do not freeze or treat the protocol as final until explicit user approval.
+Then:
+1. Process Engine V2 state machine
+2. controlled ChatGPT ↔ Supabase operation contracts
+3. Workbench information architecture
+4. UI design system
+5. implementation backlog
+
+No production mutation, routing freeze or model winner is created by the protocol freeze.
