@@ -1,0 +1,348 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/orotitan-analytical-common.v0.1.json",
+  "title": "OroTitan Analytical Common V0.1",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "specialState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NOT_APPLICABLE",
+        "NOT_ASSESSABLE",
+        "MISSING",
+        "NOT_AVAILABLE"
+      ]
+    },
+    "sourceClass": {
+      "type": "string",
+      "enum": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5",
+        "S6"
+      ]
+    },
+    "claimFit": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
+    },
+    "epistemicType": {
+      "type": "string",
+      "enum": [
+        "REPORTED",
+        "CALCULATED",
+        "CONSENSUS",
+        "ESTIMATE",
+        "ASSUMPTION",
+        "UNKNOWN"
+      ]
+    },
+    "freshnessState": {
+      "type": "string",
+      "enum": [
+        "CURRENT",
+        "FIT_FOR_PURPOSE",
+        "STALE_FOR_USE",
+        "UNKNOWN_DATE"
+      ]
+    },
+    "conflictType": {
+      "type": "string",
+      "enum": [
+        "DATE",
+        "DEFINITION",
+        "ACCOUNTING_BASIS",
+        "UNIT",
+        "RESTATEMENT",
+        "FACTUAL",
+        "OTHER"
+      ]
+    },
+    "conflictResolution": {
+      "type": "string",
+      "enum": [
+        "RESOLVED",
+        "UNRESOLVED"
+      ]
+    },
+    "ddInputStatus": {
+      "type": "string",
+      "enum": [
+        "SUFFICIENT",
+        "INSUFFICIENT",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "procedureApplicability": {
+      "type": "string",
+      "enum": [
+        "REQUIRED",
+        "CONDITIONAL",
+        "NOT_APPLICABLE"
+      ]
+    },
+    "blockExecutionStatus": {
+      "type": "string",
+      "enum": [
+        "INSUFFICIENT",
+        "IN_PROGRESS",
+        "PROVISIONALLY_STABLE",
+        "LOCKED"
+      ]
+    },
+    "executionConfidence": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW"
+      ]
+    },
+    "certificationBlockStatus": {
+      "type": "string",
+      "enum": [
+        "COMPLETE",
+        "COMPLETE_WITH_LIMITATIONS",
+        "NOT_APPLICABLE",
+        "MISSING"
+      ]
+    },
+    "stageCode": {
+      "type": "string",
+      "enum": [
+        "RESEARCH",
+        "DEEP_DIVE",
+        "INTEGRATION"
+      ]
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "payloadContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_name",
+        "schema_version",
+        "run_id",
+        "stage_code",
+        "stage_revision",
+        "data_cutoff",
+        "contract_set_sha256",
+        "generated_at"
+      ],
+      "properties": {
+        "schema_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "run_id": {
+          "$ref": "#/$defs/id"
+        },
+        "stage_code": {
+          "$ref": "#/$defs/stageCode"
+        },
+        "stage_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "data_cutoff": {
+          "$ref": "#/$defs/date"
+        },
+        "contract_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "generated_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "evidenceValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "text"
+          ],
+          "properties": {
+            "kind": {
+              "const": "TEXT"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "NUMBER"
+            },
+            "value": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/currency"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "accounting_basis": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "min",
+            "max"
+          ],
+          "properties": {
+            "kind": {
+              "const": "RANGE"
+            },
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            },
+            "unit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "currency": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/currency"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "accounting_basis": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "value"
+          ],
+          "properties": {
+            "kind": {
+              "const": "BOOLEAN"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "state"
+          ],
+          "properties": {
+            "kind": {
+              "const": "SPECIAL_STATE"
+            },
+            "state": {
+              "$ref": "#/$defs/specialState"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
