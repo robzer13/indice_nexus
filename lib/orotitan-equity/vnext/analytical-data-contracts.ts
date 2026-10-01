@@ -10,6 +10,7 @@ export type AnalyticalReferenceIndex = {
   conflictIds?: ReadonlySet<string>;
   calculationIds?: ReadonlySet<string>;
   assumptionIds?: ReadonlySet<string>;
+  gapIds?: ReadonlySet<string>;
 };
 
 export type AnalyticalDataValidationResult =
@@ -75,6 +76,58 @@ function requireKnown(
   for (const id of ids) {
     if (!known.has(id)) errors.push(`${label} unresolved reference: ${id}`);
   }
+}
+
+function validateSourceManifest(
+  artifact: JsonObject,
+  errors: string[],
+): void {
+  const body = isObject(artifact.body) ? artifact.body : null;
+  const sources = body && Array.isArray(body.sources) ? body.sources.filter(isObject) : [];
+  pushDuplicateIdErrors(sources, "source_id", "SOURCE", errors);
+  const sourceIds = new Set(
+    sources
+      .map((source) => source.source_id)
+      .filter((sourceId): sourceId is string => typeof sourceId === "string"),
+  );
+
+  for (const source of sources) {
+    const sourceId = typeof source.source_id === "string" ? source.source_id : "<unknown>";
+    if (typeof source.root_source_id === "string") {
+      if (source.root_source_id === sourceId) {
+        errors.push(`SOURCE ${sourceId} cannot be its own root source`);
+      } else if (!sourceIds.has(source.root_source_id)) {
+        errors.push(`SOURCE ${sourceId} unresolved root_source_id: ${source.root_source_id}`);
+      }
+    }
+  }
+}
+
+function validateResearchHypothesisRegister(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
+  const records = recordsOf(artifact);
+  pushDuplicateIdErrors(records, "hypothesis_id", "HYPOTHESIS", errors);
+  for (const record of records) {
+    requireKnown(
+      [
+        ...stringArray(record.supporting_evidence_ids),
+        ...stringArray(record.contradicting_evidence_ids),
+      ],
+      refs.evidenceIds,
+      "EVIDENCE",
+      errors,
+    );
+  }
+}
+
+function validateResearchGapRegister(
+  artifact: JsonObject,
+  errors: string[],
+): void {
+  pushDuplicateIdErrors(recordsOf(artifact), "gap_id", "RESEARCH_GAP", errors);
 }
 
 function validateEvidenceLedger(
@@ -157,7 +210,11 @@ function validateAssumptionRegister(
   pushDuplicateIdErrors(recordsOf(artifact), "assumption_id", "ASSUMPTION", errors);
 }
 
-function validateDdInputSufficiency(artifact: JsonObject, errors: string[]): void {
+function validateDdInputSufficiency(
+  artifact: JsonObject,
+  refs: AnalyticalReferenceIndex,
+  errors: string[],
+): void {
   const body = isObject(artifact.body) ? artifact.body : null;
   if (!body || !Array.isArray(body.blocks)) return;
 
@@ -181,6 +238,15 @@ function validateDdInputSufficiency(artifact: JsonObject, errors: string[]): voi
     if (ready && status === "INSUFFICIENT") {
       errors.push(`${blockId}: READY_FOR_DEEP_DIVE cannot include INSUFFICIENT block`);
     }
+
+    requireKnown(stringArray(block.key_evidence_ids), refs.evidenceIds, "EVIDENCE", errors);
+    requireKnown(stringArray(block.key_conflict_ids), refs.conflictIds, "CONFLICT", errors);
+    requireKnown(
+      stringArray(block.material_blocking_gap_ids),
+      refs.gapIds,
+      "RESEARCH_GAP",
+      errors,
+    );
   }
 }
 
@@ -610,6 +676,9 @@ export function validateAnalyticalDataArtifact(
 
   const errors: string[] = [];
   switch (input.artifact_type) {
+    case "SOURCE_MANIFEST":
+      validateSourceManifest(input, errors);
+      break;
     case "EVIDENCE_LEDGER":
       validateEvidenceLedger(input, refs, errors);
       break;
@@ -622,8 +691,14 @@ export function validateAnalyticalDataArtifact(
     case "MATERIAL_ASSUMPTION_REGISTER":
       validateAssumptionRegister(input, errors);
       break;
+    case "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER":
+      validateResearchHypothesisRegister(input, refs, errors);
+      break;
+    case "RESEARCH_GAP_REGISTER":
+      validateResearchGapRegister(input, errors);
+      break;
     case "DD_INPUT_SUFFICIENCY_RECORD":
-      validateDdInputSufficiency(input, errors);
+      validateDdInputSufficiency(input, refs, errors);
       break;
     case "ANALYTICAL_BLOCK_OUTPUT":
       validateAnalyticalBlock(input, refs, errors);
