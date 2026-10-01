@@ -1,0 +1,82 @@
+{
+  "format": "OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_CANDIDATE",
+  "candidate_id": "OROTITAN-ANALYTICAL-DATA-CONTRACTS-V2-001",
+  "date": "2026-10-01",
+  "status": "DESIGN_CANDIDATE_UNDER_VALIDATION",
+  "frozen": false,
+  "production_mutation": false,
+  "methodology_change": false,
+  "scoring_change": false,
+  "valuation_policy_change": false,
+  "canonical_snapshot_change": false,
+  "authority_preserved": [
+    "FROZEN_EVIDENCE_LEDGER_SEMANTICS",
+    "FROZEN_CONFLICT_LEDGER_SEMANTICS",
+    "FROZEN_CALCULATION_LEDGER_SEMANTICS",
+    "FROZEN_MATERIAL_ASSUMPTION_SEMANTICS",
+    "OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0",
+    "OROTITAN_EXECUTION_PROCESS_V3_FREEZE_V3.0",
+    "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0"
+  ],
+  "artifacts": [
+    "docs/orotitan-equity/OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_DESIGN_V0.1.md",
+    "schemas/vnext/orotitan-analytical-data-contracts-v2.schema.v0.1.json",
+    "lib/orotitan-equity/vnext/analytical-data-contracts.ts",
+    "tests/vnext-analytical-data-contracts-v2-design.test.ts"
+  ],
+  "contract_families": [
+    "SOURCE_MANIFEST",
+    "EVIDENCE_LEDGER",
+    "CONFLICT_LEDGER",
+    "CALCULATION_LEDGER",
+    "MATERIAL_ASSUMPTION_REGISTER",
+    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER",
+    "RESEARCH_GAP_REGISTER",
+    "DD_INPUT_SUFFICIENCY_RECORD",
+    "ANALYSIS_INPUT_LOCK",
+    "COMPANY_ECONOMIC_DNA",
+    "ANALYTICAL_BLOCK_OUTPUT",
+    "INDUSTRY_STRUCTURE_ANALYSIS",
+    "CAUSAL_GRAPH",
+    "MOAT_PROOF_ANALYSIS",
+    "RUNWAY_ANALYSIS",
+    "RETURN_QUALITY_ANALYSIS",
+    "FCF_FORENSIC_ANALYSIS",
+    "OUTSIDE_VIEW_ANALYSIS",
+    "VARIANT_PERCEPTION_ANALYSIS",
+    "RISK_RESILIENCE_ANALYSIS",
+    "RED_TEAM_RECORD",
+    "TECHNOLOGY_ANALYSIS",
+    "CYCLICALITY_ANALYSIS",
+    "CAPITAL_ALLOCATION_ANALYSIS",
+    "MATERIAL_CHANGE_REVALIDATION_RECORD"
+  ],
+  "acceptance_gaps_targeted": [
+    "T04",
+    "T05",
+    "T07",
+    "T10",
+    "T11",
+    "T12",
+    "T16",
+    "T18",
+    "T20"
+  ],
+  "ui_language_boundary": "FRENCH_FIRST_PRESENTATION_ENGLISH_CANONICAL_DATA",
+  "next_action": "RUN_CI_AND_REVIEW_DATA_CONTRACTS_V2_CANDIDATE",
+  "presentation_views": [
+    "OPEN_QUESTIONS_VIEW_DERIVED_FROM_RESEARCH_GAPS_AND_BLOCK_UNRESOLVED_POINTS"
+  ],
+  "notes": [
+    "Open Questions is not a parallel authoritative register.",
+    "French-first presentation remains a UI projection over English canonical data."
+  ],
+  "design_quality_invariants": [
+    "CANONICAL_VERDICTS_REMAIN_IN_ANALYTICAL_BLOCK_OUTPUT",
+    "STRUCTURED_SUPPORT_ARTIFACTS_CANNOT_CREATE_SCORES",
+    "RUNWAY_DISTINGUISHES_TAM_SERVICEABLE_MARKET_REALISTIC_CAPTURE_POOL",
+    "RED_TEAM_REQUIRES_ALL_MANDATORY_PERSPECTIVES",
+    "FCF_ADJUSTMENTS_REQUIRE_EXPLICIT_RATIONALE_AND_PROVENANCE",
+    "CAUSAL_GRAPH_NODE_AND_EDGE_REFERENCES_MUST_RESOLVE"
+  ]
+}

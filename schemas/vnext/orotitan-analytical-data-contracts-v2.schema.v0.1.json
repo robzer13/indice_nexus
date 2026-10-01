@@ -1,0 +1,4935 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/orotitan-analytical-data-contracts-v2.v0.1.json",
+  "title": "OroTitan Analytical Data Contracts V2 V0.1",
+  "description": "Additive machine-readable analytical working-artifact contracts. No scoring, valuation-policy or canonical snapshot authority.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/sourceManifestArtifact"
+    },
+    {
+      "$ref": "#/$defs/evidenceLedgerArtifact"
+    },
+    {
+      "$ref": "#/$defs/conflictLedgerArtifact"
+    },
+    {
+      "$ref": "#/$defs/calculationLedgerArtifact"
+    },
+    {
+      "$ref": "#/$defs/materialAssumptionRegisterArtifact"
+    },
+    {
+      "$ref": "#/$defs/materialResearchHypothesisRegisterArtifact"
+    },
+    {
+      "$ref": "#/$defs/researchGapRegisterArtifact"
+    },
+    {
+      "$ref": "#/$defs/ddInputSufficiencyArtifact"
+    },
+    {
+      "$ref": "#/$defs/analysisInputLockArtifact"
+    },
+    {
+      "$ref": "#/$defs/companyEconomicDnaArtifact"
+    },
+    {
+      "$ref": "#/$defs/analyticalBlockOutputArtifact"
+    },
+    {
+      "$ref": "#/$defs/industryStructureAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/causalGraphArtifact"
+    },
+    {
+      "$ref": "#/$defs/moatProofAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/runwayAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/returnQualityAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/fcfForensicAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/outsideViewAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/variantPerceptionAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/riskResilienceAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/redTeamRecordArtifact"
+    },
+    {
+      "$ref": "#/$defs/technologyAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/cyclicalityAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/capitalAllocationAnalysisArtifact"
+    },
+    {
+      "$ref": "#/$defs/materialChangeRevalidationArtifact"
+    }
+  ],
+  "$defs": {
+    "traceRefs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "calculation_ids",
+        "material_assumption_ids",
+        "conflict_ids"
+      ],
+      "properties": {
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "material_assumption_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "conflict_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "traceableFinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "statement",
+        "traceability",
+        "limitations"
+      ],
+      "properties": {
+        "finding_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceRefs"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "decimalValue": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "scalar"
+          ],
+          "properties": {
+            "representation": {
+              "const": "SCALAR"
+            },
+            "scalar": {
+              "type": "string",
+              "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "lower_bound",
+            "upper_bound"
+          ],
+          "properties": {
+            "representation": {
+              "const": "RANGE"
+            },
+            "lower_bound": {
+              "type": "string",
+              "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"
+            },
+            "upper_bound": {
+              "type": "string",
+              "pattern": "^-?[0-9]+(?:\\.[0-9]+)?$"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "reason"
+          ],
+          "properties": {
+            "representation": {
+              "const": "UNKNOWN"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "sourceManifestRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title_or_description",
+        "source_type",
+        "issuer_or_publisher",
+        "source_date",
+        "data_period",
+        "root_source_id",
+        "location_ref",
+        "discovery_route",
+        "access_status",
+        "included_in_evidence_ledger",
+        "notes_limitations"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "title_or_description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_or_publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_period": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "root_source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "location_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "discovery_route": {
+          "type": "string",
+          "minLength": 1
+        },
+        "access_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "included_in_evidence_ledger": {
+          "type": "boolean"
+        },
+        "notes_limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "quantitativeProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value",
+        "unit",
+        "currency",
+        "period",
+        "as_of_date",
+        "accounting_basis",
+        "calculation_bridge_ref"
+      ],
+      "properties": {
+        "value": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "unit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "period": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "as_of_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "accounting_basis": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "calculation_bridge_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "claim_id",
+        "claim_or_metric",
+        "value_or_statement",
+        "period_or_as_of_date",
+        "source_id",
+        "root_source_id",
+        "independence_group",
+        "source_class",
+        "claim_fit",
+        "source_date",
+        "data_cutoff",
+        "epistemic_type",
+        "freshness_state",
+        "limitations",
+        "conflict_status",
+        "quantitative_provenance",
+        "used_in"
+      ],
+      "properties": {
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_or_metric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_or_statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_or_as_of_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "root_source_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "independence_group": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_class": {
+          "enum": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6"
+          ]
+        },
+        "claim_fit": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "source_date": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "epistemic_type": {
+          "enum": [
+            "REPORTED",
+            "CALCULATED",
+            "CONSENSUS",
+            "ESTIMATE",
+            "ASSUMPTION",
+            "UNKNOWN"
+          ]
+        },
+        "freshness_state": {
+          "enum": [
+            "CURRENT",
+            "FIT_FOR_PURPOSE",
+            "STALE_FOR_USE",
+            "UNKNOWN_DATE"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "conflict_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quantitative_provenance": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/quantitativeProvenance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "used_in": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "conflictSide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "value",
+        "evidence_id"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "conflictRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conflict_id",
+        "metric_or_claim",
+        "source_a",
+        "source_b",
+        "conflict_type",
+        "reason",
+        "resolution",
+        "materiality",
+        "affected_outputs"
+      ],
+      "properties": {
+        "conflict_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric_or_claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_a": {
+          "$ref": "#/$defs/conflictSide"
+        },
+        "source_b": {
+          "$ref": "#/$defs/conflictSide"
+        },
+        "conflict_type": {
+          "enum": [
+            "DATE",
+            "DEFINITION",
+            "ACCOUNTING_BASIS",
+            "UNIT",
+            "RESTATEMENT",
+            "FACTUAL",
+            "OTHER"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resolution": {
+          "enum": [
+            "RESOLVED",
+            "UNRESOLVED"
+          ]
+        },
+        "materiality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_outputs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "calculationInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "$ref": "#/$defs/decimalValue"
+        }
+      }
+    },
+    "calculationRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calculation_id",
+        "metric_name",
+        "formula",
+        "inputs",
+        "input_evidence_ids",
+        "units",
+        "currency",
+        "period",
+        "basis",
+        "raw_result",
+        "rounding_rule",
+        "published_result",
+        "method_version",
+        "calculation_version",
+        "automated_check_status",
+        "limitations"
+      ],
+      "properties": {
+        "calculation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formula": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/calculationInput"
+          }
+        },
+        "input_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "units": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "period": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_result": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "rounding_rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "published_result": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "method_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "calculation_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "automated_check_status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "materialAssumptionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assumption_id",
+        "variable",
+        "value_or_range",
+        "epistemic_type",
+        "source_or_rationale",
+        "sensitivity",
+        "used_in"
+      ],
+      "properties": {
+        "assumption_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "variable": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_or_range": {
+          "$ref": "#/$defs/assumptionValue"
+        },
+        "epistemic_type": {
+          "enum": [
+            "REPORTED",
+            "CALCULATED",
+            "CONSENSUS",
+            "ESTIMATE",
+            "ASSUMPTION",
+            "UNKNOWN"
+          ]
+        },
+        "source_or_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sensitivity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "used_in": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "materialResearchHypothesisRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "hypothesis_id",
+        "affected_analytical_block",
+        "hypothesis",
+        "why_material",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "unresolved_points",
+        "research_status"
+      ],
+      "properties": {
+        "hypothesis_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_analytical_block": {
+          "type": "string",
+          "minLength": 1
+        },
+        "hypothesis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_material": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "unresolved_points": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "research_status": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "researchGapRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "affected_input_block",
+        "question",
+        "materiality",
+        "searches_attempted",
+        "best_next_source",
+        "status",
+        "why_not_resolved",
+        "impact_on_ready_for_deep_dive"
+      ],
+      "properties": {
+        "gap_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_input_block": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "materiality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "searches_attempted": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "best_next_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_not_resolved": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "impact_on_ready_for_deep_dive": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "ddInputBlock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_id",
+        "applicability",
+        "dd_input_status",
+        "mandatory_coverage",
+        "evidence_adequacy",
+        "material_blocking_gap_ids",
+        "key_evidence_ids",
+        "key_conflict_ids",
+        "searches_performed",
+        "best_next_source",
+        "rationale"
+      ],
+      "properties": {
+        "block_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applicability": {
+          "enum": [
+            "APPLICABLE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "dd_input_status": {
+          "enum": [
+            "SUFFICIENT",
+            "INSUFFICIENT",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "mandatory_coverage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_adequacy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "material_blocking_gap_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "key_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "key_conflict_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "searches_performed": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "best_next_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "analysisInputLockBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "company_id",
+        "research_stage_contract_version",
+        "evidence_ledger_version",
+        "source_manifest_version",
+        "dd_input_sufficiency_version",
+        "open_noncritical_gap_ids",
+        "open_material_conflict_ids",
+        "critical_blockers",
+        "ready_for_deep_dive"
+      ],
+      "properties": {
+        "company_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "research_stage_contract_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ledger_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_manifest_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dd_input_sufficiency_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "open_noncritical_gap_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "open_material_conflict_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "critical_blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "ready_for_deep_dive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "economicMechanism": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism_id",
+        "category",
+        "statement",
+        "traceability",
+        "limitations"
+      ],
+      "properties": {
+        "mechanism_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "WHO_PAYS",
+            "OFFERING",
+            "PRICING",
+            "VOLUME",
+            "RECURRENCE",
+            "COST_DRIVER",
+            "CAPITAL_REQUIREMENT",
+            "WORKING_CAPITAL",
+            "REINVESTMENT",
+            "ACQUISITION_DEPENDENCY",
+            "TECHNOLOGY_DEPENDENCY",
+            "REGULATORY_DEPENDENCY",
+            "BOTTLENECK",
+            "UNIT_ECONOMIC"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceRefs"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "companyEconomicDnaBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dna_version",
+        "economic_mechanisms",
+        "material_dependencies",
+        "open_question_ids"
+      ],
+      "properties": {
+        "dna_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "economic_mechanisms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/economicMechanism"
+          }
+        },
+        "material_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "open_question_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "canonicalVerdictField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "value"
+      ],
+      "properties": {
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {}
+      }
+    },
+    "analyticalBlockOutputBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_id",
+        "block_version",
+        "execution_status",
+        "execution_confidence",
+        "canonical_verdict_fields",
+        "core_findings",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "calculation_ids",
+        "material_assumption_ids",
+        "conflict_ids",
+        "supporting_analysis_artifact_refs",
+        "unresolved_points",
+        "material_dependencies",
+        "reopen_triggers",
+        "rationale",
+        "last_research_date"
+      ],
+      "properties": {
+        "block_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "block_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "execution_status": {
+          "enum": [
+            "INSUFFICIENT",
+            "IN_PROGRESS",
+            "PROVISIONALLY_STABLE",
+            "LOCKED"
+          ]
+        },
+        "execution_confidence": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "canonical_verdict_fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/canonicalVerdictField"
+          }
+        },
+        "core_findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "material_assumption_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "conflict_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "unresolved_points": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "material_dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "reopen_triggers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_research_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "supporting_analysis_artifact_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          }
+        }
+      }
+    },
+    "causalLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "causal_link_id",
+        "from_node_id",
+        "to_node_id",
+        "mechanism",
+        "supporting_evidence_ids",
+        "counterevidence_ids",
+        "status",
+        "confidence"
+      ],
+      "properties": {
+        "causal_link_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "from_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to_node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "counterevidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "MIXED",
+            "NOT_SUPPORTED",
+            "LOW_CONFIDENCE",
+            "NOT_ASSESSABLE"
+          ]
+        },
+        "confidence": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        }
+      }
+    },
+    "technologyAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "not_applicable_reason",
+        "current_architecture",
+        "technical_bottlenecks",
+        "next_generation_path",
+        "substitution_paths",
+        "replication_difficulty",
+        "supplier_dependence",
+        "customer_dependence",
+        "standards_ecosystem",
+        "rd_economics",
+        "commoditization_risk",
+        "economic_consequence"
+      ],
+      "properties": {
+        "applicability": {
+          "enum": [
+            "APPLICABLE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "not_applicable_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "current_architecture": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "technical_bottlenecks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "next_generation_path": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "substitution_paths": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "replication_difficulty": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "supplier_dependence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "customer_dependence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "standards_ecosystem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "rd_economics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "commoditization_risk": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "economic_consequence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "cyclicalityAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "not_applicable_reason",
+        "secular_growth",
+        "price_effect",
+        "volume_effect",
+        "inventory_cycle",
+        "capacity_cycle",
+        "end_demand_cycle",
+        "utilization",
+        "working_capital_cycle",
+        "normalized_economics",
+        "normalization_calculation_ids"
+      ],
+      "properties": {
+        "applicability": {
+          "enum": [
+            "APPLICABLE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "not_applicable_reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "secular_growth": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "price_effect": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "volume_effect": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "inventory_cycle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "capacity_cycle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "end_demand_cycle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "utilization": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "working_capital_cycle": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "normalized_economics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "normalization_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "capitalAllocationAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deployments",
+        "organic_reinvestment",
+        "acquisitions",
+        "buybacks",
+        "dividends",
+        "debt_deleveraging",
+        "dilution_sbc",
+        "acquisition_economics",
+        "organic_vs_acquired_bridge",
+        "incremental_return_evidence",
+        "capital_allocation_risks"
+      ],
+      "properties": {
+        "organic_reinvestment": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "acquisitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "buybacks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "dividends": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "debt_deleveraging": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "dilution_sbc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "acquisition_economics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "organic_vs_acquired_bridge": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "incremental_return_evidence": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "capital_allocation_risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "deployments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/capitalDeploymentRecord"
+          }
+        }
+      }
+    },
+    "revalidationCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check",
+        "status",
+        "notes",
+        "evidence_ids"
+      ],
+      "properties": {
+        "check": {
+          "enum": [
+            "REOPEN_MATERIAL_EVIDENCE",
+            "VERIFY_ROOT_PRIMARY_SOURCES",
+            "SEARCH_DISCONFIRMING_EVIDENCE",
+            "TEST_BEST_ALTERNATIVE_EXPLANATION",
+            "RECONCILE_DOWNSTREAM_BLOCKS",
+            "RECORD_PRIOR_STATE_CHANGE_REASON"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "materialChangeRevalidationBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_id",
+        "affected_blocks",
+        "prior_state_ref",
+        "proposed_state",
+        "triggering_evidence_ids",
+        "checks",
+        "downstream_reconciled_blocks",
+        "outcome",
+        "rationale"
+      ],
+      "properties": {
+        "change_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_blocks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "prior_state_ref": {
+          "$ref": "#/$defs/artifactRef"
+        },
+        "proposed_state": {
+          "type": "string",
+          "minLength": 1
+        },
+        "triggering_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "checks": {
+          "type": "array",
+          "minItems": 6,
+          "items": {
+            "$ref": "#/$defs/revalidationCheck"
+          }
+        },
+        "downstream_reconciled_blocks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "outcome": {
+          "enum": [
+            "REVALIDATED",
+            "REJECTED_CHANGE",
+            "BLOCKED"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "sourceManifestArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "SOURCE_MANIFEST"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/sourceManifestBody"
+        }
+      }
+    },
+    "evidenceLedgerArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "EVIDENCE_LEDGER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/evidenceLedgerBody"
+        }
+      }
+    },
+    "conflictLedgerArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "CONFLICT_LEDGER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/conflictLedgerBody"
+        }
+      }
+    },
+    "calculationLedgerArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "CALCULATION_LEDGER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/calculationLedgerBody"
+        }
+      }
+    },
+    "materialAssumptionRegisterArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "MATERIAL_ASSUMPTION_REGISTER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/materialAssumptionRegisterBody"
+        }
+      }
+    },
+    "materialResearchHypothesisRegisterArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/materialResearchHypothesisRegisterBody"
+        }
+      }
+    },
+    "researchGapRegisterArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RESEARCH_GAP_REGISTER"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/researchGapRegisterBody"
+        }
+      }
+    },
+    "ddInputSufficiencyArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "DD_INPUT_SUFFICIENCY_RECORD"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/ddInputSufficiencyBody"
+        }
+      }
+    },
+    "analysisInputLockArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "ANALYSIS_INPUT_LOCK"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/analysisInputLockBody"
+        }
+      }
+    },
+    "companyEconomicDnaArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "COMPANY_ECONOMIC_DNA"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/companyEconomicDnaBody"
+        }
+      }
+    },
+    "analyticalBlockOutputArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "ANALYTICAL_BLOCK_OUTPUT"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/analyticalBlockOutputBody"
+        }
+      }
+    },
+    "causalGraphArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "CAUSAL_GRAPH"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/causalGraphBody"
+        }
+      }
+    },
+    "technologyAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "TECHNOLOGY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/technologyAnalysisBody"
+        }
+      }
+    },
+    "cyclicalityAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "CYCLICALITY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/cyclicalityAnalysisBody"
+        }
+      }
+    },
+    "capitalAllocationAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "CAPITAL_ALLOCATION_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/capitalAllocationAnalysisBody"
+        }
+      }
+    },
+    "materialChangeRevalidationArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "MATERIAL_CHANGE_REVALIDATION_RECORD"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/materialChangeRevalidationBody"
+        }
+      }
+    },
+    "sourceManifestBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifest_version",
+        "sources"
+      ],
+      "properties": {
+        "manifest_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sourceManifestRecord"
+          }
+        }
+      }
+    },
+    "evidenceLedgerBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ledger_version",
+        "records"
+      ],
+      "properties": {
+        "ledger_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceRecord"
+          }
+        }
+      }
+    },
+    "conflictLedgerBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ledger_version",
+        "records"
+      ],
+      "properties": {
+        "ledger_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/conflictRecord"
+          }
+        }
+      }
+    },
+    "calculationLedgerBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ledger_version",
+        "records"
+      ],
+      "properties": {
+        "ledger_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/calculationRecord"
+          }
+        }
+      }
+    },
+    "materialAssumptionRegisterBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "register_version",
+        "records"
+      ],
+      "properties": {
+        "register_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/materialAssumptionRecord"
+          }
+        }
+      }
+    },
+    "materialResearchHypothesisRegisterBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "register_version",
+        "records"
+      ],
+      "properties": {
+        "register_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/materialResearchHypothesisRecord"
+          }
+        }
+      }
+    },
+    "researchGapRegisterBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "register_version",
+        "records"
+      ],
+      "properties": {
+        "register_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "records": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/researchGapRecord"
+          }
+        }
+      }
+    },
+    "ddInputSufficiencyBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "record_version",
+        "blocks",
+        "ready_for_deep_dive",
+        "critical_blockers"
+      ],
+      "properties": {
+        "record_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ddInputBlock"
+          }
+        },
+        "ready_for_deep_dive": {
+          "type": "boolean"
+        },
+        "critical_blockers": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "causalGraphBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "graph_version",
+        "nodes",
+        "links"
+      ],
+      "properties": {
+        "graph_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/causalNode"
+          }
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/causalLink"
+          }
+        }
+      }
+    },
+    "assumptionValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/decimalValue"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "text"
+          ],
+          "properties": {
+            "representation": {
+              "const": "TEXT"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "value"
+          ],
+          "properties": {
+            "representation": {
+              "const": "BOOLEAN"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "industryStructureAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "market_structure",
+        "competitor_set",
+        "market_share_distribution",
+        "entry_rate",
+        "exit_rate",
+        "capacity_discipline",
+        "pricing_discipline",
+        "customer_bargaining_power",
+        "supplier_bargaining_power",
+        "distributor_power",
+        "regulatory_barriers",
+        "switching_friction",
+        "multihoming",
+        "vertical_integration",
+        "consolidation_trend",
+        "disruption_vectors",
+        "profit_pool_location",
+        "value_chain_position",
+        "historical_return_distribution"
+      ],
+      "properties": {
+        "market_structure": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "competitor_set": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "market_share_distribution": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "entry_rate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "exit_rate": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "capacity_discipline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "pricing_discipline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "customer_bargaining_power": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "supplier_bargaining_power": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "distributor_power": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "regulatory_barriers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "switching_friction": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "multihoming": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "vertical_integration": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "consolidation_trend": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "disruption_vectors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "profit_pool_location": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "value_chain_position": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "historical_return_distribution": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "industryStructureAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "INDUSTRY_STRUCTURE_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/industryStructureAnalysisBody"
+        }
+      }
+    },
+    "causalNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "claim",
+        "node_type",
+        "evidence_ids",
+        "contradicting_evidence_ids",
+        "confidence"
+      ],
+      "properties": {
+        "node_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "node_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "confidence": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        }
+      }
+    },
+    "moatMechanismRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanism_id",
+        "claim",
+        "mechanism",
+        "issuer_evidence_ids",
+        "independent_evidence_ids",
+        "customer_evidence_ids",
+        "competitor_evidence_ids",
+        "behavioral_evidence_ids",
+        "economic_consequence",
+        "evidence_against_ids",
+        "alternative_explanation",
+        "replication_path",
+        "substitution_path",
+        "durability_horizon",
+        "moat_trend",
+        "calculation_ids",
+        "material_assumption_ids",
+        "limitations"
+      ],
+      "properties": {
+        "mechanism_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "independent_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "customer_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "competitor_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "behavioral_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "economic_consequence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_against_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "alternative_explanation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "replication_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "substitution_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "durability_horizon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "moat_trend": {
+          "type": "string",
+          "minLength": 1
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "material_assumption_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "moatProofAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanisms"
+      ],
+      "properties": {
+        "mechanisms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/moatMechanismRecord"
+          }
+        }
+      }
+    },
+    "moatProofAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "MOAT_PROOF_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/moatProofAnalysisBody"
+        }
+      }
+    },
+    "runwayGrowthSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "growth_source_id",
+        "classification",
+        "mechanism",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "calculation_ids",
+        "constraints",
+        "marginal_economics",
+        "limitations"
+      ],
+      "properties": {
+        "growth_source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "enum": [
+            "CORE",
+            "OPTIONALITY",
+            "ACQUIRED",
+            "CYCLICAL",
+            "PRICE",
+            "VOLUME",
+            "SHARE",
+            "NEW_MARKET"
+          ]
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "contradicting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "constraints": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "marginal_economics": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "marketScopeRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_type",
+        "value",
+        "supporting_evidence_ids",
+        "calculation_ids",
+        "limitations",
+        "unit",
+        "currency",
+        "as_of_date"
+      ],
+      "properties": {
+        "scope_type": {
+          "enum": [
+            "TAM",
+            "SERVICEABLE_MARKET",
+            "REALISTIC_CAPTURE_POOL"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "as_of_date": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "runwayAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "growth_sources",
+        "market_scopes",
+        "constraint_findings"
+      ],
+      "properties": {
+        "growth_sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/runwayGrowthSource"
+          }
+        },
+        "market_scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/marketScopeRecord"
+          }
+        },
+        "constraint_findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "runwayAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RUNWAY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/runwayAnalysisBody"
+        }
+      }
+    },
+    "returnQualityMetric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "metric_type",
+        "calculation_ids",
+        "supporting_evidence_ids",
+        "interpretability",
+        "attributability",
+        "denominator_or_basis_warning",
+        "limitations"
+      ],
+      "properties": {
+        "metric_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "metric_type": {
+          "enum": [
+            "STANDARD_ROIC",
+            "ALL_IN_ROIC",
+            "ROIIC",
+            "MARGINAL_RETURN",
+            "COHORT_RETURN",
+            "GROWTH_SPEND_ECONOMICS",
+            "INCREMENTAL_MARGIN",
+            "CAC_PAYBACK",
+            "UNIT_ECONOMICS",
+            "CASH_CONVERSION"
+          ]
+        },
+        "calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "interpretability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "attributability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "denominator_or_basis_warning": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "returnQualityAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metrics",
+        "business_model_adjustments",
+        "near_zero_invested_capital_risk"
+      ],
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/returnQualityMetric"
+          }
+        },
+        "business_model_adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        },
+        "near_zero_invested_capital_risk": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "returnQualityAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RETURN_QUALITY_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/returnQualityAnalysisBody"
+        }
+      }
+    },
+    "fcfAdjustment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adjustment_id",
+        "category",
+        "rationale",
+        "evidence_ids",
+        "recurrence",
+        "cash_nature",
+        "amount_or_range",
+        "uncertainty",
+        "calculation_id",
+        "limitations",
+        "currency",
+        "period"
+      ],
+      "properties": {
+        "adjustment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "WORKING_CAPITAL",
+            "RECEIVABLES",
+            "INVENTORY",
+            "PAYABLES",
+            "FACTORING",
+            "SUPPLIER_FINANCE",
+            "PROVISIONS",
+            "CAPITALIZATION",
+            "R_AND_D_CAPITALIZATION",
+            "SOFTWARE_CAPITALIZATION",
+            "RESTRUCTURING",
+            "ACQUISITION_ADJUSTMENT",
+            "SBC",
+            "DILUTION",
+            "LEASES",
+            "CASH_TAXES",
+            "MAINTENANCE_CAPEX",
+            "DEFERRED_MAINTENANCE",
+            "GOODWILL",
+            "IMPAIRMENT",
+            "ONE_OFF",
+            "PENSION",
+            "RELATED_PARTY",
+            "DISCONTINUED_OPERATION",
+            "OTHER"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "recurrence": {
+          "enum": [
+            "RECURRING",
+            "NON_RECURRING",
+            "MIXED",
+            "UNKNOWN"
+          ]
+        },
+        "cash_nature": {
+          "enum": [
+            "CASH",
+            "NON_CASH",
+            "MIXED",
+            "UNKNOWN"
+          ]
+        },
+        "amount_or_range": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "uncertainty": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        },
+        "calculation_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "period": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "fcfForensicAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adjustments",
+        "reported_cash_flow_calculation_ids",
+        "standardized_fcf_calculation_ids",
+        "owner_earnings_calculation_ids",
+        "forensic_findings"
+      ],
+      "properties": {
+        "adjustments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fcfAdjustment"
+          }
+        },
+        "reported_cash_flow_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "standardized_fcf_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "owner_earnings_calculation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "forensic_findings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/traceableFinding"
+          }
+        }
+      }
+    },
+    "fcfForensicAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "FCF_FORENSIC_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/fcfForensicAnalysisBody"
+        }
+      }
+    },
+    "outsideViewReferenceClass": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_class_id",
+        "reference_class",
+        "prior",
+        "sample_quality",
+        "comparability",
+        "known_differences",
+        "company_specific_evidence_ids",
+        "updated_judgment",
+        "limitations"
+      ],
+      "properties": {
+        "reference_class_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reference_class": {
+          "type": "string",
+          "minLength": 1
+        },
+        "prior": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sample_quality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "comparability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "known_differences": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "company_specific_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "updated_judgment": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "outsideViewAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference_classes"
+      ],
+      "properties": {
+        "reference_classes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/outsideViewReferenceClass"
+          }
+        }
+      }
+    },
+    "outsideViewAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "OUTSIDE_VIEW_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/outsideViewAnalysisBody"
+        }
+      }
+    },
+    "variantPerceptionAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "market_expectation",
+        "orotitan_expectation",
+        "difference",
+        "why_market_may_believe_it",
+        "why_orotitan_differs",
+        "supporting_evidence_ids",
+        "disconfirming_evidence_ids",
+        "what_would_prove_orotitan_wrong",
+        "time_horizon",
+        "catalyst_not_required",
+        "confidence"
+      ],
+      "properties": {
+        "market_expectation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "orotitan_expectation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "difference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_market_may_believe_it": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_orotitan_differs": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "disconfirming_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "what_would_prove_orotitan_wrong": {
+          "type": "string",
+          "minLength": 1
+        },
+        "time_horizon": {
+          "type": "string",
+          "minLength": 1
+        },
+        "catalyst_not_required": {
+          "type": "boolean"
+        },
+        "confidence": {
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
+        }
+      }
+    },
+    "variantPerceptionAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "VARIANT_PERCEPTION_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/variantPerceptionAnalysisBody"
+        }
+      }
+    },
+    "riskRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risk_id",
+        "risk_type",
+        "evidence_ids",
+        "transmission_mechanism",
+        "severity",
+        "detectability",
+        "reversibility",
+        "thesis_impact",
+        "early_indicator",
+        "mitigation",
+        "invalidation_trigger",
+        "limitations"
+      ],
+      "properties": {
+        "risk_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "risk_type": {
+          "enum": [
+            "TEMPORARY",
+            "CYCLICAL",
+            "STRUCTURAL",
+            "FINANCIAL",
+            "DISRUPTION",
+            "REGULATORY",
+            "GOVERNANCE",
+            "CONCENTRATION",
+            "EXECUTION"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "transmission_mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "minLength": 1
+        },
+        "detectability": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reversibility": {
+          "type": "string",
+          "minLength": 1
+        },
+        "thesis_impact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "early_indicator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mitigation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidation_trigger": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "riskResilienceAnalysisBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "risks"
+      ],
+      "properties": {
+        "risks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/riskRecord"
+          }
+        }
+      }
+    },
+    "riskResilienceAnalysisArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RISK_RESILIENCE_ANALYSIS"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/riskResilienceAnalysisBody"
+        }
+      }
+    },
+    "redTeamPerspective": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "perspective",
+        "challenge",
+        "supporting_evidence_ids",
+        "counterevidence_ids",
+        "affected_blocks",
+        "reopen_recommended",
+        "outcome",
+        "limitations"
+      ],
+      "properties": {
+        "perspective": {
+          "enum": [
+            "BEAR_CASE",
+            "SHORT_SELLER_CASE",
+            "COMPETITOR_CASE",
+            "CUSTOMER_CASE",
+            "TECHNOLOGIST_CASE",
+            "REGULATOR_CASE",
+            "ACCOUNTING_FORENSIC_CASE",
+            "CAPITAL_ALLOCATION_CASE",
+            "CYCLE_PEAK_CASE",
+            "RUNWAY_FAILURE_CASE",
+            "ROIIC_FAILURE_CASE",
+            "REVERSE_VALUATION_CASE",
+            "PRE_MORTEM"
+          ]
+        },
+        "challenge": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "counterevidence_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "affected_blocks": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reopen_recommended": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "redTeamRecordBody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "perspectives"
+      ],
+      "properties": {
+        "perspectives": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/redTeamPerspective"
+          }
+        }
+      }
+    },
+    "redTeamRecordArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "run_id",
+        "issuer_id",
+        "data_cutoff",
+        "artifact_version",
+        "created_at",
+        "body"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "0.1.0"
+        },
+        "artifact_type": {
+          "const": "RED_TEAM_RECORD"
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "security_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "dossier_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "data_cutoff": {
+          "type": "string",
+          "format": "date"
+        },
+        "artifact_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "body": {
+          "$ref": "#/$defs/redTeamRecordBody"
+        }
+      }
+    },
+    "capitalDeploymentRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deployment_id",
+        "deployment_type",
+        "amount",
+        "timing",
+        "rationale",
+        "funding",
+        "realized_outcome",
+        "per_share_consequence",
+        "estimated_return",
+        "alternative_use",
+        "traceability",
+        "limitations",
+        "currency"
+      ],
+      "properties": {
+        "deployment_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deployment_type": {
+          "enum": [
+            "ORGANIC_REINVESTMENT",
+            "R_AND_D",
+            "CAPEX",
+            "M_AND_A",
+            "DIVIDENDS",
+            "BUYBACKS",
+            "DEBT_REPAYMENT",
+            "CASH_ACCUMULATION"
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/decimalValue"
+        },
+        "timing": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "funding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "realized_outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "per_share_consequence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "estimated_return": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternative_use": {
+          "type": "string",
+          "minLength": 1
+        },
+        "traceability": {
+          "$ref": "#/$defs/traceRefs"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "run_id",
+        "status"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "x-orotitan": {
+    "authority": "IMPLEMENTATION_ONLY",
+    "methodology_change": false,
+    "scoring_authority": false,
+    "valuation_policy_authority": false,
+    "canonical_snapshot_authority": false,
+    "ui_language": "FRENCH_FIRST_PRESENTATION_ENGLISH_CANONICAL_DATA",
+    "cross_object_rules": [
+      "referenced IDs must resolve against exact active or pinned lineage",
+      "admitted current-run evidence must satisfy source_date <= data_cutoff",
+      "root_source_id must resolve when declared",
+      "supporting and contradicting evidence overlap requires explicit conflict semantics",
+      "material changed conclusions require a completed material-change revalidation record before final sealing",
+      "JSON Schema does not replace Process Engine dependency/reopening rules"
+    ]
+  }
+}
