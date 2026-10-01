@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
+    "AWAIT_EXPLICIT_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_AUTHORITY_OR_NEW_CANDIDATE_DIRECTION",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -134,11 +134,15 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
   );
   assert.equal(
     entry.llama3_2_counterevidence_prefix_separator_forensic_authorized,
-    true,
+    false,
   );
   assert.equal(
     entry.llama3_2_counterevidence_prefix_separator_forensic_authorized_run_count,
-    1,
+    0,
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_consumed,
+    true,
   );
   assert.equal(
     entry.llama3_2_counterevidence_prefix_separator_forensic_target_path,
@@ -149,6 +153,47 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
     true,
   );
   assert.equal(entry.llama3_2_additional_inference_authorized, false);
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_forensic_result_status,
+    "FORENSIC_COMPLETE_NO_SAFE_DETERMINISTIC_CANONICALIZATION",
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_canonical_candidate,
+    "E-005",
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_candidate_exists_in_packet,
+    false,
+  );
+  assert.equal(
+    entry.llama3_2_counterevidence_prefix_separator_canonicalization_admissible,
+    false,
+  );
+  assert.equal(
+    entry.llama3_2_c4_expansion_status,
+    "STOPPED_RETAIN_CALIBRATION_EVIDENCE",
+  );
+  assert.equal(entry.llama3_2_candidate_admitted, false);
+  assert.equal(entry.llama3_2_retry_authorized, false);
+  assert.equal(
+    entry.llama3_2_production_admission,
+    "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+  );
+  assert.equal(entry.llama3_2_family_global_failure_concluded, false);
+  assert.equal(
+    entry.local_candidate_registry_refresh,
+    "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+  );
+  assert.equal(entry.local_candidate_registry_new_candidate_selected, false);
+  assert.equal(entry.local_candidate_registry_download_authorized, false);
+  assert.equal(entry.local_candidate_registry_inference_authorized, false);
+  assert.equal(
+    entry.phase_c_candidate_synthesis_status,
+    "PREPARED_NO_C7_DECISION_AUTHORITY_EXERCISED",
+  );
+  assert.equal(entry.c7_local_candidate_decision_authorized, false);
+  assert.equal(entry.model_winner_selected, false);
+  assert.equal(entry.routing_frozen, false);
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);
