@@ -549,7 +549,7 @@ test("Llama 3.2 Ollama ps precondition block preserves authorization and the run
     "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
   );
 
-  assert.match(raw, /"\\/api\\/ps"/);
+  assert.equal(raw.includes('"/api/ps"'), true);
   assert.match(raw, /await assertNoLoadedModels\(\);/);
   assert.doesNotMatch(raw, /execFileSync\("ollama", \["ps"\]/);
 });
