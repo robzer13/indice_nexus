@@ -9,6 +9,8 @@ export type AnalyticalDataBundleV2 = {
   conflictLedger: JsonObject;
   researchGapRegister: JsonObject;
   companyEconomicDna: JsonObject;
+  calculationLedger: JsonObject;
+  assumptionRegister: JsonObject;
   analyticalBlockOutputs: JsonObject;
 };
 
@@ -28,6 +30,10 @@ const schemaPaths = {
     "../../../contracts/orotitan-equity/vnext/analytical-engine-v2/OROTITAN_RESEARCH_GAP_REGISTER_V2.0_DRAFT.schema.json",
   dna:
     "../../../contracts/orotitan-equity/vnext/analytical-engine-v2/OROTITAN_COMPANY_ECONOMIC_DNA_V2.0_DRAFT.schema.json",
+  calculations:
+    "../../../contracts/orotitan-equity/vnext/analytical-engine-v2/OROTITAN_CALCULATION_LEDGER_V2.0_DRAFT.schema.json",
+  assumptions:
+    "../../../contracts/orotitan-equity/vnext/analytical-engine-v2/OROTITAN_MATERIAL_ASSUMPTION_REGISTER_V2.0_DRAFT.schema.json",
   blocks:
     "../../../contracts/orotitan-equity/vnext/analytical-engine-v2/OROTITAN_ANALYTICAL_BLOCK_OUTPUTS_V2.0_DRAFT.schema.json",
 } as const;
@@ -42,6 +48,8 @@ const schemas = {
   conflict: loadSchema(schemaPaths.conflict),
   gap: loadSchema(schemaPaths.gap),
   dna: loadSchema(schemaPaths.dna),
+  calculations: loadSchema(schemaPaths.calculations),
+  assumptions: loadSchema(schemaPaths.assumptions),
   blocks: loadSchema(schemaPaths.blocks),
 };
 
@@ -60,6 +68,8 @@ const validators = {
   conflict: ajv.getSchema(String(schemas.conflict.$id)),
   gap: ajv.getSchema(String(schemas.gap.$id)),
   dna: ajv.getSchema(String(schemas.dna.$id)),
+  calculations: ajv.getSchema(String(schemas.calculations.$id)),
+  assumptions: ajv.getSchema(String(schemas.assumptions.$id)),
   blocks: ajv.getSchema(String(schemas.blocks.$id)),
 };
 
@@ -192,6 +202,8 @@ export function validateAnalyticalDataBundleV2(
     ["conflictLedger", bundle.conflictLedger, validators.conflict],
     ["researchGapRegister", bundle.researchGapRegister, validators.gap],
     ["companyEconomicDna", bundle.companyEconomicDna, validators.dna],
+    ["calculationLedger", bundle.calculationLedger, validators.calculations],
+    ["assumptionRegister", bundle.assumptionRegister, validators.assumptions],
     ["analyticalBlockOutputs", bundle.analyticalBlockOutputs, validators.blocks],
   ] as const) {
     const validate = requireValidator(validator, name);
@@ -206,6 +218,8 @@ export function validateAnalyticalDataBundleV2(
       ["conflictLedger", bundle.conflictLedger],
       ["researchGapRegister", bundle.researchGapRegister],
       ["companyEconomicDna", bundle.companyEconomicDna],
+      ["calculationLedger", bundle.calculationLedger],
+      ["assumptionRegister", bundle.assumptionRegister],
       ["analyticalBlockOutputs", bundle.analyticalBlockOutputs],
     ],
     errors,
@@ -306,6 +320,73 @@ export function validateAnalyticalDataBundleV2(
     );
   }
 
+  const assumptions = objectsAt(bundle.assumptionRegister, "assumptions");
+  const assumptionIndex = addUniqueIndex(
+    assumptions,
+    "assumption_id",
+    "assumptions",
+    errors,
+  );
+  for (const assumption of assumptions) {
+    validateEvidenceReferences(
+      stringArrayAt(assumption, "evidence_ids"),
+      `assumption ${stringAt(assumption, "assumption_id")}`,
+      evidenceIndex,
+      errors,
+    );
+  }
+
+  const calculations = objectsAt(bundle.calculationLedger, "calculations");
+  const calculationIndex = addUniqueIndex(
+    calculations,
+    "calculation_id",
+    "calculations",
+    errors,
+  );
+  for (const calculation of calculations) {
+    const calculationId = stringAt(calculation, "calculation_id");
+    validateEvidenceReferences(
+      stringArrayAt(calculation, "evidence_ids"),
+      `calculation ${calculationId}`,
+      evidenceIndex,
+      errors,
+    );
+    for (const assumptionId of stringArrayAt(calculation, "assumption_ids")) {
+      if (!assumptionIndex.has(assumptionId)) {
+        errors.push(
+          `calculation ${calculationId}: unresolved assumption_id ${assumptionId}`,
+        );
+      }
+    }
+    for (const input of objectsAt(calculation, "inputs")) {
+      const sourceKind = stringAt(input, "source_kind");
+      const sourceRefId = stringAt(input, "source_ref_id");
+      if (sourceKind === "EVIDENCE" && !evidenceIndex.has(sourceRefId)) {
+        errors.push(
+          `calculation ${calculationId}: unresolved evidence input ${sourceRefId}`,
+        );
+      }
+      if (sourceKind === "CALCULATION" && !calculationIndex.has(sourceRefId)) {
+        errors.push(
+          `calculation ${calculationId}: unresolved calculation input ${sourceRefId}`,
+        );
+      }
+      if (sourceKind === "ASSUMPTION" && !assumptionIndex.has(sourceRefId)) {
+        errors.push(
+          `calculation ${calculationId}: unresolved assumption input ${sourceRefId}`,
+        );
+      }
+      if (
+        sourceKind === "DETERMINISTIC_CONSTANT" &&
+        sourceRefId !== "NOT_APPLICABLE"
+      ) {
+        errors.push(
+          `calculation ${calculationId}: deterministic constant must use NOT_APPLICABLE source_ref_id`,
+        );
+      }
+    }
+  }
+
   const claims = objectsAt(bundle.analyticalBlockOutputs, "claims");
   const claimIndex = addUniqueIndex(claims, "claim_id", "claims", errors);
 
@@ -350,6 +431,24 @@ export function validateAnalyticalDataBundleV2(
       errors.push(
         `claim ${claimId}: material SUPPORTED claim requires evidence or calculation lineage`,
       );
+    }
+
+    for (const calculationId of stringArrayAt(claim, "calculation_ids")) {
+      const calculation = calculationIndex.get(calculationId);
+      if (!calculation) {
+        errors.push(`claim ${claimId}: unresolved calculation_id ${calculationId}`);
+      } else if (stringAt(calculation, "block") !== stringAt(claim, "block")) {
+        errors.push(
+          `claim ${claimId}: calculation ${calculationId} belongs to another block`,
+        );
+      }
+    }
+
+    for (const assumptionId of stringArrayAt(claim, "assumption_ids")) {
+      const assumption = assumptionIndex.get(assumptionId);
+      if (!assumption) {
+        errors.push(`claim ${claimId}: unresolved assumption_id ${assumptionId}`);
+      }
     }
 
     for (const conflictId of stringArrayAt(claim, "conflict_ids")) {
@@ -452,6 +551,17 @@ export function validateAnalyticalDataBundleV2(
       evidenceIndex,
       errors,
     );
+
+    for (const id of stringArrayAt(output, "calculation_ids")) {
+      if (!calculationIndex.has(id)) {
+        errors.push(`block output ${outputId}: unresolved calculation_id ${id}`);
+      }
+    }
+    for (const id of stringArrayAt(output, "assumption_ids")) {
+      if (!assumptionIndex.has(id)) {
+        errors.push(`block output ${outputId}: unresolved assumption_id ${id}`);
+      }
+    }
 
     for (const id of stringArrayAt(output, "conflict_ids")) {
       if (!conflictIndex.has(id)) {
