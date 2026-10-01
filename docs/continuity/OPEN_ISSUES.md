@@ -1,43 +1,61 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Historical Phase C calibration evidence
-Status: COMPLETE_RETAINED_IMMUTABLE
-
-Historical candidate outcomes remain immutable.
-
-## OI-002 — Gate 18 Phase C
+## OI-001 — Phase C local-model campaign
 Status: COMPLETE
 
-C7 decision:
-
+C7:
 `LOCAL_CANDIDATE_REJECTED`
 
-Scope:
-
-`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
-
-Current tested-set production candidate:
+Current local production candidate:
 NONE
 
-Formal C7 decision executed:
-TRUE
-
-## OI-003 — Post-C7 model strategy
-Status: OPEN_REQUIRES_EXPLICIT_DIRECTION
+## OI-002 — Interim post-C7 operating strategy
+Status: SELECTED_PRE_IMPLEMENTATION
 Priority: P0
 
-No post-C7 strategy has been selected.
+Strategy:
+`ASSISTED_HUMAN_IN_THE_LOOP_ANALYSIS_BRIDGE`
 
-Possible future directions are outside the current C7 decision and require explicit direction, including:
-- a new materially different local candidate;
-- a controlled external-model benchmark;
-- a hybrid local/external architecture;
-- a hardware-change path;
-- redesign of the LLM responsibility boundary.
+Goal:
+simplify execution and increase analytical quality without forcing weak local inference.
 
-No option is selected by implication.
+## OI-003 — Assisted task bundle contract
+Status: NOT_IMPLEMENTED
+Priority: P0
 
-## OI-004 — Production / routing
+Required outputs:
+- `TASK_PACKET.json`;
+- `PROMPT.md`;
+- `EXPECTED_OUTPUT_SCHEMA.json`;
+- `CONTROL_CARD.md`.
+
+## OI-004 — Assisted prepare/import tooling
+Status: NOT_IMPLEMENTED
+Priority: P0
+
+Prepare target:
+`orotitan assist prepare <company> <module>`
+
+Import target:
+`orotitan assist import <result.json>`
+
+Import must fail closed on identity, schema, reference or deterministic-semantic defects.
+
+## OI-005 — Repair loop
+Status: NOT_IMPLEMENTED
+
+Generate a minimal repair request from validator paths/codes without changing the evidence packet or historical output.
+
+## OI-006 — First pilot
+Status: NOT_STARTED
+
+Module:
+`MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`
+
+Measure:
+operator time, manual actions, schema pass rate, invalid-reference rate, semantic defects, repair count and human-quality defects.
+
+## OI-007 — Production / routing
 Status: GUARDED
 
 Model winner:
@@ -47,9 +65,6 @@ Routing freeze:
 NONE
 
 Production mutation:
-FALSE
-
-Publication authority:
 FALSE
 
 Gate 18:
