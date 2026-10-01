@@ -1951,3 +1951,37 @@ Forbidden:
 - retroactive pass.
 
 This forensic is diagnostic only and does not itself establish candidate admission, ranking, routing, or production suitability.
+
+## D-2026-10-01-104 — Counterevidence-ID forensic finds no exact canonical token decomposition
+
+The second read-only Llama 3.2 forensic completed without inference, Ollama calls, network access, source mutation, or generated narrative publication.
+
+Observed:
+- target path: `priority_findings.1.counterevidence_ids.0`;
+- raw value length: 5;
+- exact canonical `E-NNN` token count: 0;
+- residual is not separator-only;
+- no deterministic replacement is admissible under the token-decomposition rule;
+- no in-memory normalization was applied;
+- no downstream V1.1 validation was executed.
+
+The historical C4 run remains FAIL and no retry is authorized.
+
+## D-2026-10-01-105 — Authorize one format-only prefix/separator forensic
+
+One further zero-cost read-only forensic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Rationale:
+the malformed value is exactly five characters long, which equals the canonical `E-NNN` identifier length. A narrower format-only diagnostic can determine whether the exact numeric suffix is already correct while only the `E-` prefix/separator is malformed.
+
+Diagnostic normalization is permitted only on an in-memory copy when:
+- positions 2-4 are three digits;
+- those three digits map to an existing canonical packet `E-NNN`;
+- the digits are unchanged;
+- all mismatches are confined to positions 0-1.
+
+No digit substitution is allowed.
+
+If admissible, the frozen V1.1 validator is rerun on the in-memory copy.
+
+No source mutation, model call, network access, inference, retry authorization, retroactive pass, ranking, routing, production mutation, or publication is authorized.
