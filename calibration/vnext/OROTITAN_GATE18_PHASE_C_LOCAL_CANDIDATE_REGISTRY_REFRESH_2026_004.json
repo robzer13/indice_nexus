@@ -1,0 +1,103 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_V0.1",
+  "refresh_id": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "checked_at": "2026-10-01",
+  "trigger": "G18-PHASEC-LLAMA3_2-POST-CONSTELLATION-DISPOSITION-001",
+  "completed_sequence": [
+    "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+    "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+    "QWEN3_5_4B_OLLAMA_Q4_K_M",
+    "GEMMA3_4B_OLLAMA_Q4_K_M",
+    "GRANITE4_3B_OLLAMA_Q4_K_M",
+    "QWEN3_8B_LOCAL",
+    "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+    "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+    "LLAMA3_2_3B_OLLAMA_Q4_K_M"
+  ],
+  "hardware_basis": {
+    "system_ram_gib": 7.84,
+    "discrete_vram_mib": 4096,
+    "target_weight_class": "~1.9GB_TO_3.0GB_Q4_CLASS",
+    "observed_constraint": "Multiple 3B-4B candidates are loadable at context16384 but system RAM pressure is often high or critical.",
+    "selection_implication": "Prefer only a materially new family or capability discriminator before further downloads; avoid low-information same-family downsizing."
+  },
+  "completed_candidate_outcomes": {
+    "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M": "NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
+    "PHI4_MINI_3_8B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "QWEN3_5_4B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GEMMA3_4B_OLLAMA_Q4_K_M": "STOPPED_DETERMINISTIC_SEMANTIC_FAILURE",
+    "GRANITE4_3B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "QWEN3_8B_LOCAL": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE_AND_EXTREME_RAM_PRESSURE",
+    "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "GRANITE4_1_3B_OLLAMA_Q4_K_M": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+    "LLAMA3_2_3B_OLLAMA_Q4_K_M": "STOPPED_RAW_SCHEMA_REFERENCE_ID_FAILURE_AFTER_EXHAUSTED_SAFE_FORENSICS"
+  },
+  "current_registry_review": [
+    {
+      "candidate_id": "QWEN3_5_2B_OLLAMA_Q4_K_M",
+      "model_id": "qwen3.5:2b-q4_K_M",
+      "official_ollama_verified": true,
+      "ollama_digest_prefix": "124a03c34777",
+      "ollama_artifact_size_gb": 1.9,
+      "context_window_tokens": 256000,
+      "state": "HOLD_LOW_INFORMATION_GAIN",
+      "rationale": "Same Qwen3.5 family already produced a clean-engineering but critical human-quality failure at 4B. A smaller same-family candidate is lower-information than moving to Phase C synthesis."
+    },
+    {
+      "candidate_id": "GEMMA3N_E2B_OLLAMA_Q4_K_M",
+      "model_id": "gemma3n:e2b-it-q4_K_M",
+      "official_ollama_verified": true,
+      "ollama_digest_prefix": "719372f8c7de",
+      "ollama_artifact_size_gb": 5.6,
+      "context_window_tokens": 32000,
+      "state": "HOLD_POOR_HARDWARE_AND_INFORMATION_GAIN",
+      "rationale": "Artifact is materially larger than the measured target class and remains within the Gemma lineage after Gemma 3 deterministic semantic failure."
+    },
+    {
+      "candidate_id": "SMOLLM3_3B_UPSTREAM_RESEARCH_ONLY",
+      "model_id": "HuggingFaceTB/SmolLM3-3B",
+      "official_ollama_verified": false,
+      "state": "HOLD_PACKAGING_VARIANCE",
+      "rationale": "No official Ollama library tag with pinned digest/quantization was verified in this refresh. Introducing an unverified community package would confound model quality with packaging variance."
+    },
+    {
+      "candidate_id": "STABLE_CODE_3B_INSTRUCT_Q4_K_M",
+      "model_id": "stable-code:3b-instruct-q4_K_M",
+      "official_ollama_verified": true,
+      "ollama_artifact_size_gb": 1.7,
+      "context_window_tokens": 16384,
+      "state": "HOLD_DOMAIN_MISMATCH_AND_OLDER_MODEL",
+      "rationale": "Code-specialized model with only 16K context and older release profile is not a high-information general analytical candidate for the frozen MOAT_EVIDENCE_AUDIT task."
+    }
+  ],
+  "refresh_decision": {
+    "new_candidate_selected": false,
+    "download_authorized": false,
+    "inference_authorized": false,
+    "reason": "No currently verified same-weight option offers enough incremental information gain to justify another local candidate run before Phase C synthesis.",
+    "qwen3_5_2b_remains_deferred": true,
+    "smollm3_remains_research_only_until_official_runtime_package_is_pinned": true
+  },
+  "source_urls": [
+    "https://ollama.com/library/qwen3.5/tags",
+    "https://ollama.com/library/gemma3n/tags",
+    "https://ollama.com/library/granite4.1",
+    "https://ollama.com/library/stable-code:3b-instruct-q4_K_M",
+    "https://huggingface.co/HuggingFaceTB/SmolLM3-3B"
+  ],
+  "authority": {
+    "static_registry_refresh_executed": true,
+    "standing_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "model_download_authorized": false,
+    "model_inference_authorized": false,
+    "c7_candidate_decision_authorized": false,
+    "model_winner_selected": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "PREPARE_PHASE_C_CANDIDATE_SYNTHESIS_NO_C7_DECISION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

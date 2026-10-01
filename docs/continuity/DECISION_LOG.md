@@ -1985,3 +1985,75 @@ No digit substitution is allowed.
 If admissible, the frozen V1.1 validator is rerun on the in-memory copy.
 
 No source mutation, model call, network access, inference, retry authorization, retroactive pass, ranking, routing, production mutation, or publication is authorized.
+
+## D-2026-10-01-106 — Llama 3.2 final forensic exhausts safe deterministic normalization
+
+The prefix/separator forensic completed without inference, Ollama calls, network access, source mutation or raw narrative publication.
+
+Observed:
+- target path: `priority_findings.1.counterevidence_ids.0`;
+- malformed value length: 5;
+- suffix is three digits;
+- suffix remains unchanged under the only format-only canonical candidate;
+- candidate: `E-005`;
+- candidate exists in the exact pinned packet: false;
+- mismatches are confined to the prefix/separator;
+- format-only canonicalization admissible: false.
+
+Because `E-005` is absent from the exact packet, any further repair would require changing the numeric evidence identity. Such a change is not a deterministic presentation normalization and would risk inventing or substituting evidence.
+
+The historical C4 result therefore remains FAIL.
+
+No retry is authorized.
+
+## D-2026-10-01-107 — Stop Llama 3.2 C4 expansion and retain calibration evidence
+
+Llama 3.2 3B is not admitted from the current evidence.
+
+Reasons:
+- first bounded C4 produced syntactically valid JSON but failed the frozen raw schema;
+- three read-only forensics isolated the issue to a malformed evidence reference;
+- no safe canonical evidence reference can be recovered without changing evidence identity;
+- the unchanged packet/prompt/temperature retry has low information gain;
+- changing prompt/schema/packet would confound the candidate comparison.
+
+Disposition:
+
+`STOP_LLAMA3_2_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE`
+
+No additional Llama inference is authorized.
+
+No global Llama-family failure is inferred.
+
+No model winner or routing decision is made.
+
+## D-2026-10-01-108 — Refresh local candidate registry; select no automatic successor
+
+A static current registry refresh was performed after the Llama stop.
+
+The refresh retains the current hardware target around the ~2-3GB Q4 class.
+
+The Qwen3.5 2B Q4_K_M option remains available but is a smaller candidate from a family whose 4B candidate already failed human-quality adjudication, so its incremental information gain is low.
+
+No official pinned SmolLM3 Ollama package was verified in the refresh.
+
+Larger or specialized alternatives do not improve the current hardware/information-gain tradeoff.
+
+Decision:
+- no new candidate selected;
+- no download authorized;
+- no inference authorized.
+
+## D-2026-10-01-109 — Prepare Phase C synthesis without exercising C7 authority
+
+A Phase C candidate-synthesis prep is created to consolidate the local-model evidence.
+
+It does not execute any C7 production-candidate decision.
+
+No candidate is accepted, formally rejected at C7, or conditionally admitted by this step.
+
+No model is ranked or selected as winner.
+
+No routing is frozen.
+
+The next boundary requires explicit user authority for the C7 local production-candidate decision, or explicit direction to test a new candidate.

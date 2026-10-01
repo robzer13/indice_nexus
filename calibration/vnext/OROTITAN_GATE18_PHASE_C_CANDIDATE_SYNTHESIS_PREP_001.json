@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_CANDIDATE_SYNTHESIS_PREP_V0.1",
+  "prep_id": "G18-PHASEC-CANDIDATE-SYNTHESIS-PREP-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "PREPARED_NO_C7_DECISION_AUTHORITY_EXERCISED",
+  "source_registry_refresh": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+  "purpose": "Consolidate all local-candidate evidence before any C7 production-candidate decision. This artifact does not accept, reject, conditionally admit, rank, select a winner, or freeze routing.",
+  "evidence_summary": [
+    {
+      "candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+      "disposition": "NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES"
+    },
+    {
+      "candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+    },
+    {
+      "candidate": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+    },
+    {
+      "candidate": "GEMMA3_4B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_DETERMINISTIC_SEMANTIC_FAILURE"
+    },
+    {
+      "candidate": "GRANITE4_3B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+    },
+    {
+      "candidate": "QWEN3_8B_LOCAL",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE_AND_EXTREME_RAM_PRESSURE"
+    },
+    {
+      "candidate": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+    },
+    {
+      "candidate": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE"
+    },
+    {
+      "candidate": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+      "disposition": "STOPPED_RAW_SCHEMA_REFERENCE_ID_FAILURE_AFTER_EXHAUSTED_SAFE_FORENSICS"
+    }
+  ],
+  "c7_readiness_observation": {
+    "any_current_candidate_admitted": false,
+    "repeatability_stage_candidate_available": false,
+    "blinded_multi_candidate_final_comparison_ready": false,
+    "current_registry_has_high_information_next_candidate": false,
+    "c7_decision_still_requires_explicit_authority": true
+  },
+  "boundaries": {
+    "local_candidate_accepted": false,
+    "local_candidate_rejected": false,
+    "local_candidate_conditional": false,
+    "model_winner_selected": false,
+    "model_ranking_authority": false,
+    "routing_frozen": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "additional_inference_authorized": false,
+    "additional_download_authorized": false
+  },
+  "next_action": "AWAIT_EXPLICIT_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_AUTHORITY_OR_NEW_CANDIDATE_DIRECTION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

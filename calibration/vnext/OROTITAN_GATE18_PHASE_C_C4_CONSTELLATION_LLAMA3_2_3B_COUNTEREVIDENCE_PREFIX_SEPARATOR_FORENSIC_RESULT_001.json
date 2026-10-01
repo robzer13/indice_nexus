@@ -1,0 +1,74 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_READ_ONLY_SCHEMA_FORENSICS",
+  "status": "FORENSIC_COMPLETE_NO_SAFE_DETERMINISTIC_CANONICALIZATION",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001",
+  "source_run": {
+    "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001",
+    "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+    "done_reason": "stop",
+    "prompt_eval_count": 3157,
+    "eval_count": 895,
+    "schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID",
+    "raw_text_sha256": "f0cfb503a74b895ddfed73ca8030ce378a4b216c5c982b2c01def50f14acbefd"
+  },
+  "format_diagnosis": {
+    "path": "priority_findings.1.counterevidence_ids.0",
+    "raw_value_printed": false,
+    "raw_value_length": 5,
+    "suffix_is_three_digits": true,
+    "canonical_candidate": "E-005",
+    "candidate_exists_in_packet": false,
+    "numeric_suffix_unchanged": true,
+    "mismatch_positions": [
+      0
+    ],
+    "mismatch_only_prefix_or_separator": true,
+    "format_only_canonicalization_admissible": false
+  },
+  "diagnostic_normalization": {
+    "applied": false,
+    "digit_substitution_executed": false,
+    "source_artifact_mutated": false,
+    "raw_output_mutated": false,
+    "raw_malformed_value_printed": false,
+    "generated_narrative_printed": false,
+    "auto_repair_executed": false,
+    "retroactive_pass_allowed": false
+  },
+  "downstream_validation": {
+    "repaired_schema_pass": null,
+    "repaired_schema_error": null,
+    "v11_raw_schema_pass": null,
+    "v11_raw_presentation_compliant": null,
+    "v11_normalized_path_count": null,
+    "v11_substantive_status": null,
+    "v11_substantive_pass": null,
+    "v11_substantive_error": null,
+    "reason": "No deterministic in-memory normalization is admissible because E-005 does not exist in the pinned packet and digit substitution is forbidden."
+  },
+  "conclusion": {
+    "safe_deterministic_normalization_exhausted": true,
+    "additional_forensic_information_gain": "LOW",
+    "inference_retry_information_gain": "LOW",
+    "retry_authorized": false,
+    "llama3_2_c4_expansion_should_stop": true,
+    "historical_c4_result_changed": false,
+    "model_family_global_failure_concluded": false
+  },
+  "safety": {
+    "external_network_access_requested": false,
+    "ollama_api_called": false,
+    "model_inference_executed": false,
+    "source_artifact_mutated": false,
+    "raw_narrative_content_published": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "STOP_LLAMA3_2_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

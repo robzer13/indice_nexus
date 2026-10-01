@@ -728,8 +728,8 @@ test("Llama 3.2 prefix-separator forensic authorization forbids digit substituti
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_READ_ONLY_NO_INFERENCE");
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.status, "CONSUMED_READ_ONLY_FORENSIC_COMPLETE");
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.no_digit_substitution, true);
   assert.equal(a.scope.require_raw_value_length_5, true);
   assert.equal(a.scope.inspect_suffix_digit_positions_2_4, true);
@@ -765,5 +765,109 @@ test("Llama 3.2 prefix-separator forensic runner changes no digits and has no in
   assert.match(raw, /ollamaApiCalled: false/);
   assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|11434/);
   assert.doesNotMatch(raw, /fetch\(/);
+});
+
+test("Llama 3.2 prefix-separator forensic exhausts safe deterministic normalization", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    r.status,
+    "FORENSIC_COMPLETE_NO_SAFE_DETERMINISTIC_CANONICALIZATION",
+  );
+  assert.equal(r.format_diagnosis.raw_value_length, 5);
+  assert.equal(r.format_diagnosis.suffix_is_three_digits, true);
+  assert.equal(r.format_diagnosis.canonical_candidate, "E-005");
+  assert.equal(r.format_diagnosis.candidate_exists_in_packet, false);
+  assert.equal(r.format_diagnosis.numeric_suffix_unchanged, true);
+  assert.deepEqual(r.format_diagnosis.mismatch_positions, [0]);
+  assert.equal(r.format_diagnosis.mismatch_only_prefix_or_separator, true);
+  assert.equal(
+    r.format_diagnosis.format_only_canonicalization_admissible,
+    false,
+  );
+  assert.equal(r.diagnostic_normalization.applied, false);
+  assert.equal(r.conclusion.safe_deterministic_normalization_exhausted, true);
+  assert.equal(r.conclusion.retry_authorized, false);
+  assert.equal(r.conclusion.llama3_2_c4_expansion_should_stop, true);
+});
+
+test("Llama 3.2 post-Constellation disposition stops expansion without family-wide conclusion", () => {
+  const d = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LLAMA3_2_POST_CONSTELLATION_DISPOSITION_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    d.status,
+    "STOP_LLAMA3_2_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  );
+  assert.equal(d.decision.llama3_2_candidate_admitted, false);
+  assert.equal(d.decision.llama3_2_c4_expansion, "STOP");
+  assert.equal(d.decision.additional_llama3_2_inference_authorized, false);
+  assert.equal(d.decision.retry_authorized, false);
+  assert.equal(
+    d.decision.production_admission,
+    "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+  );
+  assert.equal(d.decision.family_global_failure_concluded, false);
+  assert.equal(d.decision.model_winner_selected, false);
+  assert.equal(d.decision.routing_frozen, false);
+});
+
+test("Post-Llama registry refresh selects no low-information automatic successor", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_LOCAL_CANDIDATE_REGISTRY_REFRESH_2026_004.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    r.refresh_id,
+    "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+  );
+  assert.equal(r.refresh_decision.new_candidate_selected, false);
+  assert.equal(r.refresh_decision.download_authorized, false);
+  assert.equal(r.refresh_decision.inference_authorized, false);
+  assert.equal(r.refresh_decision.qwen3_5_2b_remains_deferred, true);
+  assert.equal(
+    r.authority.c7_candidate_decision_authorized,
+    false,
+  );
+  assert.equal(r.authority.model_winner_selected, false);
+  assert.equal(r.authority.routing_frozen, false);
+});
+
+test("Phase C synthesis prep does not exercise C7 decision authority", () => {
+  const p = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_CANDIDATE_SYNTHESIS_PREP_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    p.status,
+    "PREPARED_NO_C7_DECISION_AUTHORITY_EXERCISED",
+  );
+  assert.equal(p.c7_readiness_observation.any_current_candidate_admitted, false);
+  assert.equal(
+    p.c7_readiness_observation.c7_decision_still_requires_explicit_authority,
+    true,
+  );
+  assert.equal(p.boundaries.local_candidate_accepted, false);
+  assert.equal(p.boundaries.local_candidate_rejected, false);
+  assert.equal(p.boundaries.local_candidate_conditional, false);
+  assert.equal(p.boundaries.model_winner_selected, false);
+  assert.equal(p.boundaries.routing_frozen, false);
+  assert.equal(p.boundaries.additional_inference_authorized, false);
+  assert.equal(p.boundaries.additional_download_authorized, false);
 });
 
