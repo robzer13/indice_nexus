@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/cycle-analysis.v0.1.json",
+  "title": "OroTitan Cycle Analysis V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "cycle_analysis_id",
+    "cycle_version",
+    "cycle_type",
+    "primary_drivers",
+    "leading_indicators",
+    "lagging_indicators",
+    "current_regime",
+    "historical_amplitude",
+    "historical_duration",
+    "capacity_state",
+    "inventory_state",
+    "utilization_state",
+    "order_book_state",
+    "pricing_state",
+    "volume_state",
+    "margin_state",
+    "working_capital_state",
+    "capital_spending_state",
+    "supply_response",
+    "demand_response",
+    "peak_risk",
+    "trough_upside",
+    "normalization_range",
+    "evidence_ids",
+    "contradicting_evidence_ids",
+    "confidence",
+    "invalidation_triggers"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "cycle_analysis_id": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+    },
+    "cycle_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cycle_type": {
+      "enum": [
+        "DEMAND_CYCLE",
+        "INVENTORY_CYCLE",
+        "CAPACITY_CYCLE",
+        "COMMODITY_PRICE_CYCLE",
+        "CREDIT_CYCLE",
+        "HOUSING_CYCLE",
+        "ADVERTISING_CYCLE",
+        "SEMICONDUCTOR_CYCLE",
+        "FREIGHT_CYCLE",
+        "INSURANCE_CYCLE",
+        "INDUSTRIAL_EQUIPMENT_CYCLE",
+        "CAPITAL_MARKETS_CYCLE",
+        "REGULATORY_CYCLE",
+        "COMPANY_SPECIFIC_REPLACEMENT_CYCLE"
+      ]
+    },
+    "primary_drivers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "leading_indicators": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "lagging_indicators": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "current_regime": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/cycleRegime"
+    },
+    "historical_amplitude": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "historical_duration": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "capacity_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "inventory_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "utilization_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "order_book_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "pricing_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "volume_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "margin_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "working_capital_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "capital_spending_state": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "supply_response": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "demand_response": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "peak_risk": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "trough_upside": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "normalization_range": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "contradicting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "confidence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/executionConfidence"
+    },
+    "invalidation_triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
