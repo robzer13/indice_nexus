@@ -80,7 +80,7 @@
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/dateOrState"
         },
         "data_period": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
@@ -93,7 +93,7 @@
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
         },
         "root_source_id": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
             },
@@ -174,7 +174,7 @@
           }
         },
         "source_locator": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
@@ -191,7 +191,7 @@
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/dateOrState"
         },
         "data_period": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
             },
