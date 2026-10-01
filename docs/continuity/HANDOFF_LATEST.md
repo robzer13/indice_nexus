@@ -1,87 +1,109 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-063`
+Resume ID: `VNEXT-POST-C7-20261001-064`
 
-## Post-C7 direction selected
+## Current planning state
 
-Phase C is complete.
+Phase C remains complete.
 
-Formal C7 result remains:
+C7 remains:
 
 `LOCAL_CANDIDATE_REJECTED`
 
-for the current tested local candidate set under the frozen Phase C contract.
-
-The user has now selected the post-C7 product direction:
+Post-C7 product direction remains:
 
 `ANALYTICAL_ENGINE_V2_SELECTED_AS_POST_C7_DIRECTION`
 
-This direction does not reopen Phase C and does not select a model winner.
+The final missing architectural planning layer has now been drafted:
 
-## Product objective
-
-Build an OroTitan research workbench that materially improves:
-
-1. analytical depth;
-2. process correctness and fluidity;
-3. UI/UX quality;
-4. only then automation rate.
-
-The product must become better at:
-- sector-specific economics;
-- cyclicality and normalization;
-- technology and disruption;
-- industry structure;
-- causal reasoning;
-- moat proof;
-- runway decomposition;
-- return quality;
-- forensic cash-flow analysis;
-- capital allocation;
-- base rates;
-- variant perception;
-- Red Team;
-- valuation adaptation.
-
-## Execution model
-
-The system remains provider-agnostic.
-
-Interim:
-- deterministic engine where reliable;
-- manual ChatGPT-assisted tasks where judgment is needed;
-- deterministic import and validation.
-
-Future:
-- stronger local hardware/model can replace the analysis provider without redesigning the analytical engine.
-
-## UI direction
-
-French-first premium equity-research workbench.
-
-Required product capabilities include:
-- cockpit;
-- shortlist / research queue;
-- active dossier workflow;
-- visible Research → Deep Dive → Integration state;
-- blockers and deterministic next action;
-- analysis map;
-- open questions;
-- evidence browser;
-- price freshness / refresh;
-- monitoring;
-- PDF / Markdown / JSON / CSV exports.
-
-## Canonical design artifact
-
-`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
+`OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1`
 
 Status:
 
-`POST-C7 TARGET ARCHITECTURE / NOT FROZEN / READY FOR CONTRACT DECOMPOSITION`
+`DESIGN_CANDIDATE_READY_FOR_USER_REVIEW`
 
-## Current exact next action
+## Operating architecture
 
-`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
+```text
+CHATGPT
+= PRIMARY NON-DETERMINISTIC ANALYTICAL BRAIN
 
-No production mutation, routing freeze, or model winner is authorized.
+SUPABASE
+= CANONICAL WORKING MEMORY / RUN + ARTIFACT REGISTRY
+
+GITHUB
+= METHOD / CODE / CONTRACTS / TESTS
+
+VERCEL
+= RUNTIME / DEPLOYMENT / LOGS
+
+OROTITAN
+= PRODUCT SURFACE / COCKPIT / CANONICAL DISPLAY
+```
+
+ChatGPT Work is not required in the current V2 path.
+
+## Protocol command surface
+
+```text
+LOAD OROTITAN <COMPANY>
+STATUS OROTITAN
+CHECKPOINT OROTITAN
+SAVE OROTITAN
+REFRESH OROTITAN <COMPANY>
+GO PUBLISH <COMPANY>
+```
+
+## Quality design
+
+The candidate includes:
+- layered context loading;
+- anti-anchoring / narrative-contamination controls;
+- question-driven Research;
+- primary/root-source recovery;
+- mandatory disconfirming research;
+- explicit numeric provenance;
+- material-change revalidation;
+- sector / cyclicality / technology-specific analysis;
+- Outside View / base rates;
+- mandatory Red Team;
+- reproducible valuation;
+- unknown preservation.
+
+## Reliability design
+
+The candidate includes:
+- exact run / artifact / version retrieval;
+- DATA_CUTOFF enforcement;
+- durable checkpoints;
+- optimistic concurrency;
+- prompt-injection firewall;
+- guarded Supabase RPC writes;
+- no ad-hoc DML in normal company analysis;
+- no schema migration in company analysis;
+- no publication from SAVE.
+
+## Live infrastructure verification
+
+The active Supabase project already contains:
+- `orotitan_runs`;
+- `orotitan_run_stages`;
+- `orotitan_artifacts`;
+- `orotitan_artifact_edges`;
+- `orotitan_run_events`.
+
+Existing RPCs already include:
+- `checkpoint_orotitan_stage`;
+- `finalize_orotitan_stage`;
+- `pause_orotitan_stage`;
+- `reopen_orotitan_stage`;
+- `resolve_orotitan_artifact`;
+- publish authorization/result functions.
+
+Vercel project `orotitan-vnext-pilotage` is connected and deployable.
+
+## Exact next action
+
+`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
+
+Do not freeze or treat the protocol as final until explicit user approval.
