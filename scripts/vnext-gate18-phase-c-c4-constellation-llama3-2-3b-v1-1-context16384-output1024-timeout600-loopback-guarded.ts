@@ -332,21 +332,16 @@ async function fetchJson<T>(
   );
 }
 
-function assertNoLoadedModels(): void {
+async function assertNoLoadedModels(): Promise<void> {
   try {
-    const raw = execFileSync("ollama", ["ps"], {
-      encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
-      timeout: 15_000,
-      maxBuffer: 1024 * 1024,
-    }).trim();
+    const ps = await fetchJson<{
+      models?: Array<{
+        name?: string;
+        model?: string;
+      }>;
+    }>("/api/ps");
 
-    const lines = raw
-      .split(/\r?\n/)
-      .map((line) => line.trim())
-      .filter(Boolean);
-
-    if (lines.length > 1) {
+    if ((ps.models ?? []).length > 0) {
       throw new Error(
         "VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_OTHER_MODEL_ALREADY_LOADED",
       );
@@ -397,7 +392,7 @@ function isoFileSafe(value: Date): string {
 async function main(): Promise<void> {
   const options = parseArgs(process.argv.slice(2));
   const authorization = readAndAssertAuthorization(options);
-  assertNoLoadedModels();
+  await assertNoLoadedModels();
   const installedModel = await assertInstalledModel();
   const baselineFreeRamGiB = freeRamGiB();
   const minimumFreeRamGiB =
