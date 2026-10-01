@@ -37,7 +37,6 @@
     "COMPANY_ECONOMIC_DNA",
     "ANALYTICAL_BLOCK_OUTPUT",
     "CAUSAL_GRAPH",
-    "OPEN_QUESTION_REGISTER",
     "TECHNOLOGY_ANALYSIS",
     "CYCLICALITY_ANALYSIS",
     "CAPITAL_ALLOCATION_ANALYSIS",
@@ -55,5 +54,12 @@
     "T20"
   ],
   "ui_language_boundary": "FRENCH_FIRST_PRESENTATION_ENGLISH_CANONICAL_DATA",
-  "next_action": "RUN_CI_AND_REVIEW_DATA_CONTRACTS_V2_CANDIDATE"
+  "next_action": "RUN_CI_AND_REVIEW_DATA_CONTRACTS_V2_CANDIDATE",
+  "presentation_views": [
+    "OPEN_QUESTIONS_VIEW_DERIVED_FROM_RESEARCH_GAPS_AND_BLOCK_UNRESOLVED_POINTS"
+  ],
+  "notes": [
+    "Open Questions is not a parallel authoritative register.",
+    "French-first presentation remains a UI projection over English canonical data."
+  ]
 }
