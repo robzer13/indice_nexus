@@ -1,86 +1,51 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Historical Phase C / C7 evidence
+## OI-001 — Historical Phase C / C7
 Status: COMPLETE_RETAINED_IMMUTABLE
 
-Phase C:
-`COMPLETE`
-
-C7:
-`LOCAL_CANDIDATE_REJECTED`
-
-The post-C7 work does not reopen or rewrite historical model qualification.
+Phase C = COMPLETE  
+C7 = LOCAL_CANDIDATE_REJECTED
 
 ## OI-002 — Analytical Engine V2
-Status: DESIGN_SELECTED
+Status: TARGET_ARCHITECTURE_SELECTED
+
+No change to frozen analytical semantics.
+
+## OI-003 — ChatGPT Operating Protocol V0.1
+Status: DESIGN_CANDIDATE_READY_FOR_USER_REVIEW
 Priority: P0
 
-Target architecture:
-`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
+Candidate:
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md`
 
-Immediate missing contracts:
-- COMPANY_ECONOMIC_DNA;
-- sector overlay contract;
-- cyclicality contract;
-- technology contract;
-- industry-structure contract;
-- causal graph;
-- open-question model;
-- analysis task/provider contract.
+Must not be frozen until user approval.
 
-## OI-003 — Process Engine V2
-Status: NOT_STARTED
+## OI-004 — Supabase ChatGPT access hardening
+Status: DESIGN_REQUIREMENT_NOT_IMPLEMENTED
 Priority: P0
 
-Required:
-- run/stage/block state model;
-- execution fingerprints;
-- anti-loop guards;
-- blockers;
-- retry bounds;
-- next-action resolver;
-- resume;
-- queue;
-- history.
+Target:
+- project-scoped routine reads;
+- read-only behavior for normal LOAD / STATUS / Research retrieval where practical;
+- bounded write window for CHECKPOINT / SAVE / FINALIZE;
+- guarded existing OroTitan RPCs only for normal analytical writes;
+- no ad-hoc DML in company-analysis workflow.
 
-## OI-004 — Workbench UI/UX
-Status: TARGET_DEFINED_NOT_IMPLEMENTED
-Priority: P1
+## OI-005 — Detailed implementation design
+Status: WAITING_FOR_PROTOCOL_APPROVAL
 
-Required:
-- premium French-first research cockpit;
-- company workspace;
-- analysis dependency map;
-- module views;
-- open questions;
-- evidence browser;
-- stage/integration visualization;
-- shortlist;
-- monitoring;
-- price freshness;
-- export.
-
-## OI-005 — AI execution
-Status: PROVIDER_AGNOSTIC
-
-Current acceptable mode:
-`MANUAL_CHATGPT_ASSISTED`
-
-Future modes may include approved external API or stronger local model.
-
-No provider is selected as production winner.
+After protocol approval:
+1. Analytical Engine V2 data contracts
+2. Process Engine V2 state machine
+3. ChatGPT/Supabase operation payload contracts
+4. Workbench information architecture
+5. UI design system
+6. implementation backlog
 
 ## OI-006 — Production / routing
 Status: GUARDED
 
-Model winner:
-NONE
-
-Routing freeze:
-NONE
-
-Production mutation:
-FALSE
-
-Gate 18:
-IN_PROGRESS_NOT_FROZEN
+Model winner: NONE  
+Routing freeze: NONE  
+Production mutation: FALSE  
+Gate 18: IN_PROGRESS_NOT_FROZEN
