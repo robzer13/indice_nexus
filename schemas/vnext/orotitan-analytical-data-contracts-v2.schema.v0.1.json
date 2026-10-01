@@ -392,7 +392,8 @@
         "freshness_state",
         "limitations",
         "conflict_status",
-        "quantitative_provenance"
+        "quantitative_provenance",
+        "used_in"
       ],
       "properties": {
         "evidence_id": {
@@ -437,12 +438,21 @@
           "minLength": 1
         },
         "source_class": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "S1",
+            "S2",
+            "S3",
+            "S4",
+            "S5",
+            "S6"
+          ]
         },
         "claim_fit": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "HIGH",
+            "MEDIUM",
+            "LOW"
+          ]
         },
         "source_date": {
           "type": "string",
@@ -454,17 +464,21 @@
         },
         "epistemic_type": {
           "enum": [
-            "FACT",
-            "MANAGEMENT_CLAIM",
+            "REPORTED",
+            "CALCULATED",
+            "CONSENSUS",
             "ESTIMATE",
             "ASSUMPTION",
-            "INFERENCE",
-            "CALCULATION"
+            "UNKNOWN"
           ]
         },
         "freshness_state": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "CURRENT",
+            "FIT_FOR_PURPOSE",
+            "STALE_FOR_USE",
+            "UNKNOWN_DATE"
+          ]
         },
         "limitations": {
           "type": "array",
@@ -486,6 +500,14 @@
               "type": "null"
             }
           ]
+        },
+        "used_in": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
         }
       }
     },
@@ -542,8 +564,15 @@
           "$ref": "#/$defs/conflictSide"
         },
         "conflict_type": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "DATE",
+            "DEFINITION",
+            "ACCOUNTING_BASIS",
+            "UNIT",
+            "RESTATEMENT",
+            "FACTUAL",
+            "OTHER"
+          ]
         },
         "reason": {
           "type": "string",
@@ -717,8 +746,14 @@
           "$ref": "#/$defs/assumptionValue"
         },
         "epistemic_type": {
-          "type": "string",
-          "minLength": 1
+          "enum": [
+            "REPORTED",
+            "CALCULATED",
+            "CONSENSUS",
+            "ESTIMATE",
+            "ASSUMPTION",
+            "UNKNOWN"
+          ]
         },
         "source_or_rationale": {
           "type": "string",
@@ -3579,7 +3614,10 @@
         "value",
         "supporting_evidence_ids",
         "calculation_ids",
-        "limitations"
+        "limitations",
+        "unit",
+        "currency",
+        "as_of_date"
       ],
       "properties": {
         "scope_type": {
@@ -3614,6 +3652,25 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "as_of_date": {
+          "type": "string",
+          "format": "date"
         }
       }
     },
@@ -3893,7 +3950,9 @@
         "amount_or_range",
         "uncertainty",
         "calculation_id",
-        "limitations"
+        "limitations",
+        "currency",
+        "period"
       ],
       "properties": {
         "adjustment_id": {
@@ -3984,6 +4043,21 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "period": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },
@@ -4725,7 +4799,8 @@
         "estimated_return",
         "alternative_use",
         "traceability",
-        "limitations"
+        "limitations",
+        "currency"
       ],
       "properties": {
         "deployment_id": {
@@ -4784,6 +4859,17 @@
             "type": "string",
             "minLength": 1
           }
+        },
+        "currency": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
       }
     }
