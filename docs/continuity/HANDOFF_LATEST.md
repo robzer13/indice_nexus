@@ -1,63 +1,83 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20261001-062`
+Resume ID: `VNEXT-G18-POSTC7-20261001-063`
 
-## Gate 18 Phase C — C7 executed
+## Post-C7 interim strategy selected
 
-The user explicitly authorized execution of the C7 local production-candidate decision on the current Phase C evidence.
-
-Formal C7 decision:
+The current local-model campaign is formally closed at C7 with:
 
 `LOCAL_CANDIDATE_REJECTED`
 
-Scope:
+The user has now selected the interim operating direction:
 
-`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
+`ASSISTED_HUMAN_IN_THE_LOOP_ANALYSIS_BRIDGE`
 
-This means no tested local candidate currently qualifies as an OroTitan production candidate under the Phase C contract.
+This strategy is intended to remain active until materially stronger local hardware is available and a new local-model qualification campaign becomes worthwhile.
 
-## Decision basis
+## Objective
 
-The tested campaign includes candidates eliminated at C3 or C4 for one or more of:
-- critical historical semantic regression failure;
-- deterministic semantic-contract failure;
-- raw structured-output/schema failure;
-- critical human-quality evidence-grounding failure;
-- extreme hardware pressure combined with quality failure.
+Do not optimize for 100% automation.
 
-No candidate survived earlier qualification with sufficient quality to justify a final production-candidate repeatability/blinded-comparison sequence.
+Optimize for:
+- lower operator friction;
+- higher analytical quality;
+- exact evidence traceability;
+- deterministic validation;
+- provider-neutral migration path;
+- no production/API dependency that would need to be rewritten later.
 
-Therefore:
-- C5 final repeatability = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
-- C6 final blinded adjudication = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
-- C7 = `LOCAL_CANDIDATE_REJECTED`.
+## Target flow
 
-## What the rejection does NOT mean
+```text
+DETERMINISTIC EVIDENCE PREPARATION
+→ ASSISTED TASK BUNDLE
+→ HIGH-CAPABILITY INTERACTIVE LLM
+→ STRUCTURED RESULT
+→ LOCAL VALIDATION
+→ TARGETED REPAIR LOOP IF NEEDED
+→ HUMAN ANALYTICAL CONFIRMATION
+→ CERTIFIED ARTIFACT
+→ NORMAL OROTITAN DOWNSTREAM CONTROLS
+```
 
-It does not conclude:
-- all future local/open-weight models will fail;
-- any tested model family is globally incapable;
-- a particular failed model is the best fallback;
-- a paid model should be used;
-- a hybrid architecture should be used;
-- new hardware should be purchased.
+## Automation boundary
 
-## Operational state
+Automate:
+- packet/prompt build;
+- IDs/hashes/schema;
+- result import;
+- deterministic validation;
+- repair-request generation;
+- persistence/logging;
+- technical control cards.
 
-Phase C: `COMPLETE`
+Keep assisted/human:
+- moat judgment;
+- conflict interpretation;
+- materiality;
+- runway;
+- capital allocation;
+- management/governance;
+- final qualitative synthesis;
+- refresh impact assessment.
 
-Current local production candidate: `NONE`
+## First implementation target
 
-Model winner: `NONE`
+Pilot module:
 
-Routing freeze: `NONE`
+`MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3`
 
-Production mutation: `FALSE`
+Implement:
+1. task-bundle contract;
+2. prepare CLI;
+3. import/validation CLI;
+4. minimal repair-prompt generator;
+5. first assisted pilot.
 
-Gate 18: `IN_PROGRESS_NOT_FROZEN`
-
-Existing production behavior is unchanged.
+No routing freeze.
+No production mutation.
+No model winner.
 
 ## Current exact next action
 
-`AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION`
+`IMPLEMENT_ASSISTED_TASK_BUNDLE_CONTRACT_AND_MINIMAL_PREPARE_IMPORT_BRIDGE_V0_1`
