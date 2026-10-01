@@ -1,0 +1,1101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:post-c7:analytical-data-contracts:v2:0.1",
+  "title": "OroTitan Analytical Data Contracts V2 — Design Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "issuer_id",
+    "data_cutoff",
+    "sources",
+    "evidence",
+    "conflicts",
+    "gaps",
+    "assumptions",
+    "company_economic_dna",
+    "analytical_blocks",
+    "material_changes"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.1"
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "issuer_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "security_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "dossier_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "data_cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/sourceRecord"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidenceRecord"
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conflictRecord"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gapRecord"
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assumptionRecord"
+      }
+    },
+    "company_economic_dna": {
+      "$ref": "#/$defs/companyEconomicDna"
+    },
+    "analytical_blocks": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockOutput"
+      }
+    },
+    "material_changes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/materialChange"
+      }
+    },
+    "serial_acquirer_profile": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/serialAcquirerProfile"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "blockCode": {
+      "enum": [
+        "BUSINESS_MODEL",
+        "ECONOMIC_QUALITY",
+        "INDUSTRY_STRUCTURE",
+        "TECHNOLOGY",
+        "CYCLICALITY",
+        "MOAT",
+        "RUNWAY",
+        "RETURN_QUALITY",
+        "FCF_FORENSIC",
+        "CAPITAL_ALLOCATION",
+        "MANAGEMENT_GOVERNANCE",
+        "OUTSIDE_VIEW",
+        "RISK_RESILIENCE",
+        "RED_TEAM",
+        "VALUATION",
+        "CROSS_BLOCK_RECONCILIATION"
+      ]
+    },
+    "evidenceGrade": {
+      "enum": [
+        "E0 CLAIM_ONLY",
+        "E1 OBSERVABLE_ISSUER_EVIDENCE",
+        "E2 STRONG_INDEPENDENT_EVIDENCE",
+        "E3 ORTHOGONALLY_CORROBORATED",
+        "EU UNKNOWN / CONFLICTED"
+      ]
+    },
+    "stringId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 160
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "sourceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title",
+        "publisher",
+        "source_type",
+        "source_date",
+        "locator",
+        "access_status",
+        "limitations"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_type": {
+          "enum": [
+            "REGULATORY_FILING",
+            "ISSUER_PRIMARY",
+            "CUSTOMER_PRIMARY",
+            "COMPETITOR_PRIMARY",
+            "SUPPLIER_CHANNEL_PRIMARY",
+            "REGULATORY_INDUSTRY_TECHNICAL_ACADEMIC",
+            "HIGH_QUALITY_SECONDARY",
+            "DERIVATIVE_SUMMARY",
+            "USER_PROVIDED",
+            "OTHER"
+          ]
+        },
+        "source_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "as_of_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "root_source_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/stringId"
+            }
+          ]
+        },
+        "access_status": {
+          "enum": [
+            "AVAILABLE",
+            "PARTIAL",
+            "INACCESSIBLE"
+          ]
+        },
+        "content_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "numericDatum": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric",
+        "value_kind",
+        "unit",
+        "accounting_basis"
+      ],
+      "properties": {
+        "metric": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_kind": {
+          "enum": [
+            "SCALAR",
+            "RANGE"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[A-Z]{3}$"
+        },
+        "period_start": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "period_end": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "as_of_date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date"
+        },
+        "accounting_basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "transformation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "calculation_id": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/stringId"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value_kind": {
+                "const": "SCALAR"
+              }
+            },
+            "required": [
+              "value_kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "value"
+            ],
+            "not": {
+              "anyOf": [
+                {
+                  "required": [
+                    "min"
+                  ]
+                },
+                {
+                  "required": [
+                    "max"
+                  ]
+                }
+              ]
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "value_kind": {
+                "const": "RANGE"
+              }
+            },
+            "required": [
+              "value_kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "min",
+              "max"
+            ],
+            "not": {
+              "required": [
+                "value"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "source_id",
+        "claim",
+        "epistemic_type",
+        "evidence_grade",
+        "polarity",
+        "block_relevance",
+        "independence",
+        "freshness",
+        "limitations",
+        "numeric_data"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "source_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "epistemic_type": {
+          "enum": [
+            "FACT",
+            "MANAGEMENT_CLAIM",
+            "ESTIMATE",
+            "ASSUMPTION",
+            "INFERENCE",
+            "CALCULATION"
+          ]
+        },
+        "evidence_grade": {
+          "$ref": "#/$defs/evidenceGrade"
+        },
+        "polarity": {
+          "enum": [
+            "SUPPORTING",
+            "CONTRADICTING",
+            "NEUTRAL_CONTEXT"
+          ]
+        },
+        "block_relevance": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/blockCode"
+          }
+        },
+        "independence": {
+          "enum": [
+            "ISSUER",
+            "INDEPENDENT",
+            "MIXED",
+            "UNKNOWN"
+          ]
+        },
+        "freshness": {
+          "enum": [
+            "CURRENT_AT_CUTOFF",
+            "HISTORICAL_CONTEXT",
+            "STALE",
+            "UNKNOWN"
+          ]
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "numeric_data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/numericDatum"
+          }
+        }
+      }
+    },
+    "conflictRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conflict_id",
+        "issue",
+        "evidence_ids",
+        "affected_blocks",
+        "status",
+        "resolution"
+      ],
+      "properties": {
+        "conflict_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "issue": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "affected_blocks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/blockCode"
+          }
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "UNRESOLVED_BLOCKING",
+            "UNRESOLVED_NONBLOCKING"
+          ]
+        },
+        "resolution": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "gapRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gap_id",
+        "question",
+        "affected_block",
+        "materiality",
+        "status",
+        "searches_performed",
+        "evidence_ids",
+        "best_next_source",
+        "why_unresolved",
+        "impact"
+      ],
+      "properties": {
+        "gap_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_block": {
+          "$ref": "#/$defs/blockCode"
+        },
+        "materiality": {
+          "enum": [
+            "CRITICAL",
+            "MATERIAL",
+            "NON_MATERIAL"
+          ]
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "EXHAUSTED_NOT_ASSESSABLE",
+            "BLOCKED_INPUT"
+          ]
+        },
+        "searches_performed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "best_next_source": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "why_unresolved": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "impact": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "assumptionRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assumption_id",
+        "statement",
+        "affected_blocks",
+        "materiality",
+        "basis_evidence_ids",
+        "status"
+      ],
+      "properties": {
+        "assumption_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "affected_blocks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/blockCode"
+          }
+        },
+        "materiality": {
+          "enum": [
+            "CRITICAL",
+            "MATERIAL",
+            "NON_MATERIAL"
+          ]
+        },
+        "basis_evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "SUPERSEDED",
+            "INVALIDATED"
+          ]
+        }
+      }
+    },
+    "economicDnaDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "evidence_ids"
+      ],
+      "properties": {
+        "summary": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        }
+      }
+    },
+    "companyEconomicDna": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revenue_engine",
+        "customer_structure",
+        "supplier_structure",
+        "cost_structure",
+        "capital_intensity",
+        "reinvestment_model",
+        "pricing_power_mechanism",
+        "switching_cost_mechanism",
+        "network_effects",
+        "scale_effects",
+        "regulation_dependency",
+        "technology_dependency",
+        "cyclicality_exposure",
+        "acquisition_dependency",
+        "geographic_exposure"
+      ],
+      "properties": {
+        "revenue_engine": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "customer_structure": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "supplier_structure": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "cost_structure": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "capital_intensity": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "reinvestment_model": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "pricing_power_mechanism": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "switching_cost_mechanism": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "network_effects": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "scale_effects": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "regulation_dependency": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "technology_dependency": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "cyclicality_exposure": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "acquisition_dependency": {
+          "$ref": "#/$defs/economicDnaDimension"
+        },
+        "geographic_exposure": {
+          "$ref": "#/$defs/economicDnaDimension"
+        }
+      }
+    },
+    "causalLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "link_id",
+        "from_node",
+        "to_node",
+        "mechanism",
+        "status",
+        "evidence_ids",
+        "counterevidence_ids"
+      ],
+      "properties": {
+        "link_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "from_node": {
+          "type": "string",
+          "minLength": 1
+        },
+        "to_node": {
+          "type": "string",
+          "minLength": 1
+        },
+        "mechanism": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "MIXED",
+            "UNPROVEN",
+            "INVALIDATED"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "counterevidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        }
+      }
+    },
+    "sectorOverlayResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "overlay",
+        "status",
+        "rationale",
+        "evidence_ids"
+      ],
+      "properties": {
+        "overlay": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "APPLIED",
+            "NOT_APPLICABLE",
+            "REQUIRED_MISSING",
+            "CONFLICTED"
+          ]
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        }
+      }
+    },
+    "blockOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block",
+        "status",
+        "conclusion",
+        "supporting_evidence_ids",
+        "counterevidence_ids",
+        "conflict_ids",
+        "gap_ids",
+        "assumption_ids",
+        "causal_links",
+        "sector_overlays",
+        "invalidation_triggers",
+        "upstream_block_refs"
+      ],
+      "properties": {
+        "block": {
+          "$ref": "#/$defs/blockCode"
+        },
+        "status": {
+          "enum": [
+            "READY",
+            "IN_PROGRESS",
+            "CHECKPOINTED",
+            "COMPLETE",
+            "BLOCKED",
+            "NOT_ASSESSABLE",
+            "REOPENED",
+            "STALE"
+          ]
+        },
+        "conclusion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "supporting_evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "counterevidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "conflict_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "gap_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "assumption_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "causal_links": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/causalLink"
+          }
+        },
+        "sector_overlays": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/sectorOverlayResult"
+          }
+        },
+        "invalidation_triggers": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "upstream_block_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/blockCode"
+          }
+        }
+      }
+    },
+    "revalidationChecklist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reopened_material_evidence",
+        "verified_primary_sources",
+        "searched_disconfirming_evidence",
+        "tested_best_alternative_explanation",
+        "reconciled_downstream_blocks",
+        "recorded_prior_state_change_reason",
+        "status"
+      ],
+      "properties": {
+        "reopened_material_evidence": {
+          "type": "boolean"
+        },
+        "verified_primary_sources": {
+          "type": "boolean"
+        },
+        "searched_disconfirming_evidence": {
+          "type": "boolean"
+        },
+        "tested_best_alternative_explanation": {
+          "type": "boolean"
+        },
+        "reconciled_downstream_blocks": {
+          "type": "boolean"
+        },
+        "recorded_prior_state_change_reason": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "PENDING",
+            "PASS",
+            "FAIL"
+          ]
+        }
+      }
+    },
+    "materialChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "change_id",
+        "block",
+        "prior_artifact",
+        "reason",
+        "trigger_evidence_ids",
+        "affected_downstream_blocks",
+        "revalidation"
+      ],
+      "properties": {
+        "change_id": {
+          "$ref": "#/$defs/stringId"
+        },
+        "block": {
+          "$ref": "#/$defs/blockCode"
+        },
+        "prior_artifact": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/artifactRef"
+            }
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "trigger_evidence_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        },
+        "affected_downstream_blocks": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/blockCode"
+          }
+        },
+        "revalidation": {
+          "$ref": "#/$defs/revalidationChecklist"
+        }
+      }
+    },
+    "serialAcquirerProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "organic_vs_acquired_growth",
+        "purchase_price_discipline",
+        "integration_model",
+        "goodwill_intangibles_economics",
+        "earnout_contingent_consideration",
+        "dilution_funding",
+        "acquisition_roi",
+        "deployment_runway",
+        "evidence_ids"
+      ],
+      "properties": {
+        "applicability": {
+          "enum": [
+            "APPLICABLE",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "organic_vs_acquired_growth": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purchase_price_discipline": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "integration_model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "goodwill_intangibles_economics": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "earnout_contingent_consideration": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dilution_funding": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "acquisition_roi": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "deployment_runway": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stringId"
+          }
+        }
+      }
+    }
+  }
+}
