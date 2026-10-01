@@ -263,6 +263,65 @@ test("technology complexity cannot become a hidden moat score", () => {
   assert.equal(result.ok, false);
 });
 
+test("causal graph rejects unresolved node references and preserves evidence traceability", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "CAUSAL_GRAPH",
+    body: {
+      graph_version: "1",
+      nodes: [
+        {
+          node_id: "N-1",
+          claim: "Installed base creates replacement friction.",
+          node_type: "ECONOMIC_MECHANISM",
+          evidence_ids: ["E-1"],
+          contradicting_evidence_ids: [],
+          confidence: "MEDIUM",
+        },
+      ],
+      links: [
+        {
+          causal_link_id: "CL-1",
+          from_node_id: "N-1",
+          to_node_id: "N-MISSING",
+          mechanism: "Replacement friction supports retention.",
+          supporting_evidence_ids: ["E-1"],
+          counterevidence_ids: [],
+          status: "LOW_CONFIDENCE",
+          confidence: "LOW",
+        },
+      ],
+    },
+  };
+
+  const result = validateAnalyticalDataArtifact(artifact, {
+    evidenceIds: new Set(["E-1"]),
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.ok(result.errors.some((error) => error.includes("unresolved to_node_id")));
+  }
+});
+
+test("Open Questions remains a projection rather than a second authoritative register", () => {
+  const schema = JSON.parse(
+    readFileSync(
+      "schemas/vnext/orotitan-analytical-data-contracts-v2.schema.v0.1.json",
+      "utf8",
+    ),
+  );
+
+  const refs = schema.oneOf.map((item: { $ref: string }) => item.$ref);
+  assert.equal(refs.includes("#/$defs/openQuestionRegisterArtifact"), false);
+
+  const raw = readFileSync(
+    "docs/orotitan-equity/OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_DESIGN_V0.1.md",
+    "utf8",
+  );
+  assert.match(raw, /Open Questions must not become a second authoritative register/);
+});
+
 test("material assumptions preserve qualitative as well as numeric values", () => {
   const artifact = {
     ...common,
