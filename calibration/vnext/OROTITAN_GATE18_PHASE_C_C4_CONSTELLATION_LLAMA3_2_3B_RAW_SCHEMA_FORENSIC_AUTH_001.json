@@ -1,0 +1,36 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_AUTHORIZATION_V0.1",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-AUTH-001",
+  "status": "AUTHORIZED_READ_ONLY_NO_INFERENCE",
+  "authorization_source": {
+    "type": "STANDING_USER_AUTHORIZATION",
+    "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+    "separate_user_reprompt_required": false,
+    "cost_usd": 0
+  },
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  "source_private_artifact": "calibration/vnext/private-runs/2026-10-01T105955292Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001.json",
+  "scope": {
+    "read_existing_private_artifact": true,
+    "inspect_raw_json_structure": true,
+    "inspect_schema_issue_paths_and_codes": true,
+    "report_section_cardinalities": true,
+    "compute_raw_text_hash": true,
+    "print_raw_generated_values": false,
+    "mutate_source_artifact": false,
+    "execute_model_inference": false,
+    "call_ollama": false,
+    "external_network_access": false,
+    "retry_inference": false
+  },
+  "constraints": {
+    "authorized_run_count": 1,
+    "no_model_call": true,
+    "no_network": true,
+    "no_source_mutation": true,
+    "no_raw_content_publication": true,
+    "no_retroactive_pass": true
+  },
+  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
