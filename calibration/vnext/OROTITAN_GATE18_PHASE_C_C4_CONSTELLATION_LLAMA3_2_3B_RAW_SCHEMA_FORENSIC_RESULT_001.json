@@ -1,0 +1,91 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_READ_ONLY_SCHEMA_FORENSICS",
+  "status": "FORENSIC_COMPLETE_SINGLE_MALFORMED_COUNTEREVIDENCE_ID",
+  "source_run": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  "source_run_observed": {
+    "done_reason": "stop",
+    "prompt_eval_count": 3157,
+    "eval_count": 895,
+    "max_output_tokens": 1024,
+    "output_token_margin": 129,
+    "runtime_error": null,
+    "schema_valid": false,
+    "schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID",
+    "semantic_error": "NOT_EVALUATED_SCHEMA_FAILURE"
+  },
+  "raw_json": {
+    "chars": 3789,
+    "bytes": 3789,
+    "sha256": "f0cfb503a74b895ddfed73ca8030ce378a4b216c5c982b2c01def50f14acbefd",
+    "syntactically_valid": true,
+    "parsed_json_kind": "object",
+    "top_level_keys": [
+      "case_id",
+      "data_cutoff",
+      "material_conflicts",
+      "priority_findings",
+      "unresolved_points",
+      "weak_link_candidates"
+    ],
+    "required_top_level_presence": {
+      "case_id": true,
+      "data_cutoff": true,
+      "priority_findings": true,
+      "material_conflicts": true,
+      "weak_link_candidates": true,
+      "unresolved_points": true
+    },
+    "extra_top_level_key_count": 0,
+    "section_cardinalities": {
+      "priority_findings": 3,
+      "material_conflicts": 1,
+      "weak_link_candidates": 2,
+      "unresolved_points": 1
+    }
+  },
+  "schema_diagnosis": {
+    "classification": "SYNTACTIC_JSON_VALID_RAW_SCHEMA_CONTRACT_FAILURE",
+    "issue_count": 1,
+    "unique_issue_path_count": 1,
+    "issue_paths": [
+      "priority_findings.1.counterevidence_ids.0"
+    ],
+    "issues": [
+      {
+        "path": "priority_findings.1.counterevidence_ids.0",
+        "code": "invalid_format",
+        "origin": "string",
+        "format": "regex"
+      }
+    ],
+    "output_budget_exhaustion_proven": false,
+    "timeout_failure_proven": false,
+    "runtime_failure_proven": false,
+    "semantic_quality_assessable": false,
+    "retry_automatically_justified": false
+  },
+  "interpretation": {
+    "defect_scope": "SINGLE_COUNTEREVIDENCE_ID_FORMAT_VIOLATION",
+    "broad_schema_breakdown_observed": false,
+    "deterministic_in_memory_reference_forensic_justified": true,
+    "retry_authorized": false,
+    "source_run_status_changed": false,
+    "retroactive_pass_allowed": false
+  },
+  "safety": {
+    "inference_executed": false,
+    "ollama_called": false,
+    "external_network_access": false,
+    "raw_generated_values_printed": false,
+    "raw_output_published": false,
+    "source_artifact_mutated": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC"
+}
