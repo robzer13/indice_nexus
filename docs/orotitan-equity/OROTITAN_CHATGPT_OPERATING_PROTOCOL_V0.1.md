@@ -1424,7 +1424,7 @@ SHOWS THE TRUTH
 
 The live connected infrastructure already provides the core primitives required by this protocol.
 
-## 37.1 Supabase
+## 38.1 Supabase
 
 Active project:
 
@@ -1480,7 +1480,7 @@ CHATGPT
 
 Raw SQL remains appropriate for read-only inspection and explicit engineering work, not routine company-analysis persistence.
 
-## 37.2 Vercel
+## 38.2 Vercel
 
 The connected Vercel team includes:
 
@@ -1501,7 +1501,7 @@ Vercel therefore already supports:
 
 Normal company analysis does not require Vercel mutation.
 
-## 37.3 GitHub
+## 38.3 GitHub
 
 The connected GitHub app supports direct:
 
@@ -1517,7 +1517,7 @@ This is suitable for methodology / engineering work.
 
 It remains unsuitable as the primary store for private company analytical artifacts.
 
-## 37.4 Practical conclusion
+## 38.4 Practical conclusion
 
 The protocol does not require ChatGPT Work or a paid cloud LLM API.
 
