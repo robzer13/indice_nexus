@@ -1140,15 +1140,7 @@
           "type": "string",
           "minLength": 1
         },
-        "value": {
-          "type": [
-            "string",
-            "number",
-            "integer",
-            "boolean",
-            "null"
-          ]
-        }
+        "value": {}
       }
     },
     "analyticalBlockOutputBody": {
@@ -1282,10 +1274,8 @@
         "supporting_analysis_artifact_refs": {
           "type": "array",
           "items": {
-            "type": "string",
-            "minLength": 1
-          },
-          "uniqueItems": true
+            "$ref": "#/$defs/artifactRef"
+          }
         }
       }
     },
@@ -1700,8 +1690,7 @@
           "uniqueItems": true
         },
         "prior_state_ref": {
-          "type": "string",
-          "minLength": 1
+          "$ref": "#/$defs/artifactRef"
         },
         "proposed_state": {
           "type": "string",
@@ -4865,6 +4854,45 @@
             {
               "type": "string",
               "pattern": "^[A-Z]{3}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "run_id",
+        "status"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "run_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
             },
             {
               "type": "null"
