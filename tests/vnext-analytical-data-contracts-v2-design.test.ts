@@ -223,7 +223,9 @@ test("Company Economic DNA remains causal support and contains no score field", 
   const result = validateAnalyticalDataArtifact(artifact);
   assert.equal(result.ok, true);
 
-  const contaminated = structuredClone(artifact) as any;
+  const contaminated: typeof artifact & {
+    body: typeof artifact.body & { score?: number };
+  } = structuredClone(artifact);
   contaminated.body.score = 95;
   const contaminatedResult = validateAnalyticalDataArtifact(contaminated);
   assert.equal(contaminatedResult.ok, false);
@@ -253,7 +255,9 @@ test("technology complexity cannot become a hidden moat score", () => {
 
   assert.equal(validateAnalyticalDataArtifact(artifact).ok, true);
 
-  const contaminated = structuredClone(artifact) as any;
+  const contaminated: typeof artifact & {
+    body: typeof artifact.body & { moat_score?: number };
+  } = structuredClone(artifact);
   contaminated.body.moat_score = 100;
   const result = validateAnalyticalDataArtifact(contaminated);
   assert.equal(result.ok, false);
@@ -297,7 +301,7 @@ test("material conclusion change requires all six revalidation checks", () => {
     true,
   );
 
-  const incomplete = structuredClone(artifact) as any;
+  const incomplete = structuredClone(artifact);
   incomplete.body.checks = incomplete.body.checks.slice(0, 5);
   const result = validateAnalyticalDataArtifact(incomplete, {
     evidenceIds: new Set(["E-1"]),
