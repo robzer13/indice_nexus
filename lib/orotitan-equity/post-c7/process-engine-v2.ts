@@ -79,6 +79,17 @@ export type RequiredSectorOverlay = {
   overlay: string;
 };
 
+export type RequiredBlockDependency = {
+  block: BlockCode;
+  upstream: BlockCode;
+};
+
+export type DependencyReopenPlan = {
+  directReopenBlocks: BlockCode[];
+  staleDownstreamBlocks: BlockCode[];
+  allAffectedBlocks: BlockCode[];
+};
+
 export type DependencyGraphResult =
   | {
       ok: true;
@@ -99,6 +110,8 @@ export type RefreshPlan =
         | "REVALIDATE_PRIOR_LOCK"
         | "REOPEN_AFFECTED_BLOCKS"
         | "FULL";
+      directReopenBlocks: BlockCode[];
+      staleBlocks: BlockCode[];
       reopenBlocks: BlockCode[];
       preservedBlocks: BlockCode[];
       oqsMayChange: boolean;
@@ -120,7 +133,6 @@ export type SaveEligibilityInput = {
   analyticalReconciliationPassed: boolean;
   requiredArtifactsPresent: boolean;
   persistenceVerified: boolean;
-  registryReconciled: boolean;
   criticalBlockers: string[];
   phaseGate: "NOT_EVALUATED" | "NO" | "YES";
 };
@@ -334,6 +346,87 @@ export function computeDownstreamClosure(
   return { ok: true, blocks: uniqueInCanonicalOrder(visited) };
 }
 
+
+export function validateRequiredBlockDependencies(
+  requirements: RequiredBlockDependency[],
+  blocks: AnalyticalBlockState[],
+): { ok: true } | { ok: false; errors: string[] } {
+  const errors: string[] = [];
+  const byCode = new Map(blocks.map((block) => [block.block, block]));
+  const seen = new Set<string>();
+
+  for (const requirement of requirements) {
+    const key = `${requirement.block}|${requirement.upstream}`;
+    if (seen.has(key)) {
+      errors.push(
+        `duplicate required dependency ${requirement.block} <- ${requirement.upstream}`,
+      );
+      continue;
+    }
+    seen.add(key);
+
+    if (requirement.block === requirement.upstream) {
+      errors.push(
+        `required dependency ${requirement.block} cannot reference itself`,
+      );
+      continue;
+    }
+
+    const block = byCode.get(requirement.block);
+    if (!block) {
+      errors.push(
+        `required dependency references absent block ${requirement.block}`,
+      );
+      continue;
+    }
+
+    if (!byCode.has(requirement.upstream)) {
+      errors.push(
+        `required dependency for ${requirement.block} references absent upstream ${requirement.upstream}`,
+      );
+      continue;
+    }
+
+    if (!block.upstreamBlockRefs.includes(requirement.upstream)) {
+      errors.push(
+        `block ${requirement.block} is missing required upstream dependency ${requirement.upstream}`,
+      );
+    }
+  }
+
+  return errors.length === 0 ? { ok: true } : { ok: false, errors };
+}
+
+export function planDependencyReopen(
+  changedBlocks: BlockCode[],
+  blocks: AnalyticalBlockState[],
+  requiredDependencies: RequiredBlockDependency[] = [],
+):
+  | { ok: true; plan: DependencyReopenPlan }
+  | { ok: false; errors: string[] } {
+  const dependencyValidation = validateRequiredBlockDependencies(
+    requiredDependencies,
+    blocks,
+  );
+  if (!dependencyValidation.ok) return dependencyValidation;
+
+  const closure = computeDownstreamClosure(changedBlocks, blocks);
+  if (!closure.ok) return closure;
+
+  const direct = uniqueInCanonicalOrder(changedBlocks);
+  const directSet = new Set(direct);
+  const stale = closure.blocks.filter((block) => !directSet.has(block));
+
+  return {
+    ok: true,
+    plan: {
+      directReopenBlocks: direct,
+      staleDownstreamBlocks: uniqueInCanonicalOrder(stale),
+      allAffectedBlocks: closure.blocks,
+    },
+  };
+}
+
 export function validateRequiredSectorOverlays(
   requirements: RequiredSectorOverlay[],
   blocks: AnalyticalBlockState[],
@@ -385,6 +478,7 @@ export function blockCompletionEligibility(
   block: AnalyticalBlockState,
   allBlocks: AnalyticalBlockState[],
   requiredOverlays: RequiredSectorOverlay[] = [],
+  requiredDependencies: RequiredBlockDependency[] = [],
 ): { eligible: true } | { eligible: false; reasons: string[] } {
   const reasons: string[] = [];
 
@@ -407,6 +501,14 @@ export function blockCompletionEligibility(
     allBlocks,
   );
   if (!overlayValidation.ok) reasons.push(...overlayValidation.errors);
+
+  const dependencyValidation = validateRequiredBlockDependencies(
+    requiredDependencies.filter(
+      (requirement) => requirement.block === block.block,
+    ),
+    allBlocks,
+  );
+  if (!dependencyValidation.ok) reasons.push(...dependencyValidation.errors);
 
   const byCode = new Map(allBlocks.map((item) => [item.block, item]));
   for (const upstream of block.upstreamBlockRefs) {
@@ -432,9 +534,16 @@ export function planRefresh(
   refreshClass: RefreshClass,
   changedBlocks: BlockCode[],
   blocks: AnalyticalBlockState[],
+  requiredDependencies: RequiredBlockDependency[] = [],
 ): RefreshPlan {
   const graph = buildDependencyGraph(blocks);
   if (!graph.ok) return graph;
+
+  const dependencyValidation = validateRequiredBlockDependencies(
+    requiredDependencies,
+    blocks,
+  );
+  if (!dependencyValidation.ok) return dependencyValidation;
 
   const currentCodes = new Set(blocks.map((block) => block.block));
   const base = v2RefreshRoute(refreshClass);
@@ -459,11 +568,20 @@ export function planRefresh(
       ),
     );
 
+    const directReopenBlocks = reopen.filter(
+      (block) => block === "VALUATION",
+    );
+    const staleBlocks = reopen.filter(
+      (block) => !directReopenBlocks.includes(block),
+    );
+
     return {
       ok: true,
       refreshClass,
       researchMode: base.research,
       fundamentalsMode: base.fundamentals,
+      directReopenBlocks,
+      staleBlocks,
       reopenBlocks: reopen,
       preservedBlocks: uniqueInCanonicalOrder(
         blocks
@@ -478,12 +596,17 @@ export function planRefresh(
   }
 
   if (refreshClass === "FULL_REFRESH_REQUIRED") {
+    const allBlocks = uniqueInCanonicalOrder(
+      blocks.map((block) => block.block),
+    );
     return {
       ok: true,
       refreshClass,
       researchMode: base.research,
       fundamentalsMode: base.fundamentals,
-      reopenBlocks: uniqueInCanonicalOrder(blocks.map((block) => block.block)),
+      directReopenBlocks: allBlocks,
+      staleBlocks: [],
+      reopenBlocks: allBlocks,
       preservedBlocks: [],
       oqsMayChange: true,
       requiresValuation: true,
@@ -514,22 +637,35 @@ export function planRefresh(
     };
   }
 
-  const closure = computeDownstreamClosure(changedBlocks, blocks);
-  if (!closure.ok) return closure;
+  const dependencyReopen = planDependencyReopen(
+    changedBlocks,
+    blocks,
+    requiredDependencies,
+  );
+  if (!dependencyReopen.ok) return dependencyReopen;
 
-  const reopen = new Set<BlockCode>(closure.blocks);
+  const reopen = new Set<BlockCode>(
+    dependencyReopen.plan.allAffectedBlocks,
+  );
   if (currentCodes.has("VALUATION")) reopen.add("VALUATION");
   if (currentCodes.has("CROSS_BLOCK_RECONCILIATION")) {
     reopen.add("CROSS_BLOCK_RECONCILIATION");
   }
 
   const reopenBlocks = uniqueInCanonicalOrder(reopen);
+  const directReopenBlocks = uniqueInCanonicalOrder(
+    dependencyReopen.plan.directReopenBlocks,
+  );
+  const directSet = new Set(directReopenBlocks);
+  const staleBlocks = reopenBlocks.filter((block) => !directSet.has(block));
 
   return {
     ok: true,
     refreshClass,
     researchMode: base.research,
     fundamentalsMode: base.fundamentals,
+    directReopenBlocks,
+    staleBlocks,
     reopenBlocks,
     preservedBlocks: uniqueInCanonicalOrder(
       blocks
@@ -546,6 +682,14 @@ export function planRefresh(
 export function deriveSaveDisposition(
   input: SaveEligibilityInput,
 ): SaveDisposition {
+  if (input.registryLifecycle === "NOT_STARTED") {
+    return {
+      action: "NOOP",
+      reason: "stage is not started; SAVE requires an active stage",
+      publishAuthorized: false,
+    };
+  }
+
   if (input.registryLifecycle === "COMPLETE") {
     return {
       action: "NOOP",
@@ -568,14 +712,21 @@ export function deriveSaveDisposition(
     };
   }
 
+  if (input.registryLifecycle === "PAUSED") {
+    return {
+      action: "CHECKPOINT",
+      reason: "stage is PAUSED; resume before terminal finalization",
+      publishAuthorized: false,
+    };
+  }
+
   const durableReady =
     input.selfAuditPassed &&
     input.schemaValidationPassed &&
     input.identityVersionChecksPassed &&
     input.analyticalReconciliationPassed &&
     input.requiredArtifactsPresent &&
-    input.persistenceVerified &&
-    input.registryReconciled;
+    input.persistenceVerified;
 
   if (!durableReady) {
     return {
@@ -696,13 +847,34 @@ export function deriveNextBlockAction(
   blocks: AnalyticalBlockState[],
   requiredOverlays: RequiredSectorOverlay[] = [],
   currentBlock: BlockCode | null = null,
+  requiredDependencies: RequiredBlockDependency[] = [],
 ): NextBlockAction {
+  if (blocks.length === 0) {
+    return {
+      action: "FAIL_CLOSED",
+      block: null,
+      reason: "analytical block state is empty",
+    };
+  }
+
   const graph = buildDependencyGraph(blocks);
   if (!graph.ok) {
     return {
       action: "FAIL_CLOSED",
       block: null,
       reason: graph.errors.join("; "),
+    };
+  }
+
+  const dependencyValidation = validateRequiredBlockDependencies(
+    requiredDependencies,
+    blocks,
+  );
+  if (!dependencyValidation.ok) {
+    return {
+      action: "FAIL_CLOSED",
+      block: null,
+      reason: dependencyValidation.errors.join("; "),
     };
   }
 
@@ -714,14 +886,37 @@ export function deriveNextBlockAction(
       return Boolean(parent && isProvisionallyUsable(parent.status));
     });
 
+  const hasMaterialBlocker = (block: AnalyticalBlockState): boolean =>
+    block.status === "BLOCKED" ||
+    block.criticalUnresolvedGap ||
+    block.blockingConflict ||
+    blockHasOverlayBlocker(block) ||
+    block.materialRevalidationStatus === "FAIL";
+
+  if (currentBlock) {
+    const current = byCode.get(currentBlock);
+    if (current && upstreamProvisionallyUsable(current)) {
+      if (hasMaterialBlocker(current)) {
+        return {
+          action: "RESOLVE_BLOCKER",
+          block: current.block,
+          reason: "current block has a material process blocker",
+        };
+      }
+      if (
+        ["REOPENED", "STALE", "IN_PROGRESS", "READY"].includes(current.status)
+      ) {
+        return {
+          action: "EXECUTE_BLOCK",
+          block: current.block,
+          reason: "current block remains executable with satisfied upstream dependencies",
+        };
+      }
+    }
+  }
+
   const blocked = blocks.filter(
-    (block) =>
-      upstreamProvisionallyUsable(block) &&
-      (block.status === "BLOCKED" ||
-        block.criticalUnresolvedGap ||
-        block.blockingConflict ||
-        blockHasOverlayBlocker(block) ||
-        block.materialRevalidationStatus === "FAIL"),
+    (block) => upstreamProvisionallyUsable(block) && hasMaterialBlocker(block),
   );
 
   if (blocked.length > 0) {
@@ -734,21 +929,6 @@ export function deriveNextBlockAction(
       block: code,
       reason: "block has a material process blocker",
     };
-  }
-
-  if (currentBlock) {
-    const current = byCode.get(currentBlock);
-    if (
-      current &&
-      upstreamProvisionallyUsable(current) &&
-      ["REOPENED", "STALE", "IN_PROGRESS", "READY"].includes(current.status)
-    ) {
-      return {
-        action: "EXECUTE_BLOCK",
-        block: current.block,
-        reason: "current block remains executable with satisfied upstream dependencies",
-      };
-    }
   }
 
   const executable = blocks.filter(
@@ -780,6 +960,7 @@ export function deriveNextBlockAction(
       block,
       blocks,
       requiredOverlays,
+      requiredDependencies,
     );
     if (eligibility.eligible) {
       return {
