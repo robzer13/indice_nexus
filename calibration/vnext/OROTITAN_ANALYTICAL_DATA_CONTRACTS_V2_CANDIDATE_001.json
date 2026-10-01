@@ -1,7 +1,7 @@
 {
   "format": "OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_DECISION_V0.1",
   "decision_id": "POST-C7-ANALYTICAL-DATA-CONTRACTS-V2-CANDIDATE-001",
-  "status": "DESIGN_CANDIDATE_READY_FOR_CI_AND_REVIEW",
+  "status": "DESIGN_CANDIDATE_REVIEW_PATCHED_AWAITING_CI",
   "date": "2026-10-01",
   "source_protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
   "methodology_change": false,
@@ -39,5 +39,12 @@
     "lib/orotitan-equity/post-c7/analytical-data-contracts-v2.ts",
     "tests/vnext-analytical-data-contracts-v2-design.test.ts"
   ],
-  "next_action": "RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW"
+  "next_action": "RUN_DATA_CONTRACTS_V2_REVIEW_FIX_CI",
+  "review_fixes": [
+    "ALLOW_FORWARD_PERIODS_KNOWN_AT_CUTOFF",
+    "UNIQUE_ANALYTICAL_BLOCK_CODE",
+    "ROOT_SOURCE_ACYCLICITY",
+    "COMPLETE_BLOCK_TRACEABLE_EVIDENCE",
+    "CAUSAL_LINK_EVIDENCE_ROLE_GUARDS"
+  ]
 }
