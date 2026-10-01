@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/calculation-ledger.v0.1.json",
+  "title": "OroTitan Calculation Ledger V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "ledger_version",
+    "calculations"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "ledger_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "calculations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "calculation_id",
+          "metric_name",
+          "formula",
+          "inputs",
+          "input_evidence_ids",
+          "units",
+          "currency",
+          "period",
+          "basis",
+          "raw_result",
+          "rounding_rule",
+          "published_result",
+          "method_version",
+          "calculation_version",
+          "automated_check_status",
+          "limitations"
+        ],
+        "properties": {
+          "calculation_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "metric_name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formula": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "value"
+              ],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+                }
+              }
+            }
+          },
+          "input_evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "units": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currency": {
+            "anyOf": [
+              {
+                "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/currency"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "period": {
+            "type": "string",
+            "minLength": 1
+          },
+          "basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "raw_result": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "rounding_rule": {
+            "type": "string",
+            "minLength": 1
+          },
+          "published_result": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "method_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "calculation_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "automated_check_status": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limitations": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  }
+}

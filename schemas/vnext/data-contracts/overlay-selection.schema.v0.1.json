@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/overlay-selection.v0.1.json",
+  "title": "OroTitan Overlay Selection V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "selection_version",
+    "primary_sector",
+    "selected_overlays",
+    "rejected_material_overlays"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "selection_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "primary_sector": {
+      "enum": [
+        "SOFTWARE",
+        "MARKETPLACE",
+        "PAYMENTS",
+        "DATA_INFORMATION_SERVICES",
+        "SEMICONDUCTORS",
+        "SEMICONDUCTOR_EQUIPMENT",
+        "INDUSTRIAL_AUTOMATION",
+        "INDUSTRIAL_DISTRIBUTION",
+        "AEROSPACE",
+        "DEFENSE",
+        "MEDTECH",
+        "PHARMA",
+        "LIFE_SCIENCE_TOOLS",
+        "CHEMICALS",
+        "COMMODITIES",
+        "UTILITIES",
+        "BANK",
+        "INSURANCE",
+        "ASSET_MANAGER",
+        "EXCHANGE",
+        "SERIAL_ACQUIRER",
+        "LUXURY",
+        "CONSUMER_BRAND",
+        "RETAIL",
+        "LOGISTICS",
+        "TRANSPORT",
+        "TELECOM",
+        "REAL_ESTATE",
+        "CONSTRUCTION_MATERIALS",
+        "PROFESSIONAL_SERVICES"
+      ]
+    },
+    "selected_overlays": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "overlay_id",
+          "overlay_family",
+          "profile_version",
+          "applicability",
+          "rationale",
+          "evidence_ids",
+          "affected_blocks"
+        ],
+        "properties": {
+          "overlay_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "overlay_family": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profile_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicability": {
+            "enum": [
+              "REQUIRED",
+              "CONDITIONAL"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+            },
+            "uniqueItems": true
+          },
+          "affected_blocks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    "rejected_material_overlays": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "overlay_family",
+          "reason"
+        ],
+        "properties": {
+          "overlay_family": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}
