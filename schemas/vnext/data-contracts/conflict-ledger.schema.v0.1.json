@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/conflict-ledger.v0.1.json",
+  "title": "OroTitan Conflict Ledger V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "ledger_version",
+    "evidence_ledger_ref",
+    "conflicts"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "ledger_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_ledger_ref": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "conflict_id",
+          "metric_or_claim",
+          "source_a",
+          "value_a",
+          "evidence_id_a",
+          "source_b",
+          "value_b",
+          "evidence_id_b",
+          "conflict_type",
+          "reason",
+          "resolution",
+          "materiality",
+          "affected_outputs"
+        ],
+        "properties": {
+          "conflict_id": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "metric_or_claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_a": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_a": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "evidence_id_a": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "source_b": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value_b": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/evidenceValue"
+          },
+          "evidence_id_b": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+          },
+          "conflict_type": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/conflictType"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resolution": {
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/conflictResolution"
+          },
+          "materiality": {
+            "type": "string",
+            "minLength": 1
+          },
+          "affected_outputs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
