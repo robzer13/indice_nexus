@@ -66,6 +66,12 @@ No further architecture planning is required before detailed design.
 
 `DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
 
+Legacy continuity compatibility field retained for the historical test contract:
+
+`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
+
+This legacy value is non-operative; the active execution action is Data Contracts V2.
+
 Then:
 1. Process Engine V2 state machine
 2. controlled ChatGPT ↔ Supabase operation contracts
