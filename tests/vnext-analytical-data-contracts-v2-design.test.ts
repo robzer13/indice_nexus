@@ -268,12 +268,13 @@ test("forward estimate period may extend beyond DATA_CUTOFF when known at cutoff
   assert.equal(result.ok, true);
 });
 
-test("numeric as_of_date after DATA_CUTOFF fails closed", () => {
+test("future data as_of_date is allowed when the source was available by DATA_CUTOFF", () => {
   const input = validPackage();
-  input.evidence[0].numeric_data[0].as_of_date = "2026-10-02";
+  input.evidence[0].epistemic_type = "ESTIMATE";
+  input.evidence[0].numeric_data[0].period_end = null;
+  input.evidence[0].numeric_data[0].as_of_date = "2027-12-31";
   const result = validateAnalyticalDataPackage(input, context);
-  assert.equal(result.ok, false);
-  if (!result.ok) assert.match(result.errors.join("\n"), /as_of_date is post-cutoff/);
+  assert.equal(result.ok, true);
 });
 
 test("duplicate analytical block codes fail closed", () => {
@@ -329,4 +330,81 @@ test("SUPPORTED and MIXED causal links require traceable evidence roles", () => 
   result = validateAnalyticalDataPackage(mixed, context);
   assert.equal(result.ok, false);
   if (!result.ok) assert.match(result.errors.join("\n"), /MIXED requires evidence and counterevidence/);
+});
+
+
+test("COMPLETE block cannot coexist with an open or blocking conflict", () => {
+  for (const status of ["OPEN", "UNRESOLVED_BLOCKING"] as const) {
+    const input = validPackage();
+    input.conflicts = [{
+      conflict_id: "C-001",
+      issue: "Material contradiction.",
+      evidence_ids: ["E-001", "E-002"],
+      affected_blocks: ["BUSINESS_MODEL"],
+      status,
+      resolution: null,
+    }];
+    input.sources.push({
+      ...input.sources[0],
+      source_id: "S-002",
+      title: "Independent source",
+      publisher: "Independent publisher",
+    });
+    input.evidence.push({
+      ...input.evidence[0],
+      evidence_id: "E-002",
+      source_id: "S-002",
+      polarity: "CONTRADICTING",
+    });
+    input.analytical_blocks[0].conflict_ids = ["C-001"];
+    const result = validateAnalyticalDataPackage(input, context);
+    assert.equal(result.ok, false);
+    if (!result.ok) assert.match(result.errors.join("\n"), /cannot be COMPLETE with an open\/blocking conflict/);
+  }
+});
+
+test("critical exhausted NOT_ASSESSABLE gap prevents COMPLETE", () => {
+  const input = validPackage();
+  input.gaps.push({
+    gap_id: "G-EXHAUSTED",
+    question: "Critical point cannot be established.",
+    affected_block: "BUSINESS_MODEL",
+    materiality: "CRITICAL",
+    status: "EXHAUSTED_NOT_ASSESSABLE",
+    searches_performed: ["Primary and independent sources searched"],
+    evidence_ids: [],
+    best_next_source: null,
+    why_unresolved: "No reliable evidence exists.",
+    impact: "The block cannot be responsibly concluded.",
+  });
+  input.analytical_blocks[0].gap_ids = ["G-EXHAUSTED"];
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /critical unresolved gap/);
+});
+
+test("block evidence must declare matching block_relevance", () => {
+  const input = validPackage();
+  input.evidence[0].block_relevance = ["MOAT"];
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /without matching block_relevance/);
+});
+
+test("duplicate causal link ids and sector overlays fail closed", () => {
+  const causal = validPackage();
+  causal.analytical_blocks[0].causal_links.push({
+    ...causal.analytical_blocks[0].causal_links[0],
+  });
+  let result = validateAnalyticalDataPackage(causal, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /duplicate causal link_id CL-001/);
+
+  const overlay = validPackage();
+  overlay.analytical_blocks[0].sector_overlays.push({
+    ...overlay.analytical_blocks[0].sector_overlays[0],
+  });
+  result = validateAnalyticalDataPackage(overlay, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /duplicate sector overlay SOFTWARE_OVERLAY/);
 });
