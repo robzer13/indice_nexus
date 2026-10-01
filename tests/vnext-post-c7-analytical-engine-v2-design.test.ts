@@ -53,7 +53,7 @@ test("Analytical Engine V2 design makes sector, cycle, technology and anti-loop 
   assert.match(raw, /# 10\. INDUSTRY STRUCTURE ENGINE/);
   assert.match(raw, /# 11\. CAUSAL GRAPH ENGINE/);
   assert.match(raw, /# 25\. ANTI-LOOP PROCESS ENGINE RULES/);
-  assert.match(raw, /# 27\. MANUAL CHATGPT BRIDGE/);
+  assert.match(raw, /# 27\. CHATGPT DIRECT INFRASTRUCTURE PROTOCOL/);
   assert.match(raw, /# 33\. UI \/ UX DESIGN PRINCIPLES/);
   assert.match(raw, /# 40\. IMPLEMENTATION PROGRAM/);
   assert.match(raw, /QUALITY BEFORE AUTOMATION/);
