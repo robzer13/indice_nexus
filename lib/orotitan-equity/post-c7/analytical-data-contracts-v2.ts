@@ -135,6 +135,9 @@ export function validateAnalyticalDataPackage(
   for (const [label, items, key] of idSpecs) {
     for (const id of duplicateIds(items, key)) errors.push(`duplicate ${label} id ${id}`);
   }
+  for (const code of duplicateIds(blocks, "block")) {
+    errors.push(`duplicate analytical block ${code}`);
+  }
 
   const sourceIds = stringSet(sources, "source_id");
   const evidenceIds = stringSet(evidence, "evidence_id");
@@ -157,6 +160,32 @@ export function validateAnalyticalDataPackage(
     if (typeof root === "string" && !sourceIds.has(root)) {
       errors.push(`source ${String(id)} references unknown root_source_id ${root}`);
     }
+    if (typeof root === "string" && root === id) {
+      errors.push(`source ${String(id)} cannot reference itself as root_source_id`);
+    }
+  }
+
+  const rootBySource = new Map<string, string>();
+  for (const source of sources) {
+    if (typeof source.source_id === "string" && typeof source.root_source_id === "string") {
+      rootBySource.set(source.source_id, source.root_source_id);
+    }
+  }
+  for (const source of sources) {
+    if (typeof source.source_id !== "string") continue;
+    const origin = source.source_id;
+    const seen = new Set<string>([origin]);
+    let current = origin;
+    while (rootBySource.has(current)) {
+      const next = rootBySource.get(current)!;
+      if (!sourceIds.has(next)) break;
+      if (seen.has(next)) {
+        errors.push(`source root_source_id cycle detected from ${origin}`);
+        break;
+      }
+      seen.add(next);
+      current = next;
+    }
   }
 
   for (const item of evidence) {
@@ -174,10 +203,9 @@ export function validateAnalyticalDataPackage(
       if (typeof periodStart === "string" && typeof periodEnd === "string" && periodStart > periodEnd) {
         errors.push(`evidence ${String(id)} numeric period has start > end for ${String(datum.metric)}`);
       }
-      for (const date of [datum.period_end, datum.as_of_date]) {
-        if (typeof date === "string" && compareIsoDate(date, context.dataCutoff) > 0) {
-          errors.push(`evidence ${String(id)} numeric datum ${String(datum.metric)} is post-cutoff`);
-        }
+      const datumAsOf = datum.as_of_date;
+      if (typeof datumAsOf === "string" && compareIsoDate(datumAsOf, context.dataCutoff) > 0) {
+        errors.push(`evidence ${String(id)} numeric datum ${String(datum.metric)} as_of_date is post-cutoff`);
       }
       const hasTemporalAnchor =
         typeof datum.period_end === "string" || typeof datum.as_of_date === "string";
@@ -223,6 +251,13 @@ export function validateAnalyticalDataPackage(
     const code = String(block.block);
     checkEvidenceRefs(errors, `block ${code} supporting`, block.supporting_evidence_ids, evidenceIds);
     checkEvidenceRefs(errors, `block ${code} counterevidence`, block.counterevidence_ids, evidenceIds);
+    if (
+      block.status === "COMPLETE" &&
+      refsFromArray(block.supporting_evidence_ids).length === 0 &&
+      refsFromArray(block.counterevidence_ids).length === 0
+    ) {
+      errors.push(`block ${code} cannot be COMPLETE without traceable evidence`);
+    }
 
     for (const id of refsFromArray(block.conflict_ids)) {
       if (!conflictIds.has(id)) errors.push(`block ${code} references unknown conflict_id ${id}`);
@@ -241,6 +276,16 @@ export function validateAnalyticalDataPackage(
     for (const link of asObjects(block.causal_links)) {
       checkEvidenceRefs(errors, `block ${code} causal link ${String(link.link_id)}`, link.evidence_ids, evidenceIds);
       checkEvidenceRefs(errors, `block ${code} causal counterevidence ${String(link.link_id)}`, link.counterevidence_ids, evidenceIds);
+      if (link.status === "SUPPORTED" && refsFromArray(link.evidence_ids).length === 0) {
+        errors.push(`block ${code} causal link ${String(link.link_id)} cannot be SUPPORTED without evidence`);
+      }
+      if (
+        link.status === "MIXED" &&
+        (refsFromArray(link.evidence_ids).length === 0 ||
+          refsFromArray(link.counterevidence_ids).length === 0)
+      ) {
+        errors.push(`block ${code} causal link ${String(link.link_id)} MIXED requires evidence and counterevidence`);
+      }
     }
     for (const overlay of asObjects(block.sector_overlays)) {
       checkEvidenceRefs(errors, `block ${code} sector overlay ${String(overlay.overlay)}`, overlay.evidence_ids, evidenceIds);
