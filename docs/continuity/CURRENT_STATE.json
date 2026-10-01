@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20261001-059",
+  "resume_id": "VNEXT-G18-C-20261001-060",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "ff85f2d721d2be86208da8391b9f19f5f1eb6a80",
+  "last_verified_head_sha": "c54f75e4e5d7191ac6421028fe6ad565e4f3a3b2",
   "last_verified_at": "2026-10-01",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -190,15 +190,18 @@
     "LLAMA3_2_RAW_SCHEMA_FORENSIC_AUTHORIZED_AND_PREPARED",
     "LLAMA3_2_RAW_SCHEMA_FORENSIC_COMPLETE_SINGLE_COUNTEREVIDENCE_ID_FORMAT_DEFECT",
     "LLAMA3_2_RAW_SCHEMA_FORENSIC_AUTHORIZATION_CONSUMED",
-    "LLAMA3_2_COUNTEREVIDENCE_ID_FORENSIC_AUTHORIZED_AND_PREPARED"
+    "LLAMA3_2_COUNTEREVIDENCE_ID_FORENSIC_AUTHORIZED_AND_PREPARED",
+    "LLAMA3_2_COUNTEREVIDENCE_ID_FORENSIC_COMPLETE_NO_CANONICAL_TOKEN_DECOMPOSITION",
+    "LLAMA3_2_COUNTEREVIDENCE_ID_FORENSIC_AUTHORIZATION_CONSUMED",
+    "LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_AUTHORIZED_AND_PREPARED"
   ],
   "active_work": [
-    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC"
+    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC"
   ],
   "blockers": [],
   "open_issues": [
-    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC",
-    "NO_LLAMA3_2_RETRY_AUTHORIZED_BEFORE_COUNTEREVIDENCE_ID_FORENSIC",
+    "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
+    "NO_LLAMA3_2_RETRY_AUTHORIZED_BEFORE_PREFIX_SEPARATOR_FORENSIC",
     "NO_LLAMA3_2_ADDITIONAL_INFERENCE_AUTHORIZED",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
@@ -351,7 +354,12 @@
     "LLAMA3_2_SCHEMA_ISSUE_PATH_PRIORITY_FINDINGS_1_COUNTEREVIDENCE_IDS_0",
     "LLAMA3_2_SCHEMA_ISSUE_IS_INVALID_FORMAT_REGEX",
     "LLAMA3_2_COUNTEREVIDENCE_ID_FORENSIC_MAY_NORMALIZE_IN_MEMORY_ONLY_IF_CANONICAL_DECOMPOSITION_UNAMBIGUOUS",
-    "LLAMA3_2_NO_RETRY_AUTHORITY_CREATED_BY_FORENSIC_PREP"
+    "LLAMA3_2_NO_RETRY_AUTHORITY_CREATED_BY_FORENSIC_PREP",
+    "LLAMA3_2_MALFORMED_COUNTEREVIDENCE_VALUE_LENGTH_EQUALS_CANONICAL_ID_LENGTH_5",
+    "LLAMA3_2_NO_EXACT_CANONICAL_ENNN_TOKEN_FOUND_IN_MALFORMED_VALUE",
+    "LLAMA3_2_PREFIX_SEPARATOR_FORENSIC_FORBIDS_DIGIT_SUBSTITUTION",
+    "LLAMA3_2_PREFIX_SEPARATOR_FORENSIC_MAY_NORMALIZE_IN_MEMORY_ONLY",
+    "LLAMA3_2_NO_RETRY_AUTHORITY_CREATED_BY_PREFIX_SEPARATOR_FORENSIC_PREP"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -522,7 +530,11 @@
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_RESULT_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_AUTH_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_PREP_001.json",
-    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-counterevidence-id-forensic.ts"
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-counterevidence-id-forensic.ts",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_AUTH_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC_PREP_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-counterevidence-prefix-separator-forensic.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -553,7 +565,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_ID_FORMAT_FORENSIC",
+  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -1102,7 +1114,7 @@
     "parameter_size": "3.2B",
     "context_window": "128K",
     "license": "Llama 3.2 Community License",
-    "selection_status": "FIRST_CONSTELLATION_C4_SINGLE_SCHEMA_DEFECT_COUNTEREVIDENCE_ID_FORENSIC_AUTHORIZED",
+    "selection_status": "FIRST_CONSTELLATION_C4_SINGLE_SCHEMA_DEFECT_PREFIX_SEPARATOR_FORENSIC_AUTHORIZED",
     "download_authorization_id": "G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001",
     "download_authorized": false,
     "load_smoke_authorized": true,
@@ -1196,9 +1208,17 @@
     "first_c4_forensic_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-RESULT-001",
     "first_c4_forensic_result_status": "FORENSIC_COMPLETE_SINGLE_MALFORMED_COUNTEREVIDENCE_ID",
     "counterevidence_id_forensic_authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-AUTH-001",
-    "counterevidence_id_forensic_authorized": true,
-    "counterevidence_id_forensic_authorized_run_count": 1,
+    "counterevidence_id_forensic_authorized": false,
+    "counterevidence_id_forensic_authorized_run_count": 0,
     "counterevidence_id_forensic_target_path": "priority_findings.1.counterevidence_ids.0",
-    "additional_inference_authorized": false
+    "additional_inference_authorized": false,
+    "counterevidence_id_forensic_consumed": true,
+    "counterevidence_id_forensic_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001",
+    "counterevidence_id_forensic_result_status": "FORENSIC_COMPLETE_NO_CANONICAL_TOKEN_DECOMPOSITION",
+    "counterevidence_prefix_separator_forensic_authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-AUTH-001",
+    "counterevidence_prefix_separator_forensic_authorized": true,
+    "counterevidence_prefix_separator_forensic_authorized_run_count": 1,
+    "counterevidence_prefix_separator_forensic_target_path": "priority_findings.1.counterevidence_ids.0",
+    "counterevidence_prefix_separator_forensic_no_digit_substitution": true
   }
 }
