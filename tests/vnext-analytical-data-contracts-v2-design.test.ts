@@ -82,6 +82,37 @@ test("evidence ledger preserves cutoff and exact frozen evidence fields", () => 
   assert.equal(result.ok, true);
 });
 
+test("undated evidence is explicit and cannot masquerade as current", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "EVIDENCE_LEDGER",
+    body: {
+      ledger_version: "1",
+      records: [
+        {
+          ...evidence(),
+          source_date: null,
+          freshness_state: "UNKNOWN_DATE",
+        },
+      ],
+    },
+  };
+
+  assert.equal(
+    validateAnalyticalDataArtifact(artifact, {
+      sourceIds: new Set(["S-1"]),
+    }).ok,
+    true,
+  );
+
+  const invalid = structuredClone(artifact);
+  invalid.body.records[0].freshness_state = "CURRENT";
+  const result = validateAnalyticalDataArtifact(invalid, {
+    sourceIds: new Set(["S-1"]),
+  });
+  assert.equal(result.ok, false);
+});
+
 test("frozen Evidence Ledger epistemic vocabulary rejects conversational substitutes", () => {
   const artifact = {
     ...common,
