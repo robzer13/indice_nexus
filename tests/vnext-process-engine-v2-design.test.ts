@@ -293,6 +293,44 @@ test("block completion fails on material process blockers", () => {
   }
 });
 
+test("READY block cannot skip execution and jump to terminal completion", () => {
+  const ready = block("MOAT", "READY");
+  const result = blockCompletionEligibility(ready, [ready]);
+  assert.equal(result.eligible, false);
+  if (!result.eligible) {
+    assert.match(result.reasons.join("\n"), /has not been executed/);
+  }
+});
+
+test("resolver fails closed when a persisted COMPLETE block violates completion conditions", () => {
+  const invalidComplete = {
+    ...block("MOAT", "COMPLETE"),
+    completionAuditPassed: false,
+  };
+  const next = deriveNextBlockAction([invalidComplete]);
+  assert.equal(next.action, "FAIL_CLOSED");
+  assert.equal(next.block, null);
+  assert.match(next.reason, /COMPLETE block MOAT violates completion conditions/);
+});
+
+test("resolver revalidates required overlays on persisted COMPLETE blocks", () => {
+  const completed = {
+    ...block("RETURN_QUALITY", "COMPLETE"),
+    sectorOverlays: [
+      {
+        overlay: "BANK_RETURN_ON_EQUITY",
+        status: "NOT_APPLICABLE" as const,
+      },
+    ],
+  };
+  const next = deriveNextBlockAction(
+    [completed],
+    [{ block: "RETURN_QUALITY", overlay: "BANK_RETURN_ON_EQUITY" }],
+  );
+  assert.equal(next.action, "FAIL_CLOSED");
+  assert.match(next.reason, /expected APPLIED/);
+});
+
 test("NOT_ASSESSABLE upstream is terminally resolved but CHECKPOINTED is not final", () => {
   const upstreamResolved = block("MOAT", "NOT_ASSESSABLE");
   const downstream = block("RUNWAY", "CHECKPOINTED", ["MOAT"]);
