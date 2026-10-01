@@ -1817,3 +1817,25 @@ The fixed protocol threshold remains 1.0 GiB at the runner guard. It is not rela
 For operational execution only, an external pre-launch target of at least 1.5 GiB is adopted to provide margin against the observed startup/system-state delta. This is not a protocol or model-parameter change.
 
 No automatic retry, parameter change, model switch, ranking, routing, production mutation or publication is authorized.
+
+## D-2026-10-01-099 — Llama 3.2 C4 Ollama residency guard fails before inference; switch guard to loopback API
+
+The latest manual execution stopped with:
+
+`VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_OLLAMA_PS_CHECK_FAILED`
+
+The runner sequence places the Ollama residency check before:
+- installed model verification;
+- baseline RAM guard;
+- packet construction;
+- provider generation.
+
+Therefore no provider generation request or semantic inference occurred and the single C4 authorization remains unconsumed with one run available.
+
+The pre-fix guard used `execFileSync("ollama", ["ps"])` and collapsed any CLI execution failure into the generic error above.
+
+The residency guard is changed to `GET /api/ps` via the existing loopback HTTP client. This preserves the no-preloaded-model invariant while removing the extra CLI-process dependency.
+
+No model, prompt, packet, schema, context, output budget, temperature, timeout, RAM threshold, ranking, routing, production or publication parameter is changed.
+
+No automatic retry is authorized. The same unconsumed single inference may be manually executed after the fix is merged.

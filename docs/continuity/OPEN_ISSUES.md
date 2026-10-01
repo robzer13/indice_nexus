@@ -7,25 +7,25 @@ Status: RETAINED_IMMUTABLE
 Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 
 ## OI-003 — Llama 3.2 first bounded Constellation C4
-Status: AUTHORIZED_UNCONSUMED_PRECONDITION_BLOCK
+Status: AUTHORIZED_UNCONSUMED_TOOLING_GUARD_FIXED
 Priority: P0
 
-Precondition blocks recorded: 2
+Historical pre-inference blocks:
+1. baseline RAM 0.75 GiB < 1.0 GiB;
+2. baseline RAM 0.70 GiB < 1.0 GiB;
+3. Ollama residency CLI guard failed before model identity/RAM/generation.
 
-Latest external pre-launch free RAM: 1.09 GiB
-Latest runner baseline free RAM: 0.70 GiB
-Runner protocol requirement: >= 1.00 GiB
-Operational external pre-launch target: >= 1.50 GiB
+Current runner residency guard:
+`GET /api/ps` over loopback HTTP.
 
-Provider generation reached: FALSE
-Semantic inference executed: FALSE
-Authorization consumed: FALSE
+Inference authorization consumed: FALSE
 Authorized runs remaining: 1
 Automatic retry: NOT_AUTHORIZED
 Parameter change: NOT_AUTHORIZED
 
-Required action:
-restore external free RAM to at least 1.5 GiB before launch, then manually execute the same single authorized runner once.
+Operational launch condition:
+- prefer external free RAM >= 1.5 GiB;
+- no resident Ollama model.
 
 ## OI-004 — Model winner and routing
 Status: OPEN_GUARDED

@@ -1,0 +1,36 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_OLLAMA_PS_PRECONDITION_BLOCK_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "BLOCKED_BEFORE_INFERENCE_OLLAMA_PS_CHECK_FAILED",
+  "source": "USER_PROVIDED_LOCAL_RUN_SUMMARY",
+  "observed_error": "VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_OLLAMA_PS_CHECK_FAILED",
+  "execution_boundary": {
+    "authorization_validated": true,
+    "ollama_residency_guard_reached": true,
+    "installed_model_identity_check_reached": false,
+    "baseline_memory_guard_reached": false,
+    "packet_build_reached": false,
+    "provider_generate_request_reached": false,
+    "semantic_inference_executed": false,
+    "private_generated_output_created": false
+  },
+  "authorization_consumption": {
+    "consumed": false,
+    "authorized_run_count_remaining": 1,
+    "same_single_inference_authorization_remains_valid": true
+  },
+  "remediation": {
+    "runner_guard_before_fix": "OLLAMA_CLI_PS",
+    "runner_guard_after_fix": "OLLAMA_LOOPBACK_HTTP_API_PS",
+    "runner_fixed": true,
+    "automatic_retry_authorized": false,
+    "new_retry_authorization_created": false,
+    "parameter_change_authorized": false,
+    "same_unconsumed_authorized_run_may_be_manually_executed_after_fix_merge": true
+  },
+  "next_action": "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}

@@ -512,8 +512,47 @@ test("Llama 3.2 second C4 RAM block preserves the same single inference authoriz
   assert.equal(a.c4_inference.authorized, true);
   assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(
-    a.latest_precondition_block,
-    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
+    a.precondition_blocks.includes(
+      "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
+    ),
+    true,
   );
+});
+
+test("Llama 3.2 Ollama ps precondition block preserves authorization and the runner uses loopback api ps", () => {
+  const b = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_OLLAMA_PS_PRECONDITION_BLOCK_001.json",
+      "utf8",
+    ),
+  );
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_AUTH_001.json",
+      "utf8",
+    ),
+  );
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
+    "utf8",
+  );
+
+  assert.equal(b.status, "BLOCKED_BEFORE_INFERENCE_OLLAMA_PS_CHECK_FAILED");
+  assert.equal(b.execution_boundary.provider_generate_request_reached, false);
+  assert.equal(b.execution_boundary.semantic_inference_executed, false);
+  assert.equal(b.authorization_consumption.consumed, false);
+  assert.equal(b.authorization_consumption.authorized_run_count_remaining, 1);
+
+  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
+  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(
+    a.latest_precondition_block,
+    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
+  );
+
+  assert.equal(raw.includes('"/api/ps"'), true);
+  assert.match(raw, /await assertNoLoadedModels\(\);/);
+  assert.doesNotMatch(raw, /execFileSync\("ollama", \["ps"\]/);
 });
 
