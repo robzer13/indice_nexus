@@ -41,9 +41,6 @@
       "$ref": "#/$defs/causalGraphArtifact"
     },
     {
-      "$ref": "#/$defs/openQuestionRegisterArtifact"
-    },
-    {
       "$ref": "#/$defs/technologyAnalysisArtifact"
     },
     {
@@ -1276,67 +1273,6 @@
         }
       }
     },
-    "openQuestionRecord": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "open_question_id",
-        "affected_block",
-        "question",
-        "materiality",
-        "status",
-        "evidence_needed",
-        "impact",
-        "resolution_ref"
-      ],
-      "properties": {
-        "open_question_id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "affected_block": {
-          "type": "string",
-          "minLength": 1
-        },
-        "question": {
-          "type": "string",
-          "minLength": 1
-        },
-        "materiality": {
-          "type": "string",
-          "minLength": 1
-        },
-        "status": {
-          "enum": [
-            "OPEN",
-            "RESOLVED",
-            "DEFERRED",
-            "NOT_ASSESSABLE"
-          ]
-        },
-        "evidence_needed": {
-          "type": [
-            "string",
-            "null"
-          ]
-        },
-        "impact": {
-          "type": "string",
-          "minLength": 1
-        },
-        "resolution_ref": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
-        }
-      }
-    },
     "technologyAnalysisBody": {
       "type": "object",
       "additionalProperties": false,
@@ -2524,73 +2460,6 @@
         }
       }
     },
-    "openQuestionRegisterArtifact": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "schema_version",
-        "artifact_type",
-        "run_id",
-        "issuer_id",
-        "data_cutoff",
-        "artifact_version",
-        "created_at",
-        "body"
-      ],
-      "properties": {
-        "schema_version": {
-          "const": "0.1.0"
-        },
-        "artifact_type": {
-          "const": "OPEN_QUESTION_REGISTER"
-        },
-        "run_id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "issuer_id": {
-          "type": "string",
-          "minLength": 1
-        },
-        "security_id": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "dossier_id": {
-          "anyOf": [
-            {
-              "type": "string",
-              "minLength": 1
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "data_cutoff": {
-          "type": "string",
-          "format": "date"
-        },
-        "artifact_version": {
-          "type": "integer",
-          "minimum": 1
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "body": {
-          "$ref": "#/$defs/openQuestionRegisterBody"
-        }
-      }
-    },
     "technologyAnalysisArtifact": {
       "type": "object",
       "additionalProperties": false,
@@ -3048,26 +2917,6 @@
           "type": "array",
           "items": {
             "$ref": "#/$defs/causalLink"
-          }
-        }
-      }
-    },
-    "openQuestionRegisterBody": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "register_version",
-        "records"
-      ],
-      "properties": {
-        "register_version": {
-          "type": "string",
-          "minLength": 1
-        },
-        "records": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/openQuestionRecord"
           }
         }
       }
