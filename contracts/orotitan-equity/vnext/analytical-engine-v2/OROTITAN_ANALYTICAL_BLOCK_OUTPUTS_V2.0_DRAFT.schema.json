@@ -179,7 +179,7 @@
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
         },
         "claim_id": {
-          "oneOf": [
+          "anyOf": [
             {
               "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
             },
