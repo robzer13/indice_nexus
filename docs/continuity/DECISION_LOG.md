@@ -2112,3 +2112,67 @@ Gate 18 remains:
 The C7 decision does not authorize a paid benchmark, hybrid architecture, hardware purchase, new candidate, routing change, or production mutation.
 
 The next step requires explicit post-C7 strategy direction.
+
+## D-2026-10-01-112 — Select Analytical Engine V2 as the post-C7 product direction
+
+After the Phase C C7 decision rejected the current tested local-model set, the user selected a new product direction.
+
+The immediate objective is not to continue optimizing for full local automation.
+
+The selected priority order is:
+
+`ANALYTICAL QUALITY`
+→ `PROCESS CORRECTNESS / FLUIDITY`
+→ `UI / UX QUALITY`
+→ `AUTOMATION RATE`
+
+The system should materially improve the depth and relevance of company analysis, including:
+- sector-specific economics;
+- cyclicality;
+- technology;
+- industry structure;
+- causal chains;
+- moat proof;
+- runway;
+- return quality;
+- forensic FCF;
+- capital allocation;
+- Outside View;
+- risk;
+- Red Team;
+- adaptive valuation.
+
+The UI should become a premium French-first equity-research workbench with an explicit research queue, current-stage visualization, blockers, next actions, analysis map, monitoring, prices and exports.
+
+The process should be redesigned around bounded execution, persisted state and anti-loop controls.
+
+The analytical architecture remains provider-independent.
+
+Manual ChatGPT-assisted execution is an acceptable interim provider while stronger local hardware/model capability is unavailable.
+
+This direction does not reopen the historical Phase C C7 result.
+
+## D-2026-10-01-113 — V2 extends frozen methodology rather than replacing it
+
+The V2 engines are execution-intelligence layers.
+
+They must feed the canonical frozen Research / Deep Dive / Integration semantics rather than create parallel score systems or competing analytical ontologies.
+
+Examples:
+- Cyclicality Engine feeds Business Model, Runway, Return Quality, Risk and Valuation.
+- Technology Engine feeds Moat, Runway, Risk, Outside View and Valuation.
+- Sector Intelligence selects economically appropriate methods and evidence requirements.
+- Causal Graph strengthens traceability and cross-block reconciliation.
+
+The current scoring, Certification, OroTitan terminal gate, Dossier Readiness and artifact authority remain canonical.
+
+## D-2026-10-01-114 — Defer full local automation; build provider-agnostic analysis tasks
+
+The product must support:
+- deterministic execution where reliable;
+- AI-assisted analysis for judgment-heavy tasks;
+- human-required gates when ambiguity is material.
+
+Until stronger hardware exists, the normal assisted workflow may prepare a bounded analysis packet for ChatGPT and import the result through deterministic schema / evidence-ID validation.
+
+Future stronger local inference must plug into the same task contract rather than require a redesign of the analytical engine.
