@@ -1,0 +1,152 @@
+{
+  "format": "OROTITAN_GATE18_POST_C7_ASSISTED_WORKFLOW_STRATEGY_V0.1",
+  "strategy_id": "G18-POSTC7-ASSISTED-WORKFLOW-STRATEGY-001",
+  "gate": 18,
+  "status": "SELECTED_INTERIM_STRATEGY_PRE_IMPLEMENTATION",
+  "authority": {
+    "type": "EXPLICIT_USER_DIRECTION",
+    "date": "2026-10-01",
+    "intent": "Until materially stronger local hardware is purchased, simplify the process and improve analytical quality without requiring 100% automation."
+  },
+  "strategy": {
+    "name": "ASSISTED_HUMAN_IN_THE_LOOP_ANALYSIS_BRIDGE",
+    "objective": "Maximize analytical quality and reduce operator friction while keeping deterministic preparation, validation, evidence traceability, certification and publication controls automated.",
+    "temporary_until": "MATERIALLY_STRONGER_LOCAL_HARDWARE_AND_NEW_LOCAL_MODEL_QUALIFICATION",
+    "local_model_required": false,
+    "external_api_required": false,
+    "fully_automated_required": false
+  },
+  "operating_principles": [
+    "Automate deterministic work; do not force weak local models to perform judgment tasks.",
+    "Use a high-capability interactive LLM as analyst tooling when useful, without making it the authoritative persistence layer.",
+    "Keep evidence IDs, packet hashes, schema versions and deterministic validators unchanged wherever possible.",
+    "The analyst remains authoritative for judgment and impact assessment.",
+    "Only validated/certified persisted artifacts may feed Integration; chat prose is not authoritative.",
+    "No analytical defect may be silently repaired by Integration.",
+    "Preserve a provider-neutral handoff so the interactive step can later be replaced by local inference without redesigning the research pipeline."
+  ],
+  "target_flow": [
+    "DETERMINISTIC_SOURCE_AND_EVIDENCE_PREPARATION",
+    "ASSISTED_TASK_PACKET_BUILD",
+    "INTERACTIVE_HIGH_CAPABILITY_ANALYSIS",
+    "STRUCTURED_RESULT_CAPTURE",
+    "LOCAL_SCHEMA_AND_SEMANTIC_VALIDATION",
+    "TARGETED_REPAIR_LOOP_IF_NEEDED",
+    "HUMAN_ANALYTICAL_CONFIRMATION",
+    "CERTIFIED_ARTIFACT_PERSISTENCE",
+    "NORMAL_DEEP_DIVE_AND_INTEGRATION_CONTROLS"
+  ],
+  "automation_boundary": {
+    "automate": [
+      "source manifest preparation",
+      "evidence ledger normalization",
+      "packet and prompt assembly",
+      "evidence ID and hash pinning",
+      "schema generation",
+      "task instructions",
+      "result import",
+      "JSON/schema validation",
+      "deterministic semantic validation",
+      "unknown/reference integrity checks",
+      "gap and conflict extraction",
+      "repair-prompt generation",
+      "run logging",
+      "artifact persistence",
+      "continuity metadata",
+      "pre-publication technical checks"
+    ],
+    "assisted_or_human": [
+      "moat evidence judgment",
+      "conflict interpretation",
+      "weak-link prioritization",
+      "materiality judgment",
+      "qualitative runway assessment",
+      "capital-allocation judgment",
+      "management/governance interpretation",
+      "investment conclusion synthesis",
+      "manual impact assessment during refresh",
+      "final analytical sign-off"
+    ]
+  },
+  "bridge_v0_1": {
+    "prepare_command_concept": "orotitan assist prepare <company> <module>",
+    "prepare_outputs": [
+      "TASK_PACKET.json",
+      "PROMPT.md",
+      "EXPECTED_OUTPUT_SCHEMA.json",
+      "CONTROL_CARD.md"
+    ],
+    "interactive_step": "Paste/upload PROMPT.md + TASK_PACKET.json to the chosen high-capability interactive LLM. Request only the structured result contract plus a concise analyst-readable explanation.",
+    "capture_command_concept": "orotitan assist import <result.json>",
+    "capture_controls": [
+      "task/run identity match",
+      "packet hash match",
+      "schema pass",
+      "evidence ID existence",
+      "conflict ID existence",
+      "deterministic semantic validators",
+      "no silent normalization beyond frozen contract",
+      "no publication authority"
+    ],
+    "repair_loop": "If validation fails, generate a minimal repair request containing only failing paths/codes and the frozen constraints. Do not regenerate the research packet or change evidence.",
+    "certify_boundary": "A successful import is still not publication. Human analytical confirmation and existing stage certification remain required."
+  },
+  "operator_experience_target": {
+    "normal_case_steps": [
+      "Run one prepare command.",
+      "Paste/upload the generated bundle into ChatGPT or another high-capability interactive LLM.",
+      "Save/copy the returned structured result.",
+      "Run one import/validate command.",
+      "Review one concise control card and confirm or repair."
+    ],
+    "target_manual_actions": "2-4 deliberate human actions per analytical module rather than manual reconstruction of prompts, packets and validation.",
+    "no_copy_paste_of_evidence_ids_by_hand": true
+  },
+  "quality_improvements_over_current_local_only_attempt": {
+    "stronger_reasoning_model_available_interactively": true,
+    "deterministic_grounding_guards_retained": true,
+    "explicit_conflict_and_unknown_handling": true,
+    "invalid_reference_fail_closed": true,
+    "human_review_retained": true,
+    "model_output_not_directly_authoritative": true
+  },
+  "future_local_migration": {
+    "invariant_components": [
+      "task packet",
+      "prompt contract",
+      "output schema",
+      "validators",
+      "result persistence",
+      "certification",
+      "integration controls"
+    ],
+    "replaceable_component": "INTERACTIVE_HIGH_CAPABILITY_ANALYSIS",
+    "migration_target": "LOCAL_INFERENCE_ADAPTER_ON_FUTURE_HIGHER_POWER_HARDWARE",
+    "expected_rework": "LOW_IF_BRIDGE_CONTRACT_IS_KEPT_PROVIDER_NEUTRAL"
+  },
+  "forbidden_by_this_strategy": [
+    "automatic publication",
+    "automatic investment conclusion without human confirmation",
+    "silent evidence ID repair",
+    "silent prompt/schema relaxation",
+    "using chat prose as canonical Integration input",
+    "assuming subscription UI availability equals production API reliability",
+    "routing freeze",
+    "production mutation"
+  ],
+  "implementation_sequence": [
+    "P1_DEFINE_ASSISTED_TASK_BUNDLE_CONTRACT",
+    "P2_BUILD_PREPARE_CLI_FOR_ONE_EXISTING_MODULE",
+    "P3_BUILD_IMPORT_VALIDATION_CLI",
+    "P4_BUILD_MINIMAL_REPAIR_PROMPT_GENERATOR",
+    "P5_PILOT_ON_MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+    "P6_MEASURE_OPERATOR_TIME_AND_ANALYTICAL_DEFECT_RATE",
+    "P7_EXPAND_ONLY_IF_PILOT_PASSES"
+  ],
+  "first_pilot_module": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
+  "production_mutation": false,
+  "routing_frozen": false,
+  "model_winner_selected": false,
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "next_action": "IMPLEMENT_ASSISTED_TASK_BUNDLE_CONTRACT_AND_MINIMAL_PREPARE_IMPORT_BRIDGE_V0_1"
+}
