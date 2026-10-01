@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-G18-C-20261001-057",
+  "resume_id": "VNEXT-G18-C-20261001-058",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "08980deefb6688409e4c588d606552c5e41bc01c",
+  "last_verified_head_sha": "6ced3cb1df58a56edc10ca4fd8510551eeed3211",
   "last_verified_at": "2026-10-01",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -182,16 +182,21 @@
     "LLAMA3_2_FIRST_CONSTELLATION_C4_AUTHORIZATION_STILL_UNCONSUMED",
     "LLAMA3_2_FIRST_CONSTELLATION_C4_OLLAMA_PS_PRECONDITION_BLOCK_RECORDED",
     "LLAMA3_2_FIRST_CONSTELLATION_C4_OLLAMA_PS_GUARD_SWITCHED_TO_LOOPBACK_API",
-    "LLAMA3_2_FIRST_CONSTELLATION_C4_AUTHORIZATION_REMAINS_UNCONSUMED_AFTER_OLLAMA_PS_BLOCK"
+    "LLAMA3_2_FIRST_CONSTELLATION_C4_AUTHORIZATION_REMAINS_UNCONSUMED_AFTER_OLLAMA_PS_BLOCK",
+    "LLAMA3_2_FIRST_CONSTELLATION_C4_EXECUTED_ONCE",
+    "LLAMA3_2_FIRST_CONSTELLATION_C4_AUTHORIZATION_CONSUMED",
+    "LLAMA3_2_FIRST_CONSTELLATION_C4_FAIL_RAW_SCHEMA",
+    "LLAMA3_2_FIRST_CONSTELLATION_C4_SEMANTICS_NOT_EVALUATED_SCHEMA_FAILURE",
+    "LLAMA3_2_RAW_SCHEMA_FORENSIC_AUTHORIZED_AND_PREPARED"
   ],
   "active_work": [
-    "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE"
+    "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC"
   ],
   "blockers": [],
   "open_issues": [
-    "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD",
-    "PREFER_EXTERNAL_FREE_RAM_GIB_GTE_1_5_BEFORE_LAUNCH",
-    "NO_LLAMA3_2_AUTOMATIC_RETRY_OR_PARAMETER_CHANGE_AUTHORIZED",
+    "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
+    "NO_LLAMA3_2_RETRY_AUTHORIZED_BEFORE_FORENSIC",
+    "NO_LLAMA3_2_ADDITIONAL_INFERENCE_AUTHORIZED",
     "MODEL_WINNER_AND_ROUTING_REMAIN_GUARDED"
   ],
   "preserved_decisions": [
@@ -331,7 +336,14 @@
     "LLAMA3_2_OLLAMA_PS_BLOCK_DID_NOT_REACH_PROVIDER_GENERATION",
     "LLAMA3_2_OLLAMA_PS_BLOCK_DID_NOT_CONSUME_SINGLE_INFERENCE_AUTHORIZATION",
     "LLAMA3_2_OLLAMA_RESIDENCY_GUARD_USES_LOOPBACK_API_PS_AFTER_FIX",
-    "LLAMA3_2_C4_PROTOCOL_PARAMETERS_UNCHANGED"
+    "LLAMA3_2_C4_PROTOCOL_PARAMETERS_UNCHANGED",
+    "LLAMA3_2_FIRST_C4_HISTORICAL_RESULT_REMAINS_FAIL",
+    "LLAMA3_2_FIRST_C4_PROVIDER_GENERATION_COMPLETED",
+    "LLAMA3_2_FIRST_C4_OUTPUT_BUDGET_EXHAUSTION_NOT_PROVEN",
+    "LLAMA3_2_FIRST_C4_RAW_JSON_SYNTACTICALLY_VALID_SCHEMA_INVALID",
+    "LLAMA3_2_FIRST_C4_SEMANTIC_AND_HUMAN_QUALITY_NOT_REACHED",
+    "LLAMA3_2_NO_RETRY_BEFORE_READ_ONLY_SCHEMA_FORENSIC",
+    "LLAMA3_2_RAW_SCHEMA_FORENSIC_PRINTS_NO_GENERATED_VALUES"
   ],
   "authorized_actions": [
     "ALL_ZERO_COST_OROTITAN_TECHNICAL_EXECUTION_UNDER_OROTITAN_STANDING_TECHNICAL_AUTH_002",
@@ -494,7 +506,11 @@
     "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_BASELINE_RAM_PRECONDITION_BLOCK_001.json",
     "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_BASELINE_RAM_PRECONDITION_BLOCK_002.json",
-    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_OLLAMA_PS_PRECONDITION_BLOCK_001.json"
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_OLLAMA_PS_PRECONDITION_BLOCK_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_RESULT_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_AUTH_001.json",
+    "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_PREP_001.json",
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-raw-schema-forensic.ts"
   ],
   "latest_shadow_replay": {
     "source": "USER_PROVIDED_LOCAL_PRIVATE_ARTIFACT_CONTENT",
@@ -525,7 +541,7 @@
     "implementation_status": "IMPLEMENTED_CI_PASS",
     "source_code_check": "CONFIRMED_INCOMPLETE_ERRORS_USED_HERE_ORIGINATE_FROM_ASSERT_COMPLETE_NARRATIVE_TERMINAL_PUNCTUATION_CHECK; SATURATION_HAS_SEPARATE_ERROR_CODE"
   },
-  "next_action": "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE",
+  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
   "resume_sequence": [
     "FETCH_VNEXT_HEAD",
     "READ_CURRENT_STATE",
@@ -1074,11 +1090,11 @@
     "parameter_size": "3.2B",
     "context_window": "128K",
     "license": "Llama 3.2 Community License",
-    "selection_status": "FIRST_CONSTELLATION_C4_AUTHORIZED_TOOLING_GUARD_FIXED",
+    "selection_status": "FIRST_CONSTELLATION_C4_FAIL_RAW_SCHEMA_FORENSIC_AUTHORIZED",
     "download_authorization_id": "G18-PHASEC-LLAMA3_2-3B-DOWNLOAD-AUTH-001",
     "download_authorized": false,
     "load_smoke_authorized": true,
-    "inference_authorized": true,
+    "inference_authorized": false,
     "full_digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
     "size_bytes": 2019393189,
     "format": "gguf",
@@ -1136,18 +1152,33 @@
     "first_c4_timeout_ms": 600000,
     "first_c4_minimum_free_ram_gib": 1,
     "first_c4_inference_authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
-    "first_c4_inference_authorized": true,
-    "first_c4_authorized_run_count": 1,
+    "first_c4_inference_authorized": false,
+    "first_c4_authorized_run_count": 0,
     "first_c4_prep": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-PREP-001",
     "first_c4_runner": "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-v1-1-context16384-output1024-timeout600-loopback-guarded.ts",
     "first_c4_precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
     "first_c4_precondition_status": "BLOCKED_BEFORE_INFERENCE_OLLAMA_PS_CHECK_FAILED",
     "first_c4_observed_baseline_free_ram_gib": 0.7,
     "first_c4_required_baseline_free_ram_gib": 1,
-    "first_c4_authorization_consumed": false,
+    "first_c4_authorization_consumed": true,
     "first_c4_precondition_block_count": 3,
     "first_c4_external_prelaunch_free_ram_gib": 1.09,
     "first_c4_recommended_external_prelaunch_free_ram_gib": 1.5,
-    "first_c4_ollama_ps_guard_transport": "OLLAMA_LOOPBACK_HTTP_API_PS"
+    "first_c4_ollama_ps_guard_transport": "OLLAMA_LOOPBACK_HTTP_API_PS",
+    "first_c4_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+    "first_c4_result_status": "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED",
+    "first_c4_wall_clock_ms": 299230,
+    "first_c4_prompt_eval_count": 3157,
+    "first_c4_eval_count": 895,
+    "first_c4_output_token_margin": 129,
+    "first_c4_done_reason": "stop",
+    "first_c4_schema_valid": false,
+    "first_c4_schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID",
+    "first_c4_semantic_status": "NOT_EVALUATED_SCHEMA_FAILURE",
+    "first_c4_forensic_required": true,
+    "first_c4_forensic_authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-AUTH-001",
+    "first_c4_forensic_authorized": true,
+    "first_c4_forensic_authorized_run_count": 1,
+    "first_c4_forensic_runner": "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-raw-schema-forensic.ts"
   }
 }
