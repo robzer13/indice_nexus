@@ -250,3 +250,77 @@ test("required missing sector overlay prevents block completion", () => {
   assert.equal(result.ok, false);
   if (!result.ok) assert.match(result.errors.join("\n"), /cannot be COMPLETE with REQUIRED_MISSING sector overlay/);
 });
+
+
+test("forward estimate period may extend beyond DATA_CUTOFF when known at cutoff", () => {
+  const input = validPackage();
+  input.evidence[0].epistemic_type = "ESTIMATE";
+  input.evidence[0].numeric_data[0].period_start = "2027-01-01";
+  input.evidence[0].numeric_data[0].period_end = "2027-12-31";
+  input.evidence[0].numeric_data[0].as_of_date = "2026-10-01";
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, true);
+});
+
+test("numeric as_of_date after DATA_CUTOFF fails closed", () => {
+  const input = validPackage();
+  input.evidence[0].numeric_data[0].as_of_date = "2026-10-02";
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /as_of_date is post-cutoff/);
+});
+
+test("duplicate analytical block codes fail closed", () => {
+  const input = validPackage();
+  input.analytical_blocks.push({
+    ...input.analytical_blocks[0],
+    status: "BLOCKED",
+    conclusion: null,
+  });
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /duplicate analytical block BUSINESS_MODEL/);
+});
+
+test("root source cannot self-reference or form a cycle", () => {
+  const self = validPackage();
+  self.sources[0].root_source_id = "S-001";
+  let result = validateAnalyticalDataPackage(self, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /cannot reference itself as root_source_id/);
+
+  const cycle = validPackage();
+  cycle.sources.push({
+    ...cycle.sources[0],
+    source_id: "S-002",
+    root_source_id: "S-001",
+  });
+  cycle.sources[0].root_source_id = "S-002";
+  result = validateAnalyticalDataPackage(cycle, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /root_source_id cycle detected/);
+});
+
+test("COMPLETE block requires traceable evidence", () => {
+  const input = validPackage();
+  input.analytical_blocks[0].supporting_evidence_ids = [];
+  input.analytical_blocks[0].counterevidence_ids = [];
+  const result = validateAnalyticalDataPackage(input, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /cannot be COMPLETE without traceable evidence/);
+});
+
+test("SUPPORTED and MIXED causal links require traceable evidence roles", () => {
+  const supported = validPackage();
+  supported.analytical_blocks[0].causal_links[0].evidence_ids = [];
+  let result = validateAnalyticalDataPackage(supported, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /cannot be SUPPORTED without evidence/);
+
+  const mixed = validPackage();
+  mixed.analytical_blocks[0].causal_links[0].status = "MIXED";
+  mixed.analytical_blocks[0].causal_links[0].counterevidence_ids = [];
+  result = validateAnalyticalDataPackage(mixed, context);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /MIXED requires evidence and counterevidence/);
+});
