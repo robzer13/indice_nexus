@@ -33,15 +33,16 @@ function evidence(sourceDate = "2026-09-30") {
     source_id: "S-1",
     root_source_id: null,
     independence_group: "ISSUER_PRIMARY",
-    source_class: "REGULATORY_FILING",
-    claim_fit: "DIRECT",
+    source_class: "S1",
+    claim_fit: "HIGH",
     source_date: sourceDate,
     data_cutoff: "2026-10-01",
-    epistemic_type: "FACT",
+    epistemic_type: "REPORTED",
     freshness_state: "CURRENT",
     limitations: [],
     conflict_status: "NONE",
     quantitative_provenance: null,
+    used_in: ["MOAT"],
   };
 }
 
@@ -79,6 +80,29 @@ test("evidence ledger preserves cutoff and exact frozen evidence fields", () => 
   });
 
   assert.equal(result.ok, true);
+});
+
+test("frozen Evidence Ledger epistemic vocabulary rejects conversational substitutes", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "EVIDENCE_LEDGER",
+    body: {
+      ledger_version: "1",
+      records: [
+        {
+          ...evidence(),
+          epistemic_type: "FACT",
+        },
+      ],
+    },
+  };
+
+  const result = validateAnalyticalDataArtifact(artifact, {
+    sourceIds: new Set(["S-1"]),
+  });
+
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.equal(result.stage, "schema");
 });
 
 test("post-cutoff evidence fails semantic validation", () => {
@@ -334,6 +358,9 @@ test("Runway requires TAM, serviceable market and realistic capture pool as dist
         {
           scope_type: "TAM",
           value: { representation: "UNKNOWN", reason: "Not yet bounded." },
+          unit: "EUR",
+          currency: "EUR",
+          as_of_date: "2026-10-01",
           supporting_evidence_ids: [],
           calculation_ids: [],
           limitations: ["Top-down TAM alone is insufficient."],
