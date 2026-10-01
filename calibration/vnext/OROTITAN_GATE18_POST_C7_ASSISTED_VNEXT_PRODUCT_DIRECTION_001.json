@@ -1,0 +1,326 @@
+{
+  "format": "OROTITAN_GATE18_POST_C7_ASSISTED_VNEXT_PRODUCT_DIRECTION_V0.1",
+  "direction_id": "G18-POSTC7-ASSISTED-VNEXT-PRODUCT-DIRECTION-001",
+  "gate": 18,
+  "status": "SELECTED_PRE_IMPLEMENTATION",
+  "authority": {
+    "type": "EXPLICIT_USER_DIRECTION",
+    "date": "2026-10-01",
+    "intent": [
+      "Rebuild the UI/UX around analysis execution and understanding.",
+      "Improve the analysis process so incidents and analytical problems do not create circular work.",
+      "Make the modular analytical engine the core of the product.",
+      "Accept a partially manual assisted workflow until materially stronger local hardware is available."
+    ]
+  },
+  "product_name": "OROTITAN_VNEXT_ASSISTED",
+  "product_objective": "A high-quality equity-research operating system that automates deterministic work, makes analytical state visible, prevents unproductive loops, and routes judgment-heavy modules through assisted human-in-the-loop analysis.",
+  "pillars": [
+    {
+      "id": "PILLAR_A_UI_UX",
+      "priority": "P0",
+      "objective": "Turn OroTitan from a publication/snapshot interface into an analysis cockpit.",
+      "target_surfaces": [
+        "analysis portfolio / run dashboard",
+        "company research workspace",
+        "module navigator",
+        "evidence inspector",
+        "issues / blockers / recovery panel",
+        "next-best-action control",
+        "analysis progress timeline",
+        "human review / confirmation panel",
+        "canonical published snapshot view"
+      ]
+    },
+    {
+      "id": "PILLAR_B_PROCESS_ANTI_LOOP",
+      "priority": "P0",
+      "objective": "Make every retry, repair, deeper pass or escalation evidence-driven and bounded.",
+      "target_capabilities": [
+        "incident classification",
+        "progress fingerprinting",
+        "retry budget",
+        "same-error recurrence detection",
+        "no-new-evidence detection",
+        "deterministic repair versus analytical escalation",
+        "explicit stop reasons",
+        "module-level next action",
+        "run-level blocker visibility",
+        "human escalation when analytical judgment is required"
+      ]
+    },
+    {
+      "id": "PILLAR_C_MODULAR_ANALYSIS_ENGINE",
+      "priority": "P0",
+      "objective": "Define the complete analytical engine as explicit modules with dependencies, evidence requirements, output contracts, depth rules and human authority.",
+      "target_capabilities": [
+        "module registry",
+        "module dependency graph",
+        "CORE versus CONDITIONAL modules",
+        "business/archetype overlays",
+        "DETERMINISTIC / ASSISTED / HYBRID execution modes",
+        "adaptive depth",
+        "evidence sufficiency gates",
+        "counterevidence and UNKNOWN handling",
+        "module certification",
+        "cross-module synthesis"
+      ]
+    }
+  ],
+  "ui_ux_target": {
+    "current_problem": "The current UI is primarily a canonical publication/snapshot cockpit. It does not expose the live analytical workflow, module state, blockers, evidence quality or next action clearly enough.",
+    "analysis_workspace_layout": {
+      "left_rail": "Stages and analytical modules with status, blockers and completion.",
+      "main_panel": "Current module analysis, structured findings, assumptions and human actions.",
+      "right_rail": "Evidence, source/conflict references, validation state, issues and controls.",
+      "header": "Company, run, cutoff, current stage, overall readiness and one explicit next action."
+    },
+    "status_language": [
+      "NOT_STARTED",
+      "READY",
+      "IN_PROGRESS",
+      "NEEDS_INPUT",
+      "NEEDS_HUMAN",
+      "BLOCKED",
+      "VALIDATION_FAILED",
+      "COMPLETE"
+    ],
+    "design_principles": [
+      "Expose decisions and blockers before raw technical detail.",
+      "One obvious next action per active run.",
+      "No hidden analytical state in chat history.",
+      "Technical JSON remains inspectable but not the primary UX.",
+      "Evidence and counterevidence are first-class UI objects.",
+      "Historical and current canonical state remain visually separated."
+    ]
+  },
+  "anti_loop_process": {
+    "principle": "A module may continue only when the next pass has a stated information gain or a deterministic repair target.",
+    "incident_classes": [
+      "TRANSIENT_TECHNICAL",
+      "DETERMINISTIC_CONTRACT_DEFECT",
+      "MISSING_INPUT",
+      "SOURCE_CONFLICT",
+      "ANALYTICAL_AMBIGUITY",
+      "MODEL_LIMITATION",
+      "HUMAN_DECISION_REQUIRED"
+    ],
+    "progress_fingerprint_inputs": [
+      "module",
+      "packet/evidence hash",
+      "validation failure code/path",
+      "material unresolved issue set",
+      "requested repair scope"
+    ],
+    "stop_rules": [
+      "Do not rerun when evidence set and failure fingerprint are unchanged and no deterministic repair is available.",
+      "Do not deepen analysis merely because a module is difficult; deepen only on existing adaptive-depth triggers.",
+      "Do not use a model retry to repair an evidence-identity or methodology defect.",
+      "Escalate immediately when the recovery engine classifies semantic/historical authority risk as human-required.",
+      "After repeated no-progress state, close the loop with a terminal blocker or human decision instead of creating more forensic substeps."
+    ],
+    "default_retry_policy": {
+      "transient_technical": "bounded automatic retry only when existing recovery-engine proofs pass",
+      "deterministic_contract_defect": "one targeted deterministic repair path when uniquely provable",
+      "analytical_or_identity_defect": "no automatic retry; human escalation",
+      "no_progress": "stop and surface explicit blocker"
+    },
+    "desired_output_per_incident": [
+      "what failed",
+      "why it failed",
+      "whether progress is possible",
+      "exact next action",
+      "who has authority",
+      "what must not be retried"
+    ]
+  },
+  "analysis_engine": {
+    "architecture": "LAYERED_MODULE_GRAPH",
+    "module_execution_modes": [
+      "DETERMINISTIC",
+      "ASSISTED",
+      "HYBRID"
+    ],
+    "proposed_layers": [
+      {
+        "layer": "L0_INPUT_AND_EVIDENCE",
+        "modules": [
+          "ENTITY_AND_SCOPE",
+          "SOURCE_QUALITY_AND_DATA_CUTOFF",
+          "EVIDENCE_LEDGER_AND_CONFLICTS",
+          "RESEARCH_GAP_CONTROL"
+        ]
+      },
+      {
+        "layer": "L1_BUSINESS_UNDERSTANDING",
+        "modules": [
+          "BUSINESS_MODEL",
+          "SEGMENTS_AND_REVENUE_DRIVERS",
+          "INDUSTRY_STRUCTURE_AND_POSITIONING",
+          "UNIT_ECONOMICS_WHERE_RELEVANT"
+        ]
+      },
+      {
+        "layer": "L2_COMPETITIVE_QUALITY",
+        "modules": [
+          "MOAT_EVIDENCE",
+          "MOAT_DURABILITY",
+          "COMPETITOR_COUNTEREVIDENCE",
+          "CUSTOMER_SUPPLIER_DEPENDENCY"
+        ]
+      },
+      {
+        "layer": "L3_RUNWAY_AND_EXECUTION",
+        "modules": [
+          "GROWTH_RUNWAY",
+          "TAM_AND_PENETRATION_WHERE_RELEVANT",
+          "EXECUTION_QUALITY",
+          "MANAGEMENT_AND_GOVERNANCE"
+        ]
+      },
+      {
+        "layer": "L4_ECONOMICS_AND_CAPITAL",
+        "modules": [
+          "RETURN_NORMALIZATION",
+          "CAPITAL_SEASONING",
+          "OWNER_CASH",
+          "FINANCING_CONSISTENCY",
+          "CAPITAL_ALLOCATION"
+        ]
+      },
+      {
+        "layer": "L5_RISK_AND_WEAK_LINKS",
+        "modules": [
+          "WEAK_LINK_TAXONOMY",
+          "MATERIAL_RISKS",
+          "COUNTEREVIDENCE_SYNTHESIS",
+          "INVALIDATION_TRIGGERS"
+        ]
+      },
+      {
+        "layer": "L6_VALUATION",
+        "modules": [
+          "VALUATION_ASSUMPTION_INTEGRITY",
+          "VALUATION_MODEL",
+          "VALUATION_DIAGNOSTIC_INTEGRITY",
+          "PRICE_LADDER_AND_EXPECTED_RETURN"
+        ]
+      },
+      {
+        "layer": "L7_DECISION_AND_SYNTHESIS",
+        "modules": [
+          "DECISION_STATE_ARCHITECTURE",
+          "OQS_OVS_INVESTMENT_SCORE_WHEN_PERMITTED",
+          "INVESTMENT_CASE_SYNTHESIS",
+          "READINESS_AND_NEXT_ACTION"
+        ]
+      }
+    ],
+    "existing_frozen_p0_modules_reused": [
+      "WEAK_LINK_TAXONOMY",
+      "DECISION_STATE_ARCHITECTURE",
+      "RETURN_NORMALIZATION",
+      "CAPITAL_SEASONING",
+      "OWNER_CASH",
+      "FINANCING_CONSISTENCY",
+      "VALUATION_ASSUMPTION_INTEGRITY",
+      "VALUATION_DIAGNOSTIC_INTEGRITY"
+    ],
+    "module_contract_requirements": [
+      "module_id/version",
+      "purpose",
+      "CORE or CONDITIONAL",
+      "execution_mode",
+      "prerequisites",
+      "required evidence classes",
+      "allowed inputs",
+      "output schema",
+      "UNKNOWN policy",
+      "counterevidence policy",
+      "adaptive-depth triggers",
+      "validation rules",
+      "retry/recovery rules",
+      "human authority boundary",
+      "downstream consumers"
+    ],
+    "routing_principle": "Do not execute every possible module at maximum depth. Run CORE modules and activate conditional overlays/depth only when evidence, archetype, uncertainty or materiality triggers justify them."
+  },
+  "assisted_inference_bridge": {
+    "role": "SUBCOMPONENT_OF_ANALYSIS_ENGINE_NOT_PRODUCT_SCOPE",
+    "objective": "Allow judgment-heavy modules to use a high-capability interactive model with structured import/validation while current local hardware is insufficient.",
+    "future_replaceability": "INTERACTIVE_LLM can later be replaced by a LOCAL_INFERENCE_ADAPTER without changing module contracts or persistence."
+  },
+  "implementation_order": [
+    {
+      "phase": "M0",
+      "name": "ENGINE_AND_PROCESS_BLUEPRINT",
+      "deliverables": [
+        "complete module registry",
+        "dependency graph",
+        "module execution modes",
+        "anti-loop state/incident model",
+        "analysis workspace information architecture"
+      ]
+    },
+    {
+      "phase": "M1",
+      "name": "ANALYSIS_WORKSPACE_UI_SKELETON",
+      "deliverables": [
+        "run dashboard",
+        "company analysis workspace",
+        "module navigator",
+        "blocker/next-action panel",
+        "evidence inspector"
+      ]
+    },
+    {
+      "phase": "M2",
+      "name": "ANTI_LOOP_CONTROLLER",
+      "deliverables": [
+        "progress fingerprint",
+        "no-progress detection",
+        "retry/repair budget",
+        "stop reasons",
+        "human escalation integration"
+      ]
+    },
+    {
+      "phase": "M3",
+      "name": "MODULAR_ENGINE_REGISTRY",
+      "deliverables": [
+        "register frozen P0 modules",
+        "define missing qualitative modules",
+        "CORE/CONDITIONAL routing",
+        "adaptive depth integration"
+      ]
+    },
+    {
+      "phase": "M4",
+      "name": "ASSISTED_ANALYSIS_BRIDGE",
+      "deliverables": [
+        "task bundle",
+        "interactive model handoff",
+        "structured result import",
+        "validation",
+        "minimal repair request"
+      ]
+    },
+    {
+      "phase": "M5",
+      "name": "END_TO_END_PILOT",
+      "deliverables": [
+        "one company through research-to-analysis workspace",
+        "operator-time measurement",
+        "loop/incident measurement",
+        "analytical quality review",
+        "UI friction review"
+      ]
+    }
+  ],
+  "first_build_decision": "M0_ENGINE_AND_PROCESS_BLUEPRINT",
+  "production_mutation": false,
+  "routing_frozen": false,
+  "model_winner_selected": false,
+  "gate_18": "IN_PROGRESS_NOT_FROZEN",
+  "next_action": "BUILD_M0_COMPLETE_MODULE_REGISTRY_ANTI_LOOP_SPEC_AND_ANALYSIS_WORKSPACE_INFORMATION_ARCHITECTURE"
+}
