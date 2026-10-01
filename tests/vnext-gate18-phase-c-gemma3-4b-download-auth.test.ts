@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "AWAIT_EXPLICIT_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_AUTHORITY_OR_NEW_CANDIDATE_DIRECTION",
+    "AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -191,9 +191,54 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
     entry.phase_c_candidate_synthesis_status,
     "PREPARED_NO_C7_DECISION_AUTHORITY_EXERCISED",
   );
-  assert.equal(entry.c7_local_candidate_decision_authorized, false);
+  assert.equal(
+    entry.phase_c_candidate_synthesis_result_status,
+    "COMPLETE_NO_CURRENT_CANDIDATE_MEETS_C7_ADMISSION_PREREQUISITES",
+  );
+  assert.equal(entry.c7_local_candidate_decision_authorized, true);
+  assert.equal(
+    entry.c7_local_candidate_decision_authority,
+    "EXPLICIT_USER_AUTHORIZATION_2026-10-01",
+  );
+  assert.equal(
+    entry.c7_local_candidate_decision_status,
+    "LOCAL_CANDIDATE_REJECTED",
+  );
+  assert.equal(
+    entry.c7_local_candidate_decision_scope,
+    "CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT",
+  );
+  assert.equal(entry.c7_current_tested_candidate_set_size, 10);
+  assert.equal(entry.c7_admissible_candidate_count, 0);
+  assert.equal(entry.c7_production_candidate_selected, false);
+  assert.equal(entry.c7_selected_candidate, null);
+  assert.equal(entry.c7_conditional_candidate_selected, false);
+  assert.equal(entry.c7_current_local_production_path_admitted, false);
+  assert.equal(entry.c7_current_campaign_closed, true);
+  assert.equal(entry.phase_c_complete, true);
+  assert.equal(entry.local_production_candidate, null);
+  assert.equal(entry.status, "COMPLETE");
+  assert.equal(
+    entry.current_state.c5_repeatability,
+    "QWEN3_4B_NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
+  );
+  assert.equal(entry.current_state.c6_blinded_adjudication, "NOT_STARTED");
+  assert.equal(
+    entry.c7_closure_c5_repeatability,
+    "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  );
+  assert.equal(
+    entry.c7_closure_c6_blinded_adjudication,
+    "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  );
+  assert.equal(
+    entry.current_state.c7_local_candidate_decision,
+    "LOCAL_CANDIDATE_REJECTED",
+  );
   assert.equal(entry.model_winner_selected, false);
   assert.equal(entry.routing_frozen, false);
+  assert.equal(entry.production_mutation, false);
+  assert.equal(entry.gate_18, "IN_PROGRESS_NOT_FROZEN");
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);

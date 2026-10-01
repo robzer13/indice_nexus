@@ -2057,3 +2057,58 @@ No model is ranked or selected as winner.
 No routing is frozen.
 
 The next boundary requires explicit user authority for the C7 local production-candidate decision, or explicit direction to test a new candidate.
+
+## D-2026-10-01-110 — Execute C7 and reject the current tested local-candidate set
+
+The user explicitly authorized execution of the Phase C C7 local production-candidate decision.
+
+Formal classification:
+
+`LOCAL_CANDIDATE_REJECTED`
+
+Scope:
+
+`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
+
+Basis:
+- Qwen3 1.7B failed a critical C3 historical semantic regression.
+- The broader C4 campaign produced recurrent critical human-quality failures, deterministic semantic failures, or structured-output/schema failure.
+- Hardware-fit passes do not override analytical contract failures.
+- No candidate survived with the combined structured-output reliability, semantic correctness, exact evidence grounding, judgment-boundary compliance and normal-path usefulness required for production candidacy.
+- The post-Llama registry refresh found no high-information same-weight successor worth extending the campaign before C7.
+
+C5 and C6 are recorded as not reached by any surviving production candidate rather than failed stages.
+
+This C7 rejection is not a global claim about all present or future local/open-weight models and does not establish a family-wide failure for any tested family.
+
+No failed candidate is ranked or selected as fallback.
+
+## D-2026-10-01-111 — Phase C closes; Gate 18 remains open and unfrozen
+
+Phase C status becomes:
+
+`COMPLETE`
+
+Current local production candidate:
+
+`NONE`
+
+Model winner:
+
+`NONE`
+
+Routing freeze:
+
+`NONE`
+
+Production mutation:
+
+`FALSE`
+
+Gate 18 remains:
+
+`IN_PROGRESS_NOT_FROZEN`
+
+The C7 decision does not authorize a paid benchmark, hybrid architecture, hardware purchase, new candidate, routing change, or production mutation.
+
+The next step requires explicit post-C7 strategy direction.

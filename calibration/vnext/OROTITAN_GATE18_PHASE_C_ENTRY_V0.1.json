@@ -2,7 +2,7 @@
   "format": "OROTITAN_GATE18_PHASE_C_ENTRY_V0.1",
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
-  "status": "IN_PROGRESS",
+  "status": "COMPLETE",
   "entry_preconditions": {
     "phase_a": "PASS",
     "phase_b": "PASS",
@@ -21,7 +21,7 @@
     "c4_diversified_matrix": "COMPLETE_5_OF_5_SYNTHESIS_RECORDED_RECURRENT_CRITICAL_FAILURES",
     "c5_repeatability": "QWEN3_4B_NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
     "c6_blinded_adjudication": "NOT_STARTED",
-    "c7_local_candidate_decision": "NOT_STARTED"
+    "c7_local_candidate_decision": "LOCAL_CANDIDATE_REJECTED"
   },
   "initial_model_dependent_module": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
   "deterministic_p0_modules_remain_provider_independent": true,
@@ -30,7 +30,7 @@
   "publication_authority": false,
   "model_winner_selected": false,
   "routing_frozen": false,
-  "next_action": "AWAIT_EXPLICIT_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_AUTHORITY_OR_NEW_CANDIDATE_DIRECTION",
+  "next_action": "AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "local_runtime_candidate": "OLLAMA",
   "primary_hardware_fit_candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
@@ -1724,5 +1724,22 @@
   "local_candidate_registry_inference_authorized": false,
   "phase_c_candidate_synthesis_prep": "G18-PHASEC-CANDIDATE-SYNTHESIS-PREP-001",
   "phase_c_candidate_synthesis_status": "PREPARED_NO_C7_DECISION_AUTHORITY_EXERCISED",
-  "c7_local_candidate_decision_authorized": false
+  "c7_local_candidate_decision_authorized": true,
+  "phase_c_candidate_synthesis_result": "G18-PHASEC-CANDIDATE-SYNTHESIS-RESULT-001",
+  "phase_c_candidate_synthesis_result_status": "COMPLETE_NO_CURRENT_CANDIDATE_MEETS_C7_ADMISSION_PREREQUISITES",
+  "c7_local_candidate_decision_authority": "EXPLICIT_USER_AUTHORIZATION_2026-10-01",
+  "c7_local_candidate_decision": "G18-PHASEC-C7-LOCAL-PRODUCTION-CANDIDATE-DECISION-001",
+  "c7_local_candidate_decision_status": "LOCAL_CANDIDATE_REJECTED",
+  "c7_local_candidate_decision_scope": "CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT",
+  "c7_current_tested_candidate_set_size": 10,
+  "c7_admissible_candidate_count": 0,
+  "c7_production_candidate_selected": false,
+  "c7_selected_candidate": null,
+  "c7_conditional_candidate_selected": false,
+  "c7_current_local_production_path_admitted": false,
+  "c7_current_campaign_closed": true,
+  "phase_c_complete": true,
+  "local_production_candidate": null,
+  "c7_closure_c5_repeatability": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  "c7_closure_c6_blinded_adjudication": "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE"
 }

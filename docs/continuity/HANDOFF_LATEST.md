@@ -1,58 +1,63 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20261001-061`
+Resume ID: `VNEXT-G18-C-20261001-062`
 
-## Llama 3.2 3B — C4 expansion stopped
+## Gate 18 Phase C — C7 executed
 
-The final read-only prefix/separator forensic completed.
+The user explicitly authorized execution of the C7 local production-candidate decision on the current Phase C evidence.
 
-Observed:
-- malformed path: `priority_findings.1.counterevidence_ids.0`;
-- raw value length: 5;
-- numeric suffix: three digits and unchanged;
-- format-only canonical candidate: `E-005`;
-- `E-005` exists in pinned packet: FALSE;
-- mismatches are confined to the prefix/separator;
-- deterministic canonicalization admissible: FALSE.
+Formal C7 decision:
 
-Because the only format-only candidate does not exist in the exact packet, any further repair would require changing the numeric evidence identity. That is not an admissible presentation normalization.
+`LOCAL_CANDIDATE_REJECTED`
+
+Scope:
+
+`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
+
+This means no tested local candidate currently qualifies as an OroTitan production candidate under the Phase C contract.
+
+## Decision basis
+
+The tested campaign includes candidates eliminated at C3 or C4 for one or more of:
+- critical historical semantic regression failure;
+- deterministic semantic-contract failure;
+- raw structured-output/schema failure;
+- critical human-quality evidence-grounding failure;
+- extreme hardware pressure combined with quality failure.
+
+No candidate survived earlier qualification with sufficient quality to justify a final production-candidate repeatability/blinded-comparison sequence.
 
 Therefore:
-- historical C4 result remains FAIL;
-- no downstream semantic/human adjudication is retroactively created;
-- no retry is authorized;
-- no additional Llama 3.2 inference is authorized;
-- Llama 3.2 C4 expansion is stopped;
-- evidence is retained for calibration;
-- no family-wide Llama failure is inferred.
+- C5 final repeatability = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
+- C6 final blinded adjudication = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
+- C7 = `LOCAL_CANDIDATE_REJECTED`.
 
-## Registry refresh 2026-10-01
+## What the rejection does NOT mean
 
-A zero-cost static registry refresh was completed.
+It does not conclude:
+- all future local/open-weight models will fail;
+- any tested model family is globally incapable;
+- a particular failed model is the best fallback;
+- a paid model should be used;
+- a hybrid architecture should be used;
+- new hardware should be purchased.
 
-No next local candidate was selected.
+## Operational state
 
-The current low-memory deferred option `qwen3.5:2b-q4_K_M` remains lower-information because Qwen3.5 4B already failed human-quality adjudication.
+Phase C: `COMPLETE`
 
-No official pinned SmolLM3 Ollama package was verified in the refresh.
+Current local production candidate: `NONE`
 
-No download or inference is authorized.
+Model winner: `NONE`
 
-## Phase C synthesis boundary
+Routing freeze: `NONE`
 
-A synthesis-prep artifact now consolidates the tested local-candidate sequence.
+Production mutation: `FALSE`
 
-It does NOT:
-- accept a local production candidate;
-- reject all local candidates as a formal C7 decision;
-- conditionally admit a candidate;
-- rank models;
-- select a winner;
-- freeze routing;
-- mutate production.
+Gate 18: `IN_PROGRESS_NOT_FROZEN`
 
-The standing technical authorization explicitly does not exercise the C7 production-candidate decision boundary.
+Existing production behavior is unchanged.
 
 ## Current exact next action
 
-`AWAIT_EXPLICIT_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_AUTHORITY_OR_NEW_CANDIDATE_DIRECTION`
+`AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION`

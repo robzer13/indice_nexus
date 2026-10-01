@@ -1,81 +1,56 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Completed/stopped calibration evidence
-Status: RETAINED_IMMUTABLE
+## OI-001 — Historical Phase C calibration evidence
+Status: COMPLETE_RETAINED_IMMUTABLE
 
-All historical candidate results remain immutable.
+Historical candidate outcomes remain immutable.
 
-## OI-002 — Llama 3.2 3B
-Status: STOPPED_RETAIN_CALIBRATION_EVIDENCE
+## OI-002 — Gate 18 Phase C
+Status: COMPLETE
 
-Hardware:
-`PASS_WITH_HIGH_RAM_PRESSURE`
+C7 decision:
 
-First Constellation C4:
-`FAIL_RAW_SCHEMA_FORENSICS_REQUIRED`
+`LOCAL_CANDIDATE_REJECTED`
 
-Final forensic:
-`FORENSIC_COMPLETE_NO_SAFE_DETERMINISTIC_CANONICALIZATION`
+Scope:
 
-Canonical format-only candidate:
-`E-005`
+`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
 
-Candidate exists in pinned packet:
-FALSE
+Current tested-set production candidate:
+NONE
 
-Retry authorized:
-FALSE
+Formal C7 decision executed:
+TRUE
 
-Additional Llama inference:
-FALSE
-
-Candidate admitted:
-FALSE
-
-Family-wide failure concluded:
-FALSE
-
-## OI-003 — Local candidate registry
-Status: REFRESH_COMPLETE_NO_NEXT_CANDIDATE_SELECTED
-
-Refresh:
-`G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004`
-
-New download authorized:
-FALSE
-
-New inference authorized:
-FALSE
-
-## OI-004 — Phase C synthesis / C7
-Status: PREPARED_AWAITING_EXPLICIT_DECISION_AUTHORITY
+## OI-003 — Post-C7 model strategy
+Status: OPEN_REQUIRES_EXPLICIT_DIRECTION
 Priority: P0
 
-Synthesis prep:
-`G18-PHASEC-CANDIDATE-SYNTHESIS-PREP-001`
+No post-C7 strategy has been selected.
 
-Current candidate accepted:
-FALSE
+Possible future directions are outside the current C7 decision and require explicit direction, including:
+- a new materially different local candidate;
+- a controlled external-model benchmark;
+- a hybrid local/external architecture;
+- a hardware-change path;
+- redesign of the LLM responsibility boundary.
 
-Formal C7 local-candidate rejection:
-NOT EXECUTED
+No option is selected by implication.
 
-Conditional admission:
-NOT EXECUTED
-
-Winner selected:
-FALSE
-
-Routing frozen:
-FALSE
-
-Required next authority:
-explicit C7 local production-candidate decision authority, or explicit direction to test a new candidate.
-
-## OI-005 — Production / routing
+## OI-004 — Production / routing
 Status: GUARDED
 
-No production mutation.
-No publication authority.
-No model winner.
-No routing freeze.
+Model winner:
+NONE
+
+Routing freeze:
+NONE
+
+Production mutation:
+FALSE
+
+Publication authority:
+FALSE
+
+Gate 18:
+IN_PROGRESS_NOT_FROZEN
