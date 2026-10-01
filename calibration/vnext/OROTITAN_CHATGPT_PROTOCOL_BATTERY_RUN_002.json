@@ -1,0 +1,91 @@
+{
+  "format": "OROTITAN_CHATGPT_PROTOCOL_BATTERY_RUN_V1",
+  "run_id": "OROTITAN-CHATGPT-PROTOCOL-BATTERY-002",
+  "date": "2026-10-02",
+  "protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
+  "baseline_vnext_head": "8467fdabc001baf354ce3b5919a55476ee29079e",
+  "production_mutation": false,
+  "test_mode": "CI_PLUS_LIVE_READ_ONLY_PREFLIGHT",
+  "live_supabase": {
+    "project_name": "orotitan-screener",
+    "registry_tables_rls": {
+      "orotitan_runs": true,
+      "orotitan_run_stages": true,
+      "orotitan_artifacts": true,
+      "orotitan_artifact_edges": true,
+      "orotitan_run_events": true,
+      "research_snapshots": true
+    },
+    "guarded_rpc_permissions": {
+      "checked": 9,
+      "anon_execute_count": 0,
+      "authenticated_execute_count": 0,
+      "service_role_execute_count": 9,
+      "all_security_definer": true
+    },
+    "guard_checks": {
+      "checkpoint_checks_run_state_version": true,
+      "checkpoint_has_idempotency_logic": true,
+      "finalize_checks_run_state_version": true,
+      "finalize_has_idempotency_logic": true,
+      "reopen_checks_run_state_version": true,
+      "reopen_has_idempotency_logic": true,
+      "publish_authorization_checks_run_state_version": true,
+      "publish_authorization_checks_ready_to_publish": true,
+      "publish_authorization_has_idempotency_logic": true,
+      "publish_result_checks_run_state_version": true,
+      "publish_result_checks_ready_to_publish": true,
+      "artifact_resolver_checks_expected_sha256": true,
+      "artifact_resolver_checks_authority_class": true
+    },
+    "security_advisors": {
+      "rls_enabled_no_policy": {
+        "level": "INFO",
+        "count": 14,
+        "interpretation": "REVIEW_AND_DOCUMENT_SERVICE_ONLY_POSTURE"
+      },
+      "function_search_path_mutable": {
+        "level": "WARN",
+        "count": 3,
+        "functions": [
+          "set_companies_updated_at",
+          "reject_market_sync_run_mutation",
+          "reject_snapshot_mutation"
+        ],
+        "critical_orotitan_registry_rpc_affected": false,
+        "disposition": "TECHNICAL_DEBT_TO_HARDEN"
+      }
+    },
+    "performance_advisors": {
+      "unindexed_foreign_keys": {
+        "level": "INFO",
+        "count": 10,
+        "disposition": "PERFORMANCE_DEBT_NOT_PROTOCOL_BLOCKER"
+      }
+    }
+  },
+  "acceptance_matrix_source": "calibration/vnext/OROTITAN_CHATGPT_PROTOCOL_ACCEPTANCE_MATRIX_001.json",
+  "expected_summary": {
+    "total": 25,
+    "required_before_vertical_slice": 15
+  },
+  "replay_result": {
+    "rls_firewall": "PASS",
+    "guarded_rpc_permissions": "PASS",
+    "concurrency_and_idempotency_guards": "PASS",
+    "publication_separation": "PASS",
+    "artifact_authority_resolution": "PASS",
+    "advisor_drift": "NO_MATERIAL_CHANGE",
+    "production_mutation": false
+  },
+  "readiness": {
+    "protocol_frozen": true,
+    "live_mutation_firewall_supported": true,
+    "concurrency_guards_supported": true,
+    "publication_separation_supported": true,
+    "artifact_authority_resolution_supported": true,
+    "vertical_slice_ready": false
+  },
+  "conclusion": "FOUNDATION_REPLAY_PASS_IMPLEMENTATION_GAPS_UNCHANGED",
+  "exact_next_action": "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS"
+}
