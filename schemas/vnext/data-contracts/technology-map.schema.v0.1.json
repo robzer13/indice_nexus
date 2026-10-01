@@ -1,0 +1,188 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/technology-map.v0.1.json",
+  "title": "OroTitan Technology Map V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "technology_map_id",
+    "technology_version",
+    "product_architecture",
+    "ip_position",
+    "standards_dependence",
+    "interoperability",
+    "workflow_embedding",
+    "technical_switching_costs",
+    "data_advantages",
+    "r_and_d_model",
+    "r_and_d_intensity",
+    "r_and_d_productivity_evidence",
+    "engineering_talent_dependence",
+    "current_generation",
+    "next_generation",
+    "open_source_threat",
+    "commoditization_risk",
+    "obsolescence_risk",
+    "technical_replication_difficulty",
+    "time_to_replicate",
+    "capex_to_replicate",
+    "regulatory_or_certification_barriers",
+    "technology_roadmap_confidence",
+    "core_technologies",
+    "technical_bottlenecks",
+    "proprietary_assets",
+    "supplier_tech_dependencies",
+    "customer_tech_dependencies",
+    "competing_technologies",
+    "substitute_technologies",
+    "invalidation_triggers",
+    "evidence_ids",
+    "contradicting_evidence_ids"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "technology_map_id": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+    },
+    "technology_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "product_architecture": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "ip_position": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "standards_dependence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "interoperability": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "workflow_embedding": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "technical_switching_costs": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "data_advantages": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "r_and_d_model": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "r_and_d_intensity": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "r_and_d_productivity_evidence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "engineering_talent_dependence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "current_generation": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "next_generation": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "open_source_threat": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "commoditization_risk": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "obsolescence_risk": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "technical_replication_difficulty": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "time_to_replicate": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "capex_to_replicate": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "regulatory_or_certification_barriers": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "technology_roadmap_confidence": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/stringOrSpecial"
+    },
+    "core_technologies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "technical_bottlenecks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "proprietary_assets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "supplier_tech_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "customer_tech_dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "competing_technologies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "substitute_technologies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "invalidation_triggers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "contradicting_evidence_ids": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    }
+  }
+}
