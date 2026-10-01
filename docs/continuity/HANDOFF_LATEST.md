@@ -1,33 +1,43 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20260930-056`
+Resume ID: `VNEXT-G18-C-20261001-057`
 
-## Llama 3.2 first Constellation C4 — second RAM precondition block
+## Llama 3.2 first Constellation C4 — Ollama residency guard tooling block
 
-The same single C4 inference authorization remains valid and unconsumed.
+The latest manual launch stopped before inference with:
 
-Second observed sequence:
-- external PowerShell free RAM immediately before launch: 1.09 GiB;
-- runner baseline free RAM at the actual guard: 0.70 GiB;
-- protocol requirement at the runner guard: >= 1.00 GiB;
-- status: `BLOCKED_BEFORE_INFERENCE`;
-- provider generation request: not reached;
-- semantic inference: not executed.
+`VNEXT_GATE18_PHASE_C_C4_LLAMA3_2_3B_OLLAMA_PS_CHECK_FAILED`
 
-Observed external-to-runner delta: -0.39 GiB.
+Execution boundary:
+- authorization validation reached;
+- Ollama residency guard reached;
+- installed-model identity check not reached;
+- RAM guard not reached;
+- packet build not reached;
+- provider generation not reached;
+- semantic inference not executed;
+- generated private output not created.
 
-This delta is an observation only; root cause attribution is not proven. It is consistent with startup/system-state overhead and means that a narrow external margin above 1.0 GiB is operationally insufficient.
+The single C4 inference authorization remains unconsumed with exactly one run available.
 
-The protocol threshold remains unchanged at 1.0 GiB.
+## Runner remediation
 
-Operational pre-launch target before the next manual execution: >= 1.5 GiB external free RAM.
+The prior residency guard executed the external CLI command `ollama ps` via Node child process.
 
-Authorization state:
-- consumed: false;
-- authorized runs remaining: 1;
-- automatic retry: not authorized;
-- parameter change: not authorized.
+That guard has been replaced by the Ollama loopback endpoint `/api/ps`, using the same internal HTTP transport already used by the runner.
+
+This removes dependence on launching the Ollama CLI from the Node process while preserving the exact safety invariant: no model may already be resident before the C4 run.
+
+No inference parameter changed:
+- context: 16384;
+- max output: 1024;
+- temperature: 0;
+- timeout: 600000 ms;
+- minimum runner baseline free RAM: 1.0 GiB;
+- packet and prompt hashes unchanged.
+
+Operationally, prefer at least 1.5 GiB external free RAM immediately before launch because of the previously observed external-to-runner memory delta.
 
 ## Current exact next action
 
-`RESTORE_EXTERNAL_FREE_RAM_GIB_GTE_1_5_THEN_EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION`
+`EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE`
