@@ -65,6 +65,38 @@ test("analytical data schema is an implementation-only additive contract", () =>
   );
 });
 
+test("Source Manifest rejects unresolved derivative root sources", () => {
+  const artifact = {
+    ...common,
+    artifact_type: "SOURCE_MANIFEST",
+    body: {
+      manifest_version: "1",
+      sources: [
+        {
+          source_id: "S-2",
+          title_or_description: "Secondary article",
+          source_type: "SECONDARY_MEDIA",
+          issuer_or_publisher: "Publisher",
+          source_date: "2026-09-30",
+          data_period: null,
+          root_source_id: "S-MISSING",
+          location_ref: "https://example.invalid/article",
+          discovery_route: "WEB_SEARCH",
+          access_status: "ACCESSIBLE",
+          included_in_evidence_ledger: false,
+          notes_limitations: ["Root source not yet recovered."],
+        },
+      ],
+    },
+  };
+
+  const result = validateAnalyticalDataArtifact(artifact);
+  assert.equal(result.ok, false);
+  if (!result.ok) {
+    assert.ok(result.errors.some((error) => error.includes("unresolved root_source_id")));
+  }
+});
+
 test("evidence ledger preserves cutoff and exact frozen evidence fields", () => {
   const artifact = {
     ...common,
