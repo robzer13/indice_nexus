@@ -871,3 +871,85 @@ test("Phase C synthesis prep does not exercise C7 decision authority", () => {
   assert.equal(p.boundaries.additional_download_authorized, false);
 });
 
+test("Phase C candidate synthesis result finds no C7-admissible current local model", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_CANDIDATE_SYNTHESIS_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(
+    r.status,
+    "COMPLETE_NO_CURRENT_CANDIDATE_MEETS_C7_ADMISSION_PREREQUISITES",
+  );
+  assert.equal(r.tested_candidate_set.length, 10);
+  assert.equal(
+    r.tested_candidate_set.every(
+      (candidate: { c7_eligible: boolean }) => candidate.c7_eligible === false,
+    ),
+    true,
+  );
+  assert.equal(
+    r.synthesis_conclusion.current_tested_candidate_set_contains_c7_admissible_model,
+    false,
+  );
+  assert.equal(
+    r.synthesis_conclusion.local_first_zero_external_api_cost_target_achieved,
+    false,
+  );
+  assert.equal(
+    r.synthesis_conclusion.local_first_strategy_globally_disproven,
+    false,
+  );
+  assert.equal(r.synthesis_conclusion.future_unseen_local_models_precluded, false);
+  assert.equal(r.synthesis_conclusion.family_global_failures_inferred, false);
+  assert.equal(r.boundaries.no_candidate_ranking, true);
+  assert.equal(r.boundaries.no_best_model_selected, true);
+  assert.equal(r.boundaries.no_winner_selected, true);
+  assert.equal(r.boundaries.no_routing_freeze, true);
+  assert.equal(r.boundaries.no_production_mutation, true);
+});
+
+test("C7 formally rejects the current tested local candidate set without freezing routing", () => {
+  const d = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(d.status, "LOCAL_CANDIDATE_REJECTED");
+  assert.equal(d.authority.type, "EXPLICIT_USER_AUTHORIZATION");
+  assert.equal(d.authority.routing_freeze_authorized, false);
+  assert.equal(d.authority.production_mutation_authorized, false);
+  assert.equal(d.basis.current_tested_candidate_set_size, 10);
+  assert.equal(d.basis.c7_admissible_candidate_count, 0);
+  assert.equal(d.decision.classification, "LOCAL_CANDIDATE_REJECTED");
+  assert.equal(
+    d.decision.scope,
+    "CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT",
+  );
+  assert.equal(d.decision.production_candidate_selected, false);
+  assert.equal(d.decision.selected_candidate, null);
+  assert.equal(d.decision.conditional_candidate_selected, false);
+  assert.equal(d.decision.current_zero_per_call_local_production_path_admitted, false);
+  assert.equal(d.decision.current_campaign_closed, true);
+  assert.equal(d.decision.phase_c_complete, true);
+  assert.equal(d.operational_implication.current_local_model_for_production, null);
+  assert.equal(d.operational_implication.current_model_winner, null);
+  assert.equal(d.operational_implication.current_routing_freeze, null);
+  assert.equal(d.operational_implication.production_mutation, false);
+  assert.equal(
+    d.closure.c5_repeatability,
+    "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  );
+  assert.equal(
+    d.closure.c6_blinded_adjudication,
+    "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
+  );
+  assert.equal(d.closure.c7_local_candidate_decision, "LOCAL_CANDIDATE_REJECTED");
+  assert.equal(d.closure.phase_c, "COMPLETE");
+  assert.equal(d.closure.gate_18, "IN_PROGRESS_NOT_FROZEN");
+});
+
