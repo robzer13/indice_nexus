@@ -153,9 +153,17 @@ COMPANY_ECONOMIC_DNA
 INDUSTRY_STRUCTURE_ANALYSIS
 ANALYTICAL_BLOCK_OUTPUT
 CAUSAL_GRAPH
+MOAT_PROOF_ANALYSIS
+RUNWAY_ANALYSIS
+RETURN_QUALITY_ANALYSIS
+FCF_FORENSIC_ANALYSIS
+CAPITAL_ALLOCATION_ANALYSIS
+OUTSIDE_VIEW_ANALYSIS
+VARIANT_PERCEPTION_ANALYSIS
+RISK_RESILIENCE_ANALYSIS
+RED_TEAM_RECORD
 TECHNOLOGY_ANALYSIS
 CYCLICALITY_ANALYSIS
-CAPITAL_ALLOCATION_ANALYSIS
 MATERIAL_CHANGE_REVALIDATION_RECORD
 ```
 
@@ -455,6 +463,38 @@ NOT_ASSESSABLE
 ```
 
 A material causal edge that is unsupported or not assessable cannot be treated as strongly proven merely because the narrative is persuasive.
+
+---
+
+# 11. STRUCTURED BLOCK-SUPPORT ARTIFACTS
+
+For quality-critical analytical engines, structured support artifacts may accompany the canonical `ANALYTICAL_BLOCK_OUTPUT`.
+
+They exist to preserve evidence mechanics and analytical bridges, not to create a second verdict authority.
+
+```text
+CANONICAL BLOCK VERDICT
+= ANALYTICAL_BLOCK_OUTPUT
+
+STRUCTURED SUPPORT
+= ENGINE-SPECIFIC EVIDENCE / BRIDGE / CHALLENGE DATA
+```
+
+Supported structured artifacts include:
+
+- `MOAT_PROOF_ANALYSIS`: mechanism → independent/customer/competitor/behavioral evidence → economic consequence → replication/substitution → durability;
+- `RUNWAY_ANALYSIS`: causal growth sources plus explicit TAM / serviceable market / realistic capture pool;
+- `RETURN_QUALITY_ANALYSIS`: ROIC/ROIIC/marginal/cohort/growth-spend economics with interpretability and attributability;
+- `FCF_FORENSIC_ANALYSIS`: explicit adjustment bridge from reported cash flow toward standardized FCF / owner earnings;
+- `CAPITAL_ALLOCATION_ANALYSIS`: deployments with amount/timing/funding/outcome/per-share consequence/estimated return/alternative use;
+- `OUTSIDE_VIEW_ANALYSIS`: reference class → prior → comparability → company evidence → updated judgment;
+- `VARIANT_PERCEPTION_ANALYSIS`: market expectation vs OroTitan view with falsification condition;
+- `RISK_RESILIENCE_ANALYSIS`: causal risk records under the frozen taxonomy;
+- `RED_TEAM_RECORD`: all mandatory adversarial perspectives and reopening recommendations.
+
+No structured support artifact may contain or override a frozen score.
+
+The block envelope references support artifacts by exact ID/version through the registry layer.
 
 ---
 
