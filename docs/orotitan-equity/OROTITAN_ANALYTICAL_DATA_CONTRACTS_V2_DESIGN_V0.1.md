@@ -150,6 +150,7 @@ DD_INPUT_SUFFICIENCY_RECORD
 ANALYSIS_INPUT_LOCK
 
 COMPANY_ECONOMIC_DNA
+INDUSTRY_STRUCTURE_ANALYSIS
 ANALYTICAL_BLOCK_OUTPUT
 CAUSAL_GRAPH
 TECHNOLOGY_ANALYSIS
@@ -389,31 +390,71 @@ Confidence remains execution metadata only.
 
 ---
 
-# 10. CAUSAL GRAPH
+# 10. INDUSTRY STRUCTURE + CAUSAL GRAPH
+
+## 10.1 Industry Structure
+
+Industry Structure is a cross-block support artifact, not a generic Porter paragraph and not a score.
+
+It preserves the Analytical Engine V2 lenses:
+
+```text
+MARKET_STRUCTURE
+COMPETITOR_SET
+MARKET_SHARE_DISTRIBUTION
+ENTRY_RATE / EXIT_RATE
+CAPACITY_DISCIPLINE
+PRICING_DISCIPLINE
+CUSTOMER / SUPPLIER / DISTRIBUTOR POWER
+REGULATORY_BARRIERS
+SWITCHING_FRICTION
+MULTIHOMING
+VERTICAL_INTEGRATION
+CONSOLIDATION_TREND
+DISRUPTION_VECTORS
+PROFIT_POOL_LOCATION
+VALUE_CHAIN_POSITION
+HISTORICAL_RETURN_DISTRIBUTION
+```
+
+Every material finding remains traceable.
+
+## 10.2 Causal Graph
 
 The Causal Graph does not become a separate source of truth.
 
-Each link expresses:
+It preserves explicit nodes and edges:
 
 ```text
-FROM
-→ MECHANISM
-→ TO / ECONOMIC CONSEQUENCE
+CAUSAL_NODE
+- NODE_ID
+- CLAIM
+- TYPE
+- EVIDENCE_IDS[]
+- CONTRADICTING_EVIDENCE_IDS[]
+- CONFIDENCE
+
+CAUSAL_EDGE
+- FROM_NODE
+- TO_NODE
+- MECHANISM
+- SUPPORTING_EVIDENCE_IDS[]
+- COUNTEREVIDENCE_IDS[]
+- STATUS
+- CONFIDENCE
 ```
 
-and must reference supporting / contradicting evidence and calculations where material.
-
-Allowed link states are execution metadata:
+Allowed edge status:
 
 ```text
-PROVISIONAL
 SUPPORTED
 MIXED
 NOT_SUPPORTED
+LOW_CONFIDENCE
 NOT_ASSESSABLE
 ```
 
-The graph is a structured view over the analytical dossier.
+A material causal edge that is unsupported or not assessable cannot be treated as strongly proven merely because the narrative is persuasive.
 
 ---
 
