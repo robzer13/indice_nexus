@@ -119,6 +119,18 @@ V3 economic-share-count semantics remain governed exclusively by the V3 methodol
 
 ## 4.5 Cross-object IDs are first-class
 
+Cross-artifact dependencies use exact registry identity:
+
+```text
+ARTIFACT_ID
+VERSION
+RUN_ID
+STATUS
+SHA256 when available
+```
+
+Never resolve a dependency through filename guessing, "latest", or chat memory.
+
 The application must validate:
 
 - Evidence IDs;
