@@ -198,6 +198,19 @@ LIMITATIONS
 CONFLICT_STATUS
 ```
 
+The following frozen vocabularies are exact and must not be replaced by more conversational labels:
+
+```text
+SOURCE_CLASS = S1 | S2 | S3 | S4 | S5 | S6
+CLAIM_FIT = HIGH | MEDIUM | LOW
+EPISTEMIC_TYPE = REPORTED | CALCULATED | CONSENSUS | ESTIMATE | ASSUMPTION | UNKNOWN
+FRESHNESS_STATE = CURRENT | FIT_FOR_PURPOSE | STALE_FOR_USE | UNKNOWN_DATE
+```
+
+The ChatGPT operating layer may reason about management claims, customer evidence, competitor evidence or inference, but those concepts must map into the frozen ledger fields rather than redefine `EPISTEMIC_TYPE`.
+
+The frozen Evidence Ledger also preserves `USED_IN[]`.
+
 Additional implementation-only quantitative provenance may attach:
 
 - exact scalar or range;
