@@ -1,0 +1,103 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_CANDIDATE_SYNTHESIS_RESULT_V0.1",
+  "result_id": "G18-PHASEC-CANDIDATE-SYNTHESIS-RESULT-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "COMPLETE_NO_CURRENT_CANDIDATE_MEETS_C7_ADMISSION_PREREQUISITES",
+  "source_prep": "G18-PHASEC-CANDIDATE-SYNTHESIS-PREP-001",
+  "source_registry_refresh": "G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004",
+  "tested_candidate_set": [
+    {
+      "candidate": "QWEN3_1_7B_OLLAMA_Q4",
+      "terminal_stage": "C3",
+      "disposition": "FAIL_CRITICAL_SEMANTIC_REGRESSION",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "QWEN3_4B_INSTRUCT_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "PHI4_MINI_3_8B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "QWEN3_5_4B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "GEMMA3_4B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_DETERMINISTIC_SEMANTIC_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "GRANITE4_3B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "QWEN3_8B_LOCAL",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE_AND_EXTREME_RAM_PRESSURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "MINISTRAL3_3B_INSTRUCT_2512_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "GRANITE4_1_3B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_HUMAN_QUALITY_CRITICAL_FAILURE",
+      "c7_eligible": false
+    },
+    {
+      "candidate": "LLAMA3_2_3B_OLLAMA_Q4_K_M",
+      "terminal_stage": "C4",
+      "disposition": "STOPPED_RAW_SCHEMA_REFERENCE_ID_FAILURE_AFTER_EXHAUSTED_SAFE_FORENSICS",
+      "c7_eligible": false
+    }
+  ],
+  "c7_criteria_assessment": {
+    "all_critical_semantic_regressions_pass_for_surviving_candidate": false,
+    "structured_output_reliability_acceptable_for_surviving_candidate": false,
+    "no_critical_evidence_role_inversion_for_surviving_candidate": false,
+    "judgment_boundary_respected_for_surviving_candidate": false,
+    "normal_path_usefulness_acceptable_for_surviving_candidate": false,
+    "repeatability_acceptable_for_surviving_candidate": false,
+    "machine_resource_use_operationally_viable_for_surviving_candidate": false,
+    "explanation": "No candidate survives the earlier qualification stages with sufficient quality to enter a full C5/C6 final-candidate sequence. Resource viability alone is insufficient to override semantic, grounding, schema, or human-quality failures."
+  },
+  "stage_reachability": {
+    "c5_repeatability": "NOT_REACHED_BY_ANY_SURVIVING_PRODUCTION_CANDIDATE",
+    "c6_blinded_adjudication": "NOT_REACHED_AS_FINAL_COMPARISON_STAGE_NO_SURVIVING_PRODUCTION_CANDIDATE",
+    "c7_decision_basis": "EARLIER_STAGE_ELIMINATIONS_PLUS_COMPLETE_CALIBRATION_EVIDENCE"
+  },
+  "synthesis_conclusion": {
+    "current_tested_candidate_set_contains_c7_admissible_model": false,
+    "local_first_zero_external_api_cost_target_achieved": false,
+    "local_first_strategy_globally_disproven": false,
+    "future_unseen_local_models_precluded": false,
+    "family_global_failures_inferred": false
+  },
+  "boundaries": {
+    "no_candidate_ranking": true,
+    "no_best_model_selected": true,
+    "no_winner_selected": true,
+    "no_routing_freeze": true,
+    "no_production_mutation": true,
+    "no_publication_authority": true
+  },
+  "next_action": "EXECUTE_C7_LOCAL_PRODUCTION_CANDIDATE_DECISION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
