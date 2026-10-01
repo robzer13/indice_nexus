@@ -98,6 +98,13 @@ function validateEvidenceLedger(
       errors.push(`EVIDENCE ${evidenceId} data_cutoff mismatches artifact data_cutoff`);
     }
 
+    if (sourceDate === null && record.freshness_state !== "UNKNOWN_DATE") {
+      errors.push(`EVIDENCE ${evidenceId} null source_date requires UNKNOWN_DATE freshness`);
+    }
+    if (typeof sourceDate === "string" && record.freshness_state === "UNKNOWN_DATE") {
+      errors.push(`EVIDENCE ${evidenceId} dated source cannot use UNKNOWN_DATE freshness`);
+    }
+
     const sourceIds: string[] = [];
     if (typeof record.source_id === "string") sourceIds.push(record.source_id);
     if (typeof record.root_source_id === "string") sourceIds.push(record.root_source_id);
