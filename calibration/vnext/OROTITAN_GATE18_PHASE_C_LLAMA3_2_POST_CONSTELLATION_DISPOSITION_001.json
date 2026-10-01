@@ -1,0 +1,45 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_LLAMA3_2_POST_CONSTELLATION_DISPOSITION_V0.1",
+  "disposition_id": "G18-PHASEC-LLAMA3_2-POST-CONSTELLATION-DISPOSITION-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "status": "STOP_LLAMA3_2_C4_EXPANSION_RETAIN_CALIBRATION_EVIDENCE",
+  "basis": {
+    "hardware_qualification": "PASS_WITH_HIGH_RAM_PRESSURE",
+    "first_c4_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+    "first_c4_status": "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED",
+    "raw_schema_forensic": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-RESULT-001",
+    "counterevidence_id_forensic": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001",
+    "prefix_separator_forensic": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-PREFIX-SEPARATOR-FORENSIC-RESULT-001"
+  },
+  "evidence_basis": [
+    "The bounded Constellation C4 inference completed normally at runtime with done_reason=stop and 895 generated tokens.",
+    "The generated response was syntactically valid JSON but failed the frozen raw schema at exactly one path: priority_findings.1.counterevidence_ids.0.",
+    "The malformed value contains no exact canonical E-NNN token.",
+    "A format-only candidate E-005 can be inferred from the unchanged three-digit suffix, but E-005 does not exist in the exact pinned packet.",
+    "Any further deterministic repair would require changing the numeric evidence identity, which is prohibited because it would invent or substitute evidence rather than normalize presentation.",
+    "No downstream semantic validation or human-quality adjudication can be reached on the historical output without an inadmissible reference substitution."
+  ],
+  "decision": {
+    "llama3_2_candidate_admitted": false,
+    "llama3_2_c4_expansion": "STOP",
+    "retain_as_calibration_evidence": true,
+    "additional_llama3_2_inference_authorized": false,
+    "retry_authorized": false,
+    "production_admission": "NOT_ADMITTED_FROM_CURRENT_EVIDENCE",
+    "family_global_failure_concluded": false,
+    "model_winner_selected": false,
+    "model_ranking_authority": false,
+    "routing_authority": false,
+    "routing_frozen": false,
+    "production_mutation": false
+  },
+  "rationale": [
+    "The remaining defect is not a presentation-only normalization because the canonical candidate derived from the unchanged suffix is absent from the packet.",
+    "A retry with the unchanged packet/prompt/temperature has low information gain after a completed runtime response and three read-only forensics.",
+    "Changing the prompt, schema, packet, or evidence identity would confound the candidate comparison.",
+    "The candidate therefore stops at the first C4 discriminator and is retained as calibration evidence."
+  ],
+  "next_action": "REFRESH_LOCAL_CANDIDATE_REGISTRY_AND_PREPARE_PHASE_C_SYNTHESIS_NO_DECISION",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
