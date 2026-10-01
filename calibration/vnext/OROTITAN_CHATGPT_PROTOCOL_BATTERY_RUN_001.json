@@ -1,0 +1,106 @@
+{
+  "format": "OROTITAN_CHATGPT_PROTOCOL_BATTERY_RUN_V1",
+  "run_id": "OROTITAN-CHATGPT-PROTOCOL-BATTERY-001",
+  "date": "2026-10-01",
+  "protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
+  "baseline_vnext_head": "e4dcec16e9790e5dff88a032db64a742bcaca3cf",
+  "production_mutation": false,
+  "test_mode": "CI_PLUS_LIVE_READ_ONLY_PREFLIGHT",
+  "ci_baseline": {
+    "pr": 323,
+    "vnext_ci": "PASS",
+    "screener_ci": "PASS",
+    "merge_commit": "e4dcec16e9790e5dff88a032db64a742bcaca3cf"
+  },
+  "live_supabase": {
+    "project_name": "orotitan-screener",
+    "registry_tables_rls": {
+      "orotitan_runs": true,
+      "orotitan_run_stages": true,
+      "orotitan_artifacts": true,
+      "orotitan_artifact_edges": true,
+      "orotitan_run_events": true,
+      "research_snapshots": true
+    },
+    "guarded_rpc_permissions": {
+      "checked": 9,
+      "anon_execute_count": 0,
+      "authenticated_execute_count": 0,
+      "service_role_execute_count": 9,
+      "all_security_definer": true
+    },
+    "guard_checks": {
+      "checkpoint_checks_run_state_version": true,
+      "checkpoint_checks_stage_state_version": true,
+      "checkpoint_has_idempotency_logic": true,
+      "finalize_checks_run_state_version": true,
+      "finalize_checks_stage_state_version": true,
+      "finalize_has_idempotency_logic": true,
+      "reopen_checks_run_state_version": true,
+      "reopen_checks_stage_state_version": true,
+      "publish_authorization_checks_run_state_version": true,
+      "publish_authorization_checks_ready_to_publish": true,
+      "publish_authorization_has_idempotency_logic": true,
+      "publish_result_checks_run_state_version": true,
+      "publish_result_checks_ready_to_publish": true,
+      "artifact_resolver_checks_expected_sha256": true,
+      "artifact_resolver_checks_authority_class": true
+    },
+    "security_advisors": {
+      "rls_enabled_no_policy": {
+        "level": "INFO",
+        "count": 14,
+        "interpretation": "REVIEW_AND_DOCUMENT_SERVICE_ONLY_POSTURE"
+      },
+      "function_search_path_mutable": {
+        "level": "WARN",
+        "count": 3,
+        "functions": [
+          "set_companies_updated_at",
+          "reject_market_sync_run_mutation",
+          "reject_snapshot_mutation"
+        ],
+        "critical_orotitan_registry_rpc_affected": false,
+        "disposition": "TECHNICAL_DEBT_TO_HARDEN"
+      }
+    }
+  },
+  "acceptance_matrix": {
+    "total": 25,
+    "pass_live": 5,
+    "pass_infrastructure": 1,
+    "pass_protocol": 4,
+    "partial_infrastructure": 4,
+    "partial_code": 1,
+    "implementation_gaps": 10,
+    "required_before_vertical_slice": 15
+  },
+  "readiness": {
+    "protocol_frozen": true,
+    "baseline_ci_green": true,
+    "live_mutation_firewall_supported": true,
+    "concurrency_guards_supported": true,
+    "publication_separation_supported": true,
+    "artifact_authority_resolution_supported": true,
+    "vertical_slice_ready": false
+  },
+  "blockers_before_vertical_slice": [
+    "LOAD_RESOLVER_AND_CONTEXT_ASSEMBLER",
+    "POST_CUTOFF_EVIDENCE_VALIDATOR",
+    "V2_EVIDENCE_AND_CONFLICT_CONTRACTS",
+    "MATERIAL_CHANGE_REVALIDATION_GATE",
+    "SERIAL_ACQUIRER_CAPITAL_ALLOCATION_STRUCTURES",
+    "SECTOR_OVERLAY_SELECTION_VALIDATION",
+    "BLOCK_LEVEL_GAP_AND_NOT_ASSESSABLE_STATE",
+    "SAVE_ORCHESTRATION",
+    "ANALYTICAL_EVIDENCE_ID_VALIDATION",
+    "BLOCK_LEVEL_DEPENDENCY_REOPENING",
+    "PRICE_ONLY_DELTA_ROUTING",
+    "ROUTINE_FUNDAMENTAL_DELTA_ROUTING",
+    "FULL_REFRESH_ROUTING",
+    "STAGE_FINALIZATION_ELIGIBILITY_FROM_SAVE",
+    "CONNECTOR_FAILURE_FAIL_CLOSED_LOAD_PATH"
+  ],
+  "conclusion": "FOUNDATION_PASS_WITH_IMPLEMENTATION_GAPS",
+  "exact_next_action": "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS"
+}

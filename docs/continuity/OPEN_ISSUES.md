@@ -1,58 +1,68 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Historical Phase C / C7
-Status: COMPLETE_RETAINED_IMMUTABLE
-
-Phase C = COMPLETE  
-C7 = LOCAL_CANDIDATE_REJECTED
-
-## OI-002 — Analytical Engine V2
-Status: TARGET_ARCHITECTURE_SELECTED
-
-No change to frozen analytical semantics.
-
-## OI-003 — ChatGPT Operating Protocol V1.0
+## OI-001 — ChatGPT Operating Protocol V1.0
 Status: FROZEN
 Priority: CLOSED
 
-Authoritative document:
-`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
+## OI-002 — Protocol regression battery
+Status: BASELINE_EXECUTED
+Priority: CLOSED_FOR_CURRENT_PHASE
 
-## OI-004 — Analytical Engine V2 data contracts
+Result:
+
+`FOUNDATION_PASS_WITH_IMPLEMENTATION_GAPS`
+
+25 scenarios mapped.  
+15 require implementation closure before vertical slice.
+
+## OI-003 — Analytical Engine V2 Data Contracts
 Status: TO_DESIGN
 Priority: P0
 
-Must translate the frozen methodology + ChatGPT protocol into exact machine-readable contracts without semantic duplication.
+Must close at minimum:
+- post-cutoff source validation;
+- evidence / conflict structures;
+- Evidence-ID validation;
+- serial-acquirer / capital-allocation structures;
+- cross-block references needed by revalidation.
 
-## OI-005 — Process Engine V2 state machine
+## OI-004 — Process Engine V2
 Status: TO_DESIGN
 Priority: P0
 
-Must model run/stage/block/checkpoint/finalization/reopening/failure/recovery behavior.
+Must close at minimum:
+- material-change revalidation gate;
+- sector-overlay validation;
+- block-level gaps / NOT_ASSESSABLE;
+- dependency reopening;
+- price-only / routine / full refresh routing.
 
-## OI-006 — Controlled ChatGPT ↔ Supabase operations
+## OI-005 — ChatGPT ↔ Supabase bridge
 Status: TO_DESIGN
 Priority: P0
 
-Target:
-- read-only / project-scoped normal reads where practical;
-- guarded RPC writes only for checkpoint/finalization/publication-related transitions;
-- no ad-hoc production DML in company-analysis workflow.
+Must close at minimum:
+- LOAD resolver;
+- layered context assembler;
+- fail-closed connector behavior;
+- SAVE orchestration;
+- finalization eligibility;
+- bounded guarded-RPC invocation.
+
+## OI-006 — Supabase security hardening
+Status: TRACKED
+Priority: P1 BEFORE FINAL PRODUCTION
+
+- document intended service-only RLS posture;
+- harden 3 mutable-search-path legacy functions.
 
 ## OI-007 — Workbench UI / UX
-Status: TO_DESIGN
+Status: WAITING_FOR_FOUNDATION
 Priority: P1
 
-Includes:
-- French-first UI;
-- queue / shortlist;
-- current runs;
-- block progress;
-- blockers / next action;
-- evidence browser;
-- history;
-- price monitoring;
-- exports.
+Final vitrine is French-first.
+
+Implementation should start only after the functional vertical slice validates the underlying data/state model.
 
 ## OI-008 — Production / routing
 Status: GUARDED

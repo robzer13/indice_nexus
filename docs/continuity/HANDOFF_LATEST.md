@@ -1,82 +1,75 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-065`
+Resume ID: `VNEXT-POST-C7-20261001-067`
 
 ## Current state
 
-Phase C remains complete.
+ChatGPT operating protocol:
 
-C7 remains:
-
-`LOCAL_CANDIDATE_REJECTED`
-
-Post-C7 architecture is now complete.
-
-The ChatGPT operating protocol has been explicitly approved by the user and frozen as:
-
-`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
+`OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0`
 
 Status:
 
 `FROZEN_V1_0`
 
-Approval date:
+Post-C7 architectural planning:
 
-`2026-10-01`
+`CLOSED`
 
-## Frozen architecture
+## Regression battery
 
-```text
-CHATGPT
-= PRIMARY NON-DETERMINISTIC ANALYTICAL BRAIN
+Baseline protocol battery executed against:
 
-SUPABASE
-= CANONICAL WORKING MEMORY / RUN + ARTIFACT REGISTRY
+- merged CI baseline;
+- frozen 25-scenario acceptance matrix;
+- live Supabase registry in read-only preflight mode.
 
-GITHUB
-= METHOD / CODE / CONTRACTS / TESTS
+Result:
 
-VERCEL
-= RUNTIME / DEPLOYMENT / LOGS
+`FOUNDATION_PASS_WITH_IMPLEMENTATION_GAPS`
 
-OROTITAN
-= PRODUCT SURFACE / COCKPIT / CANONICAL DISPLAY
-```
+Verified:
 
-ChatGPT Work is not required in the current V2 path.
+- VNext CI baseline = PASS;
+- Screener CI baseline = PASS;
+- RLS enabled on core registry tables;
+- critical registry RPCs are service-role only;
+- checkpoint/finalize/reopen version guards exist;
+- idempotency controls exist;
+- artifact resolver checks SHA-256 + authority class;
+- publication remains separate from SAVE.
 
-## Frozen command surface
+Security debt recorded:
 
-```text
-LOAD OROTITAN <COMPANY>
-STATUS OROTITAN
-CHECKPOINT OROTITAN
-SAVE OROTITAN
-REFRESH OROTITAN <COMPANY>
-GO PUBLISH <COMPANY>
-```
+- RLS-without-policy posture must be explicitly documented as service-only;
+- 3 legacy functions have mutable `search_path` and must be hardened before final production hardening.
 
-## Planning phase
+## Vertical slice
 
-`POST_C7_ARCHITECTURAL_PLANNING_PHASE = CLOSED`
+`VERTICAL_SLICE_READY = FALSE`
 
-No further architecture planning is required before detailed design.
+15 scenarios require implementation closure before vertical slice.
 
-## Exact next action
+They cluster into:
+
+1. Data Contracts V2
+2. Process Engine V2
+3. ChatGPT ↔ Supabase bridge
+
+## Active execution action
 
 `DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
 
-Legacy continuity compatibility field retained for the historical test contract:
+Legacy continuity compatibility field still retained:
 
 `USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
 
-This legacy value is non-operative; the active execution action is Data Contracts V2.
+The legacy value is non-operative.
 
-Then:
-1. Process Engine V2 state machine
-2. controlled ChatGPT ↔ Supabase operation contracts
-3. Workbench information architecture
-4. UI design system
-5. implementation backlog
+## Product invariant
 
-No production mutation, routing freeze or model winner is created by the protocol freeze.
+OroTitan product surface / vitrine remains:
+
+`FRENCH_FIRST_UI = TRUE`
+
+Machine contracts and internal canonical vocabulary may remain English.
