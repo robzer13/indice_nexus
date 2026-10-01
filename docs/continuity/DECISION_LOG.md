@@ -1898,3 +1898,56 @@ Forbidden:
 - production/routing/ranking/publication decisions.
 
 The forensic result will determine whether any bounded reliability remediation would be informative. No retry is pre-authorized.
+
+## D-2026-10-01-102 — Llama 3.2 raw-schema forensic isolates one malformed counterevidence ID
+
+The first read-only forensic completed without inference, Ollama calls, network access, artifact mutation, or publication of generated values.
+
+Observed:
+- raw JSON syntactically valid;
+- all six required top-level keys present;
+- no extra top-level key;
+- priority findings: 3;
+- material conflicts: 1;
+- weak-link candidates: 2;
+- unresolved points: 1;
+- schema issue count: 1;
+- unique issue path count: 1;
+- exact path: `priority_findings.1.counterevidence_ids.0`;
+- issue code: `invalid_format`;
+- issue origin: string;
+- issue format: regex.
+
+The historical C4 run remains FAIL. Semantic validation and human-quality adjudication remain unreached.
+
+The first forensic authorization is consumed.
+
+No inference retry is authorized.
+
+## D-2026-10-01-103 — Authorize one cumulative read-only counterevidence-ID forensic
+
+One further zero-cost read-only forensic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+Purpose:
+determine whether the single malformed `counterevidence_ids[0]` string can be unambiguously decomposed into one or two canonical packet evidence IDs in the form `E-NNN`.
+
+A diagnostic replacement is permitted only on an in-memory copy and only when:
+- all extracted IDs exist in the exact pinned packet;
+- the malformed string contains only those IDs plus separator characters;
+- extracted IDs are unique;
+- any already-valid trailing counterevidence ID is preserved;
+- the resulting array remains within the frozen two-ID maximum.
+
+If the replacement is unambiguous, the frozen V1.1 validator is rerun on the in-memory diagnostic copy to expose any downstream presentation or substantive semantic defect.
+
+Forbidden:
+- source artifact mutation;
+- raw malformed value publication;
+- generated narrative publication;
+- Ollama/model calls;
+- network access;
+- new inference;
+- retry authorization;
+- retroactive pass.
+
+This forensic is diagnostic only and does not itself establish candidate admission, ranking, routing, or production suitability.
