@@ -1,75 +1,68 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-067`
+Resume ID: `VNEXT-POST-C7-20261001-068`
 
-## Current state
+## Current authority
 
 ChatGPT operating protocol:
-
 `OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0`
 
-Status:
-
-`FROZEN_V1_0`
-
-Post-C7 architectural planning:
-
+Architectural planning:
 `CLOSED`
 
-## Regression battery
-
-Baseline protocol battery executed against:
-
-- merged CI baseline;
-- frozen 25-scenario acceptance matrix;
-- live Supabase registry in read-only preflight mode.
-
-Result:
-
+Protocol battery:
 `FOUNDATION_PASS_WITH_IMPLEMENTATION_GAPS`
 
-Verified:
+## Data Contracts V2
 
-- VNext CI baseline = PASS;
-- Screener CI baseline = PASS;
-- RLS enabled on core registry tables;
-- critical registry RPCs are service-role only;
-- checkpoint/finalize/reopen version guards exist;
-- idempotency controls exist;
-- artifact resolver checks SHA-256 + authority class;
-- publication remains separate from SAVE.
+Status:
+`DESIGN_CANDIDATE_READY_FOR_CI`
 
-Security debt recorded:
+Core machine contracts drafted:
+- Source Manifest
+- Evidence Ledger
+- Conflict Ledger
+- Calculation Ledger
+- Material Assumption Register
+- Material Research Hypothesis Register
+- Research Gap Register
+- DD Input Sufficiency Record
+- Analysis Input Lock
+- Analytical Block Output
 
-- RLS-without-policy posture must be explicitly documented as service-only;
-- 3 legacy functions have mutable `search_path` and must be hardened before final production hardening.
+Adaptive support contracts drafted:
+- Company Economic DNA
+- Overlay Selection
+- Cycle Analysis
+- Technology Map
+- Industry Structure
+- Causal Graph
+- Serial Acquirer Capital Deployment
 
-## Vertical slice
+Deterministic validators drafted for:
+- cutoff enforcement;
+- exact Evidence / Conflict / Calculation / Assumption references;
+- DD sufficiency;
+- Analysis Input Lock consistency;
+- adaptive support traceability;
+- causal node/edge integrity;
+- sector-overlay / DNA consistency.
 
-`VERTICAL_SLICE_READY = FALSE`
+## Invariants preserved
 
-15 scenarios require implementation closure before vertical slice.
+- no methodology change;
+- no production mutation;
+- no Supabase migration;
+- existing artifact registry remains physical authority;
+- Phase-4 snapshot schema remains downstream projection;
+- Gate-15 frozen modules are not redefined;
+- machine vocabulary remains English;
+- OroTitan vitrine remains French-first.
 
-They cluster into:
+## Exact next action
 
-1. Data Contracts V2
-2. Process Engine V2
-3. ChatGPT ↔ Supabase bridge
+`VALIDATE_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS_CANDIDATE`
 
-## Active execution action
+If CI/regression passes:
 
-`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
-
-Legacy continuity compatibility field still retained:
-
-`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
-
-The legacy value is non-operative.
-
-## Product invariant
-
-OroTitan product surface / vitrine remains:
-
-`FRENCH_FIRST_UI = TRUE`
-
-Machine contracts and internal canonical vocabulary may remain English.
+`PROCESS_ENGINE_V2_STATE_MACHINE_DESIGN`
