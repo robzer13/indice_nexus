@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { validateAnalyticalCoreBundle } from "../runtime/vnext/analytical-data-contracts";
+import { validateAnalyticalCoreBundle, type AnalyticalCoreBundle } from "../runtime/vnext/analytical-data-contracts";
 
 const sha = "a".repeat(64);
 
@@ -15,7 +15,7 @@ function ctx() {
   };
 }
 
-function bundle() {
+function bundle(): AnalyticalCoreBundle {
   return {
     run: {
       run_id: "RUN-001",
@@ -106,7 +106,7 @@ function bundle() {
 }
 
 test("clean targeted-refresh core bundle passes integrity validation", () => {
-  const result = validateAnalyticalCoreBundle(bundle() as never);
+  const result = validateAnalyticalCoreBundle(bundle());
   assert.equal(result.ok, true, JSON.stringify(result.issues, null, 2));
 });
 
@@ -115,7 +115,7 @@ test("post-cutoff evidence fails closed", () => {
   value.sourceManifest.sources[0].source_date = "2026-10-02";
   value.evidenceLedger.evidence[0].source_date = "2026-10-02";
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some((item) => item.code === "POST_CUTOFF_EVIDENCE"),
@@ -126,7 +126,7 @@ test("unknown Evidence ID fails closed", () => {
   const value = bundle();
   value.sufficiencyRecord.blocks[0].key_evidence_ids = ["E-MISSING"];
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some((item) => item.code === "UNKNOWN_EVIDENCE_ID"),
@@ -138,7 +138,7 @@ test("SUFFICIENT cannot coexist with a material blocking gap", () => {
   value.gapRegister.gaps = [{ gap_id: "G-001" }];
   value.sufficiencyRecord.blocks[0].material_blocking_gaps = ["G-001"];
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some((item) => item.code === "SUFFICIENT_WITH_BLOCKING_GAP"),
@@ -149,7 +149,7 @@ test("READY_FOR_DEEP_DIVE cannot be YES with an insufficient block", () => {
   const value = bundle();
   value.sufficiencyRecord.blocks[0].dd_input_status = "INSUFFICIENT";
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some(
@@ -162,7 +162,7 @@ test("initial analysis fails when any frozen DD input block is missing", () => {
   const value = bundle();
   value.sufficiencyRecord.scope_type = "INITIAL";
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some(
@@ -175,7 +175,7 @@ test("Analysis Input Lock must pin the loaded Evidence Ledger version", () => {
   const value = bundle();
   value.inputLock.evidence_ledger_version = "EL-OLD";
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some(
@@ -190,7 +190,7 @@ test("material assumption cannot masquerade as reported evidence", () => {
     { assumption_id: "A-001", epistemic_type: "REPORTED" },
   ];
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some(
@@ -211,7 +211,7 @@ test("Input Lock cannot be ready with open material conflicts", () => {
   ];
   value.inputLock.open_material_conflicts = ["CF-001"];
 
-  const result = validateAnalyticalCoreBundle(value as never);
+  const result = validateAnalyticalCoreBundle(value);
   assert.equal(result.ok, false);
   assert.ok(
     result.issues.some(
