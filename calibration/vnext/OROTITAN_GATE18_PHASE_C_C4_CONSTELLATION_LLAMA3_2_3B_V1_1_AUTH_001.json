@@ -4,7 +4,7 @@
   "gate": 18,
   "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
   "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
-  "status": "AUTHORIZED_SINGLE_LOCAL_INFERENCE",
+  "status": "CONSUMED_SINGLE_LOCAL_INFERENCE_COMPLETE",
   "authorization_source": {
     "type": "STANDING_USER_AUTHORIZATION",
     "authorization_id": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
@@ -17,7 +17,7 @@
     "reason": "One same-packet inference is permitted as the next zero-cost protocol step after staged context16384 load qualification; it does not establish production fit."
   },
   "c4_inference": {
-    "authorized": true,
+    "authorized": false,
     "company": "Constellation Software",
     "archetype": "SERIAL_ACQUIRER",
     "module_id": "MOAT_EVIDENCE_AUDIT_ASSISTED_V0_3",
@@ -38,7 +38,7 @@
     "transport": "NODE_HTTP_REQUEST_LOOPBACK"
   },
   "constraints": {
-    "authorized_run_count": 1,
+    "authorized_run_count": 0,
     "external_model_api_cost_usd": 0,
     "automatic_retry_authorized": false,
     "prompt_change_authorized": false,
@@ -63,7 +63,7 @@
     "assist_only": true,
     "autonomous_financial_decision_authority": false
   },
-  "next_action": "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE",
+  "next_action": "RUN_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
   "gate_18": "IN_PROGRESS_NOT_FROZEN",
   "precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
   "precondition_block_status": "HISTORICAL_BLOCKS_UNCONSUMED_AUTHORIZATION",
@@ -72,5 +72,7 @@
     "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
     "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001"
   ],
-  "latest_precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001"
+  "latest_precondition_block": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
+  "execution_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  "execution_result_status": "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED"
 }
