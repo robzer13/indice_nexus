@@ -4,7 +4,7 @@ import test from "node:test";
 
 test("ChatGPT operating protocol keeps intelligence in ChatGPT and infrastructure bounded", () => {
   const raw = readFileSync(
-    "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md",
+    "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md",
     "utf8",
   );
 
@@ -24,29 +24,31 @@ test("ChatGPT operating protocol keeps intelligence in ChatGPT and infrastructur
   assert.match(raw, /ChatGPT Work is not part of the required V2 workflow/);
 });
 
-test("ChatGPT protocol candidate remains non-frozen and non-publishing", () => {
+test("ChatGPT protocol freeze is explicit, approved and non-publishing", () => {
   const d = JSON.parse(
     readFileSync(
-      "calibration/vnext/OROTITAN_CHATGPT_OPERATING_PROTOCOL_CANDIDATE_001.json",
+      "calibration/vnext/OROTITAN_CHATGPT_OPERATING_PROTOCOL_FREEZE_V1.0_001.json",
       "utf8",
     ),
   );
 
-  assert.equal(d.status, "DESIGN_CANDIDATE_READY_FOR_USER_REVIEW");
+  assert.equal(d.status, "FROZEN_V1_0");
+  assert.equal(d.user_approval, true);
   assert.equal(d.architecture.chatgpt, "PRIMARY_NON_DETERMINISTIC_ANALYTICAL_BRAIN");
   assert.equal(d.architecture.chatgpt_work, "OUT_OF_SCOPE_UNLESS_CLEAR_FUTURE_GAIN");
-  assert.equal(d.does_not_freeze, true);
-  assert.equal(d.no_production_mutation, true);
-  assert.equal(d.next_action, "USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1");
+  assert.equal(d.preserves.no_production_mutation, true);
+  assert.equal(d.preserves.publication_gate, "GO PUBLISH <COMPANY>");
+  assert.equal(d.planning_phase_status, "CLOSED");
+  assert.equal(d.next_action, "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS");
 });
 
-test("Analytical Engine V2 points to the direct ChatGPT operating protocol", () => {
+test("Analytical Engine V2 points to the frozen direct ChatGPT operating protocol", () => {
   const raw = readFileSync(
     "docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md",
     "utf8",
   );
 
-  assert.match(raw, /OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0\.1\.md/);
+  assert.match(raw, /OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1\.0\.md/);
   assert.match(raw, /PRIMARY NON-DETERMINISTIC ANALYTICAL ENGINE/);
   assert.match(raw, /manual copy\/paste bridge is no longer the target operating model/i);
   assert.match(raw, /ChatGPT Work is optional and currently out of scope/);
