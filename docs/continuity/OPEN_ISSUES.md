@@ -7,25 +7,41 @@ Status: RETAINED_IMMUTABLE
 Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
 
 ## OI-003 — Llama 3.2 first bounded Constellation C4
-Status: AUTHORIZED_UNCONSUMED_TOOLING_GUARD_FIXED
+Status: FAIL_RAW_SCHEMA_FORENSICS_REQUIRED
 Priority: P0
 
-Historical pre-inference blocks:
-1. baseline RAM 0.75 GiB < 1.0 GiB;
-2. baseline RAM 0.70 GiB < 1.0 GiB;
-3. Ollama residency CLI guard failed before model identity/RAM/generation.
+Runtime execution completed:
+- wall clock: 299230 ms;
+- prompt tokens: 3157;
+- generated tokens: 895 / 1024;
+- done reason: stop;
+- runtime error: null.
 
-Current runner residency guard:
-`GET /api/ps` over loopback HTTP.
+Validation:
+- raw schema: FAIL;
+- error: `VNEXT_GATE18_V11_RAW_SCHEMA_INVALID`;
+- semantics: NOT EVALUATED;
+- human adjudication: NOT REACHED.
 
-Inference authorization consumed: FALSE
-Authorized runs remaining: 1
-Automatic retry: NOT_AUTHORIZED
-Parameter change: NOT_AUTHORIZED
+Inference authorization consumed: TRUE
+Additional inference authorized: FALSE
+Automatic retry authorized: FALSE
 
-Operational launch condition:
-- prefer external free RAM >= 1.5 GiB;
-- no resident Ollama model.
+## OI-004 — Llama 3.2 raw-schema forensic
+Status: AUTHORIZED_UNCONSUMED
+Priority: P0
 
-## OI-004 — Model winner and routing
+Exactly one read-only local forensic is authorized.
+
+No Ollama call.
+No inference.
+No network.
+No raw generated values printed.
+No source mutation.
+No retry authorization.
+
+Required action:
+execute the prepared forensic against the exact private artifact from the failed C4 run and return only the sanitized JSON summary.
+
+## OI-005 — Model winner and routing
 Status: OPEN_GUARDED
