@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/data-contracts/analysis-input-lock.v0.1.json",
+  "title": "OroTitan Analysis Input Lock V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "company_id",
+    "research_stage_contract_version",
+    "evidence_ledger_version",
+    "source_manifest_version",
+    "dd_input_sufficiency_version",
+    "open_noncritical_gaps",
+    "open_material_conflicts",
+    "critical_blockers",
+    "ready_for_deep_dive",
+    "created_at",
+    "artifact_refs"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "company_id": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+    },
+    "research_stage_contract_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_ledger_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_manifest_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dd_input_sufficiency_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "open_noncritical_gaps": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "open_material_conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "critical_blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "ready_for_deep_dive": {
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "created_at": {
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/timestamp"
+    },
+    "artifact_refs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_manifest",
+        "evidence_ledger",
+        "conflict_ledger",
+        "hypothesis_register",
+        "gap_register",
+        "dd_input_sufficiency_record"
+      ],
+      "properties": {
+        "source_manifest": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        },
+        "evidence_ledger": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        },
+        "conflict_ledger": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        },
+        "hypothesis_register": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        },
+        "gap_register": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        },
+        "dd_input_sufficiency_record": {
+          "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/artifactRef"
+        }
+      }
+    }
+  }
+}
