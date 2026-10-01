@@ -1,0 +1,62 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_COUNTEREVIDENCE_ID_FORENSIC_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-COUNTEREVIDENCE-ID-FORENSIC-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_READ_ONLY_SCHEMA_FORENSICS",
+  "status": "FORENSIC_COMPLETE_NO_CANONICAL_TOKEN_DECOMPOSITION",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-RESULT-001",
+  "source_run": {
+    "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001",
+    "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+    "done_reason": "stop",
+    "prompt_eval_count": 3157,
+    "eval_count": 895,
+    "schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID",
+    "raw_text_sha256": "f0cfb503a74b895ddfed73ca8030ce378a4b216c5c982b2c01def50f14acbefd"
+  },
+  "malformed_reference": {
+    "path": "priority_findings.1.counterevidence_ids.0",
+    "raw_value_printed": false,
+    "raw_value_length": 5,
+    "extracted_canonical_token_count": 0,
+    "extracted_canonical_ids": [],
+    "all_extracted_ids_exist_in_packet": false,
+    "residual_separator_only": false,
+    "trailing_counterevidence_id_count": 0,
+    "unambiguous_deterministic_replacement": false
+  },
+  "diagnostic_normalization": {
+    "applied": false,
+    "source_artifact_mutated": false,
+    "raw_output_mutated": false,
+    "generated_narrative_printed": false,
+    "auto_repair_executed": false,
+    "retroactive_pass_allowed": false
+  },
+  "downstream_validation": {
+    "repaired_schema_pass": null,
+    "v11_substantive_status": null,
+    "v11_substantive_pass": null,
+    "v11_substantive_error": null
+  },
+  "interpretation": {
+    "canonical_token_concatenation_hypothesis_supported": false,
+    "format_only_prefix_or_separator_near_miss_still_plausible": true,
+    "reason": "The malformed value has length 5, equal to the canonical E-NNN identifier length, but contains no exact E-NNN token. A further read-only diagnostic can test whether positions 2-4 are already the exact numeric suffix of one canonical packet ID while only the E- prefix/separator is malformed.",
+    "retry_authorized": false,
+    "source_run_status_changed": false,
+    "model_capability_failure_concluded": false
+  },
+  "safety": {
+    "inference_executed": false,
+    "ollama_called": false,
+    "external_network_access": false,
+    "source_artifact_mutated": false,
+    "raw_narrative_content_published": false,
+    "production_mutation": false,
+    "publication_authority": false
+  },
+  "next_action": "RUN_READ_ONLY_LLAMA3_2_COUNTEREVIDENCE_PREFIX_SEPARATOR_FORENSIC"
+}
