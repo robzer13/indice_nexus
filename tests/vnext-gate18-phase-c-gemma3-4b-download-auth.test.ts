@@ -220,10 +220,15 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
   assert.equal(entry.status, "COMPLETE");
   assert.equal(
     entry.current_state.c5_repeatability,
+    "QWEN3_4B_NOT_ADMITTED_POST_C4_RECURRENT_CRITICAL_FAILURES",
+  );
+  assert.equal(entry.current_state.c6_blinded_adjudication, "NOT_STARTED");
+  assert.equal(
+    entry.c7_closure_c5_repeatability,
     "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
   );
   assert.equal(
-    entry.current_state.c6_blinded_adjudication,
+    entry.c7_closure_c6_blinded_adjudication,
     "NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE",
   );
   assert.equal(
