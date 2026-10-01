@@ -29,8 +29,7 @@
       "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
     },
     "block_id": {
-      "type": "string",
-      "minLength": 1
+      "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/blockCode"
     },
     "block_version": {
       "type": "string",
