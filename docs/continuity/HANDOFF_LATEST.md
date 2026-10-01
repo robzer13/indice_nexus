@@ -1,63 +1,87 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-G18-C-20261001-062`
+Resume ID: `VNEXT-POST-C7-20261001-063`
 
-## Gate 18 Phase C — C7 executed
+## Post-C7 direction selected
 
-The user explicitly authorized execution of the C7 local production-candidate decision on the current Phase C evidence.
+Phase C is complete.
 
-Formal C7 decision:
+Formal C7 result remains:
 
 `LOCAL_CANDIDATE_REJECTED`
 
-Scope:
+for the current tested local candidate set under the frozen Phase C contract.
 
-`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
+The user has now selected the post-C7 product direction:
 
-This means no tested local candidate currently qualifies as an OroTitan production candidate under the Phase C contract.
+`ANALYTICAL_ENGINE_V2_SELECTED_AS_POST_C7_DIRECTION`
 
-## Decision basis
+This direction does not reopen Phase C and does not select a model winner.
 
-The tested campaign includes candidates eliminated at C3 or C4 for one or more of:
-- critical historical semantic regression failure;
-- deterministic semantic-contract failure;
-- raw structured-output/schema failure;
-- critical human-quality evidence-grounding failure;
-- extreme hardware pressure combined with quality failure.
+## Product objective
 
-No candidate survived earlier qualification with sufficient quality to justify a final production-candidate repeatability/blinded-comparison sequence.
+Build an OroTitan research workbench that materially improves:
 
-Therefore:
-- C5 final repeatability = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
-- C6 final blinded adjudication = `NOT_REACHED_NO_SURVIVING_PRODUCTION_CANDIDATE`;
-- C7 = `LOCAL_CANDIDATE_REJECTED`.
+1. analytical depth;
+2. process correctness and fluidity;
+3. UI/UX quality;
+4. only then automation rate.
 
-## What the rejection does NOT mean
+The product must become better at:
+- sector-specific economics;
+- cyclicality and normalization;
+- technology and disruption;
+- industry structure;
+- causal reasoning;
+- moat proof;
+- runway decomposition;
+- return quality;
+- forensic cash-flow analysis;
+- capital allocation;
+- base rates;
+- variant perception;
+- Red Team;
+- valuation adaptation.
 
-It does not conclude:
-- all future local/open-weight models will fail;
-- any tested model family is globally incapable;
-- a particular failed model is the best fallback;
-- a paid model should be used;
-- a hybrid architecture should be used;
-- new hardware should be purchased.
+## Execution model
 
-## Operational state
+The system remains provider-agnostic.
 
-Phase C: `COMPLETE`
+Interim:
+- deterministic engine where reliable;
+- manual ChatGPT-assisted tasks where judgment is needed;
+- deterministic import and validation.
 
-Current local production candidate: `NONE`
+Future:
+- stronger local hardware/model can replace the analysis provider without redesigning the analytical engine.
 
-Model winner: `NONE`
+## UI direction
 
-Routing freeze: `NONE`
+French-first premium equity-research workbench.
 
-Production mutation: `FALSE`
+Required product capabilities include:
+- cockpit;
+- shortlist / research queue;
+- active dossier workflow;
+- visible Research → Deep Dive → Integration state;
+- blockers and deterministic next action;
+- analysis map;
+- open questions;
+- evidence browser;
+- price freshness / refresh;
+- monitoring;
+- PDF / Markdown / JSON / CSV exports.
 
-Gate 18: `IN_PROGRESS_NOT_FROZEN`
+## Canonical design artifact
 
-Existing production behavior is unchanged.
+`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
+
+Status:
+
+`POST-C7 TARGET ARCHITECTURE / NOT FROZEN / READY FOR CONTRACT DECOMPOSITION`
 
 ## Current exact next action
 
-`AWAIT_EXPLICIT_POST_C7_MODEL_STRATEGY_DIRECTION`
+`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
+
+No production mutation, routing freeze, or model winner is authorized.
