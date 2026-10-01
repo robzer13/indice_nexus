@@ -568,7 +568,7 @@ export function planRefresh(
       ),
     );
 
-    const directReopenBlocks = reopen.filter(
+    const directReopenBlocks: BlockCode[] = reopen.filter(
       (block) => block === "VALUATION",
     );
     const staleBlocks = reopen.filter(
