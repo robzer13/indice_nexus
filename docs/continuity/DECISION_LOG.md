@@ -2176,3 +2176,53 @@ The product must support:
 Until stronger hardware exists, the normal assisted workflow may prepare a bounded analysis packet for ChatGPT and import the result through deterministic schema / evidence-ID validation.
 
 Future stronger local inference must plug into the same task contract rather than require a redesign of the analytical engine.
+
+## D-2026-10-01-115 — Draft direct ChatGPT operating protocol
+
+The final missing post-C7 architectural planning layer is drafted as:
+
+`OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1`
+
+The protocol defines ChatGPT as the primary non-deterministic analytical brain.
+
+Infrastructure roles:
+- Supabase = canonical working memory / registry;
+- GitHub = methodology / code / contracts / tests;
+- Vercel = runtime / deployment / logs;
+- OroTitan = product surface / canonical display.
+
+ChatGPT Work is removed from the required V2 workflow.
+
+The protocol remains a design candidate and is not frozen.
+
+## D-2026-10-01-116 — Direct connector access with bounded writes
+
+Current connected capabilities confirm that ChatGPT can directly access GitHub, Supabase and Vercel.
+
+The live Supabase registry already provides guarded primitives including:
+- checkpoint;
+- pause / resume / reopen;
+- finalization;
+- exact artifact resolution;
+- publish authorization / result recording.
+
+Normal analytical writes should therefore use these guarded functions rather than ad-hoc SQL mutations.
+
+Routine reads should be project-scoped / read-only where practical.
+
+## D-2026-10-01-117 — Analytical quality protections become protocol-level
+
+The protocol explicitly adds:
+- layered context loading;
+- anti-anchoring / anti-narrative-contamination;
+- mandatory disconfirming research;
+- root-source recovery;
+- numeric provenance;
+- material-change revalidation;
+- sector / cyclicality / technology-specific analysis;
+- Outside View;
+- Red Team;
+- prompt-injection isolation;
+- durable checkpoint recovery.
+
+These controls exist to maximize analysis quality without making ChatGPT reasoning rigid.
