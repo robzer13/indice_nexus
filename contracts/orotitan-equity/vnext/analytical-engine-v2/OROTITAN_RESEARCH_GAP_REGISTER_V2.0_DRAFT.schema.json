@@ -21,7 +21,18 @@
       "const": "2.0.0-draft"
     },
     "run_lock": {
-      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "RESEARCH"
+            }
+          }
+        }
+      ]
     },
     "generated_at": {
       "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
