@@ -980,9 +980,9 @@ Research dead ends must use the Gap Register.
 
 # 26. HUMAN / AI EXECUTION MODES
 
-The post-C7 operating model is now governed by:
+The approved post-C7 operating model is governed by:
 
-`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md`
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
 
 Current analytical authority model:
 
