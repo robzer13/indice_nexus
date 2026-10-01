@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-070`
+Resume ID: `VNEXT-POST-C7-20261001-071`
 
 ## Current state
 
@@ -58,7 +58,7 @@ They cluster into:
 
 ## Active execution action
 
-`DESIGN_PROCESS_ENGINE_V2`
+`RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
 
 ## Product invariant
 
@@ -116,4 +116,38 @@ The reviewed package is stable for Process Engine V2 design. It is not promoted 
 
 Exact next action:
 
-`DESIGN_PROCESS_ENGINE_V2`
+`RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
+
+
+## Process Engine V2 design candidate
+
+Active branch:
+
+`post-c7-process-engine-v2-design-002`
+
+The pre-existing unmerged branch `post-c7-process-engine-v2-design-001` is retained only as superseded draft history.
+
+Candidate implements the deterministic process layer for:
+
+- dependency-graph validation and limited downstream reopening;
+- material revalidation completion gating;
+- required sector-overlay validation;
+- price-only / routine / full refresh routing;
+- SAVE checkpoint/finalization eligibility;
+- execution fingerprint / retry loop guard;
+- blocker-aware next-block resolution.
+
+Boundary remains strict:
+
+```text
+PROCESS ENGINE
+≠ SUPABASE BRIDGE
+≠ ANALYTICAL JUDGMENT
+≠ PUBLICATION
+```
+
+No production mutation.
+
+Exact next action:
+
+`RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW`
