@@ -1839,3 +1839,62 @@ The residency guard is changed to `GET /api/ps` via the existing loopback HTTP c
 No model, prompt, packet, schema, context, output budget, temperature, timeout, RAM threshold, ranking, routing, production or publication parameter is changed.
 
 No automatic retry is authorized. The same unconsumed single inference may be manually executed after the fix is merged.
+
+## D-2026-10-01-100 — Llama 3.2 first Constellation C4 inference executes and fails the raw V1.1 schema
+
+The first bounded Constellation Software C4 inference for Llama 3.2 executed once.
+
+Observed:
+- model: `llama3.2:3b-instruct-q4_K_M`;
+- context: 16384;
+- max output: 1024;
+- temperature: 0;
+- wall clock: 299230 ms;
+- prompt eval count: 3157;
+- eval count: 895;
+- output-token margin: 129;
+- done reason: `stop`;
+- runtime error: null;
+- schema valid: false;
+- schema error: `VNEXT_GATE18_V11_RAW_SCHEMA_INVALID`;
+- semantic status: `NOT_EVALUATED_SCHEMA_FAILURE`.
+
+The provider generation completed and therefore the single inference authorization is consumed.
+
+The historical result is fixed as:
+
+`FAIL_RAW_SCHEMA_FORENSICS_REQUIRED`
+
+The response is known to be syntactically valid JSON because the runner reached the V1.1 schema validator. A JSON syntax failure would have persisted a native `JSON.parse` error instead.
+
+Output-budget exhaustion is not proven because the model stopped at 895 of 1024 allowed output tokens.
+
+No semantic validation or human-quality adjudication is possible before the raw schema defect is isolated.
+
+No retry or further Llama 3.2 inference is authorized at this point.
+
+## D-2026-10-01-101 — Authorize one read-only Llama 3.2 raw-schema forensic
+
+One local read-only forensic is authorized under `OROTITAN-STANDING-TECHNICAL-AUTH-002`.
+
+The forensic is limited to the exact persisted private artifact from the failed C4 run.
+
+Allowed:
+- read the existing artifact;
+- compute raw-text length and SHA256;
+- verify syntactic JSON identity;
+- inspect top-level shape and section cardinalities;
+- rerun the frozen V1.0 output Zod schema on the already-generated parsed JSON;
+- report sanitized issue paths and codes.
+
+Forbidden:
+- printing raw generated narrative values;
+- Ollama calls;
+- model inference;
+- network access;
+- source artifact mutation;
+- retry inference;
+- historical result reclassification;
+- production/routing/ranking/publication decisions.
+
+The forensic result will determine whether any bounded reliability remediation would be informative. No retry is pre-authorized.

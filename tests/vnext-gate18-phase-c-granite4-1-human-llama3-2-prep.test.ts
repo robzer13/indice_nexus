@@ -382,8 +382,8 @@ test("Llama 3.2 first Constellation C4 authorization is single-use and fixed", (
     ),
   );
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
+  assert.equal(a.status, "CONSUMED_SINGLE_LOCAL_INFERENCE_COMPLETE");
+  assert.equal(a.c4_inference.authorized, false);
   assert.equal(a.c4_inference.company, "Constellation Software");
   assert.equal(a.c4_inference.model_name, "llama3.2:3b-instruct-q4_K_M");
   assert.equal(
@@ -395,7 +395,7 @@ test("Llama 3.2 first Constellation C4 authorization is single-use and fixed", (
   assert.equal(a.c4_inference.temperature, 0);
   assert.equal(a.c4_inference.client_timeout_ms, 600000);
   assert.equal(a.c4_inference.pre_inference_minimum_free_ram_gib, 1);
-  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.constraints.authorized_run_count, 0);
   assert.equal(a.constraints.automatic_retry_authorized, false);
   assert.equal(a.constraints.prompt_change_authorized, false);
   assert.equal(a.constraints.context_change_authorized, false);
@@ -403,6 +403,11 @@ test("Llama 3.2 first Constellation C4 authorization is single-use and fixed", (
   assert.equal(a.constraints.production_mutation, false);
   assert.equal(a.output_policy.public_repo_generated_content_forbidden, true);
   assert.equal(a.output_policy.human_adjudication_required_if_engineering_pass, true);
+  assert.equal(
+    a.execution_result,
+    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  );
+  assert.equal(a.execution_result_status, "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED");
 });
 
 test("Llama 3.2 first Constellation C4 prep and guarded runner pin the same packet and memory guard", () => {
@@ -471,12 +476,11 @@ test("Llama 3.2 first C4 baseline RAM block preserves the single inference autho
   assert.equal(b.authorization_consumption.consumed, false);
   assert.equal(b.authorization_consumption.authorized_run_count_remaining, 1);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
-  assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(
-    a.precondition_block,
-    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
+    a.precondition_blocks.includes(
+      "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-001",
+    ),
+    true,
   );
 });
 
@@ -508,9 +512,6 @@ test("Llama 3.2 second C4 RAM block preserves the same single inference authoriz
   assert.equal(b.operational_interpretation.fixed_protocol_threshold_changed, false);
   assert.equal(b.operational_interpretation.prelaunch_headroom_target_recommended_gib, 1.5);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
-  assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(
     a.precondition_blocks.includes(
       "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-BASELINE-RAM-PRECONDITION-BLOCK-002",
@@ -543,16 +544,79 @@ test("Llama 3.2 Ollama ps precondition block preserves authorization and the run
   assert.equal(b.authorization_consumption.consumed, false);
   assert.equal(b.authorization_consumption.authorized_run_count_remaining, 1);
 
-  assert.equal(a.status, "AUTHORIZED_SINGLE_LOCAL_INFERENCE");
-  assert.equal(a.c4_inference.authorized, true);
-  assert.equal(a.constraints.authorized_run_count, 1);
   assert.equal(
-    a.latest_precondition_block,
-    "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
+    a.precondition_blocks.includes(
+      "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-OLLAMA-PS-PRECONDITION-BLOCK-001",
+    ),
+    true,
   );
 
   assert.equal(raw.includes('"/api/ps"'), true);
   assert.match(raw, /await assertNoLoadedModels\(\);/);
   assert.doesNotMatch(raw, /execFileSync\("ollama", \["ps"\]/);
+});
+
+test("Llama 3.2 first Constellation C4 result is a consumed raw-schema failure requiring forensics", () => {
+  const r = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_V1_1_RESULT_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(r.status, "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED");
+  assert.equal(r.execution.done_reason, "stop");
+  assert.equal(r.execution.prompt_eval_count, 3157);
+  assert.equal(r.execution.eval_count, 895);
+  assert.equal(r.execution.output_token_margin, 129);
+  assert.equal(r.execution.runtime_error, null);
+  assert.equal(r.execution.schema_valid, false);
+  assert.equal(r.execution.schema_error, "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID");
+  assert.equal(r.execution.semantic_error, "NOT_EVALUATED_SCHEMA_FAILURE");
+  assert.equal(r.interpretation.raw_json_syntax_valid, true);
+  assert.equal(r.interpretation.output_budget_exhaustion_proven, false);
+  assert.equal(r.interpretation.retry_justified_before_forensics, false);
+  assert.equal(r.authorization_consumption.consumed, true);
+  assert.equal(r.authorization_consumption.authorized_run_count_remaining, 0);
+});
+
+test("Llama 3.2 raw-schema forensic authorization is read-only and non-inferential", () => {
+  const a = JSON.parse(
+    readFileSync(
+      "calibration/vnext/OROTITAN_GATE18_PHASE_C_C4_CONSTELLATION_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_AUTH_001.json",
+      "utf8",
+    ),
+  );
+
+  assert.equal(a.status, "AUTHORIZED_READ_ONLY_NO_INFERENCE");
+  assert.equal(a.constraints.authorized_run_count, 1);
+  assert.equal(a.scope.read_existing_private_artifact, true);
+  assert.equal(a.scope.inspect_raw_json_structure, true);
+  assert.equal(a.scope.inspect_schema_issue_paths_and_codes, true);
+  assert.equal(a.scope.print_raw_generated_values, false);
+  assert.equal(a.scope.mutate_source_artifact, false);
+  assert.equal(a.scope.execute_model_inference, false);
+  assert.equal(a.scope.call_ollama, false);
+  assert.equal(a.scope.external_network_access, false);
+  assert.equal(a.scope.retry_inference, false);
+});
+
+test("Llama 3.2 raw-schema forensic runner exposes only sanitized structural diagnostics", () => {
+  const raw = readFileSync(
+    "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-raw-schema-forensic.ts",
+    "utf8",
+  );
+
+  assert.match(raw, /EXPECTED_EVAL_COUNT = 895/);
+  assert.match(raw, /EXPECTED_MAX_OUTPUT_TOKENS = 1024/);
+  assert.match(raw, /VNEXT_GATE18_V11_RAW_SCHEMA_INVALID/);
+  assert.match(raw, /gate18PhaseBV10OutputSchema\.safeParse/);
+  assert.match(raw, /sanitizeIssue/);
+  assert.match(raw, /SYNTACTIC_JSON_VALID_RAW_SCHEMA_CONTRACT_FAILURE/);
+  assert.match(raw, /rawGeneratedValuesPrinted: false/);
+  assert.match(raw, /modelInferenceExecuted: false/);
+  assert.match(raw, /ollamaApiCalled: false/);
+  assert.doesNotMatch(raw, /\/api\/generate|\/api\/chat|11434/);
+  assert.doesNotMatch(raw, /fetch\(/);
 });
 

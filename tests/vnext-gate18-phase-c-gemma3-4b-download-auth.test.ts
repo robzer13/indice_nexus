@@ -56,7 +56,7 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
 
   assert.equal(
     entry.next_action,
-    "EXECUTE_SAME_SINGLE_LLAMA3_2_CONSTELLATION_C4_AUTHORIZATION_WITH_LOOPBACK_PS_GUARD_AFTER_MERGE",
+    "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
   );
   assert.equal(entry.llama3_2_3b_context4096_load_authorized, false);
   assert.equal(entry.llama3_2_3b_context4096_load_authorized_run_count, 0);
@@ -98,8 +98,8 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
   assert.equal(entry.llama3_2_first_c4_context_tokens, 16384);
   assert.equal(entry.llama3_2_first_c4_max_output_tokens, 1024);
   assert.equal(entry.llama3_2_first_c4_minimum_free_ram_gib, 1);
-  assert.equal(entry.llama3_2_first_c4_inference_authorized, true);
-  assert.equal(entry.llama3_2_first_c4_authorized_run_count, 1);
+  assert.equal(entry.llama3_2_first_c4_inference_authorized, false);
+  assert.equal(entry.llama3_2_first_c4_authorized_run_count, 0);
   assert.equal(entry.llama3_2_first_c4_precondition_block_count, 3);
   assert.equal(
     entry.llama3_2_first_c4_precondition_status,
@@ -110,7 +110,16 @@ test("Phase C advances from Llama 3.2 context16384 pass to first bounded Constel
     "OLLAMA_LOOPBACK_HTTP_API_PS",
   );
   assert.equal(entry.llama3_2_3b_context_growth_beyond_16384_authorized, false);
-  assert.equal(entry.llama3_2_3b_inference_authorized, true);
+  assert.equal(entry.llama3_2_3b_inference_authorized, false);
+  assert.equal(entry.llama3_2_first_c4_authorization_consumed, true);
+  assert.equal(entry.llama3_2_first_c4_result_status, "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED");
+  assert.equal(entry.llama3_2_first_c4_eval_count, 895);
+  assert.equal(entry.llama3_2_first_c4_output_token_margin, 129);
+  assert.equal(entry.llama3_2_first_c4_schema_valid, false);
+  assert.equal(entry.llama3_2_first_c4_schema_error, "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID");
+  assert.equal(entry.llama3_2_first_c4_semantic_status, "NOT_EVALUATED_SCHEMA_FAILURE");
+  assert.equal(entry.llama3_2_first_c4_forensic_authorized, true);
+  assert.equal(entry.llama3_2_first_c4_forensic_authorized_run_count, 1);
   assert.equal(entry.gemma3_terms_user_accepted, true);
   assert.equal(entry.gemma3_download_authorized, false);
   assert.equal(entry.gemma3_download_executed, true);

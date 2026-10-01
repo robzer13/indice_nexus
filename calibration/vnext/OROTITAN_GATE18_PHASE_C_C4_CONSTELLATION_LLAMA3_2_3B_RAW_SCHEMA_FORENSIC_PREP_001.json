@@ -1,0 +1,26 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_RAW_SCHEMA_FORENSIC_PREP_V0.1",
+  "prep_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-PREP-001",
+  "status": "AUTHORIZED_READY_TO_EXECUTE",
+  "source_result": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  "authorization": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-RAW-SCHEMA-FORENSIC-AUTH-001",
+  "runner": "scripts/vnext-gate18-phase-c-c4-constellation-llama3-2-3b-raw-schema-forensic.ts",
+  "purpose": "Identify the exact structural schema violations in the syntactically valid Llama 3.2 C4 JSON without rerunning the model or publishing generated values.",
+  "source_observation": {
+    "done_reason": "stop",
+    "eval_count": 895,
+    "max_output_tokens": 1024,
+    "output_token_margin": 129,
+    "schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID"
+  },
+  "constraints": {
+    "no_inference": true,
+    "no_ollama_call": true,
+    "no_network": true,
+    "no_source_mutation": true,
+    "no_raw_content_publication": true,
+    "no_retroactive_pass": true,
+    "no_retry_authorization": true
+  },
+  "next_action": "EXECUTE_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC"
+}

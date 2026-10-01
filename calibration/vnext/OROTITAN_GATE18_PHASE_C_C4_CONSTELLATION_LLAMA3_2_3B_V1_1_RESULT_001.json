@@ -1,0 +1,68 @@
+{
+  "format": "OROTITAN_GATE18_PHASE_C_C4_LLAMA3_2_3B_CONSTELLATION_RESULT_V0.1",
+  "result_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-RESULT-001",
+  "authorization_id": "G18-PHASEC-C4-CONSTELLATION-LLAMA3_2-3B-V1_1-CONTEXT16384-OUTPUT1024-TIMEOUT600-LOOPBACK-AUTH-001",
+  "gate": 18,
+  "phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
+  "stage": "C4_DIVERSIFIED_COMPANY_MODULE_MATRIX",
+  "status": "FAIL_RAW_SCHEMA_FORENSICS_REQUIRED",
+  "matrix_cell_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001",
+  "attempt_id": "C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_OUTPUT1024_TIMEOUT600_LOOPBACK_GUARDED_001",
+  "company": "Constellation Software",
+  "model": {
+    "name": "llama3.2:3b-instruct-q4_K_M",
+    "digest": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "context_tokens": 16384,
+    "max_output_tokens": 1024,
+    "temperature": 0,
+    "client_timeout_ms": 600000
+  },
+  "execution": {
+    "wall_clock_ms": 299230,
+    "done_reason": "stop",
+    "prompt_eval_count": 3157,
+    "eval_count": 895,
+    "output_token_margin": 129,
+    "runtime_error": null,
+    "schema_valid": false,
+    "schema_error": "VNEXT_GATE18_V11_RAW_SCHEMA_INVALID",
+    "semantic_valid": false,
+    "semantic_error": "NOT_EVALUATED_SCHEMA_FAILURE",
+    "v11_raw_presentation_compliant": null,
+    "v11_normalized_path_count": 0,
+    "v11_substantive_status": "NOT_EVALUATED_SCHEMA_FAILURE"
+  },
+  "private_artifact": {
+    "local_path": "calibration/vnext/private-runs/2026-10-01T105955292Z__C4_CONSTELLATION_MOAT_EVIDENCE_AUDIT_LLAMA3_2_3B_V1_1_CONTEXT16384_001.json",
+    "generated_content_publication_forbidden": true
+  },
+  "interpretation": {
+    "runtime_failure_concluded": false,
+    "context16384_inference_execution_completed": true,
+    "output_budget_exhaustion_proven": false,
+    "reason": "done_reason=stop and eval_count=895 < max_output_tokens=1024",
+    "raw_json_syntax_valid": true,
+    "raw_schema_contract_failure_observed": true,
+    "deterministic_v1_1_semantic_quality_not_reached": true,
+    "human_quality_adjudication_not_reached": true,
+    "model_capability_failure_concluded": false,
+    "retry_justified_before_forensics": false,
+    "forensic_required": true
+  },
+  "authorization_consumption": {
+    "consumed": true,
+    "authorized_run_count_remaining": 0,
+    "reason": "Provider generation completed and returned 895 evaluated output tokens."
+  },
+  "safety": {
+    "external_model_api_cost_usd": 0,
+    "model_download_executed": false,
+    "production_mutation": false,
+    "publication_authority": false,
+    "comparison_admissible": false,
+    "model_ranking_authority": false
+  },
+  "next_action": "RUN_READ_ONLY_LLAMA3_2_CONSTELLATION_RAW_SCHEMA_FORENSIC",
+  "standing_authorization": "OROTITAN-STANDING-TECHNICAL-AUTH-002",
+  "gate_18": "IN_PROGRESS_NOT_FROZEN"
+}
