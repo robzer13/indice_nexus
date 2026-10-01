@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-067`
+Resume ID: `VNEXT-POST-C7-20261001-068`
 
 ## Current state
 
@@ -58,13 +58,7 @@ They cluster into:
 
 ## Active execution action
 
-`DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
-
-Legacy continuity compatibility field still retained:
-
-`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
-
-The legacy value is non-operative.
+`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW`
 
 ## Product invariant
 
@@ -73,3 +67,17 @@ OroTitan product surface / vitrine remains:
 `FRENCH_FIRST_UI = TRUE`
 
 Machine contracts and internal canonical vocabulary may remain English.
+
+## Data Contracts V2 candidate
+
+Drafted on branch `post-c7-data-contracts-v2-design-001`.
+
+Current package:
+- composable analytical JSON Schema;
+- semantic validator;
+- targeted regression tests;
+- no live Supabase mutation.
+
+Exact next action:
+
+`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW`
