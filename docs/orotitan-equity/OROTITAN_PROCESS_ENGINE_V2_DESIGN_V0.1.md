@@ -314,6 +314,7 @@ This closes the machine-validation portion of wrong-sector-method prevention whi
 A block is not eligible for terminal completion if any of the following holds:
 
 ```text
+READY status — execution has not occurred
 BLOCKED status
 STALE status
 critical unresolved gap
@@ -326,7 +327,9 @@ required method-plan overlay absent / not APPLIED
 upstream dependency not terminally resolved
 ```
 
-The completion self-audit is the process projection of the frozen analytical completion standard.
+The completion self-audit is a **process-projection input** of the frozen analytical completion standard. It is not invented by this engine and is not currently a field of the Data Contracts V2 block object. The future Bridge must derive it from the pinned stage/method self-audit result and pass it explicitly.
+
+Likewise, `REQUIRED_SECTOR_OVERLAYS[]` and `REQUIRED_BLOCK_DEPENDENCIES[]` are pinned method-plan inputs. They must be resolved from authoritative contracts / method-plan artifacts by the future Bridge; ChatGPT or the Process Engine may not invent them ad hoc.
 
 Data Contracts V2 separately validates evidence IDs, evidence relevance, conflict/gap semantics and causal-link integrity.
 
@@ -353,7 +356,8 @@ Rules:
 5. otherwise surface the first topological blocker before ordinary new work;
 6. otherwise choose the first topologically executable block;
 7. CHECKPOINTED blocks are finalized only when terminal prerequisites pass;
-8. all COMPLETE / NOT_ASSESSABLE → no further block action.
+8. persisted COMPLETE blocks are revalidated against completion, method-plan overlay and dependency conditions before any next action;
+9. all valid COMPLETE / NOT_ASSESSABLE → no further block action.
 
 There is no artificial percentage progress.
 
@@ -611,8 +615,11 @@ Before the Process Engine V2 candidate can be considered stable:
 21. no SAVE disposition authorizes publication;
 22. identical execution fingerprint cannot loop without an allowed retry reason;
 23. retry budget can fail closed;
-24. existing VNext and Screener CI remain green;
-25. no production mutation occurs.
+24. READY cannot skip execution and directly satisfy terminal completion;
+25. persisted COMPLETE blocks fail closed if current completion/method-plan conditions are inconsistent;
+26. process-projection inputs (completion audit, required overlays, required dependencies) must come from pinned authority via the future Bridge;
+27. existing VNext and Screener CI remain green;
+28. no production mutation occurs.
 
 ---
 
