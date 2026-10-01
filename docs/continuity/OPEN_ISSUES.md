@@ -11,38 +11,50 @@ Status: TARGET_ARCHITECTURE_SELECTED
 
 No change to frozen analytical semantics.
 
-## OI-003 — ChatGPT Operating Protocol V0.1
-Status: DESIGN_CANDIDATE_READY_FOR_USER_REVIEW
+## OI-003 — ChatGPT Operating Protocol V1.0
+Status: FROZEN
+Priority: CLOSED
+
+Authoritative document:
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
+
+## OI-004 — Analytical Engine V2 data contracts
+Status: TO_DESIGN
 Priority: P0
 
-Candidate:
-`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md`
+Must translate the frozen methodology + ChatGPT protocol into exact machine-readable contracts without semantic duplication.
 
-Must not be frozen until user approval.
+## OI-005 — Process Engine V2 state machine
+Status: TO_DESIGN
+Priority: P0
 
-## OI-004 — Supabase ChatGPT access hardening
-Status: DESIGN_REQUIREMENT_NOT_IMPLEMENTED
+Must model run/stage/block/checkpoint/finalization/reopening/failure/recovery behavior.
+
+## OI-006 — Controlled ChatGPT ↔ Supabase operations
+Status: TO_DESIGN
 Priority: P0
 
 Target:
-- project-scoped routine reads;
-- read-only behavior for normal LOAD / STATUS / Research retrieval where practical;
-- bounded write window for CHECKPOINT / SAVE / FINALIZE;
-- guarded existing OroTitan RPCs only for normal analytical writes;
-- no ad-hoc DML in company-analysis workflow.
+- read-only / project-scoped normal reads where practical;
+- guarded RPC writes only for checkpoint/finalization/publication-related transitions;
+- no ad-hoc production DML in company-analysis workflow.
 
-## OI-005 — Detailed implementation design
-Status: WAITING_FOR_PROTOCOL_APPROVAL
+## OI-007 — Workbench UI / UX
+Status: TO_DESIGN
+Priority: P1
 
-After protocol approval:
-1. Analytical Engine V2 data contracts
-2. Process Engine V2 state machine
-3. ChatGPT/Supabase operation payload contracts
-4. Workbench information architecture
-5. UI design system
-6. implementation backlog
+Includes:
+- French-first UI;
+- queue / shortlist;
+- current runs;
+- block progress;
+- blockers / next action;
+- evidence browser;
+- history;
+- price monitoring;
+- exports.
 
-## OI-006 — Production / routing
+## OI-008 — Production / routing
 Status: GUARDED
 
 Model winner: NONE  
