@@ -63,7 +63,7 @@
   },
   "$defs": {
     "stringOrState": {
-      "oneOf": [
+      "anyOf": [
         {
           "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
         },
