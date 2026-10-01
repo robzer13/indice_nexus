@@ -1277,7 +1277,122 @@ SHOWS THE TRUTH
 
 ---
 
-# 35. DESIGN STATUS
+# 35. CURRENT INFRASTRUCTURE MAPPING
+
+The live connected infrastructure already provides the core primitives required by this protocol.
+
+## 35.1 Supabase
+
+Active project:
+
+```text
+orotitan-screener
+```
+
+Relevant live tables include:
+
+- `orotitan_runs`;
+- `orotitan_run_stages`;
+- `orotitan_artifacts`;
+- `orotitan_artifact_edges`;
+- `orotitan_run_events`;
+- `research_dossiers`;
+- `research_snapshots`;
+- market-price tables.
+
+RLS is enabled on the observed public analytical registry tables.
+
+Existing controlled RPC primitives include:
+
+```text
+create_orotitan_run
+start_orotitan_stage
+checkpoint_orotitan_stage
+pause_orotitan_stage
+resume_orotitan_stage
+reopen_orotitan_stage
+finalize_orotitan_stage
+resolve_orotitan_artifact
+revalidate_orotitan_checkpoint_outputs
+record_orotitan_publish_authorization
+record_orotitan_publish_result
+persist_orotitan_research_snapshot_v2
+```
+
+Therefore the target normal ChatGPT write path is:
+
+```text
+CHATGPT
+→ PREPARE VALID PAYLOAD
+→ EXISTING GUARDED RPC
+→ SUPABASE TRANSACTION / REGISTRY
+```
+
+not:
+
+```text
+CHATGPT
+→ AD-HOC UPDATE / INSERT
+```
+
+Raw SQL remains appropriate for read-only inspection and explicit engineering work, not routine company-analysis persistence.
+
+## 35.2 Vercel
+
+The connected Vercel team includes:
+
+```text
+orotitan-vnext-pilotage
+orotitan-screener
+```
+
+The vNext Pilotage project is deployed and preview deployments are automatically produced from protocol/design branches.
+
+Vercel therefore already supports:
+
+- preview verification;
+- production/runtime inspection;
+- logs;
+- deployment state;
+- future controlled OroTitan API surfaces.
+
+Normal company analysis does not require Vercel mutation.
+
+## 35.3 GitHub
+
+The connected GitHub app supports direct:
+
+- contract retrieval;
+- file reads;
+- branches;
+- file writes;
+- PRs;
+- CI inspection;
+- merges.
+
+This is suitable for methodology / engineering work.
+
+It remains unsuitable as the primary store for private company analytical artifacts.
+
+## 35.4 Practical conclusion
+
+The protocol does not require ChatGPT Work or a paid cloud LLM API.
+
+Its current operational path can be:
+
+```text
+CHATGPT
+↔ GITHUB
+↔ SUPABASE CONTROLLED RPCs
+↔ VERCEL INSPECTION
+→ OROTITAN UI
+```
+
+with ChatGPT remaining the sole non-deterministic analytical engine.
+
+---
+
+# 36. DESIGN STATUS
 
 `OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1`
 
