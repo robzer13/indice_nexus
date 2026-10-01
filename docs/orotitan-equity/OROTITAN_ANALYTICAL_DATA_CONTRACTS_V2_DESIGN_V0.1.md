@@ -278,22 +278,27 @@ The semantic validator checks relationships.
 
 1. Run identity must match authoritative context.
 2. DATA_CUTOFF must match the run.
-3. SOURCE_DATE / AS_OF_DATE must not exceed cutoff.
+3. SOURCE_DATE must not exceed DATA_CUTOFF. DATA_PERIOD / AS_OF_DATE describe the datum and may be future when the source was already available by cutoff.
 4. Evidence SOURCE_ID must exist.
-5. ROOT_SOURCE_ID must resolve when supplied.
-6. Evidence/conflict/gap/assumption IDs must be unique.
-7. All Evidence IDs used by blocks/causal links/overlays must resolve.
-8. Conflict IDs / Gap IDs / Assumption IDs must resolve.
-9. Numeric range min <= max.
-10. Numeric period start <= end.
-11. Numeric datum must have a temporal anchor.
-12. COMPLETE block cannot carry a critical unresolved gap.
-13. NOT_ASSESSABLE requires traceable exhausted/blocked gap.
-14. REQUIRED_MISSING sector overlay prevents COMPLETE.
-15. Block cannot depend on itself.
-16. Upstream block references must exist in the package.
-17. Material revalidation PASS requires all frozen checklist controls.
-18. Applicable serial acquirer profile requires actual acquisition-economics analysis.
+5. ROOT_SOURCE_ID must resolve, must not self-reference and must not form a cycle.
+6. Evidence/conflict/gap/assumption/material-change IDs must be unique.
+7. Analytical block code must be unique within one package.
+8. All Evidence IDs used by blocks/causal links/overlays must resolve and declare matching block relevance.
+9. Conflict IDs / Gap IDs / Assumption IDs must resolve.
+10. Numeric range min <= max.
+11. Numeric period start <= end.
+12. Numeric datum must have a temporal anchor.
+13. COMPLETE block must carry traceable evidence.
+14. COMPLETE block cannot carry an OPEN / UNRESOLVED_BLOCKING conflict.
+15. COMPLETE block cannot carry a critical unresolved or exhausted-NOT_ASSESSABLE gap.
+16. SUPPORTED causal links require evidence; MIXED causal links require evidence and counterevidence.
+17. Causal link IDs and sector-overlay names must be unique within a block.
+18. NOT_ASSESSABLE requires traceable exhausted/blocked gap.
+19. REQUIRED_MISSING sector overlay prevents COMPLETE.
+20. Block cannot depend on itself.
+21. Upstream block references must exist in the package.
+22. Material revalidation PASS requires all frozen checklist controls.
+23. Applicable serial acquirer profile requires actual acquisition-economics analysis.
 
 ---
 
@@ -403,18 +408,26 @@ Before this contract is eligible to freeze:
 
 1. JSON Schema parses under AJV 2020.
 2. coherent package validates.
-3. post-cutoff source fails closed.
-4. unknown Evidence ID fails closed.
-5. critical unresolved gap blocks COMPLETE.
-6. NOT_ASSESSABLE requires traceable gap.
-7. incomplete revalidation cannot PASS.
-8. applicable serial acquirer profile cannot be empty.
-9. numeric datum requires period/as-of.
-10. absent upstream block fails.
-11. REQUIRED_MISSING overlay blocks COMPLETE.
-12. frozen Evidence Grade values remain exact.
-13. no production DB mutation is required.
-14. no existing frozen contract is modified.
+3. post-cutoff SOURCE_DATE fails closed.
+4. forward estimate / guidance periods known at cutoff remain valid.
+5. unknown Evidence ID fails closed.
+6. evidence used by a block must declare matching block relevance.
+7. duplicate analytical block code fails closed.
+8. invalid root-source self-reference / cycle fails closed.
+9. open/blocking conflict blocks COMPLETE.
+10. critical unresolved or exhausted-NOT_ASSESSABLE gap blocks COMPLETE.
+11. COMPLETE block requires traceable evidence.
+12. SUPPORTED / MIXED causal links enforce evidence roles.
+13. duplicate causal-link IDs / sector overlays fail closed.
+14. NOT_ASSESSABLE requires traceable gap.
+15. incomplete revalidation cannot PASS.
+16. applicable serial acquirer profile cannot be empty.
+17. numeric datum requires period/as-of.
+18. absent upstream block fails.
+19. REQUIRED_MISSING overlay blocks COMPLETE.
+20. frozen Evidence Grade values remain exact.
+21. no production DB mutation is required.
+22. no existing frozen contract is modified.
 
 ---
 
@@ -437,8 +450,8 @@ tests/
 
 ```text
 DOCUMENT = OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_DESIGN_V0.1
-STATUS = DESIGN_CANDIDATE
+STATUS = DESIGN_CANDIDATE_REVIEW_PATCHED
 FROZEN = NO
 PRODUCTION_MUTATION = NO
-NEXT = CI + DESIGN REVIEW
+NEXT = REVIEW_FIX_CI + FINAL DESIGN REVIEW
 ```

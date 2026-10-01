@@ -135,9 +135,16 @@ export function validateAnalyticalDataPackage(
   for (const [label, items, key] of idSpecs) {
     for (const id of duplicateIds(items, key)) errors.push(`duplicate ${label} id ${id}`);
   }
+  for (const code of duplicateIds(blocks, "block")) {
+    errors.push(`duplicate analytical block ${code}`);
+  }
 
   const sourceIds = stringSet(sources, "source_id");
   const evidenceIds = stringSet(evidence, "evidence_id");
+  const evidenceById = new Map<string, JsonObject>();
+  for (const item of evidence) {
+    if (typeof item.evidence_id === "string") evidenceById.set(item.evidence_id, item);
+  }
   const conflictIds = stringSet(conflicts, "conflict_id");
   const gapIds = stringSet(gaps, "gap_id");
   const assumptionIds = stringSet(assumptions, "assumption_id");
@@ -149,13 +156,35 @@ export function validateAnalyticalDataPackage(
     if (typeof sourceDate === "string" && compareIsoDate(sourceDate, context.dataCutoff) > 0) {
       errors.push(`source ${String(id)} is post-cutoff (${sourceDate} > ${context.dataCutoff})`);
     }
-    const asOf = source.as_of_date;
-    if (typeof asOf === "string" && compareIsoDate(asOf, context.dataCutoff) > 0) {
-      errors.push(`source ${String(id)} as_of_date is post-cutoff (${asOf} > ${context.dataCutoff})`);
-    }
     const root = source.root_source_id;
     if (typeof root === "string" && !sourceIds.has(root)) {
       errors.push(`source ${String(id)} references unknown root_source_id ${root}`);
+    }
+    if (typeof root === "string" && root === id) {
+      errors.push(`source ${String(id)} cannot reference itself as root_source_id`);
+    }
+  }
+
+  const rootBySource = new Map<string, string>();
+  for (const source of sources) {
+    if (typeof source.source_id === "string" && typeof source.root_source_id === "string") {
+      rootBySource.set(source.source_id, source.root_source_id);
+    }
+  }
+  for (const source of sources) {
+    if (typeof source.source_id !== "string") continue;
+    const origin = source.source_id;
+    const seen = new Set<string>([origin]);
+    let current = origin;
+    while (rootBySource.has(current)) {
+      const next = rootBySource.get(current)!;
+      if (!sourceIds.has(next)) break;
+      if (seen.has(next)) {
+        errors.push(`source root_source_id cycle detected from ${origin}`);
+        break;
+      }
+      seen.add(next);
+      current = next;
     }
   }
 
@@ -174,11 +203,6 @@ export function validateAnalyticalDataPackage(
       if (typeof periodStart === "string" && typeof periodEnd === "string" && periodStart > periodEnd) {
         errors.push(`evidence ${String(id)} numeric period has start > end for ${String(datum.metric)}`);
       }
-      for (const date of [datum.period_end, datum.as_of_date]) {
-        if (typeof date === "string" && compareIsoDate(date, context.dataCutoff) > 0) {
-          errors.push(`evidence ${String(id)} numeric datum ${String(datum.metric)} is post-cutoff`);
-        }
-      }
       const hasTemporalAnchor =
         typeof datum.period_end === "string" || typeof datum.as_of_date === "string";
       if (!hasTemporalAnchor) {
@@ -189,7 +213,10 @@ export function validateAnalyticalDataPackage(
 
   for (const conflict of conflicts) {
     checkEvidenceRefs(errors, `conflict ${String(conflict.conflict_id)}`, conflict.evidence_ids, evidenceIds);
-    if (conflict.status === "RESOLVED" && typeof conflict.resolution !== "string") {
+    if (
+      conflict.status === "RESOLVED" &&
+      (typeof conflict.resolution !== "string" || conflict.resolution.trim() === "")
+    ) {
       errors.push(`resolved conflict ${String(conflict.conflict_id)} requires resolution text`);
     }
   }
@@ -198,7 +225,7 @@ export function validateAnalyticalDataPackage(
     checkEvidenceRefs(errors, `gap ${String(gap.gap_id)}`, gap.evidence_ids, evidenceIds);
     if (
       (gap.status === "EXHAUSTED_NOT_ASSESSABLE" || gap.status === "BLOCKED_INPUT") &&
-      typeof gap.why_unresolved !== "string"
+      (typeof gap.why_unresolved !== "string" || gap.why_unresolved.trim() === "")
     ) {
       errors.push(`${String(gap.status)} gap ${String(gap.gap_id)} requires why_unresolved`);
     }
@@ -223,9 +250,32 @@ export function validateAnalyticalDataPackage(
     const code = String(block.block);
     checkEvidenceRefs(errors, `block ${code} supporting`, block.supporting_evidence_ids, evidenceIds);
     checkEvidenceRefs(errors, `block ${code} counterevidence`, block.counterevidence_ids, evidenceIds);
+    for (const evidenceId of [
+      ...refsFromArray(block.supporting_evidence_ids),
+      ...refsFromArray(block.counterevidence_ids),
+    ]) {
+      const evidenceItem = evidenceById.get(evidenceId);
+      if (evidenceItem && !refsFromArray(evidenceItem.block_relevance).includes(code)) {
+        errors.push(`block ${code} uses evidence_id ${evidenceId} without matching block_relevance`);
+      }
+    }
+    if (
+      block.status === "COMPLETE" &&
+      refsFromArray(block.supporting_evidence_ids).length === 0 &&
+      refsFromArray(block.counterevidence_ids).length === 0
+    ) {
+      errors.push(`block ${code} cannot be COMPLETE without traceable evidence`);
+    }
 
     for (const id of refsFromArray(block.conflict_ids)) {
       if (!conflictIds.has(id)) errors.push(`block ${code} references unknown conflict_id ${id}`);
+    }
+    const blockingConflict = conflicts.some((conflict) =>
+      refsFromArray(conflict.affected_blocks).includes(code) &&
+      (conflict.status === "OPEN" || conflict.status === "UNRESOLVED_BLOCKING")
+    );
+    if (blockingConflict && block.status === "COMPLETE") {
+      errors.push(`block ${code} cannot be COMPLETE with an open/blocking conflict`);
     }
     for (const id of refsFromArray(block.gap_ids)) {
       if (!gapIds.has(id)) errors.push(`block ${code} references unknown gap_id ${id}`);
@@ -238,12 +288,43 @@ export function validateAnalyticalDataPackage(
       if (upstream === code) errors.push(`block ${code} cannot depend on itself`);
     }
 
+    for (const linkId of duplicateIds(asObjects(block.causal_links), "link_id")) {
+      errors.push(`block ${code} has duplicate causal link_id ${linkId}`);
+    }
     for (const link of asObjects(block.causal_links)) {
       checkEvidenceRefs(errors, `block ${code} causal link ${String(link.link_id)}`, link.evidence_ids, evidenceIds);
       checkEvidenceRefs(errors, `block ${code} causal counterevidence ${String(link.link_id)}`, link.counterevidence_ids, evidenceIds);
+      for (const evidenceId of [
+        ...refsFromArray(link.evidence_ids),
+        ...refsFromArray(link.counterevidence_ids),
+      ]) {
+        const evidenceItem = evidenceById.get(evidenceId);
+        if (evidenceItem && !refsFromArray(evidenceItem.block_relevance).includes(code)) {
+          errors.push(`block ${code} causal link ${String(link.link_id)} uses evidence_id ${evidenceId} without matching block_relevance`);
+        }
+      }
+      if (link.status === "SUPPORTED" && refsFromArray(link.evidence_ids).length === 0) {
+        errors.push(`block ${code} causal link ${String(link.link_id)} cannot be SUPPORTED without evidence`);
+      }
+      if (
+        link.status === "MIXED" &&
+        (refsFromArray(link.evidence_ids).length === 0 ||
+          refsFromArray(link.counterevidence_ids).length === 0)
+      ) {
+        errors.push(`block ${code} causal link ${String(link.link_id)} MIXED requires evidence and counterevidence`);
+      }
+    }
+    for (const overlayName of duplicateIds(asObjects(block.sector_overlays), "overlay")) {
+      errors.push(`block ${code} has duplicate sector overlay ${overlayName}`);
     }
     for (const overlay of asObjects(block.sector_overlays)) {
       checkEvidenceRefs(errors, `block ${code} sector overlay ${String(overlay.overlay)}`, overlay.evidence_ids, evidenceIds);
+      for (const evidenceId of refsFromArray(overlay.evidence_ids)) {
+        const evidenceItem = evidenceById.get(evidenceId);
+        if (evidenceItem && !refsFromArray(evidenceItem.block_relevance).includes(code)) {
+          errors.push(`block ${code} sector overlay ${String(overlay.overlay)} uses evidence_id ${evidenceId} without matching block_relevance`);
+        }
+      }
       if (overlay.status === "REQUIRED_MISSING" && block.status === "COMPLETE") {
         errors.push(`block ${code} cannot be COMPLETE with REQUIRED_MISSING sector overlay`);
       }
@@ -252,7 +333,11 @@ export function validateAnalyticalDataPackage(
     const criticalOpenGap = gaps.some((gap) =>
       gap.affected_block === code &&
       gap.materiality === "CRITICAL" &&
-      (gap.status === "OPEN" || gap.status === "BLOCKED_INPUT")
+      (
+        gap.status === "OPEN" ||
+        gap.status === "BLOCKED_INPUT" ||
+        gap.status === "EXHAUSTED_NOT_ASSESSABLE"
+      )
     );
     if (criticalOpenGap && block.status === "COMPLETE") {
       errors.push(`block ${code} cannot be COMPLETE with a critical unresolved gap`);

@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-068`
+Resume ID: `VNEXT-POST-C7-20261001-069`
 
 ## Current state
 
@@ -58,7 +58,7 @@ They cluster into:
 
 ## Active execution action
 
-`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW`
+`RUN_DATA_CONTRACTS_V2_REVIEW_FIX_CI`
 
 ## Product invariant
 
@@ -78,6 +78,23 @@ Current package:
 - targeted regression tests;
 - no live Supabase mutation.
 
+Prior candidate action:
+
+`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW` — completed on PR #328.
+
+## Data Contracts V2 design review
+
+Initial candidate CI already passed on PR #328.
+
+Review found and patched on branch `post-c7-data-contracts-v2-review-fixes-001`:
+
+- forward-estimate period cutoff bug;
+- duplicate analytical-block ambiguity;
+- root-source self/cycle integrity gap;
+- missing evidence guards for COMPLETE blocks and SUPPORTED/MIXED causal links.
+
+No Supabase or production mutation.
+
 Exact next action:
 
-`RUN_DATA_CONTRACTS_V2_CI_AND_REVIEW`
+`RUN_DATA_CONTRACTS_V2_REVIEW_FIX_CI`
