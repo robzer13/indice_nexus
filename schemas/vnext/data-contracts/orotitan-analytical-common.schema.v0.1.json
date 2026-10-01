@@ -396,6 +396,27 @@
         "EXPANSION",
         "UNKNOWN"
       ]
+    },
+    "blockCode": {
+      "type": "string",
+      "enum": [
+        "BUSINESS_MODEL",
+        "ECONOMIC_QUALITY",
+        "INDUSTRY_STRUCTURE",
+        "TECHNOLOGY",
+        "CYCLICALITY",
+        "MOAT",
+        "RUNWAY",
+        "RETURN_QUALITY",
+        "FCF_FORENSIC",
+        "CAPITAL_ALLOCATION",
+        "MANAGEMENT_GOVERNANCE",
+        "OUTSIDE_VIEW",
+        "RISK_RESILIENCE",
+        "RED_TEAM",
+        "VALUATION",
+        "CROSS_BLOCK_RECONCILIATION"
+      ]
     }
   }
 }
