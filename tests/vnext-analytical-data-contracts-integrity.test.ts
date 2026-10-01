@@ -5,6 +5,15 @@ import { validateAnalyticalCoreBundle, type AnalyticalCoreBundle } from "../runt
 
 const sha = "a".repeat(64);
 
+type CompleteTestBundle = AnalyticalCoreBundle & {
+  calculationLedger: NonNullable<AnalyticalCoreBundle["calculationLedger"]>;
+  assumptionRegister: NonNullable<AnalyticalCoreBundle["assumptionRegister"]>;
+  hypothesisRegister: NonNullable<AnalyticalCoreBundle["hypothesisRegister"]>;
+  gapRegister: NonNullable<AnalyticalCoreBundle["gapRegister"]>;
+  sufficiencyRecord: NonNullable<AnalyticalCoreBundle["sufficiencyRecord"]>;
+  inputLock: NonNullable<AnalyticalCoreBundle["inputLock"]>;
+};
+
 function ctx() {
   return {
     run_id: "RUN-001",
@@ -15,7 +24,7 @@ function ctx() {
   };
 }
 
-function bundle(): AnalyticalCoreBundle {
+function bundle(): CompleteTestBundle {
   return {
     run: {
       run_id: "RUN-001",
