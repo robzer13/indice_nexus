@@ -690,7 +690,7 @@
           "minLength": 1
         },
         "value_or_range": {
-          "$ref": "#/$defs/decimalValue"
+          "$ref": "#/$defs/assumptionValue"
         },
         "epistemic_type": {
           "type": "string",
@@ -3071,6 +3071,46 @@
           }
         }
       }
+    },
+    "assumptionValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/decimalValue"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "text"
+          ],
+          "properties": {
+            "representation": {
+              "const": "TEXT"
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "representation",
+            "value"
+          ],
+          "properties": {
+            "representation": {
+              "const": "BOOLEAN"
+            },
+            "value": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
     }
   },
   "x-orotitan": {
