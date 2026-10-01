@@ -1,0 +1,37 @@
+{
+  "format": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_FREEZE_DECISION_V1",
+  "decision_id": "POST-C7-CHATGPT-OPERATING-PROTOCOL-FREEZE-001",
+  "status": "FROZEN_V1_0",
+  "date": "2026-10-01",
+  "user_approval": true,
+  "approval_text": "je valide cette logique",
+  "frozen_document": "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md",
+  "supersedes_candidate": "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md",
+  "architecture": {
+    "chatgpt": "PRIMARY_NON_DETERMINISTIC_ANALYTICAL_BRAIN",
+    "supabase": "CANONICAL_WORKING_MEMORY_AND_REGISTRY",
+    "github": "METHOD_CODE_CONTRACTS_TESTS",
+    "vercel": "RUNTIME_DEPLOYMENT_LOGS",
+    "orotitan": "PRODUCT_SURFACE_AND_CANONICAL_DISPLAY",
+    "chatgpt_work": "OUT_OF_SCOPE_UNLESS_CLEAR_FUTURE_GAIN"
+  },
+  "command_surface": [
+    "LOAD OROTITAN <COMPANY>",
+    "STATUS OROTITAN",
+    "CHECKPOINT OROTITAN",
+    "SAVE OROTITAN",
+    "REFRESH OROTITAN <COMPANY>",
+    "GO PUBLISH <COMPANY>"
+  ],
+  "preserves": {
+    "analytical_methodology": true,
+    "gate18_state": true,
+    "no_model_winner": true,
+    "no_routing_freeze": true,
+    "no_production_mutation": true,
+    "publication_gate": "GO PUBLISH <COMPANY>"
+  },
+  "planning_phase_status": "CLOSED",
+  "next_phase": "DETAILED_DESIGN",
+  "next_action": "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS"
+}

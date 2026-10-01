@@ -980,79 +980,89 @@ Research dead ends must use the Gap Register.
 
 # 26. HUMAN / AI EXECUTION MODES
 
-Each analytical task declares an execution mode.
+The approved post-C7 operating model is governed by:
 
-DETERMINISTIC
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
+
+Current analytical authority model:
+
+```text
+CHATGPT
+= PRIMARY NON-DETERMINISTIC ANALYTICAL ENGINE
+
+OROTITAN / SUPABASE / GITHUB / VERCEL
+= INFRASTRUCTURE / SYSTEM OF RECORD / PRODUCT SURFACE
+```
+
+Deterministic code remains responsible for:
+
 - formulas;
 - schema validation;
 - reconciliations;
 - evidence-ID validation;
 - freshness checks;
-- state transitions.
+- state transitions;
+- integration;
+- publication controls.
 
-AI_ASSISTED
-- evidence synthesis;
+ChatGPT remains responsible for:
+
+- research;
+- evidence interpretation;
 - causal reasoning;
 - hypothesis testing;
 - sector analysis;
+- cyclicality;
 - technology analysis;
+- moat proof;
+- runway;
+- forensic interpretation;
+- capital allocation;
+- Outside View;
 - Red Team;
-- narrative drafting.
+- valuation judgment;
+- dossier synthesis.
 
-HUMAN_REQUIRED
-- material ambiguous judgment;
-- unresolved evidence conflict;
-- non-deterministic repair;
-- Certification override not allowed;
-- explicit final decision where contract requires human authority.
+The current V2 plan does not require a local model, cloud LLM API, or ChatGPT Work.
 
-Provider abstraction:
-
-ANALYSIS_PROVIDER
-- MANUAL_CHATGPT
-- EXTERNAL_API
-- FUTURE_LOCAL_MODEL
-- OTHER_APPROVED_PROVIDER
-
-The analytical contract must not depend on provider.
+Future local inference may replace or supplement ChatGPT only after qualification under the then-current frozen contract.
 
 ---
 
-# 27. MANUAL CHATGPT BRIDGE
+# 27. CHATGPT DIRECT INFRASTRUCTURE PROTOCOL
 
-Until stronger hardware exists, OroTitan should make assisted analysis frictionless.
+The earlier manual copy/paste bridge is no longer the target operating model.
 
-For each AI-assisted task:
+ChatGPT should work directly with authorized infrastructure connectors where available:
 
-[PREPARE ANALYSIS PACKET]
+```text
+CHATGPT
+↔ SUPABASE
+↔ GITHUB
+↔ VERCEL
+```
 
-The packet contains only:
-- exact task;
-- relevant company context;
-- canonical evidence;
-- conflicts;
-- open questions;
-- sector overlays;
-- required output schema;
-- prohibited assumptions;
-- data cutoff;
-- artifact IDs.
+Normal company-analysis writes must use controlled registry / stage-finalization primitives rather than ad-hoc SQL.
 
-User can copy to ChatGPT.
+The detailed rules for:
 
-Then:
+- LOAD;
+- STATUS;
+- CHECKPOINT;
+- SAVE;
+- REFRESH;
+- PUBLISH;
+- context retrieval;
+- source ingestion;
+- evidence handling;
+- checkpoints;
+- stage finalization;
+- concurrency;
+- failure recovery;
 
-[IMPORT RESULT]
+are defined by the ChatGPT Operating Protocol.
 
-OroTitan performs:
-- JSON parse;
-- schema validation;
-- evidence-ID validation;
-- unknown-reference rejection;
-- deterministic consistency checks;
-- cross-block conflict checks.
-
-No manual reprompt reconstruction should be necessary.
+ChatGPT Work is optional and currently out of scope.
 
 ---
 

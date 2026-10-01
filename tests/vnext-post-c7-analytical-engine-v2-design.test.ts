@@ -37,7 +37,7 @@ test("post-C7 product direction selects Analytical Engine V2 without reopening P
   assert.equal(s.model_winner_selected, false);
   assert.equal(s.routing_frozen, false);
   assert.equal(s.production_mutation, false);
-  assert.equal(s.next_action, "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS");
+  assert.equal(s.next_action, "USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1");
 });
 
 test("Analytical Engine V2 design makes sector, cycle, technology and anti-loop execution first-class", () => {
@@ -53,7 +53,7 @@ test("Analytical Engine V2 design makes sector, cycle, technology and anti-loop 
   assert.match(raw, /# 10\. INDUSTRY STRUCTURE ENGINE/);
   assert.match(raw, /# 11\. CAUSAL GRAPH ENGINE/);
   assert.match(raw, /# 25\. ANTI-LOOP PROCESS ENGINE RULES/);
-  assert.match(raw, /# 27\. MANUAL CHATGPT BRIDGE/);
+  assert.match(raw, /# 27\. CHATGPT DIRECT INFRASTRUCTURE PROTOCOL/);
   assert.match(raw, /# 33\. UI \/ UX DESIGN PRINCIPLES/);
   assert.match(raw, /# 40\. IMPLEMENTATION PROGRAM/);
   assert.match(raw, /QUALITY BEFORE AUTOMATION/);

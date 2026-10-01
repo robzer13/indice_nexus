@@ -1,86 +1,63 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Historical Phase C / C7 evidence
+## OI-001 — Historical Phase C / C7
 Status: COMPLETE_RETAINED_IMMUTABLE
 
-Phase C:
-`COMPLETE`
-
-C7:
-`LOCAL_CANDIDATE_REJECTED`
-
-The post-C7 work does not reopen or rewrite historical model qualification.
+Phase C = COMPLETE  
+C7 = LOCAL_CANDIDATE_REJECTED
 
 ## OI-002 — Analytical Engine V2
-Status: DESIGN_SELECTED
+Status: TARGET_ARCHITECTURE_SELECTED
+
+No change to frozen analytical semantics.
+
+## OI-003 — ChatGPT Operating Protocol V1.0
+Status: FROZEN
+Priority: CLOSED
+
+Authoritative document:
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
+
+## OI-004 — Analytical Engine V2 data contracts
+Status: TO_DESIGN
 Priority: P0
 
-Target architecture:
-`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
+Must translate the frozen methodology + ChatGPT protocol into exact machine-readable contracts without semantic duplication.
 
-Immediate missing contracts:
-- COMPANY_ECONOMIC_DNA;
-- sector overlay contract;
-- cyclicality contract;
-- technology contract;
-- industry-structure contract;
-- causal graph;
-- open-question model;
-- analysis task/provider contract.
-
-## OI-003 — Process Engine V2
-Status: NOT_STARTED
+## OI-005 — Process Engine V2 state machine
+Status: TO_DESIGN
 Priority: P0
 
-Required:
-- run/stage/block state model;
-- execution fingerprints;
-- anti-loop guards;
-- blockers;
-- retry bounds;
-- next-action resolver;
-- resume;
-- queue;
-- history.
+Must model run/stage/block/checkpoint/finalization/reopening/failure/recovery behavior.
 
-## OI-004 — Workbench UI/UX
-Status: TARGET_DEFINED_NOT_IMPLEMENTED
+## OI-006 — Controlled ChatGPT ↔ Supabase operations
+Status: TO_DESIGN
+Priority: P0
+
+Target:
+- read-only / project-scoped normal reads where practical;
+- guarded RPC writes only for checkpoint/finalization/publication-related transitions;
+- no ad-hoc production DML in company-analysis workflow.
+
+## OI-007 — Workbench UI / UX
+Status: TO_DESIGN
 Priority: P1
 
-Required:
-- premium French-first research cockpit;
-- company workspace;
-- analysis dependency map;
-- module views;
-- open questions;
+Includes:
+- French-first UI;
+- queue / shortlist;
+- current runs;
+- block progress;
+- blockers / next action;
 - evidence browser;
-- stage/integration visualization;
-- shortlist;
-- monitoring;
-- price freshness;
-- export.
+- history;
+- price monitoring;
+- exports.
 
-## OI-005 — AI execution
-Status: PROVIDER_AGNOSTIC
-
-Current acceptable mode:
-`MANUAL_CHATGPT_ASSISTED`
-
-Future modes may include approved external API or stronger local model.
-
-No provider is selected as production winner.
-
-## OI-006 — Production / routing
+## OI-008 — Production / routing
 Status: GUARDED
 
-Model winner:
-NONE
-
-Routing freeze:
-NONE
-
-Production mutation:
-FALSE
-
-Gate 18:
-IN_PROGRESS_NOT_FROZEN
+Model winner: NONE  
+Routing freeze: NONE  
+Production mutation: FALSE  
+Gate 18: IN_PROGRESS_NOT_FROZEN

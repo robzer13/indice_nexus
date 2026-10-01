@@ -1,0 +1,255 @@
+{
+  "format": "OROTITAN_CHATGPT_PROTOCOL_ACCEPTANCE_MATRIX_V1",
+  "matrix_id": "OROTITAN-CHATGPT-PROTOCOL-ACCEPTANCE-001",
+  "date": "2026-10-01",
+  "protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
+  "production_mutation": false,
+  "live_validation_mode": "READ_ONLY_ONLY",
+  "status_legend": {
+    "PASS_LIVE": "Verified against live deployed infrastructure without mutation.",
+    "PASS_INFRASTRUCTURE": "Supported by current registry/runtime primitives; not re-executed as a mutating live test.",
+    "PASS_PROTOCOL": "Analytical behavior explicitly frozen; automation is not required for correctness.",
+    "PARTIAL_INFRASTRUCTURE": "Core protection exists, but end-to-end V2 workflow is incomplete.",
+    "PARTIAL_CODE": "Existing code/contracts cover part of the scenario.",
+    "GAP_IMPLEMENTATION": "Must be implemented before the vertical slice."
+  },
+  "live_readonly_findings": {
+    "rls_tables_verified": [
+      "orotitan_runs",
+      "orotitan_run_stages",
+      "orotitan_artifacts",
+      "orotitan_artifact_edges",
+      "orotitan_run_events",
+      "research_snapshots"
+    ],
+    "guarded_rpcs_service_role_only": [
+      "checkpoint_orotitan_stage",
+      "finalize_orotitan_stage",
+      "pause_orotitan_stage",
+      "resume_orotitan_stage",
+      "reopen_orotitan_stage",
+      "resolve_orotitan_artifact",
+      "record_orotitan_publish_authorization",
+      "record_orotitan_publish_result",
+      "persist_orotitan_research_snapshot_v2"
+    ],
+    "mutation_firewall_verified": true,
+    "run_stage_version_guards_verified": true,
+    "artifact_hash_authority_resolution_verified": true,
+    "publication_separation_verified": true
+  },
+  "scenarios": [
+    {
+      "id": "T01",
+      "name": "CLEAN_INITIAL_COMPANY",
+      "status": "PASS_INFRASTRUCTURE",
+      "evidence": "Existing run/stage registry and controlled create/start primitives support a clean initial path.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T02",
+      "name": "RESUME_ACTIVE_RUN_NEW_CHAT",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Durable artifacts exist, but LOAD resolver/context assembler is not implemented yet.",
+      "next_phase": "CHATGPT_SUPABASE_BRIDGE",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T03",
+      "name": "LOW_DISCLOSURE_COMPANY",
+      "status": "PASS_PROTOCOL",
+      "evidence": "Frozen protocol preserves UNKNOWN/NOT_ASSESSABLE and gap exhaustion semantics.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T04",
+      "name": "POST_CUTOFF_SOURCE",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Cutoff is frozen in run/manifest and methodology forbids contamination, but evidence-ingestion validator must enforce source_date <= cutoff.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T05",
+      "name": "ISSUER_COMPETITOR_CONTRADICTION",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Conflict semantics exist, but V2 conflict/evidence structures and reconciliation rules are not machine-enforced yet.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T06",
+      "name": "USER_ASSERTION_CONFLICTS_WITH_EVIDENCE",
+      "status": "PASS_PROTOCOL",
+      "evidence": "User assertions remain hypotheses unless evidenced.",
+      "next_phase": "CHATGPT_PROTOCOL",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T07",
+      "name": "PRIOR_CANONICAL_CONCLUSION_OVERTURNED",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Material-change revalidation is frozen, but no automated revalidation gate exists yet.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T08",
+      "name": "CYCLICAL_COMPANY_AT_PEAK",
+      "status": "PASS_PROTOCOL",
+      "evidence": "Cyclicality-specific normalization is mandatory in the frozen protocol.",
+      "next_phase": "ANALYTICAL_ENGINE_V2",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T09",
+      "name": "TECHNOLOGY_SUBSTITUTION_RISK",
+      "status": "PASS_PROTOCOL",
+      "evidence": "Technology-specific substitute/replication analysis is mandatory.",
+      "next_phase": "ANALYTICAL_ENGINE_V2",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T10",
+      "name": "SERIAL_ACQUIRER",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Capital-allocation/acquisition economics need explicit V2 data structures and cross-block links.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T11",
+      "name": "WRONG_SECTOR_METHOD_ATTEMPTED",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Protocol says wrong-sector method blocks Certification, but overlay selection/validation is not implemented.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T12",
+      "name": "MATERIAL_GAP_UNRESOLVED",
+      "status": "PARTIAL_INFRASTRUCTURE",
+      "evidence": "Stage can BLOCK/PAUSE today; block-level gap state and NOT_ASSESSABLE routing need V2 state machine.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T13",
+      "name": "STALE_STATE_VERSION_ON_SAVE",
+      "status": "PASS_LIVE",
+      "evidence": "Live checkpoint/finalize/reopen RPCs verify expected run and stage state_version and fail closed.",
+      "next_phase": "EXISTING_REGISTRY",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T14",
+      "name": "CONNECTOR_FAILURE_DURING_LOAD",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Frozen protocol is fail-closed, but LOAD orchestration/fallback path is not implemented.",
+      "next_phase": "CHATGPT_SUPABASE_BRIDGE",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T15",
+      "name": "PERSISTENCE_FAILURE_DURING_SAVE",
+      "status": "PARTIAL_INFRASTRUCTURE",
+      "evidence": "Transactional stage RPCs and persistence receipts exist; end-to-end ChatGPT SAVE orchestration still must be implemented.",
+      "next_phase": "CHATGPT_SUPABASE_BRIDGE",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T16",
+      "name": "INVALID_EVIDENCE_ID",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Artifact resolver validates artifact identity/hash/authority, but analytical Evidence IDs inside V2 artifacts need dedicated validation.",
+      "next_phase": "DATA_CONTRACTS_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T17",
+      "name": "LONG_DEEP_DIVE_CHECKPOINT",
+      "status": "PASS_LIVE",
+      "evidence": "Live checkpoint RPC, CHECKPOINT manifest semantics and immutable artifact registry are present.",
+      "next_phase": "EXISTING_REGISTRY",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T18",
+      "name": "RED_TEAM_REOPENS_EARLIER_BLOCK",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Stage reopen exists, but analytical block-level dependency reopening is not implemented.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T19",
+      "name": "PRICE_ONLY_DELTA",
+      "status": "PARTIAL_CODE",
+      "evidence": "Refresh class exists in V2 code/contracts; new ChatGPT workflow must preserve no-fundamental-rerun semantics.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T20",
+      "name": "ROUTINE_FUNDAMENTAL_DELTA",
+      "status": "GAP_IMPLEMENTATION",
+      "evidence": "Affected-block dependency reopening requires the new state machine.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T21",
+      "name": "FULL_REFRESH_REQUIRED",
+      "status": "PARTIAL_INFRASTRUCTURE",
+      "evidence": "Successor-run lineage exists; ChatGPT refresh routing and block reset logic remain to design.",
+      "next_phase": "PROCESS_ENGINE_V2",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T22",
+      "name": "SAVE_WITHOUT_STAGE_COMPLETION",
+      "status": "PASS_LIVE",
+      "evidence": "CHECKPOINT manifests cannot admit downstream stage; live stage trigger/RPC enforces separation.",
+      "next_phase": "EXISTING_REGISTRY",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T23",
+      "name": "COMPLETE_STAGE_FINALIZES",
+      "status": "PARTIAL_INFRASTRUCTURE",
+      "evidence": "Finalization RPC and required stage outputs exist; ChatGPT SAVE must detect eligibility and call it correctly.",
+      "next_phase": "CHATGPT_SUPABASE_BRIDGE",
+      "required_before_vertical_slice": true
+    },
+    {
+      "id": "T24",
+      "name": "SAVE_NEVER_PUBLISHES",
+      "status": "PASS_LIVE",
+      "evidence": "Publication has separate authorization/result RPCs and READY_TO_PUBLISH boundary.",
+      "next_phase": "EXISTING_REGISTRY",
+      "required_before_vertical_slice": false
+    },
+    {
+      "id": "T25",
+      "name": "GO_PUBLISH_INVALID_INTEGRATION",
+      "status": "PASS_LIVE",
+      "evidence": "Publish authorization requires READY_TO_PUBLISH/Integration candidate state and separate authorization.",
+      "next_phase": "EXISTING_REGISTRY",
+      "required_before_vertical_slice": false
+    }
+  ],
+  "summary": {
+    "total": 25,
+    "pass_live": 5,
+    "pass_infrastructure": 1,
+    "pass_protocol": 4,
+    "partial_infrastructure": 4,
+    "partial_code": 1,
+    "implementation_gaps": 10,
+    "required_before_vertical_slice": 15
+  },
+  "conclusion": "FOUNDATION_IS_STRONG_BUT_NOT_VERTICAL_SLICE_READY",
+  "exact_next_action": "DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS"
+}

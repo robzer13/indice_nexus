@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_DECISION_V0.1",
+  "decision_id": "POST-C7-CHATGPT-OPERATING-PROTOCOL-CANDIDATE-001",
+  "status": "DESIGN_CANDIDATE_READY_FOR_USER_REVIEW",
+  "date": "2026-10-01",
+  "architecture": {
+    "chatgpt": "PRIMARY_NON_DETERMINISTIC_ANALYTICAL_BRAIN",
+    "supabase": "CANONICAL_WORKING_MEMORY_AND_REGISTRY",
+    "github": "METHOD_CODE_CONTRACTS_TESTS",
+    "vercel": "RUNTIME_DEPLOYMENT_LOGS",
+    "orotitan": "PRODUCT_SURFACE_AND_CANONICAL_DISPLAY",
+    "chatgpt_work": "OUT_OF_SCOPE_UNLESS_CLEAR_FUTURE_GAIN"
+  },
+  "command_surface": [
+    "LOAD OROTITAN <COMPANY>",
+    "STATUS OROTITAN",
+    "CHECKPOINT OROTITAN",
+    "SAVE OROTITAN",
+    "REFRESH OROTITAN <COMPANY>",
+    "GO PUBLISH <COMPANY>"
+  ],
+  "quality_controls": [
+    "LAYERED_CONTEXT_LOADING",
+    "ANTI_ANCHORING_AND_NARRATIVE_CONTAMINATION",
+    "QUESTION_DRIVEN_RESEARCH",
+    "ROOT_SOURCE_RECOVERY",
+    "MANDATORY_DISCONFIRMING_SEARCH",
+    "MATERIAL_NUMERIC_PROVENANCE",
+    "MATERIAL_CHANGE_REVALIDATION_GATE",
+    "SECTOR_CYCLICALITY_TECHNOLOGY_SPECIAL_HANDLING",
+    "OUTSIDE_VIEW_BASE_RATES",
+    "MANDATORY_RED_TEAM",
+    "REPRODUCIBLE_VALUATION",
+    "UNKNOWN_PRESERVATION"
+  ],
+  "reliability_controls": [
+    "MEMORY_NEVER_AUTHORITY",
+    "EXACT_RUN_ARTIFACT_VERSION_RESOLUTION",
+    "DATA_CUTOFF_ENFORCEMENT",
+    "CHECKPOINT_RECOVERY",
+    "STATE_VERSION_OPTIMISTIC_CONCURRENCY",
+    "CONTROLLED_SUPABASE_RPC_WRITES",
+    "NO_AD_HOC_DML_IN_COMPANY_ANALYSIS",
+    "NO_SCHEMA_MIGRATION_IN_COMPANY_ANALYSIS",
+    "PROMPT_INJECTION_FIREWALL",
+    "FAIL_CLOSED_ON_CONNECTOR_OR_PERSISTENCE_ERRORS",
+    "NO_PUBLICATION_WITHOUT_GO_PUBLISH"
+  ],
+  "live_infrastructure_alignment": {
+    "supabase_project": "orotitan-screener",
+    "registry_tables_present": true,
+    "guarded_stage_rpcs_present": true,
+    "vercel_project": "orotitan-vnext-pilotage",
+    "github_direct_connector_available": true
+  },
+  "design_artifact": "docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V0.1.md",
+  "supersedes_target_workflow": "MANUAL_COPY_PASTE_CHATGPT_BRIDGE_AS_PRIMARY_PATH",
+  "does_not_freeze": true,
+  "no_production_mutation": true,
+  "next_action": "USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1"
+}

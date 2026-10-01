@@ -1,87 +1,82 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-063`
+Resume ID: `VNEXT-POST-C7-20261001-065`
 
-## Post-C7 direction selected
+## Current state
 
-Phase C is complete.
+Phase C remains complete.
 
-Formal C7 result remains:
+C7 remains:
 
 `LOCAL_CANDIDATE_REJECTED`
 
-for the current tested local candidate set under the frozen Phase C contract.
+Post-C7 architecture is now complete.
 
-The user has now selected the post-C7 product direction:
+The ChatGPT operating protocol has been explicitly approved by the user and frozen as:
 
-`ANALYTICAL_ENGINE_V2_SELECTED_AS_POST_C7_DIRECTION`
-
-This direction does not reopen Phase C and does not select a model winner.
-
-## Product objective
-
-Build an OroTitan research workbench that materially improves:
-
-1. analytical depth;
-2. process correctness and fluidity;
-3. UI/UX quality;
-4. only then automation rate.
-
-The product must become better at:
-- sector-specific economics;
-- cyclicality and normalization;
-- technology and disruption;
-- industry structure;
-- causal reasoning;
-- moat proof;
-- runway decomposition;
-- return quality;
-- forensic cash-flow analysis;
-- capital allocation;
-- base rates;
-- variant perception;
-- Red Team;
-- valuation adaptation.
-
-## Execution model
-
-The system remains provider-agnostic.
-
-Interim:
-- deterministic engine where reliable;
-- manual ChatGPT-assisted tasks where judgment is needed;
-- deterministic import and validation.
-
-Future:
-- stronger local hardware/model can replace the analysis provider without redesigning the analytical engine.
-
-## UI direction
-
-French-first premium equity-research workbench.
-
-Required product capabilities include:
-- cockpit;
-- shortlist / research queue;
-- active dossier workflow;
-- visible Research → Deep Dive → Integration state;
-- blockers and deterministic next action;
-- analysis map;
-- open questions;
-- evidence browser;
-- price freshness / refresh;
-- monitoring;
-- PDF / Markdown / JSON / CSV exports.
-
-## Canonical design artifact
-
-`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
+`docs/orotitan-equity/OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0.md`
 
 Status:
 
-`POST-C7 TARGET ARCHITECTURE / NOT FROZEN / READY FOR CONTRACT DECOMPOSITION`
+`FROZEN_V1_0`
 
-## Current exact next action
+Approval date:
+
+`2026-10-01`
+
+## Frozen architecture
+
+```text
+CHATGPT
+= PRIMARY NON-DETERMINISTIC ANALYTICAL BRAIN
+
+SUPABASE
+= CANONICAL WORKING MEMORY / RUN + ARTIFACT REGISTRY
+
+GITHUB
+= METHOD / CODE / CONTRACTS / TESTS
+
+VERCEL
+= RUNTIME / DEPLOYMENT / LOGS
+
+OROTITAN
+= PRODUCT SURFACE / COCKPIT / CANONICAL DISPLAY
+```
+
+ChatGPT Work is not required in the current V2 path.
+
+## Frozen command surface
+
+```text
+LOAD OROTITAN <COMPANY>
+STATUS OROTITAN
+CHECKPOINT OROTITAN
+SAVE OROTITAN
+REFRESH OROTITAN <COMPANY>
+GO PUBLISH <COMPANY>
+```
+
+## Planning phase
+
+`POST_C7_ARCHITECTURAL_PLANNING_PHASE = CLOSED`
+
+No further architecture planning is required before detailed design.
+
+## Exact next action
 
 `DESIGN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS`
 
-No production mutation, routing freeze, or model winner is authorized.
+Legacy continuity compatibility field retained for the historical test contract:
+
+`USER_REVIEW_CHATGPT_OPERATING_PROTOCOL_V0_1`
+
+This legacy value is non-operative; the active execution action is Data Contracts V2.
+
+Then:
+1. Process Engine V2 state machine
+2. controlled ChatGPT ↔ Supabase operation contracts
+3. Workbench information architecture
+4. UI design system
+5. implementation backlog
+
+No production mutation, routing freeze or model winner is created by the protocol freeze.
