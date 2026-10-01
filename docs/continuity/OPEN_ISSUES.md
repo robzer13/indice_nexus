@@ -1,45 +1,81 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Completed/stopped candidate calibration evidence
+## OI-001 — Completed/stopped calibration evidence
 Status: RETAINED_IMMUTABLE
 
-## OI-002 — Llama 3.2 staged hardware qualification
-Status: COMPLETE_PASS_WITH_HIGH_RAM_PRESSURE
+All historical candidate results remain immutable.
 
-## OI-003 — Llama 3.2 first Constellation C4
-Status: FAIL_RAW_SCHEMA_FORENSICS_IN_PROGRESS
+## OI-002 — Llama 3.2 3B
+Status: STOPPED_RETAIN_CALIBRATION_EVIDENCE
+
+Hardware:
+`PASS_WITH_HIGH_RAM_PRESSURE`
+
+First Constellation C4:
+`FAIL_RAW_SCHEMA_FORENSICS_REQUIRED`
+
+Final forensic:
+`FORENSIC_COMPLETE_NO_SAFE_DETERMINISTIC_CANONICALIZATION`
+
+Canonical format-only candidate:
+`E-005`
+
+Candidate exists in pinned packet:
+FALSE
+
+Retry authorized:
+FALSE
+
+Additional Llama inference:
+FALSE
+
+Candidate admitted:
+FALSE
+
+Family-wide failure concluded:
+FALSE
+
+## OI-003 — Local candidate registry
+Status: REFRESH_COMPLETE_NO_NEXT_CANDIDATE_SELECTED
+
+Refresh:
+`G18-PHASEC-LOCAL-CANDIDATE-REGISTRY-REFRESH-20261001-004`
+
+New download authorized:
+FALSE
+
+New inference authorized:
+FALSE
+
+## OI-004 — Phase C synthesis / C7
+Status: PREPARED_AWAITING_EXPLICIT_DECISION_AUTHORITY
 Priority: P0
 
-Historical run:
-- inference executed once and authorization consumed;
-- raw JSON syntactically valid;
-- exactly one raw-schema issue;
-- path `priority_findings.1.counterevidence_ids.0`.
+Synthesis prep:
+`G18-PHASEC-CANDIDATE-SYNTHESIS-PREP-001`
 
-Second forensic:
-- COMPLETE;
-- malformed value length: 5;
-- exact `E-NNN` tokens: 0;
-- deterministic token decomposition: not admissible.
+Current candidate accepted:
+FALSE
 
-## OI-004 — Llama 3.2 prefix/separator forensic
-Status: AUTHORIZED_UNCONSUMED
-Priority: P0
+Formal C7 local-candidate rejection:
+NOT EXECUTED
 
-Allowed:
-- inspect suffix positions 2-4;
-- test whether digits already identify one canonical packet ID;
-- normalize only prefix/separator on an in-memory copy;
-- rerun V1.1 on that copy.
+Conditional admission:
+NOT EXECUTED
 
-Forbidden:
-- digit substitution;
-- source mutation;
-- raw malformed value publication;
-- inference;
-- retry authorization.
+Winner selected:
+FALSE
 
-Additional Llama inference authorized: FALSE
+Routing frozen:
+FALSE
 
-## OI-005 — Model winner and routing
-Status: OPEN_GUARDED
+Required next authority:
+explicit C7 local production-candidate decision authority, or explicit direction to test a new candidate.
+
+## OI-005 — Production / routing
+Status: GUARDED
+
+No production mutation.
+No publication authority.
+No model winner.
+No routing freeze.
