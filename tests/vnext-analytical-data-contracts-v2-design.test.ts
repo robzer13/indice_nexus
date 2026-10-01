@@ -451,7 +451,13 @@ test("material conclusion change requires all six revalidation checks", () => {
     body: {
       change_id: "MC-1",
       affected_blocks: ["MOAT"],
-      prior_state_ref: "BLOCK-MOAT-V1",
+      prior_state_ref: {
+        artifact_id: "BLOCK-MOAT",
+        version: 1,
+        run_id: "run-001",
+        status: "FINAL",
+        sha256: null,
+      },
       proposed_state: "Updated moat conclusion",
       triggering_evidence_ids: ["E-1"],
       checks: checkNames.map((check) => ({
