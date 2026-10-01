@@ -1,43 +1,76 @@
 # OroTitan VNExT — Open Issues
 
-## OI-001 — Historical Phase C calibration evidence
+## OI-001 — Historical Phase C / C7 evidence
 Status: COMPLETE_RETAINED_IMMUTABLE
 
-Historical candidate outcomes remain immutable.
+Phase C:
+`COMPLETE`
 
-## OI-002 — Gate 18 Phase C
-Status: COMPLETE
-
-C7 decision:
-
+C7:
 `LOCAL_CANDIDATE_REJECTED`
 
-Scope:
+The post-C7 work does not reopen or rewrite historical model qualification.
 
-`CURRENT_TESTED_LOCAL_CANDIDATE_SET_AND_CURRENT_FROZEN_PHASE_C_CONTRACT`
-
-Current tested-set production candidate:
-NONE
-
-Formal C7 decision executed:
-TRUE
-
-## OI-003 — Post-C7 model strategy
-Status: OPEN_REQUIRES_EXPLICIT_DIRECTION
+## OI-002 — Analytical Engine V2
+Status: DESIGN_SELECTED
 Priority: P0
 
-No post-C7 strategy has been selected.
+Target architecture:
+`docs/orotitan-equity/OROTITAN_ANALYTICAL_ENGINE_V2_DESIGN_V0.1.md`
 
-Possible future directions are outside the current C7 decision and require explicit direction, including:
-- a new materially different local candidate;
-- a controlled external-model benchmark;
-- a hybrid local/external architecture;
-- a hardware-change path;
-- redesign of the LLM responsibility boundary.
+Immediate missing contracts:
+- COMPANY_ECONOMIC_DNA;
+- sector overlay contract;
+- cyclicality contract;
+- technology contract;
+- industry-structure contract;
+- causal graph;
+- open-question model;
+- analysis task/provider contract.
 
-No option is selected by implication.
+## OI-003 — Process Engine V2
+Status: NOT_STARTED
+Priority: P0
 
-## OI-004 — Production / routing
+Required:
+- run/stage/block state model;
+- execution fingerprints;
+- anti-loop guards;
+- blockers;
+- retry bounds;
+- next-action resolver;
+- resume;
+- queue;
+- history.
+
+## OI-004 — Workbench UI/UX
+Status: TARGET_DEFINED_NOT_IMPLEMENTED
+Priority: P1
+
+Required:
+- premium French-first research cockpit;
+- company workspace;
+- analysis dependency map;
+- module views;
+- open questions;
+- evidence browser;
+- stage/integration visualization;
+- shortlist;
+- monitoring;
+- price freshness;
+- export.
+
+## OI-005 — AI execution
+Status: PROVIDER_AGNOSTIC
+
+Current acceptable mode:
+`MANUAL_CHATGPT_ASSISTED`
+
+Future modes may include approved external API or stronger local model.
+
+No provider is selected as production winner.
+
+## OI-006 — Production / routing
 Status: GUARDED
 
 Model winner:
@@ -47,9 +80,6 @@ Routing freeze:
 NONE
 
 Production mutation:
-FALSE
-
-Publication authority:
 FALSE
 
 Gate 18:
