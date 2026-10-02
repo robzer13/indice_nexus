@@ -3,14 +3,30 @@
   "$id": "https://orotitan.local/schemas/vnext/chatgpt-supabase/controlled-operation.schema.v0.1.json",
   "title": "OroTitan ChatGPT Supabase Controlled Operation Contract V0.1",
   "oneOf": [
-    { "$ref": "#/$defs/loadRequest" },
-    { "$ref": "#/$defs/loadResult" },
-    { "$ref": "#/$defs/checkpointRequest" },
-    { "$ref": "#/$defs/finalizeRequest" },
-    { "$ref": "#/$defs/reopenRequest" },
-    { "$ref": "#/$defs/noopRequest" },
-    { "$ref": "#/$defs/mutationReceipt" },
-    { "$ref": "#/$defs/operationFailure" }
+    {
+      "$ref": "#/$defs/loadRequest"
+    },
+    {
+      "$ref": "#/$defs/loadResult"
+    },
+    {
+      "$ref": "#/$defs/checkpointRequest"
+    },
+    {
+      "$ref": "#/$defs/finalizeRequest"
+    },
+    {
+      "$ref": "#/$defs/reopenRequest"
+    },
+    {
+      "$ref": "#/$defs/noopRequest"
+    },
+    {
+      "$ref": "#/$defs/mutationReceipt"
+    },
+    {
+      "$ref": "#/$defs/operationFailure"
+    }
   ],
   "$defs": {
     "id": {
@@ -28,27 +44,52 @@
     },
     "stageCode": {
       "type": "string",
-      "enum": ["RESEARCH", "DEEP_DIVE", "INTEGRATION"]
+      "enum": [
+        "RESEARCH",
+        "DEEP_DIVE",
+        "INTEGRATION"
+      ]
     },
     "stageLifecycle": {
       "type": "string",
-      "enum": ["NOT_STARTED", "IN_PROGRESS", "PAUSED", "BLOCKED", "COMPLETE"]
+      "enum": [
+        "NOT_STARTED",
+        "IN_PROGRESS",
+        "PAUSED",
+        "BLOCKED",
+        "COMPLETE"
+      ]
     },
     "artifactRef": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["artifact_id", "version"],
+      "required": [
+        "artifact_id",
+        "version"
+      ],
       "properties": {
-        "artifact_id": { "$ref": "#/$defs/id" },
-        "version": { "type": "integer", "minimum": 1 },
+        "artifact_id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
         "content_sha256": {
           "anyOf": [
-            { "$ref": "#/$defs/sha256" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "required_authority_class": {
-          "type": ["string", "null"],
+          "type": [
+            "string",
+            "null"
+          ],
           "minLength": 1
         }
       }
@@ -65,18 +106,36 @@
         "active_manifest"
       ],
       "properties": {
-        "stage_code": { "$ref": "#/$defs/stageCode" },
-        "stage_revision": { "type": "integer", "minimum": 0 },
-        "lifecycle_status": { "$ref": "#/$defs/stageLifecycle" },
-        "stage_state_version": { "type": "integer", "minimum": 1 },
+        "stage_code": {
+          "$ref": "#/$defs/stageCode"
+        },
+        "stage_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lifecycle_status": {
+          "$ref": "#/$defs/stageLifecycle"
+        },
+        "stage_state_version": {
+          "type": "integer",
+          "minimum": 1
+        },
         "handoff_gate_state": {
           "type": "string",
-          "enum": ["NOT_EVALUATED", "NO", "YES"]
+          "enum": [
+            "NOT_EVALUATED",
+            "NO",
+            "YES"
+          ]
         },
         "active_manifest": {
           "anyOf": [
-            { "$ref": "#/$defs/artifactRef" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/artifactRef"
+            },
+            {
+              "type": "null"
+            }
           ]
         }
       }
@@ -84,15 +143,29 @@
     "loadRequest": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["contract_version", "operation", "issuer_query"],
+      "required": [
+        "contract_version",
+        "operation",
+        "issuer_query"
+      ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "operation": { "const": "LOAD" },
-        "issuer_query": { "$ref": "#/$defs/id" },
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "operation": {
+          "const": "LOAD"
+        },
+        "issuer_query": {
+          "$ref": "#/$defs/id"
+        },
         "run_id": {
           "anyOf": [
-            { "$ref": "#/$defs/id" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "requested_context_tiers": {
@@ -100,7 +173,12 @@
           "uniqueItems": true,
           "items": {
             "type": "string",
-            "enum": ["L0", "L1", "L2", "L3"]
+            "enum": [
+              "L0",
+              "L1",
+              "L2",
+              "L3"
+            ]
           }
         }
       }
@@ -129,109 +207,357 @@
         "context_plan"
       ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "operation": { "const": "LOAD_RESULT" },
-        "mutation_allowed": { "const": false },
-        "issuer_id": { "$ref": "#/$defs/id" },
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "operation": {
+          "const": "LOAD_RESULT"
+        },
+        "mutation_allowed": {
+          "const": false
+        },
+        "issuer_id": {
+          "$ref": "#/$defs/id"
+        },
         "security_id": {
           "anyOf": [
-            { "$ref": "#/$defs/id" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
-        "dossier_id": { "$ref": "#/$defs/id" },
+        "dossier_id": {
+          "$ref": "#/$defs/id"
+        },
         "run_id": {
           "anyOf": [
-            { "$ref": "#/$defs/id" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "run_status": {
           "anyOf": [
-            { "type": "string", "minLength": 1 },
-            { "type": "null" }
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "run_state_version": {
           "anyOf": [
-            { "type": "integer", "minimum": 1 },
-            { "type": "null" }
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "run_type": {
           "anyOf": [
-            { "type": "string", "minLength": 1 },
-            { "type": "null" }
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "canonical_mode": {
           "anyOf": [
-            { "type": "string", "minLength": 1 },
-            { "type": "null" }
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "data_cutoff": {
           "anyOf": [
-            { "$ref": "#/$defs/date" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/date"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "contract_set_sha256": {
           "anyOf": [
-            { "$ref": "#/$defs/sha256" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "current_stage": {
           "anyOf": [
-            { "$ref": "#/$defs/stageCode" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/stageCode"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "stage": {
           "anyOf": [
-            { "$ref": "#/$defs/stageState" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/stageState"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "blockers": {
           "type": "array",
-          "items": { "type": "object" }
+          "items": {
+            "type": "object"
+          }
         },
         "artifact_index": {
           "type": "array",
-          "items": { "$ref": "#/$defs/artifactRef" }
+          "items": {
+            "$ref": "#/$defs/artifactRef"
+          }
         },
         "process_state_artifact": {
           "anyOf": [
-            { "$ref": "#/$defs/artifactRef" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/artifactRef"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "context_plan": {
           "type": "object",
           "additionalProperties": false,
-          "required": ["l0", "l1", "l2", "l3"],
+          "required": [
+            "l0",
+            "l1",
+            "l2",
+            "l3"
+          ],
           "properties": {
             "l0": {
               "type": "array",
-              "items": { "$ref": "#/$defs/artifactRef" }
+              "items": {
+                "$ref": "#/$defs/artifactRef"
+              }
             },
             "l1": {
               "type": "array",
-              "items": { "$ref": "#/$defs/artifactRef" }
+              "items": {
+                "$ref": "#/$defs/artifactRef"
+              }
             },
             "l2": {
               "type": "array",
-              "items": { "$ref": "#/$defs/artifactRef" }
+              "items": {
+                "$ref": "#/$defs/artifactRef"
+              }
             },
             "l3": {
               "type": "array",
-              "items": { "$ref": "#/$defs/artifactRef" }
+              "items": {
+                "$ref": "#/$defs/artifactRef"
+              }
             }
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "run_id": {
+                "type": "null"
+              }
+            },
+            "required": [
+              "run_id"
+            ]
+          },
+          "then": {
+            "properties": {
+              "run_status": {
+                "type": "null"
+              },
+              "run_state_version": {
+                "type": "null"
+              },
+              "run_type": {
+                "type": "null"
+              },
+              "canonical_mode": {
+                "type": "null"
+              },
+              "data_cutoff": {
+                "type": "null"
+              },
+              "contract_set_sha256": {
+                "type": "null"
+              },
+              "current_stage": {
+                "type": "null"
+              },
+              "stage": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "run_status": {
+                "type": "string",
+                "minLength": 1
+              },
+              "run_state_version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "run_type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "canonical_mode": {
+                "type": "string",
+                "minLength": 1
+              },
+              "data_cutoff": {
+                "$ref": "#/$defs/date"
+              },
+              "contract_set_sha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "current_stage": {
+                "$ref": "#/$defs/stageCode"
+              },
+              "stage": {
+                "$ref": "#/$defs/stageState"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "current_stage": {
+                "const": "RESEARCH"
+              }
+            },
+            "required": [
+              "current_stage"
+            ]
+          },
+          "then": {
+            "properties": {
+              "stage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/stageState"
+                  },
+                  {
+                    "properties": {
+                      "stage_code": {
+                        "const": "RESEARCH"
+                      }
+                    },
+                    "required": [
+                      "stage_code"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "current_stage": {
+                "const": "DEEP_DIVE"
+              }
+            },
+            "required": [
+              "current_stage"
+            ]
+          },
+          "then": {
+            "properties": {
+              "stage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/stageState"
+                  },
+                  {
+                    "properties": {
+                      "stage_code": {
+                        "const": "DEEP_DIVE"
+                      }
+                    },
+                    "required": [
+                      "stage_code"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "current_stage": {
+                "const": "INTEGRATION"
+              }
+            },
+            "required": [
+              "current_stage"
+            ]
+          },
+          "then": {
+            "properties": {
+              "stage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/stageState"
+                  },
+                  {
+                    "properties": {
+                      "stage_code": {
+                        "const": "INTEGRATION"
+                      }
+                    },
+                    "required": [
+                      "stage_code"
+                    ]
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
     },
     "bundle": {
       "type": "object",
@@ -244,17 +570,27 @@
         "persistence_receipts_verified"
       ],
       "properties": {
-        "manifest": { "type": "object" },
-        "manifest_registration": { "type": "object" },
+        "manifest": {
+          "type": "object"
+        },
+        "manifest_registration": {
+          "type": "object"
+        },
         "output_artifacts": {
           "type": "array",
-          "items": { "type": "object" }
+          "items": {
+            "type": "object"
+          }
         },
         "edges": {
           "type": "array",
-          "items": { "type": "object" }
+          "items": {
+            "type": "object"
+          }
         },
-        "persistence_receipts_verified": { "const": true }
+        "persistence_receipts_verified": {
+          "const": true
+        }
       }
     },
     "mutationCommon": {
@@ -270,19 +606,39 @@
         "publish_authorized"
       ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "run_id": { "$ref": "#/$defs/id" },
-        "stage_code": { "$ref": "#/$defs/stageCode" },
-        "expected_run_state_version": { "type": "integer", "minimum": 1 },
-        "expected_stage_state_version": { "type": "integer", "minimum": 1 },
-        "idempotency_key": { "$ref": "#/$defs/id" },
-        "request_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
-        "publish_authorized": { "const": false }
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "run_id": {
+          "$ref": "#/$defs/id"
+        },
+        "stage_code": {
+          "$ref": "#/$defs/stageCode"
+        },
+        "expected_run_state_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "expected_stage_state_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/id"
+        },
+        "request_fingerprint_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "publish_authorized": {
+          "const": false
+        }
       }
     },
     "checkpointRequest": {
       "allOf": [
-        { "$ref": "#/$defs/mutationCommon" },
+        {
+          "$ref": "#/$defs/mutationCommon"
+        },
         {
           "type": "object",
           "additionalProperties": false,
@@ -302,32 +658,95 @@
             "publish_authorized"
           ],
           "properties": {
-            "contract_version": { "const": "0.1.0" },
-            "operation": { "const": "CHECKPOINT_STAGE" },
-            "run_id": { "$ref": "#/$defs/id" },
-            "stage_code": { "$ref": "#/$defs/stageCode" },
-            "expected_run_state_version": { "type": "integer", "minimum": 1 },
-            "expected_stage_state_version": { "type": "integer", "minimum": 1 },
+            "contract_version": {
+              "const": "0.1.0"
+            },
+            "operation": {
+              "const": "CHECKPOINT_STAGE"
+            },
+            "run_id": {
+              "$ref": "#/$defs/id"
+            },
+            "stage_code": {
+              "$ref": "#/$defs/stageCode"
+            },
+            "expected_run_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "expected_stage_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
             "save_disposition": {
               "type": "string",
-              "enum": ["CHECKPOINT", "BLOCK"]
+              "enum": [
+                "CHECKPOINT",
+                "BLOCK"
+              ]
             },
             "target_lifecycle": {
               "type": "string",
-              "enum": ["IN_PROGRESS", "PAUSED", "BLOCKED"]
+              "enum": [
+                "IN_PROGRESS",
+                "PAUSED",
+                "BLOCKED"
+              ]
             },
-            "bundle": { "$ref": "#/$defs/bundle" },
-            "idempotency_key": { "$ref": "#/$defs/id" },
-            "request_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
-            "actor_type": { "$ref": "#/$defs/id" },
-            "publish_authorized": { "const": false }
+            "bundle": {
+              "$ref": "#/$defs/bundle"
+            },
+            "idempotency_key": {
+              "$ref": "#/$defs/id"
+            },
+            "request_fingerprint_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "actor_type": {
+              "$ref": "#/$defs/id"
+            },
+            "publish_authorized": {
+              "const": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "save_disposition": {
+                "const": "BLOCK"
+              }
+            },
+            "required": [
+              "save_disposition"
+            ]
+          },
+          "then": {
+            "properties": {
+              "target_lifecycle": {
+                "const": "BLOCKED"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "target_lifecycle": {
+                "type": "string",
+                "enum": [
+                  "IN_PROGRESS",
+                  "PAUSED"
+                ]
+              }
+            }
           }
         }
       ]
     },
     "finalizeRequest": {
       "allOf": [
-        { "$ref": "#/$defs/mutationCommon" },
+        {
+          "$ref": "#/$defs/mutationCommon"
+        },
         {
           "type": "object",
           "additionalProperties": false,
@@ -346,25 +765,53 @@
             "publish_authorized"
           ],
           "properties": {
-            "contract_version": { "const": "0.1.0" },
-            "operation": { "const": "FINALIZE_STAGE" },
-            "run_id": { "$ref": "#/$defs/id" },
-            "stage_code": { "$ref": "#/$defs/stageCode" },
-            "expected_run_state_version": { "type": "integer", "minimum": 1 },
-            "expected_stage_state_version": { "type": "integer", "minimum": 1 },
-            "save_disposition": { "const": "FINALIZE" },
-            "bundle": { "$ref": "#/$defs/bundle" },
-            "idempotency_key": { "$ref": "#/$defs/id" },
-            "request_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
-            "actor_type": { "$ref": "#/$defs/id" },
-            "publish_authorized": { "const": false }
+            "contract_version": {
+              "const": "0.1.0"
+            },
+            "operation": {
+              "const": "FINALIZE_STAGE"
+            },
+            "run_id": {
+              "$ref": "#/$defs/id"
+            },
+            "stage_code": {
+              "$ref": "#/$defs/stageCode"
+            },
+            "expected_run_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "expected_stage_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "save_disposition": {
+              "const": "FINALIZE"
+            },
+            "bundle": {
+              "$ref": "#/$defs/bundle"
+            },
+            "idempotency_key": {
+              "$ref": "#/$defs/id"
+            },
+            "request_fingerprint_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "actor_type": {
+              "$ref": "#/$defs/id"
+            },
+            "publish_authorized": {
+              "const": false
+            }
           }
         }
       ]
     },
     "reopenRequest": {
       "allOf": [
-        { "$ref": "#/$defs/mutationCommon" },
+        {
+          "$ref": "#/$defs/mutationCommon"
+        },
         {
           "type": "object",
           "additionalProperties": false,
@@ -382,28 +829,58 @@
             "publish_authorized"
           ],
           "properties": {
-            "contract_version": { "const": "0.1.0" },
-            "operation": { "const": "REOPEN_STAGE" },
-            "run_id": { "$ref": "#/$defs/id" },
-            "stage_code": { "$ref": "#/$defs/stageCode" },
-            "expected_run_state_version": { "type": "integer", "minimum": 1 },
-            "expected_stage_state_version": { "type": "integer", "minimum": 1 },
+            "contract_version": {
+              "const": "0.1.0"
+            },
+            "operation": {
+              "const": "REOPEN_STAGE"
+            },
+            "run_id": {
+              "$ref": "#/$defs/id"
+            },
+            "stage_code": {
+              "$ref": "#/$defs/stageCode"
+            },
+            "expected_run_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "expected_stage_state_version": {
+              "type": "integer",
+              "minimum": 1
+            },
             "target_lifecycle": {
               "type": "string",
-              "enum": ["IN_PROGRESS", "BLOCKED"]
+              "enum": [
+                "IN_PROGRESS",
+                "BLOCKED"
+              ]
             },
             "reason": {
               "type": "object",
               "additionalProperties": true,
-              "required": ["code", "summary"],
+              "required": [
+                "code",
+                "summary"
+              ],
               "properties": {
-                "code": { "$ref": "#/$defs/id" },
-                "summary": { "$ref": "#/$defs/id" }
+                "code": {
+                  "$ref": "#/$defs/id"
+                },
+                "summary": {
+                  "$ref": "#/$defs/id"
+                }
               }
             },
-            "idempotency_key": { "$ref": "#/$defs/id" },
-            "request_fingerprint_sha256": { "$ref": "#/$defs/sha256" },
-            "publish_authorized": { "const": false }
+            "idempotency_key": {
+              "$ref": "#/$defs/id"
+            },
+            "request_fingerprint_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "publish_authorized": {
+              "const": false
+            }
           }
         }
       ]
@@ -421,13 +898,27 @@
         "publish_authorized"
       ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "operation": { "const": "NOOP" },
-        "run_id": { "$ref": "#/$defs/id" },
-        "stage_code": { "$ref": "#/$defs/stageCode" },
-        "save_disposition": { "const": "NOOP" },
-        "reason": { "$ref": "#/$defs/id" },
-        "publish_authorized": { "const": false }
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "operation": {
+          "const": "NOOP"
+        },
+        "run_id": {
+          "$ref": "#/$defs/id"
+        },
+        "stage_code": {
+          "$ref": "#/$defs/stageCode"
+        },
+        "save_disposition": {
+          "const": "NOOP"
+        },
+        "reason": {
+          "$ref": "#/$defs/id"
+        },
+        "publish_authorized": {
+          "const": false
+        }
       }
     },
     "mutationReceipt": {
@@ -444,28 +935,52 @@
         "verification"
       ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "operation": { "const": "MUTATION_RECEIPT" },
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "operation": {
+          "const": "MUTATION_RECEIPT"
+        },
         "status": {
           "type": "string",
-          "enum": ["SUCCESS", "IDEMPOTENT_REPLAY"]
+          "enum": [
+            "SUCCESS",
+            "IDEMPOTENT_REPLAY"
+          ]
         },
-        "run_id": { "$ref": "#/$defs/id" },
-        "stage_code": { "$ref": "#/$defs/stageCode" },
-        "stage_state_version": { "type": "integer", "minimum": 1 },
+        "run_id": {
+          "$ref": "#/$defs/id"
+        },
+        "stage_code": {
+          "$ref": "#/$defs/stageCode"
+        },
+        "stage_state_version": {
+          "type": "integer",
+          "minimum": 1
+        },
         "manifest_id": {
           "anyOf": [
-            { "$ref": "#/$defs/id" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
         "event_id": {
           "anyOf": [
-            { "$ref": "#/$defs/id" },
-            { "type": "null" }
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
           ]
         },
-        "idempotent_replay": { "type": "boolean" },
+        "idempotent_replay": {
+          "type": "boolean"
+        },
         "verification": {
           "type": "object",
           "additionalProperties": false,
@@ -475,12 +990,46 @@
             "artifact_integrity_verified"
           ],
           "properties": {
-            "durable_state_reloaded": { "const": true },
-            "state_matches_intent": { "const": true },
-            "artifact_integrity_verified": { "const": true }
+            "durable_state_reloaded": {
+              "const": true
+            },
+            "state_matches_intent": {
+              "const": true
+            },
+            "artifact_integrity_verified": {
+              "const": true
+            }
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "SUCCESS"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "idempotent_replay": {
+                "const": false
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "idempotent_replay": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
     },
     "operationFailure": {
       "type": "object",
@@ -493,8 +1042,12 @@
         "retry_without_reload_allowed"
       ],
       "properties": {
-        "contract_version": { "const": "0.1.0" },
-        "operation": { "const": "OPERATION_FAILURE" },
+        "contract_version": {
+          "const": "0.1.0"
+        },
+        "operation": {
+          "const": "OPERATION_FAILURE"
+        },
         "error_class": {
           "type": "string",
           "enum": [
@@ -507,8 +1060,12 @@
             "INFRASTRUCTURE"
           ]
         },
-        "message": { "$ref": "#/$defs/id" },
-        "retry_without_reload_allowed": { "const": false }
+        "message": {
+          "$ref": "#/$defs/id"
+        },
+        "retry_without_reload_allowed": {
+          "const": false
+        }
       }
     }
   }
