@@ -197,8 +197,8 @@ test("legacy consolidated Data Contracts candidate is explicitly superseded", ()
   );
 
   assert.equal(legacy.deprecated, true);
-  assert.equal(
-    legacy["x-orotitan-authority"],
-    "SUPERSEDED_HISTORICAL_DESIGN_CANDIDATE",
+  assert.match(
+    legacy.$comment,
+    /SUPERSEDED_HISTORICAL_DESIGN_CANDIDATE/,
   );
 });
