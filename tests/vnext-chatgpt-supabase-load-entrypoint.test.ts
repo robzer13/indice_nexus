@@ -112,3 +112,40 @@ test("LOAD entrypoint requires the Trusted Sources OIDC header in preview", asyn
     });
   });
 });
+
+test("LOAD entrypoint sanitizes server initialization failures as INFRASTRUCTURE", async () => {
+  const previousUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const previousServiceRole = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+  delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  try {
+    await withVercelEnv("preview", async () => {
+      const response = await GET(
+        new Request(
+          `https://preview.example/api/vnext/chatgpt-supabase/load?issuer_query=Veolia&run_id=${RUN_ID}`,
+          {
+            headers: {
+              "x-vercel-trusted-oidc-idp-token": "opaque-test-token",
+            },
+          },
+        ),
+      );
+
+      assert.equal(response.status, 503);
+      assert.deepEqual(await response.json(), {
+        contract_version: "0.1.0",
+        operation: "OPERATION_FAILURE",
+        error_class: "INFRASTRUCTURE",
+        message: "LOAD bridge server initialization failed",
+        retry_without_reload_allowed: false,
+      });
+    });
+  } finally {
+    if (previousUrl === undefined) delete process.env.NEXT_PUBLIC_SUPABASE_URL;
+    else process.env.NEXT_PUBLIC_SUPABASE_URL = previousUrl;
+
+    if (previousServiceRole === undefined) delete process.env.SUPABASE_SERVICE_ROLE_KEY;
+    else process.env.SUPABASE_SERVICE_ROLE_KEY = previousServiceRole;
+  }
+});
