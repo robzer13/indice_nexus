@@ -1,6 +1,6 @@
 # OroTitan VNext Analytical Data Contracts
 
-Status: GLOBAL REVIEW PATCHED — CANDIDATE FOR FREEZE
+Status: FROZEN — V1.0
 
 This directory is the single current Data Contracts V2 candidate package for the ChatGPT-first Analytical Engine V2. The earlier consolidated post-C7 schema is retained only as superseded historical design material.
 
@@ -81,3 +81,12 @@ PROCESS ENGINE control / reopen state
 ```
 
 Process Engine V2 must not replace the frozen analytical execution-status vocabulary.
+
+
+## Freeze
+
+`OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_FREEZE_V1.0`
+
+Review baseline: `vnext@c956cfbadeeaab0b36c01e242a27487fb7a433ef` (PR #336 merged).
+
+Any semantic change to this package requires an explicit successor version. Process Engine V2 may consume these contracts but may not rewrite their canonical analytical vocabularies.

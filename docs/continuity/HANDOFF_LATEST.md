@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261001-070`
+Resume ID: `VNEXT-POST-C7-20261002-071`
 
 ## Current state
 
@@ -116,4 +116,38 @@ The reviewed package is stable for Process Engine V2 design. It is not promoted 
 
 Exact next action:
 
+`DESIGN_PROCESS_ENGINE_V2`
+
+
+---
+
+## Data Contracts V2 — global review + freeze (2026-10-02)
+
+The post-#334 global review found a material authority conflict between:
+- the earlier consolidated post-C7 candidate; and
+- the split schema package added by #333/#334.
+
+Resolved on PR #336:
+- split package is the single current authority candidate;
+- prior consolidated package is historical only;
+- frozen canonical `epistemic_type` is preserved;
+- ChatGPT protocol `working_claim_type` is separate;
+- frozen analytical block execution status remains `INSUFFICIENT | IN_PROGRESS | PROVISIONALLY_STABLE | LOCKED`;
+- Process Engine control/reopen state must remain a separate layer;
+- block references are bound to canonical `blockCode`.
+
+Review result:
+```text
+VNext CI = PASS
+Screener CI = PASS
+Codex P1 = FIXED / RESOLVED
+```
+
+Freeze:
+`OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_FREEZE_V1.0`
+
+Vertical slice:
+`READY = NO`
+
+Exact next action:
 `DESIGN_PROCESS_ENGINE_V2`
