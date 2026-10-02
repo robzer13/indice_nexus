@@ -718,18 +718,25 @@ export function planRefresh(
   }
 
   if (refreshClass === "FULL_REFRESH_REQUIRED") {
-    const allBlocks = uniqueInCanonicalOrder(
-      blocks.map((block) => block.block),
+    const executedBlocks = uniqueInCanonicalOrder(
+      blocks
+        .filter((block) => block.presence === "PRESENT")
+        .map((block) => block.block),
+    );
+    const unstartedBlocks = uniqueInCanonicalOrder(
+      blocks
+        .filter((block) => block.presence === "NOT_STARTED")
+        .map((block) => block.block),
     );
     return {
       ok: true,
       refreshClass,
       researchMode: base.research,
       fundamentalsMode: base.fundamentals,
-      directReopenBlocks: allBlocks,
+      directReopenBlocks: executedBlocks,
       staleBlocks: [],
-      reopenBlocks: allBlocks,
-      preservedBlocks: [],
+      reopenBlocks: executedBlocks,
+      preservedBlocks: unstartedBlocks,
       oqsMayChange: true,
       requiresValuation: true,
       requiresCertification: true,
@@ -928,15 +935,15 @@ export function decideRetry(input: {
     return { allowed: true, reason: "first execution" };
   }
 
-  if (input.priorFingerprint !== input.nextFingerprint) {
-    return { allowed: true, reason: "execution fingerprint changed" };
-  }
-
   if (input.retryBudgetExhausted) {
     return {
       allowed: false,
-      reason: "retry budget exhausted for unchanged execution fingerprint",
+      reason: "retry budget exhausted for prior execution",
     };
+  }
+
+  if (input.priorFingerprint !== input.nextFingerprint) {
+    return { allowed: true, reason: "execution fingerprint changed" };
   }
 
   const justifications = [
@@ -1001,6 +1008,21 @@ export function deriveNextBlockAction(
   }
 
   const byCode = new Map(blocks.map((block) => [block.block, block]));
+  const missingOverlayTargets = requiredOverlays.filter(
+    (requirement) => !byCode.has(requirement.block),
+  );
+  if (missingOverlayTargets.length > 0) {
+    return {
+      action: "FAIL_CLOSED",
+      block: null,
+      reason: missingOverlayTargets
+        .map(
+          (requirement) =>
+            `required sector overlay ${requirement.overlay} references absent block ${requirement.block}`,
+        )
+        .join("; "),
+    };
+  }
 
   for (const code of graph.topologicalOrder) {
     const locked = byCode.get(code);
