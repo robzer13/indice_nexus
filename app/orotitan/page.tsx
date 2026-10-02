@@ -13,50 +13,49 @@ export default function OroTitanEntryPage() {
   const run = dossier.runSummaries.find((item) => item.runId === dossier.primaryRunId);
 
   return (
-    <div className="mx-auto max-w-4xl py-10 sm:py-16">
-      <section>
-        <div className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-400">Equity Research</div>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-white sm:text-4xl">
-          Rechercher une société
-        </h1>
-        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-500">
-          Ouvrez un dossier OroTitan existant par nom, ticker ou symbole de marché.
+    <div className="mx-auto max-w-5xl py-14 sm:py-20">
+      <section className="text-center">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400">OroTitan</div>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">Equity Research</h1>
+        <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-slate-500">
+          Recherchez un dossier existant par nom, ticker ou symbole de marché.
         </p>
       </section>
 
-      <div className="mt-8">
+      <div className="mx-auto mt-10 max-w-3xl">
         <CompanySearch />
       </div>
 
       {run ? (
-        <section className="mt-12 border-t border-slate-800 pt-7">
+        <section className="mt-16">
           <div className="mb-3 flex items-center justify-between gap-4">
-            <h2 className="text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Dossier récent</h2>
-            <span className="text-xs text-slate-700">Environnement de démonstration</span>
+            <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">Dossier récent</h2>
+            <span className="text-[10px] uppercase tracking-[0.15em] text-slate-700">Environnement de démonstration</span>
           </div>
+
           <Link
             href={buildRunHref('/orotitan/' + dossier.identity.slug, run.runId)}
-            className="group grid gap-3 border-y border-slate-800/90 py-4 transition hover:border-slate-700 sm:grid-cols-[minmax(0,1fr)_120px_120px_120px]"
+            className="group grid gap-4 rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.72)] px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,.16)] transition hover:border-cyan-400/25 hover:bg-[rgba(10,26,42,.78)] md:grid-cols-[minmax(0,1fr)_130px_120px_130px]"
           >
             <div>
-              <div className="font-medium text-slate-100 group-hover:text-white">{dossier.identity.legalName}</div>
+              <div className="text-base font-medium text-slate-100 group-hover:text-white">{dossier.identity.legalName}</div>
               <div className="mt-1 text-xs text-slate-600">{dossier.identity.ticker} · {dossier.identity.marketDataSymbol}</div>
             </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-wide text-slate-700">Étape</div>
-              <div className="mt-1 text-sm text-slate-300">{stageLabel(run.currentStage)}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-wide text-slate-700">État</div>
-              <div className="mt-1 text-sm text-rose-300">{runStatusLabel(run.runStatus)}</div>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-wide text-slate-700">Données</div>
-              <div className="mt-1 text-sm text-slate-300">{formatCutoff(run.dataCutoff)}</div>
-            </div>
+            <Meta label="Étape" value={stageLabel(run.currentStage)} />
+            <Meta label="État" value={runStatusLabel(run.runStatus)} danger={run.runStatus === 'BLOCKED'} />
+            <Meta label="Données" value={formatCutoff(run.dataCutoff)} />
           </Link>
         </section>
       ) : null}
+    </div>
+  );
+}
+
+function Meta({ label, value, danger = false }: { label: string; value: string; danger?: boolean }) {
+  return (
+    <div>
+      <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-700">{label}</div>
+      <div className={'mt-1.5 text-sm ' + (danger ? 'text-rose-300' : 'text-slate-300')}>{value}</div>
     </div>
   );
 }
