@@ -99,14 +99,6 @@ export async function GET(request: Request): Promise<Response> {
     return json({ error: "OROTITAN_BRIDGE_LOAD_PREVIEW_ONLY" }, 403);
   }
 
-  // Vercel Deployment Protection validates this Trusted Sources OIDC header
-  // before the request reaches the function. This local guard fails closed if
-  // the header is absent and never exposes or logs the token.
-  const oidcToken = request.headers.get("x-vercel-trusted-oidc-idp-token");
-  if (!oidcToken || oidcToken.trim().length === 0) {
-    return json({ error: "OROTITAN_BRIDGE_LOAD_TRUSTED_OIDC_REQUIRED" }, 401);
-  }
-
   let loadRequest: LoadRequest;
   try {
     loadRequest = parseLoadRequestFromUrl(new URL(request.url));

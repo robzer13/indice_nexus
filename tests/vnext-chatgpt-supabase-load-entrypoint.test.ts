@@ -98,17 +98,18 @@ test("LOAD entrypoint fails closed outside Vercel preview", async () => {
   });
 });
 
-test("LOAD entrypoint requires the Trusted Sources OIDC header in preview", async () => {
+test("LOAD entrypoint does not require the consumed Trusted Sources header in preview", async () => {
   await withVercelEnv("preview", async () => {
     const response = await GET(
       new Request(
-        `https://preview.example/api/vnext/chatgpt-supabase/load?issuer_query=Veolia&run_id=${RUN_ID}`,
+        "https://preview.example/api/vnext/chatgpt-supabase/load?issuer_query=Veolia&run_id=not-a-uuid",
       ),
     );
 
-    assert.equal(response.status, 401);
+    assert.equal(response.status, 400);
     assert.deepEqual(await response.json(), {
-      error: "OROTITAN_BRIDGE_LOAD_TRUSTED_OIDC_REQUIRED",
+      error: "OROTITAN_BRIDGE_LOAD_REQUEST_INVALID",
+      message: "run_id must be a UUID",
     });
   });
 });
