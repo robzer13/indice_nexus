@@ -143,11 +143,14 @@ test("process-state schema accepts orthogonal valid state", () => {
 
   const valid = validate({
     context: {
+      schema_name: "OROTITAN_PROCESS_ENGINE_V2_STATE",
+      schema_version: "0.1.0",
       run_id: "RUN-1",
       stage_code: "DEEP_DIVE",
       stage_revision: 1,
       data_cutoff: "2026-10-02",
       contract_set_sha256: sha,
+      generated_at: "2026-10-02T00:00:00Z",
     },
     process_state_version: "1",
     current_block: "MOAT",
@@ -450,6 +453,15 @@ test("all LOCKED/CURRENT blocks require no further block action", () => {
   assert.equal(next.block, null);
 });
 
+test("next-action resolver fails closed when a required overlay targets an absent block", () => {
+  const next = deriveNextBlockAction(
+    [block("BUSINESS_MODEL")],
+    [{ block: "RETURN_QUALITY", overlay: "BANK_RETURN_ON_EQUITY" }],
+  );
+  assert.equal(next.action, "FAIL_CLOSED");
+  assert.match(next.reason, /references absent block RETURN_QUALITY/);
+});
+
 test("PRICE_ONLY_DELTA preserves fundamentals and forbids fundamental changes", () => {
   const blocks = chain();
   const plan = planRefresh("PRICE_ONLY_DELTA", [], blocks);
@@ -497,7 +509,7 @@ test("ROUTINE_FUNDAMENTAL_DELTA requires a fundamental origin", () => {
   );
 });
 
-test("FULL_REFRESH_REQUIRED invalidates every analytical block", () => {
+test("FULL_REFRESH_REQUIRED invalidates every previously executed analytical block", () => {
   const blocks = chain();
   const plan = planRefresh("FULL_REFRESH_REQUIRED", [], blocks);
   assert.equal(plan.ok, true);
@@ -506,6 +518,17 @@ test("FULL_REFRESH_REQUIRED invalidates every analytical block", () => {
     assert.deepEqual(plan.preservedBlocks, []);
     assert.equal(plan.researchMode, "FULL");
     assert.equal(plan.fundamentalsMode, "FULL");
+  }
+});
+
+test("FULL_REFRESH_REQUIRED leaves NOT_STARTED blocks current and executable", () => {
+  const blocks = [block("BUSINESS_MODEL"), notStarted("MOAT")];
+  const plan = planRefresh("FULL_REFRESH_REQUIRED", [], blocks);
+  assert.equal(plan.ok, true);
+  if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, ["BUSINESS_MODEL"]);
+    assert.deepEqual(plan.reopenBlocks, ["BUSINESS_MODEL"]);
+    assert.deepEqual(plan.preservedBlocks, ["MOAT"]);
   }
 });
 
@@ -643,6 +666,14 @@ test("unchanged fingerprint cannot loop without explicit justified retry", () =>
     decideRetry({
       ...common,
       forensicJustification: true,
+      retryBudgetExhausted: true,
+    }).allowed,
+    false,
+  );
+  assert.equal(
+    decideRetry({
+      ...common,
+      nextFingerprint: "changed",
       retryBudgetExhausted: true,
     }).allowed,
     false,
