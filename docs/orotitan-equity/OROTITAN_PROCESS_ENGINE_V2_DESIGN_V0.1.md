@@ -2,7 +2,7 @@
 
 **Project:** OroTitan Equity Research  
 **Program:** post-C7 Analytical Engine V2  
-**Status:** DESIGN CANDIDATE — NOT FROZEN  
+**Status:** FROZEN — V1.0  
 **Date:** 2026-10-02  
 **Methodology change:** NO  
 **Scoring change:** NO  
@@ -560,8 +560,11 @@ DATA_CONTRACTS_V2
 = FROZEN_V1_0
 
 PROCESS_ENGINE_V2
-= DESIGN_CANDIDATE_NOT_FROZEN
+= FROZEN_V1_0
+
+FREEZE
+= OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0
 
 NEXT
-= RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW
+= DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS
 ```
