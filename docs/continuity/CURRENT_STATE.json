@@ -1,10 +1,10 @@
 {
   "protocol_version": "1.0",
-  "resume_id": "VNEXT-POST-C7-20261002-072",
+  "resume_id": "VNEXT-POST-C7-20261002-073",
   "project": "OROTITAN_VNEXT",
   "repository": "robzer13/indice_nexus",
   "branch": "vnext",
-  "last_verified_head_sha": "180d817bcd522c9d1d528ce5e2521e48aadc9cce",
+  "last_verified_head_sha": "27d28d298de31c686a15aed74085d9531df565cb",
   "last_verified_at": "2026-10-02",
   "current_gate": 18,
   "current_phase": "C_LOCAL_FIRST_MODEL_QUALIFICATION",
@@ -230,14 +230,15 @@
     "ANALYTICAL_DATA_CONTRACTS_V2_GLOBAL_REVIEW_PASS",
     "ANALYTICAL_DATA_CONTRACTS_V2_FROZEN_V1_0",
     "PROCESS_ENGINE_V2_REVIEW_PASS",
-    "PROCESS_ENGINE_V2_FROZEN_V1_0"
+    "PROCESS_ENGINE_V2_FROZEN_V1_0",
+    "CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_REVIEW_PASS",
+    "CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_FROZEN_V1_0"
   ],
   "active_work": [
-    "CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_DESIGN"
+    "CHATGPT_SUPABASE_BRIDGE_IMPLEMENTATION"
   ],
   "blockers": [],
   "open_issues": [
-    "CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_TO_DESIGN",
     "SUPABASE_SERVICE_ONLY_RLS_POSTURE_TO_DOCUMENT",
     "THREE_MUTABLE_SEARCH_PATH_FUNCTIONS_TO_HARDEN_BEFORE_FINAL_PRODUCTION",
     "WORKBENCH_UI_INFORMATION_ARCHITECTURE_TO_DESIGN",
@@ -1347,7 +1348,7 @@
   "protocol_acceptance_total_scenarios": 25,
   "protocol_acceptance_live_validation": "READ_ONLY_ONLY",
   "next_action_semantics": "LEGACY_COMPATIBILITY_ONLY",
-  "current_execution_action": "DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS",
+  "current_execution_action": "IMPLEMENT_CHATGPT_SUPABASE_BRIDGE",
   "protocol_regression_battery_status": "FOUNDATION_PASS_WITH_IMPLEMENTATION_GAPS",
   "vertical_slice_ready": false,
   "required_gaps_before_vertical_slice": 15,
@@ -1357,5 +1358,9 @@
   "process_engine_v2_status": "FROZEN_V1_0",
   "process_engine_v2_freeze": "docs/orotitan-equity/OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0.md",
   "process_engine_v2_review_pr": 338,
-  "process_engine_v2_review_merge_sha": "180d817bcd522c9d1d528ce5e2521e48aadc9cce"
+  "process_engine_v2_review_merge_sha": "180d817bcd522c9d1d528ce5e2521e48aadc9cce",
+  "chatgpt_supabase_controlled_operation_contracts_status": "FROZEN_V1_0",
+  "chatgpt_supabase_controlled_operation_contracts_freeze": "docs/orotitan-equity/OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_FREEZE_V1.0.md",
+  "chatgpt_supabase_controlled_operation_contracts_review_pr": 340,
+  "chatgpt_supabase_controlled_operation_contracts_review_merge_sha": "27d28d298de31c686a15aed74085d9531df565cb"
 }

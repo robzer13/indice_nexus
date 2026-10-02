@@ -2,7 +2,7 @@
   "format": "OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_CANDIDATE_V0.1",
   "decision_id": "CHATGPT-SUPABASE-CONTROLLED-OPERATION-CONTRACTS-CANDIDATE-001",
   "date": "2026-10-02",
-  "status": "DESIGN_CANDIDATE_AWAITING_CI",
+  "status": "FROZEN_V1_0",
   "methodology_change": false,
   "scoring_change": false,
   "valuation_change": false,
@@ -48,5 +48,19 @@
     "ARBITRARY_SQL_OR_RPC_EXECUTION"
   ],
   "schema": "schemas/vnext/chatgpt-supabase/controlled-operation.schema.v0.1.json",
-  "next_action": "RUN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_CI"
+  "next_action": "IMPLEMENT_CHATGPT_SUPABASE_BRIDGE",
+  "freeze_date": "2026-10-02",
+  "freeze_name": "OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_FREEZE_V1.0",
+  "review_pr": 340,
+  "review_merge_sha": "27d28d298de31c686a15aed74085d9531df565cb",
+  "review_head_sha": "95b47ceeeaceed92dc7004553f3207415d55cdfc",
+  "ci": {
+    "vnext": "PASS",
+    "screener": "PASS"
+  },
+  "review_findings": {
+    "current_stage_stage_code_coupling": "FIXED_RESOLVED",
+    "block_checkpoint_lifecycle_coupling": "FIXED_RESOLVED",
+    "receipt_replay_consistency": "FIXED_RESOLVED"
+  }
 }
