@@ -202,3 +202,30 @@ test("legacy consolidated Data Contracts candidate is explicitly superseded", ()
     /SUPERSEDED_HISTORICAL_DESIGN_CANDIDATE/,
   );
 });
+
+
+test("analytical execution status remains frozen and excludes Process Engine control states", () => {
+  const common = loadSchema("orotitan-analytical-common.schema.v0.1.json");
+
+  assert.deepEqual(common.$defs.blockExecutionStatus.enum, [
+    "INSUFFICIENT",
+    "IN_PROGRESS",
+    "PROVISIONALLY_STABLE",
+    "LOCKED",
+  ]);
+
+  for (const processState of [
+    "READY",
+    "CHECKPOINTED",
+    "COMPLETE",
+    "BLOCKED",
+    "REOPENED",
+    "STALE",
+  ]) {
+    assert.equal(
+      common.$defs.blockExecutionStatus.enum.includes(processState),
+      false,
+      processState,
+    );
+  }
+});
