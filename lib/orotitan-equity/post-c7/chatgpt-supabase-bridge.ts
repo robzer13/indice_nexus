@@ -622,6 +622,65 @@ function mutationIdentity(
   };
 }
 
+function mutationDescriptor(
+  request: CheckpointRequest | FinalizeRequest | ReopenRequest,
+): Record<string, unknown> {
+  if (request.operation === "CHECKPOINT_STAGE") {
+    return {
+      operation: request.operation,
+      run_id: request.run_id,
+      stage_code: request.stage_code,
+      expected_run_state_version: request.expected_run_state_version,
+      expected_stage_state_version: request.expected_stage_state_version,
+      save_disposition: request.save_disposition,
+      target_lifecycle: request.target_lifecycle,
+      bundle: request.bundle,
+      actor_type: request.actor_type,
+    };
+  }
+  if (request.operation === "FINALIZE_STAGE") {
+    return {
+      operation: request.operation,
+      run_id: request.run_id,
+      stage_code: request.stage_code,
+      expected_run_state_version: request.expected_run_state_version,
+      expected_stage_state_version: request.expected_stage_state_version,
+      bundle: request.bundle,
+      actor_type: request.actor_type,
+    };
+  }
+  return {
+    operation: request.operation,
+    run_id: request.run_id,
+    stage_code: request.stage_code,
+    expected_run_state_version: request.expected_run_state_version,
+    expected_stage_state_version: request.expected_stage_state_version,
+    target_lifecycle: request.target_lifecycle,
+    reason: request.reason,
+  };
+}
+
+function assertMutationIdentity(
+  request: CheckpointRequest | FinalizeRequest | ReopenRequest,
+): void {
+  if (request.operation === "REOPEN_STAGE") {
+    asPositiveInteger(
+      request.reason.expected_stage_revision,
+      "reason.expected_stage_revision",
+    );
+  }
+  const expected = mutationIdentity(request.operation, mutationDescriptor(request));
+  if (
+    request.request_fingerprint_sha256 !== expected.request_fingerprint_sha256 ||
+    request.idempotency_key !== expected.idempotency_key
+  ) {
+    throw new ControlledBridgeError(
+      "CONTRACT_VIOLATION",
+      "mutation idempotency identity does not match the canonical request payload",
+    );
+  }
+}
+
 export function buildSaveOperation(input: {
   load: LoadResult;
   disposition: SaveDisposition;
@@ -720,6 +779,10 @@ export function buildReopenOperation(input: {
   if (!input.load.run_id || !input.load.current_stage || !input.load.stage || !input.load.run_state_version) {
     throw new ControlledBridgeError("INVALID_STATE", "REOPEN requires an active loaded run and current stage");
   }
+  const reason = {
+    ...input.reason,
+    expected_stage_revision: input.load.stage.stage_revision + 1,
+  };
   const descriptor = {
     operation: "REOPEN_STAGE",
     run_id: input.load.run_id,
@@ -727,7 +790,7 @@ export function buildReopenOperation(input: {
     expected_run_state_version: input.load.run_state_version,
     expected_stage_state_version: input.load.stage.stage_state_version,
     target_lifecycle: input.targetLifecycle,
-    reason: input.reason,
+    reason,
   };
   const identity = mutationIdentity("REOPEN_STAGE", descriptor);
   const request: ReopenRequest = {
@@ -738,7 +801,7 @@ export function buildReopenOperation(input: {
     expected_run_state_version: input.load.run_state_version,
     expected_stage_state_version: input.load.stage.stage_state_version,
     target_lifecycle: input.targetLifecycle,
-    reason: input.reason,
+    reason,
     ...identity,
     publish_authorized: false,
   };
@@ -774,20 +837,50 @@ function verifyRegistrationBytes(
 
 function verifyPrivateGithubReceipt(
   registration: Record<string, unknown>,
+  runId: string,
+  stageCode: StageCode,
   expectedJson?: Record<string, unknown>,
 ): void {
-  if (registration.storage_backend !== "PRIVATE_GITHUB") {
-    throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "Stage Manifest must use PRIVATE_GITHUB persistence");
+  if (
+    registration.storage_backend !== "PRIVATE_GITHUB" ||
+    registration.github_repository !== "robzer13/real-orotitan"
+  ) {
+    throw new ControlledBridgeError(
+      "PERSISTENCE_INTEGRITY",
+      "deployed Registry requires canonical PRIVATE_GITHUB persistence",
+    );
   }
   assertObject(registration.persistence_receipt, "persistence_receipt");
   const receipt = registration.persistence_receipt;
   if (
-    receipt.receipt_schema_version !== "1.0" ||
-    receipt.verification_method !== "PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1" ||
+    receipt.receipt_schema_version !== "1.1" ||
+    receipt.verification_method !== "PRIVATE_GITHUB_ATTESTED_REREAD_EXACT_BYTES_V1" ||
     receipt.storage_backend !== "PRIVATE_GITHUB" ||
     receipt.commit_path_resolved !== true
   ) {
-    throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "private GitHub persistence receipt discriminator mismatch");
+    throw new ControlledBridgeError(
+      "PERSISTENCE_INTEGRITY",
+      "attested private GitHub persistence receipt discriminator mismatch",
+    );
+  }
+
+  const artifactId = asString(registration.artifact_id, "artifact_id");
+  const version = asPositiveInteger(registration.version, "version");
+  const artifactType = asString(registration.artifact_type, "artifact_type");
+  const identityChecks: Array<[unknown, unknown, string]> = [
+    [receipt.run_id, runId, "run_id"],
+    [receipt.stage_code, stageCode, "stage_code"],
+    [receipt.artifact_id, artifactId, "artifact_id"],
+    [receipt.version, version, "version"],
+    [receipt.artifact_type, artifactType, "artifact_type"],
+  ];
+  for (const [actual, expected, label] of identityChecks) {
+    if (actual !== expected) {
+      throw new ControlledBridgeError(
+        "PERSISTENCE_INTEGRITY",
+        `persistence receipt ${label} mismatch`,
+      );
+    }
   }
 
   for (const key of ["github_repository", "github_path", "github_commit_sha", "github_blob_sha"] as const) {
@@ -795,9 +888,11 @@ function verifyPrivateGithubReceipt(
       throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", `persistence receipt ${key} mismatch`);
     }
   }
+  asString(receipt.attestation_event_id, "attestation_event_id");
+  asString(receipt.verified_at, "verified_at");
 
   const bytes = receiptBytes(registration);
-  if (!bytes) throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "verified manifest bytes are missing");
+  if (!bytes) throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "verified artifact bytes are missing");
   verifyRegistrationBytes(registration, bytes);
 
   const expectedBlob = asString(registration.github_blob_sha, "github_blob_sha");
@@ -813,49 +908,53 @@ function verifyPrivateGithubReceipt(
     throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "private GitHub storage URI mismatch");
   }
 
-  if (expectedJson) {
+  if (registration.media_type === "application/json") {
+    if (!Object.prototype.hasOwnProperty.call(registration, "canonical_json_content")) {
+      throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "canonical_json_content is required for JSON artifacts");
+    }
     let parsed: unknown;
     try {
       parsed = JSON.parse(Buffer.from(bytes).toString("utf8"));
     } catch {
-      throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "persisted manifest bytes are not valid UTF-8 JSON");
+      throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "persisted artifact bytes are not valid UTF-8 JSON");
     }
-    if (canonicalJson(parsed) !== canonicalJson(expectedJson)) {
+    if (canonicalJson(parsed) !== canonicalJson(registration.canonical_json_content)) {
+      throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "persisted JSON differs from canonical_json_content");
+    }
+    if (
+      expectedJson &&
+      canonicalJson(registration.canonical_json_content) !== canonicalJson(expectedJson)
+    ) {
       throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "persisted manifest payload differs from submitted manifest");
     }
+  } else if (expectedJson) {
+    throw new ControlledBridgeError(
+      "PERSISTENCE_INTEGRITY",
+      "submitted JSON manifest requires application/json media type",
+    );
   }
 }
 
 async function verifyBundlePersistence(
-  port: ControlledBridgePort,
   bundle: Bundle,
+  runId: string,
+  stageCode: StageCode,
 ): Promise<void> {
   if (bundle.persistence_receipts_verified !== true) {
     throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "bundle persistence receipts are not verified");
   }
   assertObject(bundle.manifest, "bundle.manifest");
   assertObject(bundle.manifest_registration, "bundle.manifest_registration");
-  verifyPrivateGithubReceipt(bundle.manifest_registration, bundle.manifest);
+  verifyPrivateGithubReceipt(
+    bundle.manifest_registration,
+    runId,
+    stageCode,
+    bundle.manifest,
+  );
 
   for (const registration of bundle.output_artifacts) {
     assertObject(registration, "output artifact registration");
-    const backend = asString(registration.storage_backend, "storage_backend");
-    if (backend === "SUPABASE_STORAGE") {
-      const bucket = asString(registration.supabase_bucket, "supabase_bucket");
-      const objectPath = asString(registration.supabase_object_path, "supabase_object_path");
-      const expectedUri = `supabase://${bucket}/${objectPath}`;
-      if (registration.storage_uri !== expectedUri) {
-        throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", "Supabase storage URI mismatch");
-      }
-      const bytes = await port.readSupabaseObject(bucket, objectPath);
-      verifyRegistrationBytes(registration, bytes);
-      continue;
-    }
-    if (backend === "PRIVATE_GITHUB") {
-      verifyPrivateGithubReceipt(registration);
-      continue;
-    }
-    throw new ControlledBridgeError("PERSISTENCE_INTEGRITY", `unsupported storage backend: ${backend}`);
+    verifyPrivateGithubReceipt(registration, runId, stageCode);
   }
 }
 
@@ -921,6 +1020,21 @@ async function postWriteReceipt(input: {
     ) {
       throw new ControlledBridgeError("INVALID_STATE", "reopened stage retained active manifest");
     }
+    const expectedStageRevision = asPositiveInteger(
+      input.request.reason.expected_stage_revision,
+      "reason.expected_stage_revision",
+    );
+    const rpcStageRevision = input.rpcResult.stage_revision;
+    if (
+      stage.stage_revision !== expectedStageRevision ||
+      typeof rpcStageRevision !== "number" ||
+      rpcStageRevision !== expectedStageRevision
+    ) {
+      throw new ControlledBridgeError(
+        "STALE_STATE",
+        "post-write reopen stage revision does not match the intended successor revision",
+      );
+    }
   }
 
   const idempotentReplay = input.rpcResult.idempotent_replay === true;
@@ -963,9 +1077,11 @@ export async function executeControlledOperation(
       return request;
     }
 
+    assertMutationIdentity(request);
+
     let rpcResult: RpcResult;
     if (request.operation === "CHECKPOINT_STAGE") {
-      await verifyBundlePersistence(port, request.bundle);
+      await verifyBundlePersistence(request.bundle, request.run_id, request.stage_code);
       rpcResult = await port.checkpointStage({
         p_run_id: request.run_id,
         p_stage_code: request.stage_code,
@@ -981,7 +1097,7 @@ export async function executeControlledOperation(
         p_actor_type: request.actor_type,
       });
     } else if (request.operation === "FINALIZE_STAGE") {
-      await verifyBundlePersistence(port, request.bundle);
+      await verifyBundlePersistence(request.bundle, request.run_id, request.stage_code);
       rpcResult = await port.finalizeStage({
         p_run_id: request.run_id,
         p_stage_code: request.stage_code,
