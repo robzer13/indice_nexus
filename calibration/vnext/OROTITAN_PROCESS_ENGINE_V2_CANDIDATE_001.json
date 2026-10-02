@@ -1,0 +1,78 @@
+{
+  "format": "OROTITAN_PROCESS_ENGINE_V2_CANDIDATE_V0.1",
+  "decision_id": "PROCESS-ENGINE-V2-CANDIDATE-001",
+  "date": "2026-10-02",
+  "status": "DESIGN_CANDIDATE_AWAITING_CI_AND_REVIEW",
+  "methodology_change": false,
+  "scoring_change": false,
+  "valuation_change": false,
+  "production_mutation": false,
+  "supabase_migration": false,
+  "authorities": {
+    "analytical_data_contracts": "OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_FREEZE_V1.0",
+    "data_contracts_freeze_merge_sha": "b18f48eae1caf9838df4a16427c501658b55e14f",
+    "operating_protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
+    "execution_process": "OROTITAN_EXECUTION_PROCESS_V2_FREEZE_V2.0"
+  },
+  "state_domains": {
+    "analytical_execution_status": [
+      "INSUFFICIENT",
+      "IN_PROGRESS",
+      "PROVISIONALLY_STABLE",
+      "LOCKED"
+    ],
+    "process_freshness": [
+      "CURRENT",
+      "REOPENED",
+      "STALE"
+    ],
+    "registry_lifecycle": [
+      "NOT_STARTED",
+      "IN_PROGRESS",
+      "PAUSED",
+      "BLOCKED",
+      "COMPLETE"
+    ],
+    "save_semantics": [
+      "CHAT_WORKING",
+      "CHECKPOINTED",
+      "FINAL_SEALED"
+    ]
+  },
+  "deterministic_capabilities": [
+    "DEPENDENCY_GRAPH_VALIDATION",
+    "DEPENDENCY_CONE_REOPENING",
+    "MATERIAL_CHANGE_REVALIDATION_GATE",
+    "REQUIRED_SECTOR_OVERLAY_VALIDATION",
+    "BLOCK_LOCK_ELIGIBILITY",
+    "NEXT_BLOCK_ACTION_RESOLUTION",
+    "REFRESH_ROUTING",
+    "SAVE_DISPOSITION",
+    "EXECUTION_FINGERPRINT",
+    "RETRY_LOOP_GUARD"
+  ],
+  "closes_protocol_scenarios": [
+    "T07",
+    "T11",
+    "T12",
+    "T18",
+    "T19",
+    "T20",
+    "T21",
+    "T23"
+  ],
+  "does_not_own": [
+    "LOAD_RESOLVER",
+    "CONTEXT_ASSEMBLER",
+    "SUPABASE_RPC_INVOCATION",
+    "ARTIFACT_BYTE_PERSISTENCE",
+    "REGISTRY_TRANSACTION_EXECUTION",
+    "PUBLICATION"
+  ],
+  "persistence_boundary": {
+    "process_state_schema": "schemas/vnext/process-engine/process-state.schema.v0.1.json",
+    "default_target": "VERSIONED_REGISTERED_EXECUTION_ARTIFACT",
+    "new_database_table_required": false
+  },
+  "next_action": "RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW"
+}

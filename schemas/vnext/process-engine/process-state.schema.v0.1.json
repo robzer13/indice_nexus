@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://orotitan.local/schemas/vnext/process-engine/process-state.v0.1.json",
+  "title": "OroTitan Process Engine V2 State V0.1",
+  "description": "Execution-control state only. Analytical execution status remains authoritative in the frozen Data Contracts V2 namespace.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "context",
+    "process_state_version",
+    "current_block",
+    "blocks"
+  ],
+  "properties": {
+    "context": {
+      "$ref": "../data-contracts/orotitan-analytical-common.v0.1.json#/$defs/payloadContext"
+    },
+    "process_state_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "current_block": {
+      "anyOf": [
+        {
+          "$ref": "../data-contracts/orotitan-analytical-common.v0.1.json#/$defs/blockCode"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "blocks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "block_id",
+          "presence",
+          "analytical_execution_status",
+          "freshness",
+          "upstream_block_refs",
+          "critical_unresolved_gap",
+          "blocking_conflict",
+          "sector_overlays",
+          "material_revalidation_status",
+          "completion_audit_passed",
+          "last_execution_fingerprint",
+          "retry_count"
+        ],
+        "properties": {
+          "block_id": {
+            "$ref": "../data-contracts/orotitan-analytical-common.v0.1.json#/$defs/blockCode"
+          },
+          "presence": {
+            "enum": [
+              "NOT_STARTED",
+              "PRESENT"
+            ]
+          },
+          "analytical_execution_status": {
+            "anyOf": [
+              {
+                "$ref": "../data-contracts/orotitan-analytical-common.v0.1.json#/$defs/blockExecutionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "freshness": {
+            "enum": [
+              "CURRENT",
+              "REOPENED",
+              "STALE"
+            ],
+            "description": "Process-control freshness. Never persisted into analytical execution_status."
+          },
+          "upstream_block_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "../data-contracts/orotitan-analytical-common.v0.1.json#/$defs/blockCode"
+            }
+          },
+          "critical_unresolved_gap": {
+            "type": "boolean"
+          },
+          "blocking_conflict": {
+            "type": "boolean"
+          },
+          "sector_overlays": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "overlay_id",
+                "status"
+              ],
+              "properties": {
+                "overlay_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "status": {
+                  "enum": [
+                    "APPLIED",
+                    "NOT_APPLICABLE",
+                    "REQUIRED_MISSING",
+                    "CONFLICTED"
+                  ]
+                }
+              }
+            }
+          },
+          "material_revalidation_status": {
+            "enum": [
+              "NOT_REQUIRED",
+              "PENDING",
+              "PASS",
+              "FAIL"
+            ]
+          },
+          "completion_audit_passed": {
+            "type": "boolean"
+          },
+          "last_execution_fingerprint": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "retry_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}
