@@ -43,33 +43,32 @@ export default async function OroTitanOverviewPage({
       <CompanyHeader identity={dossier.identity} load={load} />
       <StageProgress load={load} />
 
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_290px]">
-        <main className="min-w-0 space-y-5">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_310px]">
+        <div className="min-w-0">
           <BlockerPanel blockers={load.blockers} />
-
-          <section className="rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.54)] p-4 sm:p-5">
-            <div className="mb-4 flex items-end justify-between gap-4">
-              <div>
-                <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">Documents et preuves</div>
-                <h2 className="mt-1.5 text-lg font-semibold text-white">Preuves du Deep Dive</h2>
-              </div>
-              <span className="rounded-full border border-slate-700 bg-slate-900/70 px-2.5 py-1 text-[10px] font-semibold text-slate-500">
-                {countStageArtifacts(load.artifact_index, dossier.artifactCatalog, 'DEEP_DIVE')}
-              </span>
-            </div>
-            <ArtifactRegistry refs={deepDiveRefs} catalog={dossier.artifactCatalog} />
-          </section>
-
-          <section className="rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.54)] p-4 sm:p-5">
-            <div className="mb-4">
-              <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">Contexte de l&apos;analyse</div>
-            </div>
-            <ContextSummary load={load} />
-          </section>
-        </main>
-
+        </div>
         <AnalysisRail load={load} />
       </div>
+
+      <section className="mt-5 rounded-xl border border-[rgba(123,173,214,.18)] bg-[rgba(8,22,36,.58)] p-4 sm:p-5">
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">Documents et preuves</div>
+            <h2 className="mt-1.5 text-lg font-semibold text-white">Preuves du Deep Dive</h2>
+          </div>
+          <span className="rounded-full border border-slate-700 bg-slate-900/70 px-2.5 py-1 text-[10px] font-semibold text-slate-400">
+            {countStageArtifacts(load.artifact_index, dossier.artifactCatalog, 'DEEP_DIVE')}
+          </span>
+        </div>
+        <ArtifactRegistry refs={deepDiveRefs} catalog={dossier.artifactCatalog} />
+      </section>
+
+      <section className="mt-5 rounded-xl border border-[rgba(123,173,214,.18)] bg-[rgba(8,22,36,.58)] p-4 sm:p-5">
+        <div className="mb-4">
+          <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">Contexte de l&apos;analyse</div>
+        </div>
+        <ContextSummary load={load} />
+      </section>
     </div>
   );
 }

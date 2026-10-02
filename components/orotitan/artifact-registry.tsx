@@ -40,14 +40,14 @@ export function ArtifactRegistry({
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Rechercher un document…"
-              className="min-w-0 flex-1 bg-transparent text-xs text-slate-300 outline-none placeholder:text-slate-700"
+              className="min-w-0 flex-1 bg-transparent text-xs text-slate-300 outline-none placeholder:text-slate-600"
             />
           </label>
         </div>
       ) : null}
 
       <div className="overflow-hidden rounded-[10px] border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.58)]">
-        <div className="hidden grid-cols-[minmax(0,1fr)_120px_120px_70px] gap-4 border-b border-[rgba(123,173,214,.14)] bg-[#0a1624]/55 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-600 sm:grid">
+        <div className="hidden grid-cols-[minmax(0,1fr)_120px_120px_70px] gap-4 border-b border-[rgba(123,173,214,.18)] bg-[#0a1624]/75 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500 sm:grid">
           <div>Document</div>
           <div>Étape</div>
           <div>Autorité</div>
@@ -65,17 +65,17 @@ export function ArtifactRegistry({
                 key={ref.artifact_id + ':' + ref.version}
                 type="button"
                 onClick={() => setSelected(ref)}
-                className="grid w-full gap-2 border-b border-[rgba(123,173,214,.10)] px-4 py-3 text-left text-sm transition last:border-b-0 hover:bg-white/[.025] sm:grid-cols-[minmax(0,1fr)_120px_120px_70px] sm:items-center sm:gap-4"
+                className="grid w-full gap-2 border-b border-[rgba(123,173,214,.10)] px-4 py-3 text-left text-sm transition last:border-b-0 hover:bg-cyan-400/[.035] sm:grid-cols-[minmax(0,1fr)_120px_120px_70px] sm:items-center sm:gap-4"
               >
                 <div className="min-w-0">
                   <div className="truncate text-slate-200">{metadata?.logicalName ?? ref.artifact_id}</div>
-                  <div className="mt-0.5 truncate font-mono text-[10px] text-slate-700">{metadata?.artifactType ?? 'ARTIFACT'}</div>
+                  <div className="mt-0.5 truncate font-mono text-[10px] text-slate-600">{metadata?.artifactType ?? 'ARTIFACT'}</div>
                 </div>
-                <div className="text-xs text-slate-500">{metadata ? stageLabel(metadata.stageCode) : '—'}</div>
+                <div className="text-xs text-slate-400">{metadata ? stageLabel(metadata.stageCode) : '—'}</div>
                 <div className={'text-xs ' + (metadata?.authorityState === 'AUTHORITATIVE' ? 'text-emerald-400' : 'text-amber-300')}>
                   {authority}
                 </div>
-                <div className="font-mono text-xs text-slate-600">v{ref.version}</div>
+                <div className="font-mono text-xs text-slate-500">v{ref.version}</div>
               </button>
             );
           })
@@ -137,7 +137,7 @@ function ArtifactDrawer({
 function Data({ label, value, mono = false }: { label: string; value: string; mono?: boolean }) {
   return (
     <div>
-      <dt className="text-slate-600">{label}</dt>
+      <dt className="text-slate-500">{label}</dt>
       <dd className={'mt-1.5 break-all text-slate-300 ' + (mono ? 'font-mono text-[11px]' : '')}>{value}</dd>
     </div>
   );
