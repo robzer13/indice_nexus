@@ -130,3 +130,102 @@ test("French-first stays a product-layer rule and machine enums remain canonical
   assert.ok(common.$defs.ddInputStatus.enum.includes("INSUFFICIENT"));
   assert.equal(common.$defs.ddInputStatus.enum.includes("INSUFFISANT"), false);
 });
+
+
+test("protocol working claim type is explicit and cannot overwrite frozen epistemic type", () => {
+  const common = loadSchema("orotitan-analytical-common.schema.v0.1.json");
+  const evidence = loadSchema("evidence-ledger.schema.v0.1.json");
+  const row = evidence.properties.evidence.items;
+
+  assert.deepEqual(common.$defs.workingClaimType.enum, [
+    "FACT",
+    "MANAGEMENT_CLAIM",
+    "ESTIMATE",
+    "ASSUMPTION",
+    "INFERENCE",
+    "CALCULATION",
+  ]);
+  assert.deepEqual(common.$defs.epistemicType.enum, [
+    "REPORTED",
+    "CALCULATED",
+    "CONSENSUS",
+    "ESTIMATE",
+    "ASSUMPTION",
+    "UNKNOWN",
+  ]);
+  assert.equal(
+    row.properties.epistemic_type.$ref,
+    "./orotitan-analytical-common.v0.1.json#/$defs/epistemicType",
+  );
+  assert.equal(
+    row.properties.working_claim_type.$ref,
+    "./orotitan-analytical-common.v0.1.json#/$defs/workingClaimType",
+  );
+  assert.ok(row.required.includes("epistemic_type"));
+  assert.ok(row.required.includes("working_claim_type"));
+});
+
+test("all analytical block references use the canonical blockCode namespace", () => {
+  const evidence = loadSchema("evidence-ledger.schema.v0.1.json");
+  const overlays = loadSchema("overlay-selection.schema.v0.1.json");
+  const hypotheses = loadSchema("material-research-hypothesis-register.schema.v0.1.json");
+
+  const ref = "./orotitan-analytical-common.v0.1.json#/$defs/blockCode";
+  assert.equal(
+    evidence.properties.evidence.items.properties.affected_blocks.items.$ref,
+    ref,
+  );
+  assert.equal(
+    overlays.properties.selected_overlays.items.properties.affected_blocks.items.$ref,
+    ref,
+  );
+  assert.equal(
+    hypotheses.properties.hypotheses.items.properties.affected_analytical_block.$ref,
+    ref,
+  );
+});
+
+test("legacy consolidated Data Contracts candidate is explicitly superseded", () => {
+  const legacy = JSON.parse(
+    readFileSync(
+      new URL(
+        "../contracts/orotitan-equity/post-c7/OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_SCHEMA_V0.1.json",
+        import.meta.url,
+      ),
+      "utf8",
+    ),
+  );
+
+  assert.equal(legacy.deprecated, true);
+  assert.match(
+    legacy.$comment,
+    /SUPERSEDED_HISTORICAL_DESIGN_CANDIDATE/,
+  );
+});
+
+
+test("analytical execution status remains frozen and excludes Process Engine control states", () => {
+  const common = loadSchema("orotitan-analytical-common.schema.v0.1.json");
+
+  assert.deepEqual(common.$defs.blockExecutionStatus.enum, [
+    "INSUFFICIENT",
+    "IN_PROGRESS",
+    "PROVISIONALLY_STABLE",
+    "LOCKED",
+  ]);
+
+  for (const processState of [
+    "READY",
+    "CHECKPOINTED",
+    "COMPLETE",
+    "BLOCKED",
+    "REOPENED",
+    "STALE",
+  ]) {
+    assert.equal(
+      common.$defs.blockExecutionStatus.enum.includes(processState),
+      false,
+      processState,
+    );
+  }
+});

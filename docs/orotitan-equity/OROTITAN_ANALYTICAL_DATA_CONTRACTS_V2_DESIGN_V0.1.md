@@ -1,6 +1,6 @@
 # OROTITAN ANALYTICAL DATA CONTRACTS V2 — DESIGN V0.1
 
-Status: DESIGN CANDIDATE — NOT FROZEN  
+Status: SUPERSEDED DESIGN CANDIDATE — HISTORICAL ONLY  
 Program: OroTitan Equity Research vNext / post-C7  
 Depends on:
 - OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0
@@ -12,6 +12,10 @@ Methodology change: NO
 Scoring change: NO  
 Valuation change: NO  
 Production mutation: NO
+
+## Authority notice
+
+This consolidated design candidate is retained for historical provenance only. After PR #333 and PR #334, the current Data Contracts V2 candidate package is `schemas/vnext/data-contracts/` plus the `runtime/vnext` validators. New Process Engine V2 work must not use the consolidated candidate as semantic authority.
 
 ---
 

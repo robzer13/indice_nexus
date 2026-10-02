@@ -1,3 +1,8 @@
+/**
+ * @deprecated Historical post-C7 Data Contracts V2 candidate.
+ * Current authority candidate: schemas/vnext/data-contracts/ + runtime/vnext validators.
+ * Do not use this module as the semantic source for new Process Engine V2 work.
+ */
 import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";

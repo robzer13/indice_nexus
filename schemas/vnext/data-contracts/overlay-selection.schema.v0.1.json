@@ -100,8 +100,7 @@
           "affected_blocks": {
             "type": "array",
             "items": {
-              "type": "string",
-              "minLength": 1
+              "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/blockCode"
             },
             "uniqueItems": true
           }

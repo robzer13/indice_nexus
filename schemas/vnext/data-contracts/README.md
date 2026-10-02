@@ -1,8 +1,8 @@
 # OroTitan VNext Analytical Data Contracts
 
-Status: DESIGN SPACE — NOT FROZEN
+Status: GLOBAL REVIEW PATCHED — CANDIDATE FOR FREEZE
 
-This directory contains machine-readable design candidates for the ChatGPT-first Analytical Engine V2.
+This directory is the single current Data Contracts V2 candidate package for the ChatGPT-first Analytical Engine V2. The earlier consolidated post-C7 schema is retained only as superseded historical design material.
 
 ## Authority boundary
 
@@ -54,3 +54,30 @@ Adaptive support artifacts feed canonical analytical blocks. They do not create 
 Persisted machine vocabulary remains English.
 
 The OroTitan product surface is French-first and maps canonical machine states to French display labels.
+
+
+## Semantic separation added by global review
+
+The package preserves two distinct layers:
+
+```text
+CANONICAL epistemic_type
+= REPORTED | CALCULATED | CONSENSUS | ESTIMATE | ASSUMPTION | UNKNOWN
+
+PROTOCOL working_claim_type
+= FACT | MANAGEMENT_CLAIM | ESTIMATE | ASSUMPTION | INFERENCE | CALCULATION
+```
+
+These fields are orthogonal. The protocol classification must never overwrite the canonical frozen epistemic type.
+
+Likewise:
+
+```text
+ANALYTICAL block execution status
+= INSUFFICIENT | IN_PROGRESS | PROVISIONALLY_STABLE | LOCKED
+
+PROCESS ENGINE control / reopen state
+= separate future process-layer semantics
+```
+
+Process Engine V2 must not replace the frozen analytical execution-status vocabulary.

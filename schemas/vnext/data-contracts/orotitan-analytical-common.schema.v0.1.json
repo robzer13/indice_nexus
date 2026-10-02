@@ -417,6 +417,27 @@
         "VALUATION",
         "CROSS_BLOCK_RECONCILIATION"
       ]
+    },
+    "workingClaimType": {
+      "type": "string",
+      "enum": [
+        "FACT",
+        "MANAGEMENT_CLAIM",
+        "ESTIMATE",
+        "ASSUMPTION",
+        "INFERENCE",
+        "CALCULATION"
+      ],
+      "description": "ChatGPT operating-protocol working claim classification. Distinct from canonical epistemicType and must never replace it."
+    },
+    "evidencePolarity": {
+      "type": "string",
+      "enum": [
+        "SUPPORTING",
+        "CONTRADICTING",
+        "NEUTRAL_CONTEXT"
+      ],
+      "description": "Protocol working role of a material evidence item."
     }
   }
 }

@@ -1097,5 +1097,8 @@
         }
       }
     }
-  }
+  },
+  "deprecated": true,
+  "description": "Superseded after the post-#333/#334 global Data Contracts V2 review. Retained for historical regression only; not authoritative for new Process Engine work.",
+  "$comment": "SUPERSEDED_HISTORICAL_DESIGN_CANDIDATE. Current Data Contracts V2 candidate authority is schemas/vnext/data-contracts/."
 }

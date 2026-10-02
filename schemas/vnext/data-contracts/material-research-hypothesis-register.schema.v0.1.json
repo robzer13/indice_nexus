@@ -37,8 +37,7 @@
             "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/id"
           },
           "affected_analytical_block": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "./orotitan-analytical-common.v0.1.json#/$defs/blockCode"
           },
           "hypothesis": {
             "type": "string",
