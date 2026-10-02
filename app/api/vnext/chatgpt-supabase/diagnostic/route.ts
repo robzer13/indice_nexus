@@ -273,6 +273,9 @@ export async function GET(): Promise<Response> {
     return json({ error: "OROTITAN_SUPABASE_DIAGNOSTIC_PREVIEW_ONLY" }, 403);
   }
 
-  const result = await runSupabaseRuntimeDiagnostic(process.env);
+  const result = await runSupabaseRuntimeDiagnostic({
+    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
+    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
+  });
   return json(result);
 }
