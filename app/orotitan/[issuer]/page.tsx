@@ -3,7 +3,7 @@ import {
   ArtifactList,
   BlockerPanel,
   CompanyHeader,
-  MutationActions,
+  ContextSummary,
   RunSelector,
   RunTechnicalDetails,
   StageProgress,
@@ -39,38 +39,35 @@ export default async function OroTitanOverviewPage({
   const deepDiveRefs = load.artifact_index.filter((ref) => dossier.artifactCatalog[ref.artifact_id]?.stageCode === 'DEEP_DIVE');
 
   return (
-    <div className="space-y-6">
+    <div>
       <CompanyHeader identity={dossier.identity} load={load} />
       <StageProgress load={load} />
       <BlockerPanel blockers={load.blockers} />
 
-      <section className="rounded-2xl border border-slate-800 bg-slate-900/45 p-5">
-        <div className="flex items-baseline justify-between gap-3">
+      <section className="border-b border-slate-800 py-6">
+        <div className="mb-4 flex items-end justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-white">Documents du Deep Dive</h2>
-            <p className="mt-1 text-sm text-slate-500">Artefacts actifs du stage courant.</p>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.17em] text-slate-600">Preuves du Deep Dive</div>
+            <h2 className="mt-1 text-lg font-semibold text-white">Documents du stage</h2>
           </div>
-          <span className="font-mono text-xs text-slate-500">{countStageArtifacts(load.artifact_index, dossier.artifactCatalog, 'DEEP_DIVE')} disponibles</span>
+          <span className="text-xs text-slate-600">
+            {countStageArtifacts(load.artifact_index, dossier.artifactCatalog, 'DEEP_DIVE')} disponibles
+          </span>
         </div>
-        <div className="mt-4"><ArtifactList refs={deepDiveRefs} catalog={dossier.artifactCatalog} /></div>
+        <ArtifactList refs={deepDiveRefs} catalog={dossier.artifactCatalog} compact />
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-4">
-        {[
-          ['L0', load.context_plan.l0.length],
-          ['L1', load.context_plan.l1.length],
-          ['L2', load.context_plan.l2.length],
-          ['L3', load.context_plan.l3.length],
-        ].map(([label, count]) => (
-          <div key={label} className="rounded-xl border border-slate-800 bg-slate-900/45 p-4">
-            <div className="text-xs text-slate-600">{label}</div>
-            <div className="mt-1 text-lg font-semibold text-slate-200">{count} <span className="text-xs font-normal text-slate-600">document{count === 1 ? '' : 's'}</span></div>
-          </div>
-        ))}
+      <section className="border-b border-slate-800 py-6">
+        <div className="mb-4">
+          <div className="text-[11px] font-semibold uppercase tracking-[0.17em] text-slate-600">Contexte</div>
+          <h2 className="mt-1 text-lg font-semibold text-white">Contexte chargé</h2>
+        </div>
+        <ContextSummary load={load} />
       </section>
 
-      <RunTechnicalDetails load={load} />
-      <MutationActions />
+      <div className="py-5">
+        <RunTechnicalDetails load={load} />
+      </div>
     </div>
   );
 }
