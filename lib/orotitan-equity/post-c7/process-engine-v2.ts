@@ -290,9 +290,10 @@ function validateBlockStateShape(block: AnalyticalBlockState): string[] {
 
   if (
     block.analyticalStatus === "LOCKED" &&
+    block.freshness === "CURRENT" &&
     block.materialRevalidationStatus === "PENDING"
   ) {
-    errors.push("LOCKED block cannot retain pending material revalidation");
+    errors.push("LOCKED/CURRENT block cannot retain pending material revalidation");
   }
 
   return errors;
@@ -511,16 +512,22 @@ export function planDependencyReopen(
   const closure = computeDownstreamClosure(changedBlocks, blocks);
   if (!closure.ok) return closure;
 
-  const direct = uniqueInCanonicalOrder(changedBlocks);
+  const byCode = new Map(blocks.map((block) => [block.block, block]));
+  const executedAffected = closure.blocks.filter(
+    (block) => byCode.get(block)?.presence === "PRESENT",
+  );
+  const direct = uniqueInCanonicalOrder(
+    changedBlocks.filter((block) => byCode.get(block)?.presence === "PRESENT"),
+  );
   const directSet = new Set(direct);
-  const stale = closure.blocks.filter((block) => !directSet.has(block));
+  const stale = executedAffected.filter((block) => !directSet.has(block));
 
   return {
     ok: true,
     plan: {
       directReopenBlocks: direct,
       staleDownstreamBlocks: uniqueInCanonicalOrder(stale),
-      allAffectedBlocks: closure.blocks,
+      allAffectedBlocks: executedAffected,
     },
   };
 }
@@ -667,7 +674,11 @@ export function planRefresh(
   );
   if (!dependencyValidation.ok) return dependencyValidation;
 
-  const currentCodes = new Set(blocks.map((block) => block.block));
+  const executedCodes = new Set(
+    blocks
+      .filter((block) => block.presence === "PRESENT")
+      .map((block) => block.block),
+  );
   const base = v2RefreshRoute(refreshClass);
 
   if (refreshClass === "PRICE_ONLY_DELTA") {
@@ -686,7 +697,7 @@ export function planRefresh(
 
     const reopen = uniqueInCanonicalOrder(
       ["VALUATION", "CROSS_BLOCK_RECONCILIATION"].filter(
-        (block): block is BlockCode => currentCodes.has(block as BlockCode),
+        (block): block is BlockCode => executedCodes.has(block as BlockCode),
       ),
     );
 
@@ -776,8 +787,8 @@ export function planRefresh(
   const reopen = new Set<BlockCode>(
     dependencyReopen.plan.allAffectedBlocks,
   );
-  if (currentCodes.has("VALUATION")) reopen.add("VALUATION");
-  if (currentCodes.has("CROSS_BLOCK_RECONCILIATION")) {
+  if (executedCodes.has("VALUATION")) reopen.add("VALUATION");
+  if (executedCodes.has("CROSS_BLOCK_RECONCILIATION")) {
     reopen.add("CROSS_BLOCK_RECONCILIATION");
   }
 
