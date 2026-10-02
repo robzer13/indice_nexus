@@ -62,8 +62,11 @@ export function CompanyHeader({
           'radial-gradient(circle at 84% 30%, rgba(43,200,255,.13), transparent 0 24%), radial-gradient(circle at 72% 75%, rgba(36,99,235,.09), transparent 0 18%), linear-gradient(110deg, rgba(3,10,18,.96), rgba(7,17,29,.88))',
       }}
     >
+      <div aria-hidden="true" className="absolute inset-y-0 right-0 w-[42%] bg-[linear-gradient(135deg,transparent,rgba(43,200,255,.025)_45%,rgba(59,130,246,.055))]" />
       <div aria-hidden="true" className="absolute -right-20 top-1/2 h-48 w-80 -translate-y-1/2 rotate-[-8deg] rounded-full border border-cyan-300/10" />
       <div aria-hidden="true" className="absolute -right-4 top-1/2 h-28 w-64 -translate-y-1/2 rotate-[-8deg] rounded-full border border-blue-300/10" />
+      <div aria-hidden="true" className="absolute right-14 top-7 h-px w-44 bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent" />
+      <div aria-hidden="true" className="absolute bottom-7 right-24 h-px w-28 bg-gradient-to-r from-transparent via-blue-300/15 to-transparent" />
 
       <div className="relative flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -88,8 +91,8 @@ export function StageProgress({ load }: { load: LoadResult }) {
       <div className="grid gap-4 md:grid-cols-3 md:gap-0">
         {states.map(({ stage, lifecycle }, index) => (
           <div key={stage} className="relative flex items-center gap-3 md:pr-5">
-            <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[rgba(123,173,214,.18)] bg-[#07111d]">
-              <span className={'h-3 w-3 rounded-full border ' + stateDot[lifecycle]} />
+            <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[rgba(123,173,214,.18)] bg-[#07111d]">
+              <span className={'h-2.5 w-2.5 rounded-full border ' + stateDot[lifecycle]} />
             </div>
             <div className="min-w-0">
               <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate-300">{stageLabel(stage)}</div>
@@ -97,7 +100,7 @@ export function StageProgress({ load }: { load: LoadResult }) {
                 {lifecycleLabel(lifecycle)}
               </div>
             </div>
-            {index < states.length - 1 ? <span className="ml-2 hidden h-px flex-1 bg-[rgba(123,173,214,.18)] md:block" /> : null}
+            {index < states.length - 1 ? <span className="ml-2 hidden h-px flex-1 bg-[rgba(123,173,214,.14)] md:block" /> : null}
           </div>
         ))}
       </div>
@@ -178,8 +181,8 @@ export function ContextSummary({ load }: { load: LoadResult }) {
   const items = [
     ['Essentiel', 'L0', load.context_plan.l0.length, "Ce qui définit l'état courant de l'analyse.", 'border-cyan-400/25 bg-cyan-400/[.055]', 'text-cyan-300'],
     ['Stage', 'L1', load.context_plan.l1.length, 'Documents nécessaires pour travailler sur le stage courant.', 'border-purple-400/20 bg-purple-400/[.055]', 'text-purple-300'],
-    ['Étendu', 'L2', load.context_plan.l2.length, 'Informations supplémentaires chargées à la demande.', 'border-[rgba(123,173,214,.16)] bg-[#0a1624]/55', 'text-slate-300'],
-    ['Historique', 'L3', load.context_plan.l3.length, 'Contexte ancien ou élargi.', 'border-[rgba(123,173,214,.16)] bg-[#0a1624]/55', 'text-slate-300'],
+    ['Étendu', 'L2', load.context_plan.l2.length, 'Informations supplémentaires chargées à la demande.', 'border-[rgba(123,173,214,.18)] bg-[linear-gradient(145deg,rgba(12,29,46,.72),rgba(8,22,36,.52))]', 'text-slate-200'],
+    ['Historique', 'L3', load.context_plan.l3.length, 'Contexte ancien ou élargi.', 'border-[rgba(123,173,214,.18)] bg-[linear-gradient(145deg,rgba(12,29,46,.72),rgba(8,22,36,.52))]', 'text-slate-200'],
   ] as const;
 
   return (
@@ -191,7 +194,7 @@ export function ContextSummary({ load }: { load: LoadResult }) {
             <span className="rounded-md border border-white/10 bg-white/[.035] px-2 py-1 text-[10px] font-semibold text-slate-500">{code}</span>
           </div>
           <div className="mt-2 text-sm text-slate-200">{count} document{count === 1 ? '' : 's'}</div>
-          <p className="mt-2 text-xs leading-5 text-slate-500">{description}</p>
+          <p className="mt-2 text-xs leading-5 text-slate-400">{description}</p>
         </div>
       ))}
     </div>
@@ -219,18 +222,18 @@ export function ContextPlan({
           <div>
             <div className="flex items-baseline gap-2">
               <h2 className="text-base font-medium text-slate-200">{label}</h2>
-              <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-600">{code}</span>
+              <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">{code}</span>
             </div>
             <div className="mt-2 text-xs text-slate-600">{refs.length} document{refs.length === 1 ? '' : 's'}</div>
           </div>
           <div>
-            <p className="text-sm text-slate-500">{description}</p>
+            <p className="text-sm text-slate-400">{description}</p>
             {refs.length > 0 ? (
               <ul className="mt-4 space-y-2 text-sm text-slate-300">
                 {refs.map((ref) => <li key={ref.artifact_id + ':' + ref.version}>— {catalog[ref.artifact_id]?.logicalName ?? ref.artifact_id}</li>)}
               </ul>
             ) : (
-              <div className="mt-4 text-xs text-slate-700">Aucun document chargé.</div>
+              <div className="mt-4 text-xs text-slate-600">Aucun document chargé.</div>
             )}
           </div>
         </section>
@@ -272,7 +275,7 @@ export function AnalysisRail({ load }: { load: LoadResult }) {
 function RailRow({ label, value, danger = false, mono = false }: { label: string; value: string; danger?: boolean; mono?: boolean }) {
   return (
     <div className="flex items-start justify-between gap-4 border-b border-[rgba(123,173,214,.10)] pb-3 last:border-0 last:pb-0">
-      <dt className="text-slate-600">{label}</dt>
+      <dt className="text-slate-500">{label}</dt>
       <dd className={'text-right ' + (danger ? 'text-rose-300' : 'text-slate-300') + (mono ? ' font-mono text-[11px]' : '')}>{value}</dd>
     </div>
   );
