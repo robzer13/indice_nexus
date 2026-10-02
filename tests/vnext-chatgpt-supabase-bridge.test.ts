@@ -158,7 +158,10 @@ class FakePort implements ControlledBridgePort {
   async listArtifacts(runId: string) {
     return this.state.artifacts.filter((row) => row.run_id === runId);
   }
-  async readSupabaseObject() {
+  async readSupabaseObject(
+    _bucket: string,
+    _objectPath: string,
+  ): Promise<Uint8Array> {
     throw new Error("unexpected Supabase object read");
   }
   async resolveArtifact(): Promise<RpcResult> {
