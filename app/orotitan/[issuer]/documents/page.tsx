@@ -37,18 +37,22 @@ export default async function OroTitanDocumentsPage({
   const path = '/orotitan/' + dossier.identity.slug + '/documents';
 
   return (
-    <div className="space-y-6">
-      <header>
-        <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400">Documents et preuves</div>
-        <h1 className="mt-2 text-3xl font-semibold text-white">{dossier.identity.legalName}</h1>
-        <p className="mt-2 text-sm text-slate-500">{dossier.loadResult.artifact_index.length} artefacts actifs dans artifact_index.</p>
+    <div>
+      <header className="border-b border-slate-800 pb-5">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">Documents et preuves</div>
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h1 className="text-2xl font-semibold text-white">Registre des documents</h1>
+          <span className="text-xs text-slate-600">{dossier.loadResult.artifact_index.length} documents disponibles</span>
+        </div>
       </header>
-      <nav className="flex flex-wrap gap-2">
+
+      <nav className="flex flex-wrap gap-5 border-b border-slate-800 pt-5">
         <StageFilterLink href={buildRunHref(path, selectedRun)} active={!stage}>Tous</StageFilterLink>
         <StageFilterLink href={buildRunHref(path, selectedRun, { stage: 'RESEARCH' })} active={stage === 'RESEARCH'}>Recherche</StageFilterLink>
         <StageFilterLink href={buildRunHref(path, selectedRun, { stage: 'DEEP_DIVE' })} active={stage === 'DEEP_DIVE'}>Deep Dive</StageFilterLink>
         <StageFilterLink href={buildRunHref(path, selectedRun, { stage: 'INTEGRATION' })} active={stage === 'INTEGRATION'}>Intégration</StageFilterLink>
       </nav>
+
       <ArtifactList refs={refs} catalog={dossier.artifactCatalog} />
     </div>
   );

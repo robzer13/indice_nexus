@@ -3,8 +3,8 @@ import Link from 'next/link';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: { default: 'OroTitan Screener', template: '%s · OroTitan' },
-  description: "Cockpit opérationnel d'une base fermée de sociétés déjà analysées.",
+  title: { default: 'OroTitan', template: '%s · OroTitan' },
+  description: "OroTitan · recherche actions, analyses versionnées et screener.",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
@@ -12,22 +12,27 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="fr">
       <body>
         <div className="min-h-screen">
-          <header className="sticky top-0 z-40 border-b border-slate-800/90 bg-slate-950/90 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-slate-800/90 bg-slate-950/92 backdrop-blur">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-              <Link href="/" className="flex items-baseline gap-2">
-                <span className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-300">OroTitan</span>
-                <span className="text-xs text-slate-500">Screener V1.1</span>
+              <Link href="/" className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-300">
+                OroTitan
               </Link>
-              <nav className="flex items-center gap-1 text-sm text-slate-400">
-                <Link className="rounded-lg px-3 py-2 hover:bg-slate-900 hover:text-slate-100" href="/orotitan">Equity Research</Link>
-                <Link className="rounded-lg px-3 py-2 hover:bg-slate-900 hover:text-slate-100" href="/screener">Screener</Link>
-                <Link className="rounded-lg px-3 py-2 hover:bg-slate-900 hover:text-slate-100" href="/admin">Admin</Link>
+              <nav className="flex items-center gap-1 text-sm">
+                <Link className="rounded-md px-3 py-2 text-slate-300 hover:bg-slate-900 hover:text-white" href="/orotitan">
+                  Equity Research
+                </Link>
+                <Link className="rounded-md px-3 py-2 text-slate-400 hover:bg-slate-900 hover:text-slate-100" href="/screener">
+                  Screener
+                </Link>
+                <Link className="rounded-md px-3 py-2 text-slate-600 hover:bg-slate-900 hover:text-slate-300" href="/admin">
+                  Admin
+                </Link>
               </nav>
             </div>
           </header>
-          <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">{children}</main>
-          <footer className="mx-auto max-w-7xl px-4 pb-8 text-xs text-slate-600 sm:px-6 lg:px-8">
-            OroTitan Screener · analyses versionnées, prix séparés, aucun silent overwrite.
+          <main className="mx-auto max-w-7xl px-4 py-7 sm:px-6 lg:px-8">{children}</main>
+          <footer className="mx-auto max-w-7xl px-4 pb-8 text-xs text-slate-700 sm:px-6 lg:px-8">
+            OroTitan · recherche versionnée et traçable.
           </footer>
         </div>
       </body>

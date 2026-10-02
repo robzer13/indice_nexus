@@ -25,12 +25,12 @@ export default async function OroTitanContextPage({
   }
 
   return (
-    <div className="space-y-6">
-      <header>
-        <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400">Contexte de travail</div>
-        <h1 className="mt-2 text-3xl font-semibold text-white">L0–L3</h1>
+    <div>
+      <header className="border-b border-slate-800 pb-5">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">Contexte de l&apos;analyse</div>
+        <h1 className="mt-2 text-2xl font-semibold text-white">Ce qui est chargé pour travailler</h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
-          Représentation directe du context_plan du LOAD_RESULT. Un niveau vide est affiché comme vide et n&apos;est pas interprété comme une erreur.
+          Les niveaux L0 à L3 organisent le contexte selon sa fonction. Un niveau vide reste un état normal.
         </p>
       </header>
       <ContextPlan load={dossier.loadResult} catalog={dossier.artifactCatalog} />

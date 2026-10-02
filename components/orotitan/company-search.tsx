@@ -18,7 +18,7 @@ export function CompanySearch() {
       return;
     }
     if (!acceptedQueries.has(normalized)) {
-      setError('Le mock V1 contient uniquement le dossier Veolia.');
+      setError('Aucun dossier disponible pour cette recherche dans cette version.');
       return;
     }
     setError(null);
@@ -26,22 +26,22 @@ export function CompanySearch() {
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-2xl">
+    <form onSubmit={submit}>
       <label htmlFor="orotitan-company-search" className="sr-only">Rechercher une société</label>
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex items-center border-b border-slate-700 bg-slate-950/40 transition focus-within:border-cyan-500">
+        <span aria-hidden="true" className="pl-1 text-lg text-slate-600">⌕</span>
         <input
           id="orotitan-company-search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Nom, ticker ou symbole marché"
-          className="min-w-0 flex-1 rounded-xl border border-slate-700 bg-slate-950/80 px-4 py-3 text-base text-white outline-none transition placeholder:text-slate-600 focus:border-cyan-500"
+          placeholder="Veolia, VIE, VIE.PA…"
+          className="min-w-0 flex-1 bg-transparent px-3 py-4 text-lg text-white outline-none placeholder:text-slate-700"
         />
-        <button type="submit" className="rounded-xl border border-cyan-700 bg-cyan-950/50 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-900/50">
-          Ouvrir le dossier
+        <button type="submit" className="ml-3 shrink-0 rounded-md border border-slate-700 px-3 py-2 text-sm font-medium text-slate-300 transition hover:border-slate-600 hover:bg-slate-900 hover:text-white">
+          Ouvrir
         </button>
       </div>
       {error ? <p className="mt-3 text-sm text-amber-300">{error}</p> : null}
-      <p className="mt-3 text-xs text-slate-600">Mock V1 disponible : Veolia · VIE · VIE.PA</p>
     </form>
   );
 }
