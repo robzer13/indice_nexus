@@ -2,7 +2,7 @@
   "format": "OROTITAN_ANALYTICAL_ENGINE_V2_DATA_CONTRACTS_CANDIDATE_V0.1",
   "decision_id": "ANALYTICAL-ENGINE-V2-DATA-CONTRACTS-CANDIDATE-001",
   "date": "2026-10-01",
-  "status": "DESIGN_CANDIDATE_READY_FOR_CI",
+  "status": "GLOBAL_REVIEW_PATCHED_AWAITING_CI",
   "methodology_change": false,
   "production_mutation": false,
   "supabase_migration": false,
@@ -49,5 +49,13 @@
     "SAVE_ORCHESTRATION",
     "STAGE_FINALIZATION_ELIGIBILITY"
   ],
-  "next_if_ci_passes": "PROCESS_ENGINE_V2_STATE_MACHINE_DESIGN"
+  "next_if_ci_passes": "FREEZE_ANALYTICAL_DATA_CONTRACTS_V2",
+  "global_review_date": "2026-10-02",
+  "global_review_base_sha": "ebae407911c4ed4b29f3006f646548695c9747dc",
+  "single_authority_candidate": "schemas/vnext/data-contracts/",
+  "superseded_candidate": "contracts/orotitan-equity/post-c7/OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_SCHEMA_V0.1.json",
+  "semantic_separations": [
+    "CANONICAL_EPISTEMIC_TYPE_VS_PROTOCOL_WORKING_CLAIM_TYPE",
+    "ANALYTICAL_BLOCK_EXECUTION_STATUS_VS_FUTURE_PROCESS_CONTROL_STATE"
+  ]
 }
