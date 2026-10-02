@@ -1,0 +1,52 @@
+{
+  "format": "OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_CANDIDATE_V0.1",
+  "decision_id": "CHATGPT-SUPABASE-CONTROLLED-OPERATION-CONTRACTS-CANDIDATE-001",
+  "date": "2026-10-02",
+  "status": "DESIGN_CANDIDATE_AWAITING_CI",
+  "methodology_change": false,
+  "scoring_change": false,
+  "valuation_change": false,
+  "production_mutation": false,
+  "supabase_migration": false,
+  "authorities": {
+    "operating_protocol": "OROTITAN_CHATGPT_OPERATING_PROTOCOL_V1_FREEZE_V1.0",
+    "analytical_data_contracts": "OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_FREEZE_V1.0",
+    "process_engine": "OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0",
+    "process_engine_freeze_merge_sha": "7572e5f40fc10c92ddadaff15853d92df4e82465"
+  },
+  "operation_types": [
+    "LOAD",
+    "LOAD_RESULT",
+    "CHECKPOINT_STAGE",
+    "FINALIZE_STAGE",
+    "REOPEN_STAGE",
+    "NOOP",
+    "MUTATION_RECEIPT",
+    "OPERATION_FAILURE"
+  ],
+  "mutation_invariants": [
+    "EXPECTED_RUN_STATE_VERSION_REQUIRED",
+    "EXPECTED_STAGE_STATE_VERSION_REQUIRED",
+    "IDEMPOTENCY_KEY_REQUIRED",
+    "REQUEST_FINGERPRINT_REQUIRED",
+    "PERSISTENCE_RECEIPT_REQUIRED_FOR_ARTIFACT_BUNDLES",
+    "POST_WRITE_RELOAD_REQUIRED",
+    "PUBLICATION_NEVER_AUTHORIZED"
+  ],
+  "existing_registry_bindings": {
+    "checkpoint": "checkpoint_orotitan_stage",
+    "finalize": "finalize_orotitan_stage",
+    "reopen": "reopen_orotitan_stage",
+    "artifact_resolver": "resolve_orotitan_artifact"
+  },
+  "deliberately_not_implemented": [
+    "SUPABASE_BRIDGE_RUNTIME",
+    "SERVICE_ROLE_CREDENTIAL_HANDLING",
+    "RUN_CREATION",
+    "PUBLICATION",
+    "DATABASE_MIGRATION",
+    "ARBITRARY_SQL_OR_RPC_EXECUTION"
+  ],
+  "schema": "schemas/vnext/chatgpt-supabase/controlled-operation.schema.v0.1.json",
+  "next_action": "RUN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_CI"
+}
