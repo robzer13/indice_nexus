@@ -83,6 +83,7 @@ jobs:
             ref: payload.ref ?? null,
             workflow: payload.workflow ?? null,
             workflow_ref: payload.workflow_ref ?? null,
+            sub: payload.sub ?? null,
             event_name: payload.event_name ?? null,
           };
 
