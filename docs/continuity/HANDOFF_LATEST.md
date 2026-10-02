@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261002-072`
+Resume ID: `VNEXT-POST-C7-20261002-073`
 
 ## Current state
 
@@ -48,11 +48,11 @@ Security debt recorded:
 
 `VERTICAL_SLICE_READY = FALSE`
 
-Data Contracts V2 and Process Engine V2 are frozen. The controlled ChatGPT ↔ Supabase bridge remains the next required implementation layer before a company vertical slice can be authorized.
+Data Contracts V2, Process Engine V2 and the ChatGPT ↔ Supabase Controlled Operation Contracts are frozen. The narrow bridge implementation remains the next required layer before a company vertical slice can be authorized.
 
 ## Active execution action
 
-`DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS`
+`IMPLEMENT_CHATGPT_SUPABASE_BRIDGE`
 
 ## Product invariant
 
@@ -183,3 +183,41 @@ Vertical slice:
 Exact next action:
 
 `DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS`
+
+
+---
+
+## ChatGPT ↔ Supabase Controlled Operation Contracts — review + freeze (2026-10-02)
+
+Design and review lineage:
+- PR #340 merged into `vnext` at `27d28d298de31c686a15aed74085d9531df565cb`;
+- reviewed head = `95b47ceeeaceed92dc7004553f3207415d55cdfc`;
+- VNext CI #809 = PASS;
+- Screener CI #664 = PASS;
+- review findings for current-stage coupling, BLOCK/CHECKPOINT lifecycle coupling and replay receipt consistency = FIXED / RESOLVED;
+- no methodology, scoring, valuation, production or Supabase-schema mutation.
+
+Frozen authority:
+
+`OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_FREEZE_V1.0`
+
+The freeze preserves:
+- LOAD as mutation-free;
+- exact run/stage optimistic concurrency state;
+- exact artifact ID/version/hash/authority resolution;
+- CHECKPOINT/BLOCK/FINALIZE mapping from Process Engine intent;
+- stage-level REOPEN through the guarded Registry path;
+- idempotency key + request fingerprint requirements;
+- verified artifact persistence before Registry mutation;
+- mandatory post-write durable-state verification;
+- fail-closed stale-state handling;
+- publication firewall with `publish_authorized = false`;
+- no arbitrary SQL or arbitrary RPC surface.
+
+Vertical slice:
+
+`READY = NO`
+
+Exact next action:
+
+`IMPLEMENT_CHATGPT_SUPABASE_BRIDGE`
