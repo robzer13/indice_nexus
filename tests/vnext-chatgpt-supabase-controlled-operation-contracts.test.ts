@@ -263,3 +263,116 @@ test("artifact refs require exact version", () => {
   };
   expectInvalid(value);
 });
+
+test("LOAD_RESULT fails closed when current_stage and stage.stage_code disagree", () => {
+  const value = {
+    contract_version: "0.1.0",
+    operation: "LOAD_RESULT",
+    mutation_allowed: false,
+    issuer_id: "issuer-1",
+    security_id: "security-1",
+    dossier_id: "dossier-1",
+    run_id: "run-1",
+    run_status: "ACTIVE",
+    run_state_version: 9,
+    run_type: "INITIAL",
+    canonical_mode: "STANDARD",
+    data_cutoff: "2026-10-02",
+    contract_set_sha256: sha,
+    current_stage: "RESEARCH",
+    stage: {
+      stage_code: "DEEP_DIVE",
+      stage_revision: 1,
+      lifecycle_status: "IN_PROGRESS",
+      stage_state_version: 4,
+      handoff_gate_state: "NOT_EVALUATED",
+      active_manifest: null,
+    },
+    blockers: [],
+    artifact_index: [],
+    process_state_artifact: null,
+    context_plan: { l0: [], l1: [], l2: [], l3: [] },
+  };
+  expectInvalid(value);
+
+  expectInvalid({
+    ...value,
+    run_id: null,
+    run_status: null,
+    run_state_version: null,
+    run_type: null,
+    canonical_mode: null,
+    data_cutoff: null,
+    contract_set_sha256: null,
+    current_stage: null,
+  });
+});
+
+test("CHECKPOINT and BLOCK dispositions are coupled to lifecycle", () => {
+  const common = {
+    contract_version: "0.1.0",
+    operation: "CHECKPOINT_STAGE",
+    run_id: "run-1",
+    stage_code: "RESEARCH",
+    expected_run_state_version: 2,
+    expected_stage_state_version: 2,
+    bundle,
+    idempotency_key: "checkpoint:run-1:research:2",
+    request_fingerprint_sha256: sha,
+    actor_type: "RESEARCH_WORKER",
+    publish_authorized: false,
+  };
+
+  expectInvalid({
+    ...common,
+    save_disposition: "BLOCK",
+    target_lifecycle: "IN_PROGRESS",
+  });
+
+  expectInvalid({
+    ...common,
+    save_disposition: "CHECKPOINT",
+    target_lifecycle: "BLOCKED",
+  });
+
+  expectValid({
+    ...common,
+    save_disposition: "CHECKPOINT",
+    target_lifecycle: "PAUSED",
+  });
+});
+
+test("mutation receipt status is coupled to replay flag", () => {
+  const receipt = {
+    contract_version: "0.1.0",
+    operation: "MUTATION_RECEIPT",
+    run_id: "run-1",
+    stage_code: "DEEP_DIVE",
+    stage_state_version: 5,
+    manifest_id: "manifest-2",
+    event_id: "event-1",
+    verification: {
+      durable_state_reloaded: true,
+      state_matches_intent: true,
+      artifact_integrity_verified: true,
+    },
+  };
+
+  expectInvalid({
+    ...receipt,
+    status: "SUCCESS",
+    idempotent_replay: true,
+  });
+
+  expectInvalid({
+    ...receipt,
+    status: "IDEMPOTENT_REPLAY",
+    idempotent_replay: false,
+  });
+
+  expectValid({
+    ...receipt,
+    status: "IDEMPOTENT_REPLAY",
+    idempotent_replay: true,
+  });
+});
