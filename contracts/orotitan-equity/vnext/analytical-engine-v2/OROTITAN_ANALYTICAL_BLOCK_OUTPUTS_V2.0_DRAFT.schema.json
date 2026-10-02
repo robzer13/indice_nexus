@@ -1,0 +1,372 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:analytical-block-outputs:v2.0-draft",
+  "title": "OroTitan Analytical Block Outputs V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "claims",
+    "causal_nodes",
+    "causal_edges",
+    "invalidation_triggers",
+    "block_outputs"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_ANALYTICAL_BLOCK_OUTPUTS_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "DEEP_DIVE"
+            }
+          }
+        }
+      ]
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "ANALYTICAL_BLOCK_OUTPUTS"
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/analyticalClaim"
+      }
+    },
+    "causal_nodes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/causalNode"
+      }
+    },
+    "causal_edges": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/causalEdge"
+      }
+    },
+    "invalidation_triggers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/invalidationTrigger"
+      }
+    },
+    "block_outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blockOutput"
+      }
+    }
+  },
+  "$defs": {
+    "analyticalClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "claim_id",
+        "block",
+        "claim_type",
+        "statement",
+        "materiality",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "calculation_ids",
+        "assumption_ids",
+        "conflict_ids",
+        "alternative_explanations",
+        "invalidation_trigger_ids",
+        "status"
+      ],
+      "properties": {
+        "claim_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "block": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "claim_type": {
+          "type": "string",
+          "enum": [
+            "DESCRIPTIVE",
+            "CAUSAL",
+            "NORMALIZATION",
+            "FORECAST",
+            "COMPARATIVE",
+            "RISK",
+            "VALUATION"
+          ]
+        },
+        "statement": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "materiality": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/materiality"
+        },
+        "supporting_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "contradicting_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "calculation_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "assumption_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "conflict_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "alternative_explanations": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          }
+        },
+        "invalidation_trigger_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "status": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/claimStatus"
+        }
+      }
+    },
+    "causalNode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "node_type",
+        "label",
+        "claim_id",
+        "evidence_ids"
+      ],
+      "properties": {
+        "node_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "node_type": {
+          "type": "string",
+          "enum": [
+            "CLAIM",
+            "ECONOMIC_STATE",
+            "DRIVER",
+            "OUTCOME",
+            "RISK"
+          ]
+        },
+        "label": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "claim_id": {
+          "anyOf": [
+            {
+              "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "NOT_APPLICABLE"
+              ]
+            }
+          ]
+        },
+        "evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        }
+      }
+    },
+    "causalEdge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "edge_id",
+        "from_node_id",
+        "to_node_id",
+        "mechanism",
+        "supporting_evidence_ids",
+        "counterevidence_ids",
+        "status"
+      ],
+      "properties": {
+        "edge_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "from_node_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "to_node_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "mechanism": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "supporting_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "counterevidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "status": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/claimStatus"
+        }
+      }
+    },
+    "invalidationTrigger": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "trigger_id",
+        "statement",
+        "affected_claim_ids",
+        "observable_signal",
+        "threshold_or_condition",
+        "evidence_ids",
+        "status"
+      ],
+      "properties": {
+        "trigger_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "statement": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "affected_claim_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "observable_signal": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "threshold_or_condition": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "TRIGGERED",
+            "RETIRED"
+          ]
+        }
+      }
+    },
+    "blockOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "block_output_id",
+        "block",
+        "module_type",
+        "module_schema_version",
+        "status",
+        "summary",
+        "material_claim_ids",
+        "evidence_ids",
+        "calculation_ids",
+        "assumption_ids",
+        "conflict_ids",
+        "open_question_ids",
+        "causal_node_ids",
+        "causal_edge_ids",
+        "invalidation_trigger_ids",
+        "dependencies",
+        "reopened_dependencies",
+        "module_payload"
+      ],
+      "properties": {
+        "block_output_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "block": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "module_type": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "module_schema_version": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "IN_PROGRESS",
+            "BLOCKED",
+            "COMPLETE",
+            "NOT_ASSESSABLE",
+            "REOPENED"
+          ]
+        },
+        "summary": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "material_claim_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "calculation_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "assumption_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "conflict_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "open_question_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "causal_node_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "causal_edge_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "invalidation_trigger_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+          }
+        },
+        "reopened_dependencies": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+          }
+        },
+        "module_payload": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:conflict-ledger:v2.0-draft",
+  "title": "OroTitan Conflict Ledger V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "conflicts"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_CONFLICT_LEDGER_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "CONFLICT_LEDGER"
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conflictRecord"
+      }
+    }
+  },
+  "$defs": {
+    "conflictRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conflict_id",
+        "question_or_claim",
+        "conflict_type",
+        "side_a_evidence_ids",
+        "side_b_evidence_ids",
+        "affected_blocks",
+        "materiality",
+        "status",
+        "resolution",
+        "resolution_evidence_ids",
+        "downstream_impact"
+      ],
+      "properties": {
+        "conflict_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "question_or_claim": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "conflict_type": {
+          "type": "string",
+          "enum": [
+            "FACTUAL",
+            "TEMPORAL",
+            "ACCOUNTING_BASIS",
+            "SCOPE",
+            "SOURCE_RELIABILITY",
+            "METHODOLOGICAL",
+            "INTERPRETIVE"
+          ]
+        },
+        "side_a_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "side_b_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "affected_blocks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+          }
+        },
+        "materiality": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/materiality"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "ACCEPTED_UNCERTAINTY",
+            "NON_MATERIAL",
+            "SUPERSEDED"
+          ]
+        },
+        "resolution": {
+          "anyOf": [
+            {
+              "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "NOT_APPLICABLE",
+                "UNKNOWN"
+              ]
+            }
+          ]
+        },
+        "resolution_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "downstream_impact": {
+          "anyOf": [
+            {
+              "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "NOT_APPLICABLE",
+                "UNKNOWN"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

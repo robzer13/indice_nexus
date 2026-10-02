@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:analytical-common:v2.0-draft",
+  "title": "OroTitan Analytical Engine V2 Common Data Contract — Draft",
+  "$ref": "#/$defs/runContextLock",
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "idArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/id"
+      },
+      "uniqueItems": true
+    },
+    "specialState": {
+      "type": "string",
+      "enum": [
+        "UNKNOWN",
+        "NOT_APPLICABLE",
+        "NOT_ASSESSABLE",
+        "MISSING",
+        "NOT_AVAILABLE"
+      ]
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "dateOrState": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/date"
+        },
+        {
+          "$ref": "#/$defs/specialState"
+        }
+      ]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "RESEARCH",
+        "DEEP_DIVE",
+        "INTEGRATION"
+      ]
+    },
+    "runType": {
+      "type": "string",
+      "enum": [
+        "INITIAL",
+        "REFRESH"
+      ]
+    },
+    "canonicalMode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "block": {
+      "type": "string",
+      "enum": [
+        "BUSINESS_MODEL",
+        "INDUSTRY_STRUCTURE",
+        "TECHNOLOGY",
+        "CYCLICALITY",
+        "MOAT",
+        "RUNWAY",
+        "RETURN_QUALITY",
+        "FCF_FORENSIC",
+        "CAPITAL_ALLOCATION",
+        "MANAGEMENT_GOVERNANCE",
+        "OUTSIDE_VIEW",
+        "VARIANT_PERCEPTION",
+        "RISK_RESILIENCE",
+        "RED_TEAM",
+        "VALUATION",
+        "CROSS_BLOCK_RECONCILIATION"
+      ]
+    },
+    "epistemicType": {
+      "type": "string",
+      "enum": [
+        "FACT",
+        "MANAGEMENT_CLAIM",
+        "ESTIMATE",
+        "ASSUMPTION",
+        "INFERENCE",
+        "CALCULATION"
+      ]
+    },
+    "evidenceRole": {
+      "type": "string",
+      "enum": [
+        "FACT",
+        "MANAGEMENT_CLAIM",
+        "CUSTOMER_EVIDENCE",
+        "COMPETITOR_EVIDENCE",
+        "INDUSTRY_EVIDENCE",
+        "REGULATORY_EVIDENCE",
+        "ACADEMIC_TECHNICAL_EVIDENCE",
+        "CALCULATION",
+        "ASSUMPTION",
+        "INFERENCE"
+      ]
+    },
+    "polarity": {
+      "type": "string",
+      "enum": [
+        "SUPPORTS",
+        "CONTRADICTS",
+        "CONTEXT",
+        "NEUTRAL"
+      ]
+    },
+    "materiality": {
+      "type": "string",
+      "enum": [
+        "MATERIAL",
+        "SUPPORTING",
+        "CONTEXTUAL"
+      ]
+    },
+    "claimStatus": {
+      "type": "string",
+      "enum": [
+        "SUPPORTED",
+        "MIXED",
+        "NOT_SUPPORTED",
+        "LOW_CONFIDENCE",
+        "NOT_ASSESSABLE"
+      ]
+    },
+    "sourceClass": {
+      "type": "string",
+      "enum": [
+        "REGULATORY_FILING",
+        "ISSUER_PRIMARY",
+        "CUSTOMER_PRIMARY",
+        "COMPETITOR_PRIMARY",
+        "SUPPLIER_CHANNEL_PRIMARY",
+        "REGULATORY_INDUSTRY_TECHNICAL_ACADEMIC",
+        "HIGH_QUALITY_SECONDARY",
+        "DERIVATIVE_SUMMARY",
+        "USER_SUPPLIED"
+      ]
+    },
+    "numericRange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      }
+    },
+    "materialNumericValue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "value_kind",
+        "unit",
+        "source_evidence_ids"
+      ],
+      "properties": {
+        "value_kind": {
+          "type": "string",
+          "enum": [
+            "MONETARY_FLOW",
+            "MONETARY_STOCK",
+            "PERCENTAGE",
+            "RATIO",
+            "MULTIPLE",
+            "COUNT",
+            "DAYS",
+            "OTHER"
+          ]
+        },
+        "value": {
+          "type": "number"
+        },
+        "range": {
+          "$ref": "#/$defs/numericRange"
+        },
+        "unit": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$"
+        },
+        "period_start": {
+          "$ref": "#/$defs/date"
+        },
+        "period_end": {
+          "$ref": "#/$defs/date"
+        },
+        "as_of_date": {
+          "$ref": "#/$defs/date"
+        },
+        "accounting_basis": {
+          "type": "string",
+          "enum": [
+            "IFRS",
+            "US_GAAP",
+            "LOCAL_GAAP",
+            "MANAGEMENT_ADJUSTED",
+            "OROTITAN_ECONOMIC",
+            "NOT_APPLICABLE",
+            "UNKNOWN"
+          ]
+        },
+        "source_evidence_ids": {
+          "$ref": "#/$defs/idArray"
+        },
+        "calculation_id": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "value"
+          ],
+          "not": {
+            "required": [
+              "range"
+            ]
+          }
+        },
+        {
+          "required": [
+            "range"
+          ],
+          "not": {
+            "required": [
+              "value"
+            ]
+          }
+        }
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "value_kind": {
+                "const": "MONETARY_FLOW"
+              }
+            },
+            "required": [
+              "value_kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "currency",
+              "period_start",
+              "period_end",
+              "accounting_basis"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "value_kind": {
+                "const": "MONETARY_STOCK"
+              }
+            },
+            "required": [
+              "value_kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "currency",
+              "as_of_date",
+              "accounting_basis"
+            ]
+          }
+        }
+      ]
+    },
+    "runContextLock": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "stage",
+        "stage_revision",
+        "issuer_id",
+        "security_id",
+        "dossier_id",
+        "run_type",
+        "canonical_mode",
+        "data_cutoff",
+        "contract_set_sha256"
+      ],
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/id"
+        },
+        "stage": {
+          "$ref": "#/$defs/stage"
+        },
+        "stage_revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "issuer_id": {
+          "$ref": "#/$defs/id"
+        },
+        "security_id": {
+          "$ref": "#/$defs/id"
+        },
+        "dossier_id": {
+          "$ref": "#/$defs/id"
+        },
+        "run_type": {
+          "$ref": "#/$defs/runType"
+        },
+        "canonical_mode": {
+          "$ref": "#/$defs/canonicalMode"
+        },
+        "data_cutoff": {
+          "$ref": "#/$defs/date"
+        },
+        "contract_set_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "fieldProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field_path",
+        "supporting_evidence_ids",
+        "contradicting_evidence_ids",
+        "assumption_ids"
+      ],
+      "properties": {
+        "field_path": {
+          "type": "string",
+          "pattern": "^/"
+        },
+        "supporting_evidence_ids": {
+          "$ref": "#/$defs/idArray"
+        },
+        "contradicting_evidence_ids": {
+          "$ref": "#/$defs/idArray"
+        },
+        "assumption_ids": {
+          "$ref": "#/$defs/idArray"
+        }
+      }
+    },
+    "artifactEnvelope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_name",
+        "schema_version",
+        "run_lock",
+        "generated_at",
+        "method_version",
+        "artifact_role"
+      ],
+      "properties": {
+        "contract_name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "schema_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "run_lock": {
+          "$ref": "#/$defs/runContextLock"
+        },
+        "generated_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "method_version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "artifact_role": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    }
+  }
+}

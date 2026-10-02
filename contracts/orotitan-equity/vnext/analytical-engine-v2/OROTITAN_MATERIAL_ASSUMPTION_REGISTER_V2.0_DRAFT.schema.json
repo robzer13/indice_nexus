@@ -1,0 +1,118 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:material-assumption-register:v2.0-draft",
+  "title": "OroTitan Material Assumption Register V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "assumptions"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_MATERIAL_ASSUMPTION_REGISTER_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "DEEP_DIVE"
+            }
+          }
+        }
+      ]
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "MATERIAL_ASSUMPTION_REGISTER"
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assumption"
+      }
+    }
+  },
+  "$defs": {
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "assumption_id",
+        "block",
+        "statement",
+        "assumption_type",
+        "rationale",
+        "evidence_ids",
+        "sensitivity",
+        "affected_claim_ids",
+        "status"
+      ],
+      "properties": {
+        "assumption_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "block": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "statement": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "assumption_type": {
+          "type": "string",
+          "enum": [
+            "NORMALIZATION",
+            "FORECAST",
+            "VALUATION",
+            "ACCOUNTING",
+            "OPERATING",
+            "OTHER"
+          ]
+        },
+        "rationale": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "sensitivity": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "affected_claim_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ACTIVE",
+            "SUPERSEDED",
+            "REJECTED"
+          ]
+        }
+      }
+    }
+  }
+}

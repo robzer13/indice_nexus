@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:orotitan:equity-research:research-gap-register:v2.0-draft",
+  "title": "OroTitan Research Gap Register V2 — Draft",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_name",
+    "schema_version",
+    "run_lock",
+    "generated_at",
+    "method_version",
+    "artifact_role",
+    "questions"
+  ],
+  "properties": {
+    "contract_name": {
+      "const": "OROTITAN_RESEARCH_GAP_REGISTER_V2"
+    },
+    "schema_version": {
+      "const": "2.0.0-draft"
+    },
+    "run_lock": {
+      "allOf": [
+        {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/runContextLock"
+        },
+        {
+          "properties": {
+            "stage": {
+              "const": "RESEARCH"
+            }
+          }
+        }
+      ]
+    },
+    "generated_at": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/timestamp"
+    },
+    "method_version": {
+      "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+    },
+    "artifact_role": {
+      "const": "RESEARCH_GAP_REGISTER"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/openQuestion"
+      }
+    }
+  },
+  "$defs": {
+    "openQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id",
+        "block",
+        "question",
+        "why_material",
+        "current_evidence_ids",
+        "missing_evidence",
+        "searches_already_performed",
+        "best_next_source",
+        "status",
+        "impact_if_unresolved",
+        "last_attempt_fingerprint"
+      ],
+      "properties": {
+        "question_id": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/id"
+        },
+        "block": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/block"
+        },
+        "question": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "why_material": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "current_evidence_ids": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/idArray"
+        },
+        "missing_evidence": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "searches_already_performed": {
+          "type": "array",
+          "items": {
+            "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+          }
+        },
+        "best_next_source": {
+          "anyOf": [
+            {
+              "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "UNKNOWN",
+                "NOT_AVAILABLE",
+                "NOT_APPLICABLE"
+              ]
+            }
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "OPEN",
+            "RESOLVED",
+            "EXHAUSTED",
+            "NOT_ASSESSABLE",
+            "NON_MATERIAL"
+          ]
+        },
+        "impact_if_unresolved": {
+          "$ref": "urn:orotitan:equity-research:analytical-common:v2.0-draft#/$defs/nonEmptyString"
+        },
+        "last_attempt_fingerprint": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "NOT_AVAILABLE"
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}
