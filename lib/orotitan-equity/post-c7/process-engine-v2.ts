@@ -109,6 +109,12 @@ export type DependencyReopenPlan = {
   allAffectedBlocks: BlockCode[];
 };
 
+export type BlockFreshnessTransition = {
+  block: BlockCode;
+  freshness: Extract<BlockFreshness, "REOPENED" | "STALE">;
+  materialRevalidationRequired: true;
+};
+
 export type DependencyGraphResult =
   | {
       ok: true;
@@ -517,6 +523,17 @@ export function planDependencyReopen(
       allAffectedBlocks: closure.blocks,
     },
   };
+}
+
+export function deriveReopenTransitions(
+  plan: DependencyReopenPlan,
+): BlockFreshnessTransition[] {
+  const direct = new Set(plan.directReopenBlocks);
+  return plan.allAffectedBlocks.map((block) => ({
+    block,
+    freshness: direct.has(block) ? "REOPENED" : "STALE",
+    materialRevalidationRequired: true,
+  }));
 }
 
 export function validateRequiredSectorOverlays(
@@ -1028,7 +1045,8 @@ export function deriveNextBlockAction(
     block.freshness === "REOPENED" ||
     block.freshness === "STALE" ||
     block.analyticalStatus === "INSUFFICIENT" ||
-    block.analyticalStatus === "IN_PROGRESS";
+    block.analyticalStatus === "IN_PROGRESS" ||
+    block.materialRevalidationStatus === "PENDING";
 
   if (currentBlock) {
     const current = byCode.get(currentBlock);
