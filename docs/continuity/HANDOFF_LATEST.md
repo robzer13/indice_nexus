@@ -1,6 +1,6 @@
 # OroTitan VNExT — Latest Handoff
 
-Resume ID: `VNEXT-POST-C7-20261002-071`
+Resume ID: `VNEXT-POST-C7-20261002-072`
 
 ## Current state
 
@@ -48,17 +48,11 @@ Security debt recorded:
 
 `VERTICAL_SLICE_READY = FALSE`
 
-15 scenarios require implementation closure before vertical slice.
-
-They cluster into:
-
-1. Data Contracts V2
-2. Process Engine V2
-3. ChatGPT ↔ Supabase bridge
+Data Contracts V2 and Process Engine V2 are frozen. The controlled ChatGPT ↔ Supabase bridge remains the next required implementation layer before a company vertical slice can be authorized.
 
 ## Active execution action
 
-`DESIGN_PROCESS_ENGINE_V2`
+`DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS`
 
 ## Product invariant
 
@@ -151,3 +145,41 @@ Vertical slice:
 
 Exact next action:
 `DESIGN_PROCESS_ENGINE_V2`
+
+
+---
+
+## Process Engine V2 — review + freeze (2026-10-02)
+
+Implementation and review lineage:
+- PR #338 merged into `vnext` at `180d817bcd522c9d1d528ce5e2521e48aadc9cce`;
+- implementation head = `c5af5f982fec2e31273e8f98c14c9d5c1c945e07`;
+- VNext CI #804 = PASS;
+- Screener CI #662 = PASS;
+- blocking Process Engine review findings = addressed / resolved;
+- no methodology, scoring, valuation, production or Supabase-schema mutation.
+
+Frozen authority:
+
+`OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0`
+
+The freeze preserves:
+- analytical execution status as `INSUFFICIENT | IN_PROGRESS | PROVISIONALLY_STABLE | LOCKED`;
+- process freshness as the orthogonal `CURRENT | REOPENED | STALE` domain;
+- dependency-cone reopen semantics;
+- material-change revalidation;
+- required overlay/dependency validation;
+- deterministic next-block/action routing;
+- refresh routing;
+- SAVE disposition intent without persistence;
+- execution fingerprint and bounded retry guard.
+
+The Process Engine remains pure and does not own Supabase RPC invocation, artifact-byte persistence, registry transaction execution or publication.
+
+Vertical slice:
+
+`READY = NO`
+
+Exact next action:
+
+`DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS`
