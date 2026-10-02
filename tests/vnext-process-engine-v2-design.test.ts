@@ -249,6 +249,23 @@ test("reopen plan keeps analytical status separate from freshness transition", (
   ]);
 });
 
+test("reopen plan excludes NOT_STARTED descendants from freshness transitions", () => {
+  const blocks = [
+    block("MOAT"),
+    notStarted("RUNWAY", ["MOAT"]),
+  ];
+  const result = planDependencyReopen(["MOAT"], blocks);
+  assert.equal(result.ok, true);
+  if (!result.ok) return;
+
+  assert.deepEqual(result.plan.directReopenBlocks, ["MOAT"]);
+  assert.deepEqual(result.plan.staleDownstreamBlocks, []);
+  assert.deepEqual(result.plan.allAffectedBlocks, ["MOAT"]);
+  assert.deepEqual(deriveReopenTransitions(result.plan), [
+    { block: "MOAT", freshness: "REOPENED", materialRevalidationRequired: true },
+  ]);
+});
+
 test("authoritative dependency requirements prevent under-specified graphs", () => {
   const invalid = validateRequiredBlockDependencies(
     [{ block: "MOAT", upstream: "BUSINESS_MODEL" }],
@@ -417,6 +434,19 @@ test("pending material revalidation returns block to execution work", () => {
   assert.equal(next.block, "MOAT");
 });
 
+test("reopened historical LOCKED block may carry pending material revalidation", () => {
+  const value = {
+    ...block("MOAT", "LOCKED", [], "REOPENED"),
+    materialRevalidationStatus: "PENDING" as const,
+  };
+  const graph = buildDependencyGraph([value]);
+  assert.equal(graph.ok, true);
+
+  const next = deriveNextBlockAction([value]);
+  assert.equal(next.action, "EXECUTE_BLOCK");
+  assert.equal(next.block, "MOAT");
+});
+
 test("next-action resolver surfaces blocker instead of repeating analysis", () => {
   const blocks = [
     block("BUSINESS_MODEL"),
@@ -479,6 +509,26 @@ test("PRICE_ONLY_DELTA preserves fundamentals and forbids fundamental changes", 
   assert.equal(invalid.ok, false);
 });
 
+test("PRICE_ONLY_DELTA preserves NOT_STARTED valuation rows", () => {
+  const blocks = [
+    block("BUSINESS_MODEL"),
+    notStarted("VALUATION"),
+    notStarted("CROSS_BLOCK_RECONCILIATION", ["VALUATION"]),
+  ];
+  const plan = planRefresh("PRICE_ONLY_DELTA", [], blocks);
+  assert.equal(plan.ok, true);
+  if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, []);
+    assert.deepEqual(plan.staleBlocks, []);
+    assert.deepEqual(plan.reopenBlocks, []);
+    assert.deepEqual(plan.preservedBlocks, [
+      "BUSINESS_MODEL",
+      "VALUATION",
+      "CROSS_BLOCK_RECONCILIATION",
+    ]);
+  }
+});
+
 test("ROUTINE_FUNDAMENTAL_DELTA reopens affected dependency cone only", () => {
   const blocks = [...chain(), block("MANAGEMENT_GOVERNANCE")];
   const plan = planRefresh("ROUTINE_FUNDAMENTAL_DELTA", ["MOAT"], blocks);
@@ -495,6 +545,27 @@ test("ROUTINE_FUNDAMENTAL_DELTA reopens affected dependency cone only", () => {
       "MANAGEMENT_GOVERNANCE",
     ]);
     assert.equal(plan.oqsMayChange, true);
+  }
+});
+
+test("ROUTINE_FUNDAMENTAL_DELTA leaves NOT_STARTED descendants untouched", () => {
+  const blocks = [
+    block("MOAT"),
+    notStarted("RUNWAY", ["MOAT"]),
+    notStarted("VALUATION"),
+    notStarted("CROSS_BLOCK_RECONCILIATION", ["VALUATION"]),
+  ];
+  const plan = planRefresh("ROUTINE_FUNDAMENTAL_DELTA", ["MOAT"], blocks);
+  assert.equal(plan.ok, true);
+  if (plan.ok) {
+    assert.deepEqual(plan.directReopenBlocks, ["MOAT"]);
+    assert.deepEqual(plan.staleBlocks, []);
+    assert.deepEqual(plan.reopenBlocks, ["MOAT"]);
+    assert.deepEqual(plan.preservedBlocks, [
+      "RUNWAY",
+      "VALUATION",
+      "CROSS_BLOCK_RECONCILIATION",
+    ]);
   }
 });
 
