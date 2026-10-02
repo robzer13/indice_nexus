@@ -121,3 +121,28 @@ test("Supabase diagnostic distinguishes auth failure and never exposes the servi
   assert.equal(fetchCount, 2);
   assert.equal(JSON.stringify(result).includes(SECRET), false);
 });
+
+
+test("Supabase diagnostic classifies authenticated 403 as PostgREST failure", async () => {
+  let fetchCount = 0;
+  const result = await runSupabaseRuntimeDiagnostic(
+    {
+      NEXT_PUBLIC_SUPABASE_URL: EXPECTED_URL,
+      SUPABASE_SERVICE_ROLE_KEY: SECRET,
+    },
+    {
+      lookupHost: async () => ({ family: 4 }),
+      probeTls: async () => ({ protocol: "TLSv1.3" }),
+      fetchHttp: async () => {
+        fetchCount += 1;
+        return new Response(null, { status: fetchCount === 1 ? 401 : 403 });
+      },
+    },
+  );
+
+  assert.equal(result.classification, "POSTGREST_FAILURE");
+  assert.equal(result.http_transport.status, "OK");
+  assert.equal(result.auth_rest.status, "FAILED");
+  assert.equal(result.auth_rest.http_status, 403);
+  assert.equal(JSON.stringify(result).includes(SECRET), false);
+});

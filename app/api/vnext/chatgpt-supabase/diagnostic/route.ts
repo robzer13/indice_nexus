@@ -50,6 +50,11 @@ type DiagnosticDependencies = {
   fetchHttp: typeof fetch;
 };
 
+type DiagnosticEnvironment = {
+  NEXT_PUBLIC_SUPABASE_URL?: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
+};
+
 function json(body: unknown, status = 200): Response {
   return Response.json(body, {
     status,
@@ -147,7 +152,7 @@ const defaultDependencies: DiagnosticDependencies = {
 };
 
 export async function runSupabaseRuntimeDiagnostic(
-  env: NodeJS.ProcessEnv,
+  env: DiagnosticEnvironment,
   dependencies: DiagnosticDependencies = defaultDependencies,
 ): Promise<SupabaseRuntimeDiagnostic> {
   const rawUrl = env.NEXT_PUBLIC_SUPABASE_URL;
@@ -249,7 +254,7 @@ export async function runSupabaseRuntimeDiagnostic(
       result.classification = "OK";
       return result;
     }
-    if (authResponse.status === 401 || authResponse.status === 403) {
+    if (authResponse.status === 401) {
       result.classification = "AUTH_FAILURE";
       return result;
     }
