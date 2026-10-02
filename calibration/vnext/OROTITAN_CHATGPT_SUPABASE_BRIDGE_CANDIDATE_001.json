@@ -1,0 +1,55 @@
+{
+  "format": "OROTITAN_CHATGPT_SUPABASE_BRIDGE_CANDIDATE_V0.1",
+  "decision_id": "CHATGPT-SUPABASE-BRIDGE-CANDIDATE-001",
+  "date": "2026-10-02",
+  "status": "IMPLEMENTED_AWAITING_CI_AND_REVIEW",
+  "base_sha": "0d2dafc6e9cd4457b0431f82ab21c483f291d6b6",
+  "authorities": {
+    "controlled_operation_contracts": "OROTITAN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS_FREEZE_V1.0",
+    "process_engine": "OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0",
+    "analytical_data_contracts": "OROTITAN_ANALYTICAL_DATA_CONTRACTS_V2_FREEZE_V1.0"
+  },
+  "implementation": {
+    "core": "lib/orotitan-equity/post-c7/chatgpt-supabase-bridge.ts",
+    "server_adapter": "lib/orotitan-equity/post-c7/chatgpt-supabase-bridge-server.ts",
+    "tests": "tests/vnext-chatgpt-supabase-bridge.test.ts"
+  },
+  "implemented_operations": [
+    "LOAD",
+    "CHECKPOINT_STAGE",
+    "FINALIZE_STAGE",
+    "REOPEN_STAGE",
+    "NOOP",
+    "MUTATION_RECEIPT",
+    "OPERATION_FAILURE"
+  ],
+  "safety_invariants": [
+    "NO_RUN_CREATION",
+    "NO_PUBLICATION",
+    "NO_ARBITRARY_SQL",
+    "NO_ARBITRARY_RPC",
+    "SERVICE_ROLE_STAYS_SERVER_SIDE",
+    "CAS_REQUIRED",
+    "IDEMPOTENCY_REQUIRED",
+    "PREWRITE_PERSISTENCE_VERIFICATION",
+    "POSTWRITE_DURABLE_RELOAD",
+    "ARTIFACT_RESOLUTION_AFTER_WRITE",
+    "STALE_STATE_REQUIRES_RELOAD"
+  ],
+  "live_preflight": {
+    "project_ref": "cugpgtzygqqlxetyeven",
+    "project_name": "orotitan-screener",
+    "region": "eu-west-3",
+    "status": "ACTIVE_HEALTHY",
+    "registry_tables_present": true,
+    "guarded_rpc_signatures_verified": true
+  },
+  "deliberately_not_implemented": [
+    "RUN_CREATION",
+    "PUBLICATION",
+    "ARBITRARY_ADMIN_MUTATION",
+    "DATABASE_MIGRATION",
+    "AUTONOMOUS_RETRY_LOOP"
+  ],
+  "next_action": "RUN_CHATGPT_SUPABASE_BRIDGE_CI_AND_REVIEW"
+}
