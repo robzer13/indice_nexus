@@ -58,90 +58,32 @@ jobs:
             core.setSecret(token);
             core.setOutput('token', token);
 
-      - name: Invoke protected LOAD-only entrypoint
+      - name: Print selected OIDC claims
         env:
           OIDC_TOKEN: ${{ steps.oidc.outputs.token }}
-          PREVIEW_ORIGIN: ${{ steps.target.outputs.origin }}
         run: |
           set -euo pipefail
 
-          LOAD_URL="$PREVIEW_ORIGIN/api/vnext/chatgpt-supabase/load?issuer_query=Veolia&run_id=a4cf9002-b52d-4440-8902-adc70bd777dd&tiers=L0,L1"
-
-          status="$(curl -sS \
-            --request GET \
-            --proto '=https' \
-            --tlsv1.2 \
-            --max-time 60 \
-            -o orotitan-load-result.json \
-            -w '%{http_code}' \
-            -H "accept: application/json" \
-            -H "x-vercel-trusted-oidc-idp-token: $OIDC_TOKEN" \
-            "$LOAD_URL")"
-
-          echo "HTTP_STATUS=$status"
-
-          if [ "$status" != "200" ]; then
-            echo "OROTITAN_LOAD_HTTP_FAILURE"
-            exit 1
-          fi
-
           node - <<'NODE'
-          const fs = require('fs');
-          const payload = JSON.parse(
-            fs.readFileSync('orotitan-load-result.json', 'utf8'),
-          );
+          const token = process.env.OIDC_TOKEN ?? '';
+          const parts = token.split('.');
 
-          if (
-            payload.contract_version !== '0.1.0' ||
-            payload.operation !== 'LOAD_RESULT' ||
-            payload.mutation_allowed !== false ||
-            payload.run_id !== 'a4cf9002-b52d-4440-8902-adc70bd777dd' ||
-            !Array.isArray(payload.artifact_index) ||
-            typeof payload.context_plan !== 'object' ||
-            payload.context_plan === null
-          ) {
-            throw new Error('OROTITAN_LOAD_RESULT_INVALID');
+          if (parts.length !== 3) {
+            throw new Error('OROTITAN_OIDC_TOKEN_INVALID');
           }
 
+          const payload = JSON.parse(
+            Buffer.from(parts[1], 'base64url').toString('utf8'),
+          );
+
           const safe = {
-            contract_version: payload.contract_version,
-            operation: payload.operation,
-            mutation_allowed: payload.mutation_allowed,
-            issuer_id: payload.issuer_id,
-            security_id: payload.security_id,
-            dossier_id: payload.dossier_id,
-            run_id: payload.run_id,
-            run_status: payload.run_status,
-            run_state_version: payload.run_state_version,
-            current_stage: payload.current_stage,
-            stage: payload.stage
-              ? {
-                  stage_code: payload.stage.stage_code,
-                  stage_revision: payload.stage.stage_revision,
-                  lifecycle_status: payload.stage.lifecycle_status,
-                  stage_state_version: payload.stage.stage_state_version,
-                  handoff_gate_state: payload.stage.handoff_gate_state,
-                  active_manifest: payload.stage.active_manifest,
-                }
-              : null,
-            blocker_count: Array.isArray(payload.blockers)
-              ? payload.blockers.length
-              : null,
-            artifact_count: payload.artifact_index.length,
-            context_counts: {
-              l0: Array.isArray(payload.context_plan.l0)
-                ? payload.context_plan.l0.length
-                : null,
-              l1: Array.isArray(payload.context_plan.l1)
-                ? payload.context_plan.l1.length
-                : null,
-              l2: Array.isArray(payload.context_plan.l2)
-                ? payload.context_plan.l2.length
-                : null,
-              l3: Array.isArray(payload.context_plan.l3)
-                ? payload.context_plan.l3.length
-                : null,
-            },
+            iss: payload.iss ?? null,
+            aud: payload.aud ?? null,
+            repository: payload.repository ?? null,
+            ref: payload.ref ?? null,
+            workflow: payload.workflow ?? null,
+            workflow_ref: payload.workflow_ref ?? null,
+            event_name: payload.event_name ?? null,
           };
 
           console.log(JSON.stringify(safe, null, 2));
