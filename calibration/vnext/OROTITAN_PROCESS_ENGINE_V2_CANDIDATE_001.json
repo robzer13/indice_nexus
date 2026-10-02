@@ -2,7 +2,7 @@
   "format": "OROTITAN_PROCESS_ENGINE_V2_CANDIDATE_V0.1",
   "decision_id": "PROCESS-ENGINE-V2-CANDIDATE-001",
   "date": "2026-10-02",
-  "status": "DESIGN_CANDIDATE_AWAITING_CI_AND_REVIEW",
+  "status": "FROZEN_V1_0",
   "methodology_change": false,
   "scoring_change": false,
   "valuation_change": false,
@@ -74,5 +74,14 @@
     "default_target": "VERSIONED_REGISTERED_EXECUTION_ARTIFACT",
     "new_database_table_required": false
   },
-  "next_action": "RUN_PROCESS_ENGINE_V2_CI_AND_REVIEW"
+  "next_action": "DESIGN_CHATGPT_SUPABASE_CONTROLLED_OPERATION_CONTRACTS",
+  "freeze_date": "2026-10-02",
+  "freeze_name": "OROTITAN_PROCESS_ENGINE_V2_FREEZE_V1.0",
+  "review_pr": 338,
+  "review_merge_sha": "180d817bcd522c9d1d528ce5e2521e48aadc9cce",
+  "implementation_head_sha": "c5af5f982fec2e31273e8f98c14c9d5c1c945e07",
+  "ci": {
+    "vnext": "PASS",
+    "screener": "PASS"
+  }
 }
