@@ -39,7 +39,7 @@ function manifestRegistration(
 ): Record<string, unknown> {
   const bytes = Buffer.from(JSON.stringify(manifest), "utf8");
   const commit = "c".repeat(40);
-  const repository = "robzer13/private-orotitan-artifacts";
+  const repository = "robzer13/real-orotitan";
   const path = "runs/test/manifest.json";
   const blob = createHash("sha1")
     .update(Buffer.concat([Buffer.from(`blob ${bytes.byteLength}\0`, "utf8"), bytes]))
@@ -62,14 +62,21 @@ function manifestRegistration(
     github_path: path,
     github_commit_sha: commit,
     github_blob_sha: blob,
+    canonical_json_content: manifest,
     persistence_receipt: {
-      receipt_schema_version: "1.0",
-      verification_method: "PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1",
+      receipt_schema_version: "1.1",
+      verification_method: "PRIVATE_GITHUB_ATTESTED_REREAD_EXACT_BYTES_V1",
       storage_backend: "PRIVATE_GITHUB",
+      run_id: RUN_ID,
+      stage_code: "DEEP_DIVE",
+      artifact_id: MANIFEST_ID,
+      version: 1,
+      artifact_type: "DEEP_DIVE_STAGE_MANIFEST",
       github_repository: repository,
       github_path: path,
       github_commit_sha: commit,
       github_blob_sha: blob,
+      attestation_event_id: "70000000-0000-4000-8000-000000000007",
       commit_path_resolved: true,
       verified_content_base64: bytes.toString("base64"),
       verified_at: "2026-10-02T08:30:00Z",
@@ -140,6 +147,7 @@ class FakePort implements ControlledBridgePort {
   reopenCalls = 0;
   resolveCalls = 0;
   checkpointError: Error | null = null;
+  reopenReplay = false;
 
   async listIssuers() { return this.state.issuers; }
   async listSecurities() { return this.state.securities; }
@@ -203,6 +211,13 @@ class FakePort implements ControlledBridgePort {
   async reopenStage(args: Record<string, unknown>): Promise<RpcResult> {
     this.reopenCalls += 1;
     const stage = this.state.stages[0];
+    if (this.reopenReplay) {
+      return {
+        stage_revision: stage.stage_revision,
+        stage_state_version: stage.state_version,
+        idempotent_replay: true,
+      };
+    }
     stage.lifecycle_status = args.p_target_lifecycle as StageRow["lifecycle_status"];
     stage.active_manifest_artifact_id = null;
     stage.active_manifest_version = null;
@@ -409,10 +424,32 @@ test("REOPEN uses loaded CAS state and verifies active manifest is cleared", asy
     targetLifecycle: "IN_PROGRESS",
     reason: { code: "NEW_MATERIAL_EVIDENCE", summary: "Material evidence requires revalidation" },
   });
+  assert.equal(request.reason.expected_stage_revision, 2);
   const result = await executeControlledOperation(port, request);
   assert.equal(result.operation, "MUTATION_RECEIPT");
   assert.equal(port.reopenCalls, 1);
   assert.equal(port.state.stages[0].active_manifest_artifact_id, null);
+});
+
+test("obsolete pre-attestation receipt is rejected before Registry mutation", async () => {
+  const port = new FakePort();
+  const load = await loaded(port);
+  const bundle = checkpointBundle();
+  const receipt = bundle.manifest_registration.persistence_receipt as Record<string, unknown>;
+  receipt.receipt_schema_version = "1.0";
+  receipt.verification_method = "PRIVATE_GITHUB_REREAD_EXACT_BYTES_V1";
+  const request = buildSaveOperation({
+    load,
+    disposition: { action: "CHECKPOINT", reason: "working state", publishAuthorized: false },
+    bundle,
+    actorType: "DEEP_DIVE_WORKER",
+  });
+  const result = await executeControlledOperation(port, request);
+  assert.equal(result.operation, "OPERATION_FAILURE");
+  if (result.operation === "OPERATION_FAILURE") {
+    assert.equal(result.error_class, "PERSISTENCE_INTEGRITY");
+  }
+  assert.equal(port.checkpointCalls, 0);
 });
 
 test("manifest persistence receipt is checked locally before Registry mutation", async () => {
@@ -456,4 +493,51 @@ test("generated idempotency identity is stable for the same loaded state and bun
   assert.equal(left.request_fingerprint_sha256, right.request_fingerprint_sha256);
   assert.equal(left.idempotency_key, right.idempotency_key);
   assert.equal(stableJson(left.bundle), stableJson(right.bundle));
+});
+
+test("dispatch rejects a tampered mutation identity before guarded RPC invocation", async () => {
+  const port = new FakePort();
+  const load = await loaded(port);
+  const request = buildSaveOperation({
+    load,
+    disposition: { action: "CHECKPOINT", reason: "working state", publishAuthorized: false },
+    bundle: checkpointBundle(),
+    actorType: "DEEP_DIVE_WORKER",
+  });
+  if (request.operation !== "CHECKPOINT_STAGE") throw new Error("expected checkpoint request");
+  request.bundle.manifest = { ...request.bundle.manifest, stage_revision: 99 };
+  const result = await executeControlledOperation(port, request);
+  assert.equal(result.operation, "OPERATION_FAILURE");
+  if (result.operation === "OPERATION_FAILURE") {
+    assert.equal(result.error_class, "CONTRACT_VIOLATION");
+  }
+  assert.equal(port.checkpointCalls, 0);
+});
+
+test("replayed REOPEN cannot validate against a later durable stage revision", async () => {
+  const port = new FakePort();
+  port.state.stages[0].lifecycle_status = "COMPLETE";
+  const load = await loaded(port);
+  const request = buildReopenOperation({
+    load,
+    targetLifecycle: "IN_PROGRESS",
+    reason: { code: "REVALIDATE", summary: "Reopen for revalidation" },
+  });
+  assert.equal(request.reason.expected_stage_revision, 2);
+
+  port.reopenReplay = true;
+  port.state.stages[0].stage_revision = 3;
+  port.state.stages[0].state_version = 12;
+  port.state.stages[0].lifecycle_status = "IN_PROGRESS";
+  port.state.stages[0].active_manifest_artifact_id = null;
+  port.state.stages[0].active_manifest_version = null;
+  port.state.stages[0].active_manifest_kind = null;
+  port.state.runs[0].state_version = 15;
+
+  const result = await executeControlledOperation(port, request);
+  assert.equal(result.operation, "OPERATION_FAILURE");
+  if (result.operation === "OPERATION_FAILURE") {
+    assert.equal(result.error_class, "STALE_STATE");
+  }
+  assert.equal(port.reopenCalls, 1);
 });
