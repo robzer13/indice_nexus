@@ -12,7 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="fr">
       <body>
         <div className="min-h-screen">
-          <header className="sticky top-0 z-40 border-b border-slate-800/90 bg-slate-950/92 backdrop-blur">
+          <header className="sticky top-0 z-40 border-b border-slate-800/90 bg-slate-950/90 backdrop-blur">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
               <Link href="/" className="text-sm font-bold uppercase tracking-[0.22em] text-cyan-300">
                 OroTitan
