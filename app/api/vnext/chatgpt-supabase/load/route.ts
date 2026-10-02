@@ -84,6 +84,16 @@ function failureStatus(result: OperationFailure): number {
   return 409;
 }
 
+function serverSetupFailure(): OperationFailure {
+  return {
+    contract_version: "0.1.0",
+    operation: "OPERATION_FAILURE",
+    error_class: "INFRASTRUCTURE",
+    message: "LOAD bridge server initialization failed",
+    retry_without_reload_allowed: false,
+  };
+}
+
 export async function GET(request: Request): Promise<Response> {
   if (process.env.VERCEL_ENV !== "preview") {
     return json({ error: "OROTITAN_BRIDGE_LOAD_PREVIEW_ONLY" }, 403);
@@ -110,10 +120,16 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  const { executeServerControlledOperation } = await import(
-    "@/lib/orotitan-equity/post-c7/chatgpt-supabase-bridge-server"
-  );
-  const result = await executeServerControlledOperation(loadRequest);
+  let result;
+  try {
+    const { executeServerControlledOperation } = await import(
+      "@/lib/orotitan-equity/post-c7/chatgpt-supabase-bridge-server"
+    );
+    result = await executeServerControlledOperation(loadRequest);
+  } catch {
+    const failure = serverSetupFailure();
+    return json(failure, failureStatus(failure));
+  }
 
   if (result.operation === "LOAD_RESULT") {
     return json(result);
