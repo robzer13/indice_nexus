@@ -7,9 +7,10 @@ import {
   RunSelector,
   RunTechnicalDetails,
   StageProgress,
+  UnavailableRunState,
   countStageArtifacts,
 } from '@/components/orotitan/ui';
-import { getMockDossier } from '@/lib/orotitan-ui/mock';
+import { getMockDossier, resolveMockRunSelection } from '@/lib/orotitan-ui/mock';
 
 export default async function OroTitanOverviewPage({
   params,
@@ -24,21 +25,14 @@ export default async function OroTitanOverviewPage({
   if (!dossier) notFound();
 
   const selectedRun = typeof query.run === 'string' ? query.run : null;
-  if (!selectedRun) {
+  const selection = resolveMockRunSelection(dossier, selectedRun);
+
+  if (selection.kind === 'select') {
     return <RunSelector issuerSlug={dossier.identity.slug} runs={dossier.runSummaries} />;
   }
-
-  if (selectedRun !== dossier.primaryRunId) {
-    const summary = dossier.runSummaries.find((run) => run.runId === selectedRun);
-    if (!summary) notFound();
-    return (
-      <section className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
-        <h1 className="text-xl font-semibold text-white">Mock détaillé non chargé</h1>
-        <p className="mt-2 text-sm leading-6 text-slate-400">
-          Ce run existe dans le sélecteur, mais la V1 ne fige un LOAD_RESULT détaillé que pour le run Deep Dive de référence. Aucun contenu n'est inventé pour compléter ce run.
-        </p>
-      </section>
-    );
+  if (selection.kind === 'unknown') notFound();
+  if (selection.kind === 'unavailable') {
+    return <UnavailableRunState summary={selection.summary} />;
   }
 
   const load = dossier.loadResult;

@@ -12,7 +12,7 @@ export default function OroTitanEntryPage() {
         <div className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-400">OroTitan Equity Research</div>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">Quelle société voulez-vous analyser ?</h1>
         <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-slate-400">
-          Interface V1 de consultation. Le mock respecte la forme du contrat LOAD_RESULT gelé et n'effectue aucune lecture directe Supabase.
+          Interface V1 de consultation. Le mock respecte la forme du contrat LOAD_RESULT gelé et n&apos;effectue aucune lecture directe Supabase.
         </p>
       </section>
       <div className="mt-10"><CompanySearch /></div>

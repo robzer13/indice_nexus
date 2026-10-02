@@ -1,4 +1,4 @@
-import type { ArtifactMeta, ArtifactRef, MockDossier } from './types';
+import type { ArtifactMeta, ArtifactRef, MockDossier, RunSummary } from './types';
 
 const deepManifest: ArtifactRef = {
   artifact_id: 'c617ed89-b842-44b5-89c8-07d8edb5cf0c',
@@ -193,4 +193,23 @@ export const VEOLIA_MOCK_DOSSIER: MockDossier = {
 
 export function getMockDossier(slug: string): MockDossier | null {
   return slug.toLowerCase() === 'veolia' ? VEOLIA_MOCK_DOSSIER : null;
+}
+
+export type MockRunSelection =
+  | { kind: 'select' }
+  | { kind: 'available'; summary: RunSummary }
+  | { kind: 'unavailable'; summary: RunSummary }
+  | { kind: 'unknown' };
+
+export function resolveMockRunSelection(
+  dossier: MockDossier,
+  requestedRun: string | null,
+): MockRunSelection {
+  if (!requestedRun) return { kind: 'select' };
+  const summary = dossier.runSummaries.find((run) => run.runId === requestedRun);
+  if (!summary) return { kind: 'unknown' };
+  if (requestedRun === dossier.primaryRunId && summary.detailedMockAvailable) {
+    return { kind: 'available', summary };
+  }
+  return { kind: 'unavailable', summary };
 }

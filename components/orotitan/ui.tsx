@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { ReactNode } from 'react';
 import {
   blockerTitle,
+  buildRunHref,
   deriveStageStates,
   formatCutoff,
   lifecycleLabel,
@@ -245,7 +246,7 @@ export function RunSelector({
       <div className="mb-5">
         <div className="text-xs font-semibold uppercase tracking-[0.18em] text-cyan-400">Sélection explicite</div>
         <h1 className="mt-2 text-2xl font-semibold text-white">Plusieurs analyses sont disponibles</h1>
-        <p className="mt-2 text-sm text-slate-500">Aucun run n'est choisi automatiquement.</p>
+        <p className="mt-2 text-sm text-slate-500">Aucun run n&apos;est choisi automatiquement.</p>
       </div>
       <div className="grid gap-4 lg:grid-cols-3">
         {runs.map((run) => (
@@ -258,7 +259,7 @@ export function RunSelector({
             <div className="mt-1 text-sm text-slate-500">Données au {formatCutoff(run.dataCutoff)}</div>
             <div className="mt-3 font-mono text-xs text-slate-600">{shortId(run.runId, 12)}</div>
             {run.detailedMockAvailable ? (
-              <Link href={'/orotitan/' + issuerSlug + '?run=' + encodeURIComponent(run.runId)} className="mt-5 inline-flex rounded-lg border border-cyan-700 bg-cyan-950/40 px-3 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-950/70">
+              <Link href={buildRunHref('/orotitan/' + issuerSlug, run.runId)} className="mt-5 inline-flex rounded-lg border border-cyan-700 bg-cyan-950/40 px-3 py-2 text-sm font-semibold text-cyan-100 hover:bg-cyan-950/70">
                 Ouvrir ce run
               </Link>
             ) : (
@@ -267,6 +268,23 @@ export function RunSelector({
           </article>
         ))}
       </div>
+    </section>
+  );
+}
+
+export function UnavailableRunState({ summary }: { summary: RunSummary }) {
+  return (
+    <section className="rounded-2xl border border-slate-800 bg-slate-900/50 p-6">
+      <h1 className="text-xl font-semibold text-white">Mock détaillé non chargé</h1>
+      <p className="mt-2 text-sm leading-6 text-slate-400">
+        Ce run existe dans le sélecteur, mais la V1 ne possède pas de LOAD_RESULT détaillé pour ce run. Aucun contenu provenant d&apos;une autre analyse n&apos;est substitué.
+      </p>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <RunStatusBadge status={summary.runStatus} />
+        <Pill>{stageLabel(summary.currentStage)}</Pill>
+        <Pill>v{summary.stateVersion}</Pill>
+      </div>
+      <div className="mt-3 font-mono text-xs text-slate-600">{summary.runId}</div>
     </section>
   );
 }
@@ -290,8 +308,8 @@ export function MutationActions() {
 export function LoadErrorState({ onRetry }: { onRetry?: () => void }) {
   return (
     <section className="rounded-2xl border border-rose-900/60 bg-rose-950/20 p-6">
-      <h2 className="text-lg font-semibold text-white">Impossible de charger l'analyse.</h2>
-      <p className="mt-2 text-sm text-slate-400">Les données OroTitan n'ont pas été modifiées.</p>
+      <h2 className="text-lg font-semibold text-white">Impossible de charger l&apos;analyse.</h2>
+      <p className="mt-2 text-sm text-slate-400">Les données OroTitan n&apos;ont pas été modifiées.</p>
       {onRetry ? <button type="button" onClick={onRetry} className="mt-4 rounded-lg border border-slate-700 px-3 py-2 text-sm text-slate-300">Réessayer</button> : null}
     </section>
   );

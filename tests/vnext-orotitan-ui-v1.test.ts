@@ -3,12 +3,16 @@ import test from 'node:test';
 
 import {
   blockerTitle,
+  buildRunHref,
   deriveStageStates,
   formatCutoff,
   runStatusLabel,
   shortId,
 } from '../lib/orotitan-ui/presentation';
-import { VEOLIA_MOCK_DOSSIER } from '../lib/orotitan-ui/mock';
+import {
+  resolveMockRunSelection,
+  VEOLIA_MOCK_DOSSIER,
+} from '../lib/orotitan-ui/mock';
 
 test('OroTitan UI V1 maps the frozen stage sequence deterministically', () => {
   assert.deepEqual(deriveStageStates('DEEP_DIVE', 'BLOCKED'), [
@@ -42,4 +46,27 @@ test('Veolia mock keeps the frozen LOAD_RESULT read-only shape and context count
   assert.equal(load.context_plan.l2.length, 0);
   assert.equal(load.context_plan.l3.length, 0);
   assert.equal(load.process_state_artifact, null);
+});
+
+test('mock run resolution never substitutes the primary run for another requested run', () => {
+  const dossier = VEOLIA_MOCK_DOSSIER;
+  assert.equal(resolveMockRunSelection(dossier, null).kind, 'select');
+  assert.equal(resolveMockRunSelection(dossier, dossier.primaryRunId).kind, 'available');
+  assert.equal(
+    resolveMockRunSelection(dossier, 'd56a0bc9-4e80-48b3-b326-74d1fea15e63').kind,
+    'unavailable',
+  );
+  assert.equal(resolveMockRunSelection(dossier, '00000000-0000-0000-0000-000000000000').kind, 'unknown');
+});
+
+test('run-aware navigation preserves the selected run across dossier routes and filters', () => {
+  const runId = VEOLIA_MOCK_DOSSIER.primaryRunId;
+  assert.equal(
+    buildRunHref('/orotitan/veolia/documents', runId),
+    '/orotitan/veolia/documents?run=' + runId,
+  );
+  assert.equal(
+    buildRunHref('/orotitan/veolia/documents', runId, { stage: 'DEEP_DIVE' }),
+    '/orotitan/veolia/documents?run=' + runId + '&stage=DEEP_DIVE',
+  );
 });

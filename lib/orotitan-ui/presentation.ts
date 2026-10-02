@@ -71,3 +71,16 @@ export function deriveStageStates(
       index < currentIndex ? 'COMPLETE' : index === currentIndex ? currentLifecycle : 'NOT_STARTED',
   }));
 }
+
+export function buildRunHref(
+  path: string,
+  runId: string | null,
+  extra: Record<string, string | null | undefined> = {},
+): string {
+  const params: string[] = [];
+  if (runId) params.push('run=' + encodeURIComponent(runId));
+  for (const [key, value] of Object.entries(extra)) {
+    if (value) params.push(encodeURIComponent(key) + '=' + encodeURIComponent(value));
+  }
+  return params.length > 0 ? path + '?' + params.join('&') : path;
+}
