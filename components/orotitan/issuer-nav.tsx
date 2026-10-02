@@ -2,8 +2,16 @@
 
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
-import { buildRunHref, runStatusLabel, stageLabel } from '@/lib/orotitan-ui/presentation';
-import type { RunSummary } from '@/lib/orotitan-ui/types';
+import { buildRunHref, deriveStageStates, lifecycleLabel, runStatusLabel, stageLabel } from '@/lib/orotitan-ui/presentation';
+import type { RunSummary, StageLifecycle } from '@/lib/orotitan-ui/types';
+
+const dotClasses: Record<StageLifecycle, string> = {
+  NOT_STARTED: 'border-slate-600 bg-[#07111d]',
+  IN_PROGRESS: 'border-cyan-300 bg-cyan-400',
+  PAUSED: 'border-amber-400 bg-amber-400',
+  BLOCKED: 'border-rose-400 bg-rose-400',
+  COMPLETE: 'border-emerald-300 bg-emerald-400',
+};
 
 export function IssuerNav({
   issuerSlug,
@@ -24,9 +32,13 @@ export function IssuerNav({
     { href: buildRunHref(base + '/context', run), label: 'Contexte', path: base + '/context' },
   ];
 
+  const stageStates = selectedRun
+    ? deriveStageStates(selectedRun.currentStage, selectedRun.runStatus === 'BLOCKED' ? 'BLOCKED' : 'IN_PROGRESS')
+    : null;
+
   return (
     <>
-      <nav className="mt-6 space-y-1 text-sm">
+      <nav className="mt-7 grid grid-cols-3 gap-2 text-sm lg:block lg:space-y-1">
         {links.map((link) => {
           const active = pathname === link.path;
           return (
@@ -34,10 +46,10 @@ export function IssuerNav({
               key={link.path}
               href={link.href}
               className={
-                'block border-l-2 px-3 py-2 transition ' +
+                'relative block rounded-lg border px-3 py-2.5 transition lg:border-transparent ' +
                 (active
-                  ? 'border-cyan-400 text-slate-100'
-                  : 'border-transparent text-slate-500 hover:border-slate-700 hover:text-slate-300')
+                  ? 'border-cyan-400/25 bg-cyan-400/10 text-cyan-100 lg:border-l-cyan-400 lg:bg-[rgba(43,200,255,.07)]'
+                  : 'border-[rgba(123,173,214,.12)] text-slate-500 hover:bg-slate-900/60 hover:text-slate-300 lg:border-l-transparent')
               }
             >
               {link.label}
@@ -46,20 +58,30 @@ export function IssuerNav({
         })}
       </nav>
 
-      <div className="mt-6 border-t border-slate-800 pt-4">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-700">Analyse</div>
-        {selectedRun ? (
-          <>
-            <div className="mt-2 text-xs text-slate-400">
-              {stageLabel(selectedRun.currentStage)} ·{' '}
-              <span className={selectedRun.runStatus === 'BLOCKED' ? 'text-rose-300' : selectedRun.runStatus === 'ACTIVE' ? 'text-amber-300' : 'text-slate-400'}>
-                {runStatusLabel(selectedRun.runStatus)}
-              </span>
+      <div className="mt-7 border-t border-[rgba(123,173,214,.14)] pt-5">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-700">Analyse</div>
+        {selectedRun && stageStates ? (
+          <div className="mt-4 grid grid-cols-3 gap-3 lg:block lg:space-y-0">
+            {stageStates.map(({ stage, lifecycle }, index) => (
+              <div key={stage} className="relative flex gap-3 pb-4 lg:pb-5">
+                <div className="relative flex w-4 shrink-0 justify-center">
+                  <span className={'mt-1.5 h-2.5 w-2.5 rounded-full border ' + dotClasses[lifecycle]} />
+                  {index < stageStates.length - 1 ? <span className="absolute bottom-0 top-4 hidden w-px bg-slate-800 lg:block" /> : null}
+                </div>
+                <div>
+                  <div className="text-xs font-medium text-slate-300">{stageLabel(stage)}</div>
+                  <div className={'mt-1 text-[11px] ' + (lifecycle === 'BLOCKED' ? 'text-rose-300' : lifecycle === 'COMPLETE' ? 'text-emerald-400' : 'text-slate-600')}>
+                    {lifecycleLabel(lifecycle)}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="hidden text-[10px] text-slate-700 lg:block">
+              {runStatusLabel(selectedRun.runStatus)} · lecture seule
             </div>
-            <div className="mt-2 text-[11px] text-slate-700">Lecture seule</div>
-          </>
+          </div>
         ) : (
-          <div className="mt-2 text-xs text-slate-700">Aucune analyse sélectionnée</div>
+          <div className="mt-3 text-xs text-slate-700">Aucune analyse sélectionnée</div>
         )}
       </div>
     </>

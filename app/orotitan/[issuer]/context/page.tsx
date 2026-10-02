@@ -26,8 +26,8 @@ export default async function OroTitanContextPage({
 
   return (
     <div>
-      <header className="border-b border-slate-800 pb-5">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-600">Contexte de l&apos;analyse</div>
+      <header className="mb-5 rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.54)] px-5 py-5">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-400">Contexte de l&apos;analyse</div>
         <h1 className="mt-2 text-2xl font-semibold text-white">Ce qui est chargé pour travailler</h1>
         <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
           Les niveaux L0 à L3 organisent le contexte selon sa fonction. Un niveau vide reste un état normal.
