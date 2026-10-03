@@ -226,6 +226,8 @@ test('resume prompt explicitly rejects chat memory as authority', () => {
 
   assert.match(prompt, /CHAT_MEMORY_AUTHORITY = NO/);
   assert.match(prompt, new RegExp('RUN_ID = ' + RUN_ID));
+  assert.match(prompt, /CANONICAL_MODE = ANALYZE/);
+  assert.match(prompt, /DATA_CUTOFF = 2026-09-22/);
   assert.match(
     prompt,
     new RegExp('STATE_FINGERPRINT_SHA256 = ' + current.state_fingerprint_sha256),
