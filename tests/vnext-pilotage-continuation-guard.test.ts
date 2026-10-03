@@ -7,6 +7,7 @@ import {
   buildLosslessResumeEnvelope,
   buildLosslessResumePrompt,
   evaluateContinuationGuard,
+  registerContinuationAttempt,
 } from '../lib/orotitan-equity/post-c7/pilotage-continuation-guard';
 
 const RUN_ID = '40000000-0000-4000-8000-000000000001';
@@ -119,7 +120,7 @@ test('same persisted state and same operation is NO_PROGRESS', () => {
     current,
     requestedOperation: 'CONTINUE_STAGE',
     priorAttempt: {
-      source: 'PERSISTED_PROCESS_STATE',
+      source: 'PERSISTED_CONTINUATION_LEDGER',
       state_fingerprint_sha256: current.state_fingerprint_sha256,
       requested_operation: 'CONTINUE_STAGE',
     },
@@ -143,7 +144,7 @@ test('changed authoritative state permits continuation after reload', () => {
     current,
     requestedOperation: 'CONTINUE_STAGE',
     priorAttempt: {
-      source: 'PERSISTED_PROCESS_STATE',
+      source: 'PERSISTED_CONTINUATION_LEDGER',
       state_fingerprint_sha256: prior.state_fingerprint_sha256,
       requested_operation: 'CONTINUE_STAGE',
     },
@@ -227,6 +228,7 @@ test('resume prompt explicitly rejects chat memory as authority', () => {
     prompt,
     new RegExp('STATE_FINGERPRINT_SHA256 = ' + current.state_fingerprint_sha256),
   );
+  assert.match(prompt, /ARTIFACT_INDEX = /);
   assert.match(prompt, /EXACT_NEXT_ACTION = CONTINUE_STAGE/);
   assert.match(prompt, /reload durable state before any mutation/);
 });
@@ -294,4 +296,65 @@ test('resume cannot be reconstructed when LOAD has no active run', () => {
       error instanceof PilotageContinuationError &&
       error.code === 'NO_ACTIVE_RUN',
   );
+});
+
+
+test('durable continuation registration allows only the first attempt for the same state and operation', async () => {
+  const current = buildLosslessResumeEnvelope(load());
+  let count = 0;
+  const port = {
+    async registerAttempt(args: Parameters<typeof registerContinuationAttempt>[0]['registerAttempt'] extends (value: infer T) => Promise<unknown> ? T : never) {
+      count += 1;
+      return {
+        decision: count === 1 ? 'FIRST_ATTEMPT' as const : 'NO_PROGRESS_REPLAY' as const,
+        run_id: args.p_run_id,
+        stage_code: args.p_stage_code,
+        state_fingerprint_sha256: args.p_state_fingerprint_sha256,
+        requested_operation: args.p_requested_operation,
+        exact_next_action: args.p_exact_next_action,
+        attempt_count: count,
+        retry_without_reload_allowed: false as const,
+      };
+    },
+  };
+
+  const first = await registerContinuationAttempt(
+    port,
+    current,
+    'CONTINUE_STAGE',
+  );
+  const replay = await registerContinuationAttempt(
+    port,
+    current,
+    'CONTINUE_STAGE',
+  );
+
+  assert.equal(first.decision, 'PROCEED');
+  assert.equal(first.dispatch_allowed, true);
+  assert.equal(replay.decision, 'NO_PROGRESS');
+  assert.equal(replay.dispatch_allowed, false);
+});
+
+test('route mismatch is rejected before durable attempt registration', async () => {
+  const current = buildLosslessResumeEnvelope(
+    load({
+      stage: { ...load().stage!, lifecycle_status: 'BLOCKED' },
+      blockers: [{ code: 'BLOCKER' }],
+    }),
+  );
+  let called = false;
+
+  const decision = await registerContinuationAttempt(
+    {
+      async registerAttempt() {
+        called = true;
+        throw new Error('should not be called');
+      },
+    },
+    current,
+    'CONTINUE_STAGE',
+  );
+
+  assert.equal(decision.decision, 'ROUTE_MISMATCH');
+  assert.equal(called, false);
 });
