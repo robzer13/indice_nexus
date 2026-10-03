@@ -44,6 +44,7 @@ export type LosslessResumeEnvelope = {
   active_manifest: ExactArtifactRef | null;
   process_state_artifact: ExactArtifactRef | null;
   blockers: Record<string, unknown>[];
+  artifact_index: ExactArtifactRef[];
   context_plan: {
     l0: ExactArtifactRef[];
     l1: ExactArtifactRef[];
@@ -56,9 +57,32 @@ export type LosslessResumeEnvelope = {
 };
 
 export type PersistedContinuationAttempt = {
-  source: 'PERSISTED_PROCESS_STATE';
+  source: 'PERSISTED_CONTINUATION_LEDGER';
   state_fingerprint_sha256: string;
   requested_operation: PilotageRequestedOperation;
+};
+
+export type PersistedAttemptRegistration = {
+  decision: 'FIRST_ATTEMPT' | 'NO_PROGRESS_REPLAY';
+  run_id: string;
+  stage_code: string;
+  state_fingerprint_sha256: string;
+  requested_operation: PilotageRequestedOperation;
+  exact_next_action: PilotageContinuationAction;
+  attempt_count: number;
+  retry_without_reload_allowed: false;
+};
+
+export type ContinuationAttemptPort = {
+  registerAttempt(args: {
+    p_run_id: string;
+    p_stage_code: string;
+    p_expected_run_state_version: number;
+    p_expected_stage_state_version: number;
+    p_state_fingerprint_sha256: string;
+    p_requested_operation: PilotageRequestedOperation;
+    p_exact_next_action: PilotageContinuationAction;
+  }): Promise<PersistedAttemptRegistration>;
 };
 
 export type ContinuationGuardDecision =
@@ -298,6 +322,7 @@ function fingerprintPayload(
     handoff_gate_state: envelope.handoff_gate_state,
     active_manifest: envelope.active_manifest,
     process_state_artifact: envelope.process_state_artifact,
+    artifact_index: envelope.artifact_index,
     blockers: envelope.blockers,
     context_plan: envelope.context_plan,
   };
@@ -336,6 +361,7 @@ export function buildLosslessResumeEnvelope(
     'process_state_artifact',
   );
   const blockers = sortedBlockers(load.blockers);
+  const artifactIndex = sortExactRefs(load.artifact_index, 'artifact_index');
   const contextPlan = {
     l0: sortExactRefs(load.context_plan.l0, 'context_plan.l0'),
     l1: sortExactRefs(load.context_plan.l1, 'context_plan.l1'),
@@ -360,6 +386,7 @@ export function buildLosslessResumeEnvelope(
     active_manifest: activeManifest,
     process_state_artifact: processStateArtifact,
     blockers,
+    artifact_index: artifactIndex,
     context_plan: contextPlan,
   };
 
@@ -422,10 +449,10 @@ export function evaluateContinuationGuard(input: {
 
   const prior = input.priorAttempt ?? null;
   if (prior !== null) {
-    if (prior.source !== 'PERSISTED_PROCESS_STATE') {
+    if (prior.source !== 'PERSISTED_CONTINUATION_LEDGER') {
       throw new PilotageContinuationError(
         'INVALID_PRIOR_ATTEMPT',
-        'prior attempt must come from persisted process state',
+        'prior attempt must come from the persisted continuation ledger',
       );
     }
     if (!SHA256.test(prior.state_fingerprint_sha256)) {
@@ -467,6 +494,68 @@ export function evaluateContinuationGuard(input: {
   };
 }
 
+export async function registerContinuationAttempt(
+  port: ContinuationAttemptPort,
+  current: LosslessResumeEnvelope,
+  requestedOperation: PilotageRequestedOperation,
+): Promise<ContinuationGuardDecision> {
+  const route = evaluateContinuationGuard({
+    current,
+    requestedOperation,
+  });
+  if (route.decision !== 'PROCEED') return route;
+
+  const registration = await port.registerAttempt({
+    p_run_id: current.run_id,
+    p_stage_code: current.current_stage,
+    p_expected_run_state_version: current.run_state_version,
+    p_expected_stage_state_version: current.stage_state_version,
+    p_state_fingerprint_sha256: current.state_fingerprint_sha256,
+    p_requested_operation: requestedOperation,
+    p_exact_next_action: current.exact_next_action,
+  });
+
+  if (
+    registration.run_id !== current.run_id ||
+    registration.stage_code !== current.current_stage ||
+    registration.state_fingerprint_sha256 !== current.state_fingerprint_sha256 ||
+    registration.requested_operation !== requestedOperation ||
+    registration.exact_next_action !== current.exact_next_action ||
+    registration.retry_without_reload_allowed !== false ||
+    !Number.isInteger(registration.attempt_count) ||
+    registration.attempt_count < 1
+  ) {
+    throw new PilotageContinuationError(
+      'INVALID_PRIOR_ATTEMPT',
+      'persisted continuation registration does not match current durable state',
+    );
+  }
+
+  if (registration.decision === 'NO_PROGRESS_REPLAY') {
+    return {
+      decision: 'NO_PROGRESS',
+      dispatch_allowed: false,
+      retry_allowed: false,
+      current_state_fingerprint_sha256: current.state_fingerprint_sha256,
+      exact_next_action: current.exact_next_action,
+      reason:
+        'same authoritative state and same requested operation already exists in the persisted continuation ledger',
+    };
+  }
+
+  if (
+    registration.decision !== 'FIRST_ATTEMPT' ||
+    registration.attempt_count !== 1
+  ) {
+    throw new PilotageContinuationError(
+      'INVALID_PRIOR_ATTEMPT',
+      'first continuation registration returned an invalid decision or count',
+    );
+  }
+
+  return route;
+}
+
 function formatRef(ref: ExactArtifactRef | null): string {
   if (!ref) return 'NONE';
   return [
@@ -500,6 +589,7 @@ export function buildLosslessResumePrompt(
     `STATE_FINGERPRINT_SHA256 = ${envelope.state_fingerprint_sha256}`,
     `ACTIVE_MANIFEST = ${formatRef(envelope.active_manifest)}`,
     `PROCESS_STATE_ARTIFACT = ${formatRef(envelope.process_state_artifact)}`,
+    `ARTIFACT_INDEX = ${formatTier(envelope.artifact_index)}`,
     `CONTEXT_L0 = ${formatTier(envelope.context_plan.l0)}`,
     `CONTEXT_L1 = ${formatTier(envelope.context_plan.l1)}`,
     `CONTEXT_L2 = ${formatTier(envelope.context_plan.l2)}`,
