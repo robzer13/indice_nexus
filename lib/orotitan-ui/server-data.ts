@@ -22,11 +22,14 @@ import {
   selectUiSecurity,
   selectUniqueBridgeIssuerQuery,
 } from './read-model';
+import { ArtifactContentError, resolveVerifiedArtifactContent } from './artifact-reader';
+import { readPrivateGithubArtifactBytes } from './artifact-reader-server';
 import type {
   LoadResult,
   RunSummary,
   UiDossier,
   UiDossierShell,
+  VerifiedArtifactContent,
 } from './types';
 
 function operationFailureError(result: OperationFailure): Error {
@@ -206,4 +209,44 @@ export async function getUiDossierSelection(
       artifactCatalog,
     },
   };
+}
+
+
+export async function getVerifiedUiArtifactContent(input: {
+  issuerQuery: string;
+  runId: string;
+  artifactId: string;
+  version: number;
+}): Promise<VerifiedArtifactContent> {
+  const selection = await getUiDossierSelection(
+    input.issuerQuery,
+    input.runId,
+  );
+  if (selection.kind !== 'available') {
+    throw new ArtifactContentError(
+      'ARTIFACT_NOT_LOAD_AUTHORIZED',
+      'Requested run is not available for verified artifact reading',
+    );
+  }
+
+  const dossier = selection.dossier;
+  if (dossier.loadResult.run_id !== input.runId) {
+    throw new ArtifactContentError(
+      'ARTIFACT_REGISTRY_MISMATCH',
+      'Loaded run does not match requested artifact run',
+    );
+  }
+
+  const port = createServerControlledBridgePort();
+  const artifactRows = await port.listArtifacts(input.runId);
+
+  return resolveVerifiedArtifactContent({
+    port,
+    loadRefs: dossier.loadResult.artifact_index,
+    artifactRows,
+    runId: input.runId,
+    artifactId: input.artifactId,
+    version: input.version,
+    readPrivateGithub: readPrivateGithubArtifactBytes,
+  });
 }
