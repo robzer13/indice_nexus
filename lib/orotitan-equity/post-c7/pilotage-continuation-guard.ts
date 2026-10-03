@@ -89,7 +89,7 @@ export type ContinuationGuardDecision =
   | {
       decision: 'PROCEED';
       dispatch_allowed: true;
-      retry_allowed: true;
+      retry_allowed: false;
       current_state_fingerprint_sha256: string;
       exact_next_action: PilotageContinuationAction;
       reason: string;
@@ -529,7 +529,7 @@ export function evaluateContinuationGuard(input: {
   return {
     decision: 'PROCEED',
     dispatch_allowed: true,
-    retry_allowed: true,
+    retry_allowed: false,
     current_state_fingerprint_sha256:
       input.current.state_fingerprint_sha256,
     exact_next_action: input.current.exact_next_action,
