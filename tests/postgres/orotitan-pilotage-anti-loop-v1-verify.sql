@@ -6,6 +6,7 @@ declare
   v_source public.orotitan_runs%rowtype;
   v_result jsonb;
   v_wrong_route_rejected boolean := false;
+  v_fingerprint_drift_rejected boolean := false;
   v_stale_rejected boolean := false;
 begin
   select *
@@ -160,6 +161,23 @@ begin
     perform public.register_orotitan_pilotage_attempt(
       v_run,
       'RESEARCH',
+      1,
+      1,
+      repeat('d',64),
+      'SAVE_DURABLE_CHECKPOINT',
+      'SAVE_DURABLE_CHECKPOINT'
+    );
+  exception when check_violation then
+    v_fingerprint_drift_rejected := true;
+  end;
+  if not v_fingerprint_drift_rejected then
+    raise exception 'same CAS state accepted a different continuation fingerprint';
+  end if;
+
+  begin
+    perform public.register_orotitan_pilotage_attempt(
+      v_run,
+      'RESEARCH',
       2,
       1,
       repeat('c',64),
@@ -247,6 +265,7 @@ select jsonb_build_object(
   'table', 'orotitan_pilotage_attempts',
   'same_state_same_operation', 'NO_PROGRESS_REPLAY',
   'route_guard', 'PASS',
+  'fingerprint_drift_guard', 'PASS',
   'cas_guard', 'PASS',
   'client_write_firewall', 'PASS',
   'result', 'PASS'
