@@ -220,11 +220,15 @@ export function buildVerifiedArtifactContent(
   let previewText: string | null = null;
   let previewKind: VerifiedArtifactContent['previewKind'] = 'VERIFIED_ONLY';
   let previewReason: string | null = null;
+  const baseMediaType = row.media_type
+    .split(';', 1)[0]
+    .trim()
+    .toLocaleLowerCase('en-US');
+  const jsonMediaType =
+    baseMediaType === 'application/json' || baseMediaType.endsWith('+json');
+  const textMediaType = baseMediaType.startsWith('text/');
 
-  if (
-    row.media_type === 'application/json' ||
-    row.media_type.startsWith('text/')
-  ) {
+  if (jsonMediaType || textMediaType) {
     if (bytes.byteLength > MAX_TEXT_PREVIEW_BYTES) {
       previewReason = 'Verified text artifact exceeds the preview size limit';
     } else {
@@ -238,7 +242,7 @@ export function buildVerifiedArtifactContent(
         );
       }
 
-      if (row.media_type === 'application/json') {
+      if (jsonMediaType) {
         try {
           JSON.parse(text);
         } catch {
