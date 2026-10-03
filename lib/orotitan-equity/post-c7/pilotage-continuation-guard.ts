@@ -110,6 +110,7 @@ export class PilotageContinuationError extends Error {
       | 'LOAD_INCONSISTENT'
       | 'NON_EXACT_ARTIFACT_REF'
       | 'CONTEXT_REF_CONFLICT'
+      | 'CONTEXT_REF_NOT_IN_INDEX'
       | 'INVALID_PRIOR_ATTEMPT',
     message: string,
   ) {
@@ -205,6 +206,30 @@ function sortExactRefs(
       right.required_authority_class,
     );
   });
+}
+
+function assertRefsBackedByArtifactIndex(
+  artifactIndex: ExactArtifactRef[],
+  refs: Array<{ label: string; ref: ExactArtifactRef | null }>,
+): void {
+  const byIdentity = new Map(
+    artifactIndex.map((ref) => [refKey(ref), ref] as const),
+  );
+
+  for (const { label, ref } of refs) {
+    if (ref === null) continue;
+    const indexed = byIdentity.get(refKey(ref));
+    if (
+      !indexed ||
+      indexed.content_sha256 !== ref.content_sha256 ||
+      indexed.required_authority_class !== ref.required_authority_class
+    ) {
+      throw new PilotageContinuationError(
+        'CONTEXT_REF_NOT_IN_INDEX',
+        `${label} is not backed by the exact LOAD_RESULT artifact_index`,
+      );
+    }
+  }
 }
 
 function sortedBlockers(
@@ -368,6 +393,27 @@ export function buildLosslessResumeEnvelope(
     l2: sortExactRefs(load.context_plan.l2, 'context_plan.l2'),
     l3: sortExactRefs(load.context_plan.l3, 'context_plan.l3'),
   };
+
+  assertRefsBackedByArtifactIndex(artifactIndex, [
+    { label: 'stage.active_manifest', ref: activeManifest },
+    { label: 'process_state_artifact', ref: processStateArtifact },
+    ...contextPlan.l0.map((ref, index) => ({
+      label: `context_plan.l0[${index}]`,
+      ref,
+    })),
+    ...contextPlan.l1.map((ref, index) => ({
+      label: `context_plan.l1[${index}]`,
+      ref,
+    })),
+    ...contextPlan.l2.map((ref, index) => ({
+      label: `context_plan.l2[${index}]`,
+      ref,
+    })),
+    ...contextPlan.l3.map((ref, index) => ({
+      label: `context_plan.l3[${index}]`,
+      ref,
+    })),
+  ]);
 
   const base = {
     envelope_version: '1.0.0' as const,
