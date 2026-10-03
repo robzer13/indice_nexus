@@ -41,7 +41,7 @@ export default function OroTitanEntryPage() {
               <div className="text-base font-medium text-slate-100 group-hover:text-white">{dossier.identity.legalName}</div>
               <div className="mt-1 text-xs text-slate-500">{dossier.identity.ticker} · {dossier.identity.marketDataSymbol}</div>
             </div>
-            <Meta label="Étape" value={stageLabel(run.currentStage)} />
+            <Meta label="Étape" value={run.currentStage ? stageLabel(run.currentStage) : "—"} />
             <Meta label="État" value={runStatusLabel(run.runStatus)} danger={run.runStatus === 'BLOCKED'} />
             <Meta label="Données" value={formatCutoff(run.dataCutoff)} />
           </Link>
