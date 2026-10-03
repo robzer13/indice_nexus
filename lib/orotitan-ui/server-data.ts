@@ -6,16 +6,21 @@ import {
   executeServerControlledOperation,
 } from '../orotitan-equity/post-c7/chatgpt-supabase-bridge-server';
 import type {
+  ControlledBridgePort,
+  IssuerRow,
   LoadResult as BridgeLoadResult,
   OperationFailure,
+  SecurityRow,
 } from '../orotitan-equity/post-c7/chatgpt-supabase-bridge';
 import {
+  assertSafeIssuerRoutes,
   buildArtifactCatalog,
   buildCompanyIdentity,
   buildRunSummaries,
   resolveUiIssuer,
   resolveUiRunSelection,
   selectUiSecurity,
+  selectUniqueBridgeIssuerQuery,
 } from './read-model';
 import type {
   LoadResult,
@@ -42,31 +47,106 @@ function toUiLoadResult(result: BridgeLoadResult): LoadResult {
   return result as LoadResult;
 }
 
-const loadUiDossierShell = cache(
-  async (issuerQuery: string): Promise<UiDossierShell | null> => {
+type UiDossierResolution = {
+  shell: UiDossierShell;
+  bridgeIssuerQuery: string;
+};
+
+async function readDossierResolution(
+  port: ControlledBridgePort,
+  issuer: IssuerRow,
+  issuers: IssuerRow[],
+  securities: SecurityRow[],
+): Promise<UiDossierResolution | null> {
+  const [dossiers, runs] = await Promise.all([
+    port.listDossiers(issuer.issuer_id),
+    port.listRuns(issuer.issuer_id),
+  ]);
+
+  const activeDossiers = dossiers.filter((row) => row.active);
+  if (activeDossiers.length === 0) return null;
+  if (activeDossiers.length > 1) {
+    throw new Error('OroTitan UI found multiple active dossiers for issuer');
+  }
+
+  const activeDossier = activeDossiers[0];
+  const runSummaries = buildRunSummaries(
+    runs,
+    issuer.issuer_id,
+    activeDossier.dossier_id,
+  );
+  if (runSummaries.length === 0) return null;
+
+  const security = selectUiSecurity(securities, issuer.issuer_id);
+  const bridgeIssuerQuery = selectUniqueBridgeIssuerQuery(
+    issuer,
+    issuers,
+    securities,
+  );
+  return {
+    shell: {
+      identity: buildCompanyIdentity(issuer, security),
+      runSummaries,
+    },
+    bridgeIssuerQuery,
+  };
+}
+
+const loadUiDossierResolution = cache(
+  async (issuerQuery: string): Promise<UiDossierResolution | null> => {
     const port = createServerControlledBridgePort();
     const [issuers, securities] = await Promise.all([
       port.listIssuers(),
       port.listSecurities(),
     ]);
 
+    assertSafeIssuerRoutes(issuers, securities);
     const issuer = resolveUiIssuer(issuerQuery, issuers, securities);
     if (!issuer) return null;
 
-    const security = selectUiSecurity(securities, issuer.issuer_id);
-    const runs = await port.listRuns(issuer.issuer_id);
+    return readDossierResolution(port, issuer, issuers, securities);
+  },
+);
 
-    return {
-      identity: buildCompanyIdentity(issuerQuery, issuer, security),
-      runSummaries: buildRunSummaries(runs, issuer.issuer_id),
-    };
+const loadUiDossierResolutions = cache(
+  async (): Promise<UiDossierResolution[]> => {
+    const port = createServerControlledBridgePort();
+    const [issuers, securities] = await Promise.all([
+      port.listIssuers(),
+      port.listSecurities(),
+    ]);
+
+    assertSafeIssuerRoutes(issuers, securities);
+    const resolutions = await Promise.all(
+      issuers.map((issuer) =>
+        readDossierResolution(port, issuer, issuers, securities),
+      ),
+    );
+
+    return resolutions
+      .filter(
+        (resolution): resolution is UiDossierResolution =>
+          resolution !== null,
+      )
+      .sort((left, right) =>
+        left.shell.identity.displayName.localeCompare(
+          right.shell.identity.displayName,
+          'fr',
+        ),
+      );
   },
 );
 
 export async function getUiDossierShell(
   issuerQuery: string,
 ): Promise<UiDossierShell | null> {
-  return loadUiDossierShell(issuerQuery);
+  const resolution = await loadUiDossierResolution(issuerQuery);
+  return resolution?.shell ?? null;
+}
+
+export async function listUiDossierShells(): Promise<UiDossierShell[]> {
+  const resolutions = await loadUiDossierResolutions();
+  return resolutions.map((resolution) => resolution.shell);
 }
 
 export type UiDossierSelection =
@@ -80,9 +160,10 @@ export async function getUiDossierSelection(
   issuerQuery: string,
   requestedRun: string | null,
 ): Promise<UiDossierSelection> {
-  const shell = await getUiDossierShell(issuerQuery);
-  if (!shell) return { kind: 'issuer-not-found' };
+  const resolution = await loadUiDossierResolution(issuerQuery);
+  if (!resolution) return { kind: 'issuer-not-found' };
 
+  const { shell, bridgeIssuerQuery } = resolution;
   const selection = resolveUiRunSelection(shell.runSummaries, requestedRun);
   if (selection.kind === 'select') return { kind: 'select', shell };
   if (selection.kind === 'unknown') return { kind: 'unknown', shell };
@@ -97,7 +178,7 @@ export async function getUiDossierSelection(
   const result = await executeServerControlledOperation({
     contract_version: '0.1.0',
     operation: 'LOAD',
-    issuer_query: issuerQuery,
+    issuer_query: bridgeIssuerQuery,
     run_id: selection.summary.runId,
   });
 

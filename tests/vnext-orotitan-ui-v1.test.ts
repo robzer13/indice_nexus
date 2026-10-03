@@ -11,8 +11,15 @@ import {
 } from '../lib/orotitan-ui/presentation';
 import { VEOLIA_MOCK_DOSSIER } from '../lib/orotitan-ui/mock';
 import {
+  assertSafeIssuerRoutes,
+  assertUniqueIssuerSlugs,
   buildArtifactCatalog,
+  buildCompanyIdentity,
+  buildRunSummaries,
+  issuerSlug,
+  resolveUiIssuer,
   resolveUiRunSelection,
+  selectUniqueBridgeIssuerQuery,
 } from '../lib/orotitan-ui/read-model';
 import type { ArtifactRow } from '../lib/orotitan-equity/post-c7/chatgpt-supabase-bridge';
 
@@ -125,4 +132,184 @@ test('artifact catalog never exposes a Supabase artifact absent from LOAD_RESULT
 
   assert.deepEqual(Object.keys(catalog), [visibleRef.artifact_id]);
   assert.equal(catalog[hiddenArtifactId], undefined);
+});
+
+
+test('issuer discovery derives a stable canonical slug and resolves it without a mock allow-list', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000001',
+      display_name: 'Veolia',
+      legal_name: 'Veolia Environnement S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000002',
+      display_name: 'ASML Holding',
+      legal_name: 'ASML Holding N.V.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000001',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'VIE',
+      market_data_symbol: 'VIE.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000002',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ASML',
+      market_data_symbol: 'ASML.AS',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.equal(issuerSlug('ASML Holding'), 'asml-holding');
+  assert.equal(resolveUiIssuer('asml-holding', issuers, securities)?.issuer_id, issuers[1].issuer_id);
+  assert.equal(resolveUiIssuer('ASML', issuers, securities)?.issuer_id, issuers[1].issuer_id);
+  assert.equal(resolveUiIssuer('VIE.PA', issuers, securities)?.issuer_id, issuers[0].issuer_id);
+
+  const identity = buildCompanyIdentity(issuers[0], securities[0]);
+  assert.equal(identity.slug, 'veolia');
+  assert.equal(identity.ticker, 'VIE');
+});
+
+test('issuer discovery fails closed when two issuers would share one canonical slug', () => {
+  assert.throws(
+    () =>
+      assertUniqueIssuerSlugs([
+        {
+          issuer_id: '10000000-0000-4000-8000-000000000001',
+          display_name: 'ACME, Inc.',
+          legal_name: 'ACME, Inc.',
+        },
+        {
+          issuer_id: '10000000-0000-4000-8000-000000000002',
+          display_name: 'ACME Inc',
+          legal_name: 'ACME Inc',
+        },
+      ]),
+    /canonical issuer slug is ambiguous/,
+  );
+});
+
+
+test('run summaries are scoped to the selected active dossier', () => {
+  const issuerId = '10000000-0000-4000-8000-000000000001';
+  const activeDossierId = '30000000-0000-4000-8000-000000000001';
+  const historicalDossierId = '30000000-0000-4000-8000-000000000002';
+  const baseRun = {
+    issuer_id: issuerId,
+    security_id: '20000000-0000-4000-8000-000000000001',
+    run_status: 'ACTIVE',
+    current_stage: 'RESEARCH' as const,
+    run_type: 'INITIAL',
+    canonical_mode: 'ANALYZE',
+    data_cutoff: '2026-10-03',
+    contract_set_sha256: 'a'.repeat(64),
+    state_version: 1,
+    updated_at: '2026-10-03T00:00:00Z',
+  };
+
+  const summaries = buildRunSummaries(
+    [
+      {
+        ...baseRun,
+        run_id: '40000000-0000-4000-8000-000000000001',
+        dossier_id: activeDossierId,
+      },
+      {
+        ...baseRun,
+        run_id: '40000000-0000-4000-8000-000000000002',
+        dossier_id: historicalDossierId,
+      },
+    ],
+    issuerId,
+    activeDossierId,
+  );
+
+  assert.deepEqual(
+    summaries.map((summary) => summary.runId),
+    ['40000000-0000-4000-8000-000000000001'],
+  );
+});
+
+
+test('canonical issuer routes fail closed when a slug collides with another resolver alias', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000011',
+      display_name: 'Alpha Corp',
+      legal_name: 'Alpha Corp S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000012',
+      display_name: 'Beta Corp',
+      legal_name: 'Beta Corp S.A.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000011',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'ALP',
+      market_data_symbol: 'ALP.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000012',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ALPHA-CORP',
+      market_data_symbol: 'BET.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.throws(
+    () => assertSafeIssuerRoutes(issuers, securities),
+    /canonical issuer slug collides with resolver aliases/,
+  );
+});
+
+test('controlled LOAD receives only an issuer alias proven unique across every resolver namespace', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000021',
+      display_name: 'Alpha',
+      legal_name: 'Alpha S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000022',
+      display_name: 'Beta',
+      legal_name: 'Beta S.A.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000021',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'ALP',
+      market_data_symbol: 'ALP.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000022',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ALPHA',
+      market_data_symbol: 'ALPHA S.A.',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.equal(
+    selectUniqueBridgeIssuerQuery(issuers[0], issuers, securities),
+    'ALP.PA',
+  );
 });

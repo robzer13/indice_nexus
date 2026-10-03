@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { CompanySearch } from '@/components/orotitan/company-search';
-import { getUiDossierShell } from '@/lib/orotitan-ui/server-data';
+import { listUiDossierShells } from '@/lib/orotitan-ui/server-data';
 
 export const metadata: Metadata = {
   title: 'Equity Research',
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function OroTitanEntryPage() {
-  const dossier = await getUiDossierShell('veolia');
+  const dossiers = await listUiDossierShells();
 
   return (
     <div className="mx-auto max-w-5xl py-10 sm:py-14">
@@ -18,7 +18,7 @@ export default async function OroTitanEntryPage() {
         <div className="text-[11px] font-semibold uppercase tracking-[0.28em] text-cyan-400">OroTitan</div>
         <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl">Equity Research</h1>
         <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-slate-400">
-          Recherchez un dossier existant par nom, ticker ou symbole de marché.
+          Recherchez un dossier existant par nom exact, ticker ou symbole de marché.
         </p>
       </section>
 
@@ -26,26 +26,37 @@ export default async function OroTitanEntryPage() {
         <CompanySearch />
       </div>
 
-      {dossier ? (
-        <section className="mt-11 sm:mt-12">
-          <div className="mb-3 flex items-center justify-between gap-4">
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Dossier disponible</h2>
-            <span className="text-[10px] uppercase tracking-[0.15em] text-slate-600">Données réelles · lecture seule</span>
-          </div>
+      <section className="mt-11 sm:mt-12">
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400">Dossiers disponibles</h2>
+          <span className="text-[10px] uppercase tracking-[0.15em] text-slate-600">
+            {dossiers.length} · données réelles · lecture seule
+          </span>
+        </div>
 
-          <Link
-            href={'/orotitan/' + dossier.identity.slug}
-            className="group grid gap-4 rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.72)] px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,.16)] transition hover:border-cyan-400/25 hover:bg-[rgba(10,26,42,.78)] md:grid-cols-[minmax(0,1fr)_160px_160px]"
-          >
-            <div>
-              <div className="text-base font-medium text-slate-100 group-hover:text-white">{dossier.identity.legalName}</div>
-              <div className="mt-1 text-xs text-slate-500">{dossier.identity.ticker} · {dossier.identity.marketDataSymbol}</div>
-            </div>
-            <Meta label="Analyses actives" value={String(dossier.runSummaries.length)} />
-            <Meta label="Action" value="Choisir une analyse →" accent />
-          </Link>
-        </section>
-      ) : null}
+        {dossiers.length === 0 ? (
+          <div className="rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.72)] px-5 py-8 text-center text-sm text-slate-600">
+            Aucun dossier actif n&apos;est disponible.
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {dossiers.map((dossier) => (
+              <Link
+                key={dossier.identity.slug}
+                href={'/orotitan/' + dossier.identity.slug}
+                className="group grid gap-4 rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.72)] px-5 py-5 shadow-[0_18px_48px_rgba(0,0,0,.16)] transition hover:border-cyan-400/25 hover:bg-[rgba(10,26,42,.78)] md:grid-cols-[minmax(0,1fr)_160px_160px]"
+              >
+                <div>
+                  <div className="text-base font-medium text-slate-100 group-hover:text-white">{dossier.identity.legalName}</div>
+                  <div className="mt-1 text-xs text-slate-500">{dossier.identity.ticker} · {dossier.identity.marketDataSymbol}</div>
+                </div>
+                <Meta label="Analyses actives" value={String(dossier.runSummaries.length)} />
+                <Meta label="Action" value="Choisir une analyse →" accent />
+              </Link>
+            ))}
+          </div>
+        )}
+      </section>
     </div>
   );
 }

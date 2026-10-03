@@ -3,26 +3,21 @@
 import { FormEvent, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
-const acceptedQueries = new Set(['veolia', 'vie', 'vie.pa', 'veolia environnement s.a.', 'veolia environnement']);
-
 export function CompanySearch() {
   const router = useRouter();
-  const [query, setQuery] = useState('Veolia');
+  const [query, setQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const normalized = query.trim().toLowerCase();
-    if (!normalized) {
+    const value = query.trim();
+    if (!value) {
       setError('Saisissez un nom, un ticker ou un symbole de marché.');
       return;
     }
-    if (!acceptedQueries.has(normalized)) {
-      setError('Aucun dossier disponible pour cette recherche dans cette version.');
-      return;
-    }
+
     setError(null);
-    router.push('/orotitan/veolia');
+    router.push('/orotitan/' + encodeURIComponent(value));
   }
 
   return (
@@ -34,7 +29,7 @@ export function CompanySearch() {
           id="orotitan-company-search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="Nom, ticker ou symbole…"
+          placeholder="Nom exact, ticker ou symbole…"
           className="min-w-0 flex-1 bg-transparent px-3 py-3 text-base text-white outline-none placeholder:text-slate-700"
         />
         <button
