@@ -153,6 +153,7 @@ test('changed authoritative state permits continuation after reload', () => {
 
   assert.equal(decision.decision, 'PROCEED');
   assert.equal(decision.dispatch_allowed, true);
+  assert.equal(decision.retry_allowed, false);
 });
 
 test('paused run without durable anchor must establish a checkpoint before resume', () => {
@@ -365,6 +366,7 @@ test('durable continuation registration allows only the first attempt for the sa
 
   assert.equal(first.decision, 'PROCEED');
   assert.equal(first.dispatch_allowed, true);
+  assert.equal(first.retry_allowed, false);
   assert.equal(replay.decision, 'NO_PROGRESS');
   assert.equal(replay.dispatch_allowed, false);
 });
