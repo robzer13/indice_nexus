@@ -99,7 +99,7 @@ Changing a chat session does not reset the ledger.
 
 ## Retry semantics
 
-`FIRST_ATTEMPT` means the requested continuation is eligible to dispatch.
+`FIRST_ATTEMPT` means the requested continuation is eligible to dispatch exactly once. Direct retry remains forbidden; any retry path must reload durable state and register again.
 
 `NO_PROGRESS_REPLAY` means:
 
