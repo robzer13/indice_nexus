@@ -1,10 +1,18 @@
 import 'server-only';
 
 import { createServerSupabaseClient } from '../../supabase/server';
-import type {
-  ContinuationAttemptPort,
-  PersistedAttemptRegistration,
+import {
+  buildLosslessResumeEnvelope,
+  registerContinuationAttempt,
+  type ContinuationAttemptPort,
+  type LosslessResumeEnvelope,
+  type PersistedAttemptRegistration,
+  type PilotageRequestedOperation,
+  type ContinuationGuardDecision,
 } from './pilotage-continuation-guard';
+import {
+  executeServerControlledOperation,
+} from './chatgpt-supabase-bridge-server';
 
 type ServerClient = ReturnType<typeof createServerSupabaseClient>;
 
@@ -34,4 +42,38 @@ export function createServerContinuationAttemptPort(
       return registration(data);
     },
   };
+}
+
+
+export async function loadServerLosslessResumeEnvelope(input: {
+  issuerQuery: string;
+  runId: string;
+}): Promise<LosslessResumeEnvelope> {
+  const result = await executeServerControlledOperation({
+    contract_version: '0.1.0',
+    operation: 'LOAD',
+    issuer_query: input.issuerQuery,
+    run_id: input.runId,
+    requested_context_tiers: ['L0', 'L1', 'L2', 'L3'],
+  });
+
+  if (result.operation !== 'LOAD_RESULT') {
+    throw new Error(
+      'lossless resume LOAD failed: ' +
+        ('message' in result ? result.message : result.operation),
+    );
+  }
+
+  return buildLosslessResumeEnvelope(result);
+}
+
+export async function registerServerContinuationAttempt(input: {
+  envelope: LosslessResumeEnvelope;
+  requestedOperation: PilotageRequestedOperation;
+}): Promise<ContinuationGuardDecision> {
+  return registerContinuationAttempt(
+    createServerContinuationAttemptPort(),
+    input.envelope,
+    input.requestedOperation,
+  );
 }
