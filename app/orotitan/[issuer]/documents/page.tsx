@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
 import { ArtifactRegistry } from '@/components/orotitan/artifact-registry';
 import { RunSelector, StageFilterLink, UnavailableRunState } from '@/components/orotitan/ui';
-import { getMockDossier, resolveMockRunSelection } from '@/lib/orotitan-ui/mock';
 import { buildRunHref } from '@/lib/orotitan-ui/presentation';
+import { getUiDossierSelection } from '@/lib/orotitan-ui/server-data';
 import type { StageCode } from '@/lib/orotitan-ui/types';
 
 const allowedStages = new Set<StageCode>(['RESEARCH', 'DEEP_DIVE', 'INTEGRATION']);
@@ -16,19 +16,18 @@ export default async function OroTitanDocumentsPage({
 }) {
   const { issuer } = await params;
   const query = await searchParams;
-  const dossier = getMockDossier(issuer);
-  if (!dossier) notFound();
-
   const selectedRun = typeof query.run === 'string' ? query.run : null;
-  const selection = resolveMockRunSelection(dossier, selectedRun);
+  const selection = await getUiDossierSelection(issuer, selectedRun);
+
+  if (selection.kind === 'issuer-not-found' || selection.kind === 'unknown') notFound();
   if (selection.kind === 'select') {
-    return <RunSelector issuerSlug={dossier.identity.slug} runs={dossier.runSummaries} />;
+    return <RunSelector issuerSlug={selection.shell.identity.slug} runs={selection.shell.runSummaries} />;
   }
-  if (selection.kind === 'unknown') notFound();
   if (selection.kind === 'unavailable') {
     return <UnavailableRunState summary={selection.summary} />;
   }
 
+  const dossier = selection.dossier;
   const rawStage = typeof query.stage === 'string' ? query.stage : null;
   const stage = rawStage && allowedStages.has(rawStage as StageCode) ? rawStage as StageCode : null;
   const refs = stage

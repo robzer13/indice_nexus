@@ -316,11 +316,11 @@ export function RunSelector({
         {runs.map((run) => (
           <div key={run.runId} className="grid gap-2 border-b border-[rgba(123,173,214,.10)] px-4 py-4 last:border-b-0 md:grid-cols-[120px_120px_120px_minmax(0,1fr)_100px] md:items-center md:gap-4">
             <div className="text-sm text-slate-300">{formatCutoff(run.dataCutoff)}</div>
-            <div className="text-sm text-slate-400">{stageLabel(run.currentStage)}</div>
+            <div className="text-sm text-slate-400">{run.currentStage ? stageLabel(run.currentStage) : '—'}</div>
             <RunStatusBadge status={run.runStatus} />
             <div className="truncate font-mono text-xs text-slate-600">{run.runId}</div>
             <div>
-              {run.detailedMockAvailable ? (
+              {run.loadAvailable ? (
                 <Link href={buildRunHref('/orotitan/' + issuerSlug, run.runId)} className="text-sm font-medium text-cyan-300 hover:text-cyan-200">
                   Ouvrir →
                 </Link>
@@ -339,12 +339,12 @@ export function UnavailableRunState({ summary }: { summary: RunSummary }) {
   return (
     <section className="rounded-xl border border-[rgba(123,173,214,.16)] bg-[rgba(8,22,36,.62)] p-6">
       <div className="text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-600">Analyse indisponible</div>
-      <h1 className="mt-2 text-xl font-semibold text-white">Cette analyse n&apos;est pas disponible dans cette version</h1>
+      <h1 className="mt-2 text-xl font-semibold text-white">Cette analyse ne peut pas être chargée</h1>
       <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-500">
-        Le run existe, mais son contenu détaillé n&apos;est pas chargé. OroTitan ne substitue jamais les documents d&apos;une autre analyse.
+        Le run existe, mais son état ne satisfait pas les préconditions du LOAD contrôlé. OroTitan ne substitue jamais les documents d&apos;une autre analyse.
       </p>
       <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
-        <span className="text-slate-400">{stageLabel(summary.currentStage)}</span>
+        <span className="text-slate-400">{summary.currentStage ? stageLabel(summary.currentStage) : '—'}</span>
         <RunStatusBadge status={summary.runStatus} />
         <span className="font-mono text-slate-700">{summary.runId}</span>
       </div>

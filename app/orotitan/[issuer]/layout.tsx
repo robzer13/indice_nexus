@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { IssuerNav } from '@/components/orotitan/issuer-nav';
-import { getMockDossier } from '@/lib/orotitan-ui/mock';
+import { getUiDossierShell } from '@/lib/orotitan-ui/server-data';
 
 export default async function OroTitanIssuerLayout({
   children,
@@ -11,7 +11,7 @@ export default async function OroTitanIssuerLayout({
   params: Promise<{ issuer: string }>;
 }>) {
   const { issuer } = await params;
-  const dossier = getMockDossier(issuer);
+  const dossier = await getUiDossierShell(issuer);
   if (!dossier) notFound();
 
   return (
