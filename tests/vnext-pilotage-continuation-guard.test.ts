@@ -346,7 +346,7 @@ test('durable continuation registration allows only the first attempt for the sa
         state_fingerprint_sha256: args.p_state_fingerprint_sha256,
         requested_operation: args.p_requested_operation,
         exact_next_action: args.p_exact_next_action,
-        attempt_count: count,
+        attempt_count: 1,
         retry_without_reload_allowed: false as const,
       };
     },
