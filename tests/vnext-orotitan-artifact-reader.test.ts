@@ -4,7 +4,6 @@ import test from 'node:test';
 
 import {
   ArtifactContentError,
-  buildVerifiedArtifactContent,
   resolveVerifiedArtifactContent,
   verifyArtifactBytes,
 } from '../lib/orotitan-ui/artifact-reader';
@@ -462,13 +461,20 @@ test('verified artifact reader rejects invalid storage coordinates before fetchi
   assert.deepEqual(fetched, [fx.manifest.artifact_id]);
 });
 
-test('verified artifact reader normalizes JSON media types before preview validation', () => {
-  const bytes = new TextEncoder().encode('{"ok":true}\n');
-  const row = outputRowFor(bytes, {
+test('verified artifact reader normalizes JSON media types before preview validation', async () => {
+  const fx = fixture({
     media_type: 'Application/LD+JSON; charset=utf-8',
   });
 
-  const contentResult = buildVerifiedArtifactContent(row, bytes);
+  const contentResult = await resolveVerifiedArtifactContent({
+    port: portFor(fx.rows, fx.stage),
+    loadRefs: fx.refs,
+    artifactRows: fx.rows,
+    runId: fx.output.run_id,
+    artifactId: fx.output.artifact_id,
+    version: fx.output.version,
+    readPrivateGithub: privateReader(fx.bytesByArtifactId),
+  });
   assert.equal(contentResult.previewKind, 'TEXT');
   assert.equal(contentResult.previewText, '{"ok":true}\n');
 });
