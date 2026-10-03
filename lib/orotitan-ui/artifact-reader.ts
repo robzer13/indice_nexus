@@ -313,6 +313,7 @@ export async function resolveVerifiedArtifactContent(input: {
     p_required_authority_class: ref.required_authority_class,
   });
   assertResolvedArtifactMatchesRow(resolved, row);
+  assertArtifactStorageCoordinates(row);
 
   let bytes: Uint8Array;
   if (row.storage_backend === 'PRIVATE_GITHUB') {
