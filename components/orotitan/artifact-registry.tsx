@@ -343,6 +343,12 @@ function VerifiedContent({
           value={content.sizeBytes.toLocaleString('fr-FR') + ' octets'}
         />
         <Data
+          label="Manifest actif"
+          value={
+            content.verification.manifestMembershipVerified ? 'Oui' : 'Non'
+          }
+        />
+        <Data
           label="SHA-256 vérifié"
           value={content.verification.sha256Verified ? 'Oui' : 'Non'}
         />
