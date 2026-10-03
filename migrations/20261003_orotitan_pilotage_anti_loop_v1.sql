@@ -47,7 +47,13 @@ create table public.orotitan_pilotage_attempts (
   attempt_count bigint not null default 1 check (attempt_count >= 1),
   first_seen_at timestamptz not null default now(),
   last_seen_at timestamptz not null default now(),
-  unique (run_id, stage_code, state_fingerprint_sha256, requested_operation),
+  unique (
+    run_id,
+    stage_code,
+    run_state_version,
+    stage_state_version,
+    requested_operation
+  ),
   foreign key (run_id, stage_code)
     references public.orotitan_run_stages(run_id, stage_code)
     on delete restrict
@@ -223,7 +229,13 @@ begin
     p_requested_operation,
     p_exact_next_action
   )
-  on conflict (run_id, stage_code, state_fingerprint_sha256, requested_operation)
+  on conflict (
+    run_id,
+    stage_code,
+    run_state_version,
+    stage_state_version,
+    requested_operation
+  )
   do nothing
   returning * into v_attempt;
 
@@ -245,7 +257,8 @@ begin
   from public.orotitan_pilotage_attempts
   where run_id = p_run_id
     and stage_code = p_stage_code
-    and state_fingerprint_sha256 = p_state_fingerprint_sha256
+    and run_state_version = p_expected_run_state_version
+    and stage_state_version = p_expected_stage_state_version
     and requested_operation = p_requested_operation
   for update;
 
@@ -256,6 +269,9 @@ begin
      or v_attempt.stage_state_version <> p_expected_stage_state_version
      or v_attempt.exact_next_action is distinct from p_exact_next_action then
     raise exception 'PILOTAGE_ATTEMPT_IDENTITY_MISMATCH' using errcode = '23514';
+  end if;
+  if v_attempt.state_fingerprint_sha256 is distinct from p_state_fingerprint_sha256 then
+    raise exception 'PILOTAGE_STATE_FINGERPRINT_DRIFT' using errcode = '23514';
   end if;
 
   update public.orotitan_pilotage_attempts
