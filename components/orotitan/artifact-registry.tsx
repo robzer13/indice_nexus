@@ -117,6 +117,7 @@ export function ArtifactRegistry({
 
       {selected ? (
         <ArtifactDrawer
+          key={selected.artifact_id + ':' + selected.version}
           refValue={selected}
           metadata={catalog[selected.artifact_id]}
           issuerSlug={issuerSlug}
@@ -153,7 +154,6 @@ function ArtifactDrawer({
       version: String(refValue.version),
     });
 
-    setContentState({ status: 'loading' });
     fetch(
       '/api/orotitan/artifacts/' +
         encodeURIComponent(refValue.artifact_id) +
