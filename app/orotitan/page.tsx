@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: 'Equity Research',
 };
 
+export const dynamic = 'force-dynamic';
+
 export default async function OroTitanEntryPage() {
   const dossier = await getUiDossierShell('veolia');
 
