@@ -88,8 +88,10 @@ The controlled RPC `register_orotitan_pilotage_attempt`:
 3. rejects terminal or mismatched current-stage state;
 4. recomputes the authoritative next action from durable database state;
 5. rejects route mismatches;
-6. records the first exact `state_fingerprint + requested_operation` pair;
-7. returns `NO_PROGRESS_REPLAY` on the same pair thereafter.
+6. keys replay detection to the durable `run_state_version + stage_state_version + requested_operation`;
+7. stores the deterministic state fingerprint for that CAS state;
+8. rejects fingerprint drift for the same CAS state;
+9. returns `NO_PROGRESS_REPLAY` on the same durable state + operation thereafter.
 
 A replay never authorizes an analytical or stage mutation.
 
@@ -101,9 +103,12 @@ Changing a chat session does not reset the ledger.
 
 `NO_PROGRESS_REPLAY` means:
 
-- same authoritative state;
+- same authoritative run and stage CAS versions;
 - same requested operation;
+- same deterministic state fingerprint;
 - no durable delta proving progress.
+
+A different fingerprint presented for the same run/stage CAS versions is rejected as fingerprint drift rather than treated as progress.
 
 Required response:
 
