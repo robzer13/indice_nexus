@@ -28,6 +28,9 @@ export default async function OroTitanDocumentsPage({
   }
 
   const dossier = selection.dossier;
+  const runId = dossier.loadResult.run_id;
+  if (!runId) notFound();
+
   const rawStage = typeof query.stage === 'string' ? query.stage : null;
   const stage = rawStage && allowedStages.has(rawStage as StageCode) ? rawStage as StageCode : null;
   const refs = stage
@@ -53,7 +56,13 @@ export default async function OroTitanDocumentsPage({
         <StageFilterLink href={buildRunHref(path, selectedRun, { stage: 'INTEGRATION' })} active={stage === 'INTEGRATION'}>Intégration</StageFilterLink>
       </div>
 
-      <ArtifactRegistry refs={refs} catalog={dossier.artifactCatalog} searchable />
+      <ArtifactRegistry
+        refs={refs}
+        catalog={dossier.artifactCatalog}
+        issuerSlug={dossier.identity.slug}
+        runId={runId}
+        searchable
+      />
     </div>
   );
 }
