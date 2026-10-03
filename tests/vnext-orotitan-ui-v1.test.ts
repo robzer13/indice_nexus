@@ -9,10 +9,12 @@ import {
   runStatusLabel,
   shortId,
 } from '../lib/orotitan-ui/presentation';
+import { VEOLIA_MOCK_DOSSIER } from '../lib/orotitan-ui/mock';
 import {
-  resolveMockRunSelection,
-  VEOLIA_MOCK_DOSSIER,
-} from '../lib/orotitan-ui/mock';
+  buildArtifactCatalog,
+  resolveUiRunSelection,
+} from '../lib/orotitan-ui/read-model';
+import type { ArtifactRow } from '../lib/orotitan-equity/post-c7/chatgpt-supabase-bridge';
 
 test('OroTitan UI V1 maps the frozen stage sequence deterministically', () => {
   assert.deepEqual(deriveStageStates('DEEP_DIVE', 'BLOCKED'), [
@@ -48,15 +50,15 @@ test('Veolia mock keeps the frozen LOAD_RESULT read-only shape and context count
   assert.equal(load.process_state_artifact, null);
 });
 
-test('mock run resolution never substitutes the primary run for another requested run', () => {
+test('run resolution never auto-selects or substitutes another requested run', () => {
   const dossier = VEOLIA_MOCK_DOSSIER;
-  assert.equal(resolveMockRunSelection(dossier, null).kind, 'select');
-  assert.equal(resolveMockRunSelection(dossier, dossier.primaryRunId).kind, 'available');
+  assert.equal(resolveUiRunSelection(dossier.runSummaries, null).kind, 'select');
+  assert.equal(resolveUiRunSelection(dossier.runSummaries, dossier.primaryRunId).kind, 'available');
   assert.equal(
-    resolveMockRunSelection(dossier, 'd56a0bc9-4e80-48b3-b326-74d1fea15e63').kind,
+    resolveUiRunSelection(dossier.runSummaries, 'd56a0bc9-4e80-48b3-b326-74d1fea15e63').kind,
     'unavailable',
   );
-  assert.equal(resolveMockRunSelection(dossier, '00000000-0000-0000-0000-000000000000').kind, 'unknown');
+  assert.equal(resolveUiRunSelection(dossier.runSummaries, '00000000-0000-0000-0000-000000000000').kind, 'unknown');
 });
 
 test('run-aware navigation preserves the selected run across dossier routes and filters', () => {
@@ -69,4 +71,58 @@ test('run-aware navigation preserves the selected run across dossier routes and 
     buildRunHref('/orotitan/veolia/documents', runId, { stage: 'DEEP_DIVE' }),
     '/orotitan/veolia/documents?run=' + runId + '&stage=DEEP_DIVE',
   );
+});
+
+
+test('artifact catalog never exposes a Supabase artifact absent from LOAD_RESULT.artifact_index', () => {
+  const sourceLoad = VEOLIA_MOCK_DOSSIER.loadResult;
+  const visibleRef = sourceLoad.artifact_index[0];
+  const load = {
+    ...sourceLoad,
+    artifact_index: [visibleRef],
+    context_plan: { l0: [], l1: [], l2: [], l3: [] },
+  };
+
+  const row = (
+    artifactId: string,
+    version: number,
+    contentSha256: string,
+    authorityClass: string,
+  ): ArtifactRow => ({
+    artifact_id: artifactId,
+    version,
+    run_id: sourceLoad.run_id!,
+    stage_code: 'DEEP_DIVE',
+    artifact_type: 'TEST_ARTIFACT',
+    logical_name: artifactId,
+    authority_class: authorityClass,
+    authority_state: 'CHECKPOINT',
+    artifact_status: 'SEALED',
+    availability_state: 'AVAILABLE',
+    content_sha256: contentSha256,
+    size_bytes: 1,
+    media_type: 'application/json',
+    storage_backend: 'PRIVATE_GITHUB',
+    storage_uri: 'private://test',
+    github_repository: null,
+    github_path: null,
+    github_commit_sha: null,
+    github_blob_sha: null,
+    supabase_bucket: null,
+    supabase_object_path: null,
+  });
+
+  const hiddenArtifactId = '00000000-0000-4000-8000-000000000099';
+  const catalog = buildArtifactCatalog(load, [
+    row(
+      visibleRef.artifact_id,
+      visibleRef.version,
+      visibleRef.content_sha256!,
+      visibleRef.required_authority_class!,
+    ),
+    row(hiddenArtifactId, 1, 'f'.repeat(64), 'CHECKPOINT_STAGE_OUTPUT'),
+  ]);
+
+  assert.deepEqual(Object.keys(catalog), [visibleRef.artifact_id]);
+  assert.equal(catalog[hiddenArtifactId], undefined);
 });

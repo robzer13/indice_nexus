@@ -126,7 +126,7 @@ export const VEOLIA_MOCK_DOSSIER: MockDossier = {
       currentStage: 'DEEP_DIVE',
       dataCutoff: '2026-09-22',
       stateVersion: 7,
-      detailedMockAvailable: true,
+      loadAvailable: true,
     },
     {
       runId: 'd56a0bc9-4e80-48b3-b326-74d1fea15e63',
@@ -134,7 +134,7 @@ export const VEOLIA_MOCK_DOSSIER: MockDossier = {
       currentStage: 'RESEARCH',
       dataCutoff: '2026-09-22',
       stateVersion: 2,
-      detailedMockAvailable: false,
+      loadAvailable: false,
     },
     {
       runId: '76ee7eb1-8658-4038-83bf-e2c951db731a',
@@ -142,7 +142,7 @@ export const VEOLIA_MOCK_DOSSIER: MockDossier = {
       currentStage: 'DEEP_DIVE',
       dataCutoff: '2026-09-22',
       stateVersion: 8,
-      detailedMockAvailable: false,
+      loadAvailable: false,
     },
   ],
   primaryRunId: 'a4cf9002-b52d-4440-8902-adc70bd777dd',
@@ -208,7 +208,7 @@ export function resolveMockRunSelection(
   if (!requestedRun) return { kind: 'select' };
   const summary = dossier.runSummaries.find((run) => run.runId === requestedRun);
   if (!summary) return { kind: 'unknown' };
-  if (requestedRun === dossier.primaryRunId && summary.detailedMockAvailable) {
+  if (requestedRun === dossier.primaryRunId && summary.loadAvailable) {
     return { kind: 'available', summary };
   }
   return { kind: 'unavailable', summary };

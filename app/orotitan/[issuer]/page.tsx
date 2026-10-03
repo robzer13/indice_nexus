@@ -10,7 +10,7 @@ import {
   UnavailableRunState,
   countStageArtifacts,
 } from '@/components/orotitan/ui';
-import { getMockDossier, resolveMockRunSelection } from '@/lib/orotitan-ui/mock';
+import { getUiDossierSelection } from '@/lib/orotitan-ui/server-data';
 
 export default async function OroTitanOverviewPage({
   params,
@@ -21,20 +21,18 @@ export default async function OroTitanOverviewPage({
 }) {
   const { issuer } = await params;
   const query = await searchParams;
-  const dossier = getMockDossier(issuer);
-  if (!dossier) notFound();
-
   const selectedRun = typeof query.run === 'string' ? query.run : null;
-  const selection = resolveMockRunSelection(dossier, selectedRun);
+  const selection = await getUiDossierSelection(issuer, selectedRun);
 
+  if (selection.kind === 'issuer-not-found' || selection.kind === 'unknown') notFound();
   if (selection.kind === 'select') {
-    return <RunSelector issuerSlug={dossier.identity.slug} runs={dossier.runSummaries} />;
+    return <RunSelector issuerSlug={selection.shell.identity.slug} runs={selection.shell.runSummaries} />;
   }
-  if (selection.kind === 'unknown') notFound();
   if (selection.kind === 'unavailable') {
     return <UnavailableRunState summary={selection.summary} />;
   }
 
+  const dossier = selection.dossier;
   const load = dossier.loadResult;
   const deepDiveRefs = load.artifact_index.filter((ref) => dossier.artifactCatalog[ref.artifact_id]?.stageCode === 'DEEP_DIVE');
 

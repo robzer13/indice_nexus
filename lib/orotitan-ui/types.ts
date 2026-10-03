@@ -1,12 +1,12 @@
-export type StageCode = 'RESEARCH' | 'DEEP_DIVE' | 'INTEGRATION';
-export type StageLifecycle = 'NOT_STARTED' | 'IN_PROGRESS' | 'PAUSED' | 'BLOCKED' | 'COMPLETE';
+import type {
+  LoadResult as BridgeLoadResult,
+  StageCode as BridgeStageCode,
+  StageLifecycle as BridgeStageLifecycle,
+} from '../orotitan-equity/post-c7/chatgpt-supabase-bridge';
 
-export type ArtifactRef = {
-  artifact_id: string;
-  version: number;
-  content_sha256?: string | null;
-  required_authority_class?: string | null;
-};
+export type StageCode = BridgeStageCode;
+export type StageLifecycle = BridgeStageLifecycle;
+export type ArtifactRef = BridgeLoadResult['artifact_index'][number];
 
 export type Blocker = {
   code: string;
@@ -18,38 +18,8 @@ export type Blocker = {
   [key: string]: unknown;
 };
 
-export type LoadResult = {
-  contract_version: '0.1.0';
-  operation: 'LOAD_RESULT';
-  mutation_allowed: false;
-  issuer_id: string;
-  security_id: string | null;
-  dossier_id: string;
-  run_id: string | null;
-  run_status: string | null;
-  run_state_version: number | null;
-  run_type: string | null;
-  canonical_mode: string | null;
-  data_cutoff: string | null;
-  contract_set_sha256: string | null;
-  current_stage: StageCode | null;
-  stage: {
-    stage_code: StageCode;
-    stage_revision: number;
-    lifecycle_status: StageLifecycle;
-    stage_state_version: number;
-    handoff_gate_state: 'NOT_EVALUATED' | 'NO' | 'YES';
-    active_manifest: ArtifactRef | null;
-  } | null;
+export type LoadResult = Omit<BridgeLoadResult, 'blockers'> & {
   blockers: Blocker[];
-  artifact_index: ArtifactRef[];
-  process_state_artifact?: ArtifactRef | null;
-  context_plan: {
-    l0: ArtifactRef[];
-    l1: ArtifactRef[];
-    l2: ArtifactRef[];
-    l3: ArtifactRef[];
-  };
 };
 
 export type CompanyIdentity = {
@@ -63,10 +33,10 @@ export type CompanyIdentity = {
 export type RunSummary = {
   runId: string;
   runStatus: string;
-  currentStage: StageCode;
+  currentStage: StageCode | null;
   dataCutoff: string;
   stateVersion: number;
-  detailedMockAvailable: boolean;
+  loadAvailable: boolean;
 };
 
 export type ArtifactMeta = {
@@ -77,13 +47,19 @@ export type ArtifactMeta = {
   authorityState: 'AUTHORITATIVE' | 'CHECKPOINT';
   artifactStatus: 'SEALED';
   availabilityState: 'AVAILABLE';
-  storageBackend: 'PRIVATE_GITHUB';
+  storageBackend: string;
 };
 
-export type MockDossier = {
+export type UiDossierShell = {
   identity: CompanyIdentity;
   runSummaries: RunSummary[];
-  primaryRunId: string;
+};
+
+export type UiDossier = UiDossierShell & {
   loadResult: LoadResult;
   artifactCatalog: Record<string, ArtifactMeta>;
+};
+
+export type MockDossier = UiDossier & {
+  primaryRunId: string;
 };
