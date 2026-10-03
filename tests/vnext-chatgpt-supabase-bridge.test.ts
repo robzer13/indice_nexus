@@ -417,6 +417,8 @@ test("REOPEN uses loaded CAS state and verifies active manifest is cleared", asy
     github_blob_sha: null,
     supabase_bucket: "bucket",
     supabase_object_path: "path",
+    manifest_artifact_id: null,
+    manifest_version: null,
   });
   const load = await loaded(port);
   const request = buildReopenOperation({

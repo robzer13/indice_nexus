@@ -50,6 +50,25 @@ export type ArtifactMeta = {
   storageBackend: string;
 };
 
+export type VerifiedArtifactContent = {
+  artifactId: string;
+  version: number;
+  mediaType: string;
+  sizeBytes: number;
+  contentSha256: string;
+  storageBackend: string;
+  previewKind: 'TEXT' | 'VERIFIED_ONLY';
+  previewText: string | null;
+  previewReason: string | null;
+  verification: {
+    registryResolved: true;
+    manifestMembershipVerified: true;
+    sizeVerified: true;
+    sha256Verified: true;
+    gitBlobVerified: true | null;
+  };
+};
+
 export type UiDossierShell = {
   identity: CompanyIdentity;
   runSummaries: RunSummary[];

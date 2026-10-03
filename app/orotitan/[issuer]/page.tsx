@@ -34,6 +34,8 @@ export default async function OroTitanOverviewPage({
 
   const dossier = selection.dossier;
   const load = dossier.loadResult;
+  if (!load.run_id) notFound();
+
   const deepDiveRefs = load.artifact_index.filter((ref) => dossier.artifactCatalog[ref.artifact_id]?.stageCode === 'DEEP_DIVE');
 
   return (
@@ -58,7 +60,12 @@ export default async function OroTitanOverviewPage({
             {countStageArtifacts(load.artifact_index, dossier.artifactCatalog, 'DEEP_DIVE')}
           </span>
         </div>
-        <ArtifactRegistry refs={deepDiveRefs} catalog={dossier.artifactCatalog} />
+        <ArtifactRegistry
+          refs={deepDiveRefs}
+          catalog={dossier.artifactCatalog}
+          issuerSlug={dossier.identity.slug}
+          runId={load.run_id}
+        />
       </section>
 
       <section className="mt-5 rounded-xl border border-[rgba(123,173,214,.18)] bg-[rgba(8,22,36,.58)] p-4 sm:p-5">

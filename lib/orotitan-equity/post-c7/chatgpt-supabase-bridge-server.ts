@@ -103,7 +103,7 @@ export function createServerControlledBridgePort(
       const { data, error } = await client
         .from("orotitan_artifacts")
         .select(
-          "artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,artifact_status,availability_state,content_sha256,size_bytes,media_type,storage_backend,storage_uri,github_repository,github_path,github_commit_sha,github_blob_sha,supabase_bucket,supabase_object_path",
+          "artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,artifact_status,availability_state,content_sha256,size_bytes,media_type,storage_backend,storage_uri,github_repository,github_path,github_commit_sha,github_blob_sha,supabase_bucket,supabase_object_path,manifest_artifact_id,manifest_version",
         )
         .eq("run_id", runId);
       if (error) throw databaseError("LOAD artifacts failed", error);
