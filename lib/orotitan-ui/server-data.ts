@@ -51,7 +51,6 @@ async function readDossierShell(
   issuer: IssuerRow,
   securities: SecurityRow[],
 ): Promise<UiDossierShell | null> {
-  const security = selectUiSecurity(securities, issuer.issuer_id);
   const [dossiers, runs] = await Promise.all([
     port.listDossiers(issuer.issuer_id),
     port.listRuns(issuer.issuer_id),
@@ -63,9 +62,18 @@ async function readDossierShell(
     throw new Error('OroTitan UI found multiple active dossiers for issuer');
   }
 
+  const activeDossier = activeDossiers[0];
+  const runSummaries = buildRunSummaries(
+    runs,
+    issuer.issuer_id,
+    activeDossier.dossier_id,
+  );
+  if (runSummaries.length === 0) return null;
+
+  const security = selectUiSecurity(securities, issuer.issuer_id);
   return {
     identity: buildCompanyIdentity(issuer, security),
-    runSummaries: buildRunSummaries(runs, issuer.issuer_id),
+    runSummaries,
   };
 }
 
@@ -143,7 +151,7 @@ export async function getUiDossierSelection(
   const result = await executeServerControlledOperation({
     contract_version: '0.1.0',
     operation: 'LOAD',
-    issuer_query: issuerQuery,
+    issuer_query: shell.identity.legalName,
     run_id: selection.summary.runId,
   });
 
