@@ -91,7 +91,7 @@ The controlled RPC `register_orotitan_pilotage_attempt`:
 6. keys replay detection to the durable `run_state_version + stage_state_version + requested_operation`;
 7. stores the deterministic state fingerprint for that CAS state;
 8. rejects fingerprint drift for the same CAS state;
-9. returns `NO_PROGRESS_REPLAY` on the same durable state + operation thereafter.
+9. returns `NO_PROGRESS_REPLAY` on the same durable state + operation thereafter without mutating the ledger.
 
 A replay never authorizes an analytical or stage mutation.
 
@@ -110,7 +110,7 @@ Changing a chat session does not reset the ledger.
 
 A different fingerprint presented for the same run/stage CAS versions is rejected as fingerprint drift rather than treated as progress.
 
-Required response:
+The replay path performs no database write. Required response:
 
 `NO MUTATION -> RELOAD / PRODUCE DURABLE DELTA -> EXACT_NEXT_ACTION`
 
