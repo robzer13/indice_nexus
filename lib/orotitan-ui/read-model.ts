@@ -118,9 +118,11 @@ export function buildCompanyIdentity(
 export function buildRunSummaries(
   rows: RunRow[],
   issuerId: string,
+  dossierId?: string,
 ): RunSummary[] {
   return rows
     .filter((row) => !TERMINAL_RUN_STATUSES.has(row.run_status))
+    .filter((row) => dossierId === undefined || row.dossier_id === dossierId)
     .map((row) => {
       if (row.issuer_id !== issuerId) {
         throw new Error('OroTitan UI run issuer does not match resolved issuer');
