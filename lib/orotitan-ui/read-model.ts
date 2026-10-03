@@ -31,6 +31,39 @@ export function issuerSlug(value: string): string {
   return slug;
 }
 
+function addAliasOwner(
+  owners: Map<string, Set<string>>,
+  value: string | null,
+  issuerId: string,
+): void {
+  if (value === null) return;
+  const alias = normalized(value);
+  if (!alias) return;
+
+  const issuerIds = owners.get(alias) ?? new Set<string>();
+  issuerIds.add(issuerId);
+  owners.set(alias, issuerIds);
+}
+
+function buildResolverAliasOwners(
+  issuers: IssuerRow[],
+  securities: SecurityRow[],
+): Map<string, Set<string>> {
+  const owners = new Map<string, Set<string>>();
+
+  for (const issuer of issuers) {
+    addAliasOwner(owners, issuer.display_name, issuer.issuer_id);
+    addAliasOwner(owners, issuer.legal_name, issuer.issuer_id);
+  }
+
+  for (const security of securities) {
+    addAliasOwner(owners, security.ticker, security.issuer_id);
+    addAliasOwner(owners, security.market_data_symbol, security.issuer_id);
+  }
+
+  return owners;
+}
+
 export function assertUniqueIssuerSlugs(issuers: IssuerRow[]): void {
   const ownerBySlug = new Map<string, string>();
   for (const issuer of issuers) {
@@ -41,6 +74,65 @@ export function assertUniqueIssuerSlugs(issuers: IssuerRow[]): void {
     }
     ownerBySlug.set(slug, issuer.issuer_id);
   }
+}
+
+export function assertSafeIssuerRoutes(
+  issuers: IssuerRow[],
+  securities: SecurityRow[],
+): void {
+  assertUniqueIssuerSlugs(issuers);
+  const aliasOwners = buildResolverAliasOwners(issuers, securities);
+
+  for (const issuer of issuers) {
+    const slug = issuerSlug(issuer.display_name);
+    const owners = aliasOwners.get(normalized(slug));
+    if (
+      owners &&
+      (owners.size > 1 || !owners.has(issuer.issuer_id))
+    ) {
+      throw new Error(
+        'OroTitan UI canonical issuer slug collides with resolver aliases: ' + slug,
+      );
+    }
+  }
+}
+
+export function selectUniqueBridgeIssuerQuery(
+  issuer: IssuerRow,
+  issuers: IssuerRow[],
+  securities: SecurityRow[],
+): string {
+  const aliasOwners = buildResolverAliasOwners(issuers, securities);
+  const issuerSecurities = securities.filter(
+    (security) => security.issuer_id === issuer.issuer_id,
+  );
+  const candidates = [
+    ...issuerSecurities.map((security) => security.market_data_symbol),
+    issuer.display_name,
+    issuer.legal_name,
+    ...issuerSecurities.map((security) => security.ticker),
+  ];
+
+  const seen = new Set<string>();
+  for (const candidate of candidates) {
+    if (candidate === null) continue;
+    const alias = normalized(candidate);
+    if (!alias || seen.has(alias)) continue;
+    seen.add(alias);
+
+    const owners = aliasOwners.get(alias);
+    if (
+      owners &&
+      owners.size === 1 &&
+      owners.has(issuer.issuer_id)
+    ) {
+      return candidate;
+    }
+  }
+
+  throw new Error(
+    'OroTitan UI issuer has no bridge-resolvable alias proven unique',
+  );
 }
 
 export function resolveUiIssuer(

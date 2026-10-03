@@ -11,6 +11,7 @@ import {
 } from '../lib/orotitan-ui/presentation';
 import { VEOLIA_MOCK_DOSSIER } from '../lib/orotitan-ui/mock';
 import {
+  assertSafeIssuerRoutes,
   assertUniqueIssuerSlugs,
   buildArtifactCatalog,
   buildCompanyIdentity,
@@ -18,6 +19,7 @@ import {
   issuerSlug,
   resolveUiIssuer,
   resolveUiRunSelection,
+  selectUniqueBridgeIssuerQuery,
 } from '../lib/orotitan-ui/read-model';
 import type { ArtifactRow } from '../lib/orotitan-equity/post-c7/chatgpt-supabase-bridge';
 
@@ -232,5 +234,82 @@ test('run summaries are scoped to the selected active dossier', () => {
   assert.deepEqual(
     summaries.map((summary) => summary.runId),
     ['40000000-0000-4000-8000-000000000001'],
+  );
+});
+
+
+test('canonical issuer routes fail closed when a slug collides with another resolver alias', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000011',
+      display_name: 'Alpha Corp',
+      legal_name: 'Alpha Corp S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000012',
+      display_name: 'Beta Corp',
+      legal_name: 'Beta Corp S.A.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000011',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'ALP',
+      market_data_symbol: 'ALP.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000012',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ALPHA-CORP',
+      market_data_symbol: 'BET.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.throws(
+    () => assertSafeIssuerRoutes(issuers, securities),
+    /canonical issuer slug collides with resolver aliases/,
+  );
+});
+
+test('controlled LOAD receives only an issuer alias proven unique across every resolver namespace', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000021',
+      display_name: 'Alpha',
+      legal_name: 'Alpha S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000022',
+      display_name: 'Beta',
+      legal_name: 'Beta S.A.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000021',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'ALP',
+      market_data_symbol: 'ALP.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000022',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ALPHA',
+      market_data_symbol: 'ALPHA S.A.',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.equal(
+    selectUniqueBridgeIssuerQuery(issuers[0], issuers, securities),
+    'ALP.PA',
   );
 });
