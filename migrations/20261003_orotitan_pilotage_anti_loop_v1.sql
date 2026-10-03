@@ -83,6 +83,8 @@ declare
   v_run public.orotitan_runs%rowtype;
   v_stage public.orotitan_run_stages%rowtype;
   v_attempt public.orotitan_pilotage_attempts%rowtype;
+  v_has_process_state boolean;
+  v_expected_next_action text;
 begin
   if p_stage_code not in ('RESEARCH','DEEP_DIVE','INTEGRATION') then
     raise exception 'PILOTAGE_STAGE_INVALID' using errcode = '22023';
@@ -148,6 +150,60 @@ begin
   end if;
   if v_stage.state_version <> p_expected_stage_state_version then
     raise exception 'STAGE_STATE_VERSION_MISMATCH' using errcode = '40001';
+  end if;
+
+  select exists (
+    select 1
+    from public.orotitan_artifacts a
+    where a.run_id = p_run_id
+      and a.stage_code = p_stage_code
+      and (a.artifact_type = 'PROCESS_ENGINE_STATE' or a.logical_name = 'process_engine_state')
+      and a.artifact_status = 'SEALED'
+      and a.availability_state = 'AVAILABLE'
+      and a.authority_state in ('AUTHORITATIVE','CHECKPOINT')
+  ) into v_has_process_state;
+
+  if v_stage.lifecycle_status = 'COMPLETE'
+     and jsonb_array_length(v_stage.blocker_summary) > 0 then
+    v_expected_next_action := 'FAIL_CLOSED';
+  elsif v_stage.handoff_gate_state = 'YES'
+        and v_stage.lifecycle_status <> 'COMPLETE' then
+    v_expected_next_action := 'FAIL_CLOSED';
+  elsif v_stage.lifecycle_status = 'BLOCKED'
+        or jsonb_array_length(v_stage.blocker_summary) > 0 then
+    v_expected_next_action := 'RESOLVE_BLOCKER';
+  elsif v_stage.lifecycle_status = 'PAUSED' then
+    if v_stage.active_manifest_artifact_id is null and not v_has_process_state then
+      v_expected_next_action := 'SAVE_DURABLE_CHECKPOINT';
+    else
+      v_expected_next_action := 'RESUME_STAGE';
+    end if;
+  elsif v_stage.lifecycle_status = 'IN_PROGRESS' then
+    if v_stage.active_manifest_artifact_id is null and not v_has_process_state then
+      v_expected_next_action := 'SAVE_DURABLE_CHECKPOINT';
+    else
+      v_expected_next_action := 'CONTINUE_STAGE';
+    end if;
+  elsif v_stage.lifecycle_status = 'COMPLETE' then
+    if v_stage.handoff_gate_state <> 'YES' then
+      v_expected_next_action := 'FAIL_CLOSED';
+    elsif p_stage_code = 'INTEGRATION' then
+      v_expected_next_action := 'AWAIT_EXPLICIT_GO_PUBLISH';
+    else
+      v_expected_next_action := 'HANDOFF_NEXT_STAGE';
+    end if;
+  else
+    v_expected_next_action := 'FAIL_CLOSED';
+  end if;
+
+  if p_exact_next_action is distinct from v_expected_next_action then
+    raise exception 'PILOTAGE_EXACT_NEXT_ACTION_MISMATCH' using errcode = '23514';
+  end if;
+  if v_expected_next_action in ('AWAIT_EXPLICIT_GO_PUBLISH','FAIL_CLOSED') then
+    raise exception 'PILOTAGE_ROUTE_NOT_DISPATCHABLE' using errcode = '23514';
+  end if;
+  if p_requested_operation is distinct from v_expected_next_action then
+    raise exception 'PILOTAGE_ROUTE_MISMATCH' using errcode = '23514';
   end if;
 
   insert into public.orotitan_pilotage_attempts (
