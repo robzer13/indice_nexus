@@ -4,6 +4,7 @@ import test from 'node:test';
 
 import {
   ArtifactContentError,
+  buildVerifiedArtifactContent,
   resolveVerifiedArtifactContent,
   verifyArtifactBytes,
 } from '../lib/orotitan-ui/artifact-reader';
@@ -263,4 +264,17 @@ test('verified artifact reader rejects invalid storage coordinates before privat
       error.code === 'ARTIFACT_REGISTRY_MISMATCH',
   );
   assert.equal(fetched, false);
+});
+
+
+test('verified artifact reader normalizes JSON media types before preview validation', () => {
+  const bytes = new TextEncoder().encode('{"ok":true}\n');
+  const row = {
+    ...rowFor(bytes),
+    media_type: 'Application/LD+JSON; charset=utf-8',
+  };
+
+  const contentResult = buildVerifiedArtifactContent(row, bytes);
+  assert.equal(contentResult.previewKind, 'TEXT');
+  assert.equal(contentResult.previewText, '{"ok":true}\n');
 });
