@@ -227,3 +227,40 @@ test('verified artifact reader rejects resolver metadata drift', async () => {
       error.code === 'ARTIFACT_REGISTRY_MISMATCH',
   );
 });
+
+
+test('verified artifact reader rejects invalid storage coordinates before private fetch', async () => {
+  const bytes = new TextEncoder().encode('{"ok":true}\n');
+  const row = {
+    ...rowFor(bytes),
+    storage_uri: 'github://robzer13/real-orotitan@' + '1'.repeat(40) + '/../escape.json',
+    github_path: '../escape.json',
+  };
+  let fetched = false;
+
+  await assert.rejects(
+    resolveVerifiedArtifactContent({
+      port: portFor(row, {}),
+      loadRefs: [
+        {
+          artifact_id: row.artifact_id,
+          version: row.version,
+          content_sha256: row.content_sha256,
+          required_authority_class: row.authority_class,
+        },
+      ],
+      artifactRows: [row],
+      runId: row.run_id,
+      artifactId: row.artifact_id,
+      version: row.version,
+      async readPrivateGithub() {
+        fetched = true;
+        return bytes;
+      },
+    }),
+    (error: unknown) =>
+      error instanceof ArtifactContentError &&
+      error.code === 'ARTIFACT_REGISTRY_MISMATCH',
+  );
+  assert.equal(fetched, false);
+});
