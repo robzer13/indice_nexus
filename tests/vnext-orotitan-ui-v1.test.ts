@@ -180,13 +180,13 @@ test('issuer discovery fails closed when two issuers would share one canonical s
       assertUniqueIssuerSlugs([
         {
           issuer_id: '10000000-0000-4000-8000-000000000001',
-          display_name: 'ACME S.A.',
-          legal_name: 'ACME S.A.',
+          display_name: 'ACME, Inc.',
+          legal_name: 'ACME, Inc.',
         },
         {
           issuer_id: '10000000-0000-4000-8000-000000000002',
-          display_name: 'ACME SA',
-          legal_name: 'ACME SA',
+          display_name: 'ACME Inc',
+          legal_name: 'ACME Inc',
         },
       ]),
     /canonical issuer slug is ambiguous/,
