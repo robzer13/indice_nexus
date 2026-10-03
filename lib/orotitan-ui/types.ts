@@ -62,6 +62,7 @@ export type VerifiedArtifactContent = {
   previewReason: string | null;
   verification: {
     registryResolved: true;
+    manifestMembershipVerified: true;
     sizeVerified: true;
     sha256Verified: true;
     gitBlobVerified: true | null;
