@@ -4,7 +4,7 @@ Status: repository engineering / execution policy.
 
 This protocol governs development-agent execution in this repository. It is **not** an analytical-methodology document and must not alter OroTitan frozen business contracts, analytical formulas, economic conventions, scoring, gates, state semantics, or investment policy.
 
-The root `AGENTS.md` contains the critical invariants and requires this file to be read before any repository modification.
+The root `AGENTS.md` contains the critical invariants and requires this file to be read at the start of every repository mission, including read-only missions, before any substantive repository action.
 
 ---
 
@@ -342,7 +342,7 @@ A comment is blocking only if it:
 - demonstrates a required condition fails;
 - proves the current implementation is incorrect.
 
-A blocking finding permits only a scoped correction within the current mission and correction budget.
+A blocking finding permits a scoped correction only when the current Mission Lock already authorizes implementation/modification work. In a verification-only mission, a blocking finding is a result only and requires explicit user GO before any fix.
 
 ### NON_BLOCKING
 
@@ -386,10 +386,13 @@ This applies to:
 After two checks without material change:
 
 ```text
+MISSION_STATUS = PENDING_EXTERNAL_RESULT
 PENDING_EXTERNAL_RESULT = YES
 STOP POLLING
 RETURN CONTROL TO USER
 ```
+
+`PENDING_EXTERNAL_RESULT` is an explicit non-terminal reporting state. It is neither `COMPLETE` nor `BLOCKED`.
 
 Do not repeatedly wait and recheck indefinitely.
 
@@ -538,7 +541,8 @@ Authorization for mission A never authorizes mission B.
 Return a short report:
 
 ```text
-MISSION_STATUS = COMPLETE | BLOCKED
+MISSION_STATUS = COMPLETE | BLOCKED | PENDING_EXTERNAL_RESULT
+PENDING_EXTERNAL_RESULT = YES | NO
 
 MISSION =
 BRANCH =
