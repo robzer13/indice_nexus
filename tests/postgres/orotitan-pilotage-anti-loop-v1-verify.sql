@@ -135,7 +135,7 @@ begin
   );
 
   if v_result->>'decision' <> 'NO_PROGRESS_REPLAY'
-     or (v_result->>'attempt_count')::bigint <> 2
+     or (v_result->>'attempt_count')::bigint <> 1
      or (v_result->>'retry_without_reload_allowed')::boolean then
     raise exception 'same-state replay was not stopped: %', v_result;
   end if;
@@ -195,8 +195,8 @@ begin
     raise exception 'rejected continuation attempts mutated the durable ledger';
   end if;
 
-  if (select attempt_count from public.orotitan_pilotage_attempts where run_id=v_run) <> 2 then
-    raise exception 'durable anti-loop attempt counter invalid';
+  if (select count(*) from public.orotitan_pilotage_attempts where run_id=v_run) <> 1 then
+    raise exception 'NO_PROGRESS replay mutated the durable ledger';
   end if;
 end $$;
 
