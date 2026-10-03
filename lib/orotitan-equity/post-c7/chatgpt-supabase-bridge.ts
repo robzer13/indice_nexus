@@ -79,6 +79,8 @@ export type ArtifactRow = {
   github_blob_sha: string | null;
   supabase_bucket: string | null;
   supabase_object_path: string | null;
+  manifest_artifact_id: string | null;
+  manifest_version: number | null;
 };
 
 export type RpcResult = Record<string, unknown>;
