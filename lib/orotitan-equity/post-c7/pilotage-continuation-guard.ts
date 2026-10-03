@@ -33,8 +33,14 @@ export type LosslessResumeEnvelope = {
   chat_memory_authority: false;
   mutation_allowed: false;
   run_id: string;
+  issuer_id: string;
+  security_id: string;
+  dossier_id: string;
   run_state_version: number;
   run_status: string;
+  run_type: string | null;
+  canonical_mode: string;
+  data_cutoff: string;
   contract_set_sha256: string;
   current_stage: NonNullable<LoadResult['current_stage']>;
   stage_revision: number;
@@ -337,8 +343,14 @@ function fingerprintPayload(
     envelope_version: envelope.envelope_version,
     source: envelope.source,
     run_id: envelope.run_id,
+    issuer_id: envelope.issuer_id,
+    security_id: envelope.security_id,
+    dossier_id: envelope.dossier_id,
     run_state_version: envelope.run_state_version,
     run_status: envelope.run_status,
+    run_type: envelope.run_type,
+    canonical_mode: envelope.canonical_mode,
+    data_cutoff: envelope.data_cutoff,
     contract_set_sha256: envelope.contract_set_sha256,
     current_stage: envelope.current_stage,
     stage_revision: envelope.stage_revision,
@@ -358,8 +370,13 @@ export function buildLosslessResumeEnvelope(
 ): LosslessResumeEnvelope {
   if (
     !load.run_id ||
+    !load.issuer_id ||
+    !load.security_id ||
+    !load.dossier_id ||
     !load.run_status ||
     !load.run_state_version ||
+    !load.canonical_mode ||
+    !load.data_cutoff ||
     !load.contract_set_sha256 ||
     !load.current_stage ||
     !load.stage
@@ -421,8 +438,14 @@ export function buildLosslessResumeEnvelope(
     chat_memory_authority: false as const,
     mutation_allowed: false as const,
     run_id: load.run_id,
+    issuer_id: load.issuer_id,
+    security_id: load.security_id,
+    dossier_id: load.dossier_id,
     run_state_version: load.run_state_version,
     run_status: load.run_status,
+    run_type: load.run_type,
+    canonical_mode: load.canonical_mode,
+    data_cutoff: load.data_cutoff,
     contract_set_sha256: load.contract_set_sha256,
     current_stage: load.current_stage,
     stage_revision: load.stage.stage_revision,
@@ -624,8 +647,14 @@ export function buildLosslessResumePrompt(
     'CHAT_MEMORY_AUTHORITY = NO',
     'MUTATION_ALLOWED = NO',
     `RUN_ID = ${envelope.run_id}`,
+    `ISSUER_ID = ${envelope.issuer_id}`,
+    `SECURITY_ID = ${envelope.security_id}`,
+    `DOSSIER_ID = ${envelope.dossier_id}`,
     `RUN_STATE_VERSION = ${envelope.run_state_version}`,
     `RUN_STATUS = ${envelope.run_status}`,
+    `RUN_TYPE = ${envelope.run_type ?? 'NONE'}`,
+    `CANONICAL_MODE = ${envelope.canonical_mode}`,
+    `DATA_CUTOFF = ${envelope.data_cutoff}`,
     `CONTRACT_SET_SHA256 = ${envelope.contract_set_sha256}`,
     `CURRENT_STAGE = ${envelope.current_stage}`,
     `STAGE_REVISION = ${envelope.stage_revision}`,
