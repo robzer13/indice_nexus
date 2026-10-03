@@ -14,6 +14,7 @@ import {
   assertUniqueIssuerSlugs,
   buildArtifactCatalog,
   buildCompanyIdentity,
+  buildRunSummaries,
   issuerSlug,
   resolveUiIssuer,
   resolveUiRunSelection,
@@ -190,5 +191,46 @@ test('issuer discovery fails closed when two issuers would share one canonical s
         },
       ]),
     /canonical issuer slug is ambiguous/,
+  );
+});
+
+
+test('run summaries are scoped to the selected active dossier', () => {
+  const issuerId = '10000000-0000-4000-8000-000000000001';
+  const activeDossierId = '30000000-0000-4000-8000-000000000001';
+  const historicalDossierId = '30000000-0000-4000-8000-000000000002';
+  const baseRun = {
+    issuer_id: issuerId,
+    security_id: '20000000-0000-4000-8000-000000000001',
+    run_status: 'ACTIVE',
+    current_stage: 'RESEARCH' as const,
+    run_type: 'INITIAL',
+    canonical_mode: 'ANALYZE',
+    data_cutoff: '2026-10-03',
+    contract_set_sha256: 'a'.repeat(64),
+    state_version: 1,
+    updated_at: '2026-10-03T00:00:00Z',
+  };
+
+  const summaries = buildRunSummaries(
+    [
+      {
+        ...baseRun,
+        run_id: '40000000-0000-4000-8000-000000000001',
+        dossier_id: activeDossierId,
+      },
+      {
+        ...baseRun,
+        run_id: '40000000-0000-4000-8000-000000000002',
+        dossier_id: historicalDossierId,
+      },
+    ],
+    issuerId,
+    activeDossierId,
+  );
+
+  assert.deepEqual(
+    summaries.map((summary) => summary.runId),
+    ['40000000-0000-4000-8000-000000000001'],
   );
 });
