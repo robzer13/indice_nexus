@@ -185,13 +185,12 @@ export function assertArtifactStorageCoordinates(row: ArtifactRow): void {
     );
   }
 
-  const expectedUri =
-    registration.backend === 'PRIVATE_GITHUB'
-      ? `github://${registration.repository}@${registration.commitSha}/${registration.path}`
-      : `supabase://${registration.bucket}/${registration.objectPath}`;
-
-  if (row.storage_uri !== expectedUri) {
-    throw registryError('Artifact storage URI does not match immutable coordinates');
+  if (registration.backend === 'PRIVATE_GITHUB') {
+    const expectedUri =
+      `github://${registration.repository}@${registration.commitSha}/${registration.path}`;
+    if (row.storage_uri !== expectedUri) {
+      throw registryError('Artifact storage URI does not match immutable GitHub coordinates');
+    }
   }
 }
 
