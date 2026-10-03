@@ -51,6 +51,58 @@ function registryError(message: string): ArtifactContentError {
   return new ArtifactContentError('ARTIFACT_REGISTRY_MISMATCH', message);
 }
 
+function objectValue(
+  value: unknown,
+  label: string,
+): Record<string, unknown> {
+  if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+    throw registryError(label + ' must be an object');
+  }
+  return value as Record<string, unknown>;
+}
+
+function arrayValue(value: unknown, label: string): unknown[] {
+  if (!Array.isArray(value)) {
+    throw registryError(label + ' must be an array');
+  }
+  return value;
+}
+
+function decodeJsonObject(
+  row: ArtifactRow,
+  bytes: Uint8Array,
+): Record<string, unknown> {
+  let text: string;
+  try {
+    text = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+  } catch {
+    throw new ArtifactContentError(
+      'ARTIFACT_CONTENT_INVALID',
+      'Stage Manifest is not valid UTF-8 text',
+    );
+  }
+
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new ArtifactContentError(
+      'ARTIFACT_CONTENT_INVALID',
+      'Stage Manifest is not valid JSON',
+    );
+  }
+
+  const manifest = objectValue(parsed, 'Stage Manifest');
+  if (
+    manifest.manifest_id !== row.artifact_id ||
+    manifest.run_id !== row.run_id ||
+    manifest.stage !== row.stage_code
+  ) {
+    throw registryError('Stage Manifest body identity differs from registry identity');
+  }
+  return manifest;
+}
+
 export function assertLoadAuthorizedArtifact(
   refs: ArtifactRef[],
   artifactId: string,
@@ -211,6 +263,216 @@ export function verifyArtifactBytes(row: ArtifactRow, bytes: Uint8Array): void {
   }
 }
 
+async function readArtifactBytes(
+  port: ControlledBridgePort,
+  row: ArtifactRow,
+  readPrivateGithub: (row: ArtifactRow) => Promise<Uint8Array>,
+): Promise<Uint8Array> {
+  assertArtifactStorageCoordinates(row);
+
+  if (row.storage_backend === 'PRIVATE_GITHUB') {
+    return readPrivateGithub(row);
+  }
+  if (row.storage_backend === 'SUPABASE_STORAGE') {
+    if (!row.supabase_bucket || !row.supabase_object_path) {
+      throw registryError('Supabase Storage artifact provenance is incomplete');
+    }
+    return port.readSupabaseObject(
+      row.supabase_bucket,
+      row.supabase_object_path,
+    );
+  }
+
+  throw new ArtifactContentError(
+    'ARTIFACT_STORAGE_UNSUPPORTED',
+    'Artifact storage backend is not supported',
+  );
+}
+
+async function assertRpcResolvedArtifact(
+  port: ControlledBridgePort,
+  row: ArtifactRow,
+): Promise<void> {
+  const resolved = await port.resolveArtifact({
+    p_run_id: row.run_id,
+    p_artifact_id: row.artifact_id,
+    p_version: row.version,
+    p_expected_sha256: row.content_sha256,
+    p_required_authority_class: row.authority_class,
+  });
+  assertResolvedArtifactMatchesRow(resolved, row);
+}
+
+function assertManifestOutputMatchesRow(
+  output: Record<string, unknown>,
+  row: ArtifactRow,
+): void {
+  const exactFields: Array<[string, unknown]> = [
+    ['artifact_id', row.artifact_id],
+    ['version', row.version],
+    ['artifact_type', row.artifact_type],
+    ['authority_class', row.authority_class],
+    ['content_sha256', row.content_sha256],
+    ['media_type', row.media_type],
+    ['size_bytes', row.size_bytes],
+  ];
+  for (const [key, expected] of exactFields) {
+    if (output[key] !== expected) {
+      throw registryError(
+        'Stage Manifest output metadata differs from registry metadata',
+      );
+    }
+  }
+
+  const storageRef = objectValue(output.storage_ref, 'Stage Manifest storage_ref');
+  if (storageRef.backend !== row.storage_backend) {
+    throw registryError('Stage Manifest storage backend differs from registry metadata');
+  }
+
+  if (row.storage_backend === 'PRIVATE_GITHUB') {
+    const githubFields: Array<[string, unknown]> = [
+      ['repository', row.github_repository],
+      ['path', row.github_path],
+      ['commit_sha', row.github_commit_sha],
+      ['blob_sha', row.github_blob_sha],
+    ];
+    for (const [key, expected] of githubFields) {
+      if (storageRef[key] !== expected) {
+        throw registryError(
+          'Stage Manifest GitHub storage coordinates differ from registry metadata',
+        );
+      }
+    }
+  }
+
+  if (row.storage_backend === 'SUPABASE_STORAGE') {
+    const bucket = storageRef.bucket ?? storageRef.supabase_bucket;
+    const objectPath =
+      storageRef.object_path ?? storageRef.supabase_object_path ?? storageRef.path;
+    if (
+      bucket !== row.supabase_bucket ||
+      objectPath !== row.supabase_object_path
+    ) {
+      throw registryError(
+        'Stage Manifest Supabase storage coordinates differ from registry metadata',
+      );
+    }
+  }
+}
+
+async function verifyActiveManifestMembership(input: {
+  port: ControlledBridgePort;
+  loadRefs: ArtifactRef[];
+  artifactRows: ArtifactRow[];
+  row: ArtifactRow;
+  readPrivateGithub: (row: ArtifactRow) => Promise<Uint8Array>;
+}): Promise<Uint8Array | null> {
+  const stage = await input.port.getStage(input.row.run_id, input.row.stage_code);
+  if (
+    !stage ||
+    stage.active_manifest_artifact_id === null ||
+    stage.active_manifest_version === null ||
+    stage.active_manifest_kind === null
+  ) {
+    throw registryError('Artifact stage has no complete active manifest identity');
+  }
+
+  const manifestRow = findExactArtifactRow(
+    input.artifactRows,
+    input.row.run_id,
+    stage.active_manifest_artifact_id,
+    stage.active_manifest_version,
+  );
+  if (manifestRow.stage_code !== input.row.stage_code) {
+    throw registryError('Active Stage Manifest belongs to a different stage');
+  }
+
+  const manifestRef = assertLoadAuthorizedArtifact(
+    input.loadRefs,
+    manifestRow.artifact_id,
+    manifestRow.version,
+  );
+  if (
+    manifestRef.content_sha256 !== manifestRow.content_sha256 ||
+    manifestRef.required_authority_class !== manifestRow.authority_class
+  ) {
+    throw registryError('Active Stage Manifest differs from LOAD_RESULT metadata');
+  }
+
+  await assertRpcResolvedArtifact(input.port, manifestRow);
+  const manifestBytes = await readArtifactBytes(
+    input.port,
+    manifestRow,
+    input.readPrivateGithub,
+  );
+  verifyArtifactBytes(manifestRow, manifestBytes);
+  const manifest = decodeJsonObject(manifestRow, manifestBytes);
+
+  if (manifest.manifest_kind !== stage.active_manifest_kind) {
+    throw registryError('Stage Manifest kind differs from active stage state');
+  }
+
+  const outputs = arrayValue(
+    manifest.output_artifacts,
+    'Stage Manifest output_artifacts',
+  );
+  const selfReferences = outputs.filter((value) => {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      return false;
+    }
+    const output = value as Record<string, unknown>;
+    return (
+      output.artifact_id === manifestRow.artifact_id &&
+      output.version === manifestRow.version
+    );
+  });
+  if (selfReferences.length !== 0) {
+    throw registryError('Stage Manifest violates the self-reference firewall');
+  }
+
+  const requestedIsManifest =
+    input.row.artifact_id === manifestRow.artifact_id &&
+    input.row.version === manifestRow.version;
+  if (requestedIsManifest) {
+    if (
+      input.row.manifest_artifact_id !== null ||
+      input.row.manifest_version !== null
+    ) {
+      throw registryError('Stage Manifest registry row must not self-bind');
+    }
+    return manifestBytes;
+  }
+
+  if (
+    input.row.manifest_artifact_id !== manifestRow.artifact_id ||
+    input.row.manifest_version !== manifestRow.version
+  ) {
+    throw registryError('Artifact is not bound to the active Stage Manifest');
+  }
+
+  const exactOutputs = outputs.filter((value) => {
+    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+      return false;
+    }
+    const output = value as Record<string, unknown>;
+    return (
+      output.artifact_id === input.row.artifact_id &&
+      output.version === input.row.version
+    );
+  });
+  if (exactOutputs.length !== 1) {
+    throw registryError(
+      'Artifact does not have exactly one exact membership in active Stage Manifest',
+    );
+  }
+
+  assertManifestOutputMatchesRow(
+    exactOutputs[0] as Record<string, unknown>,
+    input.row,
+  );
+  return null;
+}
+
 export function buildVerifiedArtifactContent(
   row: ArtifactRow,
   bytes: Uint8Array,
@@ -272,6 +534,7 @@ export function buildVerifiedArtifactContent(
     previewReason,
     verification: {
       registryResolved: true,
+      manifestMembershipVerified: true,
       sizeVerified: true,
       sha256Verified: true,
       gitBlobVerified:
@@ -308,33 +571,23 @@ export async function resolveVerifiedArtifactContent(input: {
     throw registryError('LOAD_RESULT artifact authority does not match registry metadata');
   }
 
-  const resolved = await input.port.resolveArtifact({
-    p_run_id: input.runId,
-    p_artifact_id: input.artifactId,
-    p_version: input.version,
-    p_expected_sha256: ref.content_sha256,
-    p_required_authority_class: ref.required_authority_class,
-  });
-  assertResolvedArtifactMatchesRow(resolved, row);
-  assertArtifactStorageCoordinates(row);
+  await assertRpcResolvedArtifact(input.port, row);
 
-  let bytes: Uint8Array;
-  if (row.storage_backend === 'PRIVATE_GITHUB') {
-    bytes = await input.readPrivateGithub(row);
-  } else if (row.storage_backend === 'SUPABASE_STORAGE') {
-    if (!row.supabase_bucket || !row.supabase_object_path) {
-      throw registryError('Supabase Storage artifact provenance is incomplete');
-    }
-    bytes = await input.port.readSupabaseObject(
-      row.supabase_bucket,
-      row.supabase_object_path,
-    );
-  } else {
-    throw new ArtifactContentError(
-      'ARTIFACT_STORAGE_UNSUPPORTED',
-      'Artifact storage backend is not supported',
-    );
-  }
+  const manifestBytes = await verifyActiveManifestMembership({
+    port: input.port,
+    loadRefs: input.loadRefs,
+    artifactRows: input.artifactRows,
+    row,
+    readPrivateGithub: input.readPrivateGithub,
+  });
+
+  const bytes =
+    manifestBytes ??
+    (await readArtifactBytes(
+      input.port,
+      row,
+      input.readPrivateGithub,
+    ));
 
   return buildVerifiedArtifactContent(row, bytes);
 }
