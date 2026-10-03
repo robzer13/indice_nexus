@@ -117,6 +117,8 @@ test('artifact catalog never exposes a Supabase artifact absent from LOAD_RESULT
     github_blob_sha: null,
     supabase_bucket: null,
     supabase_object_path: null,
+    manifest_artifact_id: null,
+    manifest_version: null,
   });
 
   const hiddenArtifactId = '00000000-0000-4000-8000-000000000099';
