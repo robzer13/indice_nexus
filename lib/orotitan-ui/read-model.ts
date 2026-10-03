@@ -17,6 +17,32 @@ function normalized(value: string): string {
   return value.trim().toLocaleLowerCase('en-US');
 }
 
+export function issuerSlug(value: string): string {
+  const slug = value
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLocaleLowerCase('en-US')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
+  if (!slug) {
+    throw new Error('OroTitan UI issuer display name cannot produce a canonical slug');
+  }
+  return slug;
+}
+
+export function assertUniqueIssuerSlugs(issuers: IssuerRow[]): void {
+  const ownerBySlug = new Map<string, string>();
+  for (const issuer of issuers) {
+    const slug = issuerSlug(issuer.display_name);
+    const prior = ownerBySlug.get(slug);
+    if (prior && prior !== issuer.issuer_id) {
+      throw new Error('OroTitan UI canonical issuer slug is ambiguous: ' + slug);
+    }
+    ownerBySlug.set(slug, issuer.issuer_id);
+  }
+}
+
 export function resolveUiIssuer(
   query: string,
   issuers: IssuerRow[],
@@ -29,6 +55,7 @@ export function resolveUiIssuer(
   for (const issuer of issuers) {
     if (
       normalized(issuer.display_name) === needle ||
+      issuerSlug(issuer.display_name) === needle ||
       (issuer.legal_name !== null && normalized(issuer.legal_name) === needle)
     ) {
       issuerIds.add(issuer.issuer_id);
@@ -76,12 +103,11 @@ export function selectUiSecurity(
 }
 
 export function buildCompanyIdentity(
-  slug: string,
   issuer: IssuerRow,
   security: SecurityRow,
 ): CompanyIdentity {
   return {
-    slug,
+    slug: issuerSlug(issuer.display_name),
     displayName: issuer.display_name,
     legalName: issuer.legal_name ?? issuer.display_name,
     ticker: security.ticker,

@@ -6,10 +6,14 @@ import {
   executeServerControlledOperation,
 } from '../orotitan-equity/post-c7/chatgpt-supabase-bridge-server';
 import type {
+  ControlledBridgePort,
+  IssuerRow,
   LoadResult as BridgeLoadResult,
   OperationFailure,
+  SecurityRow,
 } from '../orotitan-equity/post-c7/chatgpt-supabase-bridge';
 import {
+  assertUniqueIssuerSlugs,
   buildArtifactCatalog,
   buildCompanyIdentity,
   buildRunSummaries,
@@ -42,6 +46,29 @@ function toUiLoadResult(result: BridgeLoadResult): LoadResult {
   return result as LoadResult;
 }
 
+async function readDossierShell(
+  port: ControlledBridgePort,
+  issuer: IssuerRow,
+  securities: SecurityRow[],
+): Promise<UiDossierShell | null> {
+  const security = selectUiSecurity(securities, issuer.issuer_id);
+  const [dossiers, runs] = await Promise.all([
+    port.listDossiers(issuer.issuer_id),
+    port.listRuns(issuer.issuer_id),
+  ]);
+
+  const activeDossiers = dossiers.filter((row) => row.active);
+  if (activeDossiers.length === 0) return null;
+  if (activeDossiers.length > 1) {
+    throw new Error('OroTitan UI found multiple active dossiers for issuer');
+  }
+
+  return {
+    identity: buildCompanyIdentity(issuer, security),
+    runSummaries: buildRunSummaries(runs, issuer.issuer_id),
+  };
+}
+
 const loadUiDossierShell = cache(
   async (issuerQuery: string): Promise<UiDossierShell | null> => {
     const port = createServerControlledBridgePort();
@@ -50,23 +77,42 @@ const loadUiDossierShell = cache(
       port.listSecurities(),
     ]);
 
+    assertUniqueIssuerSlugs(issuers);
     const issuer = resolveUiIssuer(issuerQuery, issuers, securities);
     if (!issuer) return null;
 
-    const security = selectUiSecurity(securities, issuer.issuer_id);
-    const runs = await port.listRuns(issuer.issuer_id);
-
-    return {
-      identity: buildCompanyIdentity(issuerQuery, issuer, security),
-      runSummaries: buildRunSummaries(runs, issuer.issuer_id),
-    };
+    return readDossierShell(port, issuer, securities);
   },
 );
+
+const loadUiDossierShells = cache(async (): Promise<UiDossierShell[]> => {
+  const port = createServerControlledBridgePort();
+  const [issuers, securities] = await Promise.all([
+    port.listIssuers(),
+    port.listSecurities(),
+  ]);
+
+  assertUniqueIssuerSlugs(issuers);
+  const shells = await Promise.all(
+    issuers.map((issuer) => readDossierShell(port, issuer, securities)),
+  );
+
+  return shells
+    .filter((shell): shell is UiDossierShell => shell !== null)
+    .filter((shell) => shell.runSummaries.length > 0)
+    .sort((left, right) =>
+      left.identity.displayName.localeCompare(right.identity.displayName, 'fr'),
+    );
+});
 
 export async function getUiDossierShell(
   issuerQuery: string,
 ): Promise<UiDossierShell | null> {
   return loadUiDossierShell(issuerQuery);
+}
+
+export async function listUiDossierShells(): Promise<UiDossierShell[]> {
+  return loadUiDossierShells();
 }
 
 export type UiDossierSelection =

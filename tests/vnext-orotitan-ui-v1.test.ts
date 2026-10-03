@@ -11,7 +11,11 @@ import {
 } from '../lib/orotitan-ui/presentation';
 import { VEOLIA_MOCK_DOSSIER } from '../lib/orotitan-ui/mock';
 import {
+  assertUniqueIssuerSlugs,
   buildArtifactCatalog,
+  buildCompanyIdentity,
+  issuerSlug,
+  resolveUiIssuer,
   resolveUiRunSelection,
 } from '../lib/orotitan-ui/read-model';
 import type { ArtifactRow } from '../lib/orotitan-equity/post-c7/chatgpt-supabase-bridge';
@@ -125,4 +129,66 @@ test('artifact catalog never exposes a Supabase artifact absent from LOAD_RESULT
 
   assert.deepEqual(Object.keys(catalog), [visibleRef.artifact_id]);
   assert.equal(catalog[hiddenArtifactId], undefined);
+});
+
+
+test('issuer discovery derives a stable canonical slug and resolves it without a mock allow-list', () => {
+  const issuers = [
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000001',
+      display_name: 'Veolia',
+      legal_name: 'Veolia Environnement S.A.',
+    },
+    {
+      issuer_id: '10000000-0000-4000-8000-000000000002',
+      display_name: 'ASML Holding',
+      legal_name: 'ASML Holding N.V.',
+    },
+  ];
+  const securities = [
+    {
+      security_id: '20000000-0000-4000-8000-000000000001',
+      issuer_id: issuers[0].issuer_id,
+      ticker: 'VIE',
+      market_data_symbol: 'VIE.PA',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+    {
+      security_id: '20000000-0000-4000-8000-000000000002',
+      issuer_id: issuers[1].issuer_id,
+      ticker: 'ASML',
+      market_data_symbol: 'ASML.AS',
+      primary_listing: true,
+      listing_status: 'ACTIVE',
+    },
+  ];
+
+  assert.equal(issuerSlug('ASML Holding'), 'asml-holding');
+  assert.equal(resolveUiIssuer('asml-holding', issuers, securities)?.issuer_id, issuers[1].issuer_id);
+  assert.equal(resolveUiIssuer('ASML', issuers, securities)?.issuer_id, issuers[1].issuer_id);
+  assert.equal(resolveUiIssuer('VIE.PA', issuers, securities)?.issuer_id, issuers[0].issuer_id);
+
+  const identity = buildCompanyIdentity(issuers[0], securities[0]);
+  assert.equal(identity.slug, 'veolia');
+  assert.equal(identity.ticker, 'VIE');
+});
+
+test('issuer discovery fails closed when two issuers would share one canonical slug', () => {
+  assert.throws(
+    () =>
+      assertUniqueIssuerSlugs([
+        {
+          issuer_id: '10000000-0000-4000-8000-000000000001',
+          display_name: 'ACME S.A.',
+          legal_name: 'ACME S.A.',
+        },
+        {
+          issuer_id: '10000000-0000-4000-8000-000000000002',
+          display_name: 'ACME SA',
+          legal_name: 'ACME SA',
+        },
+      ]),
+    /canonical issuer slug is ambiguous/,
+  );
 });
