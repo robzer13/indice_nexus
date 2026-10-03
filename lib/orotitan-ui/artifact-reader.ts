@@ -473,7 +473,7 @@ async function verifyActiveManifestMembership(input: {
   return null;
 }
 
-export function buildVerifiedArtifactContent(
+function buildVerifiedArtifactContent(
   row: ArtifactRow,
   bytes: Uint8Array,
 ): VerifiedArtifactContent {
