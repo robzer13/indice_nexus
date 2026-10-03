@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import type { LoadResult } from '../lib/orotitan-equity/post-c7/chatgpt-supabase-bridge';
 import {
+  type ContinuationAttemptPort,
   PilotageContinuationError,
   buildLosslessResumeEnvelope,
   buildLosslessResumePrompt,
@@ -273,6 +274,39 @@ test('conflicting duplicate refs fail closed', () => {
   );
 });
 
+test('resume refs absent from artifact_index fail closed', () => {
+  const broken = load();
+  broken.context_plan = {
+    ...broken.context_plan,
+    l2: [ref('50000000-0000-4000-8000-000000000099')],
+  };
+
+  assert.throws(
+    () => buildLosslessResumeEnvelope(broken),
+    (error: unknown) =>
+      error instanceof PilotageContinuationError &&
+      error.code === 'CONTEXT_REF_NOT_IN_INDEX',
+  );
+});
+
+test('active manifest metadata must match artifact_index exactly', () => {
+  const broken = load();
+  broken.stage = {
+    ...broken.stage!,
+    active_manifest: {
+      ...broken.stage!.active_manifest!,
+      content_sha256: 'd'.repeat(64),
+    },
+  };
+
+  assert.throws(
+    () => buildLosslessResumeEnvelope(broken),
+    (error: unknown) =>
+      error instanceof PilotageContinuationError &&
+      error.code === 'CONTEXT_REF_NOT_IN_INDEX',
+  );
+});
+
 test('resume cannot be reconstructed when LOAD has no active run', () => {
   assert.throws(
     () =>
@@ -302,8 +336,8 @@ test('resume cannot be reconstructed when LOAD has no active run', () => {
 test('durable continuation registration allows only the first attempt for the same state and operation', async () => {
   const current = buildLosslessResumeEnvelope(load());
   let count = 0;
-  const port = {
-    async registerAttempt(args: Parameters<typeof registerContinuationAttempt>[0]['registerAttempt'] extends (value: infer T) => Promise<unknown> ? T : never) {
+  const port: ContinuationAttemptPort = {
+    async registerAttempt(args) {
       count += 1;
       return {
         decision: count === 1 ? 'FIRST_ATTEMPT' as const : 'NO_PROGRESS_REPLAY' as const,
@@ -357,4 +391,30 @@ test('route mismatch is rejected before durable attempt registration', async () 
 
   assert.equal(decision.decision, 'ROUTE_MISMATCH');
   assert.equal(called, false);
+});
+
+
+test('malformed persisted continuation registration fails closed', async () => {
+  const current = buildLosslessResumeEnvelope(load());
+  const port: ContinuationAttemptPort = {
+    async registerAttempt(args) {
+      return {
+        decision: 'FIRST_ATTEMPT',
+        run_id: args.p_run_id,
+        stage_code: args.p_stage_code,
+        state_fingerprint_sha256: '0'.repeat(64),
+        requested_operation: args.p_requested_operation,
+        exact_next_action: args.p_exact_next_action,
+        attempt_count: 1,
+        retry_without_reload_allowed: false,
+      };
+    },
+  };
+
+  await assert.rejects(
+    registerContinuationAttempt(port, current, 'CONTINUE_STAGE'),
+    (error: unknown) =>
+      error instanceof PilotageContinuationError &&
+      error.code === 'INVALID_PRIOR_ATTEMPT',
+  );
 });
