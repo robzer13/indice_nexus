@@ -44,9 +44,7 @@ create table public.orotitan_pilotage_attempts (
       'FAIL_CLOSED'
     )
   ),
-  attempt_count bigint not null default 1 check (attempt_count >= 1),
   first_seen_at timestamptz not null default now(),
-  last_seen_at timestamptz not null default now(),
   unique (
     run_id,
     stage_code,
@@ -63,7 +61,7 @@ comment on table public.orotitan_pilotage_attempts is
   'Operational Pilotage anti-loop ledger. Records continuation attempts by exact durable state fingerprint; never analytical truth.';
 
 create index orotitan_pilotage_attempts_run_stage_idx
-  on public.orotitan_pilotage_attempts (run_id, stage_code, last_seen_at desc);
+  on public.orotitan_pilotage_attempts (run_id, stage_code, first_seen_at desc);
 
 alter table public.orotitan_pilotage_attempts enable row level security;
 
@@ -247,7 +245,7 @@ begin
       'state_fingerprint_sha256', v_attempt.state_fingerprint_sha256,
       'requested_operation', v_attempt.requested_operation,
       'exact_next_action', v_attempt.exact_next_action,
-      'attempt_count', v_attempt.attempt_count,
+      'attempt_count', 1,
       'retry_without_reload_allowed', false
     );
   end if;
@@ -274,12 +272,6 @@ begin
     raise exception 'PILOTAGE_STATE_FINGERPRINT_DRIFT' using errcode = '23514';
   end if;
 
-  update public.orotitan_pilotage_attempts
-  set attempt_count = attempt_count + 1,
-      last_seen_at = now()
-  where attempt_id = v_attempt.attempt_id
-  returning * into v_attempt;
-
   return jsonb_build_object(
     'decision', 'NO_PROGRESS_REPLAY',
     'run_id', v_attempt.run_id,
@@ -287,7 +279,7 @@ begin
     'state_fingerprint_sha256', v_attempt.state_fingerprint_sha256,
     'requested_operation', v_attempt.requested_operation,
     'exact_next_action', v_attempt.exact_next_action,
-    'attempt_count', v_attempt.attempt_count,
+    'attempt_count', 1,
     'retry_without_reload_allowed', false
   );
 end;
