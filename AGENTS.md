@@ -18,11 +18,11 @@ If a real conflict cannot be resolved without guessing:
 
 ## Mandatory protocol read
 
-Before **any repository modification**, read:
+At the start of **every repository mission**, including read-only VERIFY / CHECK / AUDIT / VALIDATE / INSPECT / REVIEW / CONFIRM missions, read:
 
 `.agent/EXECUTION_CONTROL_PROTOCOL.md`
 
-The detailed protocol is mandatory, not optional. The critical invariants below remain binding even if that file cannot be read.
+Read it before any substantive repository action. The detailed protocol is mandatory, not optional. The critical invariants below remain binding even if that file cannot be read.
 
 ## Critical execution invariants
 
@@ -152,7 +152,7 @@ Classify every review comment:
 - `BLOCKING`: actually prevents mission acceptance or proves implementation incorrect.
 - `NON_BLOCKING`: suggestion, style, cleanup, optional hardening, refactor, future work.
 
-Only BLOCKING comments authorize autonomous scoped correction. NON_BLOCKING comments become follow-up only.
+Only BLOCKING comments may authorize an autonomous scoped correction **when the current Mission Lock already authorizes implementation/modification work**. In a verification-only mission, a BLOCKING finding remains a read-only result and requires explicit user GO before any fix. NON_BLOCKING comments become follow-up only.
 
 ### 10. Async polling limit
 
@@ -162,9 +162,11 @@ Applies to CI, GitHub Actions, review bots, Vercel, deployments, and external se
 
 After two checks without material change:
 
+`MISSION_STATUS = PENDING_EXTERNAL_RESULT`
+
 `PENDING_EXTERNAL_RESULT = YES`
 
-Stop polling and return control to the user.
+Stop polling and return control to the user. This is neither COMPLETE nor BLOCKED.
 
 ### 11. Action budget / checkpoint
 
