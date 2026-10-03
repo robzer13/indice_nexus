@@ -22,7 +22,8 @@ The implementation preserves the authority split:
 
 A resume envelope is rebuilt from a fresh controlled `LOAD_RESULT`. It contains:
 
-- exact `RUN_ID`;
+- exact `RUN_ID`, issuer, security and dossier identity;
+- run type, canonical mode and data cutoff;
 - run and stage `state_version`;
 - current stage and stage revision;
 - lifecycle and handoff gate;
