@@ -1,0 +1,108 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-020",
+  "company": "Visa",
+  "run_id": "f030b0e4-8613-4889-8bd7-cabd9b70fa45",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/f030b0e4-8613-4889-8bd7-cabd9b70fa45/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__d7a22e35-4e3f-4eac-a75d-4cc36d29304b__v001.json",
+    "commit_sha": "1d2b327eaaceddb43f05d41475018f58b8c60aa8",
+    "blob_sha": "dc154a0858409bba243b3e0437c30f43bcfe2022",
+    "registry_content_sha256": "e12351546c4673fee203d4918fe1eafae264bd674395cff4e881edfbe0d6657c"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "f030b0e4-8613-4889-8bd7-cabd9b70fa45",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "version": 1,
+    "status": "COMPLETE_WITH_LIMITATIONS",
+    "source_fundamentals_blocks": {
+      "artifact_id": "c0996165-0d83-42af-82e9-32df2f173ff2",
+      "version": 1,
+      "content_sha256": "73bf1468cdddd2797354a9015e504d9ff71895ac729652820e3ec3b7af09a856"
+    },
+    "source_valuation_lock": {
+      "artifact_id": "2acc968d-f3ed-4238-9c72-49166881cf37",
+      "version": 1,
+      "content_sha256": "3f8a7eed895cd282ec9587c6fc164a67298d21a7cf5ed2f3c7615e1f3b8b4c7f"
+    },
+    "block_execution": [
+      {
+        "block": "BUSINESS_MODEL",
+        "status": "COMPLETE"
+      },
+      {
+        "block": "ECONOMIC_QUALITY",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "MOAT",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "RUNWAY",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "RETURN_QUALITY",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "FCF_OWNER_EARNINGS_FORENSIC",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "CAPITAL_ALLOCATION",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "MANAGEMENT_GOVERNANCE",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "OUTSIDE_VIEW",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "RISK_RESILIENCE",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "VALUATION",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block": "CERTIFICATION_RECONCILIATION",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      }
+    ],
+    "locked_states": {
+      "moat_evidence_state": "STRONGLY_SUPPORTED",
+      "moat_trend": "STABLE",
+      "moat_durability": "LONG",
+      "runway_evidence_state": "SUPPORTED",
+      "runway_magnitude": "MATERIAL",
+      "runway_horizon": "EXTENDED",
+      "roic_trend": "UNCLEAR",
+      "roiic": "NOT_INTERPRETABLE",
+      "economic_spread": "CLEARLY_POSITIVE",
+      "forensic_reliability": "WATCH",
+      "valuation_reliability": "MEDIUM"
+    },
+    "created_at": "2026-09-20T14:28:13.705730Z"
+  }
+}
