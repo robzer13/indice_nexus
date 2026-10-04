@@ -38,8 +38,10 @@ select public.record_orotitan_benchmark_execution(
     'model_provider', 'openai',
     'model_name', 'gpt-test',
     'model_version', 'gpt-test',
-    'reasoning_config', 'PROVIDER_DEFAULT',
+    'reasoning_config', 'medium',
+    'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
     'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
+    'sanitizer_version', '1.0.0',
     'input_package_sha256', repeat('3', 64),
     'started_at', '2026-10-04T15:00:00Z',
     'finished_at', '2026-10-04T15:00:02Z',
@@ -83,8 +85,10 @@ select public.record_orotitan_benchmark_execution(
     'model_provider', 'openai',
     'model_name', 'gpt-test',
     'model_version', 'gpt-test',
-    'reasoning_config', 'PROVIDER_DEFAULT',
+    'reasoning_config', 'medium',
+    'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
     'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
+    'sanitizer_version', '1.0.0',
     'input_package_sha256', repeat('3', 64),
     'started_at', '2026-10-04T15:00:00Z',
     'finished_at', '2026-10-04T15:00:02Z',
@@ -204,13 +208,15 @@ begin
     insert into public.orotitan_engine_benchmark_executions (
       campaign_id, phase_id, case_id, repetition_index, execution_profile_id,
       engine_fingerprint, model_provider, model_name, model_version, reasoning_config,
-      prompt_artifact_version, input_package_sha256, started_at, finished_at, duration_ms,
+      runner_version, prompt_artifact_version, sanitizer_version, input_package_sha256,
+      started_at, finished_at, duration_ms,
       dimension_scores, dimension_rationales, oqs_raw, weak_link_cap, oqs,
       i2_computation_status, finish_reason, usage, output_sha256
     ) values (
       'X', 'Y', 'V2REF-001', 99, repeat('4',64), repeat('5',64),
-      'openai', 'x', 'x', 'x', 'x', repeat('6',64),
-      now(), now(), 0,
+      'openai', 'x', 'x', 'x', 'medium',
+      'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1', '1.0.0',
+      repeat('6',64), now(), now(), 0,
       jsonb_build_object(
         'MOAT', 80, 'RUNWAY', 80, 'RETURN_QUALITY', 80, 'CASH_ECONOMICS', 80,
         'CAPITAL_ALLOCATION', 80, 'MANAGEMENT_GOVERNANCE', 80, 'RESILIENCE_RISK', 80
