@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 import {
   buildLosslessResumePrompt,
   type ContinuationGuardDecision,
@@ -25,6 +26,8 @@ type ContinuationRequest = {
   runId: string;
   requestedOperation: PilotageRequestedOperation;
 };
+
+type AdmissionStatus = 'CREATED' | 'RECOVERED' | 'DENIED';
 
 export type ContinuationRouteDependencies = {
   requireAdmin: () => Promise<void>;
@@ -69,6 +72,40 @@ function json(body: unknown, status = 200): Response {
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function admissionId(
+  envelope: LosslessResumeEnvelope,
+  requestedOperation: PilotageRequestedOperation,
+): string {
+  const durableAttemptIdentity = [
+    'OROTITAN_PILOTAGE_ADMISSION_V1',
+    envelope.run_id,
+    envelope.current_stage,
+    String(envelope.run_state_version),
+    String(envelope.stage_state_version),
+    requestedOperation,
+    envelope.state_fingerprint_sha256,
+  ].join('\n');
+
+  return createHash('sha256')
+    .update(durableAttemptIdentity, 'utf8')
+    .digest('hex');
+}
+
+function admissionStatus(
+  decision: ContinuationGuardDecision,
+): AdmissionStatus {
+  if (decision.decision === 'PROCEED') return 'CREATED';
+  if (decision.decision === 'NO_PROGRESS') return 'RECOVERED';
+  return 'DENIED';
+}
+
+function handoffAllowed(decision: ContinuationGuardDecision): boolean {
+  return (
+    decision.decision === 'PROCEED' ||
+    decision.decision === 'NO_PROGRESS'
+  );
 }
 
 export function parseContinuationRequest(value: unknown): ContinuationRequest {
@@ -135,7 +172,8 @@ export async function handleContinuationRequest(
     return json(
       {
         error: 'OROTITAN_CONTINUATION_REQUEST_INVALID',
-        message: error instanceof Error ? error.message : 'invalid continuation request',
+        message:
+          error instanceof Error ? error.message : 'invalid continuation request',
       },
       400,
     );
@@ -151,12 +189,19 @@ export async function handleContinuationRequest(
       requestedOperation: parsed.requestedOperation,
     });
 
+    const status = admissionStatus(decision);
+    const canHandoff = handoffAllowed(decision);
+    const durableAdmissionId = admissionId(
+      envelope,
+      parsed.requestedOperation,
+    );
+
     return json(
       {
         continuation_version: '1.0.0',
         source: envelope.source,
         chat_memory_authority: envelope.chat_memory_authority,
-        mutation_scope: decision.dispatch_allowed
+        mutation_scope: canHandoff
           ? 'PILOTAGE_ATTEMPT_LEDGER_ONLY'
           : 'NONE',
         run_id: envelope.run_id,
@@ -166,13 +211,17 @@ export async function handleContinuationRequest(
         state_fingerprint_sha256: envelope.state_fingerprint_sha256,
         exact_next_action: envelope.exact_next_action,
         requested_operation: parsed.requestedOperation,
-        decision: decision.decision,
-        dispatch_allowed: decision.dispatch_allowed,
-        retry_allowed: decision.retry_allowed,
+        admission_id: durableAdmissionId,
+        admission_status: status,
+        handoff_allowed: canHandoff,
+        handoff_idempotency_key: canHandoff ? durableAdmissionId : null,
+        guard_decision: decision.decision,
+        guard_dispatch_allowed: decision.dispatch_allowed,
+        blind_retry_allowed: decision.retry_allowed,
         reason: decision.reason,
         lossless_resume_prompt: buildLosslessResumePrompt(envelope),
       },
-      decision.dispatch_allowed ? 200 : 409,
+      canHandoff ? 200 : 409,
     );
   } catch {
     return json(
