@@ -1,0 +1,695 @@
+{
+  "corpus_id": "OROTITAN_V2_REFERENCE_20_V0.1",
+  "status": "FROZEN_BENCHMARK_INPUT_CANDIDATE",
+  "created_date": "2026-10-04",
+  "purpose": "Stratified point-in-time reference corpus for OroTitan V2 engine reproducibility, evidence, calculation, and future cross-engine comparison.",
+  "engine": {
+    "process_version": "2.0",
+    "pilotage_contract_version": "2.0",
+    "contract_set_sha256": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e"
+  },
+  "selection_policy": {
+    "target_companies": 20,
+    "sector_coverage": "ALL_10_SECTORS_PRESENT_IN_CURRENT_PUBLISHED_CORPUS",
+    "required_stress_cases": [
+      "BANKING",
+      "INSURANCE",
+      "ASSET_MANAGEMENT",
+      "PAYMENTS_RANGE_OUTPUT",
+      "RECURRING_SUBSCRIPTION",
+      "SEMICONDUCTORS",
+      "LUXURY",
+      "MEDICAL_DEVICES",
+      "PHARMA_BIOTECH",
+      "ENERGY",
+      "REAL_ESTATE",
+      "TRANSACTION_FEE",
+      "LOW_AND_HIGH_OQS",
+      "LOW_AND_MEDIUM_VALUATION_RELIABILITY",
+      "ALLOWED_AND_CONDITIONAL_SCORE_PERMISSION"
+    ],
+    "anti_cherry_pick_rule": "Selection is stratified for methodological stress coverage, not for investment attractiveness."
+  },
+  "cases": [
+    {
+      "case_id": "V2REF-001",
+      "company": "Adyen",
+      "ticker": "ADYEN",
+      "sector": "FINANCIALS",
+      "industry_group": "PAYMENTS",
+      "business_model_primary": "PAYMENTS_TAKE_RATE",
+      "run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+      "dossier_id": "e47a0165-9d80-4d5e-9279-db206846afac",
+      "snapshot_id": "5b3e7063-86b0-48a3-be21-cadf989e6a3d",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "13378fdb-9330-4d2e-b680-feb5b7b1d685",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "3882a997-ba5a-420b-947b-831878f31b58",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 76,
+        "ovs": {
+          "min": 13.147260369686773,
+          "max": 14.569771284351365
+        },
+        "investment_score": {
+          "min": 28.147260369686773,
+          "max": 29.569771284351365
+        },
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "PAYMENTS",
+        "RANGE_OUTPUT",
+        "CONDITIONAL",
+        "LOW_VALUATION_RELIABILITY"
+      ]
+    },
+    {
+      "case_id": "V2REF-002",
+      "company": "Air Liquide",
+      "ticker": "AI",
+      "sector": "MATERIALS",
+      "industry_group": "MATERIALS_CHEMICALS",
+      "business_model_primary": "HYBRID",
+      "run_id": "dffc489e-1b68-4153-b4cb-9b6d2ef9ffea",
+      "dossier_id": "e1c503d6-c2e2-4fc3-abb4-73bcc9698646",
+      "snapshot_id": "90f2a36a-58df-4498-9652-7a32696f9a90",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "06583074-3845-4e95-94bb-81870adad695",
+        "version": 3
+      },
+      "integration_manifest": {
+        "artifact_id": "576181b4-3c5f-410b-9e4c-ca115559a16b",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 78.25,
+        "ovs": 1.1739997843906345,
+        "investment_score": 16.173999784390634,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "MATERIALS",
+        "HYBRID",
+        "LOW_OVS"
+      ]
+    },
+    {
+      "case_id": "V2REF-003",
+      "company": "Alphabet",
+      "ticker": "GOOGL",
+      "sector": "COMMUNICATION_SERVICES",
+      "industry_group": "MEDIA_ADVERTISING",
+      "business_model_primary": "HYBRID",
+      "run_id": "ef71251d-da41-442a-91ab-33503f5c95c1",
+      "dossier_id": "c7277756-d903-4fea-9c0f-2305364f4156",
+      "snapshot_id": "665038a4-06db-44a5-b5e3-98d27538d0b0",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "8fa7c723-4aa0-494f-9501-b06998274177",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "82ec4467-e103-46e2-9731-d9020b0b7b4b",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 79.25,
+        "ovs": 20.562958938881692,
+        "investment_score": 35.56295893888169,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "ADVERTISING_EXPOSURE",
+        "MEGA_CAP",
+        "HYBRID"
+      ]
+    },
+    {
+      "case_id": "V2REF-004",
+      "company": "BELIMO Holding AG",
+      "ticker": "BEAN",
+      "sector": "INDUSTRIALS",
+      "industry_group": "AUTOMATION_ELECTRIFICATION",
+      "business_model_primary": "PRODUCT_SALES_PREMIUM",
+      "run_id": "712628fb-d37f-45f5-a50d-67de3fe14fec",
+      "dossier_id": "212b4abe-8e48-4149-898e-eabbebe8e1c4",
+      "snapshot_id": "64a46cf0-b652-4923-b7ea-d2a56982b8c1",
+      "data_cutoff": "2026-09-17",
+      "deep_dive_manifest": {
+        "artifact_id": "0c5c79a9-0963-4463-b0a1-254ffce9c38f",
+        "version": 2
+      },
+      "integration_manifest": {
+        "artifact_id": "cd57e0a9-2ffe-4f6a-92ea-ca1832c9e438",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 85.75,
+        "ovs": 48.60840141205742,
+        "investment_score": 63.60840141205742,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "HIGH_OQS",
+        "INDUSTRIAL_NICHE",
+        "PREMIUM_PRODUCT"
+      ]
+    },
+    {
+      "case_id": "V2REF-005",
+      "company": "Booking Holdings",
+      "ticker": "BKNG",
+      "sector": "CONSUMER_DISCRETIONARY",
+      "industry_group": "TRAVEL_LEISURE",
+      "business_model_primary": "TRANSACTION_FEE",
+      "run_id": "c7c22f5c-084d-48b1-bcee-9870e865431b",
+      "dossier_id": "c1cc5b24-6e32-498e-91f3-d85654c6d39e",
+      "snapshot_id": "20650c2c-f333-472d-9cb9-7146538f55d2",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "c7cc4488-3ede-4baa-b50f-91eeef14aea4",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "14732c56-367e-4c5c-ac5f-c69ff2e3d2cc",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 79.25,
+        "ovs": 75,
+        "investment_score": 77.975,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "TRANSACTION_FEE",
+        "TRAVEL_CYCLICALITY",
+        "HIGH_OVS"
+      ]
+    },
+    {
+      "case_id": "V2REF-006",
+      "company": "Brookfield Corporation",
+      "ticker": "BN",
+      "sector": "FINANCIALS",
+      "industry_group": "ASSET_WEALTH_MANAGEMENT",
+      "business_model_primary": "HYBRID",
+      "run_id": "b765650c-477a-4d34-9143-55db296f6000",
+      "dossier_id": "ab46d1b4-4576-4264-8416-0fe59bdefdc5",
+      "snapshot_id": "27f2cf94-b4ba-4399-ad0f-78b3ff06baed",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "9489a214-c995-4213-8602-7ac5dc82dcaa",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "b0bfb180-0b29-4e43-b136-33993f70333a",
+        "version": 2
+      },
+      "canonical": {
+        "oqs": 77.5,
+        "ovs": 95,
+        "investment_score": 77.5,
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "ASSET_MANAGER",
+        "COMPLEX_ACCOUNTING",
+        "CONDITIONAL",
+        "OVS_CAP_INTERACTION"
+      ]
+    },
+    {
+      "case_id": "V2REF-007",
+      "company": "DBS Group Holdings Ltd",
+      "ticker": "D05",
+      "sector": "FINANCIALS",
+      "industry_group": "BANKING",
+      "business_model_primary": "BANKING_SPREAD",
+      "run_id": "79404786-140f-48cc-ab08-eac23acc4b67",
+      "dossier_id": "b3074408-8741-4abf-8451-3b90e29eab17",
+      "snapshot_id": "61cecb26-e942-426c-98af-99e0c9d6a985",
+      "data_cutoff": "2026-09-18",
+      "deep_dive_manifest": {
+        "artifact_id": "64bfef4f-74ac-4d9c-9176-c525a48e5e5e",
+        "version": 2
+      },
+      "integration_manifest": {
+        "artifact_id": "74a2f663-145f-44a8-96bd-b6d2f3e71e22",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 80,
+        "ovs": 10.630193002435,
+        "investment_score": 25.630193002435,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "BANK",
+        "SECTOR_METHOD",
+        "FINANCIAL_BALANCE_SHEET"
+      ]
+    },
+    {
+      "case_id": "V2REF-008",
+      "company": "Equinix, Inc.",
+      "ticker": "EQIX",
+      "sector": "REAL_ESTATE",
+      "industry_group": "REAL_ESTATE",
+      "business_model_primary": "HYBRID",
+      "run_id": "58c74347-a303-4c4f-ba32-345f3e9bbd70",
+      "dossier_id": "1ed7d3ab-0c10-44d1-87c9-31d368cf3f38",
+      "snapshot_id": "4709f759-86d3-4835-8972-8fee10733a38",
+      "data_cutoff": "2026-09-18",
+      "deep_dive_manifest": {
+        "artifact_id": "ce8f3580-4018-4ca6-bdcd-cb45bda70fb1",
+        "version": 2
+      },
+      "integration_manifest": {
+        "artifact_id": "28d2aaaa-24ac-47a5-8283-f1c9ae80d327",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 69.75,
+        "ovs": 0,
+        "investment_score": 15,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "REAL_ESTATE",
+        "CAPITAL_INTENSIVE",
+        "LOW_VALUATION_RELIABILITY",
+        "ZERO_OVS"
+      ]
+    },
+    {
+      "case_id": "V2REF-009",
+      "company": "Hermès International",
+      "ticker": "RMS",
+      "sector": "CONSUMER_DISCRETIONARY",
+      "industry_group": "LUXURY",
+      "business_model_primary": "PRODUCT_SALES_PREMIUM",
+      "run_id": "6550c321-5cec-403d-99f1-09e19b74dbc6",
+      "dossier_id": "f3fa5883-307d-a78f-64e4-02a49879bf44",
+      "snapshot_id": "60ce7d09-4908-4c4c-a113-43537b64fd4f",
+      "data_cutoff": "2026-09-15",
+      "deep_dive_manifest": {
+        "artifact_id": "89eeaff5-5b9c-47f7-8e0d-75b12ac6bf48",
+        "version": 4
+      },
+      "integration_manifest": {
+        "artifact_id": "b3065b94-5dd5-4652-98d9-e37f1c1f1693",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 83.25,
+        "ovs": 27.482700420970644,
+        "investment_score": 42.482700420970644,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "LUXURY",
+        "BRAND_MOAT",
+        "PREMIUM_PRODUCT"
+      ]
+    },
+    {
+      "case_id": "V2REF-010",
+      "company": "Intuitive Surgical, Inc.",
+      "ticker": "ISRG",
+      "sector": "HEALTH_CARE",
+      "industry_group": "MEDICAL_DEVICES",
+      "business_model_primary": "CONSUMABLES_RAZOR_BLADE",
+      "run_id": "f47aaacb-06e0-4307-b10b-ae1a4e3838e0",
+      "dossier_id": "2796e551-4241-4ae8-b6e1-135f9b653767",
+      "snapshot_id": "c7585971-fdde-4f5b-9dd7-b4778e022063",
+      "data_cutoff": "2026-09-18",
+      "deep_dive_manifest": {
+        "artifact_id": "5eb4d7ef-12ac-4a29-93e9-3b97063278d1",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "d349096f-0ed1-4568-bbd0-22da8772fcda",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 81,
+        "ovs": 0,
+        "investment_score": 15,
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "MEDICAL_DEVICES",
+        "RAZOR_BLADE",
+        "CONDITIONAL",
+        "ZERO_OVS",
+        "CURRENT_REFERENCE_CASE"
+      ]
+    },
+    {
+      "case_id": "V2REF-011",
+      "company": "Microsoft",
+      "ticker": "MSFT",
+      "sector": "INFORMATION_TECHNOLOGY",
+      "industry_group": "SOFTWARE",
+      "business_model_primary": "HYBRID",
+      "run_id": "86bb8d65-b278-4852-b180-fba4086a5a12",
+      "dossier_id": "468bc508-2a36-4005-88b4-e5e6c12f61af",
+      "snapshot_id": "21bbb2eb-1a44-44ec-8e3b-2d157ec65bb5",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "dba210a5-19ea-4592-aa9a-f0ea4669d3f6",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "d4443c2d-26a1-4bc6-9076-0a1d1f2cda80",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 78.75,
+        "ovs": 12.11070417385968,
+        "investment_score": 27.11070417385968,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "SOFTWARE",
+        "MEGA_CAP",
+        "HYBRID"
+      ]
+    },
+    {
+      "case_id": "V2REF-012",
+      "company": "Munich Re",
+      "ticker": "MUV2",
+      "sector": "FINANCIALS",
+      "industry_group": "INSURANCE",
+      "business_model_primary": "INSURANCE_UNDERWRITING",
+      "run_id": "e7f15ac0-9a08-4f41-9fe0-a79b1b8c117f",
+      "dossier_id": "40b47c57-225d-4a5c-911d-6d0b1c750d70",
+      "snapshot_id": "d08d25de-2bb5-4f99-a406-2670db41f779",
+      "data_cutoff": "2026-09-18",
+      "deep_dive_manifest": {
+        "artifact_id": "58e1e901-1cdb-49c0-b78f-24c8827076f7",
+        "version": 2
+      },
+      "integration_manifest": {
+        "artifact_id": "62e54418-4ad1-4db4-bfba-2619ecabf6d0",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 77.5,
+        "ovs": 70.29734252891285,
+        "investment_score": 75.33920275867385,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "INSURANCE",
+        "SECTOR_METHOD",
+        "LOW_VALUATION_RELIABILITY"
+      ]
+    },
+    {
+      "case_id": "V2REF-013",
+      "company": "Novo Nordisk A/S",
+      "ticker": "NOVO-B",
+      "sector": "HEALTH_CARE",
+      "industry_group": "PHARMA_BIOTECH",
+      "business_model_primary": "PRODUCT_SALES_PREMIUM",
+      "run_id": "8603a616-ab4a-4794-856a-a4df454e968d",
+      "dossier_id": "14ad94ae-5605-46ad-a4b4-afeca7452743",
+      "snapshot_id": "ee0debcf-a705-4895-a483-1f347e5e607d",
+      "data_cutoff": "2026-09-18",
+      "deep_dive_manifest": {
+        "artifact_id": "322990b5-c8de-4645-9d60-18e3e82e725f",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "28b9b5d5-d8d6-4fdf-8ed6-e22268c4dcfd",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 75,
+        "ovs": 70.3540125573128,
+        "investment_score": 73.60620376719385,
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "PHARMA_BIOTECH",
+        "CONDITIONAL",
+        "LOW_VALUATION_RELIABILITY"
+      ]
+    },
+    {
+      "case_id": "V2REF-014",
+      "company": "PepsiCo",
+      "ticker": "PEP",
+      "sector": "CONSUMER_STAPLES",
+      "industry_group": "FOOD_BEVERAGE",
+      "business_model_primary": "PRODUCT_SALES_PREMIUM",
+      "run_id": "10a62ea2-c8ea-4801-a7e8-864752835b5a",
+      "dossier_id": "b6c8ec7f-4d82-4927-83b3-cd007e638054",
+      "snapshot_id": "cc26b440-480f-4f46-bead-0c21fca18c64",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "78f9ba19-849d-495e-96bd-15c457fbefe8",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "4cf24ef3-2af4-4aaf-8e37-82f0cdaf6594",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 71.75,
+        "ovs": 47.9201292908,
+        "investment_score": 62.9201292908,
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "CONSUMER_STAPLES",
+        "CONDITIONAL",
+        "MATURE_BRAND"
+      ]
+    },
+    {
+      "case_id": "V2REF-015",
+      "company": "Qualys, Inc.",
+      "ticker": "QLYS",
+      "sector": "INFORMATION_TECHNOLOGY",
+      "industry_group": "CYBERSECURITY",
+      "business_model_primary": "RECURRING_SUBSCRIPTION",
+      "run_id": "e41a8fe0-29cb-45e3-8bca-b1f19ac67d12",
+      "dossier_id": "17f57723-a218-8327-841a-04c5f5513174",
+      "snapshot_id": "e42a1396-357a-42f5-ae0c-5e750f321180",
+      "data_cutoff": "2026-09-15",
+      "deep_dive_manifest": {
+        "artifact_id": "3e115f11-1ad4-4438-92f1-3d53e9ed9bcf",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "dd005bf0-2dd6-4ab2-96fa-cabaaf49e074",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 81.5,
+        "ovs": 10.952176657255615,
+        "investment_score": 25.952176657255617,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "CYBERSECURITY",
+        "RECURRING_SUBSCRIPTION",
+        "LEGACY_HISTORY_AVAILABLE"
+      ]
+    },
+    {
+      "case_id": "V2REF-016",
+      "company": "STMicroelectronics",
+      "ticker": "STMPA",
+      "sector": "INFORMATION_TECHNOLOGY",
+      "industry_group": "SEMICONDUCTORS",
+      "business_model_primary": "PRODUCT_SALES_VOLUME",
+      "run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+      "dossier_id": "b0674e4a-e22a-494a-9626-87b1c6499dd5",
+      "snapshot_id": "257e9b56-8507-4b5a-9c06-2999e788c256",
+      "data_cutoff": "2026-09-15",
+      "deep_dive_manifest": {
+        "artifact_id": "95452b45-a2a2-4f16-8884-9ae17aff2639",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "b47b09db-b853-4a37-aa2d-06fc20d53cb6",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 61.5,
+        "ovs": 0,
+        "investment_score": 15,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "SEMICONDUCTORS",
+        "LOW_OQS",
+        "CYCLICAL",
+        "ZERO_OVS"
+      ]
+    },
+    {
+      "case_id": "V2REF-017",
+      "company": "Thales",
+      "ticker": "HO",
+      "sector": "INDUSTRIALS",
+      "industry_group": "AEROSPACE_DEFENSE",
+      "business_model_primary": "HYBRID",
+      "run_id": "ffbb1518-149a-4224-81a3-628b92e9a151",
+      "dossier_id": "1bad37ef-d7a9-4383-b8ef-adf4a60772a1",
+      "snapshot_id": "88c5f6b7-7f6e-43a2-85c4-bfdd0e12b7f7",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "eba5ba96-0bb2-4b5f-be3d-da9b5cba6719",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "8381a05c-f224-4b0b-a9d9-e84b12aba08c",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 73.75,
+        "ovs": 37.60942996086451,
+        "investment_score": 52.60942996086451,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "AEROSPACE_DEFENSE",
+        "GOVERNMENT_CUSTOMERS",
+        "LOW_VALUATION_RELIABILITY"
+      ]
+    },
+    {
+      "case_id": "V2REF-018",
+      "company": "TotalEnergies",
+      "ticker": "TTE",
+      "sector": "ENERGY",
+      "industry_group": "ENERGY",
+      "business_model_primary": "HYBRID",
+      "run_id": "eca2ad1d-8096-480f-80ff-f8b4dddae6bd",
+      "dossier_id": "a8b77e70-4179-4da7-b70c-63c545fec1bc",
+      "snapshot_id": "806c7229-385a-4c53-ae88-aed0d115ea24",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "f5a89082-98e2-4f85-9f9d-d3229abfdc71",
+        "version": 2
+      },
+      "integration_manifest": {
+        "artifact_id": "bff485d3-75a4-450a-93e0-16aa0b44e526",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 69.25,
+        "ovs": 24.79699137676282,
+        "investment_score": 39.79699137676282,
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "LOW"
+      },
+      "stress_tags": [
+        "ENERGY",
+        "COMMODITY_CYCLICALITY",
+        "LOW_VALUATION_RELIABILITY"
+      ]
+    },
+    {
+      "case_id": "V2REF-019",
+      "company": "TSMC",
+      "ticker": "2330",
+      "sector": "INFORMATION_TECHNOLOGY",
+      "industry_group": "SEMICONDUCTORS",
+      "business_model_primary": "PRODUCT_SALES_VOLUME",
+      "run_id": "15b7881e-b8a3-438c-8d7a-b9c10520a383",
+      "dossier_id": "25fd991f-f4d2-4478-a374-55f12fc0dcc1",
+      "snapshot_id": "4c13da2f-a9fa-416e-8365-91772fde7dee",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "4d249eac-3a78-4488-b508-8a2548221401",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "de8246c4-3a88-420c-8fc4-94984f6a40df",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 84.75,
+        "ovs": 0.8329172070896327,
+        "investment_score": 15.832917207089633,
+        "score_permission": "CONDITIONAL",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "SEMICONDUCTORS",
+        "HIGH_OQS",
+        "GEOPOLITICAL_RISK",
+        "CONDITIONAL"
+      ]
+    },
+    {
+      "case_id": "V2REF-020",
+      "company": "Visa",
+      "ticker": "V",
+      "sector": "FINANCIALS",
+      "industry_group": "PAYMENTS",
+      "business_model_primary": "PAYMENTS_TAKE_RATE",
+      "run_id": "f030b0e4-8613-4889-8bd7-cabd9b70fa45",
+      "dossier_id": "2bf366bd-85a5-47ad-89fa-9de7b14f5210",
+      "snapshot_id": "b423a227-8813-4789-801c-e35bccb1d6cc",
+      "data_cutoff": "2026-09-19",
+      "deep_dive_manifest": {
+        "artifact_id": "a93ec72c-bed4-408d-89bc-f16e4e1d1a55",
+        "version": 1
+      },
+      "integration_manifest": {
+        "artifact_id": "e8ede279-7a3a-481e-b2d9-da8933bf5ce8",
+        "version": 1
+      },
+      "canonical": {
+        "oqs": 82.5,
+        "ovs": {
+          "min": 38.96248356534743,
+          "max": 51.04562866095937
+        },
+        "investment_score": {
+          "min": 53.96248356534743,
+          "max": 66.04562866095938
+        },
+        "score_permission": "ALLOWED",
+        "valuation_reliability": "MEDIUM"
+      },
+      "stress_tags": [
+        "PAYMENTS",
+        "RANGE_OUTPUT",
+        "NETWORK_EFFECT",
+        "HIGH_OQS"
+      ]
+    }
+  ]
+}
