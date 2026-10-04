@@ -1,0 +1,79 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-006",
+  "company": "Brookfield Corporation",
+  "run_id": "b765650c-477a-4d34-9143-55db296f6000",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/b765650c-477a-4d34-9143-55db296f6000/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__f6795d9e-73f7-48f9-8b50-0f769cd07d8c__v001.json",
+    "commit_sha": "3683ca5d1733a7458504bb4e369dbdbf64636082",
+    "blob_sha": "ef27df6db3f2958aae90f23368021f0d5e72714b",
+    "registry_content_sha256": "797acea40fd6dd847d55dbcfae5681c6d38fbe3b22439b9cadff40a0745d7d03"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "f6795d9e-73f7-48f9-8b50-0f769cd07d8c",
+      "version": 1
+    },
+    "run_id": "b765650c-477a-4d34-9143-55db296f6000",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "version": 1,
+    "source_locks": {
+      "fundamentals": {
+        "artifact_id": "adeec950-107b-4e67-a01e-d24e188ed884",
+        "version": 1,
+        "content_sha256": "35b71ce33c70e1e67f2143c01bc393a700b7974c1e3eb82fda0e78f0f566a3b4"
+      }
+    },
+    "fundamental_verdicts": {
+      "moat": {
+        "evidence_state": "SUPPORTED",
+        "trend": "STABLE",
+        "durability": "LONG"
+      },
+      "runway": {
+        "evidence_state": "SUPPORTED",
+        "magnitude": "LARGE",
+        "horizon": "EXTENDED"
+      },
+      "return_quality": {
+        "standard_roic": "NOT_APPLICABLE",
+        "roiic": "NOT_INTERPRETABLE",
+        "economic_spread": "UNKNOWN",
+        "return_attributability": "LOW",
+        "return_data_quality": "MEDIUM",
+        "interpretability": "INTERPRETABLE_WITH_LIMITATIONS"
+      },
+      "forensic_reliability": "WATCH",
+      "owner_earnings": "UNKNOWN",
+      "capital_allocation": "DISCIPLINED_GOOD_NOT_EXCEPTIONAL_CURRENT_COHORT_RETURNS_INCOMPLETE",
+      "management_governance": "CONSTRUCTIVE_ALIGNMENT_WITH_CLASS_B_CONTROL_AND_RELATED_PARTY_COMPLEXITY",
+      "resilience_risk": "STRONG_PARENT_RESILIENCE_WITH_MATERIAL_INSURANCE_REAL_ESTATE_AND_CONTINGENT_RECOURSE_RISKS"
+    },
+    "valuation_verdicts": {
+      "primary_expected_return_pct_pa": 18.87840143019629,
+      "mature_normalization_return_pct_pa": 16.835545488750427,
+      "no_multiple_expansion_return": "NOT_APPLICABLE",
+      "margin_of_safety": "ROBUST",
+      "market_expectation_gap": "BELOW_FUNDAMENTAL_CASE",
+      "valuation_reliability": "MEDIUM"
+    },
+    "certification_reconciliation": "NO_LOCKED_ANALYTICAL_JUDGMENT_OR_VALUATION_ASSUMPTION_CHANGED"
+  }
+}
