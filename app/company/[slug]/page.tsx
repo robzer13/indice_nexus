@@ -87,6 +87,24 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
     getMarketPriceHistory(company.id, 180),
   ]);
 
+  const displayedPriceHistory = [...priceHistory];
+  const lastPersistedPrice = displayedPriceHistory.at(-1);
+  if (
+    company.price !== null &&
+    company.price_as_of &&
+    (!lastPersistedPrice || Date.parse(company.price_as_of) > Date.parse(lastPersistedPrice.as_of))
+  ) {
+    displayedPriceHistory.push({
+      id: -1,
+      company_id: company.id,
+      price: company.price,
+      as_of: company.price_as_of,
+      source: company.price_source ?? 'CURRENT_DISPLAY_PRICE',
+      raw: null,
+      created_at: company.price_as_of,
+    });
+  }
+
   const distance = getDistanceO90(company.price, company.price_o90);
   const zone = getEntryZone(distance);
   const freshness = getFreshness(company.price_as_of);
@@ -178,7 +196,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
             <h2 className="text-xl font-semibold text-white">Cours et seuils de valorisation</h2>
             <p className="mt-1 text-sm text-slate-500">Le cours de marché évolue ; l’échelle de prix reste celle du dernier snapshot certifié.</p>
           </div>
-          <PriceHistoryChart points={priceHistory} thresholds={thresholds.map(([label, value]) => ({ label, value }))} {...priceProps}/>
+          <PriceHistoryChart points={displayedPriceHistory} thresholds={thresholds.map(([label, value]) => ({ label, value }))} {...priceProps}/>
         </div>
         <div>
           <h2 className="text-xl font-semibold text-white">Échelle de prix</h2>
