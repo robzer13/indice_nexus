@@ -7,6 +7,7 @@ import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit,
 import type { InvestmentConclusionStatus, MosStatus, ScorePermission, ValuationReliability } from '@/lib/orotitan-equity/v1/certification';
 import { fetchYahooFinancePrice } from '@/lib/market/yahoo-finance';
 import { deriveMarketDataReference } from '@/lib/market/reference';
+import { classifyEngineProvenance, classifyResearchFreshness } from '@/lib/orotitan-equity/engine-provenance';
 
 const fetchCachedYahooFinancePrice = unstable_cache(
   async (reference: string) => fetchYahooFinancePrice(reference),
@@ -34,6 +35,7 @@ type CanonicalContext = {
   security: UnknownRecord;
   company: UnknownRecord | null;
   marketPrice: UnknownRecord | null;
+  run: UnknownRecord | null;
 };
 
 function asRecord(value: unknown): UnknownRecord {
@@ -141,6 +143,7 @@ function canonicalFields(row: CanonicalSnapshotRow) {
     potentialOroTitanPrice: asNumber(priceLadder.potential_orotitan_max_price),
     referencePrice: asNumber(dataLock.reference_price),
     referencePriceDate: asString(dataLock.reference_price_date),
+    dataCutoff: asString(dataLock.data_cutoff) ?? asString(payload.data_cutoff),
     primaryExpectedReturn: asNumber(valuation.primary_expected_return),
     matureNormalizationReturn,
     noMultipleExpansionReturn,
@@ -259,6 +262,12 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
   const price = chooseDisplayedPrice(canonical, context.marketPrice);
   const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
   const quoteUnit = (asString(context.security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR') as QuoteUnit;
+  const engine = classifyEngineProvenance({
+    processVersion: asString(context.run?.process_version),
+    pilotageContractVersion: asString(context.run?.pilotage_contract_version),
+    contractSetSha256: asString(context.run?.contract_set_sha256),
+  });
+  const researchFreshness = classifyResearchFreshness(canonical.dataCutoff);
   const liveValuation = computeLiveValuation({
     currentPrice: price.price,
     referencePrice: canonical.referencePrice,
@@ -319,6 +328,17 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     live_investment_score: liveValuation?.investmentScore ?? null,
     live_price_change_vs_reference_pct: liveValuation?.priceChangeVsReferencePct ?? null,
     live_valuation_is_price_only: liveValuation !== null,
+    run_id: asString(context.run?.run_id),
+    engine_status: engine.status,
+    engine_generation: engine.generation,
+    engine_fingerprint: engine.fingerprint,
+    engine_short_fingerprint: engine.shortFingerprint,
+    process_version: engine.processVersion,
+    pilotage_contract_version: engine.pilotageContractVersion,
+    data_cutoff: canonical.dataCutoff,
+    research_freshness_status: researchFreshness.status,
+    analysis_age_days: researchFreshness.ageDays,
+    published_at: asString(context.run?.published_at),
     analysis_date: row.calculation_date,
     model_version: `OroTitan ${row.method_version} / report ${row.report_version}`,
     status: canonical.status,
@@ -356,18 +376,21 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
 
   const snapshotIds = dossiers.map((row) => row.current_snapshot_id).filter((value): value is string => typeof value === 'string');
   const issuerIds = dossiers.map((row) => row.issuer_id).filter((value): value is string => typeof value === 'string');
+  const dossierIds = dossiers.map((row) => row.dossier_id).filter((value): value is string => typeof value === 'string');
 
-  const [snapshotsResult, issuersResult, companiesResult, pricesResult] = await Promise.all([
+  const [snapshotsResult, issuersResult, companiesResult, pricesResult, runsResult] = await Promise.all([
     supabase.from('research_snapshots').select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at').in('snapshot_id', snapshotIds),
     supabase.from('issuers').select('*').in('issuer_id', issuerIds),
     supabase.from('companies').select('id,slug,sector').in('id', issuerIds),
     supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', issuerIds).order('as_of', { ascending: false }),
+    supabase.from('orotitan_runs').select('run_id,dossier_id,process_version,pilotage_contract_version,contract_set_sha256,published_at').in('dossier_id', dossierIds).eq('run_status', 'PUBLISHED').order('published_at', { ascending: false }),
   ]);
 
   if (snapshotsResult.error) throw new Error(`Unable to load canonical snapshots: ${snapshotsResult.error.message}`);
   if (issuersResult.error) throw new Error(`Unable to load canonical issuers: ${issuersResult.error.message}`);
   if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
   if (pricesResult.error) throw new Error(`Unable to load market prices: ${pricesResult.error.message}`);
+  if (runsResult.error) throw new Error(`Unable to load engine provenance: ${runsResult.error.message}`);
 
   const snapshots = (snapshotsResult.data ?? []) as CanonicalSnapshotRow[];
   const securityIds = snapshots.map((row) => row.security_id);
@@ -377,6 +400,11 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const issuerById = new Map((issuersResult.data ?? []).map((row) => [row.issuer_id as string, row as UnknownRecord]));
   const securityById = new Map((securities ?? []).map((row) => [row.security_id as string, row as UnknownRecord]));
   const companyById = new Map((companiesResult.data ?? []).map((row) => [row.id as string, row as UnknownRecord]));
+  const runByDossier = new Map<string, UnknownRecord>();
+  for (const run of runsResult.data ?? []) {
+    const dossierId = run.dossier_id as string;
+    if (!runByDossier.has(dossierId)) runByDossier.set(dossierId, run as UnknownRecord);
+  }
   const latestPriceByCompany = new Map<string, UnknownRecord>();
   for (const row of pricesResult.data ?? []) {
     const companyId = row.company_id as string;
@@ -388,7 +416,7 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
     const marketPrice = await getBestMarketPrice(security, latestPriceByCompany.get(snapshot.issuer_id) ?? null);
-    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice });
+    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice, run: runByDossier.get(snapshot.dossier_id) ?? null });
   }));
 
   return states.filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));

@@ -73,6 +73,17 @@ export interface CompanyState {
   live_investment_score: number | null;
   live_price_change_vs_reference_pct: number | null;
   live_valuation_is_price_only: boolean;
+  run_id?: string | null;
+  engine_status?: 'CURRENT' | 'PREVIOUS' | 'LEGACY' | 'UNKNOWN';
+  engine_generation?: string;
+  engine_fingerprint?: string | null;
+  engine_short_fingerprint?: string | null;
+  process_version?: string | null;
+  pilotage_contract_version?: string | null;
+  data_cutoff?: string | null;
+  research_freshness_status?: 'RECENT' | 'AGING' | 'STALE' | 'UNKNOWN';
+  analysis_age_days?: number | null;
+  published_at?: string | null;
   analysis_date: string | null;
   model_version: string | null;
   status: CompanyStatus | null;
