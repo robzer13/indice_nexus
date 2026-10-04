@@ -30,6 +30,7 @@ begin
 end;
 $$;
 
+alter function public.prevent_security_market_price_mutation() set search_path = pg_catalog;
 revoke all on function public.prevent_security_market_price_mutation() from public, anon, authenticated;
 
 drop trigger if exists security_market_prices_append_only on public.security_market_prices;
