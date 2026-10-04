@@ -138,8 +138,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
             {company.business_description_short ? <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">{company.business_description_short}</p> : null}
             <div className="mt-5 flex flex-wrap gap-2">
               <EntryZoneBadge zone={zone}/><CompanyStatusBadge status={company.status}/>
-              <EngineBadge status={company.engine_status} shortFingerprint={company.engine_short_fingerprint}/>
-              <ResearchFreshnessBadge status={company.research_freshness_status} ageDays={company.analysis_age_days}/>
+              <EngineBadge status={company.engine_status ?? 'UNKNOWN'} shortFingerprint={company.engine_short_fingerprint}/>
+              <ResearchFreshnessBadge status={company.research_freshness_status ?? 'UNKNOWN'} ageDays={company.analysis_age_days}/>
             </div>
           </div>
 
