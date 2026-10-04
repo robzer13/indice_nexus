@@ -36,6 +36,7 @@ export interface CompanyRecord {
 
 export interface CompanyState {
   id: string;
+  security_id: string;
   slug: string;
   ticker: string;
   name: string;
@@ -60,6 +61,15 @@ export interface CompanyState {
   price: number | null;
   price_as_of: string | null;
   price_source: string | null;
+  reference_price: number | null;
+  reference_price_date: string | null;
+  market_price_change_vs_reference_pct: number | null;
+  market_valuation_score: number | null;
+  market_investment_score: number | null;
+  market_primary_expected_return: number | null;
+  market_normalization_expected_return: number | null;
+  market_score_as_of: string | null;
+  market_score_is_live: boolean;
   analysis_date: string | null;
   model_version: string | null;
   status: CompanyStatus | null;
@@ -115,6 +125,7 @@ export interface SnapshotHistoryRow {
 export interface MarketPriceRow {
   id: number;
   company_id: string;
+  security_id?: string | null;
   price: number;
   as_of: string;
   source: string;
