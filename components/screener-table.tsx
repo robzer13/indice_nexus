@@ -47,12 +47,6 @@ function formatPct(value: number | null, digits = 1): string {
   return `${value >= 0 ? '+' : ''}${value.toFixed(digits)} %`;
 }
 
-function formatDate(value: string | null): string {
-  if (!value) return 'Date inconnue';
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? value : date.toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' });
-}
-
 export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
   const router = useRouter();
   const [search, setSearch] = useState('');
