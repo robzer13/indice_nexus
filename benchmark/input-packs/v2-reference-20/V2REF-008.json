@@ -1,0 +1,430 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-008",
+  "company": "Equinix, Inc.",
+  "run_id": "58c74347-a303-4c4f-ba32-345f3e9bbd70",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/58c74347-a303-4c4f-ba32-345f3e9bbd70/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__fd2221f3-a0fd-42b8-b442-25ca6759255d__v001.json",
+    "commit_sha": "faf667119fabdf6a125c3dac84c1edcdaf9c02ad",
+    "blob_sha": "23285e58d090965e5767635e61e2a3acd6b43765",
+    "registry_content_sha256": "8a56c7abcb93c3213846bd5086d1317b819e090584ea39ca1aa88a59c0d494c7"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "OROTITAN_DEEP_DIVE_V2",
+    "run_id": "58c74347-a303-4c4f-ba32-345f3e9bbd70",
+    "issuer_id": "5250363b-3274-4772-81d4-7599c8e87caf",
+    "security_id": "2f474fa7-0cc0-4f72-8ab9-7432f28f251d",
+    "dossier_id": "1ed7d3ab-0c10-44d1-87c9-31d368cf3f38",
+    "canonical_mode": "ANALYZE",
+    "run_type": "INITIAL",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-18",
+    "created_at": "2026-09-18T15:30:13Z",
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "version": 1,
+    "block_version": "FUNDAMENTALS-1",
+    "business_model": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "HIGH",
+      "core_findings": [
+        "Core IBX economics are carrier-neutral retail colocation plus power and interconnection, complemented by managed infrastructure.",
+        "xScale adds hyperscale capacity mainly through equity-method joint ventures; atNorth adds Nordic high-density exposure through a partner-owned structure.",
+        "FY2025 revenue was 94.8139% recurring; colocation was about 70.25% and interconnection 17.96% of revenue.",
+        "Customer concentration is low, but the model is physically capital intensive and constrained by power, utility timing and site development."
+      ],
+      "supporting_evidence_ids": [
+        "E-003",
+        "E-004",
+        "E-005",
+        "E-006",
+        "E-008",
+        "E-020",
+        "E-024",
+        "E-050"
+      ],
+      "conflict_ids": [
+        "C-003"
+      ],
+      "rationale": "The economic perimeter is well established and separates consolidated IBX operations from unconsolidated/JV economics."
+    },
+    "economic_quality": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "HIGH",
+      "core_findings": [
+        "Recurring revenue, diversified customers, rising cabinet utilization and a large installed ecosystem support high operating visibility.",
+        "FY2025 adjusted EBITDA margin was 49.1483%, but that metric excludes SBC and other economic costs and is not a cash-return measure.",
+        "H1 2026 revenue growth was strong, yet part of the Americas increase included non-recurring services to joint ventures; headline growth should not be treated as purely organic recurring economics.",
+        "Physical infrastructure intensity, financing needs and power scarcity materially qualify the otherwise strong operating characteristics."
+      ],
+      "supporting_evidence_ids": [
+        "E-005",
+        "E-007",
+        "E-008",
+        "E-009",
+        "E-010",
+        "E-011",
+        "E-043",
+        "E-045"
+      ],
+      "calculation_ids": [
+        "CALC-F-001",
+        "CALC-F-002"
+      ],
+      "rationale": "Operating quality is strong, but economic quality is not inferred from margins or recurrence alone."
+    },
+    "moat": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "canonical_verdict_fields": {
+        "MOAT_EVIDENCE_STATE": "SUPPORTED",
+        "MOAT_TREND": "STABLE",
+        "MOAT_DURABILITY": "MODERATE",
+        "PRIMARY_MOAT": "Dense interconnection ecosystem plus embedded colocation switching friction across strategically located carrier-neutral facilities."
+      },
+      "core_findings": [
+        "More than 10,500 customers, 2,000 network providers and 500,000 interconnections create density and coordination value.",
+        "Independent AWS and Google evidence confirms Equinix as a direct/private cloud interconnection location in multiple metros.",
+        "The mechanism is not exclusive: Google and competitor evidence show credible alternatives and multi-provider choice.",
+        "High recurrence and repeat bookings support embedded behavior, but contract termination flexibility means recurrence is not equivalent to hard contractual lock-in.",
+        "The absence of quantified customer migration economics prevents STRONGLY_SUPPORTED status."
+      ],
+      "supporting_evidence_ids": [
+        "E-004",
+        "E-005",
+        "E-029",
+        "E-043",
+        "E-044",
+        "E-045"
+      ],
+      "contradicting_evidence_ids": [
+        "E-030",
+        "E-032"
+      ],
+      "conflict_ids": [
+        "C-002",
+        "C-003"
+      ],
+      "unresolved_points": [
+        "Standalone interconnection margin/incremental-return attribution remains unavailable.",
+        "Direct quantified migration/switching-cost evidence remains limited."
+      ],
+      "rationale": "Evidence converges on a real but non-exclusive ecosystem/embeddedness advantage; durability is bounded by strong alternative providers and incomplete switching evidence."
+    },
+    "runway": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "canonical_verdict_fields": {
+        "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+        "RUNWAY_MAGNITUDE": "LARGE",
+        "RUNWAY_HORIZON": "EXTENDED"
+      },
+      "core_findings": [
+        "The existing development program spans 52 major projects across 35 metros with more than 55,000 planned retail cabinets and more than 100 MW of xScale capacity through 2028.",
+        "Independent industry evidence shows tight vacancy and strong high-density/AI demand, supporting a meaningful demand runway.",
+        "The ~1 GW land-bank figure is not treated as energized capacity.",
+        "Power availability, grid lead times, permitting and capital availability are binding conversion constraints.",
+        "Inference Exchange is optionality only at the cutoff because commercial availability is announced for Q1 2027 with no realized adoption/economics."
+      ],
+      "supporting_evidence_ids": [
+        "E-025",
+        "E-026",
+        "E-036",
+        "E-037",
+        "E-038",
+        "E-041",
+        "E-049"
+      ],
+      "contradicting_evidence_ids": [
+        "E-027",
+        "E-038",
+        "E-048"
+      ],
+      "conflict_ids": [
+        "C-004"
+      ],
+      "assumption_ids": [
+        "A-F-005"
+      ],
+      "rationale": "Demand and project evidence support a large extended runway, but supply conversion is constrained enough to prevent STRONGLY_SUPPORTED status."
+    },
+    "return_quality": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "canonical_verdict_fields": {
+        "STANDARD_ROIC_PCT": 5.2792,
+        "ALL_IN_ROIC_PCT": 5.2792,
+        "ROIC_EX_GOODWILL_PCT": 6.4662,
+        "ROIIC": "NOT_INTERPRETABLE",
+        "ROIC_TREND": "UNCLEAR",
+        "INVESTMENT_LAG": "HIGH",
+        "DATA_QUALITY": "MEDIUM",
+        "ATTRIBUTABILITY": "LOW",
+        "INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS",
+        "ECONOMIC_SPREAD": "UNKNOWN"
+      },
+      "core_findings": [
+        "The all-in 2025 ROIC reconstruction is positive but modest at about 5.28%; the ex-goodwill diagnostic is about 6.47%.",
+        "A one-year incremental-return diagnostic is stronger, but it cannot be promoted to canonical ROIIC because construction, acquisitions/JVs and investment lag break attribution.",
+        "The xScale structure can improve balance-sheet sharing but obscures complete capital and return attribution across equity investments, loans, VIE exposure and related-party income.",
+        "Current evidence does not establish strong marginal returns on the full growth-capital program."
+      ],
+      "supporting_evidence_ids": [
+        "E-015",
+        "E-020",
+        "E-021",
+        "E-022"
+      ],
+      "calculation_ids": [
+        "CALC-F-004",
+        "CALC-F-005",
+        "CALC-F-006"
+      ],
+      "assumption_ids": [
+        "A-F-001",
+        "A-F-002",
+        "A-F-003"
+      ],
+      "unresolved_points": [
+        "Project/cohort returns for xScale and atNorth remain unproven."
+      ],
+      "rationale": "Positive operating economics do not translate into elite all-in capital productivity on the available evidence."
+    },
+    "fcf_forensic": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "canonical_verdict_fields": {
+        "FORENSIC_RELIABILITY": "WATCH",
+        "STANDARDIZED_FCF_2025_USD_M": -400,
+        "OWNER_EARNINGS": "UNKNOWN"
+      },
+      "core_findings": [
+        "Operating cash generation is strong, but total cash PP&E investment has exceeded CFO in 2025 and H1 2026.",
+        "AFFO is transparent and useful as a REIT operating measure, but it adds back SBC and relies on an issuer-defined recurring-capex measure that cannot be assumed to equal economic maintenance.",
+        "SBC is economically material and must remain a real compensation cost; capitalized SBC adds to the construction asset base.",
+        "No evidence of accounting failure is identified, but maintenance-capex ambiguity is material enough to keep forensic reliability at WATCH."
+      ],
+      "supporting_evidence_ids": [
+        "E-012",
+        "E-013",
+        "E-014",
+        "E-015",
+        "E-019"
+      ],
+      "calculation_ids": [
+        "CALC-F-003",
+        "CALC-F-008"
+      ],
+      "assumption_ids": [
+        "A-F-004"
+      ],
+      "unresolved_points": [
+        "Economic Owner Earnings cannot be responsibly bounded from cutoff evidence."
+      ],
+      "rationale": "Cash reporting is traceable, yet the key economic bridge from AFFO to maintenance-adjusted owner cash remains uncertain."
+    },
+    "capital_allocation": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "core_findings": [
+        "Capital allocation is growth-heavy: substantial organic development, JV equity/loans, real-estate acquisitions and the atNorth transaction are being funded alongside a large dividend.",
+        "Common shares outstanding increased from about 94.63 million at YE2023 to 98.226 million at YE2025, while ATM equity issuance and debt markets have been used to finance growth.",
+        "The partnership/JV model shares capital requirements, but full project/cohort returns are not disclosed.",
+        "atNorth expands high-density Nordic capacity, but realized utilization, return and exact recourse/accounting economics remain unproven at the cutoff."
+      ],
+      "supporting_evidence_ids": [
+        "E-015",
+        "E-016",
+        "E-017",
+        "E-020",
+        "E-021",
+        "E-022",
+        "E-024"
+      ],
+      "calculation_ids": [
+        "CALC-F-007"
+      ],
+      "rationale": "The record is mixed: strategic reinvestment capacity is substantial, but demonstrated incremental capital productivity is insufficient for a strong stewardship judgment."
+    },
+    "management_governance": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "core_findings": [
+        "CEO Adaire Fox-Martin's incentive design includes revenue, AFFO per share and relative TSR, which introduces per-share and shareholder-return alignment.",
+        "Revenue remains a major annual-incentive driver and AFFO excludes several economic costs, so the plan does not directly impose a marginal-return or ROIC hurdle.",
+        "Current-leadership long-horizon capital-allocation attribution is limited in the cutoff evidence."
+      ],
+      "supporting_evidence_ids": [
+        "E-046"
+      ],
+      "unresolved_points": [
+        "Longitudinal outcome attribution under the current leadership remains limited."
+      ],
+      "rationale": "Alignment is meaningful but incomplete; governance evidence is adequate for a moderate-positive judgment, not an exceptional stewardship claim."
+    },
+    "outside_view": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "HIGH",
+      "core_findings": [
+        "Digital Realty, CoreSite, NTT, QTS and CyrusOne demonstrate that data-center and interconnection competition is deep and well capitalized.",
+        "Industry vacancy and demand evidence supports sector growth, but the Cyxtera case shows that strong demand can coexist with financial failure.",
+        "Sector outage data keeps power and connectivity failure as real base-rate risks rather than issuer-specific hypotheticals."
+      ],
+      "supporting_evidence_ids": [
+        "E-030",
+        "E-031",
+        "E-032",
+        "E-033",
+        "E-034",
+        "E-035",
+        "E-036",
+        "E-037",
+        "E-039",
+        "E-042"
+      ],
+      "rationale": "The outside view validates demand but rejects any inference that demand alone guarantees superior returns or resilience."
+    },
+    "risk_resilience": {
+      "execution_status": "LOCKED",
+      "execution_confidence": "MEDIUM",
+      "risks": [
+        {
+          "risk_type": "FINANCIAL",
+          "risk": "Large debt and contractual commitments create refinancing/funding sensitivity.",
+          "severity": "HIGH",
+          "detectability": "HIGH",
+          "reversibility": "MEDIUM",
+          "evidence_ids": [
+            "E-016",
+            "E-017",
+            "E-042"
+          ]
+        },
+        {
+          "risk_type": "EXECUTION",
+          "risk": "Power availability, utility timing and high-density conversion can delay or strand capacity.",
+          "severity": "HIGH",
+          "detectability": "MEDIUM",
+          "reversibility": "MEDIUM",
+          "evidence_ids": [
+            "E-027",
+            "E-038",
+            "E-041"
+          ]
+        },
+        {
+          "risk_type": "DISRUPTION",
+          "risk": "Alternative colocation/interconnection providers can constrain pricing and ecosystem exclusivity.",
+          "severity": "MEDIUM",
+          "detectability": "MEDIUM",
+          "reversibility": "LOW",
+          "evidence_ids": [
+            "E-030",
+            "E-031",
+            "E-032",
+            "E-033"
+          ]
+        },
+        {
+          "risk_type": "EXECUTION",
+          "risk": "JV/VIE and atNorth structures can obscure full capital-at-risk and realized return attribution.",
+          "severity": "MEDIUM",
+          "detectability": "MEDIUM",
+          "reversibility": "MEDIUM",
+          "evidence_ids": [
+            "E-020",
+            "E-021",
+            "E-022",
+            "E-024"
+          ]
+        },
+        {
+          "risk_type": "REGULATORY",
+          "risk": "Power, sustainability, permitting and grid constraints can raise costs or limit expansion.",
+          "severity": "MEDIUM",
+          "detectability": "MEDIUM",
+          "reversibility": "LOW",
+          "evidence_ids": [
+            "E-027",
+            "E-041"
+          ]
+        },
+        {
+          "risk_type": "CYCLICAL",
+          "risk": "Capacity absorption and customer deployment cycles can soften even with long-run digital demand.",
+          "severity": "MEDIUM",
+          "detectability": "MEDIUM",
+          "reversibility": "MEDIUM",
+          "evidence_ids": [
+            "E-036",
+            "E-037"
+          ]
+        }
+      ],
+      "resilience_findings": [
+        "More than 90% recurring revenue, low customer concentration, broad geography and substantial liquidity support resilience.",
+        "Debt, commitments and capital-market dependence prevent a high-resilience conclusion despite strong demand visibility."
+      ],
+      "supporting_evidence_ids": [
+        "E-005",
+        "E-008",
+        "E-016",
+        "E-017",
+        "E-045"
+      ],
+      "rationale": "Business resilience is good, but financial and infrastructure-execution vulnerabilities are material."
+    },
+    "dimension_scoring_inputs": [
+      {
+        "dimension": "MOAT",
+        "judgment": 80,
+        "evidence_state": "SUPPORTED",
+        "rationale": "Real ecosystem and embeddedness advantage, but not exclusive and switching-cost evidence is incomplete."
+      },
+      {
+        "dimension": "RUNWAY",
+        "judgment": 85,
+        "evidence_state": "SUPPORTED",
+        "rationale": "Large multi-year demand and project runway, materially constrained by power and deliverability."
+      },
+      {
+        "dimension": "RETURN_QUALITY",
+        "judgment": 60,
+        "rationale": "Positive but modest all-in ROIC with canonical ROIIC not interpretable."
+      },
+      {
+        "dimension": "CASH_ECONOMICS",
+        "judgment": 60,
+        "rationale": "Strong CFO/AFFO visibility, offset by heavy capex, SBC and unbounded maintenance economics."
+      },
+      {
+        "dimension": "CAPITAL_ALLOCATION",
+        "judgment": 60,
+        "rationale": "Mixed record: aggressive reinvestment and external financing without sufficiently demonstrated marginal returns."
+      },
+      {
+        "dimension": "MANAGEMENT_GOVERNANCE",
+        "judgment": 70,
+        "rationale": "Meaningful per-share/TSR alignment, but no direct ROIC hurdle and limited long-horizon attribution."
+      },
+      {
+        "dimension": "RESILIENCE_RISK",
+        "judgment": 70,
+        "rationale": "Diversified recurring architecture and liquidity, offset by leverage, commitments and power/execution risk."
+      }
+    ],
+    "final_oqs_published": false
+  }
+}
