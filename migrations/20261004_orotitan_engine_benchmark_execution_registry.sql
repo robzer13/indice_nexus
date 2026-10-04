@@ -16,7 +16,9 @@ create table if not exists public.orotitan_engine_benchmark_executions (
   model_name text not null,
   model_version text not null,
   reasoning_config text not null,
+  runner_version text not null,
   prompt_artifact_version text not null,
+  sanitizer_version text not null,
   input_package_sha256 text not null check (input_package_sha256 ~ '^[a-f0-9]{64}$'),
   started_at timestamptz not null,
   finished_at timestamptz not null,
@@ -162,7 +164,9 @@ begin
      or nullif(p_execution->>'model_name', '') is null
      or nullif(p_execution->>'model_version', '') is null
      or nullif(p_execution->>'reasoning_config', '') is null
+     or nullif(p_execution->>'runner_version', '') is null
      or nullif(p_execution->>'prompt_artifact_version', '') is null
+     or nullif(p_execution->>'sanitizer_version', '') is null
      or nullif(p_execution->>'input_package_sha256', '') is null
      or nullif(p_execution->>'started_at', '') is null
      or nullif(p_execution->>'finished_at', '') is null
@@ -240,7 +244,9 @@ begin
     model_name,
     model_version,
     reasoning_config,
+    runner_version,
     prompt_artifact_version,
+    sanitizer_version,
     input_package_sha256,
     started_at,
     finished_at,
@@ -265,7 +271,9 @@ begin
     p_execution->>'model_name',
     p_execution->>'model_version',
     p_execution->>'reasoning_config',
+    p_execution->>'runner_version',
     p_execution->>'prompt_artifact_version',
+    p_execution->>'sanitizer_version',
     p_execution->>'input_package_sha256',
     (p_execution->>'started_at')::timestamptz,
     (p_execution->>'finished_at')::timestamptz,
