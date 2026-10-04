@@ -20,7 +20,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const company = await getCompanyStateBySlug(slug);
-  return { title: company ? company.name + ' · OroTitan' : slug };
+  return { title: company ? company.name : slug };
 }
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
