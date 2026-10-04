@@ -1,0 +1,65 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-015",
+  "company": "Qualys, Inc.",
+  "run_id": "e41a8fe0-29cb-45e3-8bca-b1f19ac67d12",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/e41a8fe0-29cb-45e3-8bca-b1f19ac67d12/deep-dive/final-v2/ANALYTICAL_BLOCK_OUTPUTS__46869e54-43ba-4195-981a-5d359d27f34d__v002.json",
+    "commit_sha": "d2e3324b27c84a3c2688657159f6522cf9729f6c",
+    "blob_sha": "4cc5c9c20fcc326b1aadbb4ebc68996cfee2844a",
+    "registry_content_sha256": "44ce7d832356e1d703a080fe51212e549e6e33ec350ac83439b9654384afef9e"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "OROTITAN_V2_FINAL_ANALYTICAL_BLOCKS_1.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "business": {
+      "capital_allocation": {},
+      "cash_economics": {
+        "forensic_reliability": "CLEAN",
+        "owner_earnings_musd": "220.1",
+        "standardized_fcf_musd": "313.947"
+      },
+      "management_governance": {},
+      "moat": {
+        "durability": "MODERATE",
+        "evidence_state": "SUPPORTED",
+        "trend": "STABLE"
+      },
+      "resilience_risk": {},
+      "return_quality": {
+        "attributability": "MEDIUM",
+        "rd_adjusted_roic_pct": "61.3",
+        "roiic": "NOT_INTERPRETABLE",
+        "standard_roic": "NOT_INTERPRETABLE"
+      },
+      "runway": {
+        "evidence_state": "SUPPORTED",
+        "horizon": "MODERATE",
+        "magnitude": "MATERIAL"
+      }
+    },
+    "created_at": "2026-09-15T13:37:19.185551Z",
+    "data_cutoff": "2026-09-15",
+    "fundamentals_lock": {
+      "artifact_id": "a4c6f16c-59f1-4a67-982c-fd00e282bf6a",
+      "content_sha256": "303e6f2c48b2bd6d2afa21b6d7641087e517f3de40e85894ce1780d07a0bb329",
+      "version": 1
+    },
+    "run_id": "e41a8fe0-29cb-45e3-8bca-b1f19ac67d12",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "version": 2
+  }
+}
