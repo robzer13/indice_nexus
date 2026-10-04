@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { CompanyStatusBadge } from '@/components/company-status-badge';
 import { EntryZoneBadge } from '@/components/entry-zone-badge';
+import { EngineBadge, ResearchFreshnessBadge } from '@/components/engine-provenance-badges';
 import { OroTitanDistance } from '@/components/orotitan-distance';
 import { PriceDisplay } from '@/components/price-display';
 import { ScoreBadge } from '@/components/score-badge';
@@ -56,6 +57,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
   const [country, setCountry] = useState('ALL');
   const [industryGroup, setIndustryGroup] = useState('ALL');
   const [businessModel, setBusinessModel] = useState('ALL');
+  const [engine, setEngine] = useState<'ALL' | CompanyState['engine_status']>('ALL');
+  const [researchFreshness, setResearchFreshness] = useState<'ALL' | CompanyState['research_freshness_status']>('ALL');
   const [freshness, setFreshness] = useState<'ALL' | 'FRESH' | 'STALE'>('ALL');
   const [scoreMin, setScoreMin] = useState('');
   const [distanceMin, setDistanceMin] = useState('');
@@ -95,6 +98,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
       .filter((row) => country === 'ALL' || row.country === country)
       .filter((row) => industryGroup === 'ALL' || row.industry_group === industryGroup)
       .filter((row) => businessModel === 'ALL' || row.business_model_primary === businessModel)
+      .filter((row) => engine === 'ALL' || row.engine_status === engine)
+      .filter((row) => researchFreshness === 'ALL' || row.research_freshness_status === researchFreshness)
       .filter((row) => freshness === 'ALL' || (freshness === 'FRESH' && !row.stale) || (freshness === 'STALE' && row.stale))
       .filter((row) => minScore === null || (row.current_investment_score !== null && row.current_investment_score >= minScore))
       .filter((row) => minDistance === null || (row.distance_o90_pct !== null && row.distance_o90_pct >= minDistance))
@@ -106,7 +111,7 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
         return true;
       })
       .sort((a, b) => compareRow(a, b, sortKey, sortDirection));
-  }, [rows, search, focus, status, sector, country, industryGroup, businessModel, freshness, scoreMin, distanceMin, distanceMax, sortKey, sortDirection]);
+  }, [rows, search, focus, status, sector, country, industryGroup, businessModel, engine, researchFreshness, freshness, scoreMin, distanceMin, distanceMax, sortKey, sortDirection]);
 
   const stats = useMemo(() => ({
     count: filtered.length,
@@ -131,6 +136,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
     setCountry('ALL');
     setIndustryGroup('ALL');
     setBusinessModel('ALL');
+    setEngine('ALL');
+    setResearchFreshness('ALL');
     setFreshness('ALL');
     setScoreMin('');
     setDistanceMin('');
@@ -174,6 +181,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
             <Select label="Pays" value={country} onChange={setCountry} options={[['ALL','Tous'],...countries.map((value) => [value,value] as [string,string])]}/>
             <Select label="Industrie" value={industryGroup} onChange={setIndustryGroup} options={[['ALL','Toutes'],...industryGroups.map((value) => [value,value] as [string,string])]}/>
             <Select label="Modèle économique" value={businessModel} onChange={setBusinessModel} options={[['ALL','Tous'],...businessModels.map((value) => [value,value] as [string,string])]}/>
+            <Select label="Génération moteur" value={engine} onChange={(value) => setEngine(value as typeof engine)} options={[['ALL','Toutes'],['CURRENT','Moteur actuel'],['PREVIOUS','Moteur précédent'],['LEGACY','Legacy'],['UNKNOWN','Inconnu']]}/>
+            <Select label="Fraîcheur recherche" value={researchFreshness} onChange={(value) => setResearchFreshness(value as typeof researchFreshness)} options={[['ALL','Toutes'],['RECENT','Récentes'],['AGING','Vieillissantes'],['STALE','À rafraîchir'],['UNKNOWN','Inconnues']]}/>
             <Select label="Fraîcheur du cours" value={freshness} onChange={(value) => setFreshness(value as typeof freshness)} options={[['ALL','Toutes'],['FRESH','Récentes'],['STALE','Périmées']]}/>
             <NumericFilter label="Score actuel min." value={scoreMin} onChange={setScoreMin} placeholder="ex. 70"/>
             <NumericFilter label="Écart H min. %" value={distanceMin} onChange={setDistanceMin} placeholder="ex. -10"/>
@@ -212,6 +221,7 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
                   <td className="px-4 py-4">
                     <div className="font-medium text-slate-100">{row.name}</div>
                     <div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div>
+                    <div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status} ageDays={row.analysis_age_days}/></div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="font-semibold text-slate-100"><PriceDisplay value={row.price} {...priceProps}/></div>
@@ -255,7 +265,7 @@ function MobileCompanyCard({ row, onOpen }: { row: Row; onOpen: () => void }) {
   return (
     <button onClick={onOpen} className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-left transition hover:border-cyan-900 hover:bg-slate-900">
       <div className="flex items-start justify-between gap-4">
-        <div><div className="font-semibold text-white">{row.name}</div><div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div></div>
+        <div><div className="font-semibold text-white">{row.name}</div><div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div><div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status} ageDays={row.analysis_age_days}/></div></div>
         <CompanyStatusBadge status={row.status}/>
       </div>
       <div className="mt-4 flex items-end justify-between gap-4 border-b border-slate-800 pb-4">
