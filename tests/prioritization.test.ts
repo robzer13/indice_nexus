@@ -7,6 +7,11 @@ function company(slug: string, price: number | null, o90: number | null): Compan
   return {
     id: slug, slug, ticker: slug.toUpperCase(), name: slug, exchange: 'X', currency: 'EUR', quote_unit: 'MAJOR', price_decimals: 2,
     country: null, sector: null, market_data_symbol: null, market_data_multiplier: 1, price, price_as_of: null, price_source: null,
+    canonical_reference_price: null, canonical_reference_price_date: null,
+    canonical_primary_expected_return_pct: null, canonical_normalization_expected_return_pct: null, required_return_h_pct: null,
+    margin_of_safety: null, valuation_reliability: null,
+    live_primary_expected_return_pct: null, live_normalization_expected_return_pct: null,
+    live_valuation_score: null, live_investment_score: null, live_price_change_vs_reference_pct: null, live_valuation_is_price_only: false,
     analysis_date: null, model_version: null, status: null, quality_orotitan: null, business_quality_score: null, investment_score: null,
     valuation_score: null, orotitan_score: null, confidence_score: null, fair_value_low: null, fair_value_base: null, fair_value_high: null,
     price_o85: null, price_o90: o90, price_o92: null, price_o95: null, thesis: null, main_risk: null, invalidation: null, source_title: null,
