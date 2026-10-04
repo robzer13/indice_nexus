@@ -1,0 +1,399 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-010",
+  "company": "Intuitive Surgical, Inc.",
+  "run_id": "f47aaacb-06e0-4307-b10b-ae1a4e3838e0",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/f47aaacb-06e0-4307-b10b-ae1a4e3838e0/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__51808981-f117-49bf-bd9b-8a0a754e62d9__v001.json",
+    "commit_sha": "58a7aee2353405573ccaf291141dd1d6d817669c",
+    "blob_sha": "1a96b3340031ee31d6f3352a6489ca753cc1fe53",
+    "registry_content_sha256": "4cca554925099e2172fc7d21fca2ef2bcbaa4c0c7f9e35e6a2461bf18b9705bd"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "run_id": "f47aaacb-06e0-4307-b10b-ae1a4e3838e0",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-18",
+    "version": 1,
+    "price_firewall": {
+      "valuation_performed": false,
+      "reference_price_used_for_fundamental_judgment": false,
+      "DCF_performed": false,
+      "reverse_DCF_performed": false,
+      "price_ladder_performed": false,
+      "QUALITY_CLASS_computed": false,
+      "INVESTMENT_SCORE_computed": false,
+      "OROTITAN_TERMINAL_GATE_run": false,
+      "investment_thesis_produced": false
+    },
+    "blocks": {
+      "BUSINESS_MODEL": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-004",
+          "E-005",
+          "E-006",
+          "E-007",
+          "E-008",
+          "E-009",
+          "E-042",
+          "E-048"
+        ],
+        "calculation_ids": [
+          "CALC-REVENUE-MIX-FY25"
+        ],
+        "core_findings": [
+          "The model is an installed-base lifecycle system: systems are sold or leased, then procedure growth drives instruments/accessories and service revenue.",
+          "FY2025 revenue mix is approximately 59.8% instruments/accessories, 24.6% systems and 15.6% service; management-defined recurring revenue reached 85% in Q2/H1 2026 but includes economically different revenue types.",
+          "Usage-based operating leases deepen lifecycle alignment while remaining less contractually sticky than subscription revenue."
+        ],
+        "canonical_verdict_fields": {
+          "BUSINESS_MODEL_PRIMARY": "CONSUMABLES_RAZOR_BLADE",
+          "BUSINESS_MODEL_SECONDARY": "AFTERMARKET_SERVICE",
+          "RECURRENCE_CHARACTERISTICS": "HIGH_LIFECYCLE_RECURRENCE_NOT_UNIFORMLY_CONTRACTUAL",
+          "KEY_CAPITAL_REQUIREMENTS": [
+            "R&D",
+            "INVENTORY",
+            "LEASE_FLEET",
+            "MANUFACTURING_SUPPLY_CHAIN",
+            "TRAINING_SERVICE_INFRASTRUCTURE"
+          ]
+        }
+      },
+      "ECONOMIC_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-010",
+          "E-011",
+          "E-012",
+          "E-013",
+          "E-045",
+          "E-046"
+        ],
+        "calculation_ids": [
+          "CALC-MARGINS-RD-FY25",
+          "CALC-WORKING-CAPITAL-DIAGNOSTIC-FY25"
+        ],
+        "core_findings": [
+          "FY2025 gross margin was about 66.0% and operating margin about 29.3% while R&D remained about 13.0% of revenue.",
+          "Q2 2026 revenue grew 19%, da Vinci procedures 15% and Ion procedures 36%, demonstrating continued scale growth.",
+          "Economic quality is tempered by growing inventory, receivables and lease-fleet capital requirements plus material SBC."
+        ],
+        "canonical_verdict_fields": {
+          "ECONOMIC_QUALITY_STATE": "VERY_STRONG_DESCRIPTIVE_NOT_SCORED"
+        }
+      },
+      "MOAT": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "MOAT_EVIDENCE_STATE": "SUPPORTED",
+          "MOAT_TREND": "STABLE",
+          "MOAT_DURABILITY": "LONG",
+          "PRIMARY_MOAT": "Installed-base ecosystem and procedure-linked lifecycle economics reinforced by service, workflow integration, training infrastructure, R&D scale, IP and clinical support.",
+          "SWITCHING_COST_SCOPE": {
+            "hard_skill_lock_in": "NOT_ESTABLISHED",
+            "workflow_service_friction": "MATERIAL",
+            "training_friction": "SOFT_TO_MATERIAL",
+            "economic_installed_equipment_friction": "MATERIAL"
+          }
+        },
+        "supporting_evidence_ids": [
+          "E-008",
+          "E-009",
+          "E-018",
+          "E-020",
+          "E-021",
+          "E-025"
+        ],
+        "contradicting_evidence_ids": [
+          "E-019",
+          "E-027",
+          "E-028",
+          "E-029",
+          "E-030"
+        ],
+        "conflict_ids": [
+          "C-002"
+        ],
+        "material_assumption_ids": [
+          "A-F-004"
+        ],
+        "open_uncertainties": [
+          "G-002",
+          "G-003"
+        ],
+        "core_findings": [
+          "The strongest moat evidence is ecosystem depth around a large installed base, service/training infrastructure, procedure-linked consumables and sustained innovation, not hard surgeon skill lock-in.",
+          "Independent evidence that robotic skills can transfer across platforms directly limits a hard-switching-cost thesis.",
+          "Hugo, OTTAVA and Versius now have U.S. regulatory access, so contestability is rising even though current Intuitive scale remains substantially larger."
+        ]
+      },
+      "RUNWAY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+          "RUNWAY_MAGNITUDE": "MATERIAL",
+          "RUNWAY_HORIZON": "EXTENDED",
+          "EXPECTED_CAPITAL_NEED": "MATERIAL_BUT_INTERNALLY_FINANCEABLE",
+          "EXPECTED_DILUTION_RISK": "LOW"
+        },
+        "supporting_evidence_ids": [
+          "E-007",
+          "E-008",
+          "E-009",
+          "E-010",
+          "E-025",
+          "E-031"
+        ],
+        "contradicting_evidence_ids": [
+          "E-027",
+          "E-028",
+          "E-029",
+          "E-030",
+          "E-033"
+        ],
+        "material_assumption_ids": [
+          "A-F-005"
+        ],
+        "open_uncertainties": [
+          "G-003",
+          "G-004",
+          "G-010"
+        ],
+        "core_findings": [
+          "Da Vinci procedure growth of 15%, installed-base growth of 12%, utilization growth of 3% and Ion procedure growth of 36% support continued penetration and lifecycle growth.",
+          "da Vinci 5 mix, Ion adoption, international depth and indications provide multiple runway vectors without requiring a fabricated TAM denominator.",
+          "Hospital capital budgets, reimbursement economics, China quotas and credible U.S. entrants are real constraints on extrapolation."
+        ]
+      },
+      "RETURN_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "STANDARD_ROIC_2025_PCT": 31.3,
+          "ROIIC_1Y_DIAGNOSTIC_PCT": 40.8,
+          "ROIIC_PRIMARY": "NOT_INTERPRETABLE_AT_PRODUCT_COHORT_LEVEL",
+          "RETURN_ATTRIBUTABILITY": "LOW",
+          "RETURN_DATA_QUALITY": "HIGH",
+          "RETURN_INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS",
+          "ECONOMIC_SPREAD": "CLEARLY_POSITIVE",
+          "ROIC_TREND": "UNKNOWN"
+        },
+        "calculation_ids": [
+          "CALC-OPERATING-IC-FY24-FY25",
+          "CALC-NORMALIZED-NOPAT-ROIC-FY25",
+          "CALC-ROIIC-1Y-DIAGNOSTIC"
+        ],
+        "material_assumption_ids": [
+          "A-F-001",
+          "A-F-002"
+        ],
+        "supporting_evidence_ids": [
+          "E-011",
+          "E-013",
+          "E-014",
+          "E-016",
+          "E-045",
+          "E-047"
+        ],
+        "open_uncertainties": [
+          "G-005",
+          "G-006"
+        ],
+        "core_findings": [
+          "Reconstructed FY2025 Standard ROIC is approximately 31.3% on an operating carrying-capital basis that retains goodwill and intangibles.",
+          "A one-year aggregate ROIIC diagnostic is approximately 40.8%, but investment lag, leasing capital and product-mix changes make it unsuitable as product-level ROIIC.",
+          "Return quality is clearly strong at group level; attribution to da Vinci 5, Ion, R&D cohorts or the Southern Europe acquisition is unavailable."
+        ]
+      },
+      "FCF_OWNER_EARNINGS_FORENSIC": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "FORENSIC_RELIABILITY": "CLEAN",
+          "CONVENTIONAL_FCF_2025_USD_M": 2490.7,
+          "OWNER_EARNINGS_2025_USD_M": "UNKNOWN",
+          "THREE_YEAR_CFO_TO_NET_INCOME_PCT": 103.2,
+          "THREE_YEAR_CONVENTIONAL_FCF_TO_NET_INCOME_PCT": 64.6
+        },
+        "calculation_ids": [
+          "CALC-CONVENTIONAL-FCF-FY23-FY25",
+          "CALC-THREE-YEAR-CASH-CONVERSION",
+          "CALC-WORKING-CAPITAL-DIAGNOSTIC-FY25"
+        ],
+        "material_assumption_ids": [
+          "A-F-003",
+          "A-F-006"
+        ],
+        "supporting_evidence_ids": [
+          "E-013",
+          "E-014",
+          "E-015",
+          "E-046",
+          "E-048"
+        ],
+        "open_uncertainties": [
+          "G-007"
+        ],
+        "core_findings": [
+          "Three-year CFO/net-income conversion is about 103%, supporting accounting-to-cash coherence.",
+          "Conventional FCF rose to about $2.49bn in 2025, but maintenance versus growth capital is not supportably separated.",
+          "Lease-system inventory-to-PP&E transfers create timing complexity; subtracting the noncash transfer again from CFO would double count, so Owner Earnings remains UNKNOWN rather than fabricated."
+        ]
+      },
+      "CAPITAL_ALLOCATION": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "CAPITAL_ALLOCATION_JUDGMENT": "STRONG_OPERATING_REINVESTMENT_WITH_BUYBACK_VALUE_AND_SBC_TENSION"
+        },
+        "supporting_evidence_ids": [
+          "E-012",
+          "E-015",
+          "E-016",
+          "E-035",
+          "E-036",
+          "E-046"
+        ],
+        "material_assumption_ids": [
+          "A-F-006"
+        ],
+        "open_uncertainties": [
+          "G-006"
+        ],
+        "core_findings": [
+          "R&D remained roughly 13% of revenue and liquidity stayed above $8.6bn at Q2 2026, supporting internally funded innovation and resilience.",
+          "2025 repurchases were about $2.30bn and H1 2026 repurchases about $1.44bn, but buyback value creation is not judged in Fundamentals because that requires valuation.",
+          "SBC is material and the March 2026 Southern Europe distribution acquisition is too recent for realized-return attribution."
+        ]
+      },
+      "MANAGEMENT_GOVERNANCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "MANAGEMENT_GOVERNANCE_JUDGMENT": "STRONG_STRUCTURE_WITH_SHORT_NEW_CEO_OUTCOME_RECORD"
+        },
+        "supporting_evidence_ids": [
+          "E-037",
+          "E-038"
+        ],
+        "open_uncertainties": [
+          "G-011"
+        ],
+        "core_findings": [
+          "David J. Rosa became CEO on July 1, 2025 while Gary Guthart moved to Executive Chair, providing continuity through the leadership transition.",
+          "Incentives explicitly include operating income, adoption, innovation, operational excellence and quality/regulatory objectives.",
+          "The new CEO's standalone outcome record remains short, limiting confidence in a long-duration stewardship conclusion."
+        ]
+      },
+      "OUTSIDE_VIEW": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "OUTSIDE_VIEW_JUDGMENT": "SUPPORTED_BUT_PROCEDURE_SPECIFIC_AND_INCREASINGLY_CONTESTED",
+          "REFERENCE_CLASS": "ROBOTIC_ASSISTED_AND_MINIMALLY_INVASIVE_SURGERY_PLATFORMS"
+        },
+        "supporting_evidence_ids": [
+          "E-019",
+          "E-022",
+          "E-023",
+          "E-024",
+          "E-027",
+          "E-028",
+          "E-029",
+          "E-030",
+          "E-041"
+        ],
+        "conflict_ids": [
+          "C-003"
+        ],
+        "core_findings": [
+          "Randomized and systematic-review evidence does not support universal robotic clinical or cost superiority; outcomes vary by procedure and robotic surgery is frequently more expensive.",
+          "Cross-platform skill transfer weakens a hard lock-in narrative, while new U.S. approvals show credible platform entry is feasible.",
+          "Titan Medical's failure shows entry remains capital- and commercialization-intensive, so regulatory entry alone does not imply successful scale."
+        ]
+      },
+      "RISK_RESILIENCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RESILIENCE_JUDGMENT": "STRONG_FINANCIAL_RESILIENCE_WITH_COMPETITION_CLINICAL_ECONOMICS_AND_EXECUTION_RISKS"
+        },
+        "supporting_evidence_ids": [
+          "E-016",
+          "E-026",
+          "E-031",
+          "E-032",
+          "E-033",
+          "E-034"
+        ],
+        "core_findings": [
+          "Large cash and investment balances plus strong operating cash generation provide substantial financial resilience.",
+          "Key non-financial risks are credible robotic entrants, procedure-specific cost/clinical economics, product recalls, China policy/quotas, single/sole-source supply exposure, hospital budgets/reimbursement and cyber/software risks."
+        ],
+        "risks": [
+          {
+            "risk_type": "COMPETITION",
+            "severity": "HIGH",
+            "thesis_impact": "HIGH",
+            "early_indicator": "competitor placements, procedure growth, hospital multi-platform adoption",
+            "transmission_mechanism": "Hugo, OTTAVA and Versius can weaken placement share, utilization, pricing and lifecycle revenue capture."
+          },
+          {
+            "risk_type": "CLINICAL_ECONOMICS",
+            "severity": "HIGH",
+            "thesis_impact": "HIGH",
+            "early_indicator": "procedure-specific RCT/meta-analysis outcomes and hospital cost studies",
+            "transmission_mechanism": "If clinical or workflow benefits do not justify system and procedure economics, adoption or utilization can slow."
+          },
+          {
+            "risk_type": "PRODUCT_QUALITY_REGULATORY",
+            "severity": "HIGH",
+            "thesis_impact": "HIGH",
+            "early_indicator": "Class I/II recalls, adverse-event trends, regulatory actions",
+            "transmission_mechanism": "Quality failures can interrupt procedures, impair trust and raise remediation or liability costs."
+          },
+          {
+            "risk_type": "SUPPLY_CHAIN",
+            "severity": "MEDIUM_TO_HIGH",
+            "thesis_impact": "MEDIUM_TO_HIGH",
+            "early_indicator": "single-source disruptions, tariff exposure, component lead times",
+            "transmission_mechanism": "Component constraints can delay placements and instruments/accessories supply."
+          },
+          {
+            "risk_type": "CHINA_POLICY",
+            "severity": "MEDIUM_TO_HIGH",
+            "thesis_impact": "MEDIUM",
+            "early_indicator": "quota/tender rules, local pricing limits, competitor approvals",
+            "transmission_mechanism": "Quota and pricing policy can constrain placements and procedure economics."
+          },
+          {
+            "risk_type": "CAPITAL_INTENSITY",
+            "severity": "MEDIUM",
+            "thesis_impact": "MEDIUM",
+            "early_indicator": "inventory growth, lease-fleet PP&E growth, FCF conversion",
+            "transmission_mechanism": "A growing lease fleet and working capital can absorb cash ahead of utilization and revenue."
+          }
+        ]
+      }
+    }
+  }
+}
