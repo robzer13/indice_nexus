@@ -1,0 +1,599 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-002",
+  "company": "Air Liquide",
+  "run_id": "dffc489e-1b68-4153-b4cb-9b6d2ef9ffea",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/dffc489e-1b68-4153-b4cb-9b6d2ef9ffea/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__f08d2d2f-aa45-4870-ba5f-05f01c5fc584__v003.json",
+    "commit_sha": "9b5b2d8638f363728366c8446b8e3f6488c66c89",
+    "blob_sha": "fb2342c21f7ca748c711d18f161b7e32c392bf66",
+    "registry_content_sha256": "08295ac13e7f64461a1d37d98a3ba88a990bd9ced9ab777cb9429e817d128f54"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "dffc489e-1b68-4153-b4cb-9b6d2ef9ffea",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-19",
+    "version": 3,
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "blocks": {
+      "BUSINESS_MODEL": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-004",
+          "E-005",
+          "E-019",
+          "E-021",
+          "E-023",
+          "E-045",
+          "E-049",
+          "E-054",
+          "E-063",
+          "E-092",
+          "E-149"
+        ],
+        "conflict_ids": [
+          "C-001",
+          "C-002",
+          "C-012"
+        ],
+        "core_findings": [
+          "Gas & Services is economically dominant but must not be homogenized: Large Industries, Industrial Merchant, Healthcare and Electronics have different contracts, capital intensity, regulation and customer economics.",
+          "Large Industries is a dedicated-asset/on-site/pipeline model with contractual energy pass-through; Industrial Merchant is a local distribution/cylinder/service network; Healthcare combines regulated medical gases and homecare; Electronics combines ultra-high-purity consumables, site systems and qualification; E&T is project/technology activity.",
+          "H1 2026 reported growth is decomposed into comparable, significant-scope, energy and FX effects. DIG is scope, not organic growth.",
+          "E&T group-plus-third-party order intake is not external revenue backlog."
+        ],
+        "open_uncertainties": [
+          "E&T internal/external order economics remain incompletely split.",
+          "Customer-level concentration is not fully public."
+        ],
+        "reopen_triggers": [
+          "Material change to reporting perimeter or business-line definitions.",
+          "Evidence that pass-through/perimeter bridges are misclassified."
+        ]
+      },
+      "ECONOMIC_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-007",
+          "E-008",
+          "E-011",
+          "E-012",
+          "E-027",
+          "E-028",
+          "E-036",
+          "E-111"
+        ],
+        "calculation_ids": [
+          "CALC-ROIC-005",
+          "CALC-GROWTH-BRIDGE-009"
+        ],
+        "core_findings": [
+          "Group and G&S operating margins expanded materially in 2025 and H1 2026 while comparable sales growth remained moderate.",
+          "Efficiencies and Industrial Merchant pricing are observable contributors, but exact margin attribution across productivity, price, mix/volume, energy denominator and DIG PPA remains incomplete.",
+          "Economic quality is supported by diversified profit pools and high absolute operating margins, not by treating industrial gases as a single commodity business."
+        ],
+        "open_uncertainties": [
+          "Durability of the full margin step-up cannot be assigned to one structural lever.",
+          "Business-line returns are not separately disclosed."
+        ],
+        "reopen_triggers": [
+          "Sustained margin reversal after normalization.",
+          "Evidence that recent efficiencies are largely non-repeatable or offset by hidden costs."
+        ]
+      },
+      "MOAT": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "moat_evidence_state": "SUPPORTED",
+          "moat_trend": "STABLE",
+          "moat_durability": "LONG"
+        },
+        "supporting_evidence_ids": [
+          "E-045",
+          "E-047",
+          "E-048",
+          "E-050",
+          "E-051",
+          "E-052",
+          "E-055",
+          "E-062",
+          "E-063",
+          "E-064",
+          "E-080",
+          "E-090",
+          "E-133"
+        ],
+        "contradicting_evidence_ids": [
+          "E-127",
+          "E-128",
+          "E-129",
+          "E-134",
+          "E-135",
+          "E-136",
+          "E-137"
+        ],
+        "conflict_ids": [
+          "C-009",
+          "C-012"
+        ],
+        "material_assumption_ids": [
+          "A-F-005"
+        ],
+        "core_findings": [
+          "The strongest moat evidence is local infrastructure/network density, asset specificity and reliability in Large Industries, reinforced by route/cylinder density in merchant distribution and site integration/qualification in Electronics.",
+          "Healthcare adds regulatory, logistics and patient-service friction, but reimbursement/tender systems cap monetization.",
+          "Long-term contract duration receives no standalone moat credit because Linde and Air Products disclose similar on-site architectures.",
+          "Industrial Merchant pricing is segment-specific and does not prove group-wide pricing power."
+        ],
+        "open_uncertainties": [
+          "Direct switching/renewal/displacement data are not public.",
+          "Route-level merchant cost curves and retention are unavailable.",
+          "Electronics dual-source practices by molecule/customer remain incompletely evidenced.",
+          "Current China/local-basin shares remain weakly evidenced."
+        ],
+        "reopen_triggers": [
+          "Material contract displacement or loss of basin density.",
+          "Evidence of worsening merchant retention or route economics.",
+          "Loss of semiconductor qualification/site positions.",
+          "Regulatory change reducing healthcare service barriers."
+        ]
+      },
+      "RUNWAY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "runway_evidence_state": "SUPPORTED",
+          "runway_magnitude": "MATERIAL",
+          "runway_horizon": "EXTENDED"
+        },
+        "supporting_evidence_ids": [
+          "E-024",
+          "E-031",
+          "E-032",
+          "E-033",
+          "E-054",
+          "E-055",
+          "E-066",
+          "E-067",
+          "E-068",
+          "E-069",
+          "E-070",
+          "E-071",
+          "E-103",
+          "E-104",
+          "E-105",
+          "E-107"
+        ],
+        "contradicting_evidence_ids": [
+          "E-026",
+          "E-072",
+          "E-073",
+          "E-079",
+          "E-094",
+          "E-138"
+        ],
+        "conflict_ids": [
+          "C-004",
+          "C-005",
+          "C-011"
+        ],
+        "material_assumption_ids": [
+          "A-F-006",
+          "A-F-007",
+          "A-F-008"
+        ],
+        "core_findings": [
+          "Runway is supported by multi-year Large Industries/Electronics project starts, advanced semiconductor/HBM capacity, Healthcare patient/service growth and a broad investment opportunity set.",
+          "The €6bn investment backlog is a decided-investment measure, not revenue backlog; announced fabs become recurring gas revenue only after commissioning and production ramp.",
+          "DIG contributes perimeter growth but no synergy/return uplift is credited before realization.",
+          "Hydrogen/CCS is conditional upside with material subsidy, offtake and execution dependencies rather than proven base-case economics."
+        ],
+        "open_uncertainties": [
+          "Backlog-to-revenue conversion and project IRRs are not disclosed.",
+          "Homecare unit economics by geography are unavailable.",
+          "Semiconductor customer concentration and fab utilization remain uncertain.",
+          "Energy-transition project returns without support remain unknown."
+        ],
+        "reopen_triggers": [
+          "Major project cancellations/delays.",
+          "Semiconductor capex or utilization downcycle beyond current assumptions.",
+          "Material reimbursement cuts in Healthcare.",
+          "DIG integration underperformance."
+        ]
+      },
+      "RETURN_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "standard_roic_pct_range": {
+            "min": 10.5,
+            "max": 11
+          },
+          "all_in_roic_pct_range": {
+            "min": 10,
+            "max": 11
+          },
+          "roic_ex_goodwill_pct_range": {
+            "min": 17.5,
+            "max": 18.5
+          },
+          "roiic": "NOT_INTERPRETABLE",
+          "economic_spread": "CLEARLY_POSITIVE",
+          "roic_trend": "UNCLEAR",
+          "rd_adjusted_roic": "NOT_APPLICABLE",
+          "return_interpretability": "INTERPRETABLE_WITH_LIMITATIONS",
+          "return_attributability": "LOW"
+        },
+        "supporting_evidence_ids": [
+          "E-017",
+          "E-047",
+          "E-075",
+          "E-076",
+          "E-108",
+          "E-109",
+          "E-150",
+          "E-151",
+          "E-153",
+          "E-154",
+          "E-156"
+        ],
+        "calculation_ids": [
+          "CALC-OIC-004",
+          "CALC-ROIC-005",
+          "CALC-ROIC-XGW-006",
+          "CALC-ALLIN-007",
+          "CALC-ROIIC-008",
+          "CALC-RD-MAT-009"
+        ],
+        "material_assumption_ids": [
+          "A-F-001",
+          "A-F-003",
+          "A-F-004"
+        ],
+        "core_findings": [
+          "Canonical FY2025 ROIC is bounded around 10.5%-11.0%; recurring issuer ROCE at 11.2% is a corroborating diagnostic, not the canonical measure.",
+          "ROIC ex-goodwill is materially higher, showing acquisition goodwill drag, but goodwill is not removed from the primary quality judgment.",
+          "Short-period ROIIC is not economically interpretable because DIG, FX/perimeter and long construction lags destabilize the denominator.",
+          "Issuer ROCE improved from 2023 through 2025 and remains near that level in H1 2026 despite DIG/construction capital.",
+          "Canonical ROIC_TREND is UNCLEAR: FY2025 Standard ROIC is reconstructed, but the locked lineage does not contain a normalized multi-period canonical Standard ROIC series sufficient for a directional state.",
+          "R&D-adjusted ROIC is NOT_APPLICABLE: FY2025 R&D of EUR 208m is recurring but does not materially distort comparison against the group revenue, operating-profit and invested-capital base; no capitalization useful-life assumption is introduced.",
+          "Overall return economics are INTERPRETABLE_WITH_LIMITATIONS: current canonical ROIC/all-in/ex-goodwill diagnostics are usable, while ROIIC, trend history and acquisition-cohort returns remain constrained.",
+          "RETURN_ATTRIBUTABILITY is LOW because Airgas, NovaAir and DIG cohort economics and organic/acquired NOPAT/capital separation are not sufficiently disclosed for clean attribution."
+        ],
+        "open_uncertainties": [
+          "Full acquisition-cohort returns for Airgas, NovaAir and DIG are unavailable.",
+          "Project-level returns and utilization are not disclosed.",
+          "Exact WACC/hurdle comparison belongs to Valuation; CLEARLY_POSITIVE is a qualitative economic-spread judgment, not a WACC calculation.",
+          "Normalized canonical Standard ROIC history before FY2025 is not reconstructed in the locked calculation lineage; issuer ROCE history is corroborating only."
+        ],
+        "reopen_triggers": [
+          "Sustained ROIC decline below the historical capital-cost buffer.",
+          "Evidence of poor returns on current Electronics/LI backlog.",
+          "Material acquisition impairment or DIG return shortfall."
+        ],
+        "roic_trend_judgment": {
+          "state": "UNCLEAR",
+          "method": "Frozen Analysis Standard §9.11: classify ROIC trend from normalized multi-period ROIC history; do not substitute ROIIC or issuer return metrics.",
+          "evidence_basis": [
+            "E-154: issuer ROCE/recurring ROCE FY2023-H1 2026",
+            "E-150/E-153: audited inputs supporting FY2025 canonical Standard ROIC"
+          ],
+          "calculation_basis": [
+            "CALC-ROIC-005 establishes FY2025 canonical Standard ROIC 10.5%-11.0% only",
+            "No cutoff-admissible normalized canonical Standard ROIC series exists for multiple full years in the locked calculation lineage"
+          ],
+          "observation_period": "FY2023-H1 2026",
+          "limitations": [
+            "Issuer ROCE rises through FY2025 and remains near that level in H1 2026, but it is a corroborating diagnostic rather than canonical Standard ROIC.",
+            "H1 2026 is interim and distorted by DIG purchase accounting and construction capital.",
+            "ROIIC remains NOT_INTERPRETABLE and is not used as a trend substitute."
+          ],
+          "judgment_rationale": "Directional canonical ROIC trend cannot be established without substituting issuer ROCE for normalized multi-period Standard ROIC; the exact allowed uncertainty state is therefore UNCLEAR."
+        },
+        "rd_adjusted_roic_judgment": {
+          "state": "NOT_APPLICABLE",
+          "applicability_basis": "Frozen trigger requires material, recurring, multi-period R&D whose expensing materially distorts comparison. Recurrence is present; material distortion is not.",
+          "evidence_ids": [
+            "E-156"
+          ],
+          "calculation_ids": [
+            "CALC-RD-MAT-009"
+          ]
+        },
+        "return_interpretability_judgment": {
+          "state": "INTERPRETABLE_WITH_LIMITATIONS",
+          "basis": [
+            "FY2025 Standard ROIC is canonically reconstructed and bounded.",
+            "All-In ROIC and ex-goodwill diagnostics are coherent.",
+            "ROIIC is NOT_INTERPRETABLE and ROIC_TREND remains UNCLEAR due missing normalized multi-period canonical history."
+          ]
+        },
+        "return_attributability_judgment": {
+          "state": "LOW",
+          "basis": [
+            "Organic versus acquired return effects cannot be cleanly separated at NOPAT/capital level.",
+            "Airgas standalone current capital employed/return is not disclosed.",
+            "NovaAir purchase economics are incompletely disclosed.",
+            "DIG is recent and H1 2026 capital is affected by purchase accounting, FX and construction lags."
+          ]
+        }
+      },
+      "FCF_OWNER_EARNINGS_FORENSIC": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "forensic_reliability": "WATCH",
+          "standardized_fcf_eur_m": {
+            "FY2023": 2869.6,
+            "FY2024": 2797,
+            "FY2025": 2675.4
+          },
+          "owner_earnings_fy2025_eur_m_range": {
+            "min": 3518.4,
+            "max": 4118.4
+          }
+        },
+        "supporting_evidence_ids": [
+          "E-014",
+          "E-015",
+          "E-037",
+          "E-041",
+          "E-042",
+          "E-108",
+          "E-110",
+          "E-112",
+          "E-115",
+          "E-152",
+          "E-153",
+          "E-155"
+        ],
+        "calculation_ids": [
+          "CALC-FCF-001",
+          "CALC-FCF-H126-002",
+          "CALC-OE-003"
+        ],
+        "material_assumption_ids": [
+          "A-F-002"
+        ],
+        "core_findings": [
+          "Total-capex standardized FCF remained positive but softened modestly as industrial investment accelerated.",
+          "Owner Earnings is a range because maintenance/safety/renewal capex is not separately disclosed; depreciation is not mechanically substituted for maintenance capex.",
+          "H1 2026 reported cash conversion is distorted by the end of factoring; a factoring-normalized diagnostic is retained without annualization.",
+          "DIG PPA and recurring/non-recurring bridges are preserved rather than silently stripped."
+        ],
+        "open_uncertainties": [
+          "Maintenance capex range remains assumption-sensitive."
+        ],
+        "reopen_triggers": [
+          "Material revision to maintenance-capex evidence.",
+          "Factoring or working-capital policy changes persistently alter normalized cash conversion.",
+          "Recurring exclusion policy materially expands."
+        ]
+      },
+      "CAPITAL_ALLOCATION": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-014",
+          "E-018",
+          "E-037",
+          "E-040",
+          "E-074",
+          "E-075",
+          "E-076",
+          "E-079",
+          "E-101",
+          "E-102",
+          "E-103",
+          "E-104",
+          "E-106",
+          "E-119",
+          "E-120",
+          "E-146"
+        ],
+        "conflict_ids": [
+          "C-003",
+          "C-004",
+          "C-006"
+        ],
+        "calculation_ids": [
+          "CALC-ALLIN-007"
+        ],
+        "material_assumption_ids": [
+          "A-F-006",
+          "A-F-007",
+          "A-F-008"
+        ],
+        "core_findings": [
+          "Capital deployment combines organic industrial investment, acquisitions and dividends; investment decisions and capex are kept distinct.",
+          "DIG is economically material and raised leverage; its synergy and acquisition-return case remains unproven after a short consolidation window.",
+          "NovaAir and Airgas standalone acquisition-cohort returns are not disclosed sufficiently for clean attribution.",
+          "Biogas divestiture shows portfolio recycling, while low-carbon projects require project-specific return discipline."
+        ],
+        "open_uncertainties": [
+          "DIG realized synergies/retention/margins.",
+          "NovaAir purchase economics and Airgas current cohort returns."
+        ],
+        "reopen_triggers": [
+          "DIG goodwill impairment or integration shortfall.",
+          "Net debt remains elevated without corresponding cash/return improvement.",
+          "Material evidence of subsidy-dependent projects earning sub-hurdle returns."
+        ]
+      },
+      "MANAGEMENT_GOVERNANCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-119",
+          "E-120",
+          "E-123",
+          "E-124",
+          "E-125",
+          "E-126"
+        ],
+        "core_findings": [
+          "Chairman and CEO roles are separated; the board has substantial independence and employee representation.",
+          "Employee shareholding and broad employee capital participation create some alignment, while registered-share loyalty mechanics are shareholder distribution policy rather than operating quality.",
+          "Management has demonstrated margin/efficiency execution, but causal credit is constrained by incomplete margin attribution.",
+          "CFO continuity includes prior Airgas integration experience."
+        ],
+        "open_uncertainties": [
+          "Management-specific acquisition value creation remains inseparable from price paid until Valuation and later realization."
+        ],
+        "reopen_triggers": [
+          "Governance independence deterioration.",
+          "Material related-party/control change.",
+          "Repeated acquisition execution failures."
+        ]
+      },
+      "OUTSIDE_VIEW": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-127",
+          "E-128",
+          "E-129",
+          "E-130",
+          "E-131",
+          "E-132",
+          "E-133",
+          "E-134",
+          "E-135"
+        ],
+        "core_findings": [
+          "Linde and Air Products corroborate the industry's long-term on-site model but disconfirm any claim that contract duration alone is Air Liquide-specific moat proof.",
+          "Historical/local competition evidence supports basin and distribution density as economically local mechanisms rather than relying on global market-share narratives.",
+          "Messer and Nippon Sanso show credible regional/specialty competition.",
+          "Air Products' low-carbon project charges provide a base-rate warning against equating energy-transition pipelines with attractive realized returns."
+        ],
+        "reopen_triggers": [
+          "New competitor displacement evidence.",
+          "Material consolidation or regulatory change in local industrial-gas markets."
+        ]
+      },
+      "RISK_RESILIENCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-006",
+          "E-016",
+          "E-038",
+          "E-039",
+          "E-040",
+          "E-052",
+          "E-056",
+          "E-057",
+          "E-061",
+          "E-077",
+          "E-083",
+          "E-089",
+          "E-094",
+          "E-095",
+          "E-096",
+          "E-098",
+          "E-116",
+          "E-117",
+          "E-118",
+          "E-126",
+          "E-141",
+          "E-142",
+          "E-151"
+        ],
+        "conflict_ids": [
+          "C-011"
+        ],
+        "core_findings": [
+          "Resilience benefits from geographic/business diversification, Healthcare exposure, contractual energy pass-through in Large Industries, strong credit ratings and broad funding access.",
+          "Post-DIG leverage is materially higher and must normalize through cash generation rather than be ignored.",
+          "Healthcare reimbursement/tender pressure, semiconductor cycles, local industrial demand, FX and supply/energy disruptions remain material.",
+          "Hydrogen/CCS projects add execution, power-price, subsidy and offtake risk; project pipeline is not treated as realized resilience or return."
+        ],
+        "risk_taxonomy": {
+          "cyclical": [
+            "Large Industries",
+            "Electronics"
+          ],
+          "regulatory": [
+            "Healthcare reimbursement",
+            "medical-gas compliance"
+          ],
+          "financial": [
+            "post-DIG leverage",
+            "refinancing"
+          ],
+          "execution": [
+            "large projects",
+            "DIG integration",
+            "H2/CCS"
+          ],
+          "competitive": [
+            "merchant local competition",
+            "electronics dual sourcing"
+          ],
+          "measurement": [
+            "FX",
+            "energy pass-through",
+            "perimeter/PPA"
+          ]
+        },
+        "reopen_triggers": [
+          "Credit-rating downgrade or refinancing stress.",
+          "Material customer/project cancellation.",
+          "Healthcare reimbursement shock.",
+          "Major safety/operational incident."
+        ]
+      },
+      "FUNDAMENTAL_RED_TEAM": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "artifact_ref": {
+          "artifact_id": "196c745f-fa13-478a-aed2-624aabf7d6d5",
+          "version": 1
+        }
+      }
+    },
+    "stage_revision": 3,
+    "reopen_scope": "CANONICAL_ROIC_TREND_ONLY",
+    "controlled_reopen": {
+      "reason": "SEMANTIC_MAPPING_MISSING_ROIC_TREND",
+      "analytical_change": "ROIC_TREND_ONLY",
+      "research_reopened": false,
+      "valuation_changed": false,
+      "scoring_inputs_changed": false,
+      "created_at": "2026-09-20T12:43:38.598782Z"
+    },
+    "created_at": "2026-09-20T15:50:01.226Z",
+    "controlled_reconciliation": {
+      "scope": "RETURN_QUALITY_CANONICAL_COMPLETENESS_ONLY",
+      "fields_resolved": [
+        "rd_adjusted_roic",
+        "return_interpretability",
+        "return_attributability"
+      ],
+      "roic_trend": "UNCLEAR",
+      "dimension_inputs_changed": false,
+      "return_quality_score_changed": false,
+      "valuation_changed": false,
+      "investment_score_changed": false,
+      "terminal_status_changed": false,
+      "created_at": "2026-09-20T15:50:01.226Z"
+    }
+  }
+}
