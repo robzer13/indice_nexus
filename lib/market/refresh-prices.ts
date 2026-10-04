@@ -1,7 +1,7 @@
 import 'server-only';
 import {
   getMarketDataCompanies,
-  insertMarketPrice,
+  insertSecurityMarketPrice,
   recordMarketSyncRun,
 } from '@/lib/data/market-prices';
 import { fetchProviderPrice, type MarketPriceProvider } from '@/lib/market/provider';
@@ -62,8 +62,8 @@ export async function refreshMarketPrices(triggerSource: 'CRON' | 'ADMIN'): Prom
 
       assertPlausiblePrice(normalizedPrice, company.latest_price);
 
-      await insertMarketPrice({
-        companyId: company.id,
+      await insertSecurityMarketPrice({
+        securityId: company.securityId,
         price: normalizedPrice,
         asOf: provider.fetchedAt,
         source: provider.provider,
