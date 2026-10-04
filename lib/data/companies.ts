@@ -4,6 +4,8 @@ import { getDistanceO90 } from '@/lib/domain/distance';
 import { computeLiveValuation } from '@/lib/domain/live-valuation';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 import type { InvestmentConclusionStatus, MosStatus, ScorePermission, ValuationReliability } from '@/lib/orotitan-equity/v1/certification';
+import { fetchYahooFinancePrice } from '@/lib/market/yahoo-finance';
+import { deriveMarketDataReference } from '@/lib/market/reference';
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -162,6 +164,37 @@ function canonicalFields(row: CanonicalSnapshotRow) {
   };
 }
 
+function isFreshMarketPrice(marketPrice: UnknownRecord | null, maxAgeMinutes = 15): boolean {
+  const asOf = marketPrice ? asString(marketPrice.as_of) : null;
+  if (!asOf) return false;
+  const timestamp = Date.parse(asOf);
+  return Number.isFinite(timestamp) && Date.now() - timestamp <= maxAgeMinutes * 60_000;
+}
+
+async function getBestMarketPrice(security: UnknownRecord, persisted: UnknownRecord | null): Promise<UnknownRecord | null> {
+  if (isFreshMarketPrice(persisted)) return persisted;
+
+  const ticker = asString(security.ticker);
+  const exchange = asString(security.exchange);
+  if (!ticker || !exchange) return persisted;
+
+  const reference = deriveMarketDataReference(ticker, exchange, asString(security.market_data_symbol));
+  if (!reference) return persisted;
+
+  try {
+    const quote = await fetchYahooFinancePrice(reference);
+    const multiplier = asNumber(security.market_data_multiplier) ?? 1;
+    return {
+      price: quote.price * multiplier,
+      as_of: quote.fetchedAt,
+      source: 'YAHOO_FINANCE_LIVE',
+      provider_symbol: quote.providerSymbol,
+    };
+  } catch {
+    return persisted;
+  }
+}
+
 function chooseDisplayedPrice(snapshot: ReturnType<typeof canonicalFields>, marketPrice: UnknownRecord | null) {
   const marketValue = marketPrice ? asNumber(marketPrice.price) : null;
   const marketAsOf = marketPrice ? asString(marketPrice.as_of) : null;
@@ -257,7 +290,11 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     valuation_case: canonical.v2.valuationCase,
     key_risk: canonical.v2.keyRisk,
     pea_eligibility: canonical.v2.peaEligibility,
-    market_data_symbol: asString(context.security.market_data_symbol),
+    market_data_symbol: deriveMarketDataReference(
+      asString(context.security.ticker) ?? '',
+      asString(context.security.exchange) ?? '',
+      asString(context.security.market_data_symbol),
+    ),
     market_data_multiplier: asNumber(context.security.market_data_multiplier) ?? 1,
     price: price.price,
     price_as_of: price.priceAsOf,
@@ -339,12 +376,15 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     if (!latestPriceByCompany.has(companyId)) latestPriceByCompany.set(companyId, row as UnknownRecord);
   }
 
-  return snapshots.map((snapshot) => {
+  const states = await Promise.all(snapshots.map(async (snapshot) => {
     const issuer = issuerById.get(snapshot.issuer_id);
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
-    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice: latestPriceByCompany.get(snapshot.issuer_id) ?? null });
-  }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
+    const marketPrice = await getBestMarketPrice(security, latestPriceByCompany.get(snapshot.issuer_id) ?? null);
+    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice });
+  }));
+
+  return states.filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function getCompanyStates(): Promise<CompanyState[]> { return loadPublishedCanonicalStates(); }
