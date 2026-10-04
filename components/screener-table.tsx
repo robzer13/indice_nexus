@@ -57,8 +57,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
   const [country, setCountry] = useState('ALL');
   const [industryGroup, setIndustryGroup] = useState('ALL');
   const [businessModel, setBusinessModel] = useState('ALL');
-  const [engine, setEngine] = useState<'ALL' | CompanyState['engine_status']>('ALL');
-  const [researchFreshness, setResearchFreshness] = useState<'ALL' | CompanyState['research_freshness_status']>('ALL');
+  const [engine, setEngine] = useState<'ALL' | NonNullable<CompanyState['engine_status']>>('ALL');
+  const [researchFreshness, setResearchFreshness] = useState<'ALL' | NonNullable<CompanyState['research_freshness_status']>>('ALL');
   const [freshness, setFreshness] = useState<'ALL' | 'FRESH' | 'STALE'>('ALL');
   const [scoreMin, setScoreMin] = useState('');
   const [distanceMin, setDistanceMin] = useState('');
