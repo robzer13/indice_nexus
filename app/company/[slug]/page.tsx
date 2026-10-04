@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { CompanyStatusBadge } from '@/components/company-status-badge';
 import { EntryZoneBadge } from '@/components/entry-zone-badge';
+import { EngineBadge, ResearchFreshnessBadge } from '@/components/engine-provenance-badges';
 import { OroTitanDistance } from '@/components/orotitan-distance';
 import { PriceDisplay } from '@/components/price-display';
 import { PriceHistoryChart } from '@/components/price-history-chart';
@@ -135,7 +136,11 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
             <h1 className="mt-2 text-3xl font-semibold tracking-tight text-white sm:text-4xl">{company.name}</h1>
             <p className="mt-3 text-sm leading-6 text-slate-400">{frenchValue(company.country)} · {frenchValue(company.sector)} · {frenchValue(company.industry_group)}</p>
             {company.business_description_short ? <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-300">{company.business_description_short}</p> : null}
-            <div className="mt-5 flex flex-wrap gap-2"><EntryZoneBadge zone={zone}/><CompanyStatusBadge status={company.status}/></div>
+            <div className="mt-5 flex flex-wrap gap-2">
+              <EntryZoneBadge zone={zone}/><CompanyStatusBadge status={company.status}/>
+              <EngineBadge status={company.engine_status} shortFingerprint={company.engine_short_fingerprint}/>
+              <ResearchFreshnessBadge status={company.research_freshness_status} ageDays={company.analysis_age_days}/>
+            </div>
           </div>
 
           <div className="min-w-[260px] rounded-2xl border border-slate-700/80 bg-slate-950/70 p-5">
@@ -249,8 +254,12 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           </div>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Field label="Source d’autorité">{company.source_title ?? 'Non renseignée'}</Field>
-            <Field label="Version">{company.model_version ?? 'Non renseignée'}</Field>
-            <Field label="Date d’analyse">{company.analysis_date ?? 'Non renseignée'}</Field>
+            <Field label="Version analytique">{company.model_version ?? 'Non renseignée'}</Field>
+            <Field label="Moteur">{company.engine_status === 'CURRENT' ? 'Actuel' : company.engine_status === 'PREVIOUS' ? 'Précédent' : company.engine_status === 'LEGACY' ? 'Legacy' : 'Inconnu'} · process {company.process_version ?? '—'}</Field>
+            <Field label="Fingerprint moteur">{company.engine_short_fingerprint ? company.engine_short_fingerprint + '…' : 'Non disponible'}</Field>
+            <Field label="Data cutoff">{company.data_cutoff ?? 'Non renseigné'}</Field>
+            <Field label="Âge recherche">{company.analysis_age_days === null ? 'Inconnu' : company.analysis_age_days + ' jours'}</Field>
+            <Field label="Publication">{company.published_at ? new Date(company.published_at).toLocaleString('fr-FR') : 'Non renseignée'}</Field>
             <Field label="Prix de référence">{company.canonical_reference_price === null ? 'Non disponible' : <PriceDisplay value={company.canonical_reference_price} {...priceProps}/>}</Field>
           </div>
           <div>
