@@ -53,7 +53,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
 
   const [history, priceHistory] = await Promise.all([
     getSnapshotHistory(company.id),
-    getMarketPriceHistory(company.id, company.security_id, 180),
+    getMarketPriceHistory(company.id, company.security_id ?? null, 180),
   ]);
 
   const distance = getDistanceO90(company.price, company.price_o90);
@@ -70,7 +70,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
 
   const adaptiveOvs = company.market_valuation_score ?? company.valuation_score;
   const adaptiveInvestment = company.market_investment_score ?? company.investment_score;
-  const marketMode = company.market_score_is_live;
+  const marketMode = Boolean(company.market_score_is_live);
 
   return <div className="space-y-7 pb-10">
     <section className="overflow-hidden rounded-3xl border border-cyan-900/40 bg-[linear-gradient(145deg,rgba(9,31,48,.96),rgba(4,13,24,.92))] p-6 shadow-2xl shadow-cyan-950/10 sm:p-7">
@@ -90,7 +90,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           <div className="mt-2 text-4xl font-semibold tracking-tight text-white"><PriceDisplay value={company.price} {...priceProps}/></div>
           <div className="mt-2 flex items-center justify-between gap-4 text-xs">
             <span className="text-slate-500">vs prix de référence</span>
-            <span className={company.market_price_change_vs_reference_pct !== null && company.market_price_change_vs_reference_pct <= 0 ? 'font-mono text-emerald-300' : 'font-mono text-amber-200'}>{pct(company.market_price_change_vs_reference_pct)}</span>
+            <span className={(company.market_price_change_vs_reference_pct ?? null) !== null && (company.market_price_change_vs_reference_pct ?? 0) <= 0 ? 'font-mono text-emerald-300' : 'font-mono text-amber-200'}>{pct(company.market_price_change_vs_reference_pct ?? null)}</span>
           </div>
           <div className="mt-4 border-t border-slate-800 pt-3 text-xs leading-5 text-slate-500">
             MAJ : {company.price_as_of ? new Date(company.price_as_of).toLocaleString('fr-FR') : 'indisponible'}<br/>
@@ -132,8 +132,8 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
       <div className="rounded-2xl border border-slate-800 bg-slate-900/55 p-5">
         <div className="flex items-center justify-between gap-3"><h2 className="text-lg font-semibold text-white">Rendement attendu au cours actuel</h2><span className="text-xs text-slate-500">horizon certifié</span></div>
         <div className="mt-5 grid gap-4 sm:grid-cols-3">
-          <Field label="Scénario principal"><span className="text-lg font-semibold text-white">{pct(company.market_primary_expected_return)}</span></Field>
-          <Field label="Normalisation"><span className="text-lg font-semibold text-white">{pct(company.market_normalization_expected_return)}</span></Field>
+          <Field label="Scénario principal"><span className="text-lg font-semibold text-white">{pct(company.market_primary_expected_return ?? null)}</span></Field>
+          <Field label="Normalisation"><span className="text-lg font-semibold text-white">{pct(company.market_normalization_expected_return ?? null)}</span></Field>
           <Field label="Distance au seuil 10 %"><OroTitanDistance value={distance}/></Field>
         </div>
         <div className="mt-5 border-t border-slate-800 pt-4 text-xs leading-5 text-slate-500">Le recalcul marché change uniquement les sorties dépendantes du prix. Il ne constitue pas une nouvelle certification fondamentale.</div>
@@ -162,7 +162,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
           <Field label="Pays émetteur">{company.country ?? 'Non renseigné'}</Field><Field label="Secteur">{company.sector ?? 'Non renseigné'}</Field><Field label="Industrie">{company.industry_group ?? 'Non renseignée'}</Field><Field label="Modèle économique">{company.business_model_primary ?? 'Non renseigné'}</Field><Field label="Modèle secondaire">{company.business_model_secondary ?? 'Non renseigné'}</Field><Field label="Expositions économiques">{economicExposureRegions.length > 0 ? economicExposureRegions.join(', ') : 'Non renseignées'}</Field><Field label="PEA">{labelPea(company.pea_eligibility)}</Field><Field label="Taxonomie">{company.taxonomy_version ?? 'Non renseignée'}</Field>
         </div>
         <div className="mt-6 grid gap-4 lg:grid-cols-2"><TextBlock title="Déclencheurs d’invalidation" value={company.invalidation}/><TextBlock title="État du dossier / prochaine action" value={company.notes}/></div>
-        <div className="mt-5 grid gap-4 border-t border-slate-800 pt-5 sm:grid-cols-2 lg:grid-cols-4"><Field label="Autorité">{company.source_title ?? 'Non renseignée'}</Field><Field label="Version">{company.model_version ?? 'Non renseignée'}</Field><Field label="Date d’analyse">{company.analysis_date ?? 'Non renseignée'}</Field><Field label="Prix de référence">{company.reference_price === null ? '—' : <><PriceDisplay value={company.reference_price} {...priceProps}/> · {company.reference_price_date ?? 'date inconnue'}</>}</Field></div>
+        <div className="mt-5 grid gap-4 border-t border-slate-800 pt-5 sm:grid-cols-2 lg:grid-cols-4"><Field label="Autorité">{company.source_title ?? 'Non renseignée'}</Field><Field label="Version">{company.model_version ?? 'Non renseignée'}</Field><Field label="Date d’analyse">{company.analysis_date ?? 'Non renseignée'}</Field><Field label="Prix de référence">{(company.reference_price ?? null) === null ? '—' : <><PriceDisplay value={company.reference_price ?? null} {...priceProps}/> · {company.reference_price_date ?? 'date inconnue'}</>}</Field></div>
       </div>
     </details>
 
