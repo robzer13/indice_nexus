@@ -98,8 +98,8 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
       .filter((row) => country === 'ALL' || row.country === country)
       .filter((row) => industryGroup === 'ALL' || row.industry_group === industryGroup)
       .filter((row) => businessModel === 'ALL' || row.business_model_primary === businessModel)
-      .filter((row) => engine === 'ALL' || row.engine_status === engine)
-      .filter((row) => researchFreshness === 'ALL' || row.research_freshness_status === researchFreshness)
+      .filter((row) => engine === 'ALL' || (row.engine_status ?? 'UNKNOWN') === engine)
+      .filter((row) => researchFreshness === 'ALL' || (row.research_freshness_status ?? 'UNKNOWN') === researchFreshness)
       .filter((row) => freshness === 'ALL' || (freshness === 'FRESH' && !row.stale) || (freshness === 'STALE' && row.stale))
       .filter((row) => minScore === null || (row.current_investment_score !== null && row.current_investment_score >= minScore))
       .filter((row) => minDistance === null || (row.distance_o90_pct !== null && row.distance_o90_pct >= minDistance))
@@ -221,7 +221,7 @@ export function ScreenerTable({ companies }: { companies: CompanyState[] }) {
                   <td className="px-4 py-4">
                     <div className="font-medium text-slate-100">{row.name}</div>
                     <div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div>
-                    <div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status} ageDays={row.analysis_age_days}/></div>
+                    <div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status ?? 'UNKNOWN'} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status ?? 'UNKNOWN'} ageDays={row.analysis_age_days}/></div>
                   </td>
                   <td className="px-4 py-4">
                     <div className="font-semibold text-slate-100"><PriceDisplay value={row.price} {...priceProps}/></div>
@@ -265,7 +265,7 @@ function MobileCompanyCard({ row, onOpen }: { row: Row; onOpen: () => void }) {
   return (
     <button onClick={onOpen} className="rounded-2xl border border-slate-800 bg-slate-900/60 p-4 text-left transition hover:border-cyan-900 hover:bg-slate-900">
       <div className="flex items-start justify-between gap-4">
-        <div><div className="font-semibold text-white">{row.name}</div><div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div><div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status} ageDays={row.analysis_age_days}/></div></div>
+        <div><div className="font-semibold text-white">{row.name}</div><div className="mt-1 font-mono text-xs text-slate-500">{row.ticker} · {row.exchange}</div><div className="mt-2 flex flex-wrap gap-1.5"><EngineBadge status={row.engine_status ?? 'UNKNOWN'} shortFingerprint={row.engine_short_fingerprint}/><ResearchFreshnessBadge status={row.research_freshness_status ?? 'UNKNOWN'} ageDays={row.analysis_age_days}/></div></div>
         <CompanyStatusBadge status={row.status}/>
       </div>
       <div className="mt-4 flex items-end justify-between gap-4 border-b border-slate-800 pb-4">
