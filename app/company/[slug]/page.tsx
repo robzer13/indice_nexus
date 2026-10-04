@@ -52,7 +52,7 @@ function formatPct(value: number | null, digits = 1): string {
 }
 
 function priceSourceLabel(source: string | null): string {
-  if (source === 'YAHOO_FINANCE') return 'Yahoo Finance';
+  if (source === 'YAHOO_FINANCE' || source === 'YAHOO_FINANCE_LIVE') return source === 'YAHOO_FINANCE_LIVE' ? 'Yahoo Finance · direct' : 'Yahoo Finance';
   if (source === 'TWELVE_DATA') return 'Twelve Data';
   if (source === 'CANONICAL_REFERENCE_PRICE') return 'Prix de référence de l’analyse';
   return source ?? 'Source inconnue';
