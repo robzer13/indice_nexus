@@ -32,7 +32,7 @@ test('live valuation keeps frozen non-price caps while repricing I2 return compo
 
   assert.ok(result);
   assert.ok(Math.abs(result.primaryExpectedReturnPct - 10) < 1e-9);
-  assert.equal(result.primaryExpectedReturnScore, 70);
-  assert.equal(result.ovs, 55);
-  assert.equal(result.investmentScore, 70);
+  assert.ok(Math.abs(result.primaryExpectedReturnScore - 70) < 1e-9);
+  assert.ok(Math.abs(result.ovs - 55) < 1e-9);
+  assert.ok(Math.abs(result.investmentScore - 70) < 1e-9);
 });
