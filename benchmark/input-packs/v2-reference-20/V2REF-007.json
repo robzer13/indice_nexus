@@ -1,0 +1,77 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-007",
+  "company": "DBS Group Holdings Ltd",
+  "run_id": "79404786-140f-48cc-ab08-eac23acc4b67",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/79404786-140f-48cc-ab08-eac23acc4b67/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__ae3c2ec6-698c-4cca-90be-b409ebbd3f80__v001.json",
+    "commit_sha": "7018c38b06f9bd4bb491d6940b209ef006346466",
+    "blob_sha": "3bfc63514acd7d49840e595a2e054f912d4a5c52",
+    "registry_content_sha256": "0981196c886040816caede35c6a813b75781606083b4a6e09663fb1dc54dc9c2"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "79404786-140f-48cc-ab08-eac23acc4b67",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-18",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "ae3c2ec6-698c-4cca-90be-b409ebbd3f80",
+      "version": 1
+    },
+    "version": 1,
+    "source_fundamental_blocks": {
+      "artifact_id": "7628cfbc-adc1-46e3-8f57-2bf06e5741e1",
+      "version": 1,
+      "content_sha256": "614a7f0b2f75c73f29fd244774df2843dff1ff933758b092016b637ba40d86df"
+    },
+    "fundamental_verdicts": {
+      "MOAT_EVIDENCE_STATE": "SUPPORTED",
+      "MOAT_TREND": "STABLE",
+      "MOAT_DURABILITY": "LONG",
+      "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+      "RUNWAY_MAGNITUDE": "MATERIAL",
+      "RUNWAY_HORIZON": "EXTENDED",
+      "INDUSTRIAL_ROIC": "NOT_APPLICABLE",
+      "NORMALIZED_ROE_PCT": {
+        "min": 14.5,
+        "max": 16.5
+      },
+      "NORMALIZED_ROTE": "UNKNOWN",
+      "INCREMENTAL_EQUITY_RETURN": "NOT_INTERPRETABLE",
+      "FORENSIC_RELIABILITY": "CLEAN",
+      "EXACT_ECONOMIC_EXCESS_CAPITAL": "UNKNOWN"
+    },
+    "dimension_judgments": {
+      "MOAT": 80,
+      "RUNWAY": 80,
+      "RETURN_QUALITY": 85,
+      "CASH_ECONOMICS": 80,
+      "CAPITAL_ALLOCATION": 80,
+      "MANAGEMENT_GOVERNANCE": 75,
+      "RESILIENCE_RISK": 75
+    },
+    "valuation_reconciliation": {
+      "VALUATION_RELIABILITY": "MEDIUM",
+      "MARGIN_OF_SAFETY": "NONE",
+      "MARKET_EXPECTATION_GAP": "ABOVE_FUNDAMENTAL_CASE",
+      "PRIMARY_EXPECTED_RETURN_PCT": 2.414394504577,
+      "NORMALIZATION_RETURN_PCT": 1.693504744352
+    },
+    "locked_judgments_modified": false
+  }
+}
