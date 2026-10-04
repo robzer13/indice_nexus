@@ -1,0 +1,459 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-003",
+  "company": "Alphabet",
+  "run_id": "ef71251d-da41-442a-91ab-33503f5c95c1",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/ef71251d-da41-442a-91ab-33503f5c95c1/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__2fe46fda-bed8-4fa9-b5f7-9ad57e5b7c37__v001.json",
+    "commit_sha": "01f1aacf92612987571da9e9a9a129d9d056aa32",
+    "blob_sha": "b3cc80e2ddf891ce03d4fde3f257d715ebe394b0",
+    "registry_content_sha256": "2d244a1d3129f2ed3d661d20c85a57dfa092da15ad8ecc0717204b6ff057142a"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "2fe46fda-bed8-4fa9-b5f7-9ad57e5b7c37",
+      "version": 1
+    },
+    "run_id": "ef71251d-da41-442a-91ab-33503f5c95c1",
+    "issuer_id": "68332633-0f03-426d-801f-8923219407dd",
+    "security_id": "247e7f79-7a34-4e3d-9542-c217274526e9",
+    "dossier_id": "c7277756-d903-4fea-9c0f-2305364f4156",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-19",
+    "version": 1,
+    "blocks": [
+      {
+        "block_id": "BUSINESS_MODEL",
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "core_findings": [
+          "Google Services remains the dominant cash engine, combining Search/YouTube advertising with subscriptions/platforms/devices; Google Cloud is a second scaled engine; Other Bets remains economically small and loss-making.",
+          "Advertising was about 73.15% of FY2025 consolidated revenue, so diversification is meaningful but does not remove ad/search concentration.",
+          "Shared Alphabet-level AI R&D means segment margins do not represent fully loaded standalone economics."
+        ],
+        "supporting_evidence_ids": [
+          "E-021",
+          "E-022",
+          "E-023",
+          "E-024",
+          "E-025",
+          "E-026",
+          "E-106",
+          "E-168"
+        ],
+        "unresolved_points": [
+          "Exact product-level profit allocation within Services remains undisclosed."
+        ]
+      },
+      {
+        "block_id": "ECONOMIC_QUALITY",
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "core_findings": [
+          "Services generated exceptional absolute operating profit while Cloud margin reached roughly 35% in Q2 2026.",
+          "The model combines digital distribution and auction economics with an increasingly capital-intensive AI infrastructure layer.",
+          "Network advertising is structurally weaker than Search/YouTube, preventing a single uniform quality label across all revenue."
+        ],
+        "supporting_evidence_ids": [
+          "E-025",
+          "E-026",
+          "E-027",
+          "E-028",
+          "E-031",
+          "E-074",
+          "E-082",
+          "E-083",
+          "E-149"
+        ],
+        "unresolved_points": [
+          "Fully loaded AI economics across Services and Cloud remain unallocated."
+        ]
+      },
+      {
+        "block_id": "MOAT",
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "MOAT_EVIDENCE_STATE": "STRONGLY_SUPPORTED",
+          "MOAT_TREND": "UNCLEAR",
+          "MOAT_DURABILITY": "LONG",
+          "PRIMARY_MOAT": "Search/advertising scale, user habit, auction liquidity and distribution reinforced by data and product ecosystem",
+          "SUPPORTING_MECHANISMS": [
+            "YouTube creator-viewer-advertiser network",
+            "Chrome/Android/Maps distribution and intent surfaces",
+            "proprietary infrastructure/TPU plus frontier-model capability",
+            "Cloud enterprise ecosystem and installed workloads"
+          ]
+        },
+        "core_findings": [
+          "Search usage share, browser/mobile distribution, advertiser demand, persistent query growth and extraordinary Services profit provide convergent behavioral and economic proof that the moat exists.",
+          "YouTube and Cloud add independent but less dominant reinforcing mechanisms.",
+          "The moat is not reducible to technical switching costs: default payments and distribution contracts matter, and remedies explicitly target them.",
+          "AI answer interfaces, publisher traffic pressure, interoperability mandates and strong rival models make moat trend UNCLEAR even while durability is judged LONG."
+        ],
+        "supporting_evidence_ids": [
+          "E-041",
+          "E-042",
+          "E-043",
+          "E-048",
+          "E-049",
+          "E-057",
+          "E-059",
+          "E-060",
+          "E-061",
+          "E-067",
+          "E-069",
+          "E-077",
+          "E-078",
+          "E-115",
+          "E-116",
+          "E-117",
+          "E-118",
+          "E-130",
+          "E-131"
+        ],
+        "contradicting_evidence_ids": [
+          "E-048",
+          "E-049",
+          "E-061",
+          "E-067",
+          "E-116",
+          "E-117"
+        ],
+        "unresolved_points": [
+          "Post-remedy default elasticity is unobserved.",
+          "AI-search monetization and publisher-equilibrium effects are not yet proven."
+        ]
+      },
+      {
+        "block_id": "RUNWAY",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+          "RUNWAY_MAGNITUDE": "LARGE",
+          "RUNWAY_HORIZON": "EXTENDED"
+        },
+        "core_findings": [
+          "Core runway is supported by Cloud/AI enterprise demand, Search AI monetization, YouTube/subscriptions and continued AI infrastructure deployment.",
+          "Cloud RPO and realized Cloud growth support capture evidence, but RPO is not treated as near-term revenue one-for-one.",
+          "Waymo and standalone Gemini consumer monetization remain optionality because unit economics / standalone revenues are not disclosed.",
+          "Runway requires exceptional reinvestment and is constrained by power, water, land, specialized suppliers, regulation and capital intensity."
+        ],
+        "supporting_evidence_ids": [
+          "E-054",
+          "E-055",
+          "E-056",
+          "E-073",
+          "E-075",
+          "E-076",
+          "E-077",
+          "E-082",
+          "E-083",
+          "E-086",
+          "E-087",
+          "E-090",
+          "E-120",
+          "E-122",
+          "E-135",
+          "E-136",
+          "E-141",
+          "E-164"
+        ],
+        "contradicting_evidence_ids": [
+          "E-090",
+          "E-123",
+          "E-135"
+        ],
+        "unresolved_points": [
+          "No defensible bottom-up total capture pool exists for consolidated Alphabet AI opportunity.",
+          "Waymo unit economics remain unavailable."
+        ]
+      },
+      {
+        "block_id": "RETURN_QUALITY",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "STANDARD_ROIC_PCT_RANGE": [
+            43.1,
+            44.16
+          ],
+          "ALL_IN_ROIC_PCT_RANGE": [
+            43.1,
+            44.16
+          ],
+          "ROIC_EX_GOODWILL_PCT_RANGE": [
+            49.8,
+            51.03
+          ],
+          "R_AND_D_ADJUSTED_ROIC_PCT_RANGE": [
+            35.97,
+            36.86
+          ],
+          "ROIIC": "NOT_INTERPRETABLE",
+          "ROIC_TREND": "UNCLEAR",
+          "INVESTMENT_LAG": "HIGH",
+          "RETURN_DATA_QUALITY": "HIGH",
+          "RETURN_ATTRIBUTABILITY": "MEDIUM",
+          "RETURN_INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS",
+          "ECONOMIC_SPREAD": "CLEARLY_POSITIVE"
+        },
+        "core_findings": [
+          "FY2025 all-in operating ROIC is about 43%-44%; a financing bridge corroborates the denominator within roughly one percentage point.",
+          "R&D capitalization sensitivity still produces mid-30s ROIC, so strong returns are not an artifact of expensing all R&D.",
+          "The June 2026 capital base expands sharply because of AI infrastructure and acquisitions; a simple H1 annualized diagnostic falls into the high-30s.",
+          "ROIIC is NOT_INTERPRETABLE because current capital build, Wiz/Intersect and shared AI costs break clean period-to-period attribution."
+        ],
+        "calculation_ids": [
+          "CALC-IC-001",
+          "CALC-IC-XCHECK-001",
+          "CALC-NOPAT-001",
+          "CALC-ROIC-001",
+          "CALC-ROIC-XGW-001",
+          "CALC-RD-ROIC-001",
+          "CALC-H1-ROIC-DIAG-001"
+        ],
+        "supporting_evidence_ids": [
+          "E-082",
+          "E-083",
+          "E-092",
+          "E-093",
+          "E-094",
+          "E-105",
+          "E-140",
+          "E-150",
+          "E-169",
+          "E-171"
+        ],
+        "unresolved_points": [
+          "Incremental AI returns cannot yet be isolated.",
+          "Wiz/Intersect acquisition returns are not observable."
+        ]
+      },
+      {
+        "block_id": "CASH_ECONOMICS",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "FORENSIC_RELIABILITY": "WATCH",
+          "OWNER_EARNINGS": "UNKNOWN",
+          "STANDARDIZED_FCF_USD_BN": {
+            "FY2024": 72.764,
+            "FY2025": 73.266,
+            "H1_2026": 4.261
+          }
+        },
+        "core_findings": [
+          "Standardized FCF was roughly $73bn in both FY2024 and FY2025, then compressed to about $4.3bn in H1 2026 as capex almost matched CFO.",
+          "H1 2026 GAAP net income is not a cash-quality proxy because large investment fair-value gains dominate the earnings bridge.",
+          "SBC is material and is treated as economic compensation; common share count fell in 2025 but rose in H1 2026 alongside new common/preferred financing.",
+          "Owner Earnings remains UNKNOWN because maintenance versus growth AI infrastructure requirements cannot be bounded honestly."
+        ],
+        "calculation_ids": [
+          "CALC-FCF-001",
+          "CALC-SHARES-001"
+        ],
+        "supporting_evidence_ids": [
+          "E-004",
+          "E-005",
+          "E-098",
+          "E-099",
+          "E-100",
+          "E-101",
+          "E-102",
+          "E-149",
+          "E-168",
+          "E-170",
+          "E-172"
+        ],
+        "unresolved_points": [
+          "Maintenance AI capex is not disclosed.",
+          "Future dilution from mandatory conversion depends on stock price and capped-call settlement."
+        ]
+      },
+      {
+        "block_id": "CAPITAL_ALLOCATION",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Alphabet has a long record of funding high-return organic R&D and infrastructure, but the 2026 capital program is a step-change whose realized returns are unproven.",
+          "H1 2026 combined major uses included about $80.6bn capex, $33.7bn acquisition/intangible cash outflow and $22.1bn nonmarketable investment purchases; funding included common equity, mandatory preferred and debt.",
+          "Wiz ($29.5bn) and Intersect (~$5.9bn) materially increase acquisition capital; Wiz preliminary goodwill is about 77% of purchase consideration.",
+          "No H1 2026 repurchases occurred while new equity was issued; this is not automatically negative because funding needs rose, but per-share discipline must be judged on subsequent returns.",
+          "Other Bets continue to consume capital and lack consolidated standalone return disclosure."
+        ],
+        "supporting_evidence_ids": [
+          "E-005",
+          "E-006",
+          "E-008",
+          "E-009",
+          "E-010",
+          "E-011",
+          "E-012",
+          "E-013",
+          "E-014",
+          "E-092",
+          "E-093",
+          "E-094",
+          "E-103",
+          "E-104",
+          "E-124",
+          "E-125",
+          "E-157",
+          "E-158",
+          "E-170"
+        ],
+        "unresolved_points": [
+          "Wiz, Intersect and current AI infrastructure cohort returns are unproven.",
+          "Waymo cumulative return on invested capital remains unavailable."
+        ]
+      },
+      {
+        "block_id": "MANAGEMENT_GOVERNANCE",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Operational execution is evidenced by sustained Search economics, Cloud scale/profitability and accelerated AI deployment, but management claims are not used as proof by themselves.",
+          "Seven of ten 2026 director nominees are independent; an independent chair and dedicated Risk and Compliance Committee strengthen formal oversight.",
+          "CEO compensation is more performance-weighted in 2026 and includes relative-TSR and Waymo/Wing value-creation conditions, plus minimum share-ownership requirements.",
+          "Founder super-voting control remains a material minority-governance asymmetry: Page and Brin together controlled a majority of voting power despite lower economic ownership."
+        ],
+        "supporting_evidence_ids": [
+          "E-015",
+          "E-016",
+          "E-017",
+          "E-173",
+          "E-174"
+        ],
+        "unresolved_points": [
+          "Founder control materially limits minority influence over board outcomes and strategic changes.",
+          "Compensation alignment does not prove capital-allocation returns."
+        ]
+      },
+      {
+        "block_id": "OUTSIDE_VIEW",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Reference class: dominant global digital platforms undergoing an interface transition and a large infrastructure investment cycle.",
+          "External evidence confirms unusually high Search/Chrome/Android usage shares, but also strong AI-model competition and large Meta/Amazon advertising scale.",
+          "Antitrust remedies treat distribution/defaults/data access as competitively material, preventing an assumption that observed share is purely organic preference.",
+          "No quantified base-rate dataset in the admitted evidence is strong enough to manufacture a numerical prior."
+        ],
+        "supporting_evidence_ids": [
+          "E-041",
+          "E-042",
+          "E-043",
+          "E-057",
+          "E-064",
+          "E-079",
+          "E-080",
+          "E-081",
+          "E-115",
+          "E-116",
+          "E-138",
+          "E-139",
+          "E-146",
+          "E-154"
+        ],
+        "unresolved_points": [
+          "No directly comparable historical platform transition provides a clean quantitative base rate for generative-AI Search economics."
+        ]
+      },
+      {
+        "block_id": "RISK_RESILIENCE",
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Liquidity is substantial, but headline net cash is an incomplete resilience measure because contractual/purchase obligations, uncommenced leases, infrastructure backstops and preferred claims are material.",
+          "Regulatory risk is structural across Search, adtech, Android/Play and UK/EU frameworks; remedies can affect distribution/data/interoperability independently of fines.",
+          "AI creates both disruption and execution risk: monetization, compute cost, model competition, copyright/security and publisher ecosystem effects remain live.",
+          "Infrastructure scaling is exposed to power/water/land constraints and a small set of specialized suppliers; operational incidents exist though the cited outage has no disclosed material consolidated loss.",
+          "Founder control is a governance concentration risk; advertising/Search remains a business concentration risk despite Cloud growth."
+        ],
+        "supporting_evidence_ids": [
+          "E-059",
+          "E-060",
+          "E-061",
+          "E-062",
+          "E-063",
+          "E-065",
+          "E-066",
+          "E-067",
+          "E-069",
+          "E-078",
+          "E-086",
+          "E-087",
+          "E-088",
+          "E-089",
+          "E-090",
+          "E-095",
+          "E-096",
+          "E-097",
+          "E-098",
+          "E-126",
+          "E-127",
+          "E-128",
+          "E-129",
+          "E-131",
+          "E-159",
+          "E-160",
+          "E-161",
+          "E-162"
+        ],
+        "unresolved_points": [
+          "Cash cost and behavioral effect of remedies remain uncertain.",
+          "The long-dated economic burden of $811bn contractual obligations depends on utilization, cancellation/conditionality and revenue generated by the infrastructure."
+        ]
+      },
+      {
+        "block_id": "FUNDAMENTAL_RED_TEAM",
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "artifact_ref": {
+          "artifact_id": "665590a0-47df-4e18-9bb5-0aff234b41b3",
+          "version": 1
+        }
+      }
+    ],
+    "material_cross_block_reconciliations": [
+      {
+        "id": "XBR-001",
+        "issue": "Strong Search moat versus antitrust/default dependence",
+        "resolution": "Moat existence is strongly supported, but trend is UNCLEAR and distribution-contract dependence is explicit negative evidence rather than ignored."
+      },
+      {
+        "id": "XBR-002",
+        "issue": "Strong Cloud segment margin versus AI capital intensity",
+        "resolution": "Cloud profitability is recognized, but shared AI R&D/capex allocation prevents treating segment margin as fully loaded ROIC proof."
+      },
+      {
+        "id": "XBR-003",
+        "issue": "Large runway versus weak H1 standardized FCF",
+        "resolution": "Growth opportunity and cash realization are separated; runway remains supported while cash score is lower and Owner Earnings remains UNKNOWN."
+      },
+      {
+        "id": "XBR-004",
+        "issue": "Large liquidity versus commitments",
+        "resolution": "Cash/securities are retained as resilience, but $811bn obligations and off-balance-sheet commitments are separately stress-mapped and not netted away."
+      }
+    ]
+  }
+}
