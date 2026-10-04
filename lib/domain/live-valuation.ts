@@ -1,13 +1,11 @@
-import {
-  computeInvestmentScore,
-  computeOvs,
-  computeReturnComponent,
-  scoreExpectedReturnDelta,
-  type InvestmentConclusionStatus,
-  type MosStatus,
-  type ScorePermission,
-  type ValuationReliability,
-} from '@/lib/orotitan-equity/v1';
+import { scoreExpectedReturnDelta } from '@/lib/orotitan-equity/v1/expected-return';
+import { computeInvestmentScore, computeOvs, computeReturnComponent } from '@/lib/orotitan-equity/v1/scoring';
+import type {
+  InvestmentConclusionStatus,
+  MosStatus,
+  ScorePermission,
+  ValuationReliability,
+} from '@/lib/orotitan-equity/v1/certification';
 
 export interface LiveValuationInput {
   currentPrice: number | null;
