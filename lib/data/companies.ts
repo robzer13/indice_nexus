@@ -1,4 +1,5 @@
 import 'server-only';
+import { unstable_cache } from 'next/cache';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
 import { computeLiveValuation } from '@/lib/domain/live-valuation';
@@ -6,6 +7,12 @@ import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit,
 import type { InvestmentConclusionStatus, MosStatus, ScorePermission, ValuationReliability } from '@/lib/orotitan-equity/v1/certification';
 import { fetchYahooFinancePrice } from '@/lib/market/yahoo-finance';
 import { deriveMarketDataReference } from '@/lib/market/reference';
+
+const fetchCachedYahooFinancePrice = unstable_cache(
+  async (reference: string) => fetchYahooFinancePrice(reference),
+  ['orotitan-live-market-price-v1'],
+  { revalidate: 300 },
+);
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -182,7 +189,7 @@ async function getBestMarketPrice(security: UnknownRecord, persisted: UnknownRec
   if (!reference) return persisted;
 
   try {
-    const quote = await fetchYahooFinancePrice(reference);
+    const quote = await fetchCachedYahooFinancePrice(reference);
     const multiplier = asNumber(security.market_data_multiplier) ?? 1;
     return {
       price: quote.providerPrice * multiplier,
