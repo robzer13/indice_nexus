@@ -1,0 +1,112 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-018",
+  "company": "TotalEnergies",
+  "run_id": "eca2ad1d-8096-480f-80ff-f8b4dddae6bd",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/eca2ad1d-8096-480f-80ff-f8b4dddae6bd/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__28cb8ad6-57d8-4282-b95d-53bf15bc33de__v001.json",
+    "commit_sha": "3ccaad5bd6147ad60de50d080cbcbcf37bd159e5",
+    "blob_sha": "93698c05ec1115b8f9d5d60d99e540beb0223df3",
+    "registry_content_sha256": "1e0acfc45414d49f677bd1f61f93d99f91192f1789b883747eb6f5bc19688c37"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "eca2ad1d-8096-480f-80ff-f8b4dddae6bd",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "version": 1,
+    "status": "COMPLETE_WITH_LIMITATIONS",
+    "source_fundamentals_blocks": {
+      "artifact_id": "692bf174-28ad-4cf3-b5af-a99851ab0c9e",
+      "version": 1,
+      "content_sha256": "47e0a82765c5f6ffb9976203d836efa48e14957c394fa17e59cfe2099bee64f3"
+    },
+    "source_valuation_lock": {
+      "artifact_id": "fb186e90-bbb5-41b4-885c-2cdea6f9b0ee",
+      "version": 2,
+      "content_sha256": "c07e01bfefabfd1522b3c6c2ff8c35e20d7c18fe7e5863816518fe8f7aa69152"
+    },
+    "block_execution": [
+      {
+        "block_id": "BUSINESS_MODEL",
+        "status": "COMPLETE"
+      },
+      {
+        "block_id": "ECONOMIC_QUALITY",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "MOAT",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "RUNWAY",
+        "status": "COMPLETE"
+      },
+      {
+        "block_id": "RETURN_QUALITY",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "FCF_OWNER_EARNINGS_FORENSIC",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "CAPITAL_ALLOCATION",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "MANAGEMENT_GOVERNANCE",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "OUTSIDE_VIEW",
+        "status": "COMPLETE"
+      },
+      {
+        "block_id": "RISK_RESILIENCE",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      },
+      {
+        "block_id": "RED_TEAM_PREMORTEM",
+        "status": "COMPLETE"
+      },
+      {
+        "block_id": "VALUATION",
+        "status": "COMPLETE_WITH_LIMITATIONS"
+      }
+    ],
+    "locked_states": {
+      "moat_evidence_state": "PLAUSIBLE",
+      "moat_trend": "STABLE",
+      "moat_durability": "MODERATE",
+      "runway_evidence_state": "SUPPORTED",
+      "runway_magnitude": "LARGE",
+      "runway_horizon": "EXTENDED",
+      "standard_roic": "UNKNOWN",
+      "all_in_roic": "UNKNOWN",
+      "roiic": "NOT_INTERPRETABLE",
+      "economic_spread": "UNKNOWN",
+      "return_attributability": "LOW",
+      "forensic_reliability": "WATCH",
+      "standardized_fcf": "UNKNOWN",
+      "owner_earnings": "UNKNOWN",
+      "valuation_reliability": "LOW"
+    },
+    "created_at": "2026-09-20T20:50:00.000000Z"
+  }
+}
