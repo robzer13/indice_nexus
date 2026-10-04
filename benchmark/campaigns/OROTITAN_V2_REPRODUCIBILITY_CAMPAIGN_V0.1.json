@@ -1,0 +1,101 @@
+{
+  "campaign_id": "OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.1",
+  "status": "READY_FOR_HARNESS_EXECUTION",
+  "corpus_ref": "benchmark/corpora/OROTITAN_V2_REFERENCE_20_V0.1.json",
+  "engine_fingerprint": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+  "objectives": [
+    "Measure repeatability of score-driving judgments on frozen artifacts.",
+    "Separate scoring/judgment variability from retrieval/extraction variability.",
+    "Establish a V2 baseline before any V3 deterministic scoring activation."
+  ],
+  "phases": [
+    {
+      "phase_id": "A_ARTIFACT_REPLAY",
+      "status": "READY",
+      "cases": 20,
+      "repetitions_per_case": 10,
+      "total_executions": 200,
+      "input_mode": "FROZEN_ARTIFACT_REPLAY",
+      "input_root": "AUTHORITATIVE_DEEP_DIVE_FINAL_MANIFEST",
+      "network_research": "DISABLED",
+      "publication": "FORBIDDEN",
+      "canonical_mutation": "FORBIDDEN",
+      "expected_measures": [
+        "dimension_score_stability",
+        "oqs_stability",
+        "certification_state_agreement",
+        "terminal_verdict_flip_rate",
+        "i2_exact_reconciliation",
+        "structured_state_agreement"
+      ]
+    },
+    {
+      "phase_id": "B_SOURCE_REPLAY",
+      "status": "BLOCKED_PENDING_SOURCE_PACK_FREEZE",
+      "cases": 20,
+      "repetitions_per_case": 5,
+      "total_executions": 100,
+      "input_mode": "FROZEN_POINT_IN_TIME_SOURCE_REPLAY",
+      "network_research": "DISABLED_EXCEPT_LOCAL_FROZEN_SOURCE_PACK",
+      "publication": "FORBIDDEN",
+      "canonical_mutation": "FORBIDDEN",
+      "expected_measures": [
+        "claim_precision",
+        "claim_recall",
+        "source_attribution_accuracy",
+        "evidence_omission_rate",
+        "conflict_detection_precision",
+        "conflict_detection_recall",
+        "downstream_score_stability"
+      ]
+    }
+  ],
+  "execution_record_required_fields": [
+    "campaign_id",
+    "phase_id",
+    "case_id",
+    "repetition_index",
+    "engine_fingerprint",
+    "model_provider",
+    "model_name",
+    "model_version",
+    "reasoning_configuration",
+    "prompt_artifact_version",
+    "input_package_sha256",
+    "started_at",
+    "finished_at",
+    "structured_states",
+    "dimension_scores",
+    "oqs",
+    "ovs",
+    "investment_score",
+    "certification_status",
+    "terminal_verdict",
+    "artifact_output_sha256"
+  ],
+  "comparison_policy": {
+    "reference": "ORIGINAL_PUBLISHED_V2_OUTPUT",
+    "numeric_tolerance": "EXACT_FOR_DETERMINISTIC_CALCULATIONS",
+    "score_comparison": "EXACT_AND_MAD",
+    "categorical_comparison": "EXACT_AGREEMENT_AND_FLIP_RATE",
+    "missing_state": "MISSING_NOT_ZERO",
+    "range_outputs": "COMPARE_MIN_MAX_SEPARATELY"
+  },
+  "success_metrics": {
+    "phase_a": {
+      "i2_exact_reconciliation_target": 1,
+      "deterministic_score_variance_after_locked_inputs_target": 0,
+      "terminal_verdict_flip_rate_target": "<0.01",
+      "structured_state_exact_agreement_candidate_target": ">=0.95"
+    },
+    "phase_b": {
+      "unsupported_material_claim_rate_candidate_target": "<0.01",
+      "material_source_attribution_accuracy_candidate_target": ">=0.99"
+    }
+  },
+  "notes": [
+    "Candidate targets are diagnostic and are not methodology freeze thresholds.",
+    "No composite engine score is authorized.",
+    "Phase B cannot start until raw point-in-time source packs are frozen."
+  ]
+}
