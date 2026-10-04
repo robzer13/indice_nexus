@@ -8,6 +8,13 @@ test('Yahoo Finance symbols map European exchanges deterministically', () => {
   assert.equal(toYahooFinanceSymbol('RMS:EPA'), 'RMS.PA');
   assert.equal(toYahooFinanceSymbol('MEDI:OSE'), 'MEDI.OL');
   assert.equal(toYahooFinanceSymbol('RAA:XETR'), 'RAA.DE');
+  assert.equal(toYahooFinanceSymbol('ADYEN:AMS'), 'ADYEN.AS');
+  assert.equal(toYahooFinanceSymbol('BEAN:SWX'), 'BEAN.SW');
+  assert.equal(toYahooFinanceSymbol('BN:TSX'), 'BN.TO');
+  assert.equal(toYahooFinanceSymbol('TOI:TSXV'), 'TOI.V');
+  assert.equal(toYahooFinanceSymbol('NOVO-B:CPH'), 'NOVO-B.CO');
+  assert.equal(toYahooFinanceSymbol('2330:TWSE'), '2330.TW');
+  assert.equal(toYahooFinanceSymbol('D05:SGX'), 'D05.SI');
   assert.equal(toYahooFinanceSymbol('G24:XETR'), 'G24.DE');
 });
 
