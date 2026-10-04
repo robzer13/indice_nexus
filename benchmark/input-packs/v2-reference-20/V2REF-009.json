@@ -1,0 +1,135 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-009",
+  "company": "Hermès International",
+  "run_id": "6550c321-5cec-403d-99f1-09e19b74dbc6",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/6550c321-5cec-403d-99f1-09e19b74dbc6/deep-dive/certification/ANALYTICAL_BLOCK_OUTPUTS__b54b9c55-dba7-4c7b-b498-98a4b0243464__v001.json",
+    "commit_sha": "e15e2725beff46489c06f10bea2b0a2179a25894",
+    "blob_sha": "f856c503a178f60fef5c6230f12db88fb9f668eb",
+    "registry_content_sha256": "a4758581f088e279036386eb105a6839d3a040553d315bcfe02f23d9879d99d0"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact": {
+      "artifact_id": "b54b9c55-dba7-4c7b-b498-98a4b0243464",
+      "version": 1
+    },
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "created_at": "2026-09-16T16:34:19Z",
+    "data_cutoff": "2026-09-15",
+    "dimension_judgments": [
+      {
+        "dimension": "MOAT",
+        "evidence_ceiling": 90,
+        "rationale": "Long, stable and economically material moat with independent support, but evidence is SUPPORTED rather than STRONGLY_SUPPORTED and behavioral proof is incomplete.",
+        "refs": [
+          "E-002",
+          "E-006",
+          "E-007",
+          "E-010",
+          "E-019",
+          "E-020",
+          "C-001",
+          "C-002",
+          "G-001",
+          "G-003"
+        ]
+      },
+      {
+        "dimension": "RUNWAY",
+        "evidence_ceiling": 90,
+        "rationale": "Material extended runway is supported by capacity additions and breadth, but magnitude is not LARGE and APAC/China/capacity-denominator evidence limits certainty.",
+        "refs": [
+          "E-003",
+          "E-004",
+          "E-012",
+          "E-013",
+          "E-014",
+          "C-003",
+          "G-002",
+          "G-007",
+          "G-008"
+        ]
+      },
+      {
+        "dimension": "RETURN_QUALITY",
+        "rationale": "ROIC ~70.8% and 3Y ROIIC ~43.5% are strongly value-creating; declining ROIC and MEDIUM attribution prevent the exceptional anchor.",
+        "refs": [
+          "CALC-F-001",
+          "CALC-F-002",
+          "CALC-F-003",
+          "CALC-F-004",
+          "CALC-F-005"
+        ]
+      },
+      {
+        "dimension": "CASH_ECONOMICS",
+        "rationale": "Cash conversion and forensic reliability are strong and CLEAN; Owner Earnings remains UNKNOWN because maintenance versus growth capex is unresolved.",
+        "refs": [
+          "CALC-F-006",
+          "CALC-F-007",
+          "CALC-F-008",
+          "C-004",
+          "G-004"
+        ]
+      },
+      {
+        "dimension": "CAPITAL_ALLOCATION",
+        "rationale": "Organic reinvestment has created strong value with limited M&A dependence; large retained cash creates an explicit opportunity-cost tension.",
+        "refs": [
+          "E-008",
+          "E-011",
+          "E-014",
+          "E-018",
+          "CALC-F-004",
+          "CALC-F-006"
+        ]
+      },
+      {
+        "dimension": "MANAGEMENT_GOVERNANCE",
+        "rationale": "Strong stewardship and continuity are offset by structural minority-governance tension and incomplete exact family-ownership reconstruction.",
+        "refs": [
+          "E-015",
+          "E-016",
+          "E-017",
+          "E-018",
+          "C-006",
+          "G-005"
+        ]
+      },
+      {
+        "dimension": "RESILIENCE_RISK",
+        "rationale": "Financial and operating resilience are strong, but concentration in leather/Asia and craft-scaling/brand risks are economically identifiable and material.",
+        "refs": [
+          "E-003",
+          "E-004",
+          "E-006",
+          "E-009",
+          "E-013",
+          "E-016"
+        ]
+      }
+    ],
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "run_id": "6550c321-5cec-403d-99f1-09e19b74dbc6",
+    "stage": "DEEP_DIVE",
+    "upstream_fundamentals": {
+      "artifact_id": "b8183229-e8b1-4296-9db2-a9d3799ef9be",
+      "content_sha256": "519c403e07107089e6b9c19925a7b5d6f5a78edf631eaaf430870f8a953169d6",
+      "version": 1
+    }
+  }
+}
