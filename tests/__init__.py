@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 
+from . import fastapi_stub, pandas_stub, pydantic_stub, streamlit_stub, yfinance_stub
 from . import fastapi_stub, pandas_stub, streamlit_stub, yfinance_stub
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,7 @@ sys.modules.setdefault("fastapi", fastapi_stub)
 sys.modules.setdefault("fastapi.middleware", fastapi_stub.middleware)
 sys.modules.setdefault("fastapi.middleware.cors", fastapi_stub.middleware.cors)
 sys.modules.setdefault("fastapi.testclient", fastapi_stub.testclient)
+sys.modules.setdefault("pydantic", pydantic_stub)
 import sys
 
 from . import pandas_stub, yfinance_stub
