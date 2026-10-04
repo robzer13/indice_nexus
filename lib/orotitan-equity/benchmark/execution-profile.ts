@@ -6,6 +6,7 @@ export const BENCHMARK_ENGINE_FINGERPRINT = '1116ca12dce2d30ddbb4b699945d92ae235
 export const BENCHMARK_RUNNER_VERSION = 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2' as const;
 export const BENCHMARK_PROMPT_VERSION = 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1' as const;
 export const BENCHMARK_SANITIZER_VERSION = '1.0.0' as const;
+export const BENCHMARK_MAX_OUTPUT_TOKENS = 6000 as const;
 
 export const BENCHMARK_REASONING_LEVELS = [
   'none',
@@ -31,6 +32,8 @@ export function benchmarkExecutionProfile(input: {
   reasoning: BenchmarkReasoningLevel;
 }) {
   if (!input.model.includes('/')) throw new Error('Benchmark model must be a provider/model Gateway id.');
+  const provider = input.model.slice(0, input.model.indexOf('/'));
+  if (!provider) throw new Error('Benchmark model provider prefix is empty.');
 
   const profile = {
     campaign_id: BENCHMARK_CAMPAIGN_ID,
@@ -41,6 +44,8 @@ export function benchmarkExecutionProfile(input: {
     sanitizer_version: BENCHMARK_SANITIZER_VERSION,
     model: input.model,
     reasoning_config: input.reasoning,
+    gateway_provider_only: provider,
+    max_output_tokens: BENCHMARK_MAX_OUTPUT_TOKENS,
   };
 
   return {
