@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-root="$(cd "$(dirname "\${BASH_SOURCE[0]}")/../.." && pwd)"
+root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 fixture="$root/tests/postgres/i1-fixture.sql"
 migration="$root/migrations/20261004_orotitan_engine_benchmark_execution_registry.sql"
 verify="$root/tests/postgres/benchmark-execution-registry-verify.sql"
