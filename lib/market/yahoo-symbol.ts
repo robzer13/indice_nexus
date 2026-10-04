@@ -5,6 +5,13 @@ const EXCHANGE_SUFFIXES: Record<string, string> = {
   EURONEXT: '.PA',
   OSE: '.OL',
   XETR: '.DE',
+  AMS: '.AS',
+  SWX: '.SW',
+  TSX: '.TO',
+  TSXV: '.V',
+  CPH: '.CO',
+  TWSE: '.TW',
+  SGX: '.SI',
 };
 
 export function toYahooFinanceSymbol(reference: string): string {
