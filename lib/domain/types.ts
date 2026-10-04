@@ -60,6 +60,17 @@ export interface CompanyState {
   price: number | null;
   price_as_of: string | null;
   price_source: string | null;
+  reference_price?: number | null;
+  reference_price_date?: string | null;
+  required_return_h?: number | null;
+  snapshot_valuation_score?: number | null;
+  live_valuation_score?: number | null;
+  snapshot_investment_score?: number | null;
+  live_investment_score?: number | null;
+  live_primary_expected_return?: number | null;
+  live_normalization_expected_return?: number | null;
+  price_change_vs_reference_pct?: number | null;
+  live_valuation_reason?: string | null;
   analysis_date: string | null;
   model_version: string | null;
   status: CompanyStatus | null;
