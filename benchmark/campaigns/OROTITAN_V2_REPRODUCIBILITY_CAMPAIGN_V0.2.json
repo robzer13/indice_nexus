@@ -1,0 +1,106 @@
+{
+  "campaign_id": "OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2",
+  "supersedes": "OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.1",
+  "status": "READY_FOR_RUNNER_VALIDATION",
+  "corpus_ref": "benchmark/corpora/OROTITAN_V2_REFERENCE_20_V0.1.json",
+  "input_pack_root": "benchmark/input-packs/v2-reference-20",
+  "prompt_ref": "benchmark/prompts/OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1.md",
+  "sanitizer_version": "1.0.0",
+  "engine_fingerprint": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+  "correction_reason": "V0.1 permitted AUTHORITATIVE_DEEP_DIVE_FINAL_MANIFEST as replay input. Final manifests and FUNDAMENTAL_SCORING_INPUTS can contain target scores and terminal outputs. V0.2 removes target leakage by using sanitized pre-score analytical packs.",
+  "phases": [
+    {
+      "phase_id": "PHASE_A1_SCORING_JUDGMENT_REPLAY",
+      "status": "READY_FOR_SMOKE_TEST",
+      "cases": 20,
+      "repetitions_per_case": 10,
+      "total_executions": 200,
+      "input_mode": "SANITIZED_PRE_SCORE_ANALYTICAL_REPLAY",
+      "input_root": "benchmark/input-packs/v2-reference-20",
+      "model_input_contains_historical_dimension_scores": false,
+      "model_input_contains_oqs": false,
+      "model_input_contains_valuation": false,
+      "model_input_contains_certification": false,
+      "model_input_contains_terminal_verdict": false,
+      "network_research": "DISABLED",
+      "tools": "DISABLED",
+      "publication": "FORBIDDEN",
+      "canonical_mutation": "FORBIDDEN",
+      "model_role": "ASSIGN_SEVEN_DIMENSION_JUDGMENTS_ONLY",
+      "deterministic_post_processing": "I2_COMPUTE_OQS",
+      "expected_measures": [
+        "dimension_score_stability",
+        "dimension_exact_agreement",
+        "oqs_mean_absolute_deviation",
+        "oqs_exact_agreement",
+        "null_score_rate",
+        "i2_computation_success_rate",
+        "distance_from_original_published_v2_dimensions"
+      ]
+    },
+    {
+      "phase_id": "PHASE_A2_CERTIFICATION_TERMINAL_REPLAY",
+      "status": "NOT_YET_DESIGNED",
+      "purpose": "Measure certification and terminal-verdict variability without leaking historical certification or terminal outputs."
+    },
+    {
+      "phase_id": "PHASE_B_SOURCE_REPLAY",
+      "status": "BLOCKED_PENDING_SOURCE_PACK_FREEZE",
+      "cases": 20,
+      "repetitions_per_case": 5,
+      "total_executions": 100,
+      "input_mode": "FROZEN_POINT_IN_TIME_SOURCE_REPLAY",
+      "network_research": "DISABLED_EXCEPT_LOCAL_FROZEN_SOURCE_PACK",
+      "publication": "FORBIDDEN",
+      "canonical_mutation": "FORBIDDEN"
+    }
+  ],
+  "execution_record_required_fields": [
+    "campaign_id",
+    "phase_id",
+    "case_id",
+    "repetition_index",
+    "engine_fingerprint",
+    "model_provider",
+    "model_name",
+    "model_version",
+    "reasoning_config",
+    "prompt_artifact_version",
+    "input_package_sha256",
+    "started_at",
+    "finished_at",
+    "duration_ms",
+    "dimension_scores",
+    "dimension_rationales",
+    "oqs_raw",
+    "weak_link_cap",
+    "oqs",
+    "i2_computation_status",
+    "finish_reason",
+    "usage",
+    "output_sha256"
+  ],
+  "comparison_policy": {
+    "historical_reference": "ORIGINAL_PUBLISHED_V2_DIMENSION_SCORES",
+    "historical_reference_is_never_in_model_prompt": true,
+    "score_comparison": "EXACT_AND_MAD",
+    "oqs_calculation": "CANONICAL_I2_ONLY",
+    "missing_state": "NULL_NOT_ZERO",
+    "score_precision": "5_POINT_INCREMENT"
+  },
+  "execution_gate": {
+    "before_full_200_run": [
+      "CI_GREEN",
+      "20_INPUT_PACKS_PRESENT",
+      "FORBIDDEN_KEY_SCAN_PASS_20_OF_20",
+      "ONE_CASE_SINGLE_RUN_SMOKE_TEST_PASS",
+      "MODEL_ID_FROZEN_FOR_CAMPAIGN",
+      "MAXIMUM_BUDGET_EXPLICITLY_AUTHORIZED"
+    ]
+  },
+  "notes": [
+    "V0.2 intentionally narrows Phase A1 to scoring judgment reproducibility. Certification and terminal replay are separated to prevent causal leakage.",
+    "No composite engine score is authorized.",
+    "Historical model identity is not claimed; every benchmark run records the actual model used."
+  ]
+}
