@@ -1,0 +1,58 @@
+{
+  "baseline_id": "OROTITAN_V2_REFERENCE_PREFLIGHT_V0.1",
+  "observed_date": "2026-10-04",
+  "corpus_ref": "benchmark/corpora/OROTITAN_V2_REFERENCE_20_V0.1.json",
+  "campaign_ref": "benchmark/campaigns/OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.1.json",
+  "engine_fingerprint": "1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e",
+  "corpus_summary": {
+    "companies": 20,
+    "sectors": 10,
+    "score_permission": {
+      "ALLOWED": 14,
+      "CONDITIONAL": 6
+    },
+    "valuation_reliability": {
+      "MEDIUM": 12,
+      "LOW": 8
+    },
+    "range_valuation_outputs": 2,
+    "oqs_min": {
+      "company": "STMicroelectronics",
+      "value": 61.5
+    },
+    "oqs_max": {
+      "company": "BELIMO Holding AG",
+      "value": 85.75
+    }
+  },
+  "historical_i2_preflight": {
+    "authoritative_reports_found": 20,
+    "reconciliation_pass": 20,
+    "reconciliation_fail": 0,
+    "pass_rate": 1,
+    "interpretation": "All 20 selected published cases were accepted by their historical authoritative I2 reconciliation reports.",
+    "caveat": "Historical report serialization and exactness semantics are heterogeneous. PASS may represent exact equality, zero-delta field checks, candidate-match checks, or tolerance-based numerical reconciliation depending on the run generation.",
+    "external_gold_calculation_accuracy": "NOT_YET_MEASURED"
+  },
+  "reproducibility": {
+    "independent_reruns_executed": 0,
+    "required_phase_a_reruns": 200,
+    "current_status": "BLOCKED_BY_MISSING_LLM_EXECUTION_RUNNER",
+    "reason": "The repository contains no existing LLM/model execution runner (no generateText/streamText/OpenAI/AI SDK invocation path).",
+    "metrics_ready": [
+      "dimension_score_stability",
+      "oqs_mean_absolute_deviation",
+      "exact_oqs_agreement_rate",
+      "certification_flip_rate",
+      "terminal_verdict_flip_rate",
+      "i2_pass_rate"
+    ]
+  },
+  "evidence_accuracy": {
+    "current_status": "BLOCKED_PENDING_FROZEN_SOURCE_PACK_AND_GOLD_LABELS"
+  },
+  "predictive_calibration": {
+    "current_status": "INSUFFICIENT_HISTORY"
+  },
+  "conclusion": "The V2 benchmark corpus, campaign protocol, normalization layer, and statistical evaluators are ready. True LLM reproducibility is not yet measured and must not be inferred from historical I2 reconciliation."
+}
