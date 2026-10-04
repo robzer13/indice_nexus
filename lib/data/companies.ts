@@ -185,7 +185,7 @@ async function getBestMarketPrice(security: UnknownRecord, persisted: UnknownRec
     const quote = await fetchYahooFinancePrice(reference);
     const multiplier = asNumber(security.market_data_multiplier) ?? 1;
     return {
-      price: quote.price * multiplier,
+      price: quote.providerPrice * multiplier,
       as_of: quote.fetchedAt,
       source: 'YAHOO_FINANCE_LIVE',
       provider_symbol: quote.providerSymbol,
