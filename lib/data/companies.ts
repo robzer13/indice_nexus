@@ -1,7 +1,18 @@
 import 'server-only';
+import { unstable_cache } from 'next/cache';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
+import { computeLiveValuation } from '@/lib/domain/live-valuation';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
+import type { InvestmentConclusionStatus, MosStatus, ScorePermission, ValuationReliability } from '@/lib/orotitan-equity/v1/certification';
+import { fetchYahooFinancePrice } from '@/lib/market/yahoo-finance';
+import { deriveMarketDataReference } from '@/lib/market/reference';
+
+const fetchCachedYahooFinancePrice = unstable_cache(
+  async (reference: string) => fetchYahooFinancePrice(reference),
+  ['orotitan-live-market-price-v1'],
+  { revalidate: 300 },
+);
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -46,6 +57,11 @@ function asStringArray(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : [];
 }
 
+function asEnum<T extends string>(value: unknown, values: readonly T[]): T | null {
+  const parsed = asString(value);
+  return parsed && values.includes(parsed as T) ? parsed as T : null;
+}
+
 function slugify(value: string): string {
   return value
     .normalize('NFD')
@@ -68,6 +84,7 @@ function canonicalFields(row: CanonicalSnapshotRow) {
   const dataLock = asRecord(payload.data_lock);
   const l2 = asRecord(payload.l2_research_fundamentals);
   const businessQuality = asRecord(l2.business_quality);
+  const certification = asRecord(l2.certification);
   const l3 = asRecord(payload.l3_investment_valuation);
   const valuation = asRecord(l3.valuation);
   const investment = asRecord(l3.investment);
@@ -99,6 +116,14 @@ function canonicalFields(row: CanonicalSnapshotRow) {
   };
 
   const pea = asString(portfolioFilters.pea_eligibility);
+  const matureNormalizationReturn = asNumber(valuation.mature_normalization_return);
+  const noMultipleExpansionReturn = asNumber(valuation.no_multiple_expansion_return);
+  const normalizationExpectedReturn = matureNormalizationReturn ?? noMultipleExpansionReturn;
+  const marginOfSafety = asEnum<MosStatus>(valuation.margin_of_safety, ['ROBUST', 'ADEQUATE', 'THIN', 'NONE', 'NOT_ASSESSABLE']);
+  const valuationReliability = asEnum<ValuationReliability>(valuation.valuation_reliability, ['HIGH', 'MEDIUM', 'LOW', 'NOT_ASSESSABLE']);
+  const scorePermission = asEnum<ScorePermission>(certification.score_permission, ['ALLOWED', 'CONDITIONAL', 'SUSPENDED']);
+  const investmentConclusionStatus = asEnum<InvestmentConclusionStatus>(certification.investment_conclusion_status, ['CERTIFIED', 'CERTIFIED_WITH_LIMITATIONS', 'NOT_CERTIFIED', 'INSUFFICIENT_DATA']);
+
   return {
     payload,
     dataLock,
@@ -116,6 +141,16 @@ function canonicalFields(row: CanonicalSnapshotRow) {
     potentialOroTitanPrice: asNumber(priceLadder.potential_orotitan_max_price),
     referencePrice: asNumber(dataLock.reference_price),
     referencePriceDate: asString(dataLock.reference_price_date),
+    primaryExpectedReturn: asNumber(valuation.primary_expected_return),
+    matureNormalizationReturn,
+    noMultipleExpansionReturn,
+    normalizationExpectedReturn,
+    returnHorizon: asNumber(valuation.return_horizon),
+    requiredReturnH: asNumber(priceLadder.required_return_h),
+    marginOfSafety,
+    valuationReliability,
+    scorePermission,
+    investmentConclusionStatus,
     invalidation: invalidationTriggers.length > 0 ? invalidationTriggers.join('\n') : null,
     scoreComponents,
     v2: {
@@ -134,6 +169,37 @@ function canonicalFields(row: CanonicalSnapshotRow) {
       peaEligibility: pea === 'YES' || pea === 'NO' || pea === 'UNKNOWN' ? pea : null,
     },
   };
+}
+
+function isFreshMarketPrice(marketPrice: UnknownRecord | null, maxAgeMinutes = 15): boolean {
+  const asOf = marketPrice ? asString(marketPrice.as_of) : null;
+  if (!asOf) return false;
+  const timestamp = Date.parse(asOf);
+  return Number.isFinite(timestamp) && Date.now() - timestamp <= maxAgeMinutes * 60_000;
+}
+
+async function getBestMarketPrice(security: UnknownRecord, persisted: UnknownRecord | null): Promise<UnknownRecord | null> {
+  if (isFreshMarketPrice(persisted)) return persisted;
+
+  const ticker = asString(security.ticker);
+  const exchange = asString(security.exchange);
+  if (!ticker || !exchange) return persisted;
+
+  const reference = deriveMarketDataReference(ticker, exchange, asString(security.market_data_symbol));
+  if (!reference) return persisted;
+
+  try {
+    const quote = await fetchCachedYahooFinancePrice(reference);
+    const multiplier = asNumber(security.market_data_multiplier) ?? 1;
+    return {
+      price: quote.providerPrice * multiplier,
+      as_of: quote.fetchedAt,
+      source: 'YAHOO_FINANCE_LIVE',
+      provider_symbol: quote.providerSymbol,
+    };
+  } catch {
+    return persisted;
+  }
 }
 
 function chooseDisplayedPrice(snapshot: ReturnType<typeof canonicalFields>, marketPrice: UnknownRecord | null) {
@@ -193,6 +259,22 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
   const price = chooseDisplayedPrice(canonical, context.marketPrice);
   const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
   const quoteUnit = (asString(context.security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR') as QuoteUnit;
+  const liveValuation = computeLiveValuation({
+    currentPrice: price.price,
+    referencePrice: canonical.referencePrice,
+    horizonYears: canonical.returnHorizon,
+    primaryExpectedReturn: canonical.primaryExpectedReturn,
+    matureNormalizationReturn: canonical.matureNormalizationReturn,
+    noMultipleExpansionReturn: canonical.noMultipleExpansionReturn,
+    requiredReturnH: canonical.requiredReturnH,
+    marginOfSafety: canonical.marginOfSafety,
+    valuationReliability: canonical.valuationReliability,
+    scorePermission: canonical.scorePermission,
+    investmentConclusionStatus: canonical.investmentConclusionStatus,
+    oqs: canonical.oqs,
+    canonicalOvs: canonical.ovs,
+    canonicalInvestmentScore: canonical.investmentScore,
+  });
 
   return {
     id: row.issuer_id,
@@ -215,11 +297,28 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     valuation_case: canonical.v2.valuationCase,
     key_risk: canonical.v2.keyRisk,
     pea_eligibility: canonical.v2.peaEligibility,
-    market_data_symbol: asString(context.security.market_data_symbol),
+    market_data_symbol: deriveMarketDataReference(
+      asString(context.security.ticker) ?? '',
+      asString(context.security.exchange) ?? '',
+      asString(context.security.market_data_symbol),
+    ),
     market_data_multiplier: asNumber(context.security.market_data_multiplier) ?? 1,
     price: price.price,
     price_as_of: price.priceAsOf,
     price_source: price.priceSource,
+    canonical_reference_price: canonical.referencePrice,
+    canonical_reference_price_date: canonical.referencePriceDate,
+    canonical_primary_expected_return_pct: canonical.primaryExpectedReturn,
+    canonical_normalization_expected_return_pct: canonical.normalizationExpectedReturn,
+    required_return_h_pct: canonical.requiredReturnH,
+    margin_of_safety: canonical.marginOfSafety,
+    valuation_reliability: canonical.valuationReliability,
+    live_primary_expected_return_pct: liveValuation?.primaryExpectedReturnPct ?? null,
+    live_normalization_expected_return_pct: liveValuation?.normalizationExpectedReturnPct ?? null,
+    live_valuation_score: liveValuation?.ovs ?? null,
+    live_investment_score: liveValuation?.investmentScore ?? null,
+    live_price_change_vs_reference_pct: liveValuation?.priceChangeVsReferencePct ?? null,
+    live_valuation_is_price_only: liveValuation !== null,
     analysis_date: row.calculation_date,
     model_version: `OroTitan ${row.method_version} / report ${row.report_version}`,
     status: canonical.status,
@@ -284,12 +383,15 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     if (!latestPriceByCompany.has(companyId)) latestPriceByCompany.set(companyId, row as UnknownRecord);
   }
 
-  return snapshots.map((snapshot) => {
+  const states = await Promise.all(snapshots.map(async (snapshot) => {
     const issuer = issuerById.get(snapshot.issuer_id);
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
-    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice: latestPriceByCompany.get(snapshot.issuer_id) ?? null });
-  }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
+    const marketPrice = await getBestMarketPrice(security, latestPriceByCompany.get(snapshot.issuer_id) ?? null);
+    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice });
+  }));
+
+  return states.filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function getCompanyStates(): Promise<CompanyState[]> { return loadPublishedCanonicalStates(); }

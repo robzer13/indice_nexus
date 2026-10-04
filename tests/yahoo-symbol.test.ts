@@ -11,9 +11,12 @@ test('Yahoo Finance symbols map European exchanges deterministically', () => {
   assert.equal(toYahooFinanceSymbol('G24:XETR'), 'G24.DE');
 });
 
-test('Yahoo Finance symbols keep bare US tickers unchanged', () => {
+test('Yahoo Finance symbols keep bare and explicit US listings unchanged', () => {
   assert.equal(toYahooFinanceSymbol('QLYS'), 'QLYS');
   assert.equal(toYahooFinanceSymbol('SEIC'), 'SEIC');
+  assert.equal(toYahooFinanceSymbol('ISRG:NASDAQ'), 'ISRG');
+  assert.equal(toYahooFinanceSymbol('MSFT:NASDAQ'), 'MSFT');
+  assert.equal(toYahooFinanceSymbol('BRK-B:NYSE'), 'BRK-B');
 });
 
 test('Yahoo Finance mapping rejects unknown exchange codes', () => {

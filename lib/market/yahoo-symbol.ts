@@ -1,6 +1,10 @@
 import { parseTwelveDataInstrumentRef } from '@/lib/market/twelve-data-symbol';
 
 const EXCHANGE_SUFFIXES: Record<string, string> = {
+  NASDAQ: '',
+  NYSE: '',
+  NYSEARCA: '',
+  AMEX: '',
   LSE: '.L',
   EURONEXT: '.PA',
   OSE: '.OL',
@@ -12,7 +16,7 @@ export function toYahooFinanceSymbol(reference: string): string {
   if (!instrument.exchange) return instrument.symbol;
 
   const suffix = EXCHANGE_SUFFIXES[instrument.exchange];
-  if (!suffix) {
+  if (suffix === undefined) {
     throw new Error(`Unsupported Yahoo Finance exchange mapping: ${instrument.exchange}`);
   }
   return `${instrument.symbol}${suffix}`;

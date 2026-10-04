@@ -22,7 +22,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </Link>
 
               <div className="hidden h-5 w-px bg-slate-800 sm:block" />
-              <span className="hidden shrink-0 text-sm text-slate-400 sm:block">Equity Research</span>
+              <span className="hidden shrink-0 text-sm text-slate-400 sm:block">Recherche actions</span>
 
               <Link
                 href="/orotitan"

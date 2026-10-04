@@ -2,11 +2,11 @@ import type { CompanyStatus } from '@/lib/domain/types';
 
 const labels: Record<CompanyStatus, string> = {
   OROTITAN: 'OroTitan',
-  FINALIST: 'Finalist',
-  PRICE_WAIT: 'Price wait',
-  TIER_1: 'Tier 1',
-  WATCHLIST: 'Watchlist',
-  REJECTED: 'Rejected',
+  FINALIST: 'Finaliste',
+  PRICE_WAIT: 'Attendre le prix',
+  TIER_1: 'Prioritaire',
+  WATCHLIST: 'Liste de suivi',
+  REJECTED: 'Rejetée',
 };
 
 const classes: Record<CompanyStatus, string> = {
