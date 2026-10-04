@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
+import { computeLiveValuation } from '@/lib/domain/live-valuation';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
 type UnknownRecord = Record<string, unknown>;
@@ -68,6 +69,7 @@ function canonicalFields(row: CanonicalSnapshotRow) {
   const dataLock = asRecord(payload.data_lock);
   const l2 = asRecord(payload.l2_research_fundamentals);
   const businessQuality = asRecord(l2.business_quality);
+  const certification = asRecord(l2.certification);
   const l3 = asRecord(payload.l3_investment_valuation);
   const valuation = asRecord(l3.valuation);
   const investment = asRecord(l3.investment);
@@ -116,6 +118,14 @@ function canonicalFields(row: CanonicalSnapshotRow) {
     potentialOroTitanPrice: asNumber(priceLadder.potential_orotitan_max_price),
     referencePrice: asNumber(dataLock.reference_price),
     referencePriceDate: asString(dataLock.reference_price_date),
+    returnHorizon: asNumber(valuation.return_horizon),
+    primaryExpectedReturn: asNumber(valuation.primary_expected_return),
+    normalizationExpectedReturn: asNumber(valuation.mature_normalization_return),
+    requiredReturnH: asNumber(priceLadder.required_return_h),
+    marginOfSafety: asString(valuation.margin_of_safety),
+    valuationReliability: asString(valuation.valuation_reliability),
+    scorePermission: asString(certification.score_permission),
+    investmentConclusionStatus: asString(certification.investment_conclusion_status),
     invalidation: invalidationTriggers.length > 0 ? invalidationTriggers.join('\n') : null,
     scoreComponents,
     v2: {
@@ -193,6 +203,19 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
   const price = chooseDisplayedPrice(canonical, context.marketPrice);
   const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
   const quoteUnit = (asString(context.security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR') as QuoteUnit;
+  const liveValuation = computeLiveValuation({
+    currentPrice: price.price,
+    referencePrice: canonical.referencePrice,
+    horizonYears: canonical.returnHorizon,
+    primaryExpectedReturnPct: canonical.primaryExpectedReturn,
+    normalizationExpectedReturnPct: canonical.normalizationExpectedReturn,
+    requiredReturnPct: canonical.requiredReturnH,
+    marginOfSafety: canonical.marginOfSafety,
+    valuationReliability: canonical.valuationReliability,
+    scorePermission: canonical.scorePermission,
+    investmentConclusionStatus: canonical.investmentConclusionStatus,
+    oqs: canonical.oqs,
+  });
 
   return {
     id: row.issuer_id,
@@ -220,6 +243,17 @@ function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): 
     price: price.price,
     price_as_of: price.priceAsOf,
     price_source: price.priceSource,
+    reference_price: canonical.referencePrice,
+    reference_price_date: canonical.referencePriceDate,
+    required_return_h: canonical.requiredReturnH,
+    snapshot_valuation_score: canonical.ovs,
+    live_valuation_score: liveValuation.valuationScore,
+    snapshot_investment_score: canonical.investmentScore,
+    live_investment_score: liveValuation.investmentScore,
+    live_primary_expected_return: liveValuation.primaryExpectedReturnPct,
+    live_normalization_expected_return: liveValuation.normalizationExpectedReturnPct,
+    price_change_vs_reference_pct: liveValuation.priceChangeVsReferencePct,
+    live_valuation_reason: liveValuation.reason,
     analysis_date: row.calculation_date,
     model_version: `OroTitan ${row.method_version} / report ${row.report_version}`,
     status: canonical.status,
