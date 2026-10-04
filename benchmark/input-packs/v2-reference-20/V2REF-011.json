@@ -1,0 +1,474 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-011",
+  "company": "Microsoft",
+  "run_id": "86bb8d65-b278-4852-b180-fba4086a5a12",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/86bb8d65-b278-4852-b180-fba4086a5a12/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__b79cff69-8218-464e-8b15-66066e461a8b__v001.json",
+    "commit_sha": "8878fa9e73c0e279ddee2d7848c3076bc43accea",
+    "blob_sha": "185fd8e980cd6488b14153229ce0707dc50b4c08",
+    "registry_content_sha256": "dfe80aa4096b2aa8ff2bf9e6fd652c39f8e8e9e4e7649dedbc5791f460c6f08a"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "b79cff69-8218-464e-8b15-66066e461a8b",
+      "version": 1
+    },
+    "run_id": "86bb8d65-b278-4852-b180-fba4086a5a12",
+    "issuer_id": "1fb5ee9e-9fc2-4a0e-8685-e0ecc3057716",
+    "security_id": "6d82977c-f4bd-4ac2-a2ba-227abb640471",
+    "dossier_id": "468bc508-2a36-4005-88b4-e5e6c12f61af",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-19",
+    "version": 1,
+    "price_firewall": {
+      "market_price_used": false,
+      "reference_price_used": false,
+      "valuation_performed": false
+    },
+    "blocks": {
+      "BUSINESS_MODEL": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-002",
+          "E-008",
+          "E-043",
+          "E-058",
+          "E-059",
+          "E-061",
+          "E-064",
+          "E-068"
+        ],
+        "core_findings": [
+          "Microsoft is a diversified software/cloud platform with recurring enterprise subscriptions and licenses, usage-based Azure/AI cloud, advertising/search, gaming/content and device economics.",
+          "Productivity and Business Processes and Intelligent Cloud each contribute about 42% of FY2026 revenue and are the dominant profit pools; More Personal Computing is economically smaller.",
+          "The model is globally distributed and increasingly infrastructure-intensive as AI/cloud capacity expands."
+        ],
+        "canonical_verdict_fields": {
+          "BUSINESS_MODEL_PRIMARY": "HYBRID",
+          "BUSINESS_MODEL_SECONDARY": "RECURRING_SUBSCRIPTION"
+        }
+      },
+      "ECONOMIC_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-008",
+          "E-025",
+          "E-028",
+          "E-043",
+          "E-061",
+          "E-081",
+          "E-082",
+          "E-121"
+        ],
+        "calculation_ids": [
+          "CALC-SEGMENT-MIX-2026",
+          "CALC-NOPAT-ROIC-HISTORY",
+          "CALC-STANDARDIZED-FCF-2026"
+        ],
+        "core_findings": [
+          "Microsoft combines exceptional recurring software economics with cloud-scale infrastructure and a broad installed base.",
+          "FY2026 operating economics remain extremely profitable, but Microsoft Cloud gross margin fell to 66% from 69% while AI infrastructure depreciation and operating costs increased.",
+          "Economic quality remains high but the capital-light historical profile is changing materially as AI/cloud infrastructure becomes a larger part of the model."
+        ],
+        "canonical_verdict_fields": {
+          "ECONOMIC_QUALITY_STATE": "DIVERSIFIED_HIGH_MARGIN_PLATFORM_ECONOMICS_WITH_RISING_AI_CAPITAL_INTENSITY_AND_UNPROVEN_MARGINAL_RETURNS"
+        }
+      },
+      "MOAT": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "MOAT_EVIDENCE_STATE": "STRONGLY_SUPPORTED",
+          "MOAT_TREND": "STABLE",
+          "MOAT_DURABILITY": "LONG",
+          "PRIMARY_MOAT": "Integrated enterprise workflow/platform switching costs and distribution spanning productivity, identity, cloud, developer tooling and security.",
+          "SUPPORTING_MECHANISMS": [
+            "ENTERPRISE_WORKFLOW_SWITCHING_FRICTION",
+            "COMMITTED_SPEND_AND_PROCUREMENT_INTEGRATION",
+            "IDENTITY_SECURITY_PRODUCTIVITY_CROSS_SELL",
+            "DEVELOPER_ECOSYSTEM_AND_INSTALLED_BASE",
+            "CLOUD_SCALE_AND_CAPACITY"
+          ]
+        },
+        "supporting_evidence_ids": [
+          "E-043",
+          "E-049",
+          "E-050",
+          "E-053",
+          "E-054",
+          "E-061",
+          "E-064",
+          "E-074",
+          "E-112"
+        ],
+        "contradicting_evidence_ids": [
+          "E-048",
+          "E-075",
+          "E-076",
+          "E-080",
+          "E-111",
+          "E-113",
+          "E-114"
+        ],
+        "conflict_ids": [
+          "C-014",
+          "C-015",
+          "C-016",
+          "C-025",
+          "C-026"
+        ],
+        "material_assumption_ids": [
+          "A-F-010"
+        ],
+        "open_uncertainties": [
+          "G-004",
+          "G-007",
+          "G-012"
+        ],
+        "core_findings": [
+          "Independent CMA evidence directly supports meaningful cloud switching, interoperability, licensing and committed-spend frictions, while Microsoft also controls deeply embedded enterprise identity/productivity/security/developer workflows.",
+          "The moat produces observable economics through pricing/mix, high margins, customer scale and cross-product distribution, not merely management claims.",
+          "Durability is LONG but trend is STABLE rather than strengthening because interoperability remedies, multi-cloud adoption, model portability and security trust can reduce friction over time."
+        ]
+      },
+      "RUNWAY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+          "RUNWAY_MAGNITUDE": "LARGE",
+          "RUNWAY_HORIZON": "EXTENDED",
+          "PRIMARY_DRIVERS": [
+            "AZURE_AND_CLOUD_MIGRATION",
+            "AI_INFRASTRUCTURE_AND_USAGE",
+            "M365_PRICE_MIX_AND_COPILOT",
+            "SECURITY_AND_IDENTITY",
+            "GITHUB_DEVELOPER_MONETIZATION",
+            "DYNAMICS_LINKEDIN_SEARCH"
+          ]
+        },
+        "supporting_evidence_ids": [
+          "E-043",
+          "E-044",
+          "E-045",
+          "E-047",
+          "E-053",
+          "E-058",
+          "E-059",
+          "E-061",
+          "E-062",
+          "E-063",
+          "E-078",
+          "E-080",
+          "E-081"
+        ],
+        "contradicting_evidence_ids": [
+          "E-033",
+          "E-068",
+          "E-077",
+          "E-079",
+          "E-119"
+        ],
+        "conflict_ids": [
+          "C-003",
+          "C-005",
+          "C-006",
+          "C-008",
+          "C-021"
+        ],
+        "material_assumption_ids": [
+          "A-F-011"
+        ],
+        "open_uncertainties": [
+          "G-002",
+          "G-004",
+          "G-013",
+          "G-014",
+          "G-015"
+        ],
+        "core_findings": [
+          "Cloud migration, AI capacity/usage, M365 price/mix, security and developer tooling provide multiple large growth vectors.",
+          "The denominator is already enormous, competitors are investing aggressively, and power/GPU/capacity constraints can delay monetization.",
+          "Copilot and AI usage are treated as upside drivers only to the extent supported by observed seats/usage and pricing; standalone margins and renewal economics remain open."
+        ]
+      },
+      "RETURN_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM_HIGH",
+        "canonical_verdict_fields": {
+          "STANDARD_ROIC_PCT": 28.7829,
+          "RND_ADJUSTED_ROIC_RANGE_PCT": {
+            "min": 25.1611,
+            "max": 26.0367
+          },
+          "ALL_IN_ROIC": "UNKNOWN",
+          "ROIIC": "NOT_INTERPRETABLE",
+          "ROIC_TREND": "DECLINING",
+          "RETURN_ATTRIBUTABILITY": "MEDIUM",
+          "RETURN_DATA_QUALITY": "HIGH",
+          "RETURN_INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS",
+          "ECONOMIC_SPREAD": "CLEARLY_POSITIVE"
+        },
+        "supporting_evidence_ids": [
+          "E-091",
+          "E-092",
+          "E-115",
+          "E-116",
+          "E-117",
+          "E-121",
+          "E-122",
+          "E-123",
+          "E-124"
+        ],
+        "calculation_ids": [
+          "CALC-OPERATING-IC-2023",
+          "CALC-OPERATING-IC-2024",
+          "CALC-OPERATING-IC-2025",
+          "CALC-OPERATING-IC-2026",
+          "CALC-NOPAT-ROIC-HISTORY",
+          "CALC-RND-ADJUSTED-ROIC-2026"
+        ],
+        "conflict_ids": [
+          "C-004",
+          "C-008",
+          "C-023",
+          "C-024"
+        ],
+        "material_assumption_ids": [
+          "A-F-002",
+          "A-F-003",
+          "A-F-004",
+          "A-F-005",
+          "A-F-008",
+          "A-F-009"
+        ],
+        "open_uncertainties": [
+          "G-003",
+          "G-013"
+        ],
+        "core_findings": [
+          "Standard ROIC remains very high at about 28.8% in FY2026 and the R&D-adjusted sensitivity remains about 25.2%-26.0%.",
+          "ROIC trend is DECLINING from roughly 35.5% in FY2024 and 30.7% in FY2025 as capital deployment accelerated.",
+          "Canonical ROIIC is NOT_INTERPRETABLE and All-In ROIC is UNKNOWN; Azure/AI standalone incremental returns and full acquisition return attribution are not disclosed."
+        ]
+      },
+      "FCF_OWNER_EARNINGS_FORENSIC": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM_HIGH",
+        "canonical_verdict_fields": {
+          "FORENSIC_RELIABILITY": "WATCH",
+          "STANDARDIZED_FCF_2026_USD_M": 63886,
+          "FCF_PER_DILUTED_WA_SHARE_2026_USD": 8.5719,
+          "OWNER_EARNINGS": "UNKNOWN"
+        },
+        "supporting_evidence_ids": [
+          "E-025",
+          "E-028",
+          "E-030",
+          "E-032",
+          "E-082",
+          "E-083",
+          "E-086",
+          "E-124"
+        ],
+        "calculation_ids": [
+          "CALC-STANDARDIZED-FCF-2026",
+          "CALC-FCF-PER-DILUTED-WA-SHARE-2026",
+          "CALC-FCF-CONVERSION-2026",
+          "CALC-SBC-INTENSITY-2026"
+        ],
+        "conflict_ids": [
+          "C-010",
+          "C-023",
+          "C-024"
+        ],
+        "material_assumption_ids": [
+          "A-F-006",
+          "A-F-007",
+          "A-F-012",
+          "A-F-013"
+        ],
+        "open_uncertainties": [
+          "G-013",
+          "G-016"
+        ],
+        "core_findings": [
+          "Lease-symmetric standardized FY2026 FCF is about $63.9B, materially below operating cash flow because cash PP&E and finance-lease principal were exceptionally high.",
+          "Owner Earnings cannot be responsibly bounded because sustaining versus growth AI/datacenter capital, useful lives and future commitments are unresolved.",
+          "FORENSIC_RELIABILITY is WATCH rather than FAIL: the issue is economic normalization and forward capital intensity, not evidence of a material accounting misstatement."
+        ]
+      },
+      "CAPITAL_ALLOCATION": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "CAPITAL_ALLOCATION_JUDGMENT": "STRONG_LEGACY_PLATFORM_REINVESTMENT_WITH_MIXED_MA_AND_UNPROVEN_AI_INFRASTRUCTURE_RETURNS"
+        },
+        "supporting_evidence_ids": [
+          "E-070",
+          "E-071",
+          "E-072",
+          "E-087",
+          "E-089",
+          "E-108",
+          "E-109",
+          "E-110",
+          "E-116",
+          "E-117"
+        ],
+        "calculation_ids": [
+          "CALC-CAPITAL-RETURN-TO-FCF-2026",
+          "CALC-SHARE-DELTA-2026"
+        ],
+        "conflict_ids": [
+          "C-004",
+          "C-021",
+          "C-023"
+        ],
+        "material_assumption_ids": [
+          "A-F-008",
+          "A-F-009",
+          "A-F-013"
+        ],
+        "open_uncertainties": [
+          "G-003",
+          "G-012",
+          "G-013",
+          "G-015"
+        ],
+        "core_findings": [
+          "Core reinvestment historically built dominant software/cloud franchises and Microsoft returned roughly two-thirds of standardized FY2026 FCF through repurchases and dividends.",
+          "Buybacks approximately offset issuance/SBC but produced only modest net share shrinkage in FY2026.",
+          "Activision, Nuance and other acquisition returns are incompletely attributable, while the current AI infrastructure cycle is too early to call value-creating on realized marginal returns."
+        ]
+      },
+      "MANAGEMENT_GOVERNANCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM_HIGH",
+        "canonical_verdict_fields": {
+          "MANAGEMENT_GOVERNANCE_JUDGMENT": "STRONG_STRATEGIC_EXECUTION_WITH_MATERIAL_CYBER_CONTROL_ACCOUNTABILITY_AND_CHAIR_CEO_CONCENTRATION_RISKS"
+        },
+        "supporting_evidence_ids": [
+          "E-053",
+          "E-057",
+          "E-099",
+          "E-100",
+          "E-101",
+          "E-120"
+        ],
+        "contradicting_evidence_ids": [
+          "E-055",
+          "E-056"
+        ],
+        "conflict_ids": [
+          "C-015",
+          "C-016"
+        ],
+        "core_findings": [
+          "Leadership has executed a durable transition toward cloud and AI while maintaining strong enterprise franchise economics; compensation is highly performance-based and security accountability is explicit.",
+          "Independent CSRB/CISA findings documented material historical security-control failures, so issuer remediation claims are not accepted as proof that operational security risk is fully resolved.",
+          "Satya Nadella combines Chairman and CEO roles; independent board mechanisms reduce but do not eliminate concentration/accountability risk."
+        ]
+      },
+      "OUTSIDE_VIEW": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "OUTSIDE_VIEW_JUDGMENT": "LEADING_DIVERSIFIED_ENTERPRISE_PLATFORM_WITH_STRONG_CLOUD_AI_DEMAND_BUT_INTENSE_COMPETITION_AND_UNPROVEN_HYPERSCALE_AI_ROI"
+        },
+        "supporting_evidence_ids": [
+          "E-074",
+          "E-075",
+          "E-077",
+          "E-078",
+          "E-079",
+          "E-097",
+          "E-098",
+          "E-112"
+        ],
+        "core_findings": [
+          "Independent competition evidence recognizes material Microsoft cloud market power and switching frictions, while also requiring remedies that can reduce those frictions.",
+          "AWS, Google Cloud and Oracle continue aggressive cloud/AI expansion and capital deployment; Microsoft cannot assume category growth translates automatically into share or attractive marginal returns.",
+          "The outside view supports strong demand for cloud/AI but remains skeptical of unproven long-run returns on the industry's hyperscale capital cycle."
+        ]
+      },
+      "RISK_RESILIENCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "RESILIENCE_JUDGMENT": "STRONG_DIVERSIFIED_CASH_ENGINE_WITH_MATERIAL_CYBER_REGULATORY_AI_PARTNER_AND_INFRASTRUCTURE_COMMITMENT_RISKS"
+        },
+        "supporting_evidence_ids": [
+          "E-030",
+          "E-033",
+          "E-037",
+          "E-040",
+          "E-042",
+          "E-055",
+          "E-056",
+          "E-073",
+          "E-076",
+          "E-090",
+          "E-093",
+          "E-094",
+          "E-096",
+          "E-097",
+          "E-098",
+          "E-119"
+        ],
+        "conflict_ids": [
+          "C-010",
+          "C-014",
+          "C-015",
+          "C-017",
+          "C-023",
+          "C-026",
+          "C-027"
+        ],
+        "material_assumption_ids": [
+          "A-F-013"
+        ],
+        "core_findings": [
+          "Diversified enterprise software/cloud cash flows and liquidity provide substantial resilience.",
+          "Material risk channels include cyber trust failures, competition remedies, AI copyright/legal exposure, tax disputes, OpenAI commercial concentration/dependency, power/GPU constraints and very large infrastructure commitments.",
+          "The principal resilience question is not near-term solvency but whether fixed AI capacity and partner/regulatory commitments reduce flexibility if monetization or utilization disappoints."
+        ]
+      },
+      "FUNDAMENTAL_RED_TEAM": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "canonical_verdict_fields": {
+          "RED_TEAM_STATUS": "COMPLETE",
+          "MATERIAL_UNRESOLVED_CONTRADICTIONS": 0
+        },
+        "core_findings": [
+          "Every positive fundamental claim was challenged against independent competition, security, cash-flow, return-attribution and capital-intensity evidence.",
+          "Moat remains strongly supported but not immune to multi-cloud/interoperability remedies; runway is supported rather than strongly supported; ROIIC and Owner Earnings remain explicitly unresolved.",
+          "No material unresolved contradiction requires reopening Fundamentals because uncertainty is bounded through UNKNOWN/NOT_INTERPRETABLE states, limitations and invalidation triggers."
+        ]
+      }
+    },
+    "material_unresolved_fundamental_contradictions": [],
+    "blocking_gaps": [],
+    "ready_for_valuation": "YES"
+  }
+}

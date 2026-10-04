@@ -1,0 +1,84 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-014",
+  "company": "PepsiCo",
+  "run_id": "10a62ea2-c8ea-4801-a7e8-864752835b5a",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/10a62ea2-c8ea-4801-a7e8-864752835b5a/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__9402f238-3f1f-40be-b12c-2e504b081b09__v001.json",
+    "commit_sha": "f1980ec27780838eef4fa534a35ff94bc6a30233",
+    "blob_sha": "f5e0d98a8683265522732d89e4fda3f46a89b2e5",
+    "registry_content_sha256": "a42f544017fa33ae66659dad7b9cd652bf866038efd5f2473ee4f610b5e5e12b"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "10a62ea2-c8ea-4801-a7e8-864752835b5a",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "9402f238-3f1f-40be-b12c-2e504b081b09",
+      "version": 1
+    },
+    "stage_revision": 1,
+    "version": 1,
+    "source_locks": {
+      "fundamentals": {
+        "artifact_id": "ba2e74a9-90bd-4210-a3c4-376378f3d794",
+        "version": 1,
+        "content_sha256": "1a26c396923ca97b784415b6a1b13e5b4229024eeefd30b00f52a6443872de13"
+      }
+    },
+    "fundamental_verdicts": {
+      "moat": {
+        "evidence_state": "SUPPORTED",
+        "trend": "UNCLEAR",
+        "durability": "LONG"
+      },
+      "runway": {
+        "evidence_state": "SUPPORTED",
+        "magnitude": "MATERIAL",
+        "horizon": "EXTENDED"
+      },
+      "return_quality": {
+        "standard_roic_2025_pct": 20.3,
+        "roic_ex_goodwill_2025_pct": 30.6,
+        "all_in_roic_2025": "NOT_POINT_ESTIMABLE_WITH_LIMITATIONS",
+        "roiic_one_year_diagnostic_pct": 7.3,
+        "roiic_primary": "NOT_INTERPRETABLE_DUE_MA_PERIMETER_AND_SHORT_HORIZON",
+        "roic_trend": "UNKNOWN",
+        "economic_spread": "CLEARLY_POSITIVE",
+        "return_attributability": "LOW",
+        "return_data_quality": "MEDIUM_TO_HIGH",
+        "interpretability": "INTERPRETABLE_WITH_LIMITATIONS"
+      },
+      "forensic_reliability": "WATCH",
+      "owner_earnings": "UNKNOWN",
+      "capital_allocation": "MIXED_RECORD_WITH_STRONG_DISTRIBUTIONS_BUT_MA_AND_LEVERAGE_TENSION",
+      "management_governance": "GOOD_BOARD_STRUCTURE_WITH_COMBINED_CHAIR_CEO_AND_EXECUTION_ACCOUNTABILITY",
+      "resilience_risk": "GOOD_DIVERSIFICATION_AND_CASH_RESILIENCE_WITH_LEVERAGE_COMPETITION_AND_REGULATORY_VULNERABILITIES"
+    },
+    "valuation_verdicts": {
+      "reference_price_usd": 129.75,
+      "primary_expected_return_pct_pa": 7.717047868867233,
+      "mature_normalization_return_pct_pa": 7.731137960299151,
+      "no_multiple_expansion_return_pct_pa": 11.657148208058599,
+      "margin_of_safety": "NONE",
+      "market_expectation_gap": "ALIGNED",
+      "valuation_reliability": "MEDIUM"
+    },
+    "certification_reconciliation": "NO_LOCKED_ANALYTICAL_JUDGMENT_OR_VALUATION_ASSUMPTION_CHANGED"
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-004",
+  "company": "BELIMO Holding AG",
+  "run_id": "712628fb-d37f-45f5-a50d-67de3fe14fec",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/712628fb-d37f-45f5-a50d-67de3fe14fec/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__89f6c246-fce0-47e6-9c2c-53aacb1f2906__v001.json",
+    "commit_sha": "3448846e217e938adb79a0fb9545b63b6dada2dc",
+    "blob_sha": "50ceaffc5757f8795807b6376ac56f8e726828af",
+    "registry_content_sha256": "a5601cf90afb34b171c9340ab941db704f978283cf52540e71c49181c23802f4"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "analytical_changes_from_locks": false,
+    "artifact": {
+      "artifact_id": "89f6c246-fce0-47e6-9c2c-53aacb1f2906",
+      "version": 1
+    },
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "canonical_fundamental_verdicts": {
+      "ECONOMIC_SPREAD": "CLEARLY_POSITIVE",
+      "FORENSIC_RELIABILITY": "WATCH",
+      "MOAT_DURABILITY": "MODERATE",
+      "MOAT_EVIDENCE_STATE": "SUPPORTED",
+      "MOAT_TREND": "STABLE",
+      "RETURN_ATTRIBUTABILITY": "HIGH",
+      "RETURN_DATA_QUALITY": "HIGH",
+      "RETURN_INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS",
+      "ROIC_TREND": "IMPROVING",
+      "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+      "RUNWAY_HORIZON": "MODERATE",
+      "RUNWAY_MAGNITUDE": "MATERIAL"
+    },
+    "data_cutoff": "2026-09-17",
+    "dimension_judgments": {
+      "CAPITAL_ALLOCATION": 90,
+      "CASH_ECONOMICS": 80,
+      "MANAGEMENT_GOVERNANCE": 85,
+      "MOAT": 85,
+      "RESILIENCE_RISK": 80,
+      "RETURN_QUALITY": 90,
+      "RUNWAY": 85
+    },
+    "execution_mapping": {
+      "BUSINESS_MODEL": "COMPLETE",
+      "CAPITAL_ALLOCATION": "COMPLETE_WITH_LIMITATIONS",
+      "FCF_OWNER_EARNINGS_FORENSIC": "COMPLETE_WITH_LIMITATIONS",
+      "MANAGEMENT_GOVERNANCE": "COMPLETE_WITH_LIMITATIONS",
+      "MOAT": "COMPLETE_WITH_LIMITATIONS",
+      "OUTSIDE_VIEW": "COMPLETE_WITH_LIMITATIONS",
+      "RETURN_QUALITY": "COMPLETE_WITH_LIMITATIONS",
+      "RISK_RESILIENCE": "COMPLETE_WITH_LIMITATIONS",
+      "RUNWAY": "COMPLETE_WITH_LIMITATIONS"
+    },
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "run_id": "712628fb-d37f-45f5-a50d-67de3fe14fec",
+    "sources": {
+      "fundamentals_lock": {
+        "artifact_id": "bd87e7af-6cef-4706-9417-c78f50607f70",
+        "content_sha256": "e263584399c1c0f1cfb1feaf648331b2c3f2815ecb887554b3bf9deaf73329e7",
+        "version": 1
+      }
+    },
+    "stage": "DEEP_DIVE",
+    "valuation_verdicts": {
+      "MARGIN_OF_SAFETY": "NONE",
+      "MARKET_EXPECTATION_GAP": "BELOW_FUNDAMENTAL_CASE",
+      "MATURE_NORMALIZATION_RETURN": 7.106667423379193,
+      "PRIMARY_EXPECTED_RETURN": 8.214733190319974,
+      "VALUATION_RELIABILITY": "MEDIUM"
+    },
+    "version": 1
+  }
+}

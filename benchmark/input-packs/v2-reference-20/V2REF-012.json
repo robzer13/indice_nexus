@@ -1,0 +1,450 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-012",
+  "company": "Munich Re",
+  "run_id": "e7f15ac0-9a08-4f41-9fe0-a79b1b8c117f",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/e7f15ac0-9a08-4f41-9fe0-a79b1b8c117f/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__afd83086-c12b-4e27-9299-966ffa66daa7__v001.json",
+    "commit_sha": "6040ddd1d8689a81c2f3cc97d8468151877be1c3",
+    "blob_sha": "d68b51823f23ca0e9502d8c4b72bf3ec8709bc1f",
+    "registry_content_sha256": "35b53adf83727fe434ef6a2f14b1b2983c80b9ac3e17164f37a8d8b91df9d3b3"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "version": 1,
+    "run_id": "e7f15ac0-9a08-4f41-9fe0-a79b1b8c117f",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-18",
+    "blocks": {
+      "BUSINESS_MODEL": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "core_findings": [
+          "Munich Re is a diversified risk-bearing insurance group with four economically distinct pillars: P&C reinsurance, L&H reinsurance, Global Specialty Insurance and ERGO primary insurance.",
+          "The group earns through underwriting economics on insurance risk plus investment income on assets backing insurance liabilities; the investment portfolio was €225.228bn in Q2 2026.",
+          "The model is regulated-capital and reserve intensive. Capacity, underwriting/risk expertise, claims/reserving, client/distribution relationships and investment management are economically central resources; industrial capital-lightness is not the relevant frame."
+        ],
+        "supporting_evidence_ids": [
+          "E-002",
+          "E-006",
+          "E-012",
+          "E-022"
+        ]
+      },
+      "ECONOMIC_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "calculation_ids": [
+          "CALC-SOLVENCY-COVERAGE-2025",
+          "CALC-PC-RE-UW-MARGIN-2025",
+          "CALC-PC-RE-UW-MARGIN-Q2-2026"
+        ],
+        "core_findings": [
+          "Reported economics are strong: FY2025 net result was €6.121bn with 18.3% RoE, while H1 2026 net result was €3.925bn with annualised 23.0% RoE.",
+          "Underwriting outcomes are strong across the group, including a 73.5% FY2025 P&C reinsurance combined ratio, but Q2 2026's 68.9% ratio was materially assisted by an unusually low major-loss burden.",
+          "Capital strength is exceptional on current reported measures: Solvency II was 298% at FY2025 and 304% at H1 2026. This supports capacity and resilience but is not itself proof of moat or distributable excess capital.",
+          "Investment earnings are material and can be volatile: Q2 2026 investment result was €3.159bn with 5.5% ROI, while fair-value movements contributed materially."
+        ],
+        "supporting_evidence_ids": [
+          "E-003",
+          "E-004",
+          "E-009",
+          "E-011",
+          "E-012",
+          "E-005"
+        ],
+        "material_assumption_ids": [
+          "A-001"
+        ]
+      },
+      "MOAT": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "MOAT_HYPOTHESIS": "Munich Re's scale-and-capital-backed underwriting franchise may permit superior risk selection, capacity provision and cycle discipline in complex insurance markets.",
+          "PRIMARY_MOAT": "Scale-and-capital-backed underwriting franchise reinforced by risk-selection expertise and financial-strength credibility.",
+          "SUPPORTING_MECHANISMS": [
+            "Very strong solvency and independent financial-strength rating",
+            "Global diversification and capacity across reinsurance, specialty and primary insurance",
+            "Underwriting selectivity evidenced by willingness to shrink renewal volumes when pricing/terms weaken",
+            "Internal risk-model infrastructure spanning underwriting, market, credit and operational risks"
+          ],
+          "MOAT_EVIDENCE_STATE": "SUPPORTED",
+          "MOAT_TREND": "STABLE",
+          "MOAT_DURABILITY": "MODERATE"
+        },
+        "core_findings": [
+          "Independent AM Best A+/aa ratings and 298-304% Solvency II coverage support the capital-strength component of the mechanism; this matters in a business where counterparties transfer long-duration and tail risk.",
+          "Munich Re reduced business written by 18.5% at April renewals and 9.1% at July renewals while reporting refusal of business below required pricing/terms, consistent with underwriting selectivity rather than volume maximisation.",
+          "The economic consequence is compatible with the mechanism: current underwriting ratios and RoE are strong. Causality is bounded because unusually low major losses, investment effects and strong peer results also explain part of current profitability.",
+          "Independent broker evidence shows ample capacity and material market softening, while Swiss Re and Hannover Re also report high profitability. The advantage therefore cannot be treated as unique market power."
+        ],
+        "contradicting_evidence_ids": [
+          "E-013",
+          "E-014",
+          "E-015",
+          "E-016"
+        ],
+        "supporting_evidence_ids": [
+          "E-005",
+          "E-008",
+          "E-010",
+          "E-017",
+          "E-022",
+          "E-004",
+          "E-009"
+        ],
+        "open_uncertainties": [
+          "G-002 independent cedent switching/retention/willingness-to-pay evidence",
+          "G-003 proprietary data/model exclusivity and causal contribution"
+        ],
+        "removal_test": "If Munich Re lost its exceptional capital strength, underwriting infrastructure and financial-strength credibility, it would still be an insurer but would have less capacity to write complex/tail risks selectively and less counterparty credibility. However credible global peers can provide substitute capacity, so the barrier is meaningful rather than exclusive."
+      },
+      "RUNWAY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RUNWAY_EVIDENCE_STATE": "PLAUSIBLE",
+          "RUNWAY_MAGNITUDE": "MATERIAL",
+          "RUNWAY_HORIZON": "MODERATE"
+        },
+        "core_drivers": [
+          {
+            "driver": "Broader earnings contribution from L&H reinsurance, Global Specialty Insurance and ERGO",
+            "status": "CORE",
+            "evidence_ids": [
+              "E-006",
+              "E-009"
+            ],
+            "constraints": [
+              "No bottom-up addressable-pool reconstruction in the admitted evidence",
+              "Segment-specific realized growth economics are not independently established"
+            ]
+          },
+          {
+            "driver": "Specialty/cyber expansion including At-Bay",
+            "status": "OPTIONALITY",
+            "evidence_ids": [
+              "E-020"
+            ],
+            "constraints": [
+              "Transaction not closed at cutoff",
+              "Purchase-price allocation, profitability and expected returns are undisclosed"
+            ]
+          },
+          {
+            "driver": "P&C reinsurance exposure growth and pricing",
+            "status": "CORE",
+            "evidence_ids": [
+              "E-008",
+              "E-010",
+              "E-013",
+              "E-014"
+            ],
+            "constraints": [
+              "2026 market softening and ample capacity",
+              "Munich Re is deliberately reducing volume where pricing is inadequate"
+            ]
+          }
+        ],
+        "core_findings": [
+          "A plausible material runway exists through a broader mix of L&H reinsurance, specialty insurance and ERGO, but the admitted evidence does not reconstruct serviceable pools, current penetration or observed capture strongly enough for SUPPORTED.",
+          "Management's Ambition 2030 target of >8% average EPS growth is intent, not independent runway proof; an >80% payout policy also means EPS growth can partly reflect buybacks rather than underlying business expansion.",
+          "At-Bay is kept as OPTIONALITY rather than Base runway because it had not closed by the cutoff and acquisition economics were unavailable.",
+          "P&C reinsurance is not assumed to be a volume-growth engine in the near term because independent broker evidence and Munich Re's own renewals show softening prices and deliberate volume contraction."
+        ],
+        "supporting_evidence_ids": [
+          "E-006",
+          "E-009",
+          "E-019",
+          "E-020",
+          "E-008",
+          "E-010"
+        ],
+        "contradicting_evidence_ids": [
+          "E-013",
+          "E-014"
+        ],
+        "material_assumption_ids": [
+          "A-003"
+        ],
+        "open_uncertainties": [
+          "G-006 At-Bay economics",
+          "Bottom-up denominator and penetration evidence for the non-P&C growth pillars"
+        ]
+      },
+      "RETURN_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RETURN_METHOD": "INSURANCE_REINSURANCE_OVERLAY",
+          "INDUSTRIAL_ROIC": "NOT_APPLICABLE",
+          "ROIC_TREND": "NOT_APPLICABLE",
+          "NORMALIZED_ROE": "UNKNOWN",
+          "ECONOMIC_SPREAD": "CLEARLY_POSITIVE",
+          "DATA_QUALITY": "MEDIUM",
+          "ATTRIBUTABILITY": "MEDIUM",
+          "INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS"
+        },
+        "core_findings": [
+          "The applicable return measures are normalized RoE and underwriting return, not industrial ROIC. Current reported RoE is high at 18.3% in 2025 and 23.0% annualised in H1 2026.",
+          "Underwriting economics are strong on reported data, but 2026 loss experience is unusually benign and cannot be extrapolated as a normalized combined ratio.",
+          "Peer RoE of 22.7% at Swiss Re and 21.5% at Hannover Re shows that part of current return strength is sector/cycle context rather than uniquely attributable to Munich Re.",
+          "A precise normalized through-cycle RoE is left UNKNOWN in Fundamentals because comparable IFRS 17/IFRS 9 history is short and reserve/loss normalization is incomplete."
+        ],
+        "supporting_evidence_ids": [
+          "E-003",
+          "E-004",
+          "E-007",
+          "E-009",
+          "E-011",
+          "E-012",
+          "E-015",
+          "E-016",
+          "E-029"
+        ],
+        "calculation_ids": [
+          "CALC-PC-RE-UW-MARGIN-2025",
+          "CALC-PC-RE-UW-MARGIN-Q2-2026"
+        ],
+        "material_assumption_ids": [
+          "A-001",
+          "A-005"
+        ],
+        "open_uncertainties": [
+          "G-004 reserve diagnostics",
+          "G-009 consistent through-cycle accounting history"
+        ]
+      },
+      "FCF_OWNER_EARNINGS_FORENSIC": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "INDUSTRIAL_FCF_HEADLINE": "NOT_APPLICABLE",
+          "DISTRIBUTABLE_CAPITAL": "UNKNOWN",
+          "FORENSIC_RELIABILITY": "WATCH"
+        },
+        "core_findings": [
+          "Industrial FCF is not used as the headline cash measure. The applicable insurer bridge is normalized capital generation less reserve and solvency-capital needs, yielding distributable capital.",
+          "High Solvency II coverage and a €2.25bn buyback authorization demonstrate practical capital-return capacity, but they do not establish a precise sustainable distributable-capital amount.",
+          "Forensic reliability remains WATCH because detailed line-level loss-triangle/reserve diagnostics were not reconstructed, 2026 major losses were unusually low and investment fair-value movements materially affected earnings.",
+          "No material accounting-control failure is established in the admitted evidence; WATCH reflects unresolved reserve/normalization evidence rather than an allegation of misstatement."
+        ],
+        "supporting_evidence_ids": [
+          "E-005",
+          "E-011",
+          "E-012",
+          "E-018",
+          "E-023",
+          "E-029"
+        ],
+        "material_assumption_ids": [
+          "A-005",
+          "A-006"
+        ],
+        "open_uncertainties": [
+          "G-004 reserve adequacy diagnostics",
+          "G-005 legal-entity remittance capacity"
+        ]
+      },
+      "CAPITAL_ALLOCATION": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Capital allocation combines a high shareholder payout policy, active buybacks and selective specialty acquisitions while maintaining very high group solvency.",
+          "The 2026/27 buyback authorizes up to €2.25bn with shares intended for retirement. Fundamentals does not judge the buyback's price attractiveness; that belongs to Valuation.",
+          "Ambition 2030 targets total payout above 80% annually, supporting per-share capital return but increasing the importance of reserve, solvency and legal-entity remittance discipline.",
+          "The $575m At-Bay acquisition is not credited as value creation before closing and before realized or supportable acquisition returns are available."
+        ],
+        "supporting_evidence_ids": [
+          "E-005",
+          "E-018",
+          "E-019",
+          "E-020",
+          "E-027"
+        ],
+        "material_assumption_ids": [
+          "A-003",
+          "A-006"
+        ],
+        "open_uncertainties": [
+          "G-005 entity-level remittance capacity",
+          "G-006 At-Bay return economics",
+          "C-002 exact economic share count deferred to Valuation"
+        ]
+      },
+      "MANAGEMENT_GOVERNANCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "LOW",
+        "core_findings": [
+          "The 2026 Board remuneration system and remuneration report received 89.66% and 87.68% AGM approval respectively, providing evidence that a formal governance/remuneration architecture exists but not proving superior stewardship.",
+          "Renewal decisions show a stated willingness to sacrifice volume when pricing/terms fall below requirements, an operating behavior consistent with underwriting discipline.",
+          "The admitted corpus does not provide enough independent evidence on long-horizon incentive effectiveness, ownership alignment, succession, board effectiveness or minority treatment to rate governance as exceptional."
+        ],
+        "supporting_evidence_ids": [
+          "E-021",
+          "E-008",
+          "E-010"
+        ],
+        "open_uncertainties": [
+          "Long-horizon claims-versus-outcomes record",
+          "Detailed incentive and ownership alignment beyond the registered remuneration evidence"
+        ]
+      },
+      "OUTSIDE_VIEW": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "core_findings": [
+          "The 2026 reinsurance market is softening: Howden reported substantial risk-adjusted price reductions at January renewals and Guy Carpenter reported a 16% decline in its global property-catastrophe rate-on-line index at mid-year.",
+          "Strong peer economics are widespread: Swiss Re and Hannover Re both reported H1 2026 RoE above 21%, so Munich Re's current profitability cannot be treated as company-specific proof by itself.",
+          "AM Best's A+/aa stable assessment independently corroborates exceptional financial strength, while broker/peer evidence constrains claims of unique pricing power."
+        ],
+        "supporting_evidence_ids": [
+          "E-013",
+          "E-014",
+          "E-015",
+          "E-016",
+          "E-017"
+        ],
+        "material_assumption_ids": [
+          "A-002"
+        ]
+      },
+      "RISK_RESILIENCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "core_findings": [
+          "Resilience is anchored by 298-304% Solvency II coverage, an A+ financial-strength rating and diversification across reinsurance, specialty and primary insurance.",
+          "The principal vulnerabilities are cyclically softer reinsurance pricing, normalization from unusually low major losses, reserve adequacy in long-tail business, investment-market volatility and execution risk in specialty/cyber expansion.",
+          "The architecture is strong enough to absorb meaningful shocks on current evidence, but reserve diagnostics and entity-level capital fungibility remain material limitations."
+        ],
+        "material_risks": [
+          {
+            "type": "CYCLICAL",
+            "evidence": [
+              "E-008",
+              "E-010",
+              "E-013",
+              "E-014"
+            ],
+            "transmission_mechanism": "Ample capacity and falling renewal prices reduce rate adequacy, forcing lower volumes or future underwriting margins.",
+            "severity": "HIGH",
+            "detectability": "HIGH",
+            "reversibility": "MEDIUM",
+            "thesis_impact": "HIGH",
+            "early_indicator": "Risk-adjusted renewal-price declines persist while combined ratios normalize upward or business written falls without offsetting profitable growth."
+          },
+          {
+            "type": "TEMPORARY",
+            "evidence": [
+              "E-011"
+            ],
+            "transmission_mechanism": "A benign major-loss period temporarily inflates reported underwriting profitability and RoE; normalization lowers earnings even without franchise deterioration.",
+            "severity": "MEDIUM_HIGH",
+            "detectability": "HIGH",
+            "reversibility": "HIGH",
+            "thesis_impact": "MEDIUM_HIGH",
+            "early_indicator": "Major-loss ratio returns toward longer-run levels and reported combined ratios rise materially."
+          },
+          {
+            "type": "FINANCIAL",
+            "evidence": [
+              "E-012",
+              "E-005",
+              "E-009"
+            ],
+            "transmission_mechanism": "Market-value, yield, credit or FX movements alter investment earnings and can affect capital/solvency alongside underwriting shocks.",
+            "severity": "HIGH",
+            "detectability": "HIGH",
+            "reversibility": "MEDIUM",
+            "thesis_impact": "HIGH",
+            "early_indicator": "Investment result weakens sharply together with material Solvency II compression."
+          },
+          {
+            "type": "STRUCTURAL",
+            "evidence": [
+              "E-023",
+              "E-029"
+            ],
+            "transmission_mechanism": "Reserve inadequacy or adverse prior-year development would reduce earnings and capital after losses were previously recognized as adequately priced/reserved.",
+            "severity": "HIGH",
+            "detectability": "MEDIUM",
+            "reversibility": "LOW_MEDIUM",
+            "thesis_impact": "HIGH",
+            "early_indicator": "Adverse development emerges in loss triangles or reserve commentary and persists across periods."
+          },
+          {
+            "type": "CONCENTRATION",
+            "evidence": [
+              "E-011",
+              "E-022"
+            ],
+            "transmission_mechanism": "Large catastrophe or correlated insurance accumulations can create simultaneous underwriting losses and capital consumption despite diversification.",
+            "severity": "HIGH",
+            "detectability": "MEDIUM",
+            "reversibility": "MEDIUM",
+            "thesis_impact": "HIGH",
+            "early_indicator": "Major-loss burden rises materially and modelled capital requirements/Solvency II coverage deteriorate."
+          },
+          {
+            "type": "EXECUTION",
+            "evidence": [
+              "E-020"
+            ],
+            "transmission_mechanism": "Specialty/cyber expansion, including At-Bay, may fail to earn adequate risk-adjusted underwriting/acquisition returns or introduce new accumulation risk.",
+            "severity": "MEDIUM",
+            "detectability": "MEDIUM",
+            "reversibility": "MEDIUM",
+            "thesis_impact": "MEDIUM",
+            "early_indicator": "Post-close GSI/cyber loss ratios, reserve development or acquisition returns underperform stated strategic rationale."
+          }
+        ],
+        "supporting_evidence_ids": [
+          "E-002",
+          "E-005",
+          "E-009",
+          "E-011",
+          "E-012",
+          "E-017",
+          "E-022",
+          "E-023"
+        ],
+        "open_uncertainties": [
+          "G-004 detailed reserve diagnostics",
+          "G-005 capital fungibility/remittance"
+        ]
+      }
+    },
+    "fundamentals_limitations": [
+      "G-001",
+      "G-002",
+      "G-003",
+      "G-004",
+      "G-005",
+      "G-006",
+      "G-007",
+      "G-008",
+      "G-009",
+      "C-002"
+    ],
+    "price_firewall": {
+      "valuation_performed": false,
+      "reference_price_used_in_judgment": false,
+      "investment_thesis_produced": false
+    }
+  }
+}

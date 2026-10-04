@@ -1,0 +1,91 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-019",
+  "company": "TSMC",
+  "run_id": "15b7881e-b8a3-438c-8d7a-b9c10520a383",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/15b7881e-b8a3-438c-8d7a-b9c10520a383/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__c2fb8804-51f5-41c6-ad18-af04244e7ff5__v001.json",
+    "commit_sha": "e7ca554630d23d95dcf6528f3ef3efdda010373a",
+    "blob_sha": "a0d35c83b210d17c847fd91adda083a69f299533",
+    "registry_content_sha256": "1c8145193656cc96813df5df55c2dcdfd4c5a9c678293920e1ebb5c589daee86"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "c2fb8804-51f5-41c6-ad18-af04244e7ff5",
+      "version": 1
+    },
+    "run_id": "15b7881e-b8a3-438c-8d7a-b9c10520a383",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "version": 1,
+    "source_locks": {
+      "fundamentals": {
+        "artifact_id": "5369cdd2-6a7d-453b-a264-578d8f2ee39e",
+        "version": 1,
+        "content_sha256": "b49f438fcc04cd28e3213dbf097308ffd42608abd8fd1bd1c48e9d4d1adc58c4"
+      }
+    },
+    "fundamental_verdicts": {
+      "moat": {
+        "evidence_state": "STRONGLY_SUPPORTED",
+        "trend": "STRENGTHENING",
+        "durability": "LONG"
+      },
+      "runway": {
+        "evidence_state": "SUPPORTED",
+        "magnitude": "LARGE",
+        "horizon": "EXTENDED"
+      },
+      "return_quality": {
+        "standard_roic_pct_range": {
+          "min": 50.9441,
+          "max": 51.5654
+        },
+        "all_in_roic_pct_range": {
+          "min": 50.9441,
+          "max": 51.5654
+        },
+        "r_and_d_adjusted_roic": "NOT_INTERPRETABLE",
+        "roiic": "NOT_INTERPRETABLE",
+        "roic_trend": "UNCLEAR",
+        "economic_spread": "CLEARLY_POSITIVE",
+        "attributability": "MEDIUM",
+        "data_quality": "HIGH",
+        "interpretability": "INTERPRETABLE_WITH_LIMITATIONS"
+      },
+      "forensic_reliability": "CLEAN",
+      "owner_earnings": "UNKNOWN",
+      "capital_allocation": "STRONG_CONSOLIDATED_REINVESTMENT_WITH_UNRESOLVED_FAB_LEVEL_MARGINAL_RETURNS",
+      "management_governance": "STRONG_EXECUTION_WITH_COMBINED_CHAIR_CEO_STATE_LINKED_OWNERSHIP_AND_NONELITE_EVIDENCE",
+      "resilience_risk": "STRONG_FINANCIAL_RESILIENCE_WITH_MATERIAL_TAIWAN_GEOPOLITICAL_UTILITY_SUPPLY_CHAIN_CONCENTRATION"
+    },
+    "valuation_verdicts": {
+      "reference_price_twd": 2460,
+      "reference_price_date": "2026-09-18",
+      "primary_expected_return_pct_pa": 0.277639069029878,
+      "mature_normalization_return_pct_pa": -0.31268167188976403,
+      "no_multiple_expansion_return_pct_pa": 15.114473639519199,
+      "margin_of_safety": "NONE",
+      "market_expectation_gap": "FAR_ABOVE_FUNDAMENTAL_CASE",
+      "valuation_reliability": "MEDIUM"
+    },
+    "certification_reconciliation": "NO_LOCKED_ANALYTICAL_JUDGMENT_OR_VALUATION_ASSUMPTION_CHANGED",
+    "roiic_firewall": "PRESERVED_NOT_INTERPRETABLE"
+  }
+}

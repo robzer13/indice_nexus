@@ -1,0 +1,107 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-016",
+  "company": "STMicroelectronics",
+  "run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/36d27c22-a5f1-40fb-9689-dd8aa3d450d1/deep-dive/final-v2/ANALYTICAL_BLOCK_OUTPUTS__f1a73a17-4298-43ca-82bc-6652dd1ff290__v001.json",
+    "commit_sha": "a3e096c50cf11b0663d329941d6519b69997b244",
+    "blob_sha": "9714b25e49550c52be526b40b292be478bb9654b",
+    "registry_content_sha256": "4c7e189a8b29785ab94c30024c2d97f4ee8d982e592f3960512cf5f419cc9328"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "OROTITAN_V2_ANALYTICAL_BLOCKS_1.0",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "blocks": [
+      {
+        "block": "BUSINESS_MODEL",
+        "execution_status": "COMPLETE",
+        "summary": "Diversified semiconductor IDM with heavy internal manufacturing, broad embedded/analog/power exposure and material cycle sensitivity.",
+        "verdict": "CAPITAL_INTENSIVE_DIVERSIFIED_SEMICONDUCTOR_IDM"
+      },
+      {
+        "block": "MOAT",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "moat_durability": "MODERATE",
+        "moat_evidence_state": "SUPPORTED",
+        "moat_trend": "UNCLEAR",
+        "summary": "Design-in and qualification switching friction are supported, but broad leadership is not proven; automotive share erosion and unresolved SiC share limit durability confidence."
+      },
+      {
+        "block": "RUNWAY",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "runway_evidence_state": "SUPPORTED",
+        "runway_horizon": "MODERATE",
+        "runway_magnitude": "MATERIAL",
+        "summary": "AI optical/RF, MCU/embedded and SiC create material runway, offset by category growth dispersion, utilization/capacity execution and competitive constraints."
+      },
+      {
+        "attributability": "LOW",
+        "block": "RETURN_QUALITY",
+        "economic_spread": "MARGINAL",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "roic_trend": "VOLATILE",
+        "roiic_interpretability": "NOT_INTERPRETABLE",
+        "summary": "Standard ROIC is bounded at 8-12%; current marginal-return attribution is weak and investment lag is high."
+      },
+      {
+        "block": "FCF_OWNER_EARNINGS_FORENSIC",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "forensic_reliability": "WATCH",
+        "owner_earnings": "UNKNOWN",
+        "summary": "Standardized FCF deteriorated sharply after 2023 and remains near breakeven in H1 2026; no precise Owner Earnings figure is supportable."
+      },
+      {
+        "block": "CAPITAL_ALLOCATION",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "summary": "Large fab and technology investment may support recovery, but recent cash returns and project-level return attribution do not establish elite deployment.",
+        "verdict": "MIXED"
+      },
+      {
+        "block": "MANAGEMENT_GOVERNANCE",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "summary": "Execution and governance remain constrained by cycle recovery, restructuring, and state-linked ownership considerations.",
+        "verdict": "MIXED"
+      },
+      {
+        "block": "OUTSIDE_VIEW",
+        "execution_status": "COMPLETE",
+        "summary": "Category-specific semiconductor baselines and competitor evidence prevent headline semiconductor growth from being applied to ST as a whole."
+      },
+      {
+        "block": "RISK_RESILIENCE",
+        "execution_status": "COMPLETE_WITH_LIMITATIONS",
+        "summary": "Fab utilization, automotive share, P&D/SiC execution and capital intensity can transmit into weak ROIC and FCF.",
+        "verdict": "MATERIAL_BUT_MANAGEABLE_VULNERABILITIES"
+      }
+    ],
+    "created_at": "2026-09-16T05:23:25.582669Z",
+    "data_cutoff": "2026-09-15",
+    "fundamental_scoring_inputs": {
+      "artifact_id": "4e2b732a-0692-4648-b239-9dc36fd9a819",
+      "content_sha256": "e5479532c02e3a17e9635dccb027594f96443718d5ea9c3cdca3c10ca5e704fe",
+      "version": 1
+    },
+    "run_id": "36d27c22-a5f1-40fb-9689-dd8aa3d450d1",
+    "source_lock": {
+      "artifact_id": "015d9ee9-4890-4199-8512-b4789275ec3b",
+      "content_sha256": "4541e8b7558e23630a02eacd83586ef6562c9069902f76229310a7a6c9f1ebec",
+      "version": 1
+    },
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "version": 1
+  }
+}

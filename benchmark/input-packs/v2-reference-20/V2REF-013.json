@@ -1,0 +1,72 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-013",
+  "company": "Novo Nordisk A/S",
+  "run_id": "8603a616-ab4a-4794-856a-a4df454e968d",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/8603a616-ab4a-4794-856a-a4df454e968d/deep_dive/certification/ANALYTICAL_BLOCK_OUTPUTS__ff81c611-8d3c-4d6f-8c6b-ec0f94445224__v001.json",
+    "commit_sha": "336c92c09965187a354313a35ea812365c3c7339",
+    "blob_sha": "52b46bd469a8489e585abee4e0c0f85a120965d4",
+    "registry_content_sha256": "b769d43b34f79db8eadd2274dc06f837bdc5252a5ddba036888650938b0b8dbd"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "8603a616-ab4a-4794-856a-a4df454e968d",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-18",
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "ff81c611-8d3c-4d6f-8c6b-ec0f94445224",
+      "version": 1
+    },
+    "version": 1,
+    "source_fundamental_blocks": {
+      "artifact_id": "e2e1ed37-7a94-49fd-b50c-85221abdf2ea",
+      "version": 1,
+      "content_sha256": "a3c21d75dd8a9b50608c5fa5825df755d2a6a75c38066b05d894911ba39ced85"
+    },
+    "fundamental_verdicts": {
+      "MOAT_EVIDENCE_STATE": "SUPPORTED",
+      "MOAT_TREND": "ERODING",
+      "MOAT_DURABILITY": "MODERATE",
+      "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+      "RUNWAY_MAGNITUDE": "LARGE",
+      "RUNWAY_HORIZON": "MODERATE",
+      "ROIC_TREND": "DECLINING",
+      "ROIIC": "NOT_INTERPRETABLE",
+      "FORENSIC_RELIABILITY": "WATCH",
+      "OWNER_EARNINGS": "UNKNOWN"
+    },
+    "dimension_judgments": {
+      "MOAT": 80,
+      "RUNWAY": 80,
+      "RETURN_QUALITY": 75,
+      "CASH_ECONOMICS": 75,
+      "CAPITAL_ALLOCATION": 70,
+      "MANAGEMENT_GOVERNANCE": 70,
+      "RESILIENCE_RISK": 70
+    },
+    "valuation_reconciliation": {
+      "VALUATION_RELIABILITY": "LOW",
+      "MARGIN_OF_SAFETY": "THIN",
+      "MARKET_EXPECTATION_GAP": "BELOW_FUNDAMENTAL_CASE",
+      "PRIMARY_EXPECTED_RETURN_PCT": 10.059002092885466,
+      "NORMALIZATION_RETURN_PCT": 10.059002092885466
+    },
+    "locked_judgments_modified": false
+  }
+}

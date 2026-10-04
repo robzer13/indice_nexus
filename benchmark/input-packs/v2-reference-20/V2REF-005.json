@@ -1,0 +1,465 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-005",
+  "company": "Booking Holdings",
+  "run_id": "c7c22f5c-084d-48b1-bcee-9870e865431b",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/c7c22f5c-084d-48b1-bcee-9870e865431b/deep_dive/fundamentals/FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS__856ad59b-1500-42ea-9d2a-46f8bf2b0568__v001.json",
+    "commit_sha": "a117268b11e7f2c6797def74ef2a1a486e2df0b0",
+    "blob_sha": "fe4b863c3a804cb0167fd722f551ee1f9c2cf59f",
+    "registry_content_sha256": "f1d3eb2e374ba5c89c7164db16e313b34bb2c293b60a2a448e0973513232cc5f"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "c7c22f5c-084d-48b1-bcee-9870e865431b",
+    "stage": "DEEP_DIVE",
+    "execution_phase": "FUNDAMENTALS",
+    "data_cutoff": "2026-09-19",
+    "version": 1,
+    "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+    "blocks": {
+      "BUSINESS_MODEL": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-002",
+          "E-003",
+          "E-005",
+          "E-006",
+          "E-007",
+          "E-008",
+          "E-009",
+          "E-010",
+          "E-016",
+          "E-019",
+          "E-046"
+        ],
+        "conflict_ids": [
+          "C-001",
+          "C-002",
+          "C-003",
+          "C-004",
+          "C-013"
+        ],
+        "core_findings": [
+          "Core economics are a global two-sided travel marketplace, dominated by accommodation, with agency commissions and a rapidly expanding merchant model that adds payment facilitation and ancillary economics.",
+          "Merchant gross bookings and revenue are growing materially faster than agency because of model migration as well as underlying demand; aggregate revenue/gross-bookings is therefore a monetization mix measure, not a commission-rate proxy.",
+          "Physical capital intensity is low, but economic reinvestment is substantial through performance marketing, product/technology, payments, supplier tooling and customer service.",
+          "Booking.com is the core economic engine; KAYAK/OpenTable and non-accommodation verticals have different economics and are not assumed to share the same quality."
+        ],
+        "open_uncertainties": [
+          "G-006",
+          "G-008"
+        ],
+        "reopen_triggers": [
+          "Material change in merchant/payment economics",
+          "Material shift in marketing efficiency or supplier economics"
+        ]
+      },
+      "ECONOMIC_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "supporting_evidence_ids": [
+          "E-009",
+          "E-010",
+          "E-013",
+          "E-020",
+          "E-043",
+          "E-052",
+          "E-069",
+          "E-073"
+        ],
+        "calculation_ids": [
+          "CALC-OPM-003",
+          "CALC-INCRMARGIN-004"
+        ],
+        "core_findings": [
+          "Scale, high operating margins, low physical capex and strongly positive incremental operating margins indicate high economic quality at the core platform.",
+          "Quality is not uniform: alternative accommodation can carry higher service/partner costs, non-accommodation verticals can dilute margins, and KAYAK's 2025 impairment shows portfolio heterogeneity.",
+          "Merchant/payment migration increases strategic control and service capability but also increases processing, fraud/chargeback and working-capital complexity."
+        ],
+        "open_uncertainties": [
+          "G-006",
+          "G-009",
+          "G-010"
+        ],
+        "reopen_triggers": [
+          "Sustained margin deterioration unexplained by growth investment",
+          "Evidence that merchant/payment economics are materially weaker than consolidated economics"
+        ]
+      },
+      "MOAT": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "MOAT_EVIDENCE_STATE": "SUPPORTED",
+          "MOAT_TREND": "STABLE",
+          "MOAT_DURABILITY": "LONG"
+        },
+        "supporting_evidence_ids": [
+          "E-009",
+          "E-010",
+          "E-036",
+          "E-038",
+          "E-039",
+          "E-021",
+          "E-033"
+        ],
+        "contradicting_evidence_ids": [
+          "E-035",
+          "E-037",
+          "E-040",
+          "E-044",
+          "E-045",
+          "E-060"
+        ],
+        "conflict_ids": [
+          "C-005",
+          "C-006",
+          "C-007",
+          "C-008",
+          "C-009",
+          "C-010",
+          "C-011",
+          "C-014"
+        ],
+        "material_assumption_ids": [
+          "A-F-003"
+        ],
+        "core_findings": [
+          "The proven moat mechanism is marketplace scale and liquidity around accommodation supply and traveler demand, supported by exceptionally broad inventory and formal EEA/Spain evidence of durable market power/network effects.",
+          "The mechanism is strongest with fragmented lodging supply; direct hotel channels, multi-homing and large-chain loyalty materially constrain supplier lock-in and prevent a global-monopoly interpretation.",
+          "App/direct mix and Genius are useful distribution/engagement assets, but absent cohort CAC/retention economics they receive no separate switching-cost moat credit. Connected Trip remains optionality, not proven moat.",
+          "Google/search interface evolution and European competition remedies are active durability constraints. They have not yet falsified the moat, but they prevent a stronger evidentiary state."
+        ],
+        "open_uncertainties": [
+          "G-003",
+          "G-004",
+          "G-005",
+          "G-008",
+          "G-011"
+        ],
+        "reopen_triggers": [
+          "Persistent loss of intermediary share or supplier economics",
+          "Material structural increase in marketing/GB",
+          "Evidence of AI/search disintermediation reducing conversion or direct traffic",
+          "Regulatory remedies materially reducing commission/ranking economics"
+        ]
+      },
+      "RUNWAY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+          "RUNWAY_MAGNITUDE": "MATERIAL",
+          "RUNWAY_HORIZON": "MODERATE"
+        },
+        "supporting_evidence_ids": [
+          "E-010",
+          "E-015",
+          "E-031",
+          "E-042",
+          "E-043",
+          "E-064",
+          "E-066"
+        ],
+        "contradicting_evidence_ids": [
+          "E-035",
+          "E-065",
+          "E-032",
+          "E-045"
+        ],
+        "conflict_ids": [
+          "C-001",
+          "C-002",
+          "C-008",
+          "C-012",
+          "C-014"
+        ],
+        "core_findings": [
+          "Core runway is supported by ongoing global travel growth, further digital penetration outside mature markets, accommodation volume growth and continued merchant/payment adoption.",
+          "Alternative accommodations are already material and offer additional supply runway, but their room-night mix was flat year on year in Q2 2026 and margin/regulatory economics differ from hotels.",
+          "Flights and Connected Trip can expand frequency and cross-sell, but standalone profitability and cross-product retention are undisclosed; they are optionality rather than core-case economic credit.",
+          "Mature online markets constrain runway: U.K. online penetration is already very high and OTA share is not forecast to expand materially."
+        ],
+        "open_uncertainties": [
+          "G-007",
+          "G-009",
+          "G-010",
+          "G-011"
+        ],
+        "reopen_triggers": [
+          "Room-night growth persistently falls below travel-market growth",
+          "Alternative-accommodation economics deteriorate",
+          "Cross-sell economics become measurable",
+          "Regional online/OTA share evidence changes materially"
+        ]
+      },
+      "RETURN_QUALITY": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "STANDARD_ROIC": "NOT_INTERPRETABLE",
+          "ROIIC": "NOT_INTERPRETABLE",
+          "ROIC_TREND": "UNCLEAR",
+          "ECONOMIC_SPREAD": "CLEARLY_POSITIVE",
+          "DATA_QUALITY": "HIGH",
+          "ATTRIBUTABILITY": "MEDIUM",
+          "INTERPRETABILITY": "INTERPRETABLE_WITH_LIMITATIONS"
+        },
+        "supporting_evidence_ids": [
+          "E-069",
+          "E-073",
+          "E-076",
+          "E-077"
+        ],
+        "calculation_ids": [
+          "CALC-OIC-001",
+          "CALC-OIC-SENS-002",
+          "CALC-OPM-003",
+          "CALC-INCRMARGIN-004"
+        ],
+        "material_assumption_ids": [
+          "A-F-001",
+          "A-F-008"
+        ],
+        "core_findings": [
+          "Conventional ROIC is not economically interpretable because Booking's negative/near-zero marketplace operating-capital base makes the denominator unstable under reasonable merchant-liability classifications.",
+          "Alternative return evidence is strong: reported operating margin rose from 27.3% in 2023 to 32.8% in 2025, H1 2026 margin improved year over year, and incremental operating margins remained strongly positive.",
+          "Marginal-return attribution is incomplete because performance marketing, payment migration, product investment and cross-sell cohorts are not separately disclosed. No denominator-driven ROIC bonus is granted."
+        ],
+        "open_uncertainties": [
+          "G-003",
+          "G-006",
+          "G-008"
+        ],
+        "reopen_triggers": [
+          "Sustained negative incremental operating margin",
+          "Material deterioration in marketing efficiency",
+          "New cohort/growth-spend return evidence"
+        ]
+      },
+      "FCF_OWNER_EARNINGS_FORENSIC": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "canonical_verdict_fields": {
+          "FORENSIC_RELIABILITY": "WATCH",
+          "STANDARDIZED_FCF_2025_USD_M": 9087,
+          "OWNER_EARNINGS_2025_USD_M_RANGE": {
+            "min": 7935,
+            "max": 8470
+          }
+        },
+        "supporting_evidence_ids": [
+          "E-047",
+          "E-048",
+          "E-049",
+          "E-050",
+          "E-051",
+          "E-070",
+          "E-071",
+          "E-074"
+        ],
+        "conflict_ids": [
+          "C-004",
+          "C-015"
+        ],
+        "calculation_ids": [
+          "CALC-FCF-005",
+          "CALC-OE-006",
+          "CALC-H1-NORMALIZED-CASH-007"
+        ],
+        "material_assumption_ids": [
+          "A-F-002",
+          "A-F-005"
+        ],
+        "core_findings": [
+          "Audited standardized FCF rose from $7.0bn in 2023 to $9.1bn in 2025 with FCF margins above 32%, supporting strong underlying cash economics.",
+          "Headline and interim CFO materially benefit from merchant working-capital timing. H1 2026 had $3.4bn of favorable working-capital/other change, so H1 standardized FCF is not annualized or treated as owner cash.",
+          "2025 Owner Earnings is bounded at roughly $7.9-$8.5bn after charging SBC once and varying treatment of structural working-capital benefit. Restricted traveler cash and deferred merchant liabilities are not treated as freely distributable excess cash.",
+          "No fraud or accounting-control failure is evidenced, but material float, FX/debt noncash items, SBC and non-GAAP reconciliations justify WATCH rather than CLEAN forensic reliability."
+        ],
+        "open_uncertainties": [
+          "G-012"
+        ],
+        "reopen_triggers": [
+          "Merchant liability/cash settlement behavior changes materially",
+          "Restatement/control weakness or unexplained cash conversion divergence",
+          "SBC or capitalized software policy changes materially"
+        ]
+      },
+      "CAPITAL_ALLOCATION": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-052",
+          "E-053",
+          "E-054",
+          "E-072",
+          "E-074"
+        ],
+        "conflict_ids": [
+          "C-016"
+        ],
+        "calculation_ids": [
+          "CALC-CAPALLOC-008"
+        ],
+        "material_assumption_ids": [
+          "A-F-005",
+          "A-F-006",
+          "A-F-007"
+        ],
+        "core_findings": [
+          "Booking has returned very large amounts of capital through repurchases and, since 2024, dividends while maintaining substantial liquidity.",
+          "2025 distributions were covered by standardized FCF, but H1 2026 repurchases plus dividends exceeded interim standardized FCF by about $1.7bn while net debt issuance was about $2.0bn, showing a more aggressive balance-sheet posture.",
+          "The KAYAK impairment is concrete evidence that prior acquisition capital did not fully earn its carrying value.",
+          "Whether repurchases were value-accretive is deliberately UNKNOWN until Valuation; Fundamentals judges funding discipline and decision risk, not price."
+        ],
+        "open_uncertainties": [
+          "C-016",
+          "G-001"
+        ],
+        "reopen_triggers": [
+          "Valuation establishes repurchase price/value relationship",
+          "Gross debt or cash classification changes materially",
+          "New acquisition or impairment"
+        ]
+      },
+      "MANAGEMENT_GOVERNANCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-058",
+          "E-059",
+          "E-075"
+        ],
+        "core_findings": [
+          "Governance structure includes a majority-independent board, fully independent key committees, a lead-independent-director framework and clawback policies.",
+          "Executive incentives are materially equity/performance based: 60% of long-term incentive value is PSUs tied to financial performance and relative TSR, with an absolute-TSR governor, and executives have ownership requirements.",
+          "Glenn Fogel combines Booking Holdings CEO/President with Booking.com CEO responsibility, concentrating operating and group leadership. CEO compensation is high in absolute terms, but structure and ownership rules provide alignment mechanisms.",
+          "Public evidence supports good governance architecture but does not independently prove superior management skill or capital-allocation judgment."
+        ],
+        "open_uncertainties": [],
+        "reopen_triggers": [
+          "Material leadership succession",
+          "Major compensation redesign",
+          "Control, related-party or board-independence deterioration"
+        ]
+      },
+      "OUTSIDE_VIEW": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-035",
+          "E-036",
+          "E-038",
+          "E-040",
+          "E-041",
+          "E-042",
+          "E-045",
+          "E-052",
+          "E-065"
+        ],
+        "core_findings": [
+          "The appropriate reference class is scaled online travel marketplaces with strong network/liquidity effects but material multihoming, paid-acquisition dependence and supplier direct alternatives.",
+          "Booking's European intermediary share and regulator findings shift the marketplace prior upward: its accommodation position is much stronger than a generic OTA prior.",
+          "The outside view also supplies hard counterweights: hotels retain a majority direct channel in the HOTREC sample, large chains have powerful loyalty ecosystems, Expedia and Airbnb remain scaled competitors, and Google controls important discovery surfaces.",
+          "Mature-market digital penetration and KAYAK's CAC-driven impairment argue against extrapolating group scale into unlimited low-cost growth."
+        ],
+        "reopen_triggers": [
+          "Independent global market-share evidence changes materially",
+          "Competitor scale or hotel-direct behavior changes materially"
+        ]
+      },
+      "RISK_RESILIENCE": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "MEDIUM",
+        "supporting_evidence_ids": [
+          "E-024",
+          "E-034",
+          "E-037",
+          "E-039",
+          "E-045",
+          "E-050",
+          "E-056",
+          "E-057",
+          "E-060",
+          "E-061",
+          "E-062",
+          "E-074"
+        ],
+        "conflict_ids": [
+          "C-011",
+          "C-014"
+        ],
+        "core_findings": [
+          "Financial resilience is supported by very large annual cash generation and $17.2bn of June 2026 cash, but gross debt exceeded $20bn and not all cash is economically excess because traveler/merchant settlement obligations matter.",
+          "Primary structural risks are search-platform dependence/disintermediation, supplier/direct-channel bargaining, mature-market saturation and lower-margin vertical expansion.",
+          "Regulatory risk is active rather than hypothetical: DMA anti-parity obligations, national competition remedies/investigations and the blocked eTraveli transaction can constrain ranking, contractual and M&A levers.",
+          "Tax normalization, travel cyclicality/geopolitics, fraud/chargebacks, payment complexity, cyber/service availability and execution of AI/cross-product initiatives are additional transmission channels."
+        ],
+        "risk_taxonomy": {
+          "CYCLICAL": [
+            "travel-demand downturn",
+            "geopolitical/FX travel shocks"
+          ],
+          "STRUCTURAL": [
+            "mature-market online penetration",
+            "supplier direct-channel strength"
+          ],
+          "FINANCIAL": [
+            "gross-debt growth",
+            "merchant cash/liability classification"
+          ],
+          "DISRUPTION": [
+            "Google/AI travel interfaces",
+            "alternative discovery/booking models"
+          ],
+          "REGULATORY": [
+            "DMA and competition remedies",
+            "tax-law changes"
+          ],
+          "GOVERNANCE": [
+            "leadership concentration",
+            "incentive execution"
+          ],
+          "CONCENTRATION": [
+            "core Booking.com economics",
+            "search-distribution dependence"
+          ],
+          "EXECUTION": [
+            "merchant/payments migration",
+            "alternative accommodations",
+            "Connected Trip/AI"
+          ]
+        },
+        "reopen_triggers": [
+          "Material regulatory remedy affecting take rate/ranking",
+          "Search/AI causes measurable CAC or traffic deterioration",
+          "Gross debt rises without cash-flow support",
+          "Travel shock or payment/fraud losses materially impair cash conversion"
+        ]
+      },
+      "FUNDAMENTAL_RED_TEAM": {
+        "execution_status": "LOCKED",
+        "execution_confidence": "HIGH",
+        "artifact_ref": {
+          "artifact_id": "b9e15147-46d4-4ac2-8834-a01e097e9760",
+          "version": 1
+        }
+      }
+    }
+  }
+}
