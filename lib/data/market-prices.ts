@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import type { MarketPriceRow, MarketSyncRun } from '@/lib/domain/types';
+import { deriveMarketDataReference } from '@/lib/market/reference';
 
 export interface MarketDataCompany {
   id: string;
@@ -18,15 +19,6 @@ function slugifyMarketCompany(value: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
-}
-
-function deriveMarketDataSymbol(ticker: string, exchange: string, explicit: string | null): string | null {
-  if (explicit) return explicit;
-  const normalized = exchange.toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (normalized.includes('NASDAQ')) return `${ticker}:NASDAQ`;
-  if (normalized === 'NYSE' || normalized.includes('NEWYORKSTOCKEXCHANGE')) return `${ticker}:NYSE`;
-  if (normalized.includes('NYSEARCA')) return `${ticker}:NYSEARCA`;
-  return null;
 }
 
 async function ensureCanonicalMarketCompanyBridges(): Promise<void> {
@@ -76,7 +68,7 @@ async function ensureCanonicalMarketCompanyBridges(): Promise<void> {
     const explicitSymbol = typeof security.market_data_symbol === 'string' && security.market_data_symbol.trim()
       ? security.market_data_symbol.trim()
       : null;
-    const marketDataSymbol = deriveMarketDataSymbol(ticker, exchange, explicitSymbol);
+    const marketDataSymbol = deriveMarketDataReference(ticker, exchange, explicitSymbol);
     if (!ticker || !exchange || !marketDataSymbol) continue;
 
     const existing = existingById.get(issuerId);
