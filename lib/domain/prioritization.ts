@@ -33,7 +33,9 @@ export function prioritizeCompanies(
         return b.distance_o90_pct - a.distance_o90_pct;
       }
 
-      return (b.orotitan_score ?? -1) - (a.orotitan_score ?? -1);
+      const aScore = a.live_investment_score ?? a.investment_score ?? a.orotitan_score ?? -1;
+      const bScore = b.live_investment_score ?? b.investment_score ?? b.orotitan_score ?? -1;
+      return bScore - aScore;
     })
     .slice(0, Math.max(0, limit));
 }
