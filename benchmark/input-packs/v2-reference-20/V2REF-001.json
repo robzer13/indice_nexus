@@ -1,0 +1,72 @@
+{
+  "pack_schema_version": "1.0.0",
+  "pack_type": "OROTITAN_V2_PRE_SCORE_REPLAY_INPUT",
+  "case_id": "V2REF-001",
+  "company": "Adyen",
+  "run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+  "sanitizer_version": "1.0.0",
+  "prompt_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+  "source": {
+    "repository": "robzer13/real-orotitan",
+    "path": "artifacts/orotitan-equity/runs/a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf/deep_dive/final/ANALYTICAL_BLOCK_OUTPUTS__6b36ba10-df9d-4e1a-ab13-33824445ee72__v001.json",
+    "commit_sha": "501ddf1e9ae58386a62ded5b18f249c264be693e",
+    "blob_sha": "eabd4568e780ad9364cbf05686ca1cfcfad24fcc",
+    "registry_content_sha256": "20c06e0e0b625a5ef8a1ae1b05140b9fc670def97f7d6bc75db63fdcf5748259"
+  },
+  "leakage_controls": {
+    "historical_dimension_scores_removed": true,
+    "aggregate_scores_removed": true,
+    "certification_removed": true,
+    "valuation_removed": true,
+    "terminal_verdict_removed": true,
+    "forbidden_key_scan": "PASS"
+  },
+  "analytical_input": {
+    "artifact_schema_version": "2.0.0",
+    "run_id": "a8230f34-d23c-4ed8-b1e2-7cbd0ca81fbf",
+    "issuer_id": "a0d2b534-e9a2-4093-9ab2-58d6ea6b31c5",
+    "security_id": "b77eedc2-13f6-4faf-a4fc-17e09e10ff05",
+    "dossier_id": "e47a0165-9d80-4d5e-9279-db206846afac",
+    "stage": "DEEP_DIVE",
+    "stage_revision": 1,
+    "execution_phase": "CERTIFICATION_RECONCILIATION",
+    "data_cutoff": "2026-09-19",
+    "certified_at": "2026-09-20T15:53:37.804321Z",
+    "version": 1,
+    "artifact_type": "ANALYTICAL_BLOCK_OUTPUTS",
+    "artifact": {
+      "artifact_id": "6b36ba10-df9d-4e1a-ab13-33824445ee72",
+      "version": 1
+    },
+    "source_artifact": {
+      "artifact_id": "baef51d8-c8a4-4d9d-8b58-198d16c82a12",
+      "version": 1,
+      "artifact_type": "FUNDAMENTALS_ANALYTICAL_BLOCK_OUTPUTS",
+      "content_sha256": "9ba4fab749878fe9fa97b7a1441700a5c3f772b3977757d02291ca365c875e2c"
+    },
+    "locked_fundamentals_unchanged": true,
+    "dimension_inputs": {
+      "MOAT": 80,
+      "RUNWAY": 80,
+      "RETURN_QUALITY": 70,
+      "CASH_ECONOMICS": 75,
+      "CAPITAL_ALLOCATION": 70,
+      "MANAGEMENT_GOVERNANCE": 80,
+      "RESILIENCE_RISK": 80
+    },
+    "verdicts": {
+      "MOAT_EVIDENCE_STATE": "SUPPORTED",
+      "MOAT_TREND": "STABLE",
+      "MOAT_DURABILITY": "MODERATE",
+      "RUNWAY_EVIDENCE_STATE": "SUPPORTED",
+      "RUNWAY_MAGNITUDE": "MATERIAL",
+      "RUNWAY_HORIZON": "MODERATE",
+      "ROIIC": "NOT_INTERPRETABLE",
+      "RETURN_TREND": "UNCLEAR",
+      "ECONOMIC_SPREAD": "UNKNOWN",
+      "FORENSIC_RELIABILITY": "WATCH",
+      "OWNER_EARNINGS": "UNKNOWN"
+    },
+    "all_required_blocks": "LOCKED"
+  }
+}
