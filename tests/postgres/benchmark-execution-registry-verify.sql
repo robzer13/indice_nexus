@@ -39,6 +39,8 @@ select public.record_orotitan_benchmark_execution(
     'model_name', 'gpt-test',
     'model_version', 'gpt-test',
     'reasoning_config', 'medium',
+    'gateway_provider_only', 'openai',
+    'max_output_tokens', 6000,
     'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
     'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
     'sanitizer_version', '1.0.0',
@@ -86,6 +88,8 @@ select public.record_orotitan_benchmark_execution(
     'model_name', 'gpt-test',
     'model_version', 'gpt-test',
     'reasoning_config', 'medium',
+    'gateway_provider_only', 'openai',
+    'max_output_tokens', 6000,
     'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
     'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
     'sanitizer_version', '1.0.0',
@@ -208,13 +212,14 @@ begin
     insert into public.orotitan_engine_benchmark_executions (
       campaign_id, phase_id, case_id, repetition_index, execution_profile_id,
       engine_fingerprint, model_provider, model_name, model_version, reasoning_config,
-      runner_version, prompt_artifact_version, sanitizer_version, input_package_sha256,
+      gateway_provider_only, max_output_tokens, runner_version,
+      prompt_artifact_version, sanitizer_version, input_package_sha256,
       started_at, finished_at, duration_ms,
       dimension_scores, dimension_rationales, oqs_raw, weak_link_cap, oqs,
       i2_computation_status, finish_reason, usage, output_sha256
     ) values (
       'X', 'Y', 'V2REF-001', 99, repeat('4',64), repeat('5',64),
-      'openai', 'x', 'x', 'x', 'medium',
+      'openai', 'x', 'x', 'x', 'medium', 'openai', 6000,
       'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1', '1.0.0',
       repeat('6',64), now(), now(), 0,
       jsonb_build_object(
