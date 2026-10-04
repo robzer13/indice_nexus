@@ -16,6 +16,8 @@ create table if not exists public.orotitan_engine_benchmark_executions (
   model_name text not null,
   model_version text not null,
   reasoning_config text not null,
+  gateway_provider_only text not null,
+  max_output_tokens integer not null check (max_output_tokens >= 1),
   runner_version text not null,
   prompt_artifact_version text not null,
   sanitizer_version text not null,
@@ -164,6 +166,8 @@ begin
      or nullif(p_execution->>'model_name', '') is null
      or nullif(p_execution->>'model_version', '') is null
      or nullif(p_execution->>'reasoning_config', '') is null
+     or nullif(p_execution->>'gateway_provider_only', '') is null
+     or nullif(p_execution->>'max_output_tokens', '') is null
      or nullif(p_execution->>'runner_version', '') is null
      or nullif(p_execution->>'prompt_artifact_version', '') is null
      or nullif(p_execution->>'sanitizer_version', '') is null
@@ -244,6 +248,8 @@ begin
     model_name,
     model_version,
     reasoning_config,
+    gateway_provider_only,
+    max_output_tokens,
     runner_version,
     prompt_artifact_version,
     sanitizer_version,
@@ -271,6 +277,8 @@ begin
     p_execution->>'model_name',
     p_execution->>'model_version',
     p_execution->>'reasoning_config',
+    p_execution->>'gateway_provider_only',
+    (p_execution->>'max_output_tokens')::integer,
     p_execution->>'runner_version',
     p_execution->>'prompt_artifact_version',
     p_execution->>'sanitizer_version',
