@@ -39,7 +39,7 @@ export type ChallengeContext = {
   priorPassing?: { report_ref: ArtifactRef; ledger_ref: ArtifactRef };
 };
 const ajv = new Ajv2020({ allErrors: true, strict: true });
-addFormats(ajv);
+addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateLedger = ajv.compile(ledgerSchema);
 const validateReport = ajv.compile(reportSchema);
 const same = (a: unknown, b: unknown): boolean => canonicalJson(a) === canonicalJson(b);
