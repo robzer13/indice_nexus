@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import test from "node:test";
-import { authoritySetSha256, classifyMethodGeneration, methodV2Manifest, METHOD_V2_AUTHORITY_SET_SHA256, sha256, verifyMethodV2Authority } from "../lib/orotitan-equity/method-v2/authority";
-import { admitMethodV2Certification, CHALLENGE_FAMILIES, challengeScopeSha256, type ChallengeContext } from "../lib/orotitan-equity/method-v2/pre-certification";
+import { authoritySetSha256, classifyMethodGeneration, methodV2Manifest, METHOD_V2_AUTHORITY_SET_SHA256, METHOD_V2_V1_0_AUTHORITY_SET_SHA256, PRE_CERTIFICATION_EFFECTIVE_SHA256, sha256, verifyMethodV2Authority } from "../lib/orotitan-equity/method-v2/authority";
+import { admitMethodV2Certification, CHALLENGE_FAMILIES, challengeScopeSha256, type ChallengeContext, type FamilyCoverage } from "../lib/orotitan-equity/method-v2/pre-certification";
 import { resolveContractPin, type ContractPin, type GithubBlobRequest } from "../lib/orotitan-equity/v1/contract-pin-resolver";
 
 const fetchLocal = async ({ repository, path }: GithubBlobRequest): Promise<Uint8Array> => {
@@ -13,7 +13,7 @@ const historical = (versions = {}) => ({ historicalBeforeActivation: true, ...ve
 const ref = (n: number) => ({ artifact_id: `00000000-0000-4000-8000-${String(n).padStart(12, "0")}`, version: 1, content_sha256: "a".repeat(64) });
 function fixture(status: "PASS" | "CONCERN" | "REOPEN" | "FAIL" = "PASS") {
   const common = { company: "Synthetic Company", run_id: ref(1).artifact_id, data_cutoff: "2026-10-01",
-    schema_version: "1.0", challenge_version: "1.0", challenge_iteration: 1,
+    schema_version: "1.1", challenge_version: "1.1", challenge_iteration: 1,
     mode: "FULL", delta_provenance: null, fundamentals_lock_ref: ref(2), valuation_lock_ref: ref(3) };
   const questions = CHALLENGE_FAMILIES.map((family, index) => ({ question_id: `Q${index}`, question_family: family,
     question_text: `Does the specific supplier concentration invalidate the ${family} conclusion?`, company_specific: true,
@@ -21,7 +21,8 @@ function fixture(status: "PASS" | "CONCERN" | "REOPEN" | "FAIL" = "PASS") {
     answer_or_judgment: "Cutoff evidence reconciled", status: index === 0 ? status : "PASS", evidence_references: ["E1"],
     evidence_dates: ["2026-09-30"], affected_blocks: ["VALUATION"], decision_impact: "Bounds the investment conclusion",
     mitigation_or_resolution: "Contractual alternative capacity; retain residual limitation" }));
-  const ledger = { ...common, artifact_type: "PRE_CERTIFICATION_QUESTION_LEDGER", questions, dropped_candidates: [] };
+  const ledger = { ...common, artifact_type: "PRE_CERTIFICATION_QUESTION_LEDGER", questions,
+    dropped_candidates: [] as { question_id: string; reason: string; rationale: string }[] };
   const report = { ...common, artifact_type: "PRE_CERTIFICATION_CHALLENGE_REPORT", question_ledger_ref: ref(4),
     total_candidate_questions_generated: questions.length, total_questions_executed: questions.length,
     dropped_duplicate_count: 0, dropped_already_resolved_count: 0, dropped_non_material_count: 0,
@@ -31,6 +32,7 @@ function fixture(status: "PASS" | "CONCERN" | "REOPEN" | "FAIL" = "PASS") {
     reopen_required: status === "REOPEN" ? ["VALUATION"] : [], fail_reasons: status === "FAIL" ? ["Q0"] : [], affected_analytical_blocks: ["VALUATION"],
     challenge_status: status === "CONCERN" ? "PASS_WITH_CONCERNS" : status, ready_for_certification: ["REOPEN", "FAIL"].includes(status) ? "NO" : "YES",
     saturation_record: { mandatory_families_covered: true, coverage_rationale: Object.fromEntries(CHALLENGE_FAMILIES.map(f => [f, "Company-specific coverage tied to current locks"])),
+      family_coverage: Object.fromEntries(CHALLENGE_FAMILIES.map((f, i) => [f, { disposition: "QUESTION_COVERED", question_ids: [`Q${i}`] }])) as Record<typeof CHALLENGE_FAMILIES[number], FamilyCoverage>,
       company_specific_coverage: "PASS", company_specific_rationale: "Counterparty and capacity specific", all_material_concerns_dispositioned: true,
       material_questions_remaining: false, stop_reason: "NO_ADDITIONAL_MATERIAL_DECISION_USEFUL_QUESTION_IDENTIFIED",
       final_generation_passes: [1, 2].map(i => ({ pass_id: `P${i}`, independence_rationale: `Independent inversion pass ${i} documented separately`, new_material_questions: 0, conclusion_scope_sha256: "" })) } };
@@ -171,4 +173,117 @@ test("execution support is independently byte-pinned and excluded from analytica
       assert.ok(methodV2Manifest.members.every(m => m.pin.locator.path !== member.path));
     } else await resolveContractPin(member.pin!, fetchLocal);
   }
+});
+
+function evidencedExemption(): FamilyCoverage {
+  return { disposition: "EVIDENCED_NO_MATERIAL_CHALLENGE",
+    rationale: "Cutoff Evidence Ledger records show no material exposure for this company's decision",
+    evidence_references: [{ evidence_id: "E1", evidence_ledger_ref: ref(8), evidence_date: "2026-09-30" }] };
+}
+
+test("V1.1 rejects empty ledger with self-attested coverage, with or without exemptions", () => {
+  const f = fixture(); f.ledger.questions = []; f.report.company_specific_questions = [];
+  f.report.total_questions_executed = 0; f.report.total_candidate_questions_generated = 0; f.report.pass_count = 0;
+  Reflect.deleteProperty(f.report.saturation_record, "family_coverage");
+  assert.throws(f.admit, /SCHEMA_INVALID/);
+  f.report.saturation_record.family_coverage = Object.fromEntries(CHALLENGE_FAMILIES.map(family => [family, evidencedExemption()])) as typeof f.report.saturation_record.family_coverage;
+  assert.throws(f.admit, /COMPANY_COVERAGE_INSUFFICIENT/);
+});
+
+test("V1.1 rejects rationale without structured evidence or evidence dates", () => {
+  for (const missing of ["evidence_references", "evidence_date", "evidence_ledger_ref"]) {
+    const f = fixture(); const exemption = evidencedExemption();
+    assert.equal(exemption.disposition, "EVIDENCED_NO_MATERIAL_CHALLENGE");
+    if (exemption.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") throw new Error("fixture");
+    if (missing === "evidence_references") Reflect.deleteProperty(exemption, missing);
+    else Reflect.deleteProperty(exemption.evidence_references[0], missing);
+    f.report.saturation_record.family_coverage.WORLD_IN_MOTION = exemption;
+    assert.throws(f.admit, /SCHEMA_INVALID/);
+  }
+  const f = fixture();
+  f.report.saturation_record.family_coverage.WORLD_IN_MOTION = {
+    disposition: "EVIDENCED_NO_MATERIAL_CHALLENGE", rationale: "Arbitrary assertion", evidence_references: []
+  };
+  assert.throws(f.admit, /SCHEMA_INVALID/);
+});
+
+test("V1.1 family coverage rejects unknown, dropped, wrong-family and generic questions", () => {
+  for (const id of ["UNKNOWN", "DROPPED", "Q1"]) {
+    const f = fixture();
+    if (id === "DROPPED") {
+      f.ledger.dropped_candidates.push({ question_id: id, reason: "DROP_DUPLICATE", rationale: "Already covered" });
+      f.report.total_candidate_questions_generated++; f.report.dropped_duplicate_count++;
+    }
+    f.report.saturation_record.family_coverage.CROSS_BLOCK_CONSISTENCY = { disposition: "QUESTION_COVERED", question_ids: [id] };
+    assert.throws(f.admit, /FAMILY_COVERAGE_INVALID/);
+  }
+  const f = fixture(); f.ledger.questions[0].company_specific = false;
+  f.report.company_specific_questions = f.report.company_specific_questions.filter(id => id !== "Q0");
+  assert.throws(f.admit, /FAMILY_COVERAGE_INVALID/);
+});
+
+test("V1.1 requires an executed company-specific question even with all families exempted", () => {
+  const f = fixture(); f.ledger.questions.forEach(q => { q.company_specific = false; });
+  f.report.company_specific_questions = [];
+  CHALLENGE_FAMILIES.forEach(family => { f.report.saturation_record.family_coverage[family] = evidencedExemption(); });
+  assert.throws(f.admit, /COMPANY_COVERAGE_INSUFFICIENT/);
+});
+
+test("V1.1 rejects post-cutoff exemption evidence", () => {
+  const f = fixture(); const exemption = evidencedExemption();
+  if (exemption.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") throw new Error("fixture");
+  exemption.evidence_references[0].evidence_date = "2026-10-02";
+  f.report.saturation_record.family_coverage.WORLD_IN_MOTION = exemption;
+  assert.throws(f.admit, /POST_CUTOFF_EVIDENCE/);
+});
+
+test("V1.1 accepts question-backed coverage and evidenced exemption without a family question", () => {
+  assert.equal(fixture().admit().allowed, true);
+  const f = fixture(); f.ledger.questions = f.ledger.questions.filter(q => q.question_family !== "WORLD_IN_MOTION");
+  f.report.total_questions_executed--; f.report.total_candidate_questions_generated--; f.report.pass_count--;
+  f.report.company_specific_questions = f.ledger.questions.map(q => q.question_id);
+  f.report.saturation_record.family_coverage.WORLD_IN_MOTION = evidencedExemption();
+  assert.equal(f.admit().allowed, true);
+});
+
+test("V1.1 rejects missing, extra or ambiguous family dispositions", () => {
+  const missing = fixture(); Reflect.deleteProperty(missing.report.saturation_record.family_coverage, "WORLD_IN_MOTION");
+  assert.throws(missing.admit, /SCHEMA_INVALID/);
+  const extra = fixture(); Object.assign(extra.report.saturation_record.family_coverage, { UNKNOWN: evidencedExemption() });
+  assert.throws(extra.admit, /SCHEMA_INVALID/);
+  const ambiguous = fixture(); Object.assign(ambiguous.report.saturation_record.family_coverage.WORLD_IN_MOTION, evidencedExemption());
+  assert.throws(ambiguous.admit, /SCHEMA_INVALID/);
+});
+
+test("V1.1 PASS and PASS_WITH_CONCERNS reject either retained negative disposition", () => {
+  for (const status of ["PASS", "CONCERN"] as const) {
+    for (const field of ["reopen_required", "fail_reasons"] as const) {
+      const f = fixture(status); f.report[field] = ["Unresolved valuation defect"];
+      assert.throws(f.admit, /NEGATIVE_DISPOSITION_UNRESOLVED/);
+      f.report[field] = []; assert.equal(f.admit().allowed, true);
+    }
+  }
+});
+
+test("V1.1 cannot admit V1.0 artifacts under the successor authority identity", () => {
+  const f = fixture(); Object.assign(f.ledger, { schema_version: "1.0", challenge_version: "1.0" });
+  Object.assign(f.report, { schema_version: "1.0", challenge_version: "1.0" });
+  assert.throws(f.admit, /SCHEMA_INVALID/);
+});
+
+test("V1.1 retains exact historical V1.0 authority and explicitly scopes successor precedence", async () => {
+  const root = "contracts/orotitan-equity/method-v2/";
+  const historicalManifest = JSON.parse(readFileSync(`${root}OROTITAN_METHOD_V2_AUTHORITY_MANIFEST.json`, "utf8"));
+  assert.equal(authoritySetSha256(historicalManifest), METHOD_V2_V1_0_AUTHORITY_SET_SHA256);
+  assert.equal(sha256(readFileSync(`${root}OROTITAN_PRE_CERTIFICATION_CHALLENGE_FREEZE_V1.0.md`)), "6190078e532626d80eaf994e806d4461eece3a7daa3f62cbdd0e908b1f2a654a");
+  assert.equal(methodV2Manifest.predecessor_authority_set_sha256, METHOD_V2_V1_0_AUTHORITY_SET_SHA256);
+  assert.deepEqual(methodV2Manifest.members.slice(0, historicalManifest.members.length), historicalManifest.members);
+  assert.equal(methodV2Manifest.members.length, 18);
+  assert.deepEqual(methodV2Manifest.precedence.pre_certification_admission, ["pre_certification_coverage_evidence", "pre_certification_challenge", "v1_deep_dive_stage"]);
+  assert.deepEqual(methodV2Manifest.precedence.pre_certification_ledger_schema, ["challenge_ledger_schema_v1_1", "challenge_ledger_schema"]);
+  assert.deepEqual(methodV2Manifest.precedence.pre_certification_report_schema, ["challenge_report_schema_v1_1", "challenge_report_schema"]);
+  assert.equal(methodV2Manifest.members.find(m => m.id === "pre_certification_coverage_evidence")!.pin.content_sha256, PRE_CERTIFICATION_EFFECTIVE_SHA256);
+  await assert.rejects(verifyMethodV2Authority(historicalManifest, fetchLocal), /MANIFEST_MISMATCH/);
+  const f = fixture(); f.context.analyticalAuthoritySetSha256 = METHOD_V2_V1_0_AUTHORITY_SET_SHA256;
+  assert.throws(f.admit, /METHOD_AUTHORITY_MISMATCH/);
 });

@@ -1,9 +1,11 @@
 import { createHash } from "node:crypto";
-import manifest from "../../../contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_AUTHORITY_MANIFEST.json";
+import manifest from "../../../contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_AUTHORITY_MANIFEST_V1.1.json";
 import { resolveContractPin, type ContractPin, type GithubBlobFetcher } from "../v1/contract-pin-resolver";
 
 // Offline authority validation only. No DB client, runtime selector or activation.
-export const METHOD_V2_AUTHORITY_SET_SHA256 = "b3aa7f3357617ea40cfba391bcc4599acf9a1bd4b77615dd22cd5f9a617e50d2";
+export const METHOD_V2_V1_0_AUTHORITY_SET_SHA256 = "b3aa7f3357617ea40cfba391bcc4599acf9a1bd4b77615dd22cd5f9a617e50d2";
+export const PRE_CERTIFICATION_EFFECTIVE_SHA256 = "a00974d948360998c33c213c071b086f5e165b5e29641ea0b32f00c71a99e4a6";
+export const METHOD_V2_AUTHORITY_SET_SHA256 = "1e97ad30595d24d10345cfcb58c8b6c0feeb7272144af1fc12d0affd2d2e33b2";
 export const methodV2Manifest = manifest;
 export const sha256 = (bytes: Uint8Array | string): string => createHash("sha256").update(bytes).digest("hex");
 

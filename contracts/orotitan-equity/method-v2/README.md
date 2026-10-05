@@ -1,5 +1,32 @@
 # Method-V2 analytical authority closure
 
+## Current coverage evidence successor V1.1
+
+MISSION = METHOD-V2-COVERAGE-EVIDENCE-SUCCESSOR-001
+
+The current offline validator consumes
+`OROTITAN_METHOD_V2_AUTHORITY_MANIFEST_V1.1.json`: 18 members, retaining every
+V1.0 member and adding the scoped coverage evidence authority plus two V1.1
+schemas. `OROTITAN_PRE_CERTIFICATION_COVERAGE_EVIDENCE_SUCCESSOR_V1.1.md`
+supersedes only coverage evidence representation and negative-disposition
+reconciliation. The V1.0 manifest, authority and schemas remain byte-unchanged
+historical identities. The remainder of this README describes that V1.0 base.
+
+Every mandatory family now has exactly one structured disposition: executed,
+company-specific, same-family question IDs, or an evidenced no-material-challenge
+explanation with exact Evidence Ledger references and dates at or before cutoff.
+The trusted consuming resolver must resolve those references against the same
+authoritative Evidence Ledger. At least one executed company-specific question
+is required overall; exemptions cannot replace the entire Challenge. Passing
+reports must have empty `reopen_required` and `fail_reasons` arrays. Saturation,
+concern propagation, scoring, Certification formulas and terminal gates remain
+unchanged. Production remains inactive.
+
+The new effective Pre-Certification digest identifies the exact scoped successor
+document; the complete V1.1 set digest additionally binds the unchanged base,
+both schema generations and their explicit precedence. New members are pinned
+to exact bytes in their source commit before the manifest is committed.
+
 MISSION = METHOD-V2-AUTHORITY-CLOSURE-001
 BASELINE = vnext@bd6731767bf07d7c1acaf68dcb96880a7b17dccd
 STATUS = FROZEN

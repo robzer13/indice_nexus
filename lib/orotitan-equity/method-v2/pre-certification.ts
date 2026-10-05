@@ -1,7 +1,7 @@
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
-import ledgerSchema from "../../../contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_QUESTION_LEDGER_V1.0.schema.json";
-import reportSchema from "../../../contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_CHALLENGE_REPORT_V1.0.schema.json";
+import ledgerSchema from "../../../contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_QUESTION_LEDGER_V1.1.schema.json";
+import reportSchema from "../../../contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_CHALLENGE_REPORT_V1.1.schema.json";
 import { canonicalJson, METHOD_V2_AUTHORITY_SET_SHA256, sha256 } from "./authority";
 
 export const CHALLENGE_FAMILIES = ["CROSS_BLOCK_CONSISTENCY", "GREAT_INVESTOR_DECISION_THINKING", "WORLD_IN_MOTION", "OPERATIONAL_REALITY_SUPPLY_CHAIN", "TECHNOLOGY_AI", "SECOND_ORDER_EFFECTS", "COUNTERFACTUALS", "COMPANY_SPECIFIC_CHALLENGE"] as const;
@@ -17,14 +17,20 @@ type Common = {
   fundamentals_lock_ref: ArtifactRef; valuation_lock_ref: ArtifactRef; mode: "FULL" | "DELTA"; delta_provenance: Delta;
 };
 type Ledger = Common & { questions: Question[]; dropped_candidates: { question_id: string; reason: string; rationale: string }[] };
+export type FamilyCoverage =
+  | { disposition: "QUESTION_COVERED"; question_ids: string[] }
+  | { disposition: "EVIDENCED_NO_MATERIAL_CHALLENGE"; rationale: string;
+      evidence_references: { evidence_id: string; evidence_ledger_ref: ArtifactRef; evidence_date: string }[] };
 type Report = Common & {
   question_ledger_ref: ArtifactRef; total_questions_executed: number; total_candidate_questions_generated: number;
   pass_count: number; concern_count: number; reopen_count: number; fail_count: number;
   dropped_duplicate_count: number; dropped_already_resolved_count: number; dropped_non_material_count: number;
   material_concerns: string[]; company_specific_questions: string[];
+  reopen_required: string[]; fail_reasons: string[];
   challenge_status: string; ready_for_certification: "YES" | "NO";
   saturation_record: {
     mandatory_families_covered: boolean; coverage_rationale: Record<string, string>;
+    family_coverage: Record<typeof CHALLENGE_FAMILIES[number], FamilyCoverage>;
     company_specific_coverage: "PASS" | "INSUFFICIENT"; company_specific_rationale: string;
     all_material_concerns_dispositioned: boolean; material_questions_remaining: boolean; stop_reason: string;
     final_generation_passes: { pass_id: string; independence_rationale: string; new_material_questions: number; conclusion_scope_sha256: string }[];
@@ -87,8 +93,22 @@ export function admitMethodV2Certification(context: ChallengeContext, ledgerByte
   const status = count("FAIL") ? "FAIL" : count("REOPEN") ? "REOPEN" : count("CONCERN") ? "PASS_WITH_CONCERNS" : "PASS";
   ensure(report.challenge_status === status, "CHALLENGE_AGGREGATE_MISMATCH");
   ensure(status !== "FAIL" && status !== "REOPEN", `CHALLENGE_${status}`);
+  ensure(report.reopen_required.length === 0 && report.fail_reasons.length === 0, "CHALLENGE_NEGATIVE_DISPOSITION_UNRESOLVED");
   ensure(report.ready_for_certification === "YES", "CHALLENGE_NOT_READY");
   const saturation = report.saturation_record;
+  const questionsById = new Map(ledger.questions.map(q => [q.question_id, q]));
+  for (const family of CHALLENGE_FAMILIES) {
+    const coverage = saturation.family_coverage[family];
+    if (coverage.disposition === "QUESTION_COVERED") {
+      ensure(coverage.question_ids.every(id => {
+        const question = questionsById.get(id);
+        return !!question && question.question_family === family && question.company_specific;
+      }), "CHALLENGE_FAMILY_COVERAGE_INVALID");
+    } else {
+      ensure(coverage.evidence_references.every(e => e.evidence_date <= context.data_cutoff), "CHALLENGE_POST_CUTOFF_EVIDENCE");
+    }
+  }
+  ensure(ledger.questions.some(q => q.company_specific), "CHALLENGE_COMPANY_COVERAGE_INSUFFICIENT");
   ensure(saturation.mandatory_families_covered && CHALLENGE_FAMILIES.every(f => saturation.coverage_rationale[f]?.trim())
     && saturation.company_specific_coverage === "PASS" && !!saturation.company_specific_rationale.trim()
     && saturation.all_material_concerns_dispositioned && !saturation.material_questions_remaining
