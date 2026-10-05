@@ -21,8 +21,10 @@ registry9="$root/migrations/20260920203621_orotitan_registry_bundle_persistence_
 registry10="$root/migrations/20260920_orotitan_registry_v1_9_attestation_idempotency_fix.sql"
 registry11="$root/migrations/20260921_orotitan_registry_v1_10_methodology_successor_cas.sql"
 registry12="$root/migrations/20260921_orotitan_registry_v1_11_persistence_attestation_authority_repair.sql"
+valuation_date_alignment="$root/migrations/20260923_orotitan_registry_v1_12_valuation_date_alignment_successor.sql"
+valuation_date_verify="$root/tests/postgres/registry-v1-valuation-date-successor-verify.sql"
 registry13="$root/migrations/20261003_orotitan_pilotage_anti_loop_v1.sql"
-registry14="$root/migrations/20261005195139_orotitan_registry_v1_12_method_generation.sql"
+registry14="$root/migrations/20261005195139_orotitan_registry_v1_13_method_generation.sql"
 method_generation_before="$root/tests/postgres/registry-v1-method-generation-before.sql"
 method_generation_verify="$root/tests/postgres/registry-v1-method-generation-verify.sql"
 verify="$root/tests/postgres/registry-v1-verify.sql"
@@ -88,6 +90,12 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$attestation_authority_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$bundle_receipt_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_cas_verify"
 
+# Restore the exact deployed production predecessor at its historical frontier.
+test "$(git hash-object "$valuation_date_alignment")" = "350cf25c07df7eaa53ee6b8865daeb8b72a04432"
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_alignment" >/dev/null
+test "$(psql -XAt -d "$database" -c "select md5(pg_get_functiondef(oid)) from pg_proc where proname='create_orotitan_methodology_successor_run'")" = "0985bfebba7e3b2885cd457c5f662565"
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_verify"
+
 # Pilotage anti-loop is an additive post-registry operational control layer.
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry13" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$anti_loop_verify"
@@ -97,6 +105,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$anti_loop_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$method_generation_before" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry14" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$method_generation_verify"
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_verify"
 bash "$root/tests/postgres/registry-v1-method-generation-concurrency.sh" "$database"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$anti_loop_verify"
 
@@ -105,4 +114,4 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$anti_loop_verify"
 test "$legacy_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(c)::text, ',' order by c.id) from companies c)||(select string_agg(row_to_json(s)::text, ',' order by s.id) from snapshots s)||(select string_agg(row_to_json(p)::text, ',' order by p.id) from market_prices p)||(select string_agg(row_to_json(r)::text, ',' order by r.id) from market_sync_runs r))")"
 test "$identity_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(i)::text, ',' order by i.issuer_id) from issuers i)||(select string_agg(row_to_json(s)::text, ',' order by s.security_id) from securities s)||(select string_agg(row_to_json(d)::text, ',' order by d.dossier_id) from research_dossiers d)||(select string_agg(row_to_json(m)::text, ',' order by m.legacy_company_id) from legacy_company_identity_map m))")"
 
-echo 'Registry V1.6-V1.12 + Method-V2 generation + Pilotage anti-loop V1 PostgreSQL 17 regression: PASS ALL'
+echo 'Registry V1.6-V1.13 + Method-V2 generation + Pilotage anti-loop V1 PostgreSQL 17 regression: PASS ALL'

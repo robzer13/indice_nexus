@@ -2,6 +2,11 @@
 
 do $$
 begin
+  if (select replace(pg_get_functiondef(p.oid), E'\n    if v_existing.methodology_generation is distinct from ''METHOD_V1'' then\n      raise exception ''IDEMPOTENCY_CONFLICT: legacy route requires METHOD_V1'' using errcode = ''23514'';\n    end if;', '') is distinct from f.definition
+      from pg_proc p join public.method_generation_test_functions f using (oid)
+      where p.proname='create_orotitan_methodology_successor_run') then
+    raise exception 'legacy successor differs from production predecessor beyond replay guard';
+  end if;
   if not exists (select 1 from public.method_generation_test_history) then
     raise exception 'grandfathering requires historical runs';
   end if;

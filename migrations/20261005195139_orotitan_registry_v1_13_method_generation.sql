@@ -1,4 +1,4 @@
--- Registry V1.12: explicit analytical generation, orthogonal to execution pins.
+-- Registry V1.13: explicit analytical generation, orthogonal to execution pins.
 -- CODE ONLY. No deployment, activation, snapshot mutation or runtime grants.
 begin;
 
@@ -413,15 +413,16 @@ as $function$
 declare
   v_existing public.orotitan_runs%rowtype;
   v_parent public.orotitan_runs%rowtype;
+  v_parent_stage public.orotitan_run_stages%rowtype;
   v_current_snapshot_id uuid;
   v_run_id uuid := gen_random_uuid();
   v_event_id uuid;
+  v_is_blocked_repair boolean := false;
 begin
   if p_request_fingerprint_sha256 !~ '^[0-9a-f]{64}$' then
     raise exception 'invalid request fingerprint' using errcode = '22023';
   end if;
 
-  -- Preserve exact idempotent replay of a child already created by this route.
   select *
     into v_existing
   from public.orotitan_runs
@@ -457,24 +458,27 @@ begin
     );
   end if;
 
-  -- The methodology-successor route is frozen to the exact active DCF-timing
-  -- Contract Set. A merely self-consistent alternative pin pack is insufficient.
-  if p_contract_set_sha256 <> '257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c' then
+  if p_contract_set_sha256 <> '3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2'
+     or public.orotitan_contract_set_sha256(p_contract_pins) <> '3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2' then
     raise exception 'SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH'
       using errcode = '23514';
   end if;
-  if public.orotitan_contract_set_sha256(p_contract_pins) <> '257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c' then
-    raise exception 'SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH: pins do not reconcile to active set'
-      using errcode = '23514';
-  end if;
-  if (select count(*) from jsonb_object_keys(p_contract_pins)) <> 14
+
+  if (select count(*) from jsonb_object_keys(p_contract_pins)) <> 15
+     or p_contract_pins #>> '{process,name}' <> 'OROTITAN_EXECUTION_PROCESS_V3_1_FREEZE_V3.1'
+     or p_contract_pins #>> '{process,version}' <> '3.1'
+     or p_contract_pins #>> '{pilotage,name}' <> 'OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_1_FREEZE_V3.1'
+     or p_contract_pins #>> '{pilotage,version}' <> '3.1'
+     or p_contract_pins #>> '{deep_dive_stage,version}' <> '3.1'
+     or p_contract_pins #>> '{integration_stage,version}' <> '3.1'
      or p_contract_pins #>> '{dcf_timing,name}' <> 'OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0'
      or p_contract_pins #>> '{dcf_timing,version}' <> '1.0'
      or p_contract_pins #>> '{dcf_timing,content_sha256}' <> '9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee'
-     or p_contract_pins #>> '{process,version}' <> '3.0'
-     or p_contract_pins #>> '{pilotage,version}' <> '3.0'
-     or p_process_version <> '3.0'
-     or p_pilotage_contract_version <> '3.0' then
+     or p_contract_pins #>> '{valuation_date_alignment,name}' <> 'OROTITAN_VALUATION_DATE_ALIGNMENT_AUTHORITY_V1_FREEZE_V1.0'
+     or p_contract_pins #>> '{valuation_date_alignment,version}' <> '1.0'
+     or p_contract_pins #>> '{valuation_date_alignment,content_sha256}' <> '3c4e315a5b0759d13b99d77b8af5eb0298e81e46fe9ee3706ed08f3947b68ee5'
+     or p_process_version <> '3.1'
+     or p_pilotage_contract_version <> '3.1' then
     raise exception 'SUCCESSOR_ACTIVE_CONTRACT_SET_MISMATCH: active authority composition is not exact'
       using errcode = '23514';
   end if;
@@ -491,8 +495,8 @@ begin
     raise exception 'SUCCESSOR_BASELINE_MISMATCH: methodology replay must not inherit a baseline snapshot'
       using errcode = '23514';
   end if;
-  if p_expected_parent_run_status is distinct from 'ACTIVE' then
-    raise exception 'SUCCESSOR_PARENT_STATUS_MISMATCH: expected parent status must be ACTIVE'
+  if p_expected_parent_run_status not in ('ACTIVE','BLOCKED') then
+    raise exception 'SUCCESSOR_PARENT_STATUS_MISMATCH: expected status must be ACTIVE or exact governed BLOCKED repair'
       using errcode = '23514';
   end if;
   if p_expected_parent_current_stage is distinct from 'DEEP_DIVE' then
@@ -521,7 +525,7 @@ begin
   end if;
   if v_parent.published_at is not null
      or v_parent.cancelled_at is not null
-     or v_parent.run_status in ('PUBLISHED', 'CANCELLED', 'READY_TO_PUBLISH') then
+     or v_parent.run_status in ('PUBLISHED','CANCELLED','READY_TO_PUBLISH') then
     raise exception 'SUCCESSOR_PARENT_TERMINAL' using errcode = '23514';
   end if;
   if v_parent.data_cutoff <> p_data_cutoff then
@@ -543,8 +547,38 @@ begin
     raise exception 'SUCCESSOR_PARENT_ROUTING_MISMATCH' using errcode = '23514';
   end if;
 
-  -- Lock the dossier in the same transaction so a no-baseline methodology
-  -- replay cannot race canonical publication.
+  if v_parent.run_status = 'BLOCKED' then
+    if v_parent.contract_set_sha256 <> '257c287357c19a5d47a42f140a1eb0377d48701b04b07e1e9e740646797c172c' then
+      raise exception 'SUCCESSOR_BLOCKED_PARENT_NOT_REPAIRABLE: wrong historical Contract Set'
+        using errcode = '23514';
+    end if;
+
+    select *
+      into v_parent_stage
+    from public.orotitan_run_stages
+    where run_id = p_parent_run_id
+      and stage_code = 'DEEP_DIVE'
+    for update;
+
+    if not found
+       or v_parent_stage.lifecycle_status <> 'BLOCKED'
+       or v_parent_stage.contract_status_code <> 'VALUATION_BLOCKED_PINNED_TIMING_DENOMINATOR_DATE_CONFLICT'
+       or v_parent_stage.stage_contract_name <> 'OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V3_FREEZE_V3.0'
+       or v_parent_stage.stage_contract_version <> '3.0'
+       or v_parent_stage.stage_contract_sha256 <> 'f52932630702d4249d47da370604899c07d7aad9046fbd616945cdfccf2dbd16'
+       or v_parent_stage.handoff_gate_state <> 'NOT_EVALUATED'
+       or jsonb_typeof(v_parent_stage.blocker_summary) <> 'array'
+       or jsonb_array_length(v_parent_stage.blocker_summary) <> 1
+       or v_parent_stage.blocker_summary->0->>'code' <> 'V3_VALUATION_TIMING_DENOMINATOR_DATE_CONFLICT'
+       or v_parent_stage.blocker_summary->0->>'classification' <> 'PINNED_AUTHORITY_CONFLICT'
+       or v_parent_stage.blocker_summary->0->>'scope' <> 'VALUATION_DCF_AND_DEPENDENT_OUTPUTS' then
+      raise exception 'SUCCESSOR_BLOCKED_PARENT_NOT_REPAIRABLE: exact timing-conflict state not proven'
+        using errcode = '23514';
+    end if;
+
+    v_is_blocked_repair := true;
+  end if;
+
   select d.current_snapshot_id
     into v_current_snapshot_id
   from public.research_dossiers d
@@ -610,7 +644,9 @@ begin
       'run_type', 'INITIAL',
       'parent_run_id', p_parent_run_id,
       'creation_reason', 'METHODOLOGY_REPLAY_SUCCESSOR',
-      'parent_state_version_cas', p_expected_parent_state_version
+      'parent_state_version_cas', p_expected_parent_state_version,
+      'parent_status_cas', p_expected_parent_run_status,
+      'blocked_methodology_defect_repair', v_is_blocked_repair
     )
   );
 
@@ -619,7 +655,8 @@ begin
     'state_version', 1,
     'run_status', 'CREATED',
     'event_id', v_event_id,
-    'idempotent_replay', false
+    'idempotent_replay', false,
+    'blocked_methodology_defect_repair', v_is_blocked_repair
   );
 end;
 $function$;
