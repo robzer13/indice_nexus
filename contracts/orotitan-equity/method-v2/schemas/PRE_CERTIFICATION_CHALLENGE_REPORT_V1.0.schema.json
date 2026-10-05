@@ -1,0 +1,428 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "OROTITAN_PRE_CERTIFICATION_CHALLENGE_REPORT_V1.0",
+  "title": "OroTitan Pre-Certification Challenge Report V1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "company",
+    "run_id",
+    "data_cutoff",
+    "challenge_version",
+    "challenge_iteration",
+    "question_ledger_ref",
+    "total_candidate_questions_generated",
+    "total_questions_executed",
+    "dropped_duplicate_count",
+    "dropped_already_resolved_count",
+    "dropped_non_material_count",
+    "pass_count",
+    "concern_count",
+    "reopen_count",
+    "fail_count",
+    "material_concerns",
+    "blind_spots_identified",
+    "company_specific_questions",
+    "reopen_required",
+    "fail_reasons",
+    "affected_analytical_blocks",
+    "saturation_record",
+    "challenge_status",
+    "ready_for_certification",
+    "fundamentals_lock_ref",
+    "valuation_lock_ref",
+    "mode",
+    "delta_provenance"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "PRE_CERTIFICATION_CHALLENGE_REPORT"
+    },
+    "schema_version": {
+      "const": "1.0"
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "data_cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "challenge_version": {
+      "type": "string",
+      "minLength": 1,
+      "const": "1.0"
+    },
+    "challenge_iteration": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "question_ledger_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "content_sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "total_candidate_questions_generated": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "total_questions_executed": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dropped_duplicate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dropped_already_resolved_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dropped_non_material_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "concern_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reopen_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fail_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "material_concerns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blind_spots_identified": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "company_specific_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "reopen_required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fail_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_analytical_blocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "saturation_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mandatory_families_covered",
+        "company_specific_coverage",
+        "all_material_concerns_dispositioned",
+        "stop_reason",
+        "coverage_rationale",
+        "company_specific_rationale",
+        "final_generation_passes",
+        "material_questions_remaining"
+      ],
+      "properties": {
+        "mandatory_families_covered": {
+          "type": "boolean"
+        },
+        "company_specific_coverage": {
+          "enum": [
+            "PASS",
+            "INSUFFICIENT"
+          ]
+        },
+        "all_material_concerns_dispositioned": {
+          "type": "boolean"
+        },
+        "stop_reason": {
+          "enum": [
+            "NO_ADDITIONAL_MATERIAL_DECISION_USEFUL_QUESTION_IDENTIFIED",
+            "BLOCKED_REOPEN",
+            "BLOCKED_FAIL",
+            "PAUSED_MISSING_INPUT"
+          ]
+        },
+        "coverage_rationale": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "company_specific_rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "material_questions_remaining": {
+          "type": "boolean"
+        },
+        "final_generation_passes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "pass_id",
+              "independence_rationale",
+              "new_material_questions",
+              "conclusion_scope_sha256"
+            ],
+            "properties": {
+              "pass_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "independence_rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "new_material_questions": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "conclusion_scope_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "challenge_status": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_CONCERNS",
+        "REOPEN",
+        "FAIL"
+      ]
+    },
+    "ready_for_certification": {
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    },
+    "fundamentals_lock_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "content_sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "valuation_lock_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "content_sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "FULL",
+        "DELTA"
+      ]
+    },
+    "delta_provenance": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prior_passing_report_ref",
+            "prior_passing_ledger_ref",
+            "impact_map",
+            "inherited_coverage_revalidated"
+          ],
+          "properties": {
+            "prior_passing_report_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_id",
+                "version",
+                "content_sha256"
+              ],
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "prior_passing_ledger_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_id",
+                "version",
+                "content_sha256"
+              ],
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "impact_map": {
+              "type": "string",
+              "minLength": 1
+            },
+            "inherited_coverage_revalidated": {
+              "const": true
+            }
+          }
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "challenge_status": {
+            "enum": [
+              "REOPEN",
+              "FAIL"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ready_for_certification": {
+            "const": "NO"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "challenge_status": {
+            "enum": [
+              "PASS",
+              "PASS_WITH_CONCERNS"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ready_for_certification": {
+            "const": "YES"
+          }
+        }
+      }
+    }
+  ]
+}

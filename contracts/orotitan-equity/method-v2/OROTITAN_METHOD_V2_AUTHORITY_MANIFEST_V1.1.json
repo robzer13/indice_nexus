@@ -1,0 +1,538 @@
+{
+  "format": "OROTITAN_METHOD_V2_AUTHORITY_MANIFEST",
+  "version": "1.1",
+  "status": "FROZEN",
+  "production_active": false,
+  "repository": "robzer13/indice_nexus",
+  "baseline_commit": "bd6731767bf07d7c1acaf68dcb96880a7b17dccd",
+  "methodology_generation": "METHOD_V2",
+  "identity_domain": "ANALYTICAL_METHODOLOGY_ONLY",
+  "inheritance": "V1_BASE_PLUS_EXPLICIT_SCOPED_SUCCESSORS",
+  "members": [
+    {
+      "id": "challenge_ledger_schema",
+      "role": "CHALLENGE_SCHEMA",
+      "scope": "Normative artifact shape for pre_certification_challenge, not a separate analytical methodology.",
+      "pin": {
+        "name": "challenge_ledger_schema",
+        "version": "1.0",
+        "content_sha256": "1121e3abac511a80d81b586ee6ca254079bd7ece85d6d14e5602c49e6b562094",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_QUESTION_LEDGER_V1.0.schema.json",
+          "commit_sha": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+          "blob_sha": "6b71cf3d42b09dff7cfcb8ae8ac7240cc4b42ce4",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "1121e3abac511a80d81b586ee6ca254079bd7ece85d6d14e5602c49e6b562094",
+      "archive_parts": []
+    },
+    {
+      "id": "challenge_report_schema",
+      "role": "CHALLENGE_SCHEMA",
+      "scope": "Normative artifact shape for pre_certification_challenge, not a separate analytical methodology.",
+      "pin": {
+        "name": "challenge_report_schema",
+        "version": "1.0",
+        "content_sha256": "c1c9a75e86b9c01b4d96e37c9ef32cf6896d7eeb653220d9378968878e0b2020",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_CHALLENGE_REPORT_V1.0.schema.json",
+          "commit_sha": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+          "blob_sha": "d83ec3a957901b6a02d646c08b860aff0a8a8311",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "c1c9a75e86b9c01b4d96e37c9ef32cf6896d7eeb653220d9378968878e0b2020",
+      "archive_parts": []
+    },
+    {
+      "id": "dcf_timing",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Dated cash flows, time origin, discount exponents, stub and terminal timing only.",
+      "pin": {
+        "name": "dcf_timing",
+        "version": "1.0",
+        "content_sha256": "9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v3/OROTITAN_DCF_TIMING_AUTHORITY_V1_FREEZE_V1.0.md",
+          "commit_sha": "bd6731767bf07d7c1acaf68dcb96880a7b17dccd",
+          "blob_sha": "4316d8e574151882ae25f83c3f7b97f8bad48cd3",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "9bec7dcb3af85019806f255a0d504cd1770f50fe9343fb92d8f367cb13b5c4ee",
+      "archive_parts": []
+    },
+    {
+      "id": "economic_share_count",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Point-in-time economic share count definition, exactness, rigorous bounds, admission and propagation only. Date clauses subsequently governed by valuation_date_alignment.",
+      "pin": {
+        "name": "economic_share_count",
+        "version": "1.0",
+        "content_sha256": "538b70a975d00b8bfc9c3abf705d5efd425852516680d499db13d8c2ac17174f",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v3/01_ANALYSIS_STANDARD_V1_1_ECONOMIC_SHARE_COUNT_PATCH.md",
+          "commit_sha": "bd6731767bf07d7c1acaf68dcb96880a7b17dccd",
+          "blob_sha": "bfd034c6a650bb2bd0db1ad3cb3d4476aa9ca66e",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "538b70a975d00b8bfc9c3abf705d5efd425852516680d499db13d8c2ac17174f",
+      "archive_parts": []
+    },
+    {
+      "id": "economic_share_count_prompt",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Master Prompt authority for economic share count only.",
+      "pin": {
+        "name": "economic_share_count_prompt",
+        "version": "1.1",
+        "content_sha256": "2447ad836d9507eb82db884b1bdb1e0062d1512526d12afa4593339ce51dd0df",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v3/02_OROTITAN_MASTER_PROMPT_V1_1_ECONOMIC_SHARE_COUNT_PATCH.md",
+          "commit_sha": "bd6731767bf07d7c1acaf68dcb96880a7b17dccd",
+          "blob_sha": "b04ad374b79ed958a29dcb5b3d9943d394ece190",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "2447ad836d9507eb82db884b1bdb1e0062d1512526d12afa4593339ce51dd0df",
+      "archive_parts": []
+    },
+    {
+      "id": "pre_certification_challenge",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Mandatory independent Challenge after Valuation, before Certification; admission and concern propagation only, never scoring or Certification formula changes.",
+      "pin": {
+        "name": "pre_certification_challenge",
+        "version": "1.0",
+        "content_sha256": "6190078e532626d80eaf994e806d4461eece3a7daa3f62cbdd0e908b1f2a654a",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/OROTITAN_PRE_CERTIFICATION_CHALLENGE_FREEZE_V1.0.md",
+          "commit_sha": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+          "blob_sha": "1f535871fcbebd8dcf71187674f4736e9c1ae4ee",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "6190078e532626d80eaf994e806d4461eece3a7daa3f62cbdd0e908b1f2a654a",
+      "archive_parts": []
+    },
+    {
+      "id": "v1_analysis_standard",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "01_ANALYSIS_STANDARD_V1",
+        "version": "1.0",
+        "content_sha256": "9283a0df395d4596c93cf6cfad9644ce114b343ee80e6e0a81e8f94f15d1e3df",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.archive.json",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "4702be68ca6f08138add2b10773140572fdd1c71",
+          "locator_format": "OROTITAN_MULTIPART_GZIP_V1"
+        }
+      },
+      "file_sha256": "34561043c09b90912ad10cf29bae264088491e71ec66c718f040887755eb42d4",
+      "archive_parts": [
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-00",
+          "sha256": "f17b47898fa4c81497fa5a01b446bcbcfc05d2a6755fcc81323db4ec29fc4966",
+          "blob_sha": "06279af28d220f8882b20b86b8a7709e4bf62b0f"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-01",
+          "sha256": "43c5ab5a3d33272b96f1f37ca047e86f69bb248199f651cf6475a30805a63a7a",
+          "blob_sha": "0adaf98ea4f4c4da8423bcfb673a3d705e2537fe"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-02",
+          "sha256": "2452fb2b93d3f75945e99a990ff10a49a0c84080a5d290dd58df32c098567ee7",
+          "blob_sha": "56ad4d587e4e0897282bb5f4098682e297942525"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-03",
+          "sha256": "ee0fcdca6090555505f1afc0b3c473f28a0e17780eb12629205a3bfe426c1587",
+          "blob_sha": "f0f54f173499c798dbd9ae414efac9f51f97d59f"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-04",
+          "sha256": "a2b6b130338f9874132a082ba9702fd0f3f0b97be4a961531f9ffc54364d2868",
+          "blob_sha": "be4e256b0759fdb0014188b309469b175a9d2503"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/analysis_standard/01_ANALYSIS_STANDARD_V1.md.gz.b64.part-05",
+          "sha256": "a51950f6a9236d034e2ad65c719b174eb3d4c4be1c182dc82071f19b08931016",
+          "blob_sha": "40294938cee058a7ee3286598f75986296d2f041"
+        }
+      ]
+    },
+    {
+      "id": "v1_deep_dive_stage",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0",
+        "version": "1.0",
+        "content_sha256": "21586e572739e2564781ce2814758d3d557c151fee5866d8c75cb0394f9b82c5",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.archive.json",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "aabad6d1aff5f5e08fca091df0c257b1e3834e96",
+          "locator_format": "OROTITAN_MULTIPART_GZIP_V1"
+        }
+      },
+      "file_sha256": "1ac1761717af56a5a39990a3fb4089982668a2a9a4a27d80ef436fe5b026fc56",
+      "archive_parts": [
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-00",
+          "sha256": "55d40e7e16df4889d06bb7b02179b9ced41bd54da2a0c74053e0a47146e216be",
+          "blob_sha": "e057ee85447e2fdf6fa09bae03994f9fd63aa8b2"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-01",
+          "sha256": "5af99fb53d709ba3b9eae818fecb8cb8da8068c89339821aaa7fb2364c4a0ab8",
+          "blob_sha": "c52da8f9616aeb2af74fda529e1fdfc9a2985baa"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/deep_dive_stage/OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz.b64.part-02",
+          "sha256": "2ef19a5a8aa80adc9b1c7a2b2c476ca04697b8aec6c4ed4835700a98a337ab8b",
+          "blob_sha": "a81b28137e6abd4f67ae47f2d8ed145d9f30750b"
+        }
+      ]
+    },
+    {
+      "id": "v1_execution_patch",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1",
+        "version": "1.0.1",
+        "content_sha256": "6e45f39c03e79c34911850c84904b36f3d95266288a5528127a59d0b8d675973",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/OROTITAN_EXECUTION_CONTRACT_PATCH_V1.0.1.md",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "449bb43b664eae9d8c9fd98440e5511c6fbf4be3",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "6e45f39c03e79c34911850c84904b36f3d95266288a5528127a59d0b8d675973",
+      "archive_parts": []
+    },
+    {
+      "id": "v1_i2",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "I2_CANONICAL_COMPUTATION",
+        "version": "1.0",
+        "content_sha256": "fa5f6c10851182660c8b11526266620556cc01d5e8b42c769819cbbcf3d3ed35",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "docs/orotitan-equity/I2_CANONICAL_COMPUTATION.md",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "93633adec3409144fcb03d5ec7b17ecfe22ff736",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "fa5f6c10851182660c8b11526266620556cc01d5e8b42c769819cbbcf3d3ed35",
+      "archive_parts": []
+    },
+    {
+      "id": "v1_investment_policy",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "OROTITAN_INVESTMENT_POLICY_V1.0.0",
+        "version": "1.0.0",
+        "content_sha256": "66cc29ccaccf4ccf65f58c2959bf95bcf676e67567aa1dd57863b2cb9a2936c8",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/OROTITAN_INVESTMENT_POLICY_V1.0.0.md",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "fd0121bbb14e35370ddd700d9e9845eaf1ec9f75",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "66cc29ccaccf4ccf65f58c2959bf95bcf676e67567aa1dd57863b2cb9a2936c8",
+      "archive_parts": []
+    },
+    {
+      "id": "v1_master_prompt",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "02_OROTITAN_MASTER_PROMPT_V1_PATCHED",
+        "version": "1.0",
+        "content_sha256": "d3b44f0645f766d504a0b937736520048a054e533df59366c90554e5345a0dab",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.archive.json",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "d63b60bc0c2974b2fcdb8fd4751a5b84d1f3c01a",
+          "locator_format": "OROTITAN_MULTIPART_GZIP_V1"
+        }
+      },
+      "file_sha256": "fe83449602a4db1e4c90925507065760d962ceea060f695079bb9e9d0f6ef015",
+      "archive_parts": [
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-00",
+          "sha256": "fe763399ce169dd8a071d0be2e2ea1d417d7fdd4b11e4d70ed4ca1e0b012adb8",
+          "blob_sha": "3990bbc3a97cad3c036371686f762f7cd37e4842"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-01",
+          "sha256": "3d754b6fdbaca968b1cd6eba66167dbfac451f6edc715457eacd245c05e1b898",
+          "blob_sha": "472dbe24420836e14f16db6cd2db8d114566727b"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-02",
+          "sha256": "a81282c4e2e4f397efed9db5906eb1d64b9ec98bbc029543d2b890e2cc166c0b",
+          "blob_sha": "e4cc1d648577e496f50f5409331ce20d9b90cb6b"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-03",
+          "sha256": "51d706779e2d9c0d1dc69d7ef46e83133cbb4844e9ad88d53cc356bc31642de5",
+          "blob_sha": "df48eda99c84729cfba80e7006440a7a62f6d582"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-04",
+          "sha256": "12006bc6d3133c3a2fa5e9ea73b509210c29f98ce78e77b12a58dea79576a49a",
+          "blob_sha": "1a7087ec2b2704f70a5666ae7fa92eda605fb066"
+        },
+        {
+          "path": "contracts/orotitan-equity/v1/contract-pin-pack-v1/archives/master_prompt/02_OROTITAN_MASTER_PROMPT_V1_PATCHED.md.gz.b64.part-05",
+          "sha256": "aaa1295620d4c2c2d66a75514df7dc145efef4eb353a75f97a5a32440eb3619a",
+          "blob_sha": "8bb7f2847914961b0c2ed3572864debdb8a702e0"
+        }
+      ]
+    },
+    {
+      "id": "v1_research_stage",
+      "role": "INHERITED_BASE",
+      "scope": "All original clauses except explicit scoped successors; scoring/Certification/terminal gate remain inherited.",
+      "pin": {
+        "name": "OROTITAN_RESEARCH_STAGE_CONTRACT_V1_FREEZE_V1.0",
+        "version": "1.0",
+        "content_sha256": "b9a5930c91d90e498e41c1640f912fb5e38fd0ad607899a5e2ca0a616f3d47a2",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/execution-freeze/OROTITAN_RESEARCH_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "3bf94124835fe17b31e7b11410274ed585f92aa5",
+          "locator_format": "OROTITAN_GZIP_V1"
+        }
+      },
+      "file_sha256": "f872e5baa14a644856a072bbde6c81e2b9edfd97cef8151e57ba08b7f4e8e8b6",
+      "archive_parts": []
+    },
+    {
+      "id": "valuation_date_alignment",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Supersedes economic share count Section 3 conflicting date clauses and downstream date requirements only; same-date market cap distinct from valuation-date per-share denominator.",
+      "pin": {
+        "name": "valuation_date_alignment",
+        "version": "1.0",
+        "content_sha256": "3c4e315a5b0759d13b99d77b8af5eb0298e81e46fe9ee3706ed08f3947b68ee5",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v3/OROTITAN_VALUATION_DATE_ALIGNMENT_AUTHORITY_V1_FREEZE_V1.0.md",
+          "commit_sha": "7422937e76449bfe32be8fb16433a458194406d2",
+          "blob_sha": "14fe1dcfe413475690e945a78131753dda9df419",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "3c4e315a5b0759d13b99d77b8af5eb0298e81e46fe9ee3706ed08f3947b68ee5",
+      "archive_parts": []
+    },
+    {
+      "id": "valuation_date_alignment_prompt",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Master Prompt date-alignment authority order only.",
+      "pin": {
+        "name": "valuation_date_alignment_prompt",
+        "version": "1.2",
+        "content_sha256": "b6962e07ffc36b33ac08984aab0edf3abac58deb4f597d37c495a461e5dabc5a",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v3/02_OROTITAN_MASTER_PROMPT_V1_2_VALUATION_DATE_ALIGNMENT_PATCH.md",
+          "commit_sha": "6b229fdbe018ba67e65ad0abbfee0ca3065aa0d1",
+          "blob_sha": "48c5ba2ff86bb958126dd61d5ac3a0eb63a5d7e8",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "b6962e07ffc36b33ac08984aab0edf3abac58deb4f597d37c495a461e5dabc5a",
+      "archive_parts": []
+    },
+    {
+      "id": "pre_certification_coverage_evidence",
+      "role": "EXPLICIT_SUCCESSOR",
+      "scope": "Supersedes only base Challenge coverage evidence representation and negative-disposition reconciliation; all other V1.0 clauses remain controlling.",
+      "pin": {
+        "name": "pre_certification_coverage_evidence",
+        "version": "1.1",
+        "content_sha256": "a00974d948360998c33c213c071b086f5e165b5e29641ea0b32f00c71a99e4a6",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/OROTITAN_PRE_CERTIFICATION_COVERAGE_EVIDENCE_SUCCESSOR_V1.1.md",
+          "commit_sha": "8fadecaa59c8cbb2fa559746d2b2902d3bd99282",
+          "blob_sha": "1b69d028ee2a7eff4b43b1ef2f68a07d22eba5b9",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "a00974d948360998c33c213c071b086f5e165b5e29641ea0b32f00c71a99e4a6",
+      "archive_parts": []
+    },
+    {
+      "id": "challenge_ledger_schema_v1_1",
+      "role": "CHALLENGE_SCHEMA",
+      "scope": "Supersedes V1.0 ledger version identity for the coverage evidence successor; executed-question semantics unchanged.",
+      "pin": {
+        "name": "challenge_ledger_schema_v1_1",
+        "version": "1.1",
+        "content_sha256": "b28c1f4b6618b4abab3a7c1edfef44c24984057490196aa13347e8065cf549ea",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_QUESTION_LEDGER_V1.1.schema.json",
+          "commit_sha": "8fadecaa59c8cbb2fa559746d2b2902d3bd99282",
+          "blob_sha": "f93c1c410b74bce4a79fe002f405019be4979979",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "b28c1f4b6618b4abab3a7c1edfef44c24984057490196aa13347e8065cf549ea",
+      "archive_parts": []
+    },
+    {
+      "id": "challenge_report_schema_v1_1",
+      "role": "CHALLENGE_SCHEMA",
+      "scope": "Supersedes V1.0 report shape with structured mandatory-family coverage dispositions.",
+      "pin": {
+        "name": "challenge_report_schema_v1_1",
+        "version": "1.1",
+        "content_sha256": "d5944d3ca67a590d98e051a0695cd108a97feb5c065e9ce8fb7f3b3bcf742023",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/method-v2/schemas/PRE_CERTIFICATION_CHALLENGE_REPORT_V1.1.schema.json",
+          "commit_sha": "8fadecaa59c8cbb2fa559746d2b2902d3bd99282",
+          "blob_sha": "68bbe212bc0ce6323cde7ea702a7dbcbc3dec4d6",
+          "locator_format": "RAW_CANONICAL_V1"
+        }
+      },
+      "file_sha256": "d5944d3ca67a590d98e051a0695cd108a97feb5c065e9ce8fb7f3b3bcf742023",
+      "archive_parts": []
+    }
+  ],
+  "precedence": {
+    "default": "v1_analysis_standard",
+    "economic_share_count": [
+      "economic_share_count",
+      "v1_analysis_standard",
+      "v1_master_prompt"
+    ],
+    "dcf_timing": [
+      "dcf_timing",
+      "v1_analysis_standard"
+    ],
+    "valuation_date_alignment": [
+      "valuation_date_alignment",
+      "dcf_timing",
+      "economic_share_count",
+      "v1_analysis_standard"
+    ],
+    "pre_certification_admission": [
+      "pre_certification_coverage_evidence",
+      "pre_certification_challenge",
+      "v1_deep_dive_stage"
+    ],
+    "master_prompt": [
+      "valuation_date_alignment_prompt",
+      "economic_share_count_prompt",
+      "v1_master_prompt"
+    ],
+    "scoring": [
+      "v1_analysis_standard",
+      "v1_execution_patch",
+      "v1_i2"
+    ],
+    "certification": [
+      "v1_analysis_standard",
+      "v1_deep_dive_stage"
+    ],
+    "investment_policy": [
+      "v1_investment_policy"
+    ],
+    "pre_certification_ledger_schema": [
+      "challenge_ledger_schema_v1_1",
+      "challenge_ledger_schema"
+    ],
+    "pre_certification_report_schema": [
+      "challenge_report_schema_v1_1",
+      "challenge_report_schema"
+    ]
+  },
+  "unchanged": [
+    "Research methodology",
+    "Certification semantics except Challenge admission and limitation propagation",
+    "OQS",
+    "OVS",
+    "Investment Score",
+    "score weights",
+    "caps",
+    "Elite thresholds",
+    "V1 Weak Link terminal treatment",
+    "terminal OroTitan conjunction",
+    "Investment Policy",
+    "All other V1 analytical rules outside explicit supersession scopes"
+  ],
+  "excluded": [
+    "Historical Execution Process V2 naming",
+    "Runtime V2/V3",
+    "Historical Contract Pin Pack V2/V3",
+    "Process Engine V2",
+    "Analytical Data Contracts V2",
+    "Gate 15 P0",
+    "Gate 16 Adaptive Analytical Depth",
+    "ChatGPT/Supabase controlled-operation contracts",
+    "Registry migrations",
+    "anti-loop engineering",
+    "schema_version 2.0.0",
+    "generic V2/V3 strings",
+    "docs/orotitan-equity/OROTITAN_DETERMINISTIC_SCORING_ENGINE_VNEXT_DRAFT_V0.1.md"
+  ],
+  "generation_rule": {
+    "historical_before_activation": "METHOD_V1; immutable authority remains unchanged",
+    "new_method_v1": "Explicit METHOD_V1 under separately applicable frozen compatibility authority",
+    "new_method_v2": "Explicit METHOD_V2 plus exact approved manifest and independently verified complete member bytes; no inference from versions",
+    "historical_method_v2_claim": "REJECT; use separately authorized controlled successor",
+    "unknown_generation": "REJECT"
+  },
+  "hash_rule": "SHA-256 of UTF-8 canonical JSON of the whole manifest excluding authority_set_sha256; object keys sorted by Unicode code point, arrays in stored order, no whitespace or trailing newline; integer numbers only. Member content hashes cover canonical decompressed bytes; file_sha256 covers exact stored locator bytes and archive_parts covers all packaging bytes.",
+  "predecessor_authority_set_sha256": "b3aa7f3357617ea40cfba391bcc4599acf9a1bd4b77615dd22cd5f9a617e50d2",
+  "authority_set_sha256": "1e97ad30595d24d10345cfcb58c8b6c0feeb7272144af1fc12d0affd2d2e33b2"
+}
