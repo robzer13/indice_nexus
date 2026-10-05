@@ -3,7 +3,7 @@ create table public.method_generation_test_history as
 select run_id, ctid::text as physical_row, to_jsonb(r) as original_row
 from public.orotitan_runs r;
 create table public.method_generation_test_functions as
-select oid, proacl from pg_proc where pronamespace = 'public'::regnamespace;
+select oid, proacl, pg_get_functiondef(oid) as definition from pg_proc where pronamespace = 'public'::regnamespace and prokind = 'f';
 create table public.method_generation_test_security as
 select oid, relacl, relrowsecurity, relforcerowsecurity from pg_class
 where relnamespace = 'public'::regnamespace

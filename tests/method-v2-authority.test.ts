@@ -127,8 +127,9 @@ test("M20 historical runs never silently rebound, including explicit V2 attempts
 test("M21 snapshot writers and all existing migrations remain byte-unchanged", () => {
   const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
   const paths = ["migrations", "lib/orotitan-equity/v1", "lib/orotitan-equity/v2", "lib/orotitan-equity/v3"].flatMap(files)
-    // V2-11A adds this one authorized forward migration; historical bytes stay frozen.
-    .filter(p => p !== "migrations/20261005195139_orotitan_registry_v1_12_method_generation.sql").sort();
+    // Authorized forward migration and independently byte-verified restored production predecessor.
+    .filter(p => p !== "migrations/20261005195139_orotitan_registry_v1_13_method_generation.sql"
+      && p !== "migrations/20260923_orotitan_registry_v1_12_valuation_date_alignment_successor.sql").sort();
   // Independently computed from all 49 exact source blobs at bd673176...;
   // usable in CI's shallow checkout without fetching historical Git objects.
   assert.equal(sha256(paths.map(p => `${p}|${sha256(readFileSync(p))}`).join("\n") + "\n"), "d634f76852bed441caffb95c8377399b1485e0619acd62e792268b1846e731a4");
