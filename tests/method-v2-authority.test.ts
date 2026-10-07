@@ -128,7 +128,8 @@ test("M21 snapshot writers and all existing migrations remain byte-unchanged", (
   const files = (dir: string): string[] => readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? files(`${dir}/${e.name}`) : [`${dir}/${e.name}`]);
   const paths = ["migrations", "lib/orotitan-equity/v1", "lib/orotitan-equity/v2", "lib/orotitan-equity/v3"].flatMap(files)
     // Authorized forward migration and independently byte-verified restored production predecessor.
-    .filter(p => p !== "migrations/20261005195139_orotitan_registry_v1_13_method_generation.sql"
+    .filter(p => p !== "migrations/20261007212324_orotitan_registry_v1_14_method_v2_runtime_firewall.sql"
+      && p !== "migrations/20261005195139_orotitan_registry_v1_13_method_generation.sql"
       && p !== "migrations/20260923_orotitan_registry_v1_12_valuation_date_alignment_successor.sql").sort();
   // Independently computed from all 49 exact source blobs at bd673176...;
   // usable in CI's shallow checkout without fetching historical Git objects.
