@@ -102,6 +102,43 @@ test("E12 duplicate EVIDENCE_ID is rejected", () => {
   assert.throws(() => parseMethodV2EvidenceLedger(bytes([{ EVIDENCE_ID: "EV-1" }, { EVIDENCE_ID: "EV-1" }])), /DUPLICATE_EVIDENCE_ID/);
 });
 
+test("duplicate EVIDENCE_ID members in one entry reject before JSON.parse collapses them", () => {
+  const duplicate = '{"format":"OROTITAN_METHOD_V2_EVIDENCE_LEDGER","version":"1.0","entries":[{"EVIDENCE_ID":"EV-1","EVIDENCE_ID":"EV-2"}]}';
+  assert.throws(() => parseMethodV2EvidenceLedger(Buffer.from(duplicate)), /DUPLICATE_EVIDENCE_ID_MEMBER/);
+  const spaced = `{
+    "format": "OROTITAN_METHOD_V2_EVIDENCE_LEDGER",
+    "version": "1.0",
+    "entries": [{
+      "EVIDENCE_ID": "EV-1",
+      "EVIDENCE_ID": "EV-2"
+    }]
+  }`;
+  assert.throws(() => parseMethodV2EvidenceLedger(Buffer.from(spaced)), /DUPLICATE_EVIDENCE_ID_MEMBER/);
+});
+
+test("EVIDENCE_ID text in values and escaped strings does not create a duplicate-member false positive", () => {
+  const ledger = '{"format":"OROTITAN_METHOD_V2_EVIDENCE_LEDGER","version":"1.0","entries":[{' +
+    '"EVIDENCE_ID":"EV-1","NOTE":"quoted: \\\"EVIDENCE_ID\\\" and escaped slash \\\\/"}]}';
+  assert.equal(parseMethodV2EvidenceLedger(Buffer.from(ledger)).entries[0].EVIDENCE_ID, "EV-1");
+});
+
+test("nested EVIDENCE_ID plus one direct identity remains valid", () => {
+  const ledger = bytes([{ EVIDENCE_ID: "EV-1", nested: { EVIDENCE_ID: "NESTED-NON-IDENTITY" } }]);
+  assert.equal(assertMethodV2EvidenceIdExists(ledger, "EV-1").EVIDENCE_ID, "EV-1");
+  assert.equal(findMethodV2EvidenceEntry(ledger, "NESTED-NON-IDENTITY"), undefined);
+});
+
+test("escaped member names are decoded structurally and cannot bypass duplicate detection", () => {
+  const duplicate = '{"format":"OROTITAN_METHOD_V2_EVIDENCE_LEDGER","version":"1.0","entries":[{' +
+    '"EVIDENCE_ID":"EV-1","EVIDENCE_\\u0049D":"EV-2"}]}';
+  assert.throws(() => parseMethodV2EvidenceLedger(Buffer.from(duplicate)), /DUPLICATE_EVIDENCE_ID_MEMBER/);
+});
+
+test("two separate entries with distinct EVIDENCE_ID values pass", () => {
+  const ledger = parseMethodV2EvidenceLedger(bytes([{ EVIDENCE_ID: "EV-1" }, { EVIDENCE_ID: "EV-2" }]));
+  assert.deepEqual(ledger.entries.map(entry => entry.EVIDENCE_ID), ["EV-1", "EV-2"]);
+});
+
 test("E13 exact direct EVIDENCE_ID lookup succeeds", () => {
   assert.equal(assertMethodV2EvidenceIdExists(bytes([{ EVIDENCE_ID: "EV-1" }]), "EV-1").EVIDENCE_ID, "EV-1");
 });
