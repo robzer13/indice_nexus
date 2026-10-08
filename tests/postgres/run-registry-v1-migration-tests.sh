@@ -112,6 +112,7 @@ bash "$root/tests/postgres/registry-v1-method-generation-concurrency.sh" "$datab
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$anti_loop_verify"
 
 # Fresh Method-V2 runtime firewall follows the complete historical V1.13 suite.
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/tests/postgres/registry-v1-method-v2-runtime-before.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$runtime_firewall" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$runtime_firewall_verify"
 bash "$root/tests/postgres/registry-v1-method-v2-runtime-concurrency.sh" "$database"

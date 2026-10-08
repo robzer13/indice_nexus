@@ -70,6 +70,7 @@ alter table public.orotitan_runs add column runtime_binding_sha256 text,
 create unique index orotitan_one_nonterminal_fresh_method_v2_dossier_idx
 on public.orotitan_runs(dossier_id)
 where methodology_generation = 'METHOD_V2' and parent_run_id is null
+  and runtime_binding_sha256 = '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
   and run_status in ('CREATED','ACTIVE','PAUSED','BLOCKED','READY_TO_PUBLISH');
 
 create function public.enforce_orotitan_method_v2_runtime_identity()
@@ -178,6 +179,7 @@ begin
   end if;
   if exists (select 1 from public.orotitan_runs where dossier_id=p_dossier_id
     and methodology_generation='METHOD_V2' and parent_run_id is null
+    and runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
     and run_status in ('CREATED','ACTIVE','PAUSED','BLOCKED','READY_TO_PUBLISH')) then
     raise exception 'METHOD_V2_FRESH_RUN_ALREADY_EXISTS' using errcode='23514';
   end if;
@@ -298,7 +300,8 @@ create function public.enforce_orotitan_method_v2_stage_firewall()
 returns trigger language plpgsql security definer set search_path = pg_catalog, public as $$
 declare d public.orotitan_run_stages%rowtype;
 begin
-  if not exists(select 1 from public.orotitan_runs where run_id=new.run_id and methodology_generation='METHOD_V2') then
+  if not exists(select 1 from public.orotitan_runs where run_id=new.run_id and methodology_generation='METHOD_V2'
+    and runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c') then
     return new;
   end if;
   if new.stage_code='DEEP_DIVE' and (new.lifecycle_status='COMPLETE' or new.handoff_gate_state='YES') then

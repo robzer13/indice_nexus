@@ -27,6 +27,69 @@ $$;
 create function pg_temp.reject_request_v14(q jsonb, expected text) returns void language plpgsql as $$
 begin perform pg_temp.reject_v14(format('select pg_temp.call_v14(%L::jsonb)',q::text),expected); end $$;
 
+-- B36/B44: exact persisted V1.13 rows survive installation without a rewrite.
+do $$
+declare r public.orotitan_runs%rowtype; manifest uuid; result jsonb;
+  hash text:=encode(extensions.digest(convert_to('{}','UTF8'),'sha256'),'hex');
+begin
+  perform pg_temp.assert_v14(not exists (
+    select 1 from public.runtime_firewall_test_history h left join public.orotitan_runs historical_run using(run_id)
+    where historical_run.run_id is null or historical_run.runtime_binding_sha256 is not null or historical_run.runtime_commit_sha is not null
+      or historical_run.ctid::text <> h.physical_row
+      or (to_jsonb(historical_run)-'runtime_binding_sha256'-'runtime_commit_sha') <> h.original_row
+  ),'B36 B44 every historical run unchanged; no runtime backfill');
+  perform pg_temp.assert_v14((select count(*)=2 from public.orotitan_runs
+    where creation_idempotency_key in ('v14:grandfather:1','v14:grandfather:2')
+      and methodology_generation='METHOD_V2' and runtime_binding_sha256 is null
+      and parent_run_id is null and dossier_id is not null),'actual V1.13 fresh creation fixtures');
+  for r in select * from public.orotitan_runs
+    where creation_idempotency_key in ('v14:grandfather:1','v14:grandfather:2','method-generation:parent') loop
+    perform pg_temp.assert_v14(not exists(select 1 from public.orotitan_artifacts where run_id=r.run_id)
+      and not exists(select 1 from public.orotitan_method_v2_challenge_proofs where run_id=r.run_id),
+      'historical fixture has no Challenge artifacts/proof');
+    -- Integration UPDATE is intercepted even without a lifecycle change for bound runs.
+    update public.orotitan_run_stages set state_version=state_version+1
+      where run_id=r.run_id and stage_code='INTEGRATION';
+    perform pg_temp.assert_v14((select state_version=2 from public.orotitan_run_stages
+      where run_id=r.run_id and stage_code='INTEGRATION'),'historical V2/V1 Integration mutation allowed');
+    insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,
+      stage_contract_sha256,handoff_gate_name,lifecycle_status,started_at)
+    values(r.run_id,'DEEP_DIVE',r.contract_pins #>> '{deep_dive_stage,name}',
+      r.contract_pins #>> '{deep_dive_stage,version}',r.contract_pins #>> '{deep_dive_stage,content_sha256}',
+      'READY_FOR_INTEGRATION','IN_PROGRESS',now());
+    manifest:=gen_random_uuid();
+    insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,
+      authority_class,authority_state,media_type,size_bytes,content_sha256,storage_backend,storage_uri,
+      supabase_bucket,supabase_object_path)
+    values(manifest,1,r.run_id,'DEEP_DIVE','DEEP_DIVE_STAGE_MANIFEST','historical manifest',
+      'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE','application/json',2,hash,'SUPABASE_STORAGE',
+      'supabase://orotitan-text-artifacts-v1/'||manifest,'orotitan-text-artifacts-v1',manifest::text);
+    update public.orotitan_run_stages set lifecycle_status='COMPLETE',active_manifest_kind='FINAL',
+      active_manifest_artifact_id=manifest,active_manifest_version=1,completed_at=now(),handoff_gate_state='YES'
+      where run_id=r.run_id and stage_code='DEEP_DIVE';
+    perform pg_temp.assert_v14((select lifecycle_status='COMPLETE' and handoff_gate_state='YES'
+      from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE'),
+      'historical V2/V1 FINAL mutation needs no V1.14 Challenge proof/edges');
+  end loop;
+  -- The adjacent index must not constrain two legitimate unbound historical fresh runs.
+  update public.orotitan_runs set run_status='ACTIVE',state_version=state_version+1
+    where creation_idempotency_key in ('v14:grandfather:1','v14:grandfather:2');
+  select * into strict r from public.orotitan_runs where creation_idempotency_key='v14:grandfather:1';
+  update public.orotitan_method_v2_runtime_control set admission_mode='ACTIVE_FOR_NEW_RUNS',admission_scope='INITIAL_AND_REFRESH',runtime_commit_sha=repeat('a',40);
+  result:=public.create_orotitan_method_v2_runtime_run('v14:alongside-grandfather',r.issuer_id,r.security_id,r.dossier_id,
+    (select current_snapshot_id from public.research_dossiers where dossier_id=r.dossier_id),
+    greatest(r.data_cutoff,(select s.data_cutoff+1 from public.research_snapshots s join public.research_dossiers d on d.current_snapshot_id=s.snapshot_id where d.dossier_id=r.dossier_id)),repeat('f',64),'0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c');
+  perform pg_temp.assert_v14((select runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
+    from public.orotitan_runs where run_id=(result->>'run_id')::uuid),'runtime admission excludes unbound historical cohort');
+  -- A new bound run has no Integration row yet: INSERT still enforces the runtime firewall.
+  perform pg_temp.reject_v14(format('insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,handoff_gate_name) values(%L,''INTEGRATION'',''test'',''test'',%L,''READY_TO_PUBLISH'')',
+    (result->>'run_id')::uuid,hash),'INTEGRATION_NOT_ADMITTED');
+  perform pg_temp.assert_v14(not exists(select 1 from public.runtime_firewall_test_history h
+    join public.orotitan_runs historical_run using(run_id) where historical_run.runtime_binding_sha256 is not null),'historical binding remains NULL after mutations');
+  update public.orotitan_method_v2_runtime_control set admission_mode='INSTALLED_INACTIVE',admission_scope='INITIAL_ONLY',runtime_commit_sha=null;
+end $$;
+select 'B36 B44 V1.13-created NULL-binding V2 and V1 grandfathering / no backfill / adjacent index: PASS' as result;
+
 do $$
 declare
   c public.orotitan_method_v2_runtime_control%rowtype;
