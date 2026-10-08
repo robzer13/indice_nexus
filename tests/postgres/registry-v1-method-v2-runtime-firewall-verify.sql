@@ -80,6 +80,28 @@ begin
         and handoff_gate_state='NOT_EVALUATED' and active_manifest_artifact_id is null
         and active_manifest_version is null and active_manifest_kind is null and completed_at is null),
       'real METHOD_V1 / grandfathered METHOD_V2 reopen retains inherited downstream invalidation');
+    insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,
+      handoff_gate_name,lifecycle_status,started_at)
+    values(r.run_id,'RESEARCH',r.contract_pins #>> '{research_stage,name}',r.contract_pins #>> '{research_stage,version}',
+      r.contract_pins #>> '{research_stage,content_sha256}','READY_FOR_DEEP_DIVE','IN_PROGRESS',now());
+    manifest:=gen_random_uuid();
+    insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
+      media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
+    values(manifest,1,r.run_id,'RESEARCH','RESEARCH_STAGE_MANIFEST','historical Research','AUTHORITATIVE_STAGE_OUTPUT',
+      'AUTHORITATIVE','application/json',2,hash,'SUPABASE_STORAGE','supabase://orotitan-text-artifacts-v1/'||manifest,
+      'orotitan-text-artifacts-v1',manifest::text);
+    update public.orotitan_run_stages set lifecycle_status='COMPLETE',handoff_gate_state='YES',active_manifest_artifact_id=manifest,
+      active_manifest_version=1,active_manifest_kind='FINAL',completed_at=now() where run_id=r.run_id and stage_code='RESEARCH';
+    perform public.reopen_orotitan_stage(r.run_id,'RESEARCH',
+      (select state_version from public.orotitan_runs where run_id=r.run_id),
+      (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='RESEARCH'),
+      'IN_PROGRESS','{}'::jsonb,'v14:historical:research:reopen:'||r.run_id,repeat('c',64));
+    perform pg_temp.assert_v14((select count(*)=2 from public.orotitan_run_stages
+      where run_id=r.run_id and stage_code in ('DEEP_DIVE','INTEGRATION') and lifecycle_status='BLOCKED'
+      and contract_status_code='UPSTREAM_STAGE_REOPENED' and handoff_gate_state='NOT_EVALUATED'
+      and active_manifest_artifact_id is null and active_manifest_version is null and active_manifest_kind is null
+      and completed_at is null and blocker_summary='[{"code":"UPSTREAM_STAGE_REOPENED","summary":"Research was reopened"}]'::jsonb),
+      'METHOD_V1 / unbound METHOD_V2 real Research reopen remains grandfathered');
   end loop;
   -- The adjacent index must not constrain two legitimate unbound historical fresh runs.
   update public.orotitan_runs set run_status='ACTIVE',state_version=state_version+1
@@ -241,7 +263,8 @@ declare
     'VALUATION_ARTIFACT','CERTIFICATION_ARTIFACT','OROTITAN_TERMINAL_GATE_ARTIFACT','READINESS_NEXT_ACTION_ARTIFACT',
     'PRE_CERTIFICATION_QUESTION_LEDGER','PRE_CERTIFICATION_CHALLENGE_REPORT','FUNDAMENTALS_LOCK','VALUATION_LOCK'];
   finalize_sql text; target text; revision integer; mutation text; result jsonb; integration_manifest uuid:=gen_random_uuid();
-  integration_before public.orotitan_run_stages%rowtype;
+  integration_before public.orotitan_run_stages%rowtype; deep_dive_before public.orotitan_run_stages%rowtype;
+  upstream text; invalidation_summary jsonb; research_manifest uuid:=gen_random_uuid(); research_revision integer;
 begin
   select * into r from public.orotitan_runs where creation_idempotency_key='v14:active';
   insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,lifecycle_status,handoff_gate_name,started_at)
@@ -279,8 +302,23 @@ begin
     r.contract_pins #>> '{integration_stage,content_sha256}','v14:integration:start',repeat('a',64));
   perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set artifact_status=''INVALIDATED'' where artifact_id=%L',ch),
     format('update public.orotitan_run_stages set state_version=state_version+1 where run_id=%L and stage_code=''INTEGRATION''',r.run_id),'DEEP_DIVE_REQUIRED_OUTPUT');
-  foreach target in array array['IN_PROGRESS','BLOCKED'] loop
+  insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,
+    lifecycle_status,handoff_gate_name,started_at)
+  values(r.run_id,'RESEARCH',r.contract_pins #>> '{research_stage,name}',r.contract_pins #>> '{research_stage,version}',
+    r.contract_pins #>> '{research_stage,content_sha256}','IN_PROGRESS','READY_FOR_DEEP_DIVE',now());
+  insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
+    media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
+  values(research_manifest,1,r.run_id,'RESEARCH','RESEARCH_STAGE_MANIFEST','Research final','AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',
+    'application/json',2,hash,'SUPABASE_STORAGE','supabase://orotitan-text-artifacts-v1/'||research_manifest,
+    'orotitan-text-artifacts-v1',research_manifest::text);
+  update public.orotitan_run_stages set lifecycle_status='COMPLETE',handoff_gate_state='YES',active_manifest_artifact_id=research_manifest,
+    active_manifest_version=1,active_manifest_kind='FINAL',completed_at=now() where run_id=r.run_id and stage_code='RESEARCH';
+  foreach upstream in array array['DEEP_DIVE','RESEARCH'] loop
+   invalidation_summary:=jsonb_build_array(jsonb_build_object('code','UPSTREAM_STAGE_REOPENED',
+     'summary',case when upstream='RESEARCH' then 'Research was reopened' else 'Deep Dive was reopened' end));
+   foreach target in array array['IN_PROGRESS','BLOCKED'] loop
     if target='BLOCKED' then
+      integration_manifest:=gen_random_uuid();
       insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
         media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
       values(integration_manifest,1,r.run_id,'INTEGRATION','INTEGRATION_STAGE_MANIFEST','Integration final','AUTHORITATIVE_STAGE_OUTPUT',
@@ -291,35 +329,49 @@ begin
         where run_id=r.run_id and stage_code='INTEGRATION';
     end if;
     select * into strict integration_before from public.orotitan_run_stages where run_id=r.run_id and stage_code='INTEGRATION';
-    result:=public.reopen_orotitan_stage(r.run_id,'DEEP_DIVE',
+    select * into strict deep_dive_before from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE';
+    result:=public.reopen_orotitan_stage(r.run_id,upstream,
       (select state_version from public.orotitan_runs where run_id=r.run_id),
-      (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE'),
-      target,'{"code":"RECOVERY_REGRESSION"}'::jsonb,'v14:reopen:'||target,repeat('b',64));
-    revision:=(result->>'stage_revision')::integer;
+      (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code=upstream),
+      target,'{"code":"RECOVERY_REGRESSION"}'::jsonb,'v14:reopen:'||upstream||':'||target,repeat('b',64));
+    perform pg_temp.assert_v14((select lifecycle_status=target and stage_revision=(result->>'stage_revision')::integer
+      from public.orotitan_run_stages where run_id=r.run_id and stage_code=upstream),'real upstream reopen requested lifecycle');
+    select stage_revision into revision from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE';
     perform pg_temp.assert_v14((select lifecycle_status=target and stage_revision=revision
       and handoff_gate_state='NOT_EVALUATED' and active_manifest_artifact_id is null
-      from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE'),
+      from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE') or upstream='RESEARCH',
       'real runtime-bound Deep Dive reopen succeeds with requested lifecycle');
+    if upstream='RESEARCH' then
+      perform pg_temp.assert_v14((select lifecycle_status='BLOCKED' and contract_status_code='UPSTREAM_STAGE_REOPENED'
+        and handoff_gate_state='NOT_EVALUATED' and active_manifest_artifact_id is null and active_manifest_version is null
+        and active_manifest_kind is null and completed_at is null and blocker_summary=invalidation_summary
+        and state_version=deep_dive_before.state_version+1
+        and stage_revision=deep_dive_before.stage_revision+case when deep_dive_before.lifecycle_status='COMPLETE' then 1 else 0 end
+        from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE'),'exact Research downstream Deep Dive invalidation');
+    end if;
     perform pg_temp.assert_v14((select lifecycle_status='BLOCKED' and contract_status_code='UPSTREAM_STAGE_REOPENED'
       and handoff_gate_state='NOT_EVALUATED' and active_manifest_artifact_id is null and active_manifest_version is null
       and active_manifest_kind is null and completed_at is null
-      and blocker_summary='[{"code":"UPSTREAM_STAGE_REOPENED","summary":"Deep Dive was reopened"}]'::jsonb
+      and blocker_summary=invalidation_summary
       and state_version=integration_before.state_version+1
       and stage_revision=integration_before.stage_revision+case when integration_before.lifecycle_status='COMPLETE' then 1 else 0 end
       from public.orotitan_run_stages where run_id=r.run_id and stage_code='INTEGRATION'),
       'Integration becomes exact inert invalidation while Deep Dive is reopened');
     perform pg_temp.reject_v14(format('select public.resume_orotitan_stage(%L,''INTEGRATION'',%s,%s,''v14:resume:reject:%s'',%L)',
       r.run_id,(select state_version from public.orotitan_runs where run_id=r.run_id),
-      (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='INTEGRATION'),target,repeat('c',64)),
+      (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='INTEGRATION'),upstream||':'||target,repeat('c',64)),
       'METHOD_V2_INTEGRATION_NOT_ADMITTED');
     -- Even a fresh INSERT copying the safe shape cannot use the UPDATE exception.
     perform pg_temp.reject_v14(format('insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,handoff_gate_name,lifecycle_status,contract_status_code,blocker_summary,started_at) values(%L,''INTEGRATION'',''test'',''test'',%L,''READY_TO_PUBLISH'',''BLOCKED'',''UPSTREAM_STAGE_REOPENED'',%L::jsonb,now())',
-      r.run_id,hash,'[{"code":"UPSTREAM_STAGE_REOPENED","summary":"Deep Dive was reopened"}]'),
+      r.run_id,hash,invalidation_summary::text),
       'METHOD_V2_INTEGRATION_NOT_ADMITTED');
     foreach mutation in array array[
       'lifecycle_status=''IN_PROGRESS''', 'handoff_gate_state=''YES''', 'contract_status_code=''READY_TO_PUBLISH''',
       format('active_manifest_artifact_id=%L',manifest), 'active_manifest_version=1', 'active_manifest_kind=''FINAL''',
       'completed_at=now()', 'blocker_summary=''[]''::jsonb', 'stage_revision=stage_revision+1',
+      'blocker_summary=''[{"code":"UPSTREAM_STAGE_REOPENED","summary":"arbitrary reopen"}]''::jsonb',
+      'blocker_summary=''[{"code":"UPSTREAM_STAGE_REOPENED"}]''::jsonb',
+      'blocker_summary=''[{"code":"UPSTREAM_STAGE_REOPENED","summary":"Research was reopened","extra":true}]''::jsonb',
       'state_version=state_version',
       format('lifecycle_status=''COMPLETE'',handoff_gate_state=''YES'',active_manifest_artifact_id=%L,active_manifest_version=1,active_manifest_kind=''FINAL'',completed_at=now()',manifest)
     ] loop
@@ -327,6 +379,23 @@ begin
         case when mutation='state_version=state_version' then mutation else 'state_version=state_version+1,'||mutation end,r.run_id),
         'METHOD_V2_INTEGRATION_NOT_ADMITTED');
     end loop;
+    if upstream='RESEARCH' then
+      select stage_revision into research_revision from public.orotitan_run_stages where run_id=r.run_id and stage_code='RESEARCH';
+      insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
+        media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
+      select artifact_id,research_revision,run_id,stage_code,artifact_type,logical_name,authority_class,'AUTHORITATIVE',
+        media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path
+      from public.orotitan_artifacts where artifact_id=research_manifest and version=1;
+      update public.orotitan_run_stages set lifecycle_status='COMPLETE',handoff_gate_state='YES',active_manifest_artifact_id=research_manifest,
+        active_manifest_version=research_revision,active_manifest_kind='FINAL',completed_at=now(),contract_status_code=null,
+        blocker_summary='[]'::jsonb,state_version=state_version+1 where run_id=r.run_id and stage_code='RESEARCH';
+      perform pg_temp.reject_v14(format('update public.orotitan_run_stages set lifecycle_status=''IN_PROGRESS'',state_version=state_version+1 where run_id=%L and stage_code=''INTEGRATION''',r.run_id),
+        'METHOD_V2_INTEGRATION_NOT_ADMITTED');
+      perform public.resume_orotitan_stage(r.run_id,'DEEP_DIVE',
+        (select state_version from public.orotitan_runs where run_id=r.run_id),
+        (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='DEEP_DIVE'),
+        'v14:dd:resume:after:research:'||target,repeat('e',64));
+    end if;
     -- New immutable versions and proof bind the reopened revision; old bundles stay superseded.
     insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
       media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path,manifest_artifact_id,manifest_version)
@@ -347,12 +416,14 @@ begin
     result:=public.resume_orotitan_stage(r.run_id,'INTEGRATION',
       (select state_version from public.orotitan_runs where run_id=r.run_id),
       (select state_version from public.orotitan_run_stages where run_id=r.run_id and stage_code='INTEGRATION'),
-      'v14:resume:allowed:'||target,repeat('d',64));
+      'v14:resume:allowed:'||upstream||':'||target,repeat('d',64));
     perform pg_temp.assert_v14((select lifecycle_status='IN_PROGRESS' from public.orotitan_run_stages
       where run_id=r.run_id and stage_code='INTEGRATION'),'Integration resumes only after current revision is validly re-finalized');
+  end loop;
   end loop;
 end $$;
 select 'B42 B43 Method-V2 FINAL DEEP_DIVE current output/proof/CONSUMES lineage and Integration bypass rejection: PASS' as result;
 select 'Real Deep Dive reopen / exact downstream invalidation / spoof and INSERT rejection / current-lineage readmission: PASS' as result;
+select 'Real Research reopen IN_PROGRESS/BLOCKED / exact downstream invalidation / upstream re-finalization/readmission: PASS' as result;
 rollback;
 select 'B36 B44 historical V1.6-V1.13 regression already passed; all synthetic identity/control changes rolled back: PASS' as result;
