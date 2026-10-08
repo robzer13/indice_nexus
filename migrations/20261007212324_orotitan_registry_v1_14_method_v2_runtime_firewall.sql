@@ -311,6 +311,18 @@ begin
     perform public.assert_orotitan_method_v2_deep_dive_lineage(new.run_id,new.stage_revision,
       new.active_manifest_artifact_id,new.active_manifest_version);
   elsif new.stage_code='INTEGRATION' then
+    -- The inherited Deep Dive reopen RPC invalidates an existing downstream row.
+    -- This inert UPDATE admits no readiness, active manifest or progression.
+    if tg_op='UPDATE' and new.lifecycle_status='BLOCKED'
+      and new.contract_status_code='UPSTREAM_STAGE_REOPENED'
+      and new.handoff_gate_state='NOT_EVALUATED'
+      and new.active_manifest_artifact_id is null and new.active_manifest_version is null
+      and new.active_manifest_kind is null and new.completed_at is null
+      and new.blocker_summary='[{"code":"UPSTREAM_STAGE_REOPENED","summary":"Deep Dive was reopened"}]'::jsonb
+      and new.state_version=old.state_version+1
+      and new.stage_revision=old.stage_revision+(case when old.lifecycle_status='COMPLETE' then 1 else 0 end) then
+      return new;
+    end if;
     select * into d from public.orotitan_run_stages where run_id=new.run_id and stage_code='DEEP_DIVE' for share;
     if not found or d.lifecycle_status is distinct from 'COMPLETE' or d.active_manifest_kind is distinct from 'FINAL'
       or d.handoff_gate_state is distinct from 'YES' then
