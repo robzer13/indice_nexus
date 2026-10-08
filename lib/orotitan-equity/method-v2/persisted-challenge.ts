@@ -88,10 +88,17 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
       }
       await verify(prior, true);
     }
+    let authoritativeEvidenceLedgerRef: ArtifactRef | undefined;
     for (const family of CHALLENGE_FAMILIES) {
       const coverage = rawReport.saturation_record.family_coverage[family];
       if (coverage.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") continue;
       for (const reference of coverage.evidence_references) {
+        const ref = reference.evidence_ledger_ref;
+        if (authoritativeEvidenceLedgerRef && (ref.artifact_id !== authoritativeEvidenceLedgerRef.artifact_id
+          || ref.version !== authoritativeEvidenceLedgerRef.version
+          || ref.content_sha256 !== authoritativeEvidenceLedgerRef.content_sha256)) {
+          throw new Error("METHOD_V2_EVIDENCE_LEDGER_AUTHORITY_MISMATCH");
+        }
         const expected = await registry.readEvidenceExpectation(reference.evidence_ledger_ref, identity);
         if (!same(expected.ref, reference.evidence_ledger_ref) || expected.artifactType !== "EVIDENCE_LEDGER"
           || expected.artifactStatus !== "SEALED" || expected.authorityClass !== "AUTHORITATIVE_STAGE_OUTPUT"
@@ -101,6 +108,7 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
         if (!parsed.entries.some(entry => entry.EVIDENCE_ID === reference.evidence_id)) {
           throw new Error("METHOD_V2_EVIDENCE_LEDGER_EVIDENCE_ID_NOT_FOUND");
         }
+        authoritativeEvidenceLedgerRef ??= { artifact_id: ref.artifact_id, version: ref.version, content_sha256: ref.content_sha256 };
       }
     }
     return result;

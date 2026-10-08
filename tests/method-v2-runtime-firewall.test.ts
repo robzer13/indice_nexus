@@ -58,6 +58,87 @@ function runtimeFixture(evidenceBytes = Buffer.from('{"format":"OROTITAN_METHOD_
     verify: () => verifyPersistedMethodV2Challenge(source, f.context.run_id) };
 }
 
+function multiReferenceFixture(mode: "FULL" | "DELTA", difference?: "artifact_id" | "version" | "content_sha256", multipleIds = false,
+  prior = runtimeFixture()) {
+  const evidenceBytes = Buffer.from('{"format":"OROTITAN_METHOD_V2_EVIDENCE_LEDGER","version":"1.0","entries":[{"EVIDENCE_ID":"E1"},{"EVIDENCE_ID":"E2"}]}');
+  const differentBytes = Buffer.from('{"format":"OROTITAN_METHOD_V2_EVIDENCE_LEDGER","version":"1.0","entries":[{"EVIDENCE_ID":"E1"},{"EVIDENCE_ID":"E2"}],"note":"different bytes"}');
+  const current = runtimeFixture(evidenceBytes, f => {
+    if (mode === "DELTA") {
+      f.context.run_id = "00000000-0000-4000-8000-000000000099";
+      for (const [ref, suffix] of [[f.context.question_ledger_ref, "94"], [f.context.challenge_report_ref, "95"],
+        [f.context.fundamentals_lock_ref, "92"], [f.context.valuation_lock_ref, "93"]] as const) {
+        ref.artifact_id = `00000000-0000-4000-8000-0000000000${suffix}`;
+      }
+      const delta = { prior_passing_report_ref: prior.identity.context.challenge_report_ref,
+        prior_passing_ledger_ref: prior.identity.context.question_ledger_ref,
+        impact_map: "Exact change revalidated", inherited_coverage_revalidated: true };
+      Object.assign(f.ledger, { run_id: f.context.run_id, mode, delta_provenance: delta });
+      Object.assign(f.report, { run_id: f.context.run_id, mode, delta_provenance: delta });
+      f.context.priorPassing = { report_ref: delta.prior_passing_report_ref, ledger_ref: delta.prior_passing_ledger_ref };
+    }
+    const first = f.report.saturation_record.family_coverage.WORLD_IN_MOTION;
+    if (first.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") throw new Error("fixture exemption required");
+    if (mode === "DELTA") first.evidence_references[0].evidence_ledger_ref.artifact_id = "00000000-0000-4000-8000-000000000098";
+    const second = structuredClone(first);
+    const reference = second.evidence_references[0];
+    if (multipleIds) reference.evidence_id = "E2";
+    if (difference === "artifact_id") reference.evidence_ledger_ref.artifact_id = "00000000-0000-4000-8000-000000000088";
+    if (difference === "version") reference.evidence_ledger_ref.version = 2;
+    if (difference === "content_sha256") reference.evidence_ledger_ref.content_sha256 = sha256(differentBytes);
+    f.report.saturation_record.family_coverage.TECHNOLOGY_AI = second;
+  });
+  const second = current.f.report.saturation_record.family_coverage.TECHNOLOGY_AI;
+  if (second.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") throw new Error("fixture exemption required");
+  const secondRef = second.evidence_references[0].evidence_ledger_ref;
+  const secondRow: RegistryArtifact = { ...current.rows.get(current.evidence.ref.artifact_id)!, ...secondRef };
+  const secondPath = `runs/${current.identity.context.run_id}/${secondRef.artifact_id}/${secondRef.version}.json`;
+  secondRow.supabase_object_path = secondPath; secondRow.storage_uri = `supabase://orotitan-text-artifacts-v1/${secondPath}`;
+  const secondBytes = difference === "content_sha256" ? differentBytes : evidenceBytes;
+  secondRow.size_bytes = secondBytes.length;
+  const originalRead = current.source.readArtifact; const originalDownload = current.source.download;
+  current.source.readArtifact = async (id, version) => {
+    if (mode === "DELTA" && prior.rows.has(id)) return prior.source.readArtifact(id, version);
+    if (difference && difference !== "content_sha256" && id === secondRef.artifact_id && version === secondRef.version) return structuredClone(secondRow);
+    return originalRead(id, version);
+  };
+  current.source.download = async (bucket, path) => {
+    if (mode === "DELTA" && prior.stored.has(path)) return prior.source.download(bucket, path);
+    if (difference && difference !== "content_sha256" && path === secondPath) {
+      current.downloads.push(path); return secondBytes;
+    }
+    return originalDownload(bucket, path);
+  };
+  current.source.readEvidenceExpectation = async (ref, identity) => {
+    if (mode === "DELTA" && identity.context.run_id === prior.identity.context.run_id) return prior.source.readEvidenceExpectation(ref, identity);
+    return { ...structuredClone(current.evidence), ref: structuredClone(ref) };
+  };
+  current.source.readPriorPassingIdentity = async () => structuredClone(prior.identity);
+  return current;
+}
+
+for (const mode of ["FULL", "DELTA"] as const) {
+  test(`B41 ${mode}: two exemption families use the same exact authoritative Ledger`, async () => {
+    const f = multiReferenceFixture(mode);
+    assert.equal((await f.verify()).admission.allowed, true);
+    const path = f.rows.get(f.evidence.ref.artifact_id)!.supabase_object_path;
+    assert.equal(f.downloads.filter(p => p === path).length, 2);
+  });
+  for (const field of ["artifact_id", "version", "content_sha256"] as const) {
+    test(`B41 ${mode}: different Evidence Ledger ${field} rejects with the authority mismatch error`, async () => {
+      await assert.rejects(multiReferenceFixture(mode, field).verify(), { message: "METHOD_V2_EVIDENCE_LEDGER_AUTHORITY_MISMATCH" });
+    });
+  }
+  test(`B41 ${mode}: multiple exact evidence IDs from the same authoritative Ledger pass`, async () => {
+    assert.equal((await multiReferenceFixture(mode, undefined, true).verify()).admission.allowed, true);
+  });
+}
+
+test("B41 DELTA: prior passing reports must also preserve single-Ledger authority", async () => {
+  const prior = multiReferenceFixture("FULL", "artifact_id");
+  await assert.rejects(multiReferenceFixture("DELTA", undefined, false, prior).verify(),
+    { message: "METHOD_V2_EVIDENCE_LEDGER_AUTHORITY_MISMATCH" });
+});
+
 test("B07 B08 B09: inactive binding exact raw bytes, immutable full-pack locator and serialization identity", () => {
   assert.equal(sha256(readFileSync(BINDING_PATH)), METHOD_V2_RUNTIME_BINDING_SHA256);
   assert.equal(binding.methodology_authority_sha256, pack.method_v2_authority_set_sha256);
