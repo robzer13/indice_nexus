@@ -3,7 +3,7 @@ import pack from "../../../contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V
 import { createServerSupabaseClient } from "../../supabase/server";
 import { canonicalJson, METHOD_V2_AUTHORITY_SET_SHA256 } from "./authority";
 import type { ArtifactRef, ChallengeContext } from "./pre-certification";
-import { METHOD_V2_RUNTIME_BINDING_SHA256, type RegistryArtifact, type ArtifactExpectation } from "./persisted-artifacts";
+import { METHOD_V2_RUNTIME_BINDING_SHA256, METHOD_V2_CERTIFICATION_PROFILE_SHA256, type RegistryArtifact, type ArtifactExpectation } from "./persisted-artifacts";
 import { verifyPersistedMethodV2Challenge, type ChallengeIdentity, type ChallengeRegistry, type ChallengeProof } from "./persisted-challenge";
 
 type Client = ReturnType<typeof createServerSupabaseClient>;
@@ -72,6 +72,32 @@ export class SupabaseMethodV2ChallengeRegistry implements ChallengeRegistry {
     }
     if (ledger.run_id !== runId || report.run_id !== runId || ledger.stage_code !== "DEEP_DIVE" || report.stage_code !== "DEEP_DIVE"
       || ledger.artifact_type !== "PRE_CERTIFICATION_QUESTION_LEDGER" || report.artifact_type !== "PRE_CERTIFICATION_CHALLENGE_REPORT") fail("METHOD_V2_CHALLENGE_REGISTRY_LINEAGE_MISMATCH");
+    // Select Certification from the exact current/candidate bundle, independently
+    // of its claimed binding or CONSUMES edge. Historical DELTA uses only the
+    // immutable Certification identity already recorded in the owner proof.
+    const manifestId = priorProof ? report.manifest_artifact_id : candidateManifestRef?.artifact_id ?? stage.active_manifest_artifact_id;
+    const manifestVersion = priorProof ? report.manifest_version : candidateManifestRef?.version ?? stage.active_manifest_version;
+    if (!manifestId || !manifestVersion || ledger.manifest_artifact_id !== manifestId || ledger.manifest_version !== manifestVersion
+      || report.manifest_artifact_id !== manifestId || report.manifest_version !== manifestVersion) fail("METHOD_V2_CHALLENGE_REGISTRY_LINEAGE_MISMATCH");
+    let certification: RegistryArtifact;
+    if (priorProof) {
+      const persisted = await this.readArtifact(priorProof.certification_id, priorProof.certification_version);
+      if (!persisted || persisted.content_sha256 !== priorProof.certification_sha256
+        || priorProof.runtime_binding_sha256 !== METHOD_V2_RUNTIME_BINDING_SHA256
+        || priorProof.certification_profile_sha256 !== METHOD_V2_CERTIFICATION_PROFILE_SHA256
+        || priorProof.validator_identity !== "verifyPersistedMethodV2Challenge:1.1") fail("METHOD_V2_CERTIFICATION_PRIOR_PROOF_MISMATCH");
+      certification = persisted;
+    } else {
+      const { data, error } = await this.client.from("orotitan_artifacts").select("*").eq("run_id", runId)
+        .eq("stage_code", "DEEP_DIVE").eq("manifest_artifact_id", manifestId).eq("manifest_version", manifestVersion)
+        .eq("artifact_type", "CERTIFICATION_ARTIFACT");
+      if (error || !data || data.length !== 1) fail("METHOD_V2_CERTIFICATION_CURRENT_LINEAGE_REQUIRED");
+      certification = data[0] as RegistryArtifact;
+    }
+    if (certification.run_id !== runId || certification.stage_code !== "DEEP_DIVE" || certification.artifact_type !== "CERTIFICATION_ARTIFACT"
+      || certification.manifest_artifact_id !== manifestId || certification.manifest_version !== manifestVersion
+      || certification.authority_class !== "AUTHORITATIVE_STAGE_OUTPUT") fail("METHOD_V2_CERTIFICATION_REGISTRY_LINEAGE_MISMATCH");
+    if (!(await this.parents(certification)).some(a => exact(ref(a), ref(report)))) fail("METHOD_V2_CHALLENGE_CERTIFICATION_EDGE_ABSENT");
     const parents = await this.parents(report);
     const one = (kind: string) => {
       const candidates = parents.filter(a => a.artifact_type === kind && a.run_id === runId && a.stage_code === "DEEP_DIVE");
@@ -104,11 +130,11 @@ export class SupabaseMethodV2ChallengeRegistry implements ChallengeRegistry {
       || priorProof.fundamentals_lock_sha256 !== fundamentals.content_sha256 || priorProof.valuation_lock_id !== valuation.artifact_id
       || priorProof.valuation_lock_version !== valuation.version || priorProof.valuation_lock_sha256 !== valuation.content_sha256)) fail("METHOD_V2_CHALLENGE_PRIOR_PROOF_MISMATCH");
     const expected = (a: RegistryArtifact) => ({ ...this.expectation(a, !!priorProof),
-      ...(candidateManifestRef ? { manifestRef: { artifact_id: candidateManifestRef.artifact_id, version: candidateManifestRef.version } } : {}) });
+      manifestRef: { artifact_id: manifestId, version: manifestVersion } });
     return { context, candidateManifest, ...(priorProof ? { historicalPassing: true as const } : {}), methodologyGeneration: "METHOD_V2", contractSetSha256: r.contract_set_sha256,
       runtimeBindingSha256: r.runtime_binding_sha256, stageRevision: priorProof?.stage_revision ?? stage.stage_revision,
       questionLedger: expected(ledger), challengeReport: expected(report),
-      fundamentalsLock: expected(fundamentals), valuationLock: expected(valuation) };
+      fundamentalsLock: expected(fundamentals), valuationLock: expected(valuation), certification: expected(certification) };
   }
   readChallengeIdentity(runId: string, candidateManifestRef?: ArtifactRef) { return this.identity(runId, undefined, undefined, undefined, candidateManifestRef); }
   async readPriorPassingIdentity(reportRef: ArtifactRef, ledgerRef: ArtifactRef) {

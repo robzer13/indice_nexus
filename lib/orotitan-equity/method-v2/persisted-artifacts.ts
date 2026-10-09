@@ -1,8 +1,9 @@
 import { sha256 } from "./authority";
 import type { ArtifactRef } from "./pre-certification";
 
-export const METHOD_V2_RUNTIME_BINDING_SHA256 = "0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c";
+export const METHOD_V2_RUNTIME_BINDING_SHA256 = "b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0";
 export const METHOD_V2_EVIDENCE_PROFILE_SHA256 = "8679e2aeb8f7be4569670629866a9ee2a63d933f5b04d6ede209aa8310e29a83";
+export const METHOD_V2_CERTIFICATION_PROFILE_SHA256 = "a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c";
 export type StageCode = "RESEARCH" | "DEEP_DIVE" | "INTEGRATION";
 export type ArtifactAuthority = "AUTHORITATIVE_STAGE_OUTPUT" | "CHECKPOINT_STAGE_OUTPUT" | "SOURCE_ATTACHMENT";
 export type RegistryArtifact = ArtifactRef & {
@@ -23,7 +24,7 @@ export interface PersistedArtifactSource {
   download(bucket: string, exactObjectPath: string): Promise<Uint8Array>;
 }
 const approvedBuckets = new Set(["orotitan-text-artifacts-v1", "orotitan-source-files-v1"]);
-const textArtifacts = new Set(["PRE_CERTIFICATION_QUESTION_LEDGER", "PRE_CERTIFICATION_CHALLENGE_REPORT", "EVIDENCE_LEDGER"]);
+const textArtifacts = new Set(["PRE_CERTIFICATION_QUESTION_LEDGER", "PRE_CERTIFICATION_CHALLENGE_REPORT", "EVIDENCE_LEDGER", "CERTIFICATION_ARTIFACT"]);
 function fail(code: string): never { throw new Error(code); }
 
 /** Expectations are supplied by the trusted Registry consumer, never a storage locator from a caller. */

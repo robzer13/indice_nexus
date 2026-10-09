@@ -110,8 +110,8 @@ begin
   update public.orotitan_method_v2_runtime_control set admission_mode='ACTIVE_FOR_NEW_RUNS',admission_scope='INITIAL_AND_REFRESH',runtime_commit_sha=repeat('a',40);
   result:=public.create_orotitan_method_v2_runtime_run('v14:alongside-grandfather',r.issuer_id,r.security_id,r.dossier_id,
     (select current_snapshot_id from public.research_dossiers where dossier_id=r.dossier_id),
-    greatest(r.data_cutoff,(select s.data_cutoff+1 from public.research_snapshots s join public.research_dossiers d on d.current_snapshot_id=s.snapshot_id where d.dossier_id=r.dossier_id)),repeat('f',64),'0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c');
-  perform pg_temp.assert_v14((select runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
+    greatest(r.data_cutoff,(select s.data_cutoff+1 from public.research_snapshots s join public.research_dossiers d on d.current_snapshot_id=s.snapshot_id where d.dossier_id=r.dossier_id)),repeat('f',64),'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0');
+  perform pg_temp.assert_v14((select runtime_binding_sha256='b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'
     from public.orotitan_runs where run_id=(result->>'run_id')::uuid),'runtime admission excludes unbound historical cohort');
   -- A new bound run has no Integration row yet: INSERT still enforces the runtime firewall.
   perform pg_temp.reject_v14(format('insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,handoff_gate_name) values(%L,''INTEGRATION'',''test'',''test'',%L,''READY_TO_PUBLISH'')',
@@ -160,7 +160,7 @@ begin
   perform pg_temp.assert_v14(not has_table_privilege('public','public.orotitan_method_v2_runtime_control','SELECT'),'B06 PUBLIC denied');
   perform pg_temp.assert_v14(c.methodology_authority_sha256='1e97ad30595d24d10345cfcb58c8b6c0feeb7272144af1fc12d0affd2d2e33b2'
     and c.contract_set_sha256='23b75bf5c2d7448e8270e7e8f3a0223e639d0be3a1406b3c089e6e885dd063ea','B07 B08 exact identities');
-  perform pg_temp.assert_v14(c.runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c','B09 binding');
+  perform pg_temp.assert_v14(c.runtime_binding_sha256='b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0','B09 binding');
   fn := 'public.create_orotitan_method_v2_runtime_run(text,uuid,uuid,uuid,uuid,date,text,text)'::regprocedure;
   perform pg_temp.assert_v14((select prosecdef and proconfig=array['search_path=pg_catalog, public'] from pg_proc where oid=fn),'B11 safe SECURITY DEFINER');
   foreach role_name in array array['public','anon','authenticated','service_role'] loop
@@ -282,13 +282,25 @@ begin
     values(a,1,r.run_id,'DEEP_DIVE',kind,kind,'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE','application/json',2,hash,'SUPABASE_STORAGE','supabase://orotitan-text-artifacts-v1/'||a,'orotitan-text-artifacts-v1',a::text,manifest,1);
   end loop;
   perform pg_temp.reject_v14(finalize_sql,'CHALLENGE_PERSISTED_PROOF_REQUIRED');
-  insert into public.orotitan_method_v2_challenge_proofs values(r.run_id,1,q,1,hash,ch,1,hash,f,1,hash,v,1,hash,r.runtime_binding_sha256,'verifyPersistedMethodV2Challenge:1.0');
+  insert into public.orotitan_method_v2_challenge_proofs values(r.run_id,1,q,1,hash,ch,1,hash,f,1,hash,v,1,hash,
+    cert,1,hash,'a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c',r.runtime_binding_sha256,'verifyPersistedMethodV2Challenge:1.1');
   perform pg_temp.reject_v14(finalize_sql,'CHALLENGE_CERTIFICATION_LINEAGE_MISMATCH');
   insert into public.orotitan_artifact_edges(child_run_id,child_artifact_id,child_version,parent_run_id,parent_artifact_id,parent_version,relation_type)
     values(r.run_id,ch,1,r.run_id,q,1,'CONSUMES'),(r.run_id,ch,1,r.run_id,v,1,'CONSUMES');
   perform pg_temp.reject_v14(finalize_sql,'CHALLENGE_CERTIFICATION_LINEAGE_MISMATCH');
   insert into public.orotitan_artifact_edges(child_run_id,child_artifact_id,child_version,parent_run_id,parent_artifact_id,parent_version,relation_type)
     values(r.run_id,cert,1,r.run_id,ch,1,'CONSUMES');
+  -- All required edges exist, but another Certification version cannot borrow
+  -- the verified payload's proof, including when its bytes have the same hash.
+  insert into public.orotitan_artifacts(artifact_id,version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
+    media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path,manifest_artifact_id,manifest_version)
+  select artifact_id,999,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,
+    media_type,size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path,null,null
+  from public.orotitan_artifacts where artifact_id=cert and version=1;
+  insert into public.orotitan_artifact_edges(child_run_id,child_artifact_id,child_version,parent_run_id,parent_artifact_id,parent_version,relation_type)
+    values(r.run_id,cert,999,r.run_id,ch,1,'CONSUMES');
+  perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set manifest_artifact_id=null,manifest_version=null where artifact_id=%L and version=1; update public.orotitan_artifacts set manifest_artifact_id=%L,manifest_version=1 where artifact_id=%L and version=999',cert,manifest,cert),
+    finalize_sql,'CHALLENGE_PERSISTED_PROOF_REQUIRED');
   -- Each Method-V2 addition must fail individually; locks and proof revision cannot go stale.
   perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set artifact_status=''INVALIDATED'' where artifact_id=%L',q),finalize_sql,'DEEP_DIVE_REQUIRED_OUTPUT');
   perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set artifact_status=''INVALIDATED'' where artifact_id=%L',ch),finalize_sql,'DEEP_DIVE_REQUIRED_OUTPUT');
@@ -302,6 +314,8 @@ begin
     r.contract_pins #>> '{integration_stage,content_sha256}','v14:integration:start',repeat('a',64));
   perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set artifact_status=''INVALIDATED'' where artifact_id=%L',ch),
     format('update public.orotitan_run_stages set state_version=state_version+1 where run_id=%L and stage_code=''INTEGRATION''',r.run_id),'DEEP_DIVE_REQUIRED_OUTPUT');
+  perform pg_temp.mutate_reject_v14(format('update public.orotitan_artifacts set manifest_artifact_id=null,manifest_version=null where artifact_id=%L and version=1; update public.orotitan_artifacts set manifest_artifact_id=%L,manifest_version=1 where artifact_id=%L and version=999',cert,manifest,cert),
+    format('update public.orotitan_run_stages set state_version=state_version+1 where run_id=%L and stage_code=''INTEGRATION''',r.run_id),'CHALLENGE_PERSISTED_PROOF_REQUIRED');
   insert into public.orotitan_run_stages(run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,
     lifecycle_status,handoff_gate_name,started_at)
   values(r.run_id,'RESEARCH',r.contract_pins #>> '{research_stage,name}',r.contract_pins #>> '{research_stage,version}',
@@ -404,7 +418,8 @@ begin
       case when manifest_artifact_id is not null then revision end
     from public.orotitan_artifacts where run_id=r.run_id and stage_code='DEEP_DIVE' and version=1;
     insert into public.orotitan_method_v2_challenge_proofs values(r.run_id,revision,q,revision,hash,ch,revision,hash,
-      f,revision,hash,v,revision,hash,r.runtime_binding_sha256,'verifyPersistedMethodV2Challenge:1.0');
+      f,revision,hash,v,revision,hash,cert,revision,hash,'a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c',
+      r.runtime_binding_sha256,'verifyPersistedMethodV2Challenge:1.1');
     perform pg_temp.reject_v14(format('update public.orotitan_run_stages set lifecycle_status=''COMPLETE'',active_manifest_kind=''FINAL'',active_manifest_artifact_id=%L,active_manifest_version=%s,completed_at=now(),handoff_gate_state=''YES'' where run_id=%L and stage_code=''DEEP_DIVE''',
       manifest,revision,r.run_id),'CHALLENGE_CERTIFICATION_LINEAGE_MISMATCH');
     insert into public.orotitan_artifact_edges(child_run_id,child_artifact_id,child_version,parent_run_id,parent_artifact_id,parent_version,relation_type)

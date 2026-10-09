@@ -30,8 +30,12 @@ Additional inherited content may change whole-artifact bytes, never the identity
 of this Challenge binding. Runtime identity is format/version under a separately
 pinned Method-V2 profile; it does not independently classify or activate a run.
 
-PR #371 is unchanged here. After this profile is independently reviewed and merged
-into `vnext`, PR #371 must pin its exact raw-byte SHA-256 and recompute the runtime
-binding SHA. PR #371 WILL REQUIRE A NEW RUNTIME BINDING SHA AFTER THIS PROFILE IS
-PINNED. The old `0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c`
-must not be artificially preserved. No publication or activation is implemented.
+The profile was independently reviewed and merged into `vnext` by PR #372 at
+`cf83831d13b87bc892aef59e2951c7c4518119e8`. Resumed PR #371 pins the exact profile
+raw-byte SHA-256 `a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c`.
+The recomputed runtime binding raw-byte SHA-256 is
+`b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0`, replacing
+`0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c`.
+The runtime consumer verifies authoritative persisted Certification bytes and exact
+Challenge context before creating its owner-only proof. No publication or
+activation is implemented.

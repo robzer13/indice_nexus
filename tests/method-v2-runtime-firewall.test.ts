@@ -5,7 +5,8 @@ import test from "node:test";
 import binding from "../contracts/orotitan-equity/method-v2/runtime/OROTITAN_METHOD_V2_RUNTIME_BINDING_V1.0.json";
 import pack from "../contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_EXECUTION_CONTRACT_PIN_PACK_V1.0.json";
 import { sha256 } from "../lib/orotitan-equity/method-v2/authority";
-import { resolvePersistedMethodV2Artifact, METHOD_V2_RUNTIME_BINDING_SHA256, type ArtifactExpectation, type RegistryArtifact } from "../lib/orotitan-equity/method-v2/persisted-artifacts";
+import { resolvePersistedMethodV2Artifact, METHOD_V2_RUNTIME_BINDING_SHA256, METHOD_V2_CERTIFICATION_PROFILE_SHA256, type ArtifactExpectation, type RegistryArtifact } from "../lib/orotitan-equity/method-v2/persisted-artifacts";
+import { type MethodV2CertificationArtifact } from "../lib/orotitan-equity/method-v2/certification-persistence";
 import { verifyAndRecordMethodV2Challenge, verifyPersistedMethodV2Challenge, type ChallengeIdentity, type ChallengeRegistry } from "../lib/orotitan-equity/method-v2/persisted-challenge";
 import { challengeFixture } from "./method-v2-runtime-fixtures";
 
@@ -26,6 +27,17 @@ function runtimeFixture(evidenceBytes = Buffer.from('{"format":"OROTITAN_METHOD_
   Object.assign(f.ledger, { fundamentals_lock_ref: f.context.fundamentals_lock_ref, valuation_lock_ref: f.context.valuation_lock_ref });
   Object.assign(f.report, { fundamentals_lock_ref: f.context.fundamentals_lock_ref, valuation_lock_ref: f.context.valuation_lock_ref });
   const { ledgerBytes, reportBytes } = f.bytes();
+  const certification: MethodV2CertificationArtifact = {
+    format: "OROTITAN_METHOD_V2_CERTIFICATION_ARTIFACT", version: "1.0",
+    run_id: f.context.run_id, stage_revision: 1, data_cutoff: f.context.data_cutoff,
+    certification: { inherited: "opaque Certification content", material_limitations: [] },
+    method_v2_challenge_binding: { question_ledger_ref: structuredClone(f.context.question_ledger_ref),
+      challenge_report_ref: structuredClone(f.context.challenge_report_ref),
+      fundamentals_lock_ref: structuredClone(f.context.fundamentals_lock_ref), valuation_lock_ref: structuredClone(f.context.valuation_lock_ref),
+      challenge_status: f.report.challenge_status as "PASS" | "PASS_WITH_CONCERNS",
+      challenge_limitations: f.ledger.questions.filter(q => q.status === "CONCERN").map(q => ({ question_id: q.question_id,
+        decision_impact: q.decision_impact, mitigation_or_resolution: q.mitigation_or_resolution })) },
+  };
   const rows = new Map<string, RegistryArtifact>(); const stored = new Map<string, Uint8Array>(); const downloads: string[] = [];
   function add(id: string, kind: string, bytes: Uint8Array): ArtifactExpectation {
     const path = `runs/${f.context.run_id}/${id}/1.json`;
@@ -43,7 +55,8 @@ function runtimeFixture(evidenceBytes = Buffer.from('{"format":"OROTITAN_METHOD_
     questionLedger: add(f.context.question_ledger_ref.artifact_id, "PRE_CERTIFICATION_QUESTION_LEDGER", ledgerBytes),
     challengeReport: add(f.context.challenge_report_ref.artifact_id, "PRE_CERTIFICATION_CHALLENGE_REPORT", reportBytes),
     fundamentalsLock: add(f.context.fundamentals_lock_ref.artifact_id, "FUNDAMENTALS_LOCK", fundBytes),
-    valuationLock: add(f.context.valuation_lock_ref.artifact_id, "VALUATION_LOCK", valBytes) };
+    valuationLock: add(f.context.valuation_lock_ref.artifact_id, "VALUATION_LOCK", valBytes),
+    certification: add(f.context.run_id.replace(/^./, "c"), "CERTIFICATION_ARTIFACT", Buffer.from(JSON.stringify(certification))) };
   const coverage = f.report.saturation_record.family_coverage.WORLD_IN_MOTION;
   if (coverage.disposition !== "EVIDENCED_NO_MATERIAL_CHALLENGE") throw new Error("fixture exemption required");
   const evidence = add(coverage.evidence_references[0].evidence_ledger_ref.artifact_id, "EVIDENCE_LEDGER", evidenceBytes);
@@ -54,7 +67,13 @@ function runtimeFixture(evidenceBytes = Buffer.from('{"format":"OROTITAN_METHOD_
     async readPriorPassingIdentity() { throw new Error("prior unavailable"); },
     async readEvidenceExpectation() { return structuredClone(evidence); },
   };
-  return { f, identity, evidence, source, rows, stored, downloads,
+  function persistCertification(bytes = Buffer.from(JSON.stringify(certification))) {
+    const row = rows.get(identity.certification.ref.artifact_id)!;
+    row.size_bytes = bytes.length; row.content_sha256 = sha256(bytes);
+    identity.certification.ref.content_sha256 = row.content_sha256;
+    stored.set(row.supabase_object_path!, bytes);
+  }
+  return { f, identity, certification, persistCertification, evidence, source, rows, stored, downloads,
     verify: () => verifyPersistedMethodV2Challenge(source, f.context.run_id) };
 }
 
@@ -144,6 +163,18 @@ test("B07 B08 B09: inactive binding exact raw bytes, immutable full-pack locator
   assert.equal(binding.methodology_authority_sha256, pack.method_v2_authority_set_sha256);
   assert.equal(binding.contract_set_sha256, pack.contract_set_sha256);
   assert.equal(binding.evidence_ledger_persistence_profile_sha256, "8679e2aeb8f7be4569670629866a9ee2a63d933f5b04d6ede209aa8310e29a83");
+  assert.notEqual(METHOD_V2_RUNTIME_BINDING_SHA256, "0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c");
+  const profile = binding.certification_persistence_profile;
+  const profileBytes = readFileSync(profile.locator.path);
+  assert.equal(profile.content_sha256, METHOD_V2_CERTIFICATION_PROFILE_SHA256);
+  assert.equal(sha256(profileBytes), profile.content_sha256);
+  assert.deepEqual(JSON.parse(profileBytes.toString()).format, profile.format);
+  assert.equal(JSON.parse(profileBytes.toString()).version, profile.version);
+  assert.equal(profile.locator.repository, "robzer13/indice_nexus");
+  assert.equal(profile.locator.commit_sha, "cf83831d13b87bc892aef59e2951c7c4518119e8");
+  assert.equal(execFileSync("git", ["rev-parse", `${profile.locator.commit_sha}:${profile.locator.path}`], { encoding: "utf8" }).trim(), profile.locator.blob_sha);
+  assert.equal(sha256(execFileSync("git", ["show", `${profile.locator.commit_sha}:${profile.locator.path}`])), profile.content_sha256);
+  assert.equal(binding.pre_certification_validator.proof_validator_identity, "verifyPersistedMethodV2Challenge:1.1");
   assert.equal(binding.production_active, false); assert.equal(binding.publication_active, false); assert.equal(binding.canary_active, false);
   const loc = binding.execution_pack_locator;
   const bytes = execFileSync("git", ["show", `${loc.commit_sha}:${loc.path}`]);
@@ -152,6 +183,8 @@ test("B07 B08 B09: inactive binding exact raw bytes, immutable full-pack locator
   const sql = readFileSync(SQL_PATH, "utf8");
   const pins = JSON.parse(sql.match(/select '(.+)'::jsonb \$pins\$/)![1]);
   assert.deepEqual(pins, pack.contract_pins);
+  assert.equal(sql.split(METHOD_V2_RUNTIME_BINDING_SHA256).length - 1, 8);
+  assert.doesNotMatch(sql, /0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c/);
 });
 
 test("B10 B44: selector and frozen authority bytes unchanged; no publisher or activation wiring", () => {
@@ -161,6 +194,9 @@ test("B10 B44: selector and frozen authority bytes unchanged; no publisher or ac
     "contracts/orotitan-equity/method-v2/runtime/OROTITAN_METHOD_V2_EVIDENCE_LEDGER_PERSISTENCE_PROFILE_V1.0.json",
     "migrations/20261005195139_orotitan_registry_v1_13_method_generation.sql"]) {
     assert.equal(sha256(readFileSync(path)), sha256(execFileSync("git", ["show", `e5c3b107116a998496eb15a3c0a81546c3c827b2:${path}`])));
+  }
+  for (const path of ["lib/orotitan-equity/method-v2/certification-persistence.ts", binding.certification_persistence_profile.locator.path]) {
+    assert.equal(sha256(readFileSync(path)), sha256(execFileSync("git", ["show", `cf83831d13b87bc892aef59e2951c7c4518119e8:${path}`])));
   }
   assert.doesNotMatch(readFileSync(SQL_PATH, "utf8"), /grant execute|PUBLISH_SUCCEEDED|insert into public\.research_snapshots|update public\.research_snapshots/i);
   const server = readFileSync("lib/orotitan-equity/method-v2/persisted-artifacts-server.ts", "utf8");
@@ -204,9 +240,11 @@ test("B39: every Registry identity, status, availability and authority dimension
 test("B40: validator receives reread ledger/report and both current lock bytes", async () => {
   const f = runtimeFixture(); const result = await f.verify();
   assert.equal(result.admission.allowed, true); assert.equal(result.proof.challenge_report_sha256, f.identity.context.challenge_report_ref.content_sha256);
-  assert.equal(result.proof.validator_identity, "verifyPersistedMethodV2Challenge:1.0");
-  assert.equal(f.downloads.length, 5);
-  await f.verify(); assert.equal(f.downloads.length, 10);
+  assert.equal(result.proof.validator_identity, "verifyPersistedMethodV2Challenge:1.1");
+  assert.equal(result.proof.certification_sha256, f.identity.certification.ref.content_sha256);
+  assert.equal(result.proof.certification_profile_sha256, METHOD_V2_CERTIFICATION_PROFILE_SHA256);
+  assert.equal(f.downloads.length, 6);
+  await f.verify(); assert.equal(f.downloads.length, 12);
   const negative = runtimeFixture(undefined, f => { f.report.fail_reasons = ["Unresolved"]; });
   await assert.rejects(negative.verify(), /NEGATIVE_DISPOSITION_UNRESOLVED/);
   const absent = runtimeFixture(); absent.rows.delete(absent.identity.fundamentalsLock.ref.artifact_id);
@@ -287,7 +325,7 @@ test("B40 B43: trusted proof sink receives only persisted-byte validator output,
 
 test("B40 B43: FINAL candidate bytes verify before finalization and bind the exact current revision and outputs", async () => {
   const f = runtimeFixture(); const manifestId = "00000000-0000-4000-8000-000000000010";
-  const artifacts = [f.identity.questionLedger, f.identity.challengeReport, f.identity.fundamentalsLock, f.identity.valuationLock];
+  const artifacts = [f.identity.questionLedger, f.identity.challengeReport, f.identity.fundamentalsLock, f.identity.valuationLock, f.identity.certification];
   const raw = { run_id: f.identity.context.run_id, stage: "DEEP_DIVE", manifest_id: manifestId, manifest_kind: "FINAL",
     stage_revision: 1, contract_set_sha256: pack.contract_set_sha256,
     output_artifacts: artifacts.map(a => ({ ...a.ref, artifact_type: a.artifactType, authority_class: "AUTHORITATIVE_STAGE_OUTPUT" })) };
@@ -308,4 +346,203 @@ test("B40 B43: FINAL candidate bytes verify before finalization and bind the exa
   f.identity.stageRevision = 1;
   f.stored.set(path, Buffer.alloc(bytes.length));
   await assert.rejects(verifyPersistedMethodV2Challenge(f.source, f.identity.context.run_id, manifestRef), /SHA256_MISMATCH/);
+});
+
+function concernsFixture() {
+  return runtimeFixture(undefined, f => {
+    for (const q of f.ledger.questions.slice(0, 2)) {
+      q.status = "CONCERN";
+      q.decision_impact = `  Exact impact ${q.question_id}  `;
+      q.mitigation_or_resolution = `Exact mitigation ${q.question_id}\nretained`;
+    }
+    f.report.pass_count -= 2; f.report.concern_count = 2;
+    f.report.material_concerns = ["Q0", "Q1"]; f.report.challenge_status = "PASS_WITH_CONCERNS";
+  });
+}
+
+test("Certification lineage: persisted PASS has empty limitations and proof binds exact bytes", async () => {
+  const f = runtimeFixture(); const result = await f.verify();
+  assert.deepEqual(result.admission.limitations, []);
+  assert.equal(result.proof.certification_id, f.identity.certification.ref.artifact_id);
+  assert.equal(result.proof.certification_version, f.identity.certification.ref.version);
+  assert.equal(result.proof.certification_sha256, sha256(f.stored.get(f.rows.get(result.proof.certification_id)!.supabase_object_path!)!));
+  assert.equal(f.downloads.filter(p => p === f.rows.get(result.proof.certification_id)!.supabase_object_path).length, 1);
+});
+
+test("Certification lineage: every current CONCERN tuple propagates exactly; order and inherited content remain independent", async () => {
+  const f = concernsFixture(); const initial = await f.verify();
+  assert.deepEqual(initial.admission.limitations, f.certification.method_v2_challenge_binding.challenge_limitations);
+  f.certification.method_v2_challenge_binding.challenge_limitations.reverse();
+  f.certification.certification = { arbitrary_inherited_decision: "not interpreted", material_limitations: [{ issueRef: "opaque" }] };
+  f.persistCertification(Buffer.from(JSON.stringify(f.certification, null, 2)));
+  const reordered = await f.verify();
+  assert.deepEqual(reordered.admission, initial.admission);
+  assert.notEqual(reordered.proof.certification_sha256, initial.proof.certification_sha256);
+});
+
+for (const field of ["run_id", "stage_revision", "data_cutoff"] as const) {
+  test(`Certification lineage: rehashed wrong ${field} rejects before owner proof recording`, async () => {
+    const f = runtimeFixture(); const writes: unknown[] = [];
+    if (field === "run_id") f.certification.run_id = "00000000-0000-4000-8000-000000000099";
+    if (field === "stage_revision") f.certification.stage_revision = 2;
+    if (field === "data_cutoff") f.certification.data_cutoff = "2026-09-30";
+    f.persistCertification();
+    await assert.rejects(verifyAndRecordMethodV2Challenge(f.source, f.identity.context.run_id,
+      { async recordVerifiedProof(proof) { writes.push(proof); } }), /CERTIFICATION_CONTEXT_MISMATCH/);
+    assert.deepEqual(writes, []);
+  });
+}
+
+for (const reference of ["question_ledger_ref", "challenge_report_ref", "fundamentals_lock_ref", "valuation_lock_ref"] as const) {
+  for (const member of ["artifact_id", "version", "content_sha256"] as const) {
+    test(`Certification lineage: persisted stale ${reference}.${member} rejects despite matching Registry bytes`, async () => {
+      const f = runtimeFixture(); const ref = f.certification.method_v2_challenge_binding[reference];
+      if (member === "artifact_id") ref.artifact_id = "00000000-0000-4000-8000-000000000099";
+      if (member === "version") ref.version++;
+      if (member === "content_sha256") ref.content_sha256 = "f".repeat(64);
+      f.persistCertification();
+      await assert.rejects(f.verify(), /CERTIFICATION_ARTIFACT_REF_MISMATCH/);
+    });
+  }
+}
+
+for (const defect of ["omission", "addition", "duplicate", "question_id", "decision_impact", "mitigation_or_resolution", "trim", "status"] as const) {
+  test(`Certification lineage: concern ${defect} rejects with a valid persisted hash`, async () => {
+    const f = concernsFixture(); const binding = f.certification.method_v2_challenge_binding;
+    if (defect === "omission") binding.challenge_limitations.pop();
+    if (defect === "addition") binding.challenge_limitations.push({ ...binding.challenge_limitations[0], question_id: "EXTRA" });
+    if (defect === "duplicate") binding.challenge_limitations.push({ ...binding.challenge_limitations[0] });
+    if (["question_id", "decision_impact", "mitigation_or_resolution"].includes(defect)) {
+      binding.challenge_limitations[0][defect as "question_id" | "decision_impact" | "mitigation_or_resolution"] += "altered";
+    }
+    if (defect === "trim") binding.challenge_limitations[0].decision_impact = binding.challenge_limitations[0].decision_impact.trim();
+    if (defect === "status") { binding.challenge_status = "PASS"; binding.challenge_limitations = []; }
+    f.persistCertification();
+    await assert.rejects(f.verify(), defect === "duplicate" ? /CERTIFICATION_DUPLICATE_QUESTION_ID/
+      : defect === "status" ? /CERTIFICATION_CHALLENGE_STATUS_MISMATCH/ : /CERTIFICATION_CHALLENGE_LIMITATIONS_MISMATCH/);
+  });
+}
+
+test("Certification lineage: PASS cannot carry a limitation or a fabricated PASS_WITH_CONCERNS binding", async () => {
+  for (const status of ["PASS", "PASS_WITH_CONCERNS"] as const) {
+    const f = runtimeFixture(); const binding = f.certification.method_v2_challenge_binding;
+    binding.challenge_status = status;
+    binding.challenge_limitations.push({ question_id: "EXTRA", decision_impact: "extra", mitigation_or_resolution: "extra" });
+    f.persistCertification();
+    await assert.rejects(f.verify(), status === "PASS" ? /PASS_LIMITATIONS_NOT_EMPTY/ : /CHALLENGE_STATUS_MISMATCH/);
+  }
+});
+
+test("Certification lineage: storage tampering, including opaque inherited content, never records a proof", async () => {
+  for (const mode of ["size", "binding", "inherited"] as const) {
+    const f = runtimeFixture(); const writes: unknown[] = [];
+    const row = f.rows.get(f.identity.certification.ref.artifact_id)!;
+    const bytes = f.stored.get(row.supabase_object_path!)!;
+    const tampered = Buffer.from(mode === "size" ? "short" : Buffer.from(bytes).toString().replace(
+      mode === "binding" ? '"stage_revision":1' : "opaque Certification content",
+      mode === "binding" ? '"stage_revision":2' : "OPAQUE Certification content"));
+    f.stored.set(row.supabase_object_path!, tampered);
+    await assert.rejects(verifyAndRecordMethodV2Challenge(f.source, f.identity.context.run_id,
+      { async recordVerifiedProof(proof) { writes.push(proof); } }), mode === "size" ? /SIZE_MISMATCH/ : /SHA256_MISMATCH/);
+    assert.deepEqual(writes, []);
+  }
+});
+
+test("Certification lineage: missing, non-authoritative, stale and wrongly stored Certification cannot be substituted", async () => {
+  for (const mutation of [{ authority_state: "SUPERSEDED" }, { authority_class: "CHECKPOINT_STAGE_OUTPUT" },
+    { run_id: "wrong" }, { version: 2 }, { artifact_type: "OTHER" }, { stage_code: "RESEARCH" },
+    { artifact_status: "INVALIDATED" }, { availability_state: "MISSING" }, { content_sha256: "f".repeat(64) },
+    { supabase_bucket: "orotitan-source-files-v1" }, { media_type: "text/plain" }]) {
+    const f = runtimeFixture(); Object.assign(f.rows.get(f.identity.certification.ref.artifact_id)!, mutation);
+    await assert.rejects(f.verify(), /REGISTRY_MISMATCH|STORAGE_NOT_APPROVED/);
+  }
+  const f = runtimeFixture(); f.rows.delete(f.identity.certification.ref.artifact_id);
+  await assert.rejects(f.verify(), /REGISTRY_MISMATCH/);
+});
+
+test("Certification lineage: duplicate decoded JSON member names reject after exact byte hashing", async () => {
+  for (const replacement of ['"stage_revision":1,"stage_revision":1', '"stage_revision":1,"stage_\\u0072evision":1']) {
+    const f = runtimeFixture();
+    f.persistCertification(Buffer.from(JSON.stringify(f.certification).replace('"stage_revision":1', replacement)));
+    await assert.rejects(f.verify(), /CERTIFICATION_DUPLICATE_JSON_MEMBER/);
+  }
+});
+
+test("Certification lineage: DELTA prior Certification is reread and its binding cannot be stale", async () => {
+  const prior = runtimeFixture(); const current = multiReferenceFixture("DELTA", undefined, false, prior);
+  assert.equal((await current.verify()).admission.allowed, true);
+  assert.ok(prior.downloads.includes(prior.rows.get(prior.identity.certification.ref.artifact_id)!.supabase_object_path!));
+  prior.certification.stage_revision = 2; prior.persistCertification();
+  await assert.rejects(current.verify(), /CERTIFICATION_CONTEXT_MISMATCH/);
+});
+
+test("Certification lineage: real server adapter selects the unique current/candidate Certification independently of edges", () => {
+  const f = runtimeFixture(); const manifestId = "00000000-0000-4000-8000-000000000010";
+  const artifacts = [f.identity.questionLedger, f.identity.challengeReport, f.identity.fundamentalsLock, f.identity.valuationLock, f.identity.certification];
+  const raw = { run_id: f.identity.context.run_id, stage: "DEEP_DIVE", manifest_id: manifestId, manifest_kind: "FINAL",
+    stage_revision: 1, contract_set_sha256: pack.contract_set_sha256,
+    output_artifacts: artifacts.map(a => ({ ...a.ref, artifact_type: a.artifactType, authority_class: "AUTHORITATIVE_STAGE_OUTPUT" })) };
+  const manifestBytes = Buffer.from(JSON.stringify(raw)); const path = "candidate/final.json";
+  for (const row of f.rows.values()) { row.manifest_artifact_id = manifestId; row.manifest_version = 1; }
+  f.rows.set(manifestId, { ...f.rows.get(f.identity.questionLedger.ref.artifact_id)!, artifact_id: manifestId,
+    artifact_type: "DEEP_DIVE_STAGE_MANIFEST", content_sha256: sha256(manifestBytes), size_bytes: manifestBytes.length,
+    supabase_object_path: path, storage_uri: `supabase://orotitan-text-artifacts-v1/${path}`, manifest_artifact_id: null, manifest_version: null });
+  f.stored.set(path, manifestBytes);
+  const runId = f.identity.context.run_id;
+  const tables = { orotitan_artifacts: [...f.rows.values()],
+    orotitan_runs: [{ run_id: runId, methodology_generation: "METHOD_V2", methodology_authority_sha256: f.identity.context.analyticalAuthoritySetSha256,
+      contract_set_sha256: pack.contract_set_sha256, contract_pins: pack.contract_pins, runtime_binding_sha256: METHOD_V2_RUNTIME_BINDING_SHA256,
+      issuer_id: "issuer", security_id: "security", dossier_id: "dossier", data_cutoff: f.identity.context.data_cutoff }],
+    orotitan_run_stages: [{ run_id: runId, stage_code: "DEEP_DIVE", stage_revision: 1,
+      active_manifest_artifact_id: manifestId, active_manifest_version: 1, active_manifest_kind: "FINAL" }],
+    issuers: [{ issuer_id: "issuer", display_name: f.identity.context.company }],
+    orotitan_artifact_edges: [f.identity.questionLedger, f.identity.fundamentalsLock, f.identity.valuationLock, f.evidence].map(a => ({
+      child_run_id: runId, child_artifact_id: f.identity.challengeReport.ref.artifact_id, child_version: 1,
+      parent_run_id: runId, parent_artifact_id: a.ref.artifact_id, parent_version: a.ref.version, relation_type: "CONSUMES" })).concat([{
+      child_run_id: runId, child_artifact_id: f.identity.certification.ref.artifact_id, child_version: 1,
+      parent_run_id: runId, parent_artifact_id: f.identity.challengeReport.ref.artifact_id, parent_version: 1, relation_type: "CONSUMES" }]),
+  };
+  const seed = { tables, stored: [...f.stored].map(([path, bytes]) => [path, Buffer.from(bytes).toString("base64")]),
+    runId, certId: f.identity.certification.ref.artifact_id,
+    manifestRef: { artifact_id: manifestId, version: 1, content_sha256: sha256(manifestBytes) } };
+  // Exercise server-only code in a React-server process, without creating any
+  // Supabase client, reading credentials or making a network connection.
+  const script = `
+    import assert from 'node:assert/strict';
+    import { createRequire } from 'node:module';
+    const require = createRequire(import.meta.url);
+    const { SupabaseMethodV2ChallengeRegistry } = require('./lib/orotitan-equity/method-v2/persisted-artifacts-server.ts');
+    const { verifyPersistedMethodV2Challenge } = require('./lib/orotitan-equity/method-v2/persisted-challenge.ts');
+    const seed = ${JSON.stringify(seed)};
+    const tables = seed.tables; const stored = new Map(seed.stored); const downloads = [];
+    const client = { from(table) {
+      const filters = []; const query = { select() { return query; },
+        eq(key, value) { filters.push(row => row[key] === value); return query; },
+        in(key, values) { filters.push(row => values.includes(row[key])); return query; },
+        then(ok, bad) { return Promise.resolve({ data: (tables[table] ?? []).filter(row => filters.every(fn => fn(row))), error: null }).then(ok, bad); },
+        async single() { const result = await query; return { data: result.data.length === 1 ? result.data[0] : null, error: result.data.length === 1 ? null : 'ambiguous' }; },
+        maybeSingle() { return query.single(); } }; return query;
+    }, storage: { from() { return { async download(path) { downloads.push(path); const bytes = Buffer.from(stored.get(path), 'base64');
+      return { error: null, data: { async arrayBuffer() { return Uint8Array.from(bytes).buffer; } } }; } }; } } };
+    const registry = new SupabaseMethodV2ChallengeRegistry(client);
+    assert.equal((await verifyPersistedMethodV2Challenge(registry, seed.runId)).proof.certification_id, seed.certId);
+    const cert = tables.orotitan_artifacts.find(row => row.artifact_id === seed.certId);
+    assert.ok(downloads.includes(cert.supabase_object_path));
+    tables.orotitan_artifacts.push({ ...cert, artifact_id: 'c0000000-0000-4000-8000-000000000999' });
+    await assert.rejects(verifyPersistedMethodV2Challenge(registry, seed.runId), /CERTIFICATION_CURRENT_LINEAGE_REQUIRED/);
+    tables.orotitan_artifacts.pop();
+    cert.manifest_artifact_id = 'stale';
+    await assert.rejects(verifyPersistedMethodV2Challenge(registry, seed.runId), /CERTIFICATION_CURRENT_LINEAGE_REQUIRED/);
+    cert.manifest_artifact_id = seed.manifestRef.artifact_id;
+    const edge = tables.orotitan_artifact_edges.pop();
+    await assert.rejects(verifyPersistedMethodV2Challenge(registry, seed.runId), /CERTIFICATION_EDGE_ABSENT/);
+    tables.orotitan_artifact_edges.push(edge);
+    tables.orotitan_run_stages[0].active_manifest_artifact_id = 'old-checkpoint';
+    tables.orotitan_run_stages[0].active_manifest_kind = 'CHECKPOINT';
+    assert.equal((await verifyPersistedMethodV2Challenge(registry, seed.runId, seed.manifestRef)).proof.certification_id, seed.certId);
+    const bytes = Buffer.from(stored.get(cert.supabase_object_path), 'base64'); bytes[0] = 0;
+    stored.set(cert.supabase_object_path, bytes.toString('base64'));
+    await assert.rejects(verifyPersistedMethodV2Challenge(registry, seed.runId, seed.manifestRef), /SHA256_MISMATCH/);
+  `;
+  execFileSync(process.execPath, ["--conditions=react-server", "--import=tsx", "--input-type=module", "-"], { stdio: "pipe", input: script });
 });

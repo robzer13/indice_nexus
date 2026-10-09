@@ -1,7 +1,8 @@
 import { METHOD_V2_AUTHORITY_SET_SHA256, canonicalJson } from "./authority";
 import { parseMethodV2EvidenceLedger } from "./evidence-ledger-persistence";
+import { parseMethodV2CertificationArtifact, verifyMethodV2CertificationChallengeBinding } from "./certification-persistence";
 import { admitMethodV2Certification, CHALLENGE_FAMILIES, type ArtifactRef, type ChallengeContext, type FamilyCoverage } from "./pre-certification";
-import { METHOD_V2_RUNTIME_BINDING_SHA256, resolvePersistedMethodV2Artifact,
+import { METHOD_V2_RUNTIME_BINDING_SHA256, METHOD_V2_CERTIFICATION_PROFILE_SHA256, resolvePersistedMethodV2Artifact,
   type ArtifactExpectation, type PersistedArtifactSource } from "./persisted-artifacts";
 
 export type ChallengeIdentity = {
@@ -10,6 +11,7 @@ export type ChallengeIdentity = {
   candidateManifest?: ArtifactExpectation; historicalPassing?: true;
   questionLedger: ArtifactExpectation; challengeReport: ArtifactExpectation;
   fundamentalsLock: ArtifactExpectation; valuationLock: ArtifactExpectation;
+  certification: ArtifactExpectation;
 };
 export interface ChallengeRegistry extends PersistedArtifactSource {
   // This identity is loaded from Registry run/stage/artifact lineage, not supplied as PASS claims.
@@ -23,7 +25,9 @@ export type ChallengeProof = {
   challenge_report_id: string; challenge_report_version: number; challenge_report_sha256: string;
   fundamentals_lock_id: string; fundamentals_lock_version: number; fundamentals_lock_sha256: string;
   valuation_lock_id: string; valuation_lock_version: number; valuation_lock_sha256: string;
-  runtime_binding_sha256: string; validator_identity: "verifyPersistedMethodV2Challenge:1.0";
+  certification_id: string; certification_version: number; certification_sha256: string;
+  certification_profile_sha256: string;
+  runtime_binding_sha256: string; validator_identity: "verifyPersistedMethodV2Challenge:1.1";
 };
 const same = (a: unknown, b: unknown) => canonicalJson(a) === canonicalJson(b);
 
@@ -40,16 +44,19 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
     const key = `${context.challenge_report_ref.artifact_id}:${context.challenge_report_ref.version}`;
     if (visited.has(key)) throw new Error("METHOD_V2_CHALLENGE_DELTA_CYCLE");
     visited.add(key);
+    if (!identity.certification) throw new Error("METHOD_V2_CERTIFICATION_CURRENT_LINEAGE_REQUIRED");
     const expectedArtifacts = [
       [identity.questionLedger, context.question_ledger_ref, "PRE_CERTIFICATION_QUESTION_LEDGER"],
       [identity.challengeReport, context.challenge_report_ref, "PRE_CERTIFICATION_CHALLENGE_REPORT"],
       [identity.fundamentalsLock, context.fundamentals_lock_ref, "FUNDAMENTALS_LOCK"],
       [identity.valuationLock, context.valuation_lock_ref, "VALUATION_LOCK"],
+      [identity.certification, identity.certification.ref, "CERTIFICATION_ARTIFACT"],
     ] as const;
     for (const [expected, ref, kind] of expectedArtifacts) {
       if (!same(expected.ref, ref) || expected.runId !== context.run_id || expected.stageCode !== "DEEP_DIVE"
         || expected.artifactType !== kind || expected.artifactStatus !== "SEALED"
-        || !["AUTHORITATIVE_STAGE_OUTPUT", "CHECKPOINT_STAGE_OUTPUT"].includes(expected.authorityClass)
+        || !(kind === "CERTIFICATION_ARTIFACT" ? ["AUTHORITATIVE_STAGE_OUTPUT"] : ["AUTHORITATIVE_STAGE_OUTPUT", "CHECKPOINT_STAGE_OUTPUT"]).includes(expected.authorityClass)
+        || (kind === "CERTIFICATION_ARTIFACT" && !(historical ? ["AUTHORITATIVE", "SUPERSEDED"] : ["AUTHORITATIVE"]).includes(expected.authorityState))
         || !(historical ? ["AUTHORITATIVE", "CHECKPOINT", "SUPERSEDED"] : ["AUTHORITATIVE", "CHECKPOINT"]).includes(expected.authorityState)) {
         throw new Error("METHOD_V2_CHALLENGE_REGISTRY_LINEAGE_MISMATCH");
       }
@@ -72,11 +79,12 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
           || expected.manifestRef?.artifact_id !== manifestExpected.ref.artifact_id
           || expected.manifestRef.version !== manifestExpected.ref.version)) throw new Error("METHOD_V2_CHALLENGE_CANDIDATE_MISMATCH");
     }
-    const [ledger, report] = await Promise.all(expectedArtifacts.map(([expected]) => resolvePersistedMethodV2Artifact(registry, expected)));
+    const [ledger, report, , , certification] = await Promise.all(expectedArtifacts.map(([expected]) => resolvePersistedMethodV2Artifact(registry, expected)));
     // Pure validation owns schema, aggregation, saturation, concerns and cutoff checks.
     const result = admitMethodV2Certification(context, ledger.bytes, report.bytes);
     const rawReport = JSON.parse(Buffer.from(report.bytes).toString("utf8")) as {
-      mode: "FULL" | "DELTA"; saturation_record: { family_coverage: Record<typeof CHALLENGE_FAMILIES[number], FamilyCoverage> };
+      mode: "FULL" | "DELTA"; challenge_status: "PASS" | "PASS_WITH_CONCERNS";
+      saturation_record: { family_coverage: Record<typeof CHALLENGE_FAMILIES[number], FamilyCoverage> };
     };
     if (rawReport.mode === "DELTA") {
       if (!context.priorPassing) throw new Error("CHALLENGE_DELTA_PROVENANCE_INVALID");
@@ -111,6 +119,15 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
         authoritativeEvidenceLedgerRef ??= { artifact_id: ref.artifact_id, version: ref.version, content_sha256: ref.content_sha256 };
       }
     }
+    // Validate authoritative persisted Certification, including opaque inherited
+    // bytes, only against the independently admitted current Challenge context.
+    // CONSUMES edges and caller claims cannot stand in for this exact binding.
+    verifyMethodV2CertificationChallengeBinding(parseMethodV2CertificationArtifact(certification.bytes), {
+      run_id: context.run_id, stage_revision: identity.stageRevision, data_cutoff: context.data_cutoff,
+      question_ledger_ref: context.question_ledger_ref, challenge_report_ref: context.challenge_report_ref,
+      fundamentals_lock_ref: context.fundamentals_lock_ref, valuation_lock_ref: context.valuation_lock_ref,
+      challenge_status: rawReport.challenge_status, challenge_limitations: result.limitations,
+    });
     return result;
   };
   const identity = await registry.readChallengeIdentity(runId, candidateManifestRef);
@@ -128,7 +145,10 @@ export async function verifyPersistedMethodV2Challenge(registry: ChallengeRegist
     fundamentals_lock_sha256: ctx.fundamentals_lock_ref.content_sha256,
     valuation_lock_id: ctx.valuation_lock_ref.artifact_id, valuation_lock_version: ctx.valuation_lock_ref.version,
     valuation_lock_sha256: ctx.valuation_lock_ref.content_sha256,
-    runtime_binding_sha256: METHOD_V2_RUNTIME_BINDING_SHA256, validator_identity: "verifyPersistedMethodV2Challenge:1.0",
+    certification_id: identity.certification.ref.artifact_id, certification_version: identity.certification.ref.version,
+    certification_sha256: identity.certification.ref.content_sha256,
+    certification_profile_sha256: METHOD_V2_CERTIFICATION_PROFILE_SHA256,
+    runtime_binding_sha256: METHOD_V2_RUNTIME_BINDING_SHA256, validator_identity: "verifyPersistedMethodV2Challenge:1.1",
   };
   return { admission, proof };
 }

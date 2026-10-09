@@ -12,7 +12,7 @@ SQL
 cat > "$scratch/request.sql" <<'SQL'
 begin;
 select public.create_orotitan_method_v2_runtime_run(:'request_key',d.issuer_id,s.security_id,d.dossier_id,
-  d.current_snapshot_id,'2026-10-07',repeat('c',64),'0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c')
+  d.current_snapshot_id,'2026-10-07',repeat('c',64),'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0')
 from public.research_dossiers d join public.legacy_company_identity_map m using(dossier_id,issuer_id)
 join public.securities s on s.security_id=m.security_id and s.issuer_id=d.issuer_id
 where m.legacy_company_id='00000000-0000-4000-8000-000000000002';

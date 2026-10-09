@@ -27,8 +27,8 @@ create table public.orotitan_method_v2_runtime_control (
     check (methodology_authority_sha256 = '1e97ad30595d24d10345cfcb58c8b6c0feeb7272144af1fc12d0affd2d2e33b2'),
   contract_set_sha256 text not null default '23b75bf5c2d7448e8270e7e8f3a0223e639d0be3a1406b3c089e6e885dd063ea'
     check (contract_set_sha256 = '23b75bf5c2d7448e8270e7e8f3a0223e639d0be3a1406b3c089e6e885dd063ea'),
-  runtime_binding_sha256 text not null default '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
-    check (runtime_binding_sha256 = '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'),
+  runtime_binding_sha256 text not null default 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'
+    check (runtime_binding_sha256 = 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'),
   runtime_commit_sha text check (runtime_commit_sha ~ '^[0-9a-f]{40}$'),
   check (admission_mode in ('INSTALLED_INACTIVE','DISABLED') or runtime_commit_sha is not null)
 );
@@ -57,7 +57,7 @@ alter table public.orotitan_runs add column runtime_binding_sha256 text,
   add constraint orotitan_method_v2_runtime_birth_check check (
     runtime_binding_sha256 is null or (
       methodology_generation = 'METHOD_V2'
-      and runtime_binding_sha256 = '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
+      and runtime_binding_sha256 = 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'
       and runtime_commit_sha is not null and runtime_commit_sha ~ '^[0-9a-f]{40}$'
       and parent_run_id is null and issuer_id is not null and security_id is not null and dossier_id is not null
       and contract_pins = public.orotitan_method_v2_runtime_contract_pins()
@@ -70,7 +70,7 @@ alter table public.orotitan_runs add column runtime_binding_sha256 text,
 create unique index orotitan_one_nonterminal_fresh_method_v2_dossier_idx
 on public.orotitan_runs(dossier_id)
 where methodology_generation = 'METHOD_V2' and parent_run_id is null
-  and runtime_binding_sha256 = '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
+  and runtime_binding_sha256 = 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'
   and run_status in ('CREATED','ACTIVE','PAUSED','BLOCKED','READY_TO_PUBLISH');
 
 create function public.enforce_orotitan_method_v2_runtime_identity()
@@ -125,7 +125,7 @@ begin
     or p_issuer_id is null or p_security_id is null or p_dossier_id is null or p_data_cutoff is null then
     raise exception 'METHOD_V2_INVALID_REQUEST' using errcode='22023';
   end if;
-  if p_runtime_binding_sha256 is distinct from '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c' then
+  if p_runtime_binding_sha256 is distinct from 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0' then
     raise exception 'METHOD_V2_RUNTIME_BINDING_MISMATCH' using errcode='23514';
   end if;
   -- Serialize creation keys across dossiers as well as exact requests on one dossier.
@@ -179,7 +179,7 @@ begin
   end if;
   if exists (select 1 from public.orotitan_runs where dossier_id=p_dossier_id
     and methodology_generation='METHOD_V2' and parent_run_id is null
-    and runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'
+    and runtime_binding_sha256='b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'
     and run_status in ('CREATED','ACTIVE','PAUSED','BLOCKED','READY_TO_PUBLISH')) then
     raise exception 'METHOD_V2_FRESH_RUN_ALREADY_EXISTS' using errcode='23514';
   end if;
@@ -212,13 +212,17 @@ create table public.orotitan_method_v2_challenge_proofs (
   fundamentals_lock_sha256 text not null check (fundamentals_lock_sha256 ~ '^[0-9a-f]{64}$'),
   valuation_lock_id uuid not null, valuation_lock_version integer not null,
   valuation_lock_sha256 text not null check (valuation_lock_sha256 ~ '^[0-9a-f]{64}$'),
-  runtime_binding_sha256 text not null check (runtime_binding_sha256 = '0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c'),
-  validator_identity text not null check (validator_identity = 'verifyPersistedMethodV2Challenge:1.0'),
+  certification_id uuid not null, certification_version integer not null,
+  certification_sha256 text not null check (certification_sha256 ~ '^[0-9a-f]{64}$'),
+  certification_profile_sha256 text not null check (certification_profile_sha256 = 'a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c'),
+  runtime_binding_sha256 text not null check (runtime_binding_sha256 = 'b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0'),
+  validator_identity text not null check (validator_identity = 'verifyPersistedMethodV2Challenge:1.1'),
   primary key (run_id,stage_revision,challenge_report_id,challenge_report_version),
   foreign key (run_id,question_ledger_id,question_ledger_version) references public.orotitan_artifacts(run_id,artifact_id,version),
   foreign key (run_id,challenge_report_id,challenge_report_version) references public.orotitan_artifacts(run_id,artifact_id,version),
   foreign key (run_id,fundamentals_lock_id,fundamentals_lock_version) references public.orotitan_artifacts(run_id,artifact_id,version),
-  foreign key (run_id,valuation_lock_id,valuation_lock_version) references public.orotitan_artifacts(run_id,artifact_id,version)
+  foreign key (run_id,valuation_lock_id,valuation_lock_version) references public.orotitan_artifacts(run_id,artifact_id,version),
+  foreign key (run_id,certification_id,certification_version) references public.orotitan_artifacts(run_id,artifact_id,version)
 );
 alter table public.orotitan_method_v2_challenge_proofs enable row level security;
 revoke all on public.orotitan_method_v2_challenge_proofs from public,anon,authenticated,service_role;
@@ -262,7 +266,11 @@ begin
     select * into strict proof from public.orotitan_method_v2_challenge_proofs where run_id=p_run_id
       and stage_revision=p_revision and question_ledger_id=q.artifact_id and question_ledger_version=q.version
       and challenge_report_id=ch.artifact_id and challenge_report_version=ch.version
-      and question_ledger_sha256=q.content_sha256 and challenge_report_sha256=ch.content_sha256;
+      and question_ledger_sha256=q.content_sha256 and challenge_report_sha256=ch.content_sha256
+      -- An edge alone is insufficient: the owner verifier must have reread this
+      -- exact Certification payload and validated its complete Challenge binding.
+      and certification_id=cert.artifact_id and certification_version=cert.version
+      and certification_sha256=cert.content_sha256;
   exception when no_data_found or too_many_rows then
     raise exception 'METHOD_V2_CHALLENGE_PERSISTED_PROOF_REQUIRED' using errcode='23514';
   end;
@@ -301,7 +309,7 @@ returns trigger language plpgsql security definer set search_path = pg_catalog, 
 declare d public.orotitan_run_stages%rowtype;
 begin
   if not exists(select 1 from public.orotitan_runs where run_id=new.run_id and methodology_generation='METHOD_V2'
-    and runtime_binding_sha256='0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c') then
+    and runtime_binding_sha256='b078df1a792aa6dc46b913457406e9d48d6dd79cca55d8951d8f14218eb384d0') then
     return new;
   end if;
   if new.stage_code='DEEP_DIVE' and (new.lifecycle_status='COMPLETE' or new.handoff_gate_state='YES') then
