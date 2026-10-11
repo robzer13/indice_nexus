@@ -22,6 +22,43 @@ export interface CandidateMarketQuote {
 const MAX_PRICE_AGE_MS = 96 * 60 * 60 * 1000;
 const FUTURE_GRACE_MS = 5 * 60 * 1000;
 const US_EXCHANGES = new Set(['NASDAQ','NYSE','NYSE ARCA','NYSE AMERICAN']);
+
+/** Canonical venue mappings, grounded in persisted Screener exchange values.
+ * Unknown exchanges are unsupported until explicitly mapped and tested.
+ */
+const VENUE_REF_SUFFIXES: Record<string, readonly string[]> = {
+  'NASDAQ':['',':NASDAQ'], 'NYSE':['',':NYSE'],
+  'EURONEXT PARIS':[':EPA','.PA'],
+  'EURONEXT AMSTERDAM':['.AS'], 'SIX SWISS EXCHANGE':['.SW'],
+  'TORONTO STOCK EXCHANGE':['.TO'], 'SGX MAINBOARD':['.SI'],
+  'NASDAQ COPENHAGEN':['.CO'], 'TSX VENTURE EXCHANGE':['.V'],
+  'TAIWAN STOCK EXCHANGE':['.TW'], 'LONDON STOCK EXCHANGE':[':LSE','.L'],
+  'XETRA':[':XETR','.DE'], 'OSLO BØRS':[':OSE','.OL'],
+};
+export function assertCanonicalMarketReference(instrument: ExpectedMarketInstrument): void {
+  const suffixes=VENUE_REF_SUFFIXES[instrument.exchange.trim().toUpperCase()];
+  if (!suffixes) throw new Error('CANONICAL_EXCHANGE_UNMAPPED');
+  const ref=instrument.reference.trim().toUpperCase();
+  const ticker=instrument.ticker.trim().toUpperCase();
+  if(!suffixes.some(suffix=>ref===ticker+suffix))
+    throw new Error('QUOTE_REFERENCE_SECURITY_MISMATCH');
+}
+
+/** Only direct venue echoes or reviewed naming aliases count as corroboration. */
+export function assertTwelveDataVenue(requestedExchange: string, returnedExchange: string | null): void {
+  const requested=requestedExchange.trim().toUpperCase();
+  const returned=returnedExchange?.trim().toUpperCase()??'';
+  const aliases:Record<string,readonly string[]>={
+    'EURONEXT':['EURONEXT','EURONEXT PARIS'],
+    'LSE':['LSE','LONDON STOCK EXCHANGE'],
+    'XETR':['XETR','XETRA'],
+    'OSE':['OSE','OSLO','OSLO BØRS'],
+    'NASDAQ':['NASDAQ'], 'NYSE':['NYSE'],
+  };
+  if (!returned || !(aliases[requested]??[requested]).includes(returned))
+    throw new Error('TWELVE_DATA_EXCHANGE_MISMATCH');
+}
+
 const YAHOO_NASDAQ = new Set(['NMS','NGM','NCM','NAS','NMQ']);
 const YAHOO_NYSE = new Set(['NYQ','NYE','ASE','PCX']);
 
@@ -52,6 +89,7 @@ export function admitMarketQuote(
     || !Number.isFinite(expected.multiplier) || expected.multiplier <= 0) {
     throw new Error('INVALID_CANONICAL_INSTRUMENT');
   }
+  assertCanonicalMarketReference(expected);
   const match = (s: string) => s.trim().toUpperCase();
   if (!candidate.providerSymbol || match(candidate.providerSymbol) !== match(expectedProviderSymbol))
     throw new Error('QUOTE_SYMBOL_MISMATCH');

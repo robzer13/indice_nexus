@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
+import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
 const now=new Date('2026-10-11T18:00:00Z');
 const eur:ExpectedMarketInstrument={
   reference:'ADYEN.AS',ticker:'ADYEN',exchange:'Euronext Amsterdam',
@@ -42,4 +42,29 @@ test('bare tickers may not silently switch listing exchange',()=>{
   assert.throws(()=>requireUsListingMatch('Nasdaq','NYQ'),/QUOTE_EXCHANGE_MISMATCH/);
   assert.doesNotThrow(()=>requireUsListingMatch('NYSE','NYQ'));
   assert.throws(()=>requireUsListingMatch('NYSE',null),/QUOTE_EXCHANGE_MISMATCH/);
+});
+
+test('reference must match canonical ticker AND exchange before valuation',()=>{
+  const valid=[
+    ['ADYEN.AS','ADYEN','Euronext Amsterdam'],
+    ['AI:EPA','AI','Euronext Paris'],['BEAN.SW','BEAN','SIX Swiss Exchange'],
+    ['BN.TO','BN','Toronto Stock Exchange'],['D05.SI','D05','SGX Mainboard'],
+    ['NOVO-B.CO','NOVO-B','Nasdaq Copenhagen'],['TOI.V','TOI','TSX Venture Exchange'],
+    ['2330.TW','2330','Taiwan Stock Exchange'],['AUTO:LSE','AUTO','London Stock Exchange'],
+    ['RAA:XETR','RAA','Xetra'],['MEDI:OSE','MEDI','Oslo Børs'],
+    ['ISRG:NASDAQ','ISRG','Nasdaq'],['WSE:NASDAQ','WSE','Nasdaq'],
+    ['V','V','NYSE'],['META','META','Nasdaq'],
+  ];
+  for(const [reference,ticker,exchange] of valid)
+    assert.doesNotThrow(()=>assertCanonicalMarketReference({...eur,reference,ticker,exchange}));
+  assert.throws(()=>assertCanonicalMarketReference({...eur,reference:'MSFT',ticker:'NVDA',exchange:'Nasdaq'}),/QUOTE_REFERENCE_SECURITY_MISMATCH/);
+  assert.throws(()=>assertCanonicalMarketReference({...eur,reference:'AI:EPA',ticker:'AI',exchange:'Euronext Amsterdam'}),/QUOTE_REFERENCE_SECURITY_MISMATCH/);
+  assert.throws(()=>assertCanonicalMarketReference({...eur,exchange:'Unverified Venue'}),/CANONICAL_EXCHANGE_UNMAPPED/);
+});
+test('secondary source must corroborate requested exchange',()=>{
+  assert.doesNotThrow(()=>assertTwelveDataVenue('NASDAQ','NASDAQ'));
+  assert.doesNotThrow(()=>assertTwelveDataVenue('EURONEXT','Euronext Paris'));
+  assert.doesNotThrow(()=>assertTwelveDataVenue('XETR','Xetra'));
+  assert.throws(()=>assertTwelveDataVenue('NASDAQ','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
+  assert.throws(()=>assertTwelveDataVenue('LSE',null),/TWELVE_DATA_EXCHANGE_MISMATCH/);
 });

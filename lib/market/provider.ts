@@ -4,7 +4,7 @@ import { fetchYahooFinancePrice } from '@/lib/market/yahoo-finance';
 import { toYahooFinanceSymbol } from '@/lib/market/yahoo-symbol';
 import { parseTwelveDataInstrumentRef } from '@/lib/market/twelve-data-symbol';
 import {
-  admitMarketQuote,isUnambiguousUSExchange,requireUsListingMatch,
+  admitMarketQuote,isUnambiguousUSExchange,requireUsListingMatch,assertTwelveDataVenue,
   type CandidateMarketQuote,type ExpectedMarketInstrument,type MarketFeedName,
 } from '@/lib/market/price-quality';
 export type MarketPriceProvider = MarketFeedName;
@@ -56,8 +56,7 @@ export async function fetchProviderPrice(instrument: ExpectedMarketInstrument): 
         providerPrice:fetched.providerPrice,observedAt:fetched.fetchedAt,raw:fetched.raw,
       };
       // The payload exchange must be present for cross-listed instruments.
-      if(requested.exchange && !quote.providerExchange)
-        throw new Error('TWELVE_DATA_EXCHANGE_MISSING');
+      if(requested.exchange)assertTwelveDataVenue(requested.exchange,quote.providerExchange);
       const normalizedPrice=admitMarketQuote(instrument,quote,requested.symbol);
       return {provider:'TWELVE_DATA',providerPrice:quote.providerPrice,
         normalizedPrice,fetchedAt:quote.observedAt,raw:quote.raw};
