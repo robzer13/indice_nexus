@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { AdminNav } from '@/components/admin/admin-nav';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
 import { eurNumber, loadPaperDashboard } from '@/lib/data/paper-portfolio';
-import { getFreshness } from '@/lib/domain/freshness';
+import { isAdmissiblePaperValuationQuote } from '@/lib/domain/paper-quote-validation';
 import { createPaperPortfolioAction, createPaperPolicyAction, evaluatePaperSignalAction, executeVirtualFillAction } from './actions';
 
 export const metadata: Metadata = { title: 'Portefeuille virtuel' };
@@ -73,7 +73,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
             <thead className="text-xs uppercase text-slate-500"><tr><th>Société</th><th>Stratégie</th><th>Quantité</th><th>PRU</th><th>Cours</th><th>Valeur</th></tr></thead>
             <tbody className="divide-y divide-slate-800">
               {data.positions.map(p => {const c=names.get(p.company_id),q=data.quotes.get(p.company_id);
-                const valid=!!q && c?.currency==='EUR' && c?.quote_unit==='MAJOR' && !getFreshness(q.as_of).stale;
+                const valid=!!q && c?.currency==='EUR' && c?.quote_unit==='MAJOR' && isAdmissiblePaperValuationQuote(Number(q.price),q.as_of);
                 return <tr key={p.company_id} className="text-slate-200">
                   <td className="py-3 font-medium">{c?.name??p.company_id.slice(0,8)}</td>
                   <td>{data.policies.find(x=>x.company_id===p.company_id)?.profile??'—'}</td>
@@ -138,7 +138,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
           <div className="space-y-3">{data.signals.map(s=>{
             const q=data.quotes.get(s.company_id),done=filledIds.has(s.id);
             const newer=!!q&&Date.parse(q.as_of)>Date.parse(s.created_at)
-              &&Date.parse(q.created_at)>Date.parse(s.created_at)&&!getFreshness(q.as_of).stale;
+              &&Date.parse(q.created_at)>Date.parse(s.created_at)&&isAdmissiblePaperValuationQuote(Number(q.price),q.as_of);
             const actionable=s.action==='BUY_CANDIDATE'||s.action==='SELL_CANDIDATE';
             return <div key={s.id} className="flex flex-col justify-between gap-3 rounded-xl border border-slate-800 bg-slate-950/50 p-4 lg:flex-row lg:items-center">
               <div><p className="text-sm font-semibold text-white">{names.get(s.company_id)?.name??s.company_id.slice(0,8)}

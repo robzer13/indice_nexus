@@ -127,6 +127,8 @@ begin
   then raise exception 'PAPER_SNAPSHOT_NOT_CURRENT' using errcode='23514'; end if;
   select quote.* into q from public.market_prices quote
     join public.legacy_company_identity_map link on link.legacy_company_id=quote.company_id
+    join public.research_snapshots snap on snap.snapshot_id=pol.snapshot_id
+      and snap.issuer_id=pol.company_id and snap.security_id=link.security_id
     where quote.id=p_quote and link.issuer_id=pol.company_id;
   if not found then raise exception 'PAPER_QUOTE_COMPANY_MISMATCH' using errcode='23514'; end if;
   if q.as_of > now()+interval '5 minutes' or q.as_of < now()-interval '96 hours'
@@ -177,6 +179,8 @@ begin
   then raise exception 'PAPER_SIGNAL_ALREADY_FILLED' using errcode='23505'; end if;
   select quote.* into q from public.market_prices quote
     join public.legacy_company_identity_map link on link.legacy_company_id=quote.company_id
+    join public.research_snapshots snap on snap.snapshot_id=s.snapshot_id
+      and snap.issuer_id=s.company_id and snap.security_id=link.security_id
     where quote.id=p_quote and link.issuer_id=s.company_id;
   if not found or q.as_of<=s.created_at or q.created_at<=s.created_at
     or q.as_of>now()+interval '5 minutes' or q.as_of<now()-interval '96 hours'

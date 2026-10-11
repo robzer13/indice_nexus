@@ -1,7 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getCompanyStates } from '@/lib/data/companies';
-import { getFreshness } from '@/lib/domain/freshness';
+import { isAdmissiblePaperValuationQuote } from '@/lib/domain/paper-quote-validation';
 import type { CompanyState } from '@/lib/domain/types';
 import type { PaperInvestmentProfile, PaperSignalAction, PaperThesisState, PaperMilestoneState } from '@/lib/domain/paper-signals';
 
@@ -56,8 +56,19 @@ export async function latestStoredQuote(issuerId: string): Promise<PaperQuote | 
   // Canonical issuer IDs differ from historical companies IDs used by market_prices.
   // Resolve only through the audited identity crosswalk; no implicit UUID equality.
   const supabase = createServerSupabaseClient();
+  const { data: dossier, error: dossierError } = await supabase.from('research_dossiers')
+    .select('current_snapshot_id').eq('issuer_id', issuerId).eq('active', true)
+    .not('current_snapshot_id', 'is', null).limit(1).maybeSingle();
+  if (dossierError) throw new Error('Résolution du dossier courant impossible : ' + dossierError.message);
+  if (!dossier?.current_snapshot_id) return null;
+  const { data: snapshot, error: snapshotError } = await supabase.from('research_snapshots')
+    .select('security_id').eq('snapshot_id', dossier.current_snapshot_id)
+    .eq('issuer_id', issuerId).maybeSingle();
+  if (snapshotError) throw new Error('Résolution de la sécurité canonique impossible : ' + snapshotError.message);
+  if (!snapshot?.security_id) return null;
   const { data: link, error: linkError } = await supabase.from('legacy_company_identity_map')
-    .select('legacy_company_id').eq('issuer_id', issuerId).maybeSingle();
+    .select('legacy_company_id').eq('issuer_id', issuerId)
+    .eq('security_id', snapshot.security_id).maybeSingle();
   if (linkError) throw new Error('Résolution des identités de cours impossible : ' + linkError.message);
   if (!link) return null;
   const { data, error } = await supabase.from('market_prices')
@@ -116,7 +127,7 @@ export async function loadPaperDashboard(): Promise<PaperDashboard> {
     const quote = quotes.get(pos.company_id);
     const company = companyById.get(pos.company_id);
     if (!quote || !company || company.currency !== 'EUR' || company.quote_unit !== 'MAJOR'
-      || getFreshness(quote.as_of).stale) {
+      || !isAdmissiblePaperValuationQuote(Number(quote.price),quote.as_of)) {
       unpricedPositions++;
       continue;
     }

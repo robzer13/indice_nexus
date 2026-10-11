@@ -21,14 +21,17 @@ create table public.issuers(issuer_id uuid primary key);
 create table public.securities(security_id uuid primary key, trading_currency text not null, quote_unit text not null);
 create table public.research_snapshots(snapshot_id uuid primary key, issuer_id uuid not null references public.issuers, security_id uuid not null references public.securities);
 create table public.research_dossiers(issuer_id uuid not null references public.issuers, current_snapshot_id uuid references public.research_snapshots, active boolean not null);
-create table public.legacy_company_identity_map (legacy_company_id uuid primary key, issuer_id uuid not null references public.issuers);
+create table public.legacy_company_identity_map (legacy_company_id uuid primary key, issuer_id uuid not null references public.issuers, security_id uuid not null references public.securities);
 create table public.market_prices (
   id bigint generated always as identity primary key, company_id uuid not null,
   price numeric not null, as_of timestamptz not null, created_at timestamptz not null default now()
 );
 insert into public.issuers values ('00000000-0000-4000-8000-000000000111');
-insert into public.legacy_company_identity_map values ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111');
-insert into public.securities values ('00000000-0000-4000-8000-000000000222','EUR','MAJOR');
+insert into public.securities values
+  ('00000000-0000-4000-8000-000000000222','EUR','MAJOR'),
+  ('00000000-0000-4000-8000-000000000555','USD','MAJOR');
+insert into public.legacy_company_identity_map values
+  ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.research_snapshots values
   ('00000000-0000-4000-8000-000000000333','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.research_dossiers values
@@ -47,6 +50,16 @@ begin
     '00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000333',
     'VALUE','ACTIVE','NOT_APPLICABLE',4.5,12,'Fixture VALUE avec cible de sortie et suivi');
   if (select version from public.paper_policy_versions where id=pol)<>1 then raise exception 'Missing policy version'; end if;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000555'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  begin
+    perform public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','WAIT','WRONG_SECURITY');
+    raise exception 'PAPER_WRONG_SECURITY_SIGNAL_ACCEPTED';
+  exception when sqlstate '23514' then null; end;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000222'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
   sig:=public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','BUY_CANDIDATE','ENTRY_PRICE_REACHED');
   same_sig:=public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','BUY_CANDIDATE','ENTRY_PRICE_REACHED');
   if sig is distinct from same_sig then raise exception 'Idempotent replay changed signal identity'; end if;
@@ -73,6 +86,16 @@ declare sig uuid; v_fill_id uuid; portfolio uuid;
 begin
   select id into sig from public.paper_signals limit 1;
   select id into portfolio from public.paper_portfolios where code='default';
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000555'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  begin
+    perform public.paper_execute_fill(sig,2,10,1);
+    raise exception 'PAPER_WRONG_SECURITY_FILL_ACCEPTED';
+  exception when sqlstate '23514' then null; end;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000222'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
   v_fill_id:=public.paper_execute_fill(sig,2,10,1);
   if v_fill_id is null then raise exception 'No virtual fill ID'; end if;
   if (select cash_eur from public.paper_portfolios where id=portfolio) <> 99949
