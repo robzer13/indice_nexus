@@ -82,5 +82,12 @@ jobs:
           PGPORT: 5432
           PGUSER: postgres
           PGPASSWORD: postgres
+      - name: Paper portfolio isolated PostgreSQL 17 tests
+        run: bash tests/postgres/run-paper-portfolio-tests.sh
+        env:
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
       - name: Production build
         run: npm run build

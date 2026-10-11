@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+set -euo pipefail
+# Explicitly local disposable PostgreSQL 17: no shared DB connection possible.
+export PGHOST=127.0.0.1 PGPORT=5432 PGUSER=postgres PGPASSWORD=postgres
+root="$(cd "$(dirname "$0")/../.." && pwd)"
+database="orotitan_paper_$$"
+cleanup() { dropdb --if-exists --force "$database" >/dev/null 2>&1 || true; }
+trap cleanup EXIT
+createdb "$database"
+version="$(psql -XAt -d "$database" -c 'show server_version_num')"
+if (( version < 170000 || version >= 180000 )); then echo "PostgreSQL 17 required" >&2; exit 3; fi
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL' >/dev/null
+create extension if not exists pgcrypto;
+do $$ begin
+  if not exists (select 1 from pg_roles where rolname='anon') then create role anon nologin; end if;
+  if not exists (select 1 from pg_roles where rolname='authenticated') then create role authenticated nologin; end if;
+  if not exists (select 1 from pg_roles where rolname='service_role') then create role service_role nologin bypassrls; end if;
+end $$;
+-- Minimal canonical *test doubles* only. No production schema or existing canonical rows are mutated.
+create table public.issuers(issuer_id uuid primary key);
+create table public.securities(security_id uuid primary key, trading_currency text not null, quote_unit text not null);
+create table public.research_snapshots(snapshot_id uuid primary key, issuer_id uuid not null references public.issuers, security_id uuid not null references public.securities);
+create table public.research_dossiers(issuer_id uuid not null references public.issuers, current_snapshot_id uuid references public.research_snapshots, active boolean not null);
+create table public.legacy_company_identity_map (legacy_company_id uuid primary key, issuer_id uuid not null references public.issuers, security_id uuid not null references public.securities);
+create table public.market_prices (
+  id bigint generated always as identity primary key, company_id uuid not null,
+  price numeric not null, as_of timestamptz not null, created_at timestamptz not null default now()
+);
+insert into public.issuers values ('00000000-0000-4000-8000-000000000111');
+insert into public.securities values
+  ('00000000-0000-4000-8000-000000000222','EUR','MAJOR'),
+  ('00000000-0000-4000-8000-000000000555','USD','MAJOR');
+insert into public.legacy_company_identity_map values
+  ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
+insert into public.research_snapshots values
+  ('00000000-0000-4000-8000-000000000333','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
+insert into public.research_dossiers values
+  ('00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000333',true);
+insert into public.market_prices(company_id,price,as_of) values
+  ('00000000-0000-4000-8000-000000000444',4.5,now()-interval '30 minutes');
+SQL
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/migrations/20261011_paper_long_term_portfolio_v1.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
+insert into public.paper_portfolios(code) values ('default');
+do $$
+declare portfolio uuid; pol uuid; sig uuid; same_sig uuid;
+begin
+  select id into portfolio from public.paper_portfolios where code='default';
+  pol:=public.paper_create_policy(portfolio,
+    '00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000333',
+    'VALUE','ACTIVE','NOT_APPLICABLE',4.5,12,'Fixture VALUE avec cible de sortie et suivi');
+  if (select version from public.paper_policy_versions where id=pol)<>1 then raise exception 'Missing policy version'; end if;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000555'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  begin
+    perform public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','WAIT','WRONG_SECURITY');
+    raise exception 'PAPER_WRONG_SECURITY_SIGNAL_ACCEPTED';
+  exception when sqlstate '23514' then null; end;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000222'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  sig:=public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','BUY_CANDIDATE','ENTRY_PRICE_REACHED');
+  same_sig:=public.paper_record_signal(pol,1,'PAPER_LONG_TERM_V1','BUY_CANDIDATE','ENTRY_PRICE_REACHED');
+  if sig is distinct from same_sig then raise exception 'Idempotent replay changed signal identity'; end if;
+  if (select count(*) from public.paper_signals)<>1 then raise exception 'Duplicate signal'; end if;
+  begin
+    update public.paper_signals set reason='TAMPERED' where id=sig;
+    raise exception 'Mutable signal unexpectedly accepted';
+  exception when sqlstate '23514' then null; end;
+  begin
+    perform public.paper_execute_fill(sig,1,1,0);
+    raise exception 'Old pre-signal quote unexpectedly filled';
+  exception when sqlstate '23514' then null; end;
+  if has_function_privilege('anon','public.paper_execute_fill(uuid,bigint,numeric,numeric)','EXECUTE')
+  then raise exception 'Anonymous caller can execute a fill'; end if;
+end $$;
+SQL
+# New quote is stored *after* signal; forward-only execution rejects the original quote.
+sleep 2
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
+insert into public.market_prices(company_id,price,as_of) values
+  ('00000000-0000-4000-8000-000000000444',5,now());
+do $$
+declare sig uuid; v_fill_id uuid; portfolio uuid;
+begin
+  select id into sig from public.paper_signals limit 1;
+  select id into portfolio from public.paper_portfolios where code='default';
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000555'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  begin
+    perform public.paper_execute_fill(sig,2,10,1);
+    raise exception 'PAPER_WRONG_SECURITY_FILL_ACCEPTED';
+  exception when sqlstate '23514' then null; end;
+  update public.legacy_company_identity_map
+    set security_id='00000000-0000-4000-8000-000000000222'
+    where issuer_id='00000000-0000-4000-8000-000000000111';
+  v_fill_id:=public.paper_execute_fill(sig,2,10,1);
+  if v_fill_id is null then raise exception 'No virtual fill ID'; end if;
+  if (select cash_eur from public.paper_portfolios where id=portfolio) <> 99949
+    then raise exception 'Incorrect cash after buy'; end if;
+  if (select quantity from public.paper_positions where portfolio_id=portfolio) <> 10
+    then raise exception 'Incorrect bought quantity'; end if;
+  begin
+    perform public.paper_execute_fill(sig,2,10,1);
+    raise exception 'Duplicate fill unexpectedly accepted';
+  exception when unique_violation then null; end;
+  begin
+    delete from public.paper_fills where id=v_fill_id;
+    raise exception 'Mutable fill unexpectedly accepted';
+  exception when sqlstate '23514' then null; end;
+  perform public.paper_create_policy(portfolio,
+    '00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000333',
+    'VALUE','ACTIVE','NOT_APPLICABLE',4.5,12,'Version additionnelle auditable et immuable');
+  if (select max(version) from public.paper_policy_versions) <> 2
+    then raise exception 'Policy successor version not created'; end if;
+  begin
+    update public.paper_policy_versions set rationale='REWRITTEN' where version=1;
+    raise exception 'Historical policy mutation unexpectedly accepted';
+  exception when sqlstate '23514' then null; end;
+end $$;
+SQL
+# Regression for provider prices with >4 decimal places. Roll back the synthetic
+# sale so downstream stacked V1.2 tests still see the original EUR 5.00 position.
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
+begin;
+insert into public.market_prices(company_id,price,as_of)
+values ('00000000-0000-4000-8000-000000000444',12.34567,clock_timestamp());
+select public.paper_record_signal(
+  (select id from public.paper_policy_versions where version=2),
+  currval(pg_get_serial_sequence('public.market_prices','id')),
+  'PAPER_LONG_TERM_V1','SELL_CANDIDATE','PRICE_ROUNDING_REGRESSION'
+);
+select pg_sleep(0.05);
+insert into public.market_prices(company_id,price,as_of,created_at)
+values ('00000000-0000-4000-8000-000000000444',12.34567,clock_timestamp(),clock_timestamp());
+do $$
+declare
+  v_signal uuid; v_fill uuid; v_quote bigint; v_cash numeric; v_price numeric;
+  v_qty numeric; v_fee numeric;
+begin
+  select id into v_signal from public.paper_signals where reason='PRICE_ROUNDING_REGRESSION';
+  select max(id) into v_quote from public.market_prices;
+  select cash_eur into v_cash from public.paper_portfolios where code='default';
+  v_fill:=public.paper_execute_fill(v_signal,v_quote,10,0.5);
+  select price_eur,quantity,fee_eur into v_price,v_qty,v_fee from public.paper_fills where id=v_fill;
+  if v_price <> 12.3457 then raise exception 'Fill execution price was not normalized'; end if;
+  if (select cash_eur from public.paper_portfolios where code='default')
+       <> v_cash + round(v_price*v_qty,4) - v_fee then
+    raise exception 'Virtual cash does not reconcile with persisted fill price';
+  end if;
+  if (select quantity from public.paper_positions where company_id='00000000-0000-4000-8000-000000000111') <> 0
+  then raise exception 'Virtual sale did not close test position'; end if;
+end $$;
+rollback;
+SQL
+echo "Paper portfolio: isolated PG17 migration, immutable signals and forward-price virtual fill PASS"
