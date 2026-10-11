@@ -125,7 +125,9 @@ begin
   if not exists(select 1 from public.research_dossiers d where d.issuer_id=pol.company_id
     and d.active and d.current_snapshot_id=pol.snapshot_id)
   then raise exception 'PAPER_SNAPSHOT_NOT_CURRENT' using errcode='23514'; end if;
-  select * into q from public.market_prices where id=p_quote and company_id=pol.company_id;
+  select quote.* into q from public.market_prices quote
+    join public.legacy_company_identity_map link on link.legacy_company_id=quote.company_id
+    where quote.id=p_quote and link.issuer_id=pol.company_id;
   if not found then raise exception 'PAPER_QUOTE_COMPANY_MISMATCH' using errcode='23514'; end if;
   if q.as_of > now()+interval '5 minutes' or q.as_of < now()-interval '96 hours'
   then raise exception 'PAPER_QUOTE_OUT_OF_WINDOW' using errcode='23514'; end if;
@@ -173,7 +175,9 @@ begin
   then raise exception 'PAPER_SNAPSHOT_NOT_CURRENT' using errcode='23514'; end if;
   if exists(select 1 from public.paper_fills where signal_id=p_signal)
   then raise exception 'PAPER_SIGNAL_ALREADY_FILLED' using errcode='23505'; end if;
-  select * into q from public.market_prices where id=p_quote and company_id=s.company_id;
+  select quote.* into q from public.market_prices quote
+    join public.legacy_company_identity_map link on link.legacy_company_id=quote.company_id
+    where quote.id=p_quote and link.issuer_id=s.company_id;
   if not found or q.as_of<=s.created_at or q.created_at<=s.created_at
     or q.as_of>now()+interval '5 minutes' or q.as_of<now()-interval '96 hours'
   then raise exception 'PAPER_NO_NEW_VALID_EXECUTION_QUOTE' using errcode='23514'; end if;
