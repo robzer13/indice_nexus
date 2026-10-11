@@ -28,8 +28,8 @@ create table public.market_prices (
   source text not null default 'YAHOO_FINANCE',raw jsonb
 );
 insert into public.issuers values ('00000000-0000-4000-8000-000000000111');
-insert into public.legacy_company_identity_map values ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.securities values ('00000000-0000-4000-8000-000000000222','EUR','MAJOR');
+insert into public.legacy_company_identity_map values ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.research_snapshots values
   ('00000000-0000-4000-8000-000000000333','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.research_dossiers values
@@ -96,7 +96,7 @@ SQL
 sleep 2
 psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
 insert into public.market_prices(company_id,price,as_of) values
-  ('00000000-0000-4000-8000-000000000444',5,now());
+  ('00000000-0000-4000-8000-000000000444',5,date_trunc('second',now()));
 do $$
 declare sig uuid; v_fill_id uuid; portfolio uuid;
 begin
