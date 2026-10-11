@@ -52,9 +52,16 @@ export function eurNumber(value: unknown): number {
   if (!Number.isFinite(n)) throw new Error('Montant virtuel invalide.');
   return n;
 }
-export async function latestStoredQuote(companyId: string): Promise<PaperQuote | null> {
-  const { data, error } = await createServerSupabaseClient().from('market_prices')
-    .select('id,company_id,price,as_of,created_at').eq('company_id', companyId)
+export async function latestStoredQuote(issuerId: string): Promise<PaperQuote | null> {
+  // Canonical issuer IDs differ from historical companies IDs used by market_prices.
+  // Resolve only through the audited identity crosswalk; no implicit UUID equality.
+  const supabase = createServerSupabaseClient();
+  const { data: link, error: linkError } = await supabase.from('legacy_company_identity_map')
+    .select('legacy_company_id').eq('issuer_id', issuerId).maybeSingle();
+  if (linkError) throw new Error('Résolution des identités de cours impossible : ' + linkError.message);
+  if (!link) return null;
+  const { data, error } = await supabase.from('market_prices')
+    .select('id,company_id,price,as_of,created_at').eq('company_id', link.legacy_company_id)
     .order('as_of', { ascending: false }).order('id', { ascending: false }).limit(1).maybeSingle();
   if (error) throw new Error('Lecture du cours impossible : ' + error.message);
   return data as PaperQuote | null;
