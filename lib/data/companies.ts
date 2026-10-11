@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
+import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
 type UnknownRecord = Record<string, unknown>;
@@ -258,19 +259,31 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const snapshotIds = dossiers.map((row) => row.current_snapshot_id).filter((value): value is string => typeof value === 'string');
   const issuerIds = dossiers.map((row) => row.issuer_id).filter((value): value is string => typeof value === 'string');
 
-  const [snapshotsResult, issuersResult, companiesResult, pricesResult] = await Promise.all([
+  const [snapshotsResult, issuersResult, linksResult] = await Promise.all([
     supabase.from('research_snapshots').select('snapshot_id,dossier_id,issuer_id,security_id,report_id,calculation_date,report_version,method_version,canonical_payload,created_at').in('snapshot_id', snapshotIds),
     supabase.from('issuers').select('*').in('issuer_id', issuerIds),
-    supabase.from('companies').select('id,slug,sector').in('id', issuerIds),
-    supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', issuerIds).order('as_of', { ascending: false }),
+    supabase.from('legacy_company_identity_map').select('legacy_company_id,issuer_id,security_id,dossier_id').in('issuer_id', issuerIds),
   ]);
 
   if (snapshotsResult.error) throw new Error(`Unable to load canonical snapshots: ${snapshotsResult.error.message}`);
   if (issuersResult.error) throw new Error(`Unable to load canonical issuers: ${issuersResult.error.message}`);
-  if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
-  if (pricesResult.error) throw new Error(`Unable to load market prices: ${pricesResult.error.message}`);
+  if (linksResult.error) throw new Error(`Unable to load canonical quote identities: ${linksResult.error.message}`);
 
   const snapshots = (snapshotsResult.data ?? []) as CanonicalSnapshotRow[];
+  const links = (linksResult.data ?? []) as LegacyCompanyQuoteLink[];
+  const legacyIds = [...new Set(snapshots.map(snapshot => resolveCanonicalQuoteCompanyId(snapshot, links)).filter((id): id is string => id !== null))];
+  // Never read legacy market rows by issuer_id: that accidental UUID equality
+  // masks missing crosswalk entries and can attach the wrong security.
+  const [companiesResult, pricesResult] = await Promise.all([
+    legacyIds.length
+      ? supabase.from('companies').select('id,slug,sector').in('id', legacyIds)
+      : Promise.resolve({ data: [], error: null }),
+    legacyIds.length
+      ? supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', legacyIds).order('as_of', { ascending: false })
+      : Promise.resolve({ data: [], error: null }),
+  ]);
+  if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
+  if (pricesResult.error) throw new Error(`Unable to load market prices: ${pricesResult.error.message}`);
   const securityIds = snapshots.map((row) => row.security_id);
   const { data: securities, error: securitiesError } = await supabase.from('securities').select('*').in('security_id', securityIds);
   if (securitiesError) throw new Error(`Unable to load canonical securities: ${securitiesError.message}`);
@@ -288,7 +301,13 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     const issuer = issuerById.get(snapshot.issuer_id);
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
-    return mapCompanyState(snapshot, { issuer, security, company: companyById.get(snapshot.issuer_id) ?? null, marketPrice: latestPriceByCompany.get(snapshot.issuer_id) ?? null });
+    const legacyId = resolveCanonicalQuoteCompanyId(snapshot, links);
+    return mapCompanyState(snapshot, {
+      issuer,
+      security,
+      company: legacyId ? companyById.get(legacyId) ?? null : null,
+      marketPrice: legacyId ? latestPriceByCompany.get(legacyId) ?? null : null,
+    });
   }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }
 

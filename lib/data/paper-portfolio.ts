@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getCompanyStates } from '@/lib/data/companies';
+import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import { isAdmissiblePaperValuationQuote } from '@/lib/domain/paper-quote-validation';
 import type { CompanyState } from '@/lib/domain/types';
 import type { PaperInvestmentProfile, PaperSignalAction, PaperThesisState, PaperMilestoneState } from '@/lib/domain/paper-signals';
@@ -57,22 +58,23 @@ export async function latestStoredQuote(issuerId: string): Promise<PaperQuote | 
   // Resolve only through the audited identity crosswalk; no implicit UUID equality.
   const supabase = createServerSupabaseClient();
   const { data: dossier, error: dossierError } = await supabase.from('research_dossiers')
-    .select('current_snapshot_id').eq('issuer_id', issuerId).eq('active', true)
+    .select('dossier_id,current_snapshot_id').eq('issuer_id', issuerId).eq('active', true)
     .not('current_snapshot_id', 'is', null).limit(1).maybeSingle();
   if (dossierError) throw new Error('Résolution du dossier courant impossible : ' + dossierError.message);
   if (!dossier?.current_snapshot_id) return null;
   const { data: snapshot, error: snapshotError } = await supabase.from('research_snapshots')
-    .select('security_id').eq('snapshot_id', dossier.current_snapshot_id)
-    .eq('issuer_id', issuerId).maybeSingle();
+    .select('security_id,dossier_id,issuer_id').eq('snapshot_id', dossier.current_snapshot_id)
+    .eq('issuer_id', issuerId).eq('dossier_id', dossier.dossier_id).maybeSingle();
   if (snapshotError) throw new Error('Résolution de la sécurité canonique impossible : ' + snapshotError.message);
   if (!snapshot?.security_id) return null;
   const { data: link, error: linkError } = await supabase.from('legacy_company_identity_map')
-    .select('legacy_company_id').eq('issuer_id', issuerId)
-    .eq('security_id', snapshot.security_id).maybeSingle();
+    .select('legacy_company_id,issuer_id,security_id,dossier_id').eq('issuer_id', issuerId)
+    .eq('security_id', snapshot.security_id).eq('dossier_id', dossier.dossier_id).maybeSingle();
   if (linkError) throw new Error('Résolution des identités de cours impossible : ' + linkError.message);
-  if (!link) return null;
+  const legacyId = resolveCanonicalQuoteCompanyId(snapshot, link ? [link as LegacyCompanyQuoteLink] : []);
+  if (!legacyId) return null;
   const { data, error } = await supabase.from('market_prices')
-    .select('id,company_id,price,as_of,created_at').eq('company_id', link.legacy_company_id)
+    .select('id,company_id,price,as_of,created_at').eq('company_id', legacyId)
     .order('as_of', { ascending: false }).order('id', { ascending: false }).limit(1).maybeSingle();
   if (error) throw new Error('Lecture du cours impossible : ' + error.message);
   return data as PaperQuote | null;
