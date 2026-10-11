@@ -49,7 +49,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
     {typeof qs.error==='string' && <p className="rounded-xl border border-rose-800 bg-rose-950/30 p-4 text-sm text-rose-200">{qs.error}</p>}
     {typeof qs.success==='string' && <p className="rounded-xl border border-emerald-900 bg-emerald-950/30 p-4 text-sm text-emerald-200">{qs.success}</p>}
     {data.migrationMissing ? <Panel title="Migration non appliquée">
-      <p className="text-sm text-amber-200">La base ne contient pas encore les tables de simulation. Aucune migration n'est appliquée automatiquement.</p>
+      <p className="text-sm text-amber-200">La base ne contient pas encore les tables de simulation. Aucune migration n’est appliquée automatiquement.</p>
       <p className="mt-3 font-mono text-xs text-slate-400">migrations/20261011_paper_long_term_portfolio_v1.sql</p>
     </Panel> : !data.portfolio ? <Panel title="Initialisation du laboratoire">
       <p className="mb-4 text-sm text-slate-400">Démarrer avec 100 000 € fictifs et zéro position. Aucun accès à un courtier.</p>
@@ -85,7 +85,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
       </Panel>
       <div className="grid gap-5 lg:grid-cols-2">
         <Panel title="Nouvelle stratégie ou révision">
-          <p className="mb-3 text-xs leading-5 text-slate-400">Chaque version conserve une justification datée et le snapshot publié correspondant. Une nouvelle version n'efface pas les précédentes.</p>
+          <p className="mb-3 text-xs leading-5 text-slate-400">Chaque version conserve une justification datée et le snapshot publié correspondant. Une nouvelle version n’efface pas les précédentes.</p>
           <form action={createPaperPolicyAction} className="space-y-3">
             <label className="block text-xs text-slate-400">Société
               <select name="company_id" required className={selectClass}><option value="">Choisir une société</option>
@@ -133,7 +133,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
         </Panel>
       </div>
       <Panel title="Signaux horodatés et exécution fictive">
-        <p className="mb-4 text-xs text-slate-400">Le prix du signal n'est jamais un prix d'exécution. Il faut une nouvelle cotation enregistrée après le signal.</p>
+        <p className="mb-4 text-xs text-slate-400">Le prix du signal n’est jamais un prix d’exécution. Il faut une nouvelle cotation enregistrée après le signal.</p>
         {data.signals.length===0?<p className="text-sm text-slate-500">Aucun signal enregistré.</p>:
           <div className="space-y-3">{data.signals.map(s=>{
             const q=data.quotes.get(s.company_id),done=filledIds.has(s.id);
