@@ -43,7 +43,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
 insert into public.paper_portfolios(code) values ('default');
 
 -- V1.2 is off by default. Only a controlled owner RPC can activate it.
-do $
+do $$
 declare p uuid;
 begin
   select id into p from public.paper_portfolios where code='default';
@@ -66,9 +66,9 @@ begin
     delete from public.paper_autopilot_policy_events where portfolio_id=p;
     raise exception 'Policy audit events unexpectedly mutable';
   exception when sqlstate '23514' then null; end;
-end $;
+end $$;
 
-do $
+do $$
 declare portfolio uuid; pol uuid; sig uuid; same_sig uuid;
 begin
   select id into portfolio from public.paper_portfolios where code='default';
@@ -132,7 +132,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
 update public.market_prices set raw=jsonb_build_object(
   'regularMarketTime',to_char(as_of at time zone 'UTC','YYYY-MM-DD"T"HH24:MI:SS"Z"')
 );
-do $
+do $$
 declare p uuid; id1 bigint; id2 bigint;
 begin
   select id into p from public.paper_portfolios where code='default';
@@ -147,6 +147,6 @@ begin
   exception when sqlstate '23514' then null; end;
   if has_function_privilege('anon','public.paper_record_daily_nav(uuid)','EXECUTE')
   then raise exception 'Anonymous NAV access'; end if;
-end $;
+end $$;
 SQL
 echo "Paper portfolio: isolated PG17 migration, immutable signals and forward-price virtual fill PASS"
