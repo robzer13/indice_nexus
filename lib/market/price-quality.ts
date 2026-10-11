@@ -28,6 +28,7 @@ const US_EXCHANGES = new Set(['NASDAQ','NYSE','NYSE ARCA','NYSE AMERICAN']);
  */
 const VENUE_REF_SUFFIXES: Record<string, readonly string[]> = {
   'NASDAQ':['',':NASDAQ'], 'NYSE':['',':NYSE'],
+  'NYSE ARCA':[''], 'NYSE AMERICAN':[''],
   'EURONEXT PARIS':[':EPA','.PA'],
   'EURONEXT AMSTERDAM':['.AS'], 'SIX SWISS EXCHANGE':['.SW'],
   'TORONTO STOCK EXCHANGE':['.TO'], 'SGX MAINBOARD':['.SI'],
@@ -54,13 +55,17 @@ export function assertTwelveDataVenue(requestedExchange: string, returnedExchang
     'XETR':['XETR','XETRA'],
     'OSE':['OSE','OSLO','OSLO BØRS'],
     'NASDAQ':['NASDAQ'], 'NYSE':['NYSE'],
+    'NYSE ARCA':['NYSE ARCA'],
+    'NYSE AMERICAN':['NYSE AMERICAN'],
   };
   if (!returned || !(aliases[requested]??[requested]).includes(returned))
     throw new Error('TWELVE_DATA_EXCHANGE_MISMATCH');
 }
 
 const YAHOO_NASDAQ = new Set(['NMS','NGM','NCM','NAS','NMQ']);
-const YAHOO_NYSE = new Set(['NYQ','NYE','ASE','PCX']);
+const YAHOO_NYSE = new Set(['NYQ','NYE']);
+const YAHOO_ARCA = new Set(['PCX']);
+const YAHOO_AMERICAN = new Set(['ASE']);
 
 export function isUnambiguousUSExchange(exchange: string): boolean {
   return US_EXCHANGES.has(exchange.trim().toUpperCase());
@@ -73,7 +78,9 @@ export function requireUsListingMatch(expectedExchange: string, providerExchange
     throw new Error('QUOTE_EXCHANGE_MISMATCH');
   if (venue === 'NYSE' && !YAHOO_NYSE.has(actual))
     throw new Error('QUOTE_EXCHANGE_MISMATCH');
-  if ((venue === 'NYSE ARCA' || venue === 'NYSE AMERICAN') && !YAHOO_NYSE.has(actual))
+  if (venue === 'NYSE ARCA' && !YAHOO_ARCA.has(actual))
+    throw new Error('QUOTE_EXCHANGE_MISMATCH');
+  if (venue === 'NYSE AMERICAN' && !YAHOO_AMERICAN.has(actual))
     throw new Error('QUOTE_EXCHANGE_MISMATCH');
 }
 

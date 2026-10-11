@@ -56,7 +56,12 @@ export async function fetchProviderPrice(instrument: ExpectedMarketInstrument): 
         providerPrice:fetched.providerPrice,observedAt:fetched.fetchedAt,raw:fetched.raw,
       };
       // The payload exchange must be present for cross-listed instruments.
-      if(requested.exchange)assertTwelveDataVenue(requested.exchange,quote.providerExchange);
+      // Bare US symbols have no exchange suffix. Validate against the canonical
+      // issuer listing; otherwise the optional feed could silently switch venues.
+      const venueToCheck=requested.exchange ??
+        (isUnambiguousUSExchange(instrument.exchange) ? instrument.exchange : null);
+      if(!venueToCheck)throw new Error('TWELVE_DATA_EXCHANGE_UNVERIFIABLE');
+      assertTwelveDataVenue(venueToCheck,quote.providerExchange);
       const normalizedPrice=admitMarketQuote(instrument,quote,requested.symbol);
       return {provider:'TWELVE_DATA',providerPrice:quote.providerPrice,
         normalizedPrice,fetchedAt:quote.observedAt,raw:quote.raw};

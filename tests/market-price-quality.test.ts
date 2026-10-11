@@ -68,3 +68,21 @@ test('secondary source must corroborate requested exchange',()=>{
   assert.throws(()=>assertTwelveDataVenue('NASDAQ','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
   assert.throws(()=>assertTwelveDataVenue('LSE',null),/TWELVE_DATA_EXCHANGE_MISMATCH/);
 });
+
+test('NYSE, NYSE Arca and NYSE American Yahoo exchange codes must not cross-match',()=>{
+  assert.doesNotThrow(()=>requireUsListingMatch('NYSE','NYQ'));
+  assert.doesNotThrow(()=>requireUsListingMatch('NYSE','NYE'));
+  assert.throws(()=>requireUsListingMatch('NYSE','ASE'),/QUOTE_EXCHANGE_MISMATCH/);
+  assert.throws(()=>requireUsListingMatch('NYSE','PCX'),/QUOTE_EXCHANGE_MISMATCH/);
+  assert.doesNotThrow(()=>requireUsListingMatch('NYSE Arca','PCX'));
+  assert.throws(()=>requireUsListingMatch('NYSE Arca','NYQ'),/QUOTE_EXCHANGE_MISMATCH/);
+  assert.doesNotThrow(()=>requireUsListingMatch('NYSE American','ASE'));
+  assert.throws(()=>requireUsListingMatch('NYSE American','NYQ'),/QUOTE_EXCHANGE_MISMATCH/);
+});
+test('secondary quote on bare US ticker must match canonical venue exactly',()=>{
+  assert.doesNotThrow(()=>assertTwelveDataVenue('Nasdaq','NASDAQ'));
+  assert.throws(()=>assertTwelveDataVenue('Nasdaq','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
+  assert.doesNotThrow(()=>assertTwelveDataVenue('NYSE','NYSE'));
+  assert.throws(()=>assertTwelveDataVenue('NYSE','NASDAQ'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
+  assert.throws(()=>assertTwelveDataVenue('NYSE Arca','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
+});
