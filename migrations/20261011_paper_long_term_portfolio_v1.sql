@@ -136,8 +136,13 @@ begin
   insert into public.paper_signals
     (portfolio_id,company_id,policy_id,snapshot_id,quote_id,quote_price_eur,quote_as_of,ruleset,action,reason)
   values(pol.portfolio_id,pol.company_id,pol.id,pol.snapshot_id,q.id,q.price,q.as_of,p_ruleset,p_action,p_reason)
-  on conflict (policy_id, quote_id, action, reason) do update set id=public.paper_signals.id
+  on conflict (policy_id, quote_id, action, reason) do nothing
   returning id into v_id;
+  if v_id is null then
+    select id into v_id from public.paper_signals
+    where policy_id=pol.id and quote_id=q.id and action=p_action and reason=p_reason;
+  end if;
+  if v_id is null then raise exception 'PAPER_CONFLICTED_SIGNAL_RETRY' using errcode='23505'; end if;
   return v_id;
 end; $$;
 
