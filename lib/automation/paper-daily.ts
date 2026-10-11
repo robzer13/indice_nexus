@@ -96,7 +96,7 @@ export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
         snapshot:{
           id:candidate.snapshot_id,analysisDate:company.analysis_date,
           canonicalEntryPrice:company.price_o90,
-          eligibleForInvestment:['OROTITAN','FINALIST','PRICE_WAIT'].includes(company.status),
+          eligibleForInvestment:['OROTITAN','FINALIST','PRICE_WAIT'].includes(company.status ?? ''),
           coreQualityConfirmed:company.quality_orotitan===true,
         },
         quote:{price:eurNumber(quote.price),asOf:quote.as_of},
