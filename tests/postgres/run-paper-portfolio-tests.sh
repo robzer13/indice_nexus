@@ -68,7 +68,7 @@ begin
   exception when sqlstate '23514' then null; end;
 end $;
 
-do $$
+do $
 declare portfolio uuid; pol uuid; sig uuid; same_sig uuid;
 begin
   select id into portfolio from public.paper_portfolios where code='default';
