@@ -57,7 +57,7 @@ export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
       if(!quote||!trustedExchangeQuote(quote,now)){
         report.issues.push({issuer:candidate.company_id,reason:'EXCHANGE_QUOTE_NOT_VERIFIABLE'});continue;
       }
-      let pos=view.positions.find(p=>p.company_id===candidate.company_id);
+      const pos=view.positions.find(p=>p.company_id===candidate.company_id);
       let held=pos?eurNumber(pos.quantity):0;
       const {data:prior,error:priorError}=await db.from('paper_signals').select('*')
         .eq('policy_id',candidate.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
