@@ -3,6 +3,10 @@
     {
       "path": "/api/cron/prices",
       "schedule": "15 22 * * 1-5"
+    },
+    {
+      "path": "/api/cron/paper-daily",
+      "schedule": "45 22 * * 1-5"
     }
   ]
 }
