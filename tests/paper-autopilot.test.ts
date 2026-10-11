@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { planPaperAutoFill, trustedExchangeQuote } from '../lib/domain/paper-autopilot';
+import { planPaperAutoFill, trustedExchangeQuote, admissibleAutomaticRepricing } from '../lib/domain/paper-autopilot';
 import { cashDividendEur, computeTimeWeightedReturn, maximumDrawdown, relativePerformance, translateToEur } from '../lib/domain/paper-performance';
 
 const policy = { enabled: true, initialCapitalEur: 100000, availableCashEur: 100000, maxInitialCapitalWeight: .05, simulatedFeeEur: 1 };
@@ -39,4 +39,14 @@ test('FX and cash dividends fail closed on absent or future provenance', () => {
   assert.equal(translateToEur(100,{...r,source:''},'2026-10-09T17:00:00Z'),null);
   assert.equal(cashDividendEur(100,2,.15,.9),153);
   assert.equal(cashDividendEur(100,2,1.1,.9),null);
+});
+
+test('autopilot rejects expired signals and major gaps rather than chasing a quote',()=>{
+  const start='2026-10-05T22:45:00Z',end='2026-10-06T22:45:00Z';
+  assert.equal(admissibleAutomaticRepricing('BUY_CANDIDATE',100,104,start,end),true);
+  assert.equal(admissibleAutomaticRepricing('BUY_CANDIDATE',100,120,start,end),false);
+  assert.equal(admissibleAutomaticRepricing('BUY_CANDIDATE',100,85,start,end),false);
+  assert.equal(admissibleAutomaticRepricing('SELL_CANDIDATE',12,11.5,start,end),true);
+  assert.equal(admissibleAutomaticRepricing('SELL_CANDIDATE',12,8,start,end),false);
+  assert.equal(admissibleAutomaticRepricing('BUY_CANDIDATE',100,100,start,'2026-10-20T22:45:00Z'),false);
 });

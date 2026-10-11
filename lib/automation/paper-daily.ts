@@ -2,7 +2,7 @@ import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { loadPaperDashboard, latestStoredQuote, eurNumber } from '@/lib/data/paper-portfolio';
 import { evaluateLongTermPaperSignal } from '@/lib/domain/paper-signals';
-import { planPaperAutoFill, trustedExchangeQuote } from '@/lib/domain/paper-autopilot';
+import { planPaperAutoFill, trustedExchangeQuote, admissibleAutomaticRepricing } from '@/lib/domain/paper-autopilot';
 
 export type PaperAutomationSettings = {
   portfolio_id: string; enabled: boolean;
@@ -78,7 +78,11 @@ export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
         const {data:existing,error:existingError}=await db.from('paper_fills')
           .select('id').eq('signal_id',prior.id).limit(1).maybeSingle();
         if(existingError) throw new Error('FILL_LOOKUP_FAILED: '+existingError.message);
-        if(!existing){
+        if(!existing && !admissibleAutomaticRepricing(
+          prior.action,eurNumber(prior.quote_price_eur),eurNumber(quote.price),prior.created_at,now
+        )){
+          report.issues.push({issuer:candidate.company_id,reason:'PENDING_SIGNAL_REPRICE_REQUIRES_REVIEW'});
+        } else if(!existing){
           const plan=planPaperAutoFill(prior.action,eurNumber(quote.price),held,{
             enabled:true,initialCapitalEur:eurNumber(view.portfolio!.initial_cash_eur),
             availableCashEur:eurNumber(view.portfolio!.cash_eur),

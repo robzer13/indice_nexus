@@ -72,3 +72,17 @@ export function trustedExchangeQuote(quote: {
     && quoteMs <= nowMs + 300000 && quoteMs >= nowMs - 96 * 3600000
     && storedMs <= nowMs + 300000;
 }
+
+/** Prevent stale delayed signals or large overnight repricing from being filled automatically. */
+export function admissibleAutomaticRepricing(
+  action: string, signalPrice: number, executionPrice: number, signalCreatedAt: string, now: string,
+): boolean {
+  const signalTime=Date.parse(signalCreatedAt),clock=Date.parse(now);
+  if(!Number.isFinite(signalTime)||!Number.isFinite(clock)||clock<signalTime
+    ||clock-signalTime>7*86400000 || !Number.isFinite(signalPrice)
+    ||!Number.isFinite(executionPrice)||signalPrice<=0||executionPrice<=0) return false;
+  const relative=executionPrice/signalPrice;
+  if(action==='BUY_CANDIDATE')return relative>=0.90&&relative<=1.05;
+  if(action==='SELL_CANDIDATE')return relative>=0.90&&relative<=1.10;
+  return false;
+}
