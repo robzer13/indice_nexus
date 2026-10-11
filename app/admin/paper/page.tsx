@@ -116,12 +116,18 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
         </Panel>
         <Panel title="Stratégies suivies">
           {data.policies.length===0?<p className="text-sm text-slate-500">Aucune politique définie.</p>:
-            <div className="space-y-3">{data.policies.map(p=><div key={p.id}
+            <div className="space-y-3">{data.policies.map(p=>{
+              const quote = data.quotes.get(p.company_id);
+              const company = names.get(p.company_id);
+              const validQuote = !!quote && company?.currency === 'EUR'
+                && company?.quote_unit === 'MAJOR'
+                && isAdmissiblePaperValuationQuote(Number(quote.price), quote.as_of);
+              return <div key={p.id}
               className="rounded-xl border border-slate-800 bg-slate-950/70 p-4">
               <div className="flex justify-between gap-3">
                 <div><p className="font-medium text-white">{names.get(p.company_id)?.name??p.company_id.slice(0,8)}</p>
                   <p className="mt-1 text-xs text-cyan-300">{p.profile} · V{p.version} · {p.thesis_state}</p></div>
-                <span className="text-xs text-slate-400">{data.quotes.get(p.company_id)?eur(eurNumber(data.quotes.get(p.company_id)!.price)):'Cours indisponible'}</span>
+                <span className="text-xs text-slate-400">{validQuote && quote ? eur(eurNumber(quote.price)) : 'Cours indisponible'}</span>
               </div>
               <p className="mt-3 text-xs text-slate-400">{p.rationale}</p>
               {p.exit_target_eur!==null&&<p className="mt-2 text-xs text-slate-300">Cible : {eur(eurNumber(p.exit_target_eur))}</p>}
@@ -129,7 +135,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
                 <input type="hidden" name="policy_id" value={p.id}/>
                 <button className="rounded-lg border border-cyan-700 px-3 py-2 text-xs text-cyan-200">Évaluer et historiser un signal</button>
               </form>
-            </div>)}</div>}
+            </div>;})}</div>}
         </Panel>
       </div>
       <Panel title="Signaux horodatés et exécution fictive">

@@ -158,6 +158,7 @@ create function public.paper_execute_fill(
 declare s public.paper_signals%rowtype; pol public.paper_policy_versions%rowtype;
   port public.paper_portfolios%rowtype; q public.market_prices%rowtype;
   pos public.paper_positions%rowtype; v_trade uuid; v_notional numeric;
+  v_execution_price numeric(20,4);
   v_new_qty numeric; v_cost numeric; v_realized numeric := 0;
 begin
   select * into s from public.paper_signals where id=p_signal;
@@ -189,7 +190,13 @@ begin
     values(s.portfolio_id,s.company_id) on conflict do nothing;
   select * into pos from public.paper_positions where portfolio_id=s.portfolio_id
     and company_id=s.company_id for update;
-  v_notional:=round(q.price*p_quantity,4);
+  -- Normalize once to the precision persisted in paper_fills; all cash/PRU/P&L
+  -- calculations must reconcile to that exact price, not the raw provider quote.
+  v_execution_price:=round(q.price,4);
+  if v_execution_price <= 0 then
+    raise exception 'PAPER_EXECUTION_PRICE_TOO_SMALL' using errcode='23514';
+  end if;
+  v_notional:=round(v_execution_price*p_quantity,4);
   if s.action='BUY_CANDIDATE' then
     if port.cash_eur<v_notional+p_fee_eur
     then raise exception 'PAPER_INSUFFICIENT_CASH' using errcode='23514'; end if;
@@ -213,7 +220,7 @@ begin
     (portfolio_id,company_id,signal_id,quote_id,side,quantity,price_eur,fee_eur,realized_pnl_eur)
   values(s.portfolio_id,s.company_id,s.id,q.id,
     case when s.action='BUY_CANDIDATE' then 'BUY' else 'SELL' end,
-    p_quantity,q.price,p_fee_eur,v_realized) returning id into v_trade;
+    p_quantity,v_execution_price,p_fee_eur,v_realized) returning id into v_trade;
   return v_trade;
 end; $$;
 

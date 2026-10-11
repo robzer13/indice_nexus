@@ -121,4 +121,38 @@ begin
   exception when sqlstate '23514' then null; end;
 end $$;
 SQL
+# Regression for provider prices with >4 decimal places. Roll back the synthetic
+# sale so downstream stacked V1.2 tests still see the original EUR 5.00 position.
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
+begin;
+insert into public.market_prices(company_id,price,as_of)
+values ('00000000-0000-4000-8000-000000000444',12.34567,clock_timestamp());
+select public.paper_record_signal(
+  (select id from public.paper_policy_versions where version=2),
+  currval(pg_get_serial_sequence('public.market_prices','id')),
+  'PAPER_LONG_TERM_V1','SELL_CANDIDATE','PRICE_ROUNDING_REGRESSION'
+);
+select pg_sleep(0.05);
+insert into public.market_prices(company_id,price,as_of,created_at)
+values ('00000000-0000-4000-8000-000000000444',12.34567,clock_timestamp(),clock_timestamp());
+do $$
+declare
+  v_signal uuid; v_fill uuid; v_quote bigint; v_cash numeric; v_price numeric;
+  v_qty numeric; v_fee numeric;
+begin
+  select id into v_signal from public.paper_signals where reason='PRICE_ROUNDING_REGRESSION';
+  select max(id) into v_quote from public.market_prices;
+  select cash_eur into v_cash from public.paper_portfolios where code='default';
+  v_fill:=public.paper_execute_fill(v_signal,v_quote,10,0.5);
+  select price_eur,quantity,fee_eur into v_price,v_qty,v_fee from public.paper_fills where id=v_fill;
+  if v_price <> 12.3457 then raise exception 'Fill execution price was not normalized'; end if;
+  if (select cash_eur from public.paper_portfolios where code='default')
+       <> v_cash + round(v_price*v_qty,4) - v_fee then
+    raise exception 'Virtual cash does not reconcile with persisted fill price';
+  end if;
+  if (select quantity from public.paper_positions where company_id='00000000-0000-4000-8000-000000000111') <> 0
+  then raise exception 'Virtual sale did not close test position'; end if;
+end $$;
+rollback;
+SQL
 echo "Paper portfolio: isolated PG17 migration, immutable signals and forward-price virtual fill PASS"
