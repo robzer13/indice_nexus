@@ -5,6 +5,7 @@ const links = [
   ['/admin/companies', 'Sociétés'],
   ['/admin/snapshots/new', 'Nouveau snapshot'],
   ['/admin/prices', 'Cours'],
+  ['/admin/paper', 'Portefeuille virtuel'],
   ['/admin/data-health', 'Data Health'],
 ] as const;
 
