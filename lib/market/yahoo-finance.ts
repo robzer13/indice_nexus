@@ -9,6 +9,7 @@ export interface YahooFinancePriceResult {
   fetchedAt: string;
   providerSymbol: string;
   providerCurrency: string | null;
+  providerExchange: string | null;
   raw: unknown;
 }
 
@@ -23,7 +24,7 @@ function toIso(value: unknown): string {
     const parsed = new Date(value);
     if (!Number.isNaN(parsed.getTime())) return parsed.toISOString();
   }
-  return new Date().toISOString();
+  throw new Error('YAHOO_MARKET_TIMESTAMP_MISSING');
 }
 
 export async function fetchYahooFinancePrice(reference: string): Promise<YahooFinancePriceResult> {
@@ -34,6 +35,7 @@ export async function fetchYahooFinancePrice(reference: string): Promise<YahooFi
     currency?: string;
     regularMarketTime?: unknown;
     quoteSourceName?: string;
+    exchange?: string;
     marketState?: string;
   } | undefined;
 
@@ -44,16 +46,21 @@ export async function fetchYahooFinancePrice(reference: string): Promise<YahooFi
 
   const fetchedAt = toIso(quote?.regularMarketTime);
   const providerCurrency = typeof quote?.currency === 'string' ? quote.currency : null;
+  const providerExchange = typeof quote?.exchange === 'string' ? quote.exchange : null;
+  if (!quote?.symbol || quote.symbol.toUpperCase() !== providerSymbol.toUpperCase())
+    throw new Error('YAHOO_QUOTE_SYMBOL_MISMATCH');
 
   return {
     providerPrice,
     fetchedAt,
     providerSymbol,
     providerCurrency,
+    providerExchange,
     raw: {
-      symbol: quote?.symbol ?? providerSymbol,
+      symbol: quote.symbol,
       regularMarketPrice: providerPrice,
       currency: providerCurrency,
+      exchange: providerExchange,
       regularMarketTime: fetchedAt,
       quoteSourceName: quote?.quoteSourceName ?? null,
       marketState: quote?.marketState ?? null,

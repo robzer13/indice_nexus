@@ -19,3 +19,16 @@ test('Yahoo Finance symbols keep bare US tickers unchanged', () => {
 test('Yahoo Finance mapping rejects unknown exchange codes', () => {
   assert.throws(() => toYahooFinanceSymbol('ABC:UNKNOWN'), /Unsupported Yahoo Finance exchange mapping/);
 });
+
+test('Yahoo Finance accepts explicitly known dotted international symbols and US venues',()=>{
+  assert.equal(toYahooFinanceSymbol('ADYEN.AS'),'ADYEN.AS');
+  assert.equal(toYahooFinanceSymbol('BEAN.SW'),'BEAN.SW');
+  assert.equal(toYahooFinanceSymbol('BN.TO'),'BN.TO');
+  assert.equal(toYahooFinanceSymbol('D05.SI'),'D05.SI');
+  assert.equal(toYahooFinanceSymbol('NOVO-B.CO'),'NOVO-B.CO');
+  assert.equal(toYahooFinanceSymbol('TOI.V'),'TOI.V');
+  assert.equal(toYahooFinanceSymbol('2330.TW'),'2330.TW');
+  assert.equal(toYahooFinanceSymbol('ISRG:NASDAQ'),'ISRG');
+  assert.equal(toYahooFinanceSymbol('V:NYSE'),'V');
+  assert.throws(()=>toYahooFinanceSymbol('AAPL.MYSTERY'),/Unsupported Yahoo Finance exchange suffix/);
+});
