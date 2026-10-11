@@ -78,7 +78,12 @@
     "i2_computation_status",
     "finish_reason",
     "usage",
-    "output_sha256"
+    "output_sha256",
+    "execution_profile_id",
+    "gateway_provider_only",
+    "max_output_tokens",
+    "runner_version",
+    "sanitizer_version"
   ],
   "comparison_policy": {
     "historical_reference": "ORIGINAL_PUBLISHED_V2_DIMENSION_SCORES",
@@ -101,6 +106,18 @@
   "notes": [
     "V0.2 intentionally narrows Phase A1 to scoring judgment reproducibility. Certification and terminal replay are separated to prevent causal leakage.",
     "No composite engine score is authorized.",
-    "Historical model identity is not claimed; every benchmark run records the actual model used."
-  ]
+    "Historical model identity is not claimed; every benchmark run records the actual model used.",
+    "Candidate smoke profile uses openai/gpt-5.4 at explicit medium reasoning and OpenAI-only Gateway routing; it is not frozen for the full 200-run campaign until the smoke test and budget gate pass."
+  ],
+  "candidate_smoke_profile": {
+    "status": "CANDIDATE_NOT_FULL_CAMPAIGN_FREEZE",
+    "model": "openai/gpt-5.4",
+    "reasoning_config": "medium",
+    "gateway_provider_only": "openai",
+    "max_output_tokens": 6000,
+    "runner_version": "OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2",
+    "prompt_artifact_version": "OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1",
+    "sanitizer_version": "1.0.0",
+    "smoke_case_id": "V2REF-010"
+  }
 }

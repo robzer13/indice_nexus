@@ -5,6 +5,17 @@ import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { generateText, Output } from 'ai';
 import { z } from 'zod';
+import {
+  benchmarkExecutionProfile,
+  BENCHMARK_CAMPAIGN_ID,
+  BENCHMARK_ENGINE_FINGERPRINT,
+  BENCHMARK_MAX_OUTPUT_TOKENS,
+  BENCHMARK_PHASE_ID,
+  BENCHMARK_PROMPT_VERSION,
+  BENCHMARK_RUNNER_VERSION,
+  BENCHMARK_SANITIZER_VERSION,
+  type BenchmarkReasoningLevel,
+} from '@/lib/orotitan-equity/benchmark/execution-profile';
 import { computeOqs, DIMENSION_KEYS, type DimensionKey } from '@/lib/orotitan-equity/v1/quality';
 
 const scoreSchema = z.number().int().min(0).max(100).refine((value) => value % 5 === 0, {
@@ -36,8 +47,8 @@ const inputPackSchema = z.object({
   case_id: z.string().regex(/^V2REF-\d{3}$/),
   company: z.string().min(1),
   run_id: z.string().uuid(),
-  sanitizer_version: z.literal('1.0.0'),
-  prompt_version: z.literal('OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1'),
+  sanitizer_version: z.literal(BENCHMARK_SANITIZER_VERSION),
+  prompt_version: z.literal(BENCHMARK_PROMPT_VERSION),
   source: z.object({
     repository: z.string(),
     path: z.string(),
@@ -62,19 +73,25 @@ export interface ScoringReplayRequest {
   caseId: string;
   repetitionIndex: number;
   model: string;
+  reasoning: BenchmarkReasoningLevel;
 }
 
 export interface ScoringReplayExecutionRecord {
-  campaign_id: 'OROTITAN_V2_REPRODUCIBILITY_V0.1';
-  phase_id: 'PHASE_A1_SCORING_JUDGMENT_REPLAY';
+  campaign_id: typeof BENCHMARK_CAMPAIGN_ID;
+  phase_id: typeof BENCHMARK_PHASE_ID;
   case_id: string;
   repetition_index: number;
+  execution_profile_id: string;
   engine_fingerprint: string;
   model_provider: string;
   model_name: string;
   model_version: string;
-  reasoning_config: 'PROVIDER_DEFAULT';
-  prompt_artifact_version: 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1';
+  reasoning_config: BenchmarkReasoningLevel;
+  gateway_provider_only: string;
+  max_output_tokens: number;
+  runner_version: typeof BENCHMARK_RUNNER_VERSION;
+  prompt_artifact_version: typeof BENCHMARK_PROMPT_VERSION;
+  sanitizer_version: typeof BENCHMARK_SANITIZER_VERSION;
   input_package_sha256: string;
   started_at: string;
   finished_at: string;
@@ -131,10 +148,11 @@ export async function runScoringReplay(request: ScoringReplayRequest): Promise<S
   if (!Number.isInteger(request.repetitionIndex) || request.repetitionIndex < 1) {
     throw new Error('repetitionIndex must be a positive integer.');
   }
-  if (!request.model || !request.model.includes('/')) {
-    throw new Error('A fully-qualified Gateway model id (provider/model) is required.');
-  }
 
+  const profile = benchmarkExecutionProfile({
+    model: request.model,
+    reasoning: request.reasoning,
+  });
   const { pack, packText, systemPrompt } = await loadReplayAssets(request.caseId);
   const inputHash = sha256Text(packText);
   const started = new Date();
@@ -152,6 +170,13 @@ export async function runScoringReplay(request: ScoringReplayRequest): Promise<S
       JSON.stringify(pack.analytical_input),
     ].join('\n'),
     output: Output.object({ schema: replayOutputSchema }),
+    reasoning: request.reasoning,
+    providerOptions: {
+      gateway: {
+        only: [profile.gateway_provider_only],
+      },
+    },
+    maxOutputTokens: BENCHMARK_MAX_OUTPUT_TOKENS,
     maxRetries: 0,
   });
 
@@ -167,16 +192,21 @@ export async function runScoringReplay(request: ScoringReplayRequest): Promise<S
   const modelParts = parseModelId(request.model);
 
   const recordWithoutHash = {
-    campaign_id: 'OROTITAN_V2_REPRODUCIBILITY_V0.1' as const,
-    phase_id: 'PHASE_A1_SCORING_JUDGMENT_REPLAY' as const,
+    campaign_id: BENCHMARK_CAMPAIGN_ID,
+    phase_id: BENCHMARK_PHASE_ID,
     case_id: pack.case_id,
     repetition_index: request.repetitionIndex,
-    engine_fingerprint: '1116ca12dce2d30ddbb4b699945d92ae235c940cbf69d104a01019fc21efbf5e',
+    execution_profile_id: profile.execution_profile_id,
+    engine_fingerprint: BENCHMARK_ENGINE_FINGERPRINT,
     model_provider: modelParts.provider,
     model_name: modelParts.name,
     model_version: modelParts.version,
-    reasoning_config: 'PROVIDER_DEFAULT' as const,
-    prompt_artifact_version: 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1' as const,
+    reasoning_config: request.reasoning,
+    gateway_provider_only: profile.gateway_provider_only,
+    max_output_tokens: BENCHMARK_MAX_OUTPUT_TOKENS,
+    runner_version: BENCHMARK_RUNNER_VERSION,
+    prompt_artifact_version: BENCHMARK_PROMPT_VERSION,
+    sanitizer_version: BENCHMARK_SANITIZER_VERSION,
     input_package_sha256: inputHash,
     started_at: started.toISOString(),
     finished_at: finished.toISOString(),
