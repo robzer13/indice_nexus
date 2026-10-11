@@ -1,0 +1,26 @@
+name: Nonproduction Yahoo 39-source probe
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "lib/market/**"
+      - "tests/fixtures/market-universe-20261011.json"
+      - "scripts/probe-market-universe.ts"
+      - ".github/workflows/market-universe-probe.yml"
+permissions:
+  contents: read
+jobs:
+  live-source-diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - name: Fetch read-only market quotes (no database credentials)
+        run: npx tsx scripts/probe-market-universe.ts
+        env:
+          CI: "true"

@@ -1,0 +1,275 @@
+[
+  {
+    "ticker": "ADYEN",
+    "exchange": "Euronext Amsterdam",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "ADYEN.AS"
+  },
+  {
+    "ticker": "AI",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "AI:EPA"
+  },
+  {
+    "ticker": "GOOGL",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "GOOGL"
+  },
+  {
+    "ticker": "ASM",
+    "exchange": "Euronext Amsterdam",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "ASM.AS"
+  },
+  {
+    "ticker": "AUTO",
+    "exchange": "London Stock Exchange",
+    "currency": "GBP",
+    "quote_unit": "MINOR",
+    "market_data_symbol": "AUTO:LSE"
+  },
+  {
+    "ticker": "BCG",
+    "exchange": "London Stock Exchange",
+    "currency": "GBP",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "BCG:LSE"
+  },
+  {
+    "ticker": "BEAN",
+    "exchange": "SIX Swiss Exchange",
+    "currency": "CHF",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "BEAN.SW"
+  },
+  {
+    "ticker": "BKNG",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "BKNG"
+  },
+  {
+    "ticker": "BN",
+    "exchange": "Toronto Stock Exchange",
+    "currency": "CAD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "BN.TO"
+  },
+  {
+    "ticker": "CSU",
+    "exchange": "Toronto Stock Exchange",
+    "currency": "CAD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "CSU.TO"
+  },
+  {
+    "ticker": "CPRT",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "CPRT"
+  },
+  {
+    "ticker": "D05",
+    "exchange": "SGX Mainboard",
+    "currency": "SGD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "D05.SI"
+  },
+  {
+    "ticker": "EQIX",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "EQIX"
+  },
+  {
+    "ticker": "EL",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "EL:EPA"
+  },
+  {
+    "ticker": "GRAB",
+    "exchange": "NASDAQ",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "GRAB"
+  },
+  {
+    "ticker": "HLMA",
+    "exchange": "London Stock Exchange",
+    "currency": "GBP",
+    "quote_unit": "MINOR",
+    "market_data_symbol": "HLMA:LSE"
+  },
+  {
+    "ticker": "RMS",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "RMS:EPA"
+  },
+  {
+    "ticker": "ISRG",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "ISRG:NASDAQ"
+  },
+  {
+    "ticker": "KKR",
+    "exchange": "NYSE",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "KKR"
+  },
+  {
+    "ticker": "MEDI",
+    "exchange": "Oslo Børs",
+    "currency": "NOK",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "MEDI:OSE"
+  },
+  {
+    "ticker": "META",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "META"
+  },
+  {
+    "ticker": "MSFT",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "MSFT"
+  },
+  {
+    "ticker": "MUV2",
+    "exchange": "Xetra",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "MUV2:XETR"
+  },
+  {
+    "ticker": "NOVO-B",
+    "exchange": "Nasdaq Copenhagen",
+    "currency": "DKK",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "NOVO-B.CO"
+  },
+  {
+    "ticker": "NVDA",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "NVDA"
+  },
+  {
+    "ticker": "PEP",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "PEP"
+  },
+  {
+    "ticker": "RI",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "RI:EPA"
+  },
+  {
+    "ticker": "QLYS",
+    "exchange": "NASDAQ",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "QLYS"
+  },
+  {
+    "ticker": "RAA",
+    "exchange": "Xetra",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "RAA:XETR"
+  },
+  {
+    "ticker": "G24",
+    "exchange": "Xetra",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "G24:XETR"
+  },
+  {
+    "ticker": "SEIC",
+    "exchange": "NASDAQ",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "SEIC"
+  },
+  {
+    "ticker": "STMPA",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "STMPA:EPA"
+  },
+  {
+    "ticker": "HO",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "HO:EPA"
+  },
+  {
+    "ticker": "TOI",
+    "exchange": "TSX Venture Exchange",
+    "currency": "CAD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "TOI.V"
+  },
+  {
+    "ticker": "TTE",
+    "exchange": "Euronext Paris",
+    "currency": "EUR",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "TTE:EPA"
+  },
+  {
+    "ticker": "TDG",
+    "exchange": "NYSE",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "TDG"
+  },
+  {
+    "ticker": "2330",
+    "exchange": "Taiwan Stock Exchange",
+    "currency": "TWD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "2330.TW"
+  },
+  {
+    "ticker": "V",
+    "exchange": "NYSE",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "V"
+  },
+  {
+    "ticker": "WSE",
+    "exchange": "Nasdaq",
+    "currency": "USD",
+    "quote_unit": "MAJOR",
+    "market_data_symbol": "WSE:NASDAQ"
+  }
+]
