@@ -21,18 +21,20 @@ create table public.issuers(issuer_id uuid primary key);
 create table public.securities(security_id uuid primary key, trading_currency text not null, quote_unit text not null);
 create table public.research_snapshots(snapshot_id uuid primary key, issuer_id uuid not null references public.issuers, security_id uuid not null references public.securities);
 create table public.research_dossiers(issuer_id uuid not null references public.issuers, current_snapshot_id uuid references public.research_snapshots, active boolean not null);
+create table public.legacy_company_identity_map (legacy_company_id uuid primary key, issuer_id uuid not null references public.issuers);
 create table public.market_prices (
-  id bigint generated always as identity primary key, company_id uuid not null references public.issuers,
+  id bigint generated always as identity primary key, company_id uuid not null,
   price numeric not null, as_of timestamptz not null, created_at timestamptz not null default now()
 );
 insert into public.issuers values ('00000000-0000-4000-8000-000000000111');
+insert into public.legacy_company_identity_map values ('00000000-0000-4000-8000-000000000444','00000000-0000-4000-8000-000000000111');
 insert into public.securities values ('00000000-0000-4000-8000-000000000222','EUR','MAJOR');
 insert into public.research_snapshots values
   ('00000000-0000-4000-8000-000000000333','00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000222');
 insert into public.research_dossiers values
   ('00000000-0000-4000-8000-000000000111','00000000-0000-4000-8000-000000000333',true);
 insert into public.market_prices(company_id,price,as_of) values
-  ('00000000-0000-4000-8000-000000000111',4.5,now()-interval '30 minutes');
+  ('00000000-0000-4000-8000-000000000444',4.5,now()-interval '30 minutes');
 SQL
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/migrations/20261011_paper_long_term_portfolio_v1.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
@@ -65,7 +67,7 @@ SQL
 sleep 2
 psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
 insert into public.market_prices(company_id,price,as_of) values
-  ('00000000-0000-4000-8000-000000000111',5,now());
+  ('00000000-0000-4000-8000-000000000444',5,now());
 do $$
 declare sig uuid; v_fill_id uuid; portfolio uuid;
 begin
