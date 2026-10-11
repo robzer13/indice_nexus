@@ -118,7 +118,7 @@ test('ineligible published analysis never becomes a buy recommendation', () => {
 });
 
 test('VALUE needs a valid objective and entry/exit ordering', () => {
-  assert.equal(evaluate({ strategy: { profile: 'VALUE', thesisState: 'ACTIVE' } }).action, 'REVIEW_REQUIRED');
+  assert.equal(evaluate({ strategy: { profile: 'VALUE', thesisState: 'ACTIVE', exitTargetPrice: null } }).action, 'REVIEW_REQUIRED');
   assert.equal(evaluate({ strategy: { ...baseline.strategy, exitTargetPrice: 0 } }).action, 'DATA_BLOCKED');
   assert.equal(evaluate({ strategy: { ...baseline.strategy, exitTargetPrice: 3 } }).reason, 'TARGET_BELOW_ENTRY');
 });
