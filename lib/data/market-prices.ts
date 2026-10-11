@@ -8,6 +8,10 @@ export interface MarketDataCompany {
   name: string;
   market_data_symbol: string;
   market_data_multiplier: number;
+  ticker: string;
+  exchange: string;
+  currency: string;
+  quote_unit: 'MAJOR' | 'MINOR';
   latest_price: number | null;
 }
 
@@ -15,7 +19,7 @@ export async function getMarketDataCompanies(): Promise<MarketDataCompany[]> {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from('latest_company_state')
-    .select('id,slug,name,market_data_symbol,market_data_multiplier,price')
+    .select('id,slug,name,ticker,exchange,currency,quote_unit,market_data_symbol,market_data_multiplier,price')
     .not('market_data_symbol', 'is', null)
     .order('name');
   if (error) throw new Error(`Unable to load market-data companies: ${error.message}`);
@@ -27,6 +31,10 @@ export async function getMarketDataCompanies(): Promise<MarketDataCompany[]> {
       name: row.name,
       market_data_symbol: row.market_data_symbol,
       market_data_multiplier: Number(row.market_data_multiplier),
+      ticker: row.ticker,
+      exchange: row.exchange,
+      currency: row.currency,
+      quote_unit: row.quote_unit,
       latest_price: row.price === null ? null : Number(row.price),
     })) as MarketDataCompany[];
 }
