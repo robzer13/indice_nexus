@@ -8,6 +8,7 @@ import {
   isBenchmarkReasoningLevel,
 } from '@/lib/orotitan-equity/benchmark/execution-profile';
 import {
+  claimBenchmarkExecution,
   getExistingBenchmarkExecution,
   recordBenchmarkExecution,
 } from '@/lib/orotitan-equity/benchmark/persistence';
@@ -72,6 +73,17 @@ export async function POST(request: Request) {
       });
     }
 
+    // Atomic, durable claim must precede any paid model invocation.
+    const claim = await claimBenchmarkExecution(lookup);
+    if (claim === 'IN_PROGRESS') {
+      return NextResponse.json({ status: 'IN_PROGRESS' }, { status: 202 });
+    }
+    if (claim === 'EXISTING') {
+      const recorded = await getExistingBenchmarkExecution(lookup);
+      if (!recorded) throw new Error('Claim reports missing completed execution');
+      return NextResponse.json({ status: 'EXISTING', execution: recorded });
+    }
+    if (claim !== 'CLAIMED') throw new Error('Paid inference claim not granted');
     const execution = await runScoringReplay({
       caseId: parsed.data.caseId,
       repetitionIndex: parsed.data.repetitionIndex,

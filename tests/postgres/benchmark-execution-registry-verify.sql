@@ -19,6 +19,15 @@ begin
      or has_function_privilege('public', 'public.record_orotitan_benchmark_execution(jsonb)', 'EXECUTE') then
     raise exception 'benchmark RPC leaked to non-service roles';
   end if;
+  if to_regclass('public.orotitan_engine_benchmark_claims') is null
+    or has_table_privilege('service_role','public.orotitan_engine_benchmark_claims','INSERT')
+    or has_table_privilege('service_role','public.orotitan_engine_benchmark_claims','UPDATE')
+    or has_table_privilege('service_role','public.orotitan_engine_benchmark_claims','DELETE')
+    or has_function_privilege('anon','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE')
+    or has_function_privilege('authenticated','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE')
+    or not has_function_privilege('service_role','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE') then
+    raise exception 'benchmark claim ACL violated';
+  end if;
   if not has_function_privilege('service_role', 'public.record_orotitan_benchmark_execution(jsonb)', 'EXECUTE') then
     raise exception 'service_role benchmark RPC execute missing';
   end if;
@@ -27,54 +36,18 @@ $$;
 
 set role service_role;
 
-select public.record_orotitan_benchmark_execution(
-  jsonb_build_object(
-    'campaign_id', 'OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2',
-    'phase_id', 'PHASE_A1_SCORING_JUDGMENT_REPLAY',
-    'case_id', 'V2REF-010',
-    'repetition_index', 1,
-    'execution_profile_id', repeat('1', 64),
-    'engine_fingerprint', repeat('2', 64),
-    'model_provider', 'openai',
-    'model_name', 'gpt-test',
-    'model_version', 'gpt-test',
-    'reasoning_config', 'medium',
-    'gateway_provider_only', 'openai',
-    'max_output_tokens', 6000,
-    'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
-    'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
-    'sanitizer_version', '1.0.0',
-    'input_package_sha256', repeat('3', 64),
-    'started_at', '2026-10-04T15:00:00Z',
-    'finished_at', '2026-10-04T15:00:02Z',
-    'duration_ms', 2000,
-    'dimension_scores', jsonb_build_object(
-      'MOAT', 85,
-      'RUNWAY', 85,
-      'RETURN_QUALITY', 80,
-      'CASH_ECONOMICS', 80,
-      'CAPITAL_ALLOCATION', 75,
-      'MANAGEMENT_GOVERNANCE', 80,
-      'RESILIENCE_RISK', 80
-    ),
-    'dimension_rationales', jsonb_build_object(
-      'MOAT', 'test',
-      'RUNWAY', 'test',
-      'RETURN_QUALITY', 'test',
-      'CASH_ECONOMICS', 'test',
-      'CAPITAL_ALLOCATION', 'test',
-      'MANAGEMENT_GOVERNANCE', 'test',
-      'RESILIENCE_RISK', 'test'
-    ),
-    'oqs_raw', 81,
-    'weak_link_cap', 100,
-    'oqs', 81,
-    'i2_computation_status', 'PASS',
-    'finish_reason', 'stop',
-    'usage', jsonb_build_object('inputTokens', 100, 'outputTokens', 50),
-    'output_sha256', repeat('a', 64)
-  )
-);
+do $$
+declare a jsonb; b jsonb;
+begin
+  a := public.claim_orotitan_benchmark_execution('OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2',
+    'PHASE_A1_SCORING_JUDGMENT_REPLAY','V2REF-010',1,repeat('1',64));
+  b := public.claim_orotitan_benchmark_execution('OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2',
+    'PHASE_A1_SCORING_JUDGMENT_REPLAY','V2REF-010',1,repeat('1',64));
+  if a->>'status' <> 'CLAIMED' or b->>'status' <> 'IN_PROGRESS' then
+    raise exception 'duplicate benchmark reservation: % / %',a,b;
+  end if;
+end;
+$$;
 
 select public.record_orotitan_benchmark_execution(
   jsonb_build_object(
@@ -125,6 +98,63 @@ select public.record_orotitan_benchmark_execution(
   )
 );
 
+select public.record_orotitan_benchmark_execution(
+  jsonb_build_object(
+    'campaign_id', 'OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2',
+    'phase_id', 'PHASE_A1_SCORING_JUDGMENT_REPLAY',
+    'case_id', 'V2REF-010',
+    'repetition_index', 1,
+    'execution_profile_id', repeat('1', 64),
+    'engine_fingerprint', repeat('2', 64),
+    'model_provider', 'openai',
+    'model_name', 'gpt-test',
+    'model_version', 'gpt-test',
+    'reasoning_config', 'medium',
+    'gateway_provider_only', 'openai',
+    'max_output_tokens', 6000,
+    'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
+    'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
+    'sanitizer_version', '1.0.0',
+    'input_package_sha256', repeat('3', 64),
+    'started_at', '2026-10-04T15:00:00Z',
+    'finished_at', '2026-10-04T15:00:02Z',
+    'duration_ms', 2000,
+    'dimension_scores', jsonb_build_object(
+      'MOAT', 85,
+      'RUNWAY', 85,
+      'RETURN_QUALITY', 80,
+      'CASH_ECONOMICS', 80,
+      'CAPITAL_ALLOCATION', 75,
+      'MANAGEMENT_GOVERNANCE', 80,
+      'RESILIENCE_RISK', 80
+    ),
+    'dimension_rationales', jsonb_build_object(
+      'MOAT', 'test',
+      'RUNWAY', 'test',
+      'RETURN_QUALITY', 'test',
+      'CASH_ECONOMICS', 'test',
+      'CAPITAL_ALLOCATION', 'test',
+      'MANAGEMENT_GOVERNANCE', 'test',
+      'RESILIENCE_RISK', 'test'
+    ),
+    'oqs_raw', 81,
+    'weak_link_cap', 100,
+    'oqs', 81,
+    'i2_computation_status', 'PASS',
+    'finish_reason', 'stop',
+    'usage', jsonb_build_object('inputTokens', 100, 'outputTokens', 50),
+    'output_sha256', repeat('a', 64)
+  )
+);
+
+do $$
+declare r jsonb;
+begin
+  r := public.claim_orotitan_benchmark_execution('OROTITAN_V2_REPRODUCIBILITY_CAMPAIGN_V0.2',
+    'PHASE_A1_SCORING_JUDGMENT_REPLAY','V2REF-010',1,repeat('1',64));
+  if r->>'status' <> 'EXISTING' then raise exception 'completed claim must replay'; end if;
+end;
+$$;
 reset role;
 
 do $$
@@ -153,6 +183,10 @@ begin
         'model_name', 'gpt-test',
         'model_version', 'gpt-test',
         'reasoning_config', 'PROVIDER_DEFAULT',
+        'gateway_provider_only', 'openai',
+        'max_output_tokens', 6000,
+        'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
+        'sanitizer_version', '1.0.0',
         'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
         'input_package_sha256', repeat('3', 64),
         'started_at', '2026-10-04T15:00:00Z',
@@ -219,7 +253,7 @@ begin
       i2_computation_status, finish_reason, usage, output_sha256
     ) values (
       'X', 'Y', 'V2REF-001', 99, repeat('4',64), repeat('5',64),
-      'openai', 'x', 'x', 'x', 'medium', 'openai', 6000,
+      'openai', 'x', 'x', 'medium', 'openai', 6000,
       'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1', '1.0.0',
       repeat('6',64), now(), now(), 0,
       jsonb_build_object(
@@ -252,6 +286,10 @@ begin
         'model_name', 'gpt-test',
         'model_version', 'gpt-test',
         'reasoning_config', 'PROVIDER_DEFAULT',
+        'gateway_provider_only', 'openai',
+        'max_output_tokens', 6000,
+        'runner_version', 'OROTITAN_V2_SCORING_REPLAY_RUNNER_V0.2',
+        'sanitizer_version', '1.0.0',
         'prompt_artifact_version', 'OROTITAN_V2_SCORING_REPLAY_PROMPT_V0.1',
         'input_package_sha256', repeat('9', 64),
         'started_at', '2026-10-04T15:00:00Z',

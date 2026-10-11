@@ -314,4 +314,61 @@ revoke all on function public.record_orotitan_benchmark_execution(jsonb)
   from public, anon, authenticated, service_role;
 grant execute on function public.record_orotitan_benchmark_execution(jsonb) to service_role;
 
+
+-- Durable atomic paid-inference claim; never automatically recycle a crashed key.
+create table if not exists public.orotitan_engine_benchmark_claims (
+  campaign_id text not null,
+  phase_id text not null,
+  case_id text not null check (case_id ~ '^V2REF-[0-9]{3}$'),
+  repetition_index integer not null check (repetition_index >= 1),
+  execution_profile_id text not null check (execution_profile_id ~ '^[a-f0-9]{64}$'),
+  claimed_at timestamptz not null default now(),
+  primary key (campaign_id, phase_id, case_id, repetition_index, execution_profile_id)
+);
+create trigger orotitan_engine_benchmark_claims_immutable
+before update or delete on public.orotitan_engine_benchmark_claims
+for each row execute function public.reject_orotitan_benchmark_execution_mutation();
+
+alter table public.orotitan_engine_benchmark_claims enable row level security;
+revoke all on table public.orotitan_engine_benchmark_claims from public, anon, authenticated, service_role;
+grant select on table public.orotitan_engine_benchmark_claims to service_role;
+
+create or replace function public.claim_orotitan_benchmark_execution(
+  p_campaign_id text, p_phase_id text, p_case_id text, p_repetition_index integer, p_execution_profile_id text
+)
+returns jsonb language plpgsql security definer set search_path = pg_catalog, public
+as $$
+declare v_inserted integer;
+begin
+  if nullif(p_campaign_id,'') is null or nullif(p_phase_id,'') is null
+     or p_case_id is null or p_case_id !~ '^V2REF-[0-9]{3}$'
+     or p_repetition_index is null or p_repetition_index < 1
+     or p_execution_profile_id is null or p_execution_profile_id !~ '^[a-f0-9]{64}$' then
+    raise exception 'invalid benchmark claim key' using errcode = '22023';
+  end if;
+  if exists(select 1 from public.orotitan_engine_benchmark_executions e
+    where e.campaign_id=p_campaign_id and e.phase_id=p_phase_id and e.case_id=p_case_id
+      and e.repetition_index=p_repetition_index and e.execution_profile_id=p_execution_profile_id) then
+    return jsonb_build_object('status','EXISTING');
+  end if;
+  insert into public.orotitan_engine_benchmark_claims
+    (campaign_id,phase_id,case_id,repetition_index,execution_profile_id)
+  values (p_campaign_id,p_phase_id,p_case_id,p_repetition_index,p_execution_profile_id)
+  on conflict do nothing;
+  get diagnostics v_inserted = row_count;
+  if v_inserted=1 then return jsonb_build_object('status','CLAIMED'); end if;
+  if exists(select 1 from public.orotitan_engine_benchmark_executions e
+    where e.campaign_id=p_campaign_id and e.phase_id=p_phase_id and e.case_id=p_case_id
+      and e.repetition_index=p_repetition_index and e.execution_profile_id=p_execution_profile_id) then
+    return jsonb_build_object('status','EXISTING');
+  end if;
+  return jsonb_build_object('status','IN_PROGRESS');
+end;
+$$;
+
+revoke all on function public.claim_orotitan_benchmark_execution(text,text,text,integer,text)
+from public, anon, authenticated, service_role;
+grant execute on function public.claim_orotitan_benchmark_execution(text,text,text,integer,text)
+to service_role;
+
 commit;

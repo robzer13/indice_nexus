@@ -35,3 +35,21 @@ export async function recordBenchmarkExecution(record: ScoringReplayExecutionRec
   if (error) throw new Error(`Unable to persist benchmark execution: ${error.message}`);
   return data;
 }
+
+/** Permanently claim the exact paid inference key; uncertain claims fail closed. */
+export async function claimBenchmarkExecution(key: BenchmarkExecutionLookup): Promise<'CLAIMED'|'IN_PROGRESS'|'EXISTING'> {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase.rpc('claim_orotitan_benchmark_execution', {
+    p_campaign_id: key.campaignId,
+    p_phase_id: key.phaseId,
+    p_case_id: key.caseId,
+    p_repetition_index: key.repetitionIndex,
+    p_execution_profile_id: key.executionProfileId,
+  });
+  if (error) throw new Error('Benchmark claim RPC failed: '+error.message);
+  const status = (data as {status?: unknown} | null)?.status;
+  if (status !== 'CLAIMED' && status !== 'IN_PROGRESS' && status !== 'EXISTING') {
+    throw new Error('Invalid claim receipt');
+  }
+  return status;
+}
