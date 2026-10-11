@@ -1,0 +1,116 @@
+{
+  "format": "OROTITAN_METHOD_V2_CERTIFICATION_PERSISTENCE_PROFILE",
+  "version": "1.0",
+  "status": "FROZEN_RUNTIME_SERIALIZATION",
+  "source_baseline_commit_sha": "e5c3b107116a998496eb15a3c0a81546c3c827b2",
+  "identity_domain": "METHOD_V2_RUNTIME_SERIALIZATION_NOT_ANALYTICAL_AUTHORITY",
+  "production_active": false,
+  "artifact_type": "CERTIFICATION_ARTIFACT",
+  "media_type": "application/json",
+  "applies_to": {
+    "methodology_generation": "METHOD_V2",
+    "artifact_lifecycle": "NEW_ARTIFACTS_ONLY",
+    "historical_v1_and_pre_profile_artifacts_rewritten": false
+  },
+  "persisted_document": {
+    "encoding": "UTF-8_WITHOUT_BOM",
+    "root_type": "object",
+    "required_exact_root_members": ["format", "version", "run_id", "stage_revision", "data_cutoff", "certification", "method_v2_challenge_binding"],
+    "format": "OROTITAN_METHOD_V2_CERTIFICATION_ARTIFACT",
+    "version": "1.0",
+    "run_id": "UUID_STRING_8_4_4_4_12_HEX_DIGITS_EXACT_NO_CASE_NORMALIZATION",
+    "stage_revision": "POSITIVE_SAFE_INTEGER",
+    "data_cutoff": "VALID_GREGORIAN_DATE_YYYY-MM-DD",
+    "certification": {
+      "type": "object",
+      "additional_properties": "ALLOWED_OPAQUE_INHERITED_CONTENT",
+      "decision_authority": "INHERITED_FROZEN_CERTIFICATION_AUTHORITY",
+      "affects_challenge_binding_identity": false
+    },
+    "method_v2_challenge_binding": {
+      "required_exact_members": ["question_ledger_ref", "challenge_report_ref", "fundamentals_lock_ref", "valuation_lock_ref", "challenge_status", "challenge_limitations"],
+      "artifact_ref_members": ["question_ledger_ref", "challenge_report_ref", "fundamentals_lock_ref", "valuation_lock_ref"],
+      "challenge_status": ["PASS", "PASS_WITH_CONCERNS"],
+      "challenge_limitations": {
+        "type": "array",
+        "item_type": "object",
+        "required_exact_members": ["question_id", "decision_impact", "mitigation_or_resolution"],
+        "member_values": "NON_EMPTY_STRINGS_RETAINED_EXACTLY",
+        "question_id_unique": true,
+        "ordering_semantics": "NONE"
+      }
+    }
+  },
+  "artifact_ref_rule": {
+    "required_exact_members": ["artifact_id", "version", "content_sha256"],
+    "artifact_id": "UUID_STRING_8_4_4_4_12_HEX_DIGITS",
+    "version": "POSITIVE_SAFE_INTEGER",
+    "content_sha256": "64_LOWERCASE_HEX_DIGITS",
+    "comparison": "EXACT_FIELD_EQUALITY",
+    "normalization": "NONE",
+    "aliases": [],
+    "fallback": false,
+    "fuzzy_matching": false
+  },
+  "concern_propagation_rule": {
+    "source": "CURRENT_VALIDATED_METHOD_V2_CHALLENGE_LIMITATIONS_OUTPUT",
+    "destination": "method_v2_challenge_binding.challenge_limitations",
+    "cardinality": "ONE_ENTRY_PER_CURRENT_CONCERN",
+    "comparison": "EXACT_SET_EQUALITY_BY_QUESTION_ID_AND_EXACT_STRING_VALUES",
+    "normalization": "NONE",
+    "trimming": false,
+    "paraphrase": false,
+    "omissions_allowed": false,
+    "extra_challenge_limitations_allowed": false,
+    "PASS": "EMPTY_ARRAY",
+    "PASS_WITH_CONCERNS": "EXACTLY_ALL_CURRENT_CONCERNS_NON_EMPTY",
+    "legacy_boundary": "NOT_EQUIVALENT_TO_V1_CERTIFICATION_MATERIAL_LIMITATIONS_OR_ISSUE_REF; INHERITED_CANONICAL_PROJECTION_REMAINS_SEPARATELY_GOVERNED"
+  },
+  "deterministic_writer": {
+    "object_keys": "RECURSIVELY_SORT_ASCENDING_UTF16_CODE_UNITS",
+    "challenge_limitations": "SORT_ASCENDING_QUESTION_ID_UTF16_CODE_UNITS",
+    "other_arrays": "RETAIN_ORDER",
+    "strings_and_finite_json_numbers": "ECMASCRIPT_JSON_STRINGIFY_PRIMITIVE_SERIALIZATION",
+    "whitespace": "NONE",
+    "final_newline": false,
+    "non_json_values": "REJECT",
+    "raw_byte_identity": "SHA256_OF_EXACT_PERSISTED_BYTES_NO_RESERIALIZATION"
+  },
+  "parser_rule": {
+    "invalid_utf8": "REJECT_FATAL_DECODER",
+    "invalid_json_or_bom": "REJECT",
+    "duplicate_json_members": "REJECT_IN_EVERY_OBJECT_BEFORE_JSON_PARSE_USING_DECODED_MEMBER_NAMES",
+    "escaped_duplicate_member_names": "REJECT",
+    "valid_alternate_whitespace_and_member_order": "ACCEPT_WITHOUT_CHANGING_RAW_BYTE_HASH_IDENTITY"
+  },
+  "verification_context": {
+    "trusted_expected_values": ["run_id", "stage_revision", "data_cutoff", "question_ledger_ref", "challenge_report_ref", "fundamentals_lock_ref", "valuation_lock_ref", "challenge_status", "challenge_limitations"],
+    "every_mismatch": "REJECT",
+    "provider_responsibility": "RESOLVE_CURRENT_EXACT_PERSISTED_LINEAGE_AND_VALIDATE_UPSTREAM_CHALLENGE_ADMISSION; PARSER_AND_VERIFIER_DO_NOT_ESTABLISH_CURRENTNESS_OR_CERTIFICATION_DECISIONS"
+  },
+  "semantic_boundary": {
+    "defines_analytical_meaning": false,
+    "replaces_inherited_certification_semantics": false,
+    "changes_certification_decisions": false,
+    "changes_score_permission": false,
+    "changes_challenge_aggregation": false,
+    "changes_challenge_concern_semantics": false,
+    "maps_challenge_concerns_to_legacy_issue_ref": false,
+    "changes_canonical_snapshot_schema": false,
+    "imports_runtime_v2_v3_authority": false
+  },
+  "scope_boundary": {
+    "contacts_supabase": false,
+    "contacts_github": false,
+    "creates_live_run": false,
+    "activates_method_v2": false,
+    "publishes_canonical_snapshot": false,
+    "mutates_production_registry": false
+  },
+  "future_runtime_binding": {
+    "changed_by_this_mission": false,
+    "dependent_pr": 371,
+    "requirement": "AFTER_INDEPENDENT_REVIEW_AND_MERGE_TO_VNEXT_PIN_THIS_PROFILE_RAW_SHA256_IN_PR_371_RUNTIME_BINDING_AND_RECOMPUTE_BINDING_SHA256",
+    "old_binding_sha256_must_not_be_artificially_preserved": "0832d3c90afab1e4e044d0b84af3992edcb2961298b379890cd7d978d391ca2c"
+  }
+}

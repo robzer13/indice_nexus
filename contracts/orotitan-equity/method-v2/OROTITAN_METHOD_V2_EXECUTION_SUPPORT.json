@@ -1,0 +1,79 @@
+{
+  "identity_domain": "EXECUTION_SUPPORT_NOT_ANALYTICAL_IDENTITY",
+  "production_active": false,
+  "members": [
+    {
+      "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_DEEP_DIVE_STAGE_CONTRACT_SUCCESSOR_V1.0.md",
+      "source_commit": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+      "sha256": "7cc34e39a8c8e5895c63ba51781b41aa2a81011219e14b8e127e0c85a76f2b3d"
+    },
+    {
+      "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_EXECUTION_PROCESS_SUCCESSOR_V1.0.md",
+      "source_commit": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+      "sha256": "4bb6672949c704349316f40c4a1280fcd65e2e96d40a619b9e500a7eba89d088"
+    },
+    {
+      "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_INTEGRATION_ADMISSION_SUCCESSOR_V1.0.md",
+      "source_commit": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+      "sha256": "c88c915823b04112eede6acb5b0ec136b8149d7f550cd3c9e6edea82c6876ae3"
+    },
+    {
+      "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_MASTER_PROMPT_SEQUENCING_SUCCESSOR_V1.0.md",
+      "source_commit": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+      "sha256": "efe42012bcf8f41be4942ff216d49b7a5010e67c0a1101d82e5c4a4330fde51c"
+    },
+    {
+      "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_PILOTAGE_SUCCESSOR_V1.0.md",
+      "source_commit": "3ba9cb7e83368155abcca9d44429df490bb08b9e",
+      "sha256": "a332708924cb2c684de8d87b21aafa52d74b658467e11b8f2baf9adc8a25df5c"
+    },
+    {
+      "inherited_execution_pin": "process",
+      "pin": {
+        "name": "OROTITAN_RESEARCH_EXECUTION_PROCESS_V1_FREEZE_V1.0",
+        "version": "1.0",
+        "content_sha256": "943745d3c413c39ddbabb2512605d364754c213628b15fdf9b9b58e78be0eb6a",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/execution-freeze/OROTITAN_RESEARCH_EXECUTION_PROCESS_V1_FREEZE_V1.0.md.gz",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "7fccc918b8bc5a1d4b03df6c957ebcbc1dfac4f3",
+          "locator_format": "OROTITAN_GZIP_V1"
+        }
+      }
+    },
+    {
+      "inherited_execution_pin": "pilotage",
+      "pin": {
+        "name": "OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V1_FREEZE_V1.0.1",
+        "version": "1.0.1",
+        "content_sha256": "304e19d572be39516914b069d33e10ee53e472b15c5601f2e0a2d2e0a8ccc446",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/execution-freeze/OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V1_FREEZE_V1.0.1.md.gz",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "5b7ed7ad92906c2fa1cbdaa5775bb0a36ac69c83",
+          "locator_format": "OROTITAN_GZIP_V1"
+        }
+      }
+    },
+    {
+      "inherited_execution_pin": "integration_stage",
+      "pin": {
+        "name": "OROTITAN_INTEGRATION_STAGE_CONTRACT_V1_FREEZE_V1.0",
+        "version": "1.0",
+        "content_sha256": "66bbe2f0ee8955feaba33a2c52b174f94695148a7884e35ef66704e2a6304ccb",
+        "locator": {
+          "backend": "GITHUB_IMMUTABLE",
+          "repository": "robzer13/indice_nexus",
+          "path": "contracts/orotitan-equity/v1/execution-freeze/OROTITAN_INTEGRATION_STAGE_CONTRACT_V1_FREEZE_V1.0.md.gz",
+          "commit_sha": "8aba7cee6a9b38204785c16976e65e9010f5d959",
+          "blob_sha": "612bcb58f629cd6e7338964424a94f1a71f83931",
+          "locator_format": "OROTITAN_GZIP_V1"
+        }
+      }
+    }
+  ]
+}

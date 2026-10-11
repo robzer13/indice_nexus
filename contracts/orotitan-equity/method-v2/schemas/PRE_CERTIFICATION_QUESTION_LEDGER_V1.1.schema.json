@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "OROTITAN_PRE_CERTIFICATION_QUESTION_LEDGER_V1.1",
+  "title": "OroTitan Pre-Certification Question Ledger V1.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "company",
+    "run_id",
+    "data_cutoff",
+    "challenge_version",
+    "challenge_iteration",
+    "questions",
+    "fundamentals_lock_ref",
+    "valuation_lock_ref",
+    "mode",
+    "delta_provenance",
+    "dropped_candidates"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "PRE_CERTIFICATION_QUESTION_LEDGER"
+    },
+    "schema_version": {
+      "const": "1.1"
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "data_cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "challenge_version": {
+      "type": "string",
+      "minLength": 1,
+      "const": "1.1"
+    },
+    "challenge_iteration": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "question_family",
+          "question_text",
+          "company_specific",
+          "origin_trigger",
+          "why_material",
+          "novelty_basis",
+          "answer_or_judgment",
+          "status",
+          "evidence_references",
+          "affected_blocks",
+          "decision_impact",
+          "evidence_dates"
+        ],
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question_family": {
+            "enum": [
+              "CROSS_BLOCK_CONSISTENCY",
+              "GREAT_INVESTOR_DECISION_THINKING",
+              "WORLD_IN_MOTION",
+              "OPERATIONAL_REALITY_SUPPLY_CHAIN",
+              "TECHNOLOGY_AI",
+              "SECOND_ORDER_EFFECTS",
+              "COUNTERFACTUALS",
+              "COMPANY_SPECIFIC_CHALLENGE",
+              "OTHER_MATERIAL_CHALLENGE"
+            ]
+          },
+          "question_subfamily": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "question_text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "company_specific": {
+            "type": "boolean"
+          },
+          "origin_trigger": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "why_material": {
+            "type": "string",
+            "minLength": 1
+          },
+          "novelty_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer_or_judgment": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "CONCERN",
+              "REOPEN",
+              "FAIL"
+            ]
+          },
+          "evidence_references": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "affected_blocks": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "RESEARCH",
+                "BUSINESS_MODEL",
+                "MOAT",
+                "RUNWAY",
+                "RETURN_QUALITY",
+                "FCF_FORENSIC",
+                "CAPITAL_ALLOCATION",
+                "MANAGEMENT_GOVERNANCE",
+                "RISK_RESILIENCE",
+                "VALUATION",
+                "CERTIFICATION",
+                "OTHER"
+              ]
+            }
+          },
+          "reopen_target": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "enum": [
+                "RESEARCH",
+                "BUSINESS_MODEL",
+                "MOAT",
+                "RUNWAY",
+                "RETURN_QUALITY",
+                "FCF_FORENSIC",
+                "CAPITAL_ALLOCATION",
+                "MANAGEMENT_GOVERNANCE",
+                "RISK_RESILIENCE",
+                "VALUATION"
+              ]
+            }
+          },
+          "decision_impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mitigation_or_resolution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "second_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "third_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidence_dates": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        }
+      }
+    },
+    "fundamentals_lock_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "content_sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "valuation_lock_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "version",
+        "content_sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "FULL",
+        "DELTA"
+      ]
+    },
+    "delta_provenance": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "prior_passing_report_ref",
+            "prior_passing_ledger_ref",
+            "impact_map",
+            "inherited_coverage_revalidated"
+          ],
+          "properties": {
+            "prior_passing_report_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_id",
+                "version",
+                "content_sha256"
+              ],
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "prior_passing_ledger_ref": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "artifact_id",
+                "version",
+                "content_sha256"
+              ],
+              "properties": {
+                "artifact_id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "content_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            },
+            "impact_map": {
+              "type": "string",
+              "minLength": 1
+            },
+            "inherited_coverage_revalidated": {
+              "const": true
+            }
+          }
+        }
+      ]
+    },
+    "dropped_candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "reason",
+          "rationale"
+        ],
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "enum": [
+              "DROP_DUPLICATE",
+              "DROP_ALREADY_RESOLVED",
+              "DROP_NON_MATERIAL",
+              "DROP_NOT_COMPANY_RELEVANT"
+            ]
+          },
+          "rationale": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

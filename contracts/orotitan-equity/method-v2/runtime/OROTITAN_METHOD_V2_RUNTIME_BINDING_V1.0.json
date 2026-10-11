@@ -1,0 +1,51 @@
+{
+  "format": "OROTITAN_METHOD_V2_RUNTIME_BINDING",
+  "version": "1.0",
+  "identity_domain": "EXECUTION_RUNTIME_NOT_ANALYTICAL_AUTHORITY",
+  "repository": "robzer13/indice_nexus",
+  "methodology_generation": "METHOD_V2",
+  "methodology_authority_sha256": "1e97ad30595d24d10345cfcb58c8b6c0feeb7272144af1fc12d0affd2d2e33b2",
+  "contract_set_sha256": "23b75bf5c2d7448e8270e7e8f3a0223e639d0be3a1406b3c089e6e885dd063ea",
+  "evidence_ledger_persistence_profile_sha256": "8679e2aeb8f7be4569670629866a9ee2a63d933f5b04d6ede209aa8310e29a83",
+  "certification_persistence_profile": {
+    "format": "OROTITAN_METHOD_V2_CERTIFICATION_PERSISTENCE_PROFILE",
+    "version": "1.0",
+    "content_sha256": "a9b3eff1930a9a7e6164cfb1f0248c98c8041975ef9adc77f9d152062df0a53c",
+    "locator": {
+      "backend": "GITHUB_IMMUTABLE",
+      "repository": "robzer13/indice_nexus",
+      "path": "contracts/orotitan-equity/method-v2/runtime/OROTITAN_METHOD_V2_CERTIFICATION_PERSISTENCE_PROFILE_V1.0.json",
+      "commit_sha": "cf83831d13b87bc892aef59e2951c7c4518119e8",
+      "blob_sha": "1e44968777667d4aced85a288e6c673e53cf5c4d"
+    }
+  },
+  "execution_pack_locator": {
+    "backend": "GITHUB_IMMUTABLE",
+    "repository": "robzer13/indice_nexus",
+    "path": "contracts/orotitan-equity/method-v2/OROTITAN_METHOD_V2_EXECUTION_CONTRACT_PIN_PACK_V1.0.json",
+    "commit_sha": "e5c3b107116a998496eb15a3c0a81546c3c827b2",
+    "blob_sha": "b64ad27423a7f06922fbc220739f7fbaabdcbda5",
+    "pin_count": 13
+  },
+  "registry_requirement": "V1.14_RUNTIME_FIREWALL",
+  "controlled_fresh_run_rpc": "public.create_orotitan_method_v2_runtime_run(text,uuid,uuid,uuid,uuid,date,text,text)",
+  "pre_certification_validator": {
+    "runtime_path": "lib/orotitan-equity/method-v2/persisted-challenge.ts",
+    "runtime_export": "verifyPersistedMethodV2Challenge",
+    "pure_path": "lib/orotitan-equity/method-v2/pre-certification.ts",
+    "pure_export": "admitMethodV2Certification",
+    "evidence_parser_path": "lib/orotitan-equity/method-v2/evidence-ledger-persistence.ts",
+    "evidence_parser_export": "parseMethodV2EvidenceLedger",
+    "certification_parser_path": "lib/orotitan-equity/method-v2/certification-persistence.ts",
+    "certification_parser_export": "parseMethodV2CertificationArtifact",
+    "certification_verifier_export": "verifyMethodV2CertificationChallengeBinding",
+    "proof_validator_identity": "verifyPersistedMethodV2Challenge:1.1"
+  },
+  "approved_private_runtime_artifact_buckets": [
+    "orotitan-text-artifacts-v1",
+    "orotitan-source-files-v1"
+  ],
+  "production_active": false,
+  "publication_active": false,
+  "canary_active": false
+}

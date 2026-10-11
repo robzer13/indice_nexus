@@ -1,0 +1,61 @@
+{
+  "format": "OROTITAN_METHOD_V2_EVIDENCE_LEDGER_PERSISTENCE_PROFILE",
+  "version": "1.0",
+  "source_baseline_commit_sha": "0cb8c3d4d525054c43651a3d503ee2e6685ad918",
+  "identity_domain": "METHOD_V2_RUNTIME_SERIALIZATION_NOT_ANALYTICAL_AUTHORITY",
+  "production_active": false,
+  "artifact_type": "EVIDENCE_LEDGER",
+  "media_type": "application/json",
+  "applies_to": {
+    "methodology_generation": "METHOD_V2",
+    "artifact_lifecycle": "NEW_ARTIFACTS_ONLY"
+  },
+  "persisted_document": {
+    "encoding": "UTF-8",
+    "root_type": "object",
+    "format_property": {
+      "name": "format",
+      "const": "OROTITAN_METHOD_V2_EVIDENCE_LEDGER"
+    },
+    "version_property": {
+      "name": "version",
+      "const": "1.0"
+    },
+    "entries_property": {
+      "name": "entries",
+      "type": "array",
+      "item_type": "object",
+      "ordering_semantics": "NONE"
+    },
+    "entry_identity": {
+      "direct_property": "EVIDENCE_ID",
+      "type": "string",
+      "minimum_length": 1,
+      "unique_across_entries": true,
+      "additional_entry_properties": "ALLOWED_AND_IGNORED_FOR_IDENTITY_RESOLUTION"
+    }
+  },
+  "lookup_rule": {
+    "path": "entries[i].EVIDENCE_ID",
+    "comparison": "EXACT_CASE_SENSITIVE_STRING_EQUALITY",
+    "normalization": "NONE",
+    "recursive_search": false,
+    "aliases_accepted": []
+  },
+  "semantic_boundary": {
+    "defines_analytical_meaning": false,
+    "replaces_frozen_evidence_ledger_semantics": false,
+    "infers_evidence_quality": false,
+    "infers_evidence_date_provenance": false,
+    "imports_analytical_data_contracts_v2": false,
+    "changes_challenge_aggregation": false
+  },
+  "scope_boundary": {
+    "contacts_supabase": false,
+    "contacts_github": false,
+    "creates_live_run": false,
+    "activates_method_v2": false,
+    "publishes_canonical_snapshot": false,
+    "mutates_production_registry": false
+  }
+}
