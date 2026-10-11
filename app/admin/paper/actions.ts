@@ -4,7 +4,6 @@ import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { requireAdminSession } from '@/lib/auth/admin-session';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import { getCompanyStates } from '@/lib/data/companies';
 import { eurNumber, latestStoredQuote, loadPaperDashboard } from '@/lib/data/paper-portfolio';
 import { evaluateLongTermPaperSignal } from '@/lib/domain/paper-signals';
 import type { PaperInvestmentProfile, PaperThesisState, PaperMilestoneState } from '@/lib/domain/paper-signals';
