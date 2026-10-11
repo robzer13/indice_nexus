@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { AdminNav } from '@/components/admin/admin-nav';
 import { PaperAutopilotSettings } from '@/components/admin/paper-autopilot-settings';
+import { PaperPerformancePanel } from '@/components/admin/paper-performance-panel';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
 import { eurNumber, loadPaperDashboard } from '@/lib/data/paper-portfolio';
 import { getFreshness } from '@/lib/domain/freshness';
@@ -57,6 +58,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
       <p className="mb-4 text-sm text-slate-400">Démarrer avec 100 000 € fictifs et zéro position. Aucun accès à un courtier.</p>
       <form action={createPaperPortfolioAction}><button className={btn}>Initialiser le portefeuille</button></form>
     </Panel> : <>
+      <Panel title="Historique de la valeur virtuelle"><PaperPerformancePanel portfolioId={data.portfolio.id}/></Panel>
       <section className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
           ['Valeur',data.equityEur===null?'Indisponible':eur(data.equityEur)],

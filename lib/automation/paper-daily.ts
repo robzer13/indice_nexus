@@ -24,6 +24,12 @@ export async function readPaperAutomationSettings(portfolioId: string): Promise<
 }
 function reason(error: unknown): string { return error instanceof Error ? error.message : 'UNKNOWN_ERROR'; }
 
+
+async function recordPortfolioNav(portfolioId:string):Promise<string | null>{
+  const {error}=await createServerSupabaseClient().rpc('paper_record_daily_nav',{p_portfolio_id:portfolioId});
+  return error?'DAILY_NAV_REJECTED: '+error.message:null;
+}
+
 export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
   const report: PaperDailyReport={status:'DISABLED',evaluated:0,signals:0,fills:0,issues:[]};
   const initial=await loadPaperDashboard();
@@ -31,7 +37,11 @@ export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
   if(!initial.portfolio){report.status='PORTFOLIO_NOT_INITIALIZED';return report;}
   const settings=await readPaperAutomationSettings(initial.portfolio.id);
   if(settings==='MIGRATION_NOT_INSTALLED'){report.status='MIGRATION_NOT_INSTALLED';return report;}
-  if(!settings?.enabled) return report;
+  if(!settings?.enabled){
+    const navError=await recordPortfolioNav(initial.portfolio.id);
+    if(navError) report.issues.push({issuer:'PORTFOLIO',reason:navError});
+    return report;
+  }
   report.status='COMPLETE';
   const db=createServerSupabaseClient();
   const now=new Date().toISOString();
@@ -112,6 +122,8 @@ export async function runPaperDailyAutomation(): Promise<PaperDailyReport> {
       report.signals++;
     }catch(e){report.issues.push({issuer:candidate.company_id,reason:reason(e)});}
   }
+  const navError=await recordPortfolioNav(initial.portfolio.id);
+  if(navError)report.issues.push({issuer:'PORTFOLIO',reason:navError});
   if(report.issues.length)report.status='PARTIAL';
   return report;
 }
