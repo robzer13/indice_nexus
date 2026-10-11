@@ -28,7 +28,7 @@ export type PaperFillRow = {
   quantity: number | string; price_eur: number | string; fee_eur: number | string;
   realized_pnl_eur: number | string; filled_at: string;
 };
-export type PaperQuote = { id: number; company_id: string; price: number | string; as_of: string; created_at: string };
+export type PaperQuote = { id: number; company_id: string; price: number | string; as_of: string; created_at: string; source: string; raw: unknown };
 export type PaperDashboard = {
   migrationMissing: boolean;
   portfolio: PaperPortfolioRow | null;
@@ -61,7 +61,7 @@ export async function latestStoredQuote(issuerId: string): Promise<PaperQuote | 
   if (linkError) throw new Error('Résolution des identités de cours impossible : ' + linkError.message);
   if (!link) return null;
   const { data, error } = await supabase.from('market_prices')
-    .select('id,company_id,price,as_of,created_at').eq('company_id', link.legacy_company_id)
+    .select('id,company_id,price,as_of,created_at,source,raw').eq('company_id', link.legacy_company_id)
     .order('as_of', { ascending: false }).order('id', { ascending: false }).limit(1).maybeSingle();
   if (error) throw new Error('Lecture du cours impossible : ' + error.message);
   return data as PaperQuote | null;

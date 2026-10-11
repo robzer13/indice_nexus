@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation';
 import type { Metadata } from 'next';
 import { AdminNav } from '@/components/admin/admin-nav';
+import { PaperAutopilotSettings } from '@/components/admin/paper-autopilot-settings';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
 import { eurNumber, loadPaperDashboard } from '@/lib/data/paper-portfolio';
 import { getFreshness } from '@/lib/domain/freshness';
@@ -46,6 +47,7 @@ export default async function PaperPage({ searchParams }: { searchParams: Promis
         Transactions fictives, après le signal, sans ordre réel. Univers actuel : actions cotées directement en EUR.</p>
     </div>
     <AdminNav/>
+    {data.portfolio && <PaperAutopilotSettings portfolioId={data.portfolio.id}/>}
     {typeof qs.error==='string' && <p className="rounded-xl border border-rose-800 bg-rose-950/30 p-4 text-sm text-rose-200">{qs.error}</p>}
     {typeof qs.success==='string' && <p className="rounded-xl border border-emerald-900 bg-emerald-950/30 p-4 text-sm text-emerald-200">{qs.success}</p>}
     {data.migrationMissing ? <Panel title="Migration non appliquée">

@@ -37,8 +37,36 @@ insert into public.market_prices(company_id,price,as_of) values
   ('00000000-0000-4000-8000-000000000444',4.5,now()-interval '30 minutes');
 SQL
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/migrations/20261011_paper_long_term_portfolio_v1.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/migrations/20261011_paper_autopilot_v1_2.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL'
 insert into public.paper_portfolios(code) values ('default');
+
+-- V1.2 is off by default. Only a controlled owner RPC can activate it.
+do $
+declare p uuid;
+begin
+  select id into p from public.paper_portfolios where code='default';
+  if exists(select 1 from public.paper_autopilot_settings where portfolio_id=p)
+  then raise exception 'Autopilot must begin disabled and unconfigured'; end if;
+  perform public.paper_configure_autopilot(p,false,0.05,1);
+  if (select enabled from public.paper_autopilot_settings where portfolio_id=p) then
+    raise exception 'Initial autopilot policy must be OFF'; end if;
+  begin
+    perform public.paper_configure_autopilot(p,true,0.50,1);
+    raise exception 'Invalid max weight was accepted';
+  exception when sqlstate '23514' then null; end;
+  if has_function_privilege('anon','public.paper_configure_autopilot(uuid,boolean,numeric,numeric)','EXECUTE')
+  then raise exception 'Anonymous caller can activate autopilot'; end if;
+  perform public.paper_configure_autopilot(p,true,0.05,1);
+  if not (select enabled from public.paper_autopilot_settings where portfolio_id=p) then
+    raise exception 'Explicit opt-in was not persisted'; end if;
+  perform public.paper_configure_autopilot(p,false,0.05,1);
+  begin
+    delete from public.paper_autopilot_policy_events where portfolio_id=p;
+    raise exception 'Policy audit events unexpectedly mutable';
+  exception when sqlstate '23514' then null; end;
+end $;
+
 do $$
 declare portfolio uuid; pol uuid; sig uuid; same_sig uuid;
 begin
