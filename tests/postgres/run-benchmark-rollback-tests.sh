@@ -195,6 +195,13 @@ psql -q -v ON_ERROR_STOP=1 -d "$db" -c "create statistics public.rollback_extern
 expect_reject "unexpected automatically dropped extended statistics"
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin if not exists(select 1 from pg_statistic_ext where stxname='rollback_external_stats') then raise exception 'EXTENDED_STATISTICS_LOST'; end if; end \$check\$;"
 end_case
+# Logical replication identity drift must be refused even if index names,
+# columns and uniqueness still match the pinned schema.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_executions replica identity using index orotitan_engine_benchmark_unique_execution"
+expect_reject "unexpected replica identity using existing unique index"
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin if (select relreplident from pg_class where oid='public.orotitan_engine_benchmark_executions'::regclass) <> 'i' then raise exception 'REPLICA_IDENTITY_DRIFT_LOST'; end if; end \$check\$;"
+end_case
 # Schema drift must fail before any DROP.
 new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_claims add column unexpected text"
