@@ -92,8 +92,13 @@ begin
    (select pg_get_userbyid(relowner) from pg_class where oid=c)<>current_user then
    raise exception 'ROLLBACK_REFUSED_OWNER' using errcode='55000';
  end if;
- if not exists(select 1 from pg_class where oid=e and relkind='r' and relrowsecurity and not relforcerowsecurity)
- or not exists(select 1 from pg_class where oid=c and relkind='r' and relrowsecurity and not relforcerowsecurity) then
+ if not exists(select 1 from pg_class where oid=e and relkind='r'
+         and relpersistence='p' and not relispartition and not relhassubclass
+         and relrowsecurity and not relforcerowsecurity)
+ or not exists(select 1 from pg_class where oid=c and relkind='r'
+         and relpersistence='p' and not relispartition and not relhassubclass
+         and relrowsecurity and not relforcerowsecurity)
+ or exists(select 1 from pg_inherits where inhrelid in(e,c) or inhparent in(e,c)) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: table kind or RLS' using errcode='55000';
  end if;
  if exists(select 1 from public.orotitan_engine_benchmark_executions)
@@ -109,6 +114,34 @@ begin
  into actual from pg_attribute where attrelid=c and attnum>0 and not attisdropped;
  if actual is distinct from '[["campaign_id","text",true],["phase_id","text",true],["case_id","text",true],["repetition_index","integer",true],["execution_profile_id","text",true],["claimed_at","timestamp with time zone",true]]'::jsonb then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: claims columns' using errcode='55000';
+ end if;
+ -- Reject unapproved column identity/generation, storage and inheritance drift.
+ -- This also blocks unexpected owned identity sequences that RESTRICT would remove.
+ if (select jsonb_agg(jsonb_build_array(
+     attname::text, attidentity::text, attgenerated::text, atthasdef,
+     attcollation::text, attstorage::text, attcompression::text,
+     attndims, attinhcount, attislocal, to_jsonb(attoptions), to_jsonb(attfdwoptions))
+   order by attnum)
+ from pg_attribute where attrelid=e and attnum>0 and not attisdropped) is distinct from
+    (select jsonb_agg(jsonb_build_array(
+     attname::text, attidentity::text, attgenerated::text, atthasdef,
+     attcollation::text, attstorage::text, attcompression::text,
+     attndims, attinhcount, attislocal, to_jsonb(attoptions), to_jsonb(attfdwoptions))
+   order by attnum)
+ from pg_attribute where attrelid='pg_temp.orotitan_engine_benchmark_executions'::regclass and attnum>0 and not attisdropped)
+ or (select jsonb_agg(jsonb_build_array(
+     attname::text, attidentity::text, attgenerated::text, atthasdef,
+     attcollation::text, attstorage::text, attcompression::text,
+     attndims, attinhcount, attislocal, to_jsonb(attoptions), to_jsonb(attfdwoptions))
+   order by attnum)
+ from pg_attribute where attrelid=c and attnum>0 and not attisdropped) is distinct from
+    (select jsonb_agg(jsonb_build_array(
+     attname::text, attidentity::text, attgenerated::text, atthasdef,
+     attcollation::text, attstorage::text, attcompression::text,
+     attndims, attinhcount, attislocal, to_jsonb(attoptions), to_jsonb(attfdwoptions))
+   order by attnum)
+ from pg_attribute where attrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass and attnum>0 and not attisdropped) then
+   raise exception 'ROLLBACK_REFUSED_IDENTITY: column attributes' using errcode='55000';
  end if;
  -- Exact default set: nullable scalar comparisons would miss substituted defaults.
  if (select jsonb_agg(jsonb_build_array(a.attname::text,pg_get_expr(d.adbin,d.adrelid,true))
@@ -504,7 +537,22 @@ $expected_3$,true,'v')
    and p.pronamespace='public'::regnamespace and p.proowner=owner_id
    and p.prolang=(select oid from pg_language where lanname='plpgsql')
    and p.prosrc=expected.source and p.prosecdef=expected.security_definer and p.provolatile=expected.volatility
-   and p.proconfig=array['search_path=pg_catalog, public']::text[]) then
+   and p.proconfig=array['search_path=pg_catalog, public']::text[]
+   and p.prorettype = case expected.signature
+      when 'orotitan_benchmark_dimensions_valid(jsonb)' then 'boolean'::regtype
+      when 'reject_orotitan_benchmark_execution_mutation()' then 'trigger'::regtype
+      else 'jsonb'::regtype end
+   and not p.proretset and p.prokind='f'
+   and p.proargmodes is null and p.proallargtypes is null
+   and p.pronargdefaults=0 and p.proargdefaults is null and p.provariadic=0
+   and p.proargnames is not distinct from
+      (case expected.signature
+       when 'orotitan_benchmark_dimensions_valid(jsonb)' then array['p_scores']::text[]
+       when 'record_orotitan_benchmark_execution(jsonb)' then array['p_execution']::text[]
+       when 'claim_orotitan_benchmark_execution(text,text,text,integer,text)'
+          then array['p_campaign_id','p_phase_id','p_case_id','p_repetition_index','p_execution_profile_id']::text[]
+       else null::text[] end)
+   and not p.proisstrict and not p.proleakproof and p.proparallel='u') then
      raise exception 'ROLLBACK_REFUSED_IDENTITY: function %', expected.signature using errcode='55000';
    end if;
  end loop;
