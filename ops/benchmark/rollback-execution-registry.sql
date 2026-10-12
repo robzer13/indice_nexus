@@ -68,6 +68,10 @@ create temporary table orotitan_engine_benchmark_claims (
 alter table pg_temp.orotitan_engine_benchmark_executions
   add constraint orotitan_engine_benchmark_dimensions_check
   check (public.orotitan_benchmark_dimensions_valid(dimension_scores));
+-- Mirror the sole explicit, non-constraint index from the pinned forward DDL.
+create index orotitan_engine_benchmark_campaign_case_idx
+  on pg_temp.orotitan_engine_benchmark_executions
+  (campaign_id, phase_id, case_id, repetition_index);
 do $rollback_guard$
 declare
  e oid := 'public.orotitan_engine_benchmark_executions'::regclass;
@@ -99,13 +103,23 @@ begin
  if actual is distinct from '[["campaign_id","text",true],["phase_id","text",true],["case_id","text",true],["repetition_index","integer",true],["execution_profile_id","text",true],["claimed_at","timestamp with time zone",true]]'::jsonb then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: claims columns' using errcode='55000';
  end if;
- if (select count(*) from pg_attrdef where adrelid in (e,c))<>3
- or (select pg_get_expr(d.adbin,d.adrelid) from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
-     where d.adrelid=e and a.attname='execution_id')<>'gen_random_uuid()'
- or (select pg_get_expr(d.adbin,d.adrelid) from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
-     where d.adrelid=e and a.attname='created_at')<>'now()'
- or (select pg_get_expr(d.adbin,d.adrelid) from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
-     where d.adrelid=c and a.attname='claimed_at')<>'now()' then
+ -- Exact default set: nullable scalar comparisons would miss substituted defaults.
+ if (select jsonb_agg(jsonb_build_array(a.attname::text,pg_get_expr(d.adbin,d.adrelid,true))
+      order by a.attname)
+   from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
+   where d.adrelid=e) is distinct from
+    (select jsonb_agg(jsonb_build_array(a.attname::text,pg_get_expr(d.adbin,d.adrelid,true))
+      order by a.attname)
+   from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
+   where d.adrelid='pg_temp.orotitan_engine_benchmark_executions'::regclass)
+ or (select jsonb_agg(jsonb_build_array(a.attname::text,pg_get_expr(d.adbin,d.adrelid,true))
+      order by a.attname)
+   from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
+   where d.adrelid=c) is distinct from
+    (select jsonb_agg(jsonb_build_array(a.attname::text,pg_get_expr(d.adbin,d.adrelid,true))
+      order by a.attname)
+   from pg_attrdef d join pg_attribute a on a.attrelid=d.adrelid and a.attnum=d.adnum
+   where d.adrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: defaults' using errcode='55000';
  end if;
  -- Verify the full set of constraint definitions against the pinned DDL.
@@ -123,10 +137,56 @@ begin
     from pg_constraint where conrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: constraints' using errcode='55000';
  end if;
- if (select array_agg(i.relname::text order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=e)
-   is distinct from array['orotitan_engine_benchmark_campaign_case_idx','orotitan_engine_benchmark_executions_pkey','orotitan_engine_benchmark_unique_execution']::text[]
- or (select array_agg(i.relname::text order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=c)
-   is distinct from array['orotitan_engine_benchmark_claims_pkey']::text[] then
+ -- Compare access method, validity/readiness, key order, uniqueness, predicate,
+ -- opclasses/collations, options and decompiled per-column index definitions.
+ if (select jsonb_agg(jsonb_build_array(
+      idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
+      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
+      i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
+      pg_get_expr(i.indexprs,i.indrelid,true),
+      pg_get_expr(i.indpred,i.indrelid,true),
+      (select jsonb_agg(pg_get_indexdef(i.indexrelid,pos,true) order by pos)
+       from generate_series(1,i.indnatts) pos)
+   ) order by idx.relname)
+   from pg_index i join pg_class idx on idx.oid=i.indexrelid
+   where i.indrelid=e) is distinct from
+    (select jsonb_agg(jsonb_build_array(
+      idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
+      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
+      i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
+      pg_get_expr(i.indexprs,i.indrelid,true),
+      pg_get_expr(i.indpred,i.indrelid,true),
+      (select jsonb_agg(pg_get_indexdef(i.indexrelid,pos,true) order by pos)
+       from generate_series(1,i.indnatts) pos)
+   ) order by idx.relname)
+   from pg_index i join pg_class idx on idx.oid=i.indexrelid
+   where i.indrelid='pg_temp.orotitan_engine_benchmark_executions'::regclass)
+ or (select jsonb_agg(jsonb_build_array(
+      idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
+      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
+      i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
+      pg_get_expr(i.indexprs,i.indrelid,true),
+      pg_get_expr(i.indpred,i.indrelid,true),
+      (select jsonb_agg(pg_get_indexdef(i.indexrelid,pos,true) order by pos)
+       from generate_series(1,i.indnatts) pos)
+   ) order by idx.relname)
+   from pg_index i join pg_class idx on idx.oid=i.indexrelid
+   where i.indrelid=c) is distinct from
+    (select jsonb_agg(jsonb_build_array(
+      idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
+      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
+      i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
+      pg_get_expr(i.indexprs,i.indrelid,true),
+      pg_get_expr(i.indpred,i.indrelid,true),
+      (select jsonb_agg(pg_get_indexdef(i.indexrelid,pos,true) order by pos)
+       from generate_series(1,i.indnatts) pos)
+   ) order by idx.relname)
+   from pg_index i join pg_class idx on idx.oid=i.indexrelid
+   where i.indrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: indexes' using errcode='55000';
  end if;
  if (select array_agg(tgname::text order by tgname) from pg_trigger where tgrelid=e and not tgisinternal)
@@ -141,12 +201,26 @@ begin
  ('orotitan_engine_benchmark_executions','orotitan_engine_benchmark_claims')) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: policies' using errcode='55000';
  end if;
- if not has_table_privilege('service_role',e,'SELECT') or not has_table_privilege('service_role',c,'SELECT')
- or has_table_privilege('service_role',e,'INSERT') or has_table_privilege('service_role',e,'UPDATE')
- or has_table_privilege('service_role',e,'DELETE') or has_table_privilege('service_role',c,'INSERT')
- or has_table_privilege('service_role',c,'UPDATE') or has_table_privilege('service_role',c,'DELETE')
- or exists(select 1 from pg_class t cross join lateral aclexplode(coalesce(t.relacl,acldefault('r',t.relowner))) a
-    where t.oid in(e,c) and a.grantee not in(owner_id,'service_role'::regrole::oid)) then
+ -- Fail closed on any unexpected ACL entry, including extended PostgreSQL
+ -- table privileges TRUNCATE/REFERENCES/TRIGGER/MAINTAIN and grant options.
+ if exists (
+    select 1 from pg_class t
+    cross join lateral aclexplode(coalesce(t.relacl,acldefault('r',t.relowner))) a
+    where t.oid in(e,c) and (
+       a.grantee not in(owner_id,'service_role'::regrole::oid)
+       or (a.grantee='service_role'::regrole::oid
+           and (a.privilege_type <> 'SELECT' or a.is_grantable))
+    )
+ )
+ or (select count(*) from pg_class t
+     cross join lateral aclexplode(coalesce(t.relacl,acldefault('r',t.relowner))) a
+     where t.oid=e and a.grantee='service_role'::regrole::oid
+       and a.privilege_type='SELECT' and not a.is_grantable) <> 1
+ or (select count(*) from pg_class t
+     cross join lateral aclexplode(coalesce(t.relacl,acldefault('r',t.relowner))) a
+     where t.oid=c and a.grantee='service_role'::regrole::oid
+       and a.privilege_type='SELECT' and not a.is_grantable) <> 1
+ then
    raise exception 'ROLLBACK_REFUSED_ACL: tables' using errcode='55000';
  end if;
  for expected in
