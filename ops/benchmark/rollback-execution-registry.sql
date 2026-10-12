@@ -101,6 +101,14 @@ begin
  or exists(select 1 from pg_inherits where inhrelid in(e,c) or inhparent in(e,c)) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: table kind or RLS' using errcode='55000';
  end if;
+ -- The pinned forward DDL uses the default logical-replication identity.
+ -- A changed REPLICA IDENTITY can reuse an otherwise valid unique index.
+ if (select relreplident from pg_class where oid=e) is distinct from
+      (select relreplident from pg_class where oid='pg_temp.orotitan_engine_benchmark_executions'::regclass)
+ or (select relreplident from pg_class where oid=c) is distinct from
+      (select relreplident from pg_class where oid='pg_temp.orotitan_engine_benchmark_claims'::regclass) then
+   raise exception 'ROLLBACK_REFUSED_IDENTITY: replica identity' using errcode='55000';
+ end if;
  -- RESTRICT ignores AUTO/INTERNAL owned dependencies. Permit only the
  -- intrinsic objects independently checked above (indexes, constraints,
  -- triggers, defaults, rowtype and PostgreSQL-created TOAST relation).
@@ -216,7 +224,7 @@ begin
  -- opclasses/collations, options and decompiled per-column index definitions.
  if (select jsonb_agg(jsonb_build_array(
       idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
-      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indisunique, i.indisprimary, i.indisreplident, i.indisexclusion, i.indisvalid, i.indisready,
       i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
       i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
       pg_get_expr(i.indexprs,i.indrelid,true),
@@ -228,7 +236,7 @@ begin
    where i.indrelid=e) is distinct from
     (select jsonb_agg(jsonb_build_array(
       idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
-      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indisunique, i.indisprimary, i.indisreplident, i.indisexclusion, i.indisvalid, i.indisready,
       i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
       i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
       pg_get_expr(i.indexprs,i.indrelid,true),
@@ -240,7 +248,7 @@ begin
    where i.indrelid='pg_temp.orotitan_engine_benchmark_executions'::regclass)
  or (select jsonb_agg(jsonb_build_array(
       idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
-      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indisunique, i.indisprimary, i.indisreplident, i.indisexclusion, i.indisvalid, i.indisready,
       i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
       i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
       pg_get_expr(i.indexprs,i.indrelid,true),
@@ -252,7 +260,7 @@ begin
    where i.indrelid=c) is distinct from
     (select jsonb_agg(jsonb_build_array(
       idx.relname::text, idx.relam, to_jsonb(idx.reloptions),
-      i.indisunique, i.indisprimary, i.indisexclusion, i.indisvalid, i.indisready,
+      i.indisunique, i.indisprimary, i.indisreplident, i.indisexclusion, i.indisvalid, i.indisready,
       i.indislive, i.indnullsnotdistinct, i.indnatts, i.indnkeyatts,
       i.indkey::text, i.indclass::text, i.indcollation::text, i.indoption::text,
       pg_get_expr(i.indexprs,i.indrelid,true),
