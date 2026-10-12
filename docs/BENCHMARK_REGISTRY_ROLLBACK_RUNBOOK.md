@@ -8,8 +8,8 @@ The forward migration is unchanged. Operator-only SQL lives in `ops/benchmark/ro
 
 1. Obtain a separate explicit GO identifying the target Supabase project and exact SQL. Independently verify a restorable backup or an adequate recovery strategy first.
 2. Disable the benchmark runner and ensure no in-flight claim/write operations remain. **Any claim or execution row causes fail-closed refusal**, even when there is no completed execution; reservations must not be recycled.
-3. Run using the owning database role. The script locks both tables with `ACCESS EXCLUSIVE NOWAIT`, checks schema and ownership identity, table columns/defaults/constraints/indexes/triggers, RLS and ACLs, and matches all four stored PL/pgSQL function bodies against the pinned original migration.
-4. Only `DROP ... RESTRICT` is used. Unexpected outside dependencies cause the whole transaction, including earlier DROP statements, to roll back. The script never issues `CASCADE`, deletes data, or touches canonical research/dossier/run/artifact tables.
+3. Run using the owning database role. The script locks both tables with `ACCESS EXCLUSIVE NOWAIT`, verifies schema and ownership identity, table columns/defaults, the full ordered constraint definitions against independent transaction-local reference DDL derived from the pinned original migration, indexes/triggers, RLS and ACLs, and exact source identity for all four PL/pgSQL functions.
+4. Only `DROP ... RESTRICT` is used. Catalog-tracked dependencies (such as external views) trigger atomic refusal; a conservative `pg_proc.prosrc` scan additionally refuses recognizable external PL/pgSQL references. **Neither mechanism reliably detects dynamic SQL assembled at runtime, application-side SQL strings, or all external consumers.** Before executing any live rollback, independently audit functions, procedures, application code, schedules and other clients for untracked references. If this audit cannot establish their absence, **do not execute**. Any SQL error rolls back all statements in the transaction. The script never uses `CASCADE`, deletes data, or touches canonical research/dossier/run/artifact tables.
 5. Record before/after catalog evidence and operator outcome. No automated execution against a shared Supabase project is permitted.
 
 ## Schema recovery is NOT migration-history recovery
@@ -18,7 +18,7 @@ This rollback **does not** edit `supabase_migrations.schema_migrations`. A succe
 
 ## Ephemeral PostgreSQL validation
 
-VNext CI uses PostgreSQL 17, explicit local `PGHOST=127.0.0.1`, `PGPORT=5432`. The targeted script `tests/postgres/run-benchmark-rollback-tests.sh` creates only its own temporary database, runs original fixtures and original forward SQL, tests empty rollback and canonical row preservation, then confirms refusal with existing claims, execution rows, an external dependent view, altered table identity, and unauthorized role. Cleanup is restricted to the database created by the test.
+VNext CI uses PostgreSQL 17, explicit local `PGHOST=127.0.0.1`, `PGPORT=5432`. The targeted script `tests/postgres/run-benchmark-rollback-tests.sh` creates only its own temporary database, runs original fixtures and original forward SQL, tests empty rollback and canonical row preservation, then confirms refusal with existing claims, execution rows, an external dependent view, an externally referencing PL/pgSQL routine, a count-preserving altered constraint, altered table identity, and unauthorized role. Cleanup runs only after a positively successful `createdb`; a pre-existing name collision is never an authorization to drop the database.
 
 Command under the isolated PostgreSQL service:
 
@@ -26,4 +26,4 @@ Command under the isolated PostgreSQL service:
 bash tests/postgres/run-benchmark-rollback-tests.sh
 ```
 
-**Limits:** Successful CI is not proof of Supabase backup restorability, Point-in-Time Recovery availability, live service quiescence, or coherent migration-history rollback. Production/shared migration and any live rollback each require separate user GO and independent recovery preflight.
+**Limits:** Successful CI is not proof of Supabase backup restorability, Point-in-Time Recovery availability, live service quiescence, exhaustive external dependency detection, or coherent migration-history rollback. Production/shared migration and any live rollback each require separate user GO and independent recovery preflight.
