@@ -13,6 +13,7 @@ import {
   recordBenchmarkExecution,
 } from '@/lib/orotitan-equity/benchmark/persistence';
 import { runScoringReplay } from '@/lib/orotitan-equity/benchmark/scoring-replay';
+import { validateBenchmarkSmokeGate } from '@/lib/orotitan-equity/benchmark/smoke-gate';
 
 export const runtime = 'nodejs';
 export const maxDuration = 300;
@@ -53,6 +54,22 @@ export async function POST(request: Request) {
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) {
     return NextResponse.json({ error: 'INVALID_REQUEST', details: parsed.error.flatten() }, { status: 400 });
+  }
+
+  // A separate, default-off smoke-only gate prevents accidental campaign execution.
+  // This is not a financial hard cap; budget and Gateway controls require separate approval.
+  const smokeRejection = validateBenchmarkSmokeGate({
+    mode: process.env.OROTITAN_BENCHMARK_RUN_MODE,
+    model,
+    reasoning: reasoningValue,
+    caseId: parsed.data.caseId,
+    repetitionIndex: parsed.data.repetitionIndex,
+  });
+  if (smokeRejection !== null) {
+    return NextResponse.json(
+      { error: smokeRejection },
+      { status: smokeRejection === 'BENCHMARK_SMOKE_CASE_NOT_ALLOWED' ? 403 : 503 },
+    );
   }
 
   try {
