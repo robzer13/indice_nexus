@@ -183,6 +183,12 @@ $alter_rpc$;
 SQL
 expect_reject "RPC return-type contract mutation"
 end_case
+# A non-identity owned sequence still has an automatic DROP dependency.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "create sequence public.rollback_unexpected_owned_seq; alter sequence public.rollback_unexpected_owned_seq owned by public.orotitan_engine_benchmark_executions.repetition_index"
+expect_reject "unexpected owned sequence"
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin if to_regclass('public.rollback_unexpected_owned_seq') is null then raise exception 'UNEXPECTED_SEQUENCE_LOST'; end if; end \$check\$;"
+end_case
 # Schema drift must fail before any DROP.
 new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_claims add column unexpected text"
