@@ -443,6 +443,11 @@ $expected_3$,true,'v')
  end if;
 end;
 $rollback_guard$;
+-- These transaction-local reference tables depend on the benchmark validator.
+-- Drop our own exact DDL fixtures before the real registry/function teardown;
+-- otherwise DROP FUNCTION ... RESTRICT correctly refuses the temp CHECK dependency.
+drop table pg_temp.orotitan_engine_benchmark_claims restrict;
+drop table pg_temp.orotitan_engine_benchmark_executions restrict;
 -- RESTRICT catches unplanned external dependencies; any failure rolls back
 -- the whole transaction including preceding DDL.
 drop table public.orotitan_engine_benchmark_claims restrict;
