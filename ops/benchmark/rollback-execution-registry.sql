@@ -54,15 +54,15 @@ begin
  or not exists(select 1 from pg_constraint where conrelid=c and contype='p') then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: constraints' using errcode='55000';
  end if;
- if (select array_agg(i.relname order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=e)
+ if (select array_agg(i.relname::text order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=e)
    is distinct from array['orotitan_engine_benchmark_campaign_case_idx','orotitan_engine_benchmark_executions_pkey','orotitan_engine_benchmark_unique_execution']::text[]
- or (select array_agg(i.relname order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=c)
+ or (select array_agg(i.relname::text order by i.relname) from pg_index x join pg_class i on i.oid=x.indexrelid where x.indrelid=c)
    is distinct from array['orotitan_engine_benchmark_claims_pkey']::text[] then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: indexes' using errcode='55000';
  end if;
- if (select array_agg(tgname order by tgname) from pg_trigger where tgrelid=e and not tgisinternal)
+ if (select array_agg(tgname::text order by tgname) from pg_trigger where tgrelid=e and not tgisinternal)
    is distinct from array['orotitan_engine_benchmark_executions_immutable']::text[]
- or (select array_agg(tgname order by tgname) from pg_trigger where tgrelid=c and not tgisinternal)
+ or (select array_agg(tgname::text order by tgname) from pg_trigger where tgrelid=c and not tgisinternal)
    is distinct from array['orotitan_engine_benchmark_claims_immutable']::text[]
  or exists(select 1 from pg_trigger where tgrelid in (e,c) and not tgisinternal and
    (tgfoid<>'public.reject_orotitan_benchmark_execution_mutation()'::regprocedure or tgtype<>27 or tgenabled<>'O')) then
