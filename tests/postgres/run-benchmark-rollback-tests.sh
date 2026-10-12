@@ -133,6 +133,26 @@ new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "grant maintain on table public.orotitan_engine_benchmark_executions to service_role"
 expect_reject "unexpected service_role MAINTAIN privilege"
 end_case
+# A table can acquire column-level grants with the table-level ACL unchanged.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "grant select (campaign_id) on table public.orotitan_engine_benchmark_executions to authenticated"
+expect_reject "unexpected column-level authenticated SELECT"
+end_case
+# Internal helper functions must never become callable by service_role.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "grant execute on function public.orotitan_benchmark_dimensions_valid(jsonb) to service_role"
+expect_reject "unexpected helper function EXECUTE"
+end_case
+# Even authorized RPCs must not offer regrant privileges.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "grant execute on function public.record_orotitan_benchmark_execution(jsonb) to service_role with grant option"
+expect_reject "unexpected RPC GRANT OPTION"
+end_case
+# Preserve append-only trigger semantics, not just the trigger's name/function.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "drop trigger orotitan_engine_benchmark_executions_immutable on public.orotitan_engine_benchmark_executions; create trigger orotitan_engine_benchmark_executions_immutable before update or delete on public.orotitan_engine_benchmark_executions for each row when (false) execute function public.reject_orotitan_benchmark_execution_mutation()"
+expect_reject "trigger WHEN(false) semantic drift"
+end_case
 # Schema drift must fail before any DROP.
 new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_claims add column unexpected text"
