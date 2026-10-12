@@ -101,18 +101,40 @@ begin
  or exists(select 1 from pg_inherits where inhrelid in(e,c) or inhparent in(e,c)) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: table kind or RLS' using errcode='55000';
  end if;
- -- The forward migration owns no sequences. A later OWNED BY dependency
- -- would be silently removed by DROP TABLE even with RESTRICT.
- if exists(
-   select 1
-   from pg_depend d
-   join pg_class obj on obj.oid=d.objid and obj.relkind='S'
-   where d.classid='pg_class'::regclass
-     and d.refclassid='pg_class'::regclass
+ -- RESTRICT ignores AUTO/INTERNAL owned dependencies. Permit only the
+ -- intrinsic objects independently checked above (indexes, constraints,
+ -- triggers, defaults, rowtype and PostgreSQL-created TOAST relation).
+ -- Unknown dependent catalogs, including pg_statistic_ext or owned sequences,
+ -- cause refusal before any DROP.
+ if exists (
+   select 1 from pg_depend d
+   where d.refclassid='pg_class'::regclass
      and d.refobjid in(e,c)
      and d.deptype in('a','i')
+     and not (
+       (d.classid='pg_class'::regclass and exists(
+          select 1 from pg_class obj where obj.oid=d.objid
+          and (
+             exists(select 1 from pg_index ix
+                    where ix.indexrelid=obj.oid and ix.indrelid=d.refobjid)
+             or obj.oid=(select reltoastrelid from pg_class where oid=d.refobjid)
+          )
+       ))
+       or (d.classid='pg_constraint'::regclass and exists(
+          select 1 from pg_constraint q where q.oid=d.objid and q.conrelid=d.refobjid
+       ))
+       or (d.classid='pg_trigger'::regclass and exists(
+          select 1 from pg_trigger t where t.oid=d.objid and t.tgrelid=d.refobjid
+       ))
+       or (d.classid='pg_attrdef'::regclass and exists(
+          select 1 from pg_attrdef a where a.oid=d.objid and a.adrelid=d.refobjid
+       ))
+       or (d.classid='pg_type'::regclass and exists(
+          select 1 from pg_class t where t.oid=d.refobjid and t.reltype=d.objid
+       ))
+     )
  ) then
-   raise exception 'ROLLBACK_REFUSED_IDENTITY: unexpected owned sequence' using errcode='55000';
+   raise exception 'ROLLBACK_REFUSED_IDENTITY: unexpected automatically dropped object' using errcode='55000';
  end if;
  if exists(select 1 from public.orotitan_engine_benchmark_executions)
  or exists(select 1 from public.orotitan_engine_benchmark_claims) then
