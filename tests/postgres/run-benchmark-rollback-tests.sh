@@ -15,14 +15,28 @@ if [[ "$PGPORT" != "5432" ]]; then
 fi
 db="orotitan_benchmark_rollback_$$"
 log="$(mktemp)"
-cleanup() { dropdb --if-exists "$db" >/dev/null 2>&1 || true; rm -f "$log"; }
+db_created_by_test=0
+cleanup() {
+ # Never delete a database when creation did not positively succeed.
+ if [[ "$db_created_by_test" == 1 ]]; then
+  dropdb --if-exists "$db" >/dev/null 2>&1 || true
+ fi
+ rm -f "$log"
+}
 trap cleanup EXIT
 new_case() {
  createdb "$db"
+ db_created_by_test=1
  psql -q -v ON_ERROR_STOP=1 -d "$db" -f "$fixture"
  psql -q -v ON_ERROR_STOP=1 -d "$db" -f "$migration"
 }
-end_case() { dropdb "$db"; }
+end_case() {
+ if [[ "$db_created_by_test" != 1 ]]; then
+  echo "ROLLBACK_TEST_REFUSED: no database ownership proof" >&2; exit 1
+ fi
+ dropdb "$db"
+ db_created_by_test=0
+}
 assert_canonical() {
  psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin
  if (select count(*) from public.companies)<>(select companies from public.fixture_legacy_before)
@@ -83,6 +97,26 @@ new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "create view public.rollback_external_reference as select execution_id from public.orotitan_engine_benchmark_executions"
 expect_reject "unexpected external dependency"
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "select 1 from public.rollback_external_reference limit 1"
+end_case
+# Static PL/pgSQL dependencies are not pg_depend-backed; reject explicitly.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
+create function public.rollback_external_plpgsql_reader() returns bigint
+language plpgsql as $fn$
+declare v_count bigint;
+begin
+  select count(*) into v_count from public.orotitan_engine_benchmark_executions;
+  return v_count;
+end;
+$fn$;
+SQL
+expect_reject "untracked external PL/pgSQL routine reference"
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "select public.rollback_external_plpgsql_reader()"
+end_case
+# Same constraint name/count/type, altered definition: must refuse.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_executions drop constraint orotitan_engine_benchmark_time_check; alter table public.orotitan_engine_benchmark_executions add constraint orotitan_engine_benchmark_time_check check (finished_at is not null)"
+expect_reject "modified constraint definition with unchanged count"
 end_case
 # Schema drift must fail before any DROP.
 new_case
