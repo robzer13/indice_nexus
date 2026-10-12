@@ -72,6 +72,13 @@ alter table pg_temp.orotitan_engine_benchmark_executions
 create index orotitan_engine_benchmark_campaign_case_idx
   on pg_temp.orotitan_engine_benchmark_executions
   (campaign_id, phase_id, case_id, repetition_index);
+-- Exact reference triggers with no WHEN clauses or trigger arguments.
+create trigger orotitan_engine_benchmark_executions_immutable
+before update or delete on pg_temp.orotitan_engine_benchmark_executions
+for each row execute function public.reject_orotitan_benchmark_execution_mutation();
+create trigger orotitan_engine_benchmark_claims_immutable
+before update or delete on pg_temp.orotitan_engine_benchmark_claims
+for each row execute function public.reject_orotitan_benchmark_execution_mutation();
 do $rollback_guard$
 declare
  e oid := 'public.orotitan_engine_benchmark_executions'::regclass;
@@ -189,17 +196,37 @@ begin
    where i.indrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: indexes' using errcode='55000';
  end if;
- if (select array_agg(tgname::text order by tgname) from pg_trigger where tgrelid=e and not tgisinternal)
-   is distinct from array['orotitan_engine_benchmark_executions_immutable']::text[]
- or (select array_agg(tgname::text order by tgname) from pg_trigger where tgrelid=c and not tgisinternal)
-   is distinct from array['orotitan_engine_benchmark_claims_immutable']::text[]
- or exists(select 1 from pg_trigger where tgrelid in (e,c) and not tgisinternal and
-   (tgfoid<>'public.reject_orotitan_benchmark_execution_mutation()'::regprocedure or tgtype<>27 or tgenabled<>'O')) then
+ -- Verify every trigger-defining field, including WHEN/args and event bits.
+ if (select jsonb_agg(jsonb_build_array(tgname::text,tgfoid::text,tgtype,
+tgenabled,tgnargs,encode(tgargs,'hex'),tgattr::text,pg_get_expr(tgqual,tgrelid,true),
+tgdeferrable,tginitdeferred,tgisinternal,tgconstraint::text,tgconstrrelid::text,
+tgconstrindid::text,tgoldtable,tgnewtable) order by tgname)
+from pg_trigger where tgrelid=e and not tgisinternal) is distinct from
+    (select jsonb_agg(jsonb_build_array(tgname::text,tgfoid::text,tgtype,
+tgenabled,tgnargs,encode(tgargs,'hex'),tgattr::text,pg_get_expr(tgqual,tgrelid,true),
+tgdeferrable,tginitdeferred,tgisinternal,tgconstraint::text,tgconstrrelid::text,
+tgconstrindid::text,tgoldtable,tgnewtable) order by tgname)
+from pg_trigger where tgrelid='pg_temp.orotitan_engine_benchmark_executions'::regclass and not tgisinternal)
+ or (select jsonb_agg(jsonb_build_array(tgname::text,tgfoid::text,tgtype,
+tgenabled,tgnargs,encode(tgargs,'hex'),tgattr::text,pg_get_expr(tgqual,tgrelid,true),
+tgdeferrable,tginitdeferred,tgisinternal,tgconstraint::text,tgconstrrelid::text,
+tgconstrindid::text,tgoldtable,tgnewtable) order by tgname)
+from pg_trigger where tgrelid=c and not tgisinternal) is distinct from
+    (select jsonb_agg(jsonb_build_array(tgname::text,tgfoid::text,tgtype,
+tgenabled,tgnargs,encode(tgargs,'hex'),tgattr::text,pg_get_expr(tgqual,tgrelid,true),
+tgdeferrable,tginitdeferred,tgisinternal,tgconstraint::text,tgconstrrelid::text,
+tgconstrindid::text,tgoldtable,tgnewtable) order by tgname)
+from pg_trigger where tgrelid='pg_temp.orotitan_engine_benchmark_claims'::regclass and not tgisinternal) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: triggers' using errcode='55000';
  end if;
  if exists(select 1 from pg_policies where schemaname='public' and tablename in
  ('orotitan_engine_benchmark_executions','orotitan_engine_benchmark_claims')) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: policies' using errcode='55000';
+ end if;
+ -- No column-level grants exist in the pinned migration.
+ if exists(select 1 from pg_attribute where attrelid in(e,c)
+           and attnum>0 and not attisdropped and attacl is not null) then
+   raise exception 'ROLLBACK_REFUSED_ACL: columns' using errcode='55000';
  end if;
  -- Fail closed on any unexpected ACL entry, including extended PostgreSQL
  -- table privileges TRUNCATE/REFERENCES/TRIGGER/MAINTAIN and grant options.
@@ -500,19 +527,26 @@ $expected_3$,true,'v')
  ) then
    raise exception 'ROLLBACK_REFUSED_EXTERNAL_ROUTINE_REFERENCE' using errcode='55000';
  end if;
+ -- Match the complete direct function ACL grants and their grant-option states.
  if (select count(*) from pg_proc where pronamespace='public'::regnamespace
- and proname in('orotitan_benchmark_dimensions_valid','reject_orotitan_benchmark_execution_mutation',
+     and proname in ('orotitan_benchmark_dimensions_valid','reject_orotitan_benchmark_execution_mutation',
  'record_orotitan_benchmark_execution','claim_orotitan_benchmark_execution'))<>4
- or not has_function_privilege('service_role','public.record_orotitan_benchmark_execution(jsonb)','EXECUTE')
- or not has_function_privilege('service_role','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE')
- or has_function_privilege('anon','public.record_orotitan_benchmark_execution(jsonb)','EXECUTE')
- or has_function_privilege('authenticated','public.record_orotitan_benchmark_execution(jsonb)','EXECUTE')
- or has_function_privilege('anon','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE')
- or has_function_privilege('authenticated','public.claim_orotitan_benchmark_execution(text,text,text,integer,text)','EXECUTE')
- or exists(select 1 from pg_proc p cross join lateral aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
- where p.pronamespace='public'::regnamespace and p.proname in('orotitan_benchmark_dimensions_valid',
- 'reject_orotitan_benchmark_execution_mutation','record_orotitan_benchmark_execution','claim_orotitan_benchmark_execution')
- and a.grantee not in(owner_id,'service_role'::regrole::oid)) then
+ or exists(
+   select 1 from pg_proc p
+   cross join lateral aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
+   where p.pronamespace='public'::regnamespace and p.proname in ('orotitan_benchmark_dimensions_valid','reject_orotitan_benchmark_execution_mutation',
+ 'record_orotitan_benchmark_execution','claim_orotitan_benchmark_execution')
+   and (a.grantee not in(owner_id,'service_role'::regrole::oid)
+        or (a.grantee='service_role'::regrole::oid
+            and (p.proname not in ('record_orotitan_benchmark_execution','claim_orotitan_benchmark_execution')
+                 or a.privilege_type<>'EXECUTE' or a.is_grantable)))
+ )
+ or (select count(*) from pg_proc p
+   cross join lateral aclexplode(coalesce(p.proacl,acldefault('f',p.proowner))) a
+   where p.pronamespace='public'::regnamespace and p.proname in ('record_orotitan_benchmark_execution','claim_orotitan_benchmark_execution')
+     and a.grantee='service_role'::regrole::oid and a.privilege_type='EXECUTE'
+     and not a.is_grantable)<>2
+ then
    raise exception 'ROLLBACK_REFUSED_ACL: functions' using errcode='55000';
  end if;
 end;
