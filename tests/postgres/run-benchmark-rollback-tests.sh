@@ -118,6 +118,21 @@ new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_executions drop constraint orotitan_engine_benchmark_time_check; alter table public.orotitan_engine_benchmark_executions add constraint orotitan_engine_benchmark_time_check check (finished_at is not null)"
 expect_reject "modified constraint definition with unchanged count"
 end_case
+# Missing default + replacement on another column retains total default count: reject.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_executions alter column execution_id drop default; alter table public.orotitan_engine_benchmark_executions alter column model_provider set default 'unexpected'"
+expect_reject "default substitution preserving count"
+end_case
+# Same index name with changed key order must be rejected.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "drop index public.orotitan_engine_benchmark_campaign_case_idx; create index orotitan_engine_benchmark_campaign_case_idx on public.orotitan_engine_benchmark_executions (campaign_id, case_id, phase_id, repetition_index)"
+expect_reject "changed index definition preserving name"
+end_case
+# Privilege widening must be rejected (PostgreSQL 17 MAINTAIN is not SELECT).
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "grant maintain on table public.orotitan_engine_benchmark_executions to service_role"
+expect_reject "unexpected service_role MAINTAIN privilege"
+end_case
 # Schema drift must fail before any DROP.
 new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_claims add column unexpected text"
