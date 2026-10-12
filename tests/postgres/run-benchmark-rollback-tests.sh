@@ -189,6 +189,12 @@ psql -q -v ON_ERROR_STOP=1 -d "$db" -c "create sequence public.rollback_unexpect
 expect_reject "unexpected owned sequence"
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin if to_regclass('public.rollback_unexpected_owned_seq') is null then raise exception 'UNEXPECTED_SEQUENCE_LOST'; end if; end \$check\$;"
 end_case
+# Extended statistics are implicitly dropped even with DROP RESTRICT.
+new_case
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "create statistics public.rollback_external_stats on campaign_id, phase_id from public.orotitan_engine_benchmark_executions"
+expect_reject "unexpected automatically dropped extended statistics"
+psql -q -v ON_ERROR_STOP=1 -d "$db" -c "do \$check\$ begin if not exists(select 1 from pg_statistic_ext where stxname='rollback_external_stats') then raise exception 'EXTENDED_STATISTICS_LOST'; end if; end \$check\$;"
+end_case
 # Schema drift must fail before any DROP.
 new_case
 psql -q -v ON_ERROR_STOP=1 -d "$db" -c "alter table public.orotitan_engine_benchmark_claims add column unexpected text"
