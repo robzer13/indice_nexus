@@ -101,6 +101,19 @@ begin
  or exists(select 1 from pg_inherits where inhrelid in(e,c) or inhparent in(e,c)) then
    raise exception 'ROLLBACK_REFUSED_IDENTITY: table kind or RLS' using errcode='55000';
  end if;
+ -- The forward migration owns no sequences. A later OWNED BY dependency
+ -- would be silently removed by DROP TABLE even with RESTRICT.
+ if exists(
+   select 1
+   from pg_depend d
+   join pg_class obj on obj.oid=d.objid and obj.relkind='S'
+   where d.classid='pg_class'::regclass
+     and d.refclassid='pg_class'::regclass
+     and d.refobjid in(e,c)
+     and d.deptype in('a','i')
+ ) then
+   raise exception 'ROLLBACK_REFUSED_IDENTITY: unexpected owned sequence' using errcode='55000';
+ end if;
  if exists(select 1 from public.orotitan_engine_benchmark_executions)
  or exists(select 1 from public.orotitan_engine_benchmark_claims) then
    raise exception 'ROLLBACK_REFUSED_DATA: nonempty benchmark registry' using errcode='55000';
