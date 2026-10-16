@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
+import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, isStoredQuoteCurrencyCompatible, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
 const now=new Date('2026-10-11T18:00:00Z');
 const eur:ExpectedMarketInstrument={
   reference:'ADYEN.AS',ticker:'ADYEN',exchange:'Euronext Amsterdam',
@@ -85,4 +85,16 @@ test('secondary quote on bare US ticker must match canonical venue exactly',()=>
   assert.doesNotThrow(()=>assertTwelveDataVenue('NYSE','NYSE'));
   assert.throws(()=>assertTwelveDataVenue('NYSE','NASDAQ'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
   assert.throws(()=>assertTwelveDataVenue('NYSE Arca','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
+});
+
+test('historical BCG EUR prices cannot enter GBP-major display or history',()=>{
+  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'EUR'},'GBP','MAJOR'),false);
+  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'GBP'},'GBP','MAJOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBp'},'GBP','MAJOR'),false);
+  assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBp'},'GBP','MINOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBX'},'GBP','MINOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({currency:123},'GBP','MAJOR'),false);
+  // Rows predating raw-currency provenance remain historical evidence;
+  // this guard rejects known contradictions without inventing metadata.
+  assert.equal(isStoredQuoteCurrencyCompatible({},'GBP','MAJOR'),true);
 });
