@@ -126,3 +126,18 @@ export function admitMarketQuote(
   }
   return normalizedPrice;
 }
+
+/** Existing append-only quotes are not automatically certified by newer provider gates.
+ * Reject an explicit source-currency contradiction; preserve pre-provenance legacy
+ * rows separately as historical evidence rather than inventing their currency.
+ */
+export function isStoredQuoteCurrencyCompatible(
+  raw: unknown, expectedCurrency: string, quoteUnit: MarketQuoteUnit,
+): boolean {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !('currency' in raw)) return true;
+  const quotedCurrency = (raw as Record<string, unknown>).currency;
+  if (typeof quotedCurrency !== 'string' || !quotedCurrency) return false;
+  if (quoteUnit === 'MINOR')
+    return expectedCurrency === 'GBP' && ['GBp', 'GBX'].includes(quotedCurrency);
+  return quotedCurrency === expectedCurrency;
+}
