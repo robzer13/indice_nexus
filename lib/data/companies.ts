@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
+import { isStoredQuoteCurrencyCompatible } from '@/lib/market/price-quality';
 import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
@@ -191,9 +192,16 @@ function mapSnapshotHistory(row: CanonicalSnapshotRow): SnapshotHistoryRow {
 function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): CompanyState {
   const canonical = canonicalFields(row);
   const issuerName = asString(context.issuer.display_name) ?? asString(context.issuer.legal_name) ?? row.issuer_id;
-  const price = chooseDisplayedPrice(canonical, context.marketPrice);
-  const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
   const quoteUnit = (asString(context.security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR') as QuoteUnit;
+  const expectedCurrency = asString(context.security.trading_currency)
+    ?? asString(context.issuer.reporting_currency) ?? 'USD';
+  // Historical provider payloads remain stored for audit, but incompatible
+  // source currencies must not enter the displayed price or live valuation.
+  const admittedMarketPrice = context.marketPrice && isStoredQuoteCurrencyCompatible(
+    context.marketPrice.raw, expectedCurrency, quoteUnit,
+  ) ? context.marketPrice : null;
+  const price = chooseDisplayedPrice(canonical, admittedMarketPrice);
+  const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
 
   return {
     id: row.issuer_id,
@@ -279,7 +287,7 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
       ? supabase.from('companies').select('id,slug,sector').in('id', legacyIds)
       : Promise.resolve({ data: [], error: null }),
     legacyIds.length
-      ? supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', legacyIds).order('as_of', { ascending: false })
+      ? supabase.from('market_prices').select('company_id,price,as_of,source,created_at,raw').in('company_id', legacyIds).order('as_of', { ascending: false })
       : Promise.resolve({ data: [], error: null }),
   ]);
   if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
