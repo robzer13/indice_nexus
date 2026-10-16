@@ -34,7 +34,7 @@ export default async function CompanyPage({ params }: { params: Promise<{ slug: 
   const { slug } = await params;
   const company = await getCompanyStateBySlug(slug);
   if (!company) notFound();
-  const [history, priceHistory] = await Promise.all([getSnapshotHistory(company.id), getMarketPriceHistory(company.id, 180)]);
+  const [history, priceHistory] = await Promise.all([getSnapshotHistory(company.id), getMarketPriceHistory(company.id, company.currency, company.quote_unit, 180)]);
   const distance = getDistanceO90(company.price, company.price_o90);
   const zone = getEntryZone(distance);
   const freshness = getFreshness(company.price_as_of);
