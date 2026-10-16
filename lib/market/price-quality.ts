@@ -141,3 +141,13 @@ export function isStoredQuoteCurrencyCompatible(
     return expectedCurrency === 'GBP' && ['GBp', 'GBX'].includes(quotedCurrency);
   return quotedCurrency === expectedCurrency;
 }
+
+
+/** Candidates must be ordered newest first; skip explicit currency contradictions
+ * without discarding older compatible observations or mutating audit rows.
+ */
+export function selectLatestCompatibleStoredQuote<T extends { raw?: unknown }>(
+  newestFirst: readonly T[], expectedCurrency: string, quoteUnit: MarketQuoteUnit,
+): T | null {
+  return newestFirst.find(row => isStoredQuoteCurrencyCompatible(row.raw, expectedCurrency, quoteUnit)) ?? null;
+}

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, isStoredQuoteCurrencyCompatible, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
+import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
 const now=new Date('2026-10-11T18:00:00Z');
 const eur:ExpectedMarketInstrument={
   reference:'ADYEN.AS',ticker:'ADYEN',exchange:'Euronext Amsterdam',
@@ -102,4 +102,25 @@ test('BCG quote currency is EUR-major since 2026-09-02; historical guard uses ca
   // Unattested pre-provenance rows remain observable, not certified as currency-consistent.
   assert.equal(isStoredQuoteCurrencyCompatible(null,'EUR','MAJOR'),true);
   assert.equal(isStoredQuoteCurrencyCompatible({},'EUR','MAJOR'),true);
+});
+
+test('latest compatible quote skips an incompatible newest row instead of falling back to a stale reference',()=>{
+  const rows = [
+    {price:3.20,raw:{currency:'GBP'}},
+    {price:3.10,raw:{currency:'EUR'}},
+    {price:3.00,raw:{currency:'EUR'}},
+  ]; // Newest first, as ordered by market_prices.as_of DESC.
+  assert.equal(selectLatestCompatibleStoredQuote(rows,'EUR','MAJOR'),rows[1]);
+  assert.equal(selectLatestCompatibleStoredQuote(rows,'GBP','MAJOR'),rows[0]);
+  assert.equal(selectLatestCompatibleStoredQuote(rows,'USD','MAJOR'),null);
+  assert.equal(selectLatestCompatibleStoredQuote([], 'EUR','MAJOR'),null);
+});
+
+test('legacy rows without attested raw currency remain eligible after contradictory newer quotes',()=>{
+  const rows = [
+    {price:3.20,raw:{currency:'GBP'}},
+    {price:2.70,raw:null},
+  ];
+  assert.equal(selectLatestCompatibleStoredQuote(rows,'EUR','MAJOR'),rows[1]);
+  assert.equal(selectLatestCompatibleStoredQuote([{price:3.20,raw:{currency:'GBP'}}],'EUR','MAJOR'),null);
 });

@@ -1,7 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
-import { isStoredQuoteCurrencyCompatible } from '@/lib/market/price-quality';
+import { isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote } from '@/lib/market/price-quality';
 import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
@@ -299,10 +299,14 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const issuerById = new Map((issuersResult.data ?? []).map((row) => [row.issuer_id as string, row as UnknownRecord]));
   const securityById = new Map((securities ?? []).map((row) => [row.security_id as string, row as UnknownRecord]));
   const companyById = new Map((companiesResult.data ?? []).map((row) => [row.id as string, row as UnknownRecord]));
-  const latestPriceByCompany = new Map<string, UnknownRecord>();
+  // Preserve all candidates in descending date order, not just the newest
+  // row: an older compatible quote may follow an incompatible newer one.
+  const pricesByCompany = new Map<string, UnknownRecord[]>();
   for (const row of pricesResult.data ?? []) {
     const companyId = row.company_id as string;
-    if (!latestPriceByCompany.has(companyId)) latestPriceByCompany.set(companyId, row as UnknownRecord);
+    const candidates = pricesByCompany.get(companyId);
+    if (candidates) candidates.push(row as UnknownRecord);
+    else pricesByCompany.set(companyId, [row as UnknownRecord]);
   }
 
   return snapshots.map((snapshot) => {
@@ -310,11 +314,17 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
     const legacyId = resolveCanonicalQuoteCompanyId(snapshot, links);
+    const expectedCurrency = asString(security.trading_currency)
+      ?? asString(issuer.reporting_currency) ?? 'USD';
+    const quoteUnit: QuoteUnit = asString(security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR';
+    const compatibleMarketPrice = legacyId
+      ? selectLatestCompatibleStoredQuote(pricesByCompany.get(legacyId) ?? [], expectedCurrency, quoteUnit)
+      : null;
     return mapCompanyState(snapshot, {
       issuer,
       security,
       company: legacyId ? companyById.get(legacyId) ?? null : null,
-      marketPrice: legacyId ? latestPriceByCompany.get(legacyId) ?? null : null,
+      marketPrice: compatibleMarketPrice,
     });
   }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }
