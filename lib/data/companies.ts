@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
+import { isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote, fetchAllStoredQuotePages } from '@/lib/market/price-quality';
 import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
@@ -191,9 +192,16 @@ function mapSnapshotHistory(row: CanonicalSnapshotRow): SnapshotHistoryRow {
 function mapCompanyState(row: CanonicalSnapshotRow, context: CanonicalContext): CompanyState {
   const canonical = canonicalFields(row);
   const issuerName = asString(context.issuer.display_name) ?? asString(context.issuer.legal_name) ?? row.issuer_id;
-  const price = chooseDisplayedPrice(canonical, context.marketPrice);
-  const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
   const quoteUnit = (asString(context.security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR') as QuoteUnit;
+  const expectedCurrency = asString(context.security.trading_currency)
+    ?? asString(context.issuer.reporting_currency) ?? 'USD';
+  // Historical provider payloads remain stored for audit, but incompatible
+  // source currencies must not enter the displayed price or live valuation.
+  const admittedMarketPrice = context.marketPrice && isStoredQuoteCurrencyCompatible(
+    context.marketPrice.raw, expectedCurrency, quoteUnit,
+  ) ? context.marketPrice : null;
+  const price = chooseDisplayedPrice(canonical, admittedMarketPrice);
+  const companySlug = asString(context.company?.slug) ?? slugify(issuerName);
 
   return {
     id: row.issuer_id,
@@ -274,16 +282,25 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const legacyIds = [...new Set(snapshots.map(snapshot => resolveCanonicalQuoteCompanyId(snapshot, links)).filter((id): id is string => id !== null))];
   // Never read legacy market rows by issuer_id: that accidental UUID equality
   // masks missing crosswalk entries and can attach the wrong security.
-  const [companiesResult, pricesResult] = await Promise.all([
+  const [companiesResult, priceRows] = await Promise.all([
     legacyIds.length
       ? supabase.from('companies').select('id,slug,sector').in('id', legacyIds)
       : Promise.resolve({ data: [], error: null }),
     legacyIds.length
-      ? supabase.from('market_prices').select('company_id,price,as_of,source,created_at').in('company_id', legacyIds).order('as_of', { ascending: false })
-      : Promise.resolve({ data: [], error: null }),
+      ? fetchAllStoredQuotePages(async (start, end) => {
+          const { data, error } = await supabase.from('market_prices')
+            .select('company_id,price,as_of,source,created_at,raw')
+            .in('company_id', legacyIds)
+            .order('as_of', { ascending: false })
+            .order('created_at', { ascending: false })
+            .order('id', { ascending: false })
+            .range(start, end);
+          if (error) throw new Error(`Unable to load market prices: ${error.message}`);
+          return data ?? [];
+        })
+      : Promise.resolve([]),
   ]);
   if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
-  if (pricesResult.error) throw new Error(`Unable to load market prices: ${pricesResult.error.message}`);
   const securityIds = snapshots.map((row) => row.security_id);
   const { data: securities, error: securitiesError } = await supabase.from('securities').select('*').in('security_id', securityIds);
   if (securitiesError) throw new Error(`Unable to load canonical securities: ${securitiesError.message}`);
@@ -291,10 +308,14 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const issuerById = new Map((issuersResult.data ?? []).map((row) => [row.issuer_id as string, row as UnknownRecord]));
   const securityById = new Map((securities ?? []).map((row) => [row.security_id as string, row as UnknownRecord]));
   const companyById = new Map((companiesResult.data ?? []).map((row) => [row.id as string, row as UnknownRecord]));
-  const latestPriceByCompany = new Map<string, UnknownRecord>();
-  for (const row of pricesResult.data ?? []) {
+  // Preserve all candidates in descending date order, not just the newest
+  // row: an older compatible quote may follow an incompatible newer one.
+  const pricesByCompany = new Map<string, UnknownRecord[]>();
+  for (const row of priceRows) {
     const companyId = row.company_id as string;
-    if (!latestPriceByCompany.has(companyId)) latestPriceByCompany.set(companyId, row as UnknownRecord);
+    const candidates = pricesByCompany.get(companyId);
+    if (candidates) candidates.push(row as UnknownRecord);
+    else pricesByCompany.set(companyId, [row as UnknownRecord]);
   }
 
   return snapshots.map((snapshot) => {
@@ -302,11 +323,17 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
     const security = securityById.get(snapshot.security_id);
     if (!issuer || !security) return null;
     const legacyId = resolveCanonicalQuoteCompanyId(snapshot, links);
+    const expectedCurrency = asString(security.trading_currency)
+      ?? asString(issuer.reporting_currency) ?? 'USD';
+    const quoteUnit: QuoteUnit = asString(security.quote_unit) === 'MINOR' ? 'MINOR' : 'MAJOR';
+    const compatibleMarketPrice = legacyId
+      ? selectLatestCompatibleStoredQuote(pricesByCompany.get(legacyId) ?? [], expectedCurrency, quoteUnit)
+      : null;
     return mapCompanyState(snapshot, {
       issuer,
       security,
       company: legacyId ? companyById.get(legacyId) ?? null : null,
-      marketPrice: legacyId ? latestPriceByCompany.get(legacyId) ?? null : null,
+      marketPrice: compatibleMarketPrice,
     });
   }).filter((row): row is CompanyState => row !== null).sort((a, b) => a.name.localeCompare(b.name));
 }

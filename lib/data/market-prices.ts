@@ -1,6 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
-import type { MarketPriceRow, MarketSyncRun } from '@/lib/domain/types';
+import { isStoredQuoteCurrencyCompatible } from '@/lib/market/price-quality';
+import type { MarketPriceRow, MarketSyncRun, QuoteUnit } from '@/lib/domain/types';
 
 export interface MarketDataCompany {
   id: string;
@@ -57,7 +58,7 @@ export async function insertMarketPrice(input: {
   if (error) throw new Error(`Unable to insert market price: ${error.message}`);
 }
 
-export async function getMarketPriceHistory(companyId: string, limit = 180): Promise<MarketPriceRow[]> {
+export async function getMarketPriceHistory(companyId: string, expectedCurrency: string, quoteUnit: QuoteUnit, limit = 180): Promise<MarketPriceRow[]> {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .from('market_prices')
@@ -66,7 +67,8 @@ export async function getMarketPriceHistory(companyId: string, limit = 180): Pro
     .order('as_of', { ascending: false })
     .limit(limit);
   if (error) throw new Error(`Unable to load market price history: ${error.message}`);
-  return ((data ?? []) as MarketPriceRow[]).reverse();
+  return ((data ?? []) as MarketPriceRow[])
+    .filter(row => isStoredQuoteCurrencyCompatible(row.raw, expectedCurrency, quoteUnit)).reverse();
 }
 
 export async function recordMarketSyncRun(input: {

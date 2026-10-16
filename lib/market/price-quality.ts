@@ -126,3 +126,47 @@ export function admitMarketQuote(
   }
   return normalizedPrice;
 }
+
+/** Existing append-only quotes are not automatically certified by newer provider gates.
+ * Reject an explicit source-currency contradiction; preserve pre-provenance legacy
+ * rows separately as historical evidence rather than inventing their currency.
+ */
+export function isStoredQuoteCurrencyCompatible(
+  raw: unknown, expectedCurrency: string, quoteUnit: MarketQuoteUnit,
+): boolean {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw) || !('currency' in raw)) return true;
+  const quotedCurrency = (raw as Record<string, unknown>).currency;
+  if (typeof quotedCurrency !== 'string' || !quotedCurrency) return false;
+  if (quoteUnit === 'MINOR')
+    return expectedCurrency === 'GBP' && ['GBp', 'GBX'].includes(quotedCurrency);
+  return quotedCurrency === expectedCurrency;
+}
+
+
+/** Candidates must be ordered newest first; skip explicit currency contradictions
+ * without discarding older compatible observations or mutating audit rows.
+ */
+export function selectLatestCompatibleStoredQuote<T extends { raw?: unknown }>(
+  newestFirst: readonly T[], expectedCurrency: string, quoteUnit: MarketQuoteUnit,
+): T | null {
+  return newestFirst.find(row => isStoredQuoteCurrencyCompatible(row.raw, expectedCurrency, quoteUnit)) ?? null;
+}
+
+/** Fetch all stored-quote candidates, including quotes beyond a PostgREST
+ * response-row cap. Advance by rows *received*, not the requested range size:
+ * a server-side cap can return a short page before the last row.
+ */
+export async function fetchAllStoredQuotePages<T>(
+  fetchRange: (start: number, end: number) => Promise<readonly T[]>,
+  pageSize = 500,
+): Promise<T[]> {
+  if (!Number.isSafeInteger(pageSize) || pageSize <= 0) throw new Error('STORED_QUOTE_PAGE_SIZE_INVALID');
+  const rows: T[] = [];
+  for (let start = 0; ; ) {
+    const page = await fetchRange(start, start + pageSize - 1);
+    if (page.length === 0) return rows;
+    if (page.length > pageSize) throw new Error('STORED_QUOTE_PAGE_SIZE_EXCEEDED');
+    rows.push(...page);
+    start += page.length;
+  }
+}
