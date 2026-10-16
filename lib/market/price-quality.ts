@@ -151,3 +151,22 @@ export function selectLatestCompatibleStoredQuote<T extends { raw?: unknown }>(
 ): T | null {
   return newestFirst.find(row => isStoredQuoteCurrencyCompatible(row.raw, expectedCurrency, quoteUnit)) ?? null;
 }
+
+/** Fetch all stored-quote candidates, including quotes beyond a PostgREST
+ * response-row cap. Advance by rows *received*, not the requested range size:
+ * a server-side cap can return a short page before the last row.
+ */
+export async function fetchAllStoredQuotePages<T>(
+  fetchRange: (start: number, end: number) => Promise<readonly T[]>,
+  pageSize = 500,
+): Promise<T[]> {
+  if (!Number.isSafeInteger(pageSize) || pageSize <= 0) throw new Error('STORED_QUOTE_PAGE_SIZE_INVALID');
+  const rows: T[] = [];
+  for (let start = 0; ; ) {
+    const page = await fetchRange(start, start + pageSize - 1);
+    if (page.length === 0) return rows;
+    if (page.length > pageSize) throw new Error('STORED_QUOTE_PAGE_SIZE_EXCEEDED');
+    rows.push(...page);
+    start += page.length;
+  }
+}

@@ -1,7 +1,7 @@
 import 'server-only';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
 import { getDistanceO90 } from '@/lib/domain/distance';
-import { isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote } from '@/lib/market/price-quality';
+import { isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote, fetchAllStoredQuotePages } from '@/lib/market/price-quality';
 import { resolveCanonicalQuoteCompanyId, type LegacyCompanyQuoteLink } from '@/lib/domain/canonical-quote-identity';
 import type { ActiveCompanyOption, CompanyState, CompanyStatus, Json, QuoteUnit, SnapshotHistoryRow } from '@/lib/domain/types';
 
@@ -282,16 +282,25 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   const legacyIds = [...new Set(snapshots.map(snapshot => resolveCanonicalQuoteCompanyId(snapshot, links)).filter((id): id is string => id !== null))];
   // Never read legacy market rows by issuer_id: that accidental UUID equality
   // masks missing crosswalk entries and can attach the wrong security.
-  const [companiesResult, pricesResult] = await Promise.all([
+  const [companiesResult, priceRows] = await Promise.all([
     legacyIds.length
       ? supabase.from('companies').select('id,slug,sector').in('id', legacyIds)
       : Promise.resolve({ data: [], error: null }),
     legacyIds.length
-      ? supabase.from('market_prices').select('company_id,price,as_of,source,created_at,raw').in('company_id', legacyIds).order('as_of', { ascending: false })
-      : Promise.resolve({ data: [], error: null }),
+      ? fetchAllStoredQuotePages(async (start, end) => {
+          const { data, error } = await supabase.from('market_prices')
+            .select('company_id,price,as_of,source,created_at,raw')
+            .in('company_id', legacyIds)
+            .order('as_of', { ascending: false })
+            .order('created_at', { ascending: false })
+            .order('id', { ascending: false })
+            .range(start, end);
+          if (error) throw new Error(`Unable to load market prices: ${error.message}`);
+          return data ?? [];
+        })
+      : Promise.resolve([]),
   ]);
   if (companiesResult.error) throw new Error(`Unable to load company display metadata: ${companiesResult.error.message}`);
-  if (pricesResult.error) throw new Error(`Unable to load market prices: ${pricesResult.error.message}`);
   const securityIds = snapshots.map((row) => row.security_id);
   const { data: securities, error: securitiesError } = await supabase.from('securities').select('*').in('security_id', securityIds);
   if (securitiesError) throw new Error(`Unable to load canonical securities: ${securitiesError.message}`);
@@ -302,7 +311,7 @@ async function loadPublishedCanonicalStates(): Promise<CompanyState[]> {
   // Preserve all candidates in descending date order, not just the newest
   // row: an older compatible quote may follow an incompatible newer one.
   const pricesByCompany = new Map<string, UnknownRecord[]>();
-  for (const row of pricesResult.data ?? []) {
+  for (const row of priceRows) {
     const companyId = row.company_id as string;
     const candidates = pricesByCompany.get(companyId);
     if (candidates) candidates.push(row as UnknownRecord);

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
+import { admitMarketQuote, requireUsListingMatch, isUnambiguousUSExchange, assertCanonicalMarketReference, assertTwelveDataVenue, isStoredQuoteCurrencyCompatible, selectLatestCompatibleStoredQuote, fetchAllStoredQuotePages, type CandidateMarketQuote, type ExpectedMarketInstrument } from '../lib/market/price-quality';
 const now=new Date('2026-10-11T18:00:00Z');
 const eur:ExpectedMarketInstrument={
   reference:'ADYEN.AS',ticker:'ADYEN',exchange:'Euronext Amsterdam',
@@ -123,4 +123,37 @@ test('legacy rows without attested raw currency remain eligible after contradict
   ];
   assert.equal(selectLatestCompatibleStoredQuote(rows,'EUR','MAJOR'),rows[1]);
   assert.equal(selectLatestCompatibleStoredQuote([{price:3.20,raw:{currency:'GBP'}}],'EUR','MAJOR'),null);
+});
+
+test('quote pagination passes response caps and finds a compatible older quote',async()=>{
+  const rows = [
+    {price:9,raw:{currency:'GBP'}},
+    {price:8,raw:{currency:'GBP'}},
+    {price:7,raw:{currency:'GBP'}},
+    {price:6,raw:{currency:'GBP'}},
+    {price:5,raw:{currency:'GBP'}},
+    {price:4,raw:{currency:'GBP'}},
+    {price:3,raw:{currency:'EUR'}},
+  ]; // Server ordering is newest first.
+  const requested: number[][] = [];
+  const found = await fetchAllStoredQuotePages(async(start,end)=>{
+    requested.push([start,end]);
+    // Simulate PostgREST silently capping to TWO rows when THREE were requested.
+    return rows.slice(start,Math.min(end+1,start+2));
+  },3);
+  assert.deepEqual(found,rows);
+  assert.deepEqual(requested,[[0,2],[2,4],[4,6],[6,8],[7,9]]);
+  assert.equal(selectLatestCompatibleStoredQuote(found,'EUR','MAJOR'),rows[6]);
+});
+
+test('quote pagination handles empty results and fails closed on page errors',async()=>{
+  assert.deepEqual(await fetchAllStoredQuotePages(async()=>[],3),[]);
+  let requests = 0;
+  await assert.rejects(fetchAllStoredQuotePages(async()=>{
+    requests++;
+    if(requests===1) return [{price:1,raw:{currency:'GBP'}}];
+    throw new Error('MARKET_PAGE_FAILURE');
+  },2),/MARKET_PAGE_FAILURE/);
+  assert.equal(requests,2);
+  await assert.rejects(fetchAllStoredQuotePages(async()=>[],0),/STORED_QUOTE_PAGE_SIZE_INVALID/);
 });
