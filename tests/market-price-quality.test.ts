@@ -87,14 +87,19 @@ test('secondary quote on bare US ticker must match canonical venue exactly',()=>
   assert.throws(()=>assertTwelveDataVenue('NYSE Arca','NYSE'),/TWELVE_DATA_EXCHANGE_MISMATCH/);
 });
 
-test('historical BCG EUR prices cannot enter GBP-major display or history',()=>{
+test('BCG quote currency is EUR-major since 2026-09-02; historical guard uses canonical currency',()=>{
+  // Official issuer trading-currency notice: https://balticclassifieds.com/change-in-trading-currency
+  // Nominal share denomination GBP0.01 is distinct from exchange quote currency.
+  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'EUR'},'EUR','MAJOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'GBP'},'EUR','MAJOR'),false);
+  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'GBp'},'EUR','MAJOR'),false);
+  // Legacy companies.currency=GBP is stale; this test does NOT certify EUR prices as GBP.
   assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'EUR'},'GBP','MAJOR'),false);
-  assert.equal(isStoredQuoteCurrencyCompatible({symbol:'BCG.L',currency:'GBP'},'GBP','MAJOR'),true);
   assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBp'},'GBP','MAJOR'),false);
   assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBp'},'GBP','MINOR'),true);
   assert.equal(isStoredQuoteCurrencyCompatible({currency:'GBX'},'GBP','MINOR'),true);
-  assert.equal(isStoredQuoteCurrencyCompatible({currency:123},'GBP','MAJOR'),false);
-  // Rows predating raw-currency provenance remain historical evidence;
-  // this guard rejects known contradictions without inventing metadata.
-  assert.equal(isStoredQuoteCurrencyCompatible({},'GBP','MAJOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({currency:123},'EUR','MAJOR'),false);
+  // Unattested pre-provenance rows remain observable, not certified as currency-consistent.
+  assert.equal(isStoredQuoteCurrencyCompatible(null,'EUR','MAJOR'),true);
+  assert.equal(isStoredQuoteCurrencyCompatible({},'EUR','MAJOR'),true);
 });
