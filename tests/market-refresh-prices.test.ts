@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
+import { register } from 'node:module';
 import test from 'node:test';
 import type { MarketDataCompany } from '../lib/data/market-prices';
 
@@ -69,19 +69,15 @@ const mockSources = new Map<string, string>([
   `],
 ]);
 
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === 'server-only') return { url: 'mock:server-only', shortCircuit: true };
-    if (specifier === '@/lib/data/market-prices')
-      return { url: 'mock:market-data', shortCircuit: true };
-    if (specifier === '@/lib/market/provider')
-      return { url: 'mock:market-provider', shortCircuit: true };
-    return nextResolve(specifier, context);
-  },
-  load(url, context, nextLoad) {
-    const source = mockSources.get(url);
-    if (source !== undefined) return { format: 'module', source, shortCircuit: true };
-    return nextLoad(url, context);
+register('./module-mock-hooks.mjs', import.meta.url, {
+  data: {
+    resolutions: [
+      ['server-only', 'mock:server-only'],
+      ['@/lib/data/market-prices', 'mock:market-data'],
+      ['@/lib/market/provider', 'mock:market-provider'],
+    ],
+    sources: [...mockSources],
+    modulePrefixes: [new URL('../lib/', import.meta.url).href],
   },
 });
 

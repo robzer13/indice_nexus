@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
+import { register } from 'node:module';
 import test from 'node:test';
 
 interface PersistenceState {
@@ -28,17 +28,14 @@ const mockSources = new Map<string, string>([
   `],
 ]);
 
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === 'server-only') return { url: 'mock:server-only', shortCircuit: true };
-    if (specifier === '@/lib/supabase/server')
-      return { url: 'mock:supabase-server', shortCircuit: true };
-    return nextResolve(specifier, context);
-  },
-  load(url, context, nextLoad) {
-    const source = mockSources.get(url);
-    if (source !== undefined) return { format: 'module', source, shortCircuit: true };
-    return nextLoad(url, context);
+register('./module-mock-hooks.mjs', import.meta.url, {
+  data: {
+    resolutions: [
+      ['server-only', 'mock:server-only'],
+      ['@/lib/supabase/server', 'mock:supabase-server'],
+    ],
+    sources: [...mockSources],
+    modulePrefixes: [new URL('../lib/', import.meta.url).href],
   },
 });
 

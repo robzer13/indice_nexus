@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
+import { register } from 'node:module';
 import test from 'node:test';
 
 interface ProviderQuote {
@@ -54,19 +54,15 @@ const mockSources = new Map<string, string>([
   `],
 ]);
 
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === 'server-only') return { url: 'mock:server-only', shortCircuit: true };
-    if (specifier === '@/lib/market/yahoo-finance')
-      return { url: 'mock:market-yahoo-finance', shortCircuit: true };
-    if (specifier === '@/lib/market/twelve-data')
-      return { url: 'mock:market-twelve-data', shortCircuit: true };
-    return nextResolve(specifier, context);
-  },
-  load(url, context, nextLoad) {
-    const source = mockSources.get(url);
-    if (source !== undefined) return { format: 'module', source, shortCircuit: true };
-    return nextLoad(url, context);
+register('./module-mock-hooks.mjs', import.meta.url, {
+  data: {
+    resolutions: [
+      ['server-only', 'mock:server-only'],
+      ['@/lib/market/yahoo-finance', 'mock:market-yahoo-finance'],
+      ['@/lib/market/twelve-data', 'mock:market-twelve-data'],
+    ],
+    sources: [...mockSources],
+    modulePrefixes: [new URL('../lib/', import.meta.url).href],
   },
 });
 

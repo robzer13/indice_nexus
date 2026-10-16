@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { registerHooks } from 'node:module';
+import { register } from 'node:module';
 import test from 'node:test';
 import type { NextRequest } from 'next/server';
 
@@ -29,16 +29,11 @@ const mockSources = new Map<string, string>([
   `],
 ]);
 
-registerHooks({
-  resolve(specifier, context, nextResolve) {
-    if (specifier === '@/lib/market/refresh-prices')
-      return { url: 'mock:market-refresh', shortCircuit: true };
-    return nextResolve(specifier, context);
-  },
-  load(url, context, nextLoad) {
-    const source = mockSources.get(url);
-    if (source !== undefined) return { format: 'module', source, shortCircuit: true };
-    return nextLoad(url, context);
+register('./module-mock-hooks.mjs', import.meta.url, {
+  data: {
+    resolutions: [['@/lib/market/refresh-prices', 'mock:market-refresh']],
+    sources: [...mockSources],
+    modulePrefixes: [new URL('../app/', import.meta.url).href],
   },
 });
 
