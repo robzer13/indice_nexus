@@ -78,6 +78,43 @@ test('CRON route rejects a missing or incorrect Authorization header', async () 
   assert.deepEqual(routeState.__cronRouteMocks.calls, []);
 });
 
+test('CRON route emits non-secret diagnostics only for denied Vercel cron calls', async () => {
+  const { GET } = await routeModule;
+  const originalWarn = console.warn;
+  const events: unknown[][] = [];
+  console.warn = (...args: unknown[]) => { events.push(args); };
+
+  try {
+    const unauthenticated = new Request('http://localhost/api/cron/prices', {
+      headers: { 'user-agent': 'vercel-cron/1.0' },
+    }) as NextRequest;
+    const rejected = new Request('http://localhost/api/cron/prices', {
+      headers: { 'user-agent': 'vercel-cron/1.0', authorization: 'Bearer wrong-secret' },
+    }) as NextRequest;
+
+    assert.equal((await GET(unauthenticated)).status, 401);
+    assert.equal((await GET(rejected)).status, 401);
+    assert.deepEqual(events, [
+      ['CRON_AUTH_DIAGNOSTIC', {
+        secretConfigured: true,
+        authorizationHeaderPresent: false,
+        bearerPrefixPresent: false,
+        secretHasInvalidHeaderChars: false,
+      }],
+      ['CRON_AUTH_DIAGNOSTIC', {
+        secretConfigured: true,
+        authorizationHeaderPresent: true,
+        bearerPrefixPresent: true,
+        secretHasInvalidHeaderChars: false,
+      }],
+    ]);
+    assert.equal(JSON.stringify(events).includes('test-cron-secret'), false);
+    assert.deepEqual(routeState.__cronRouteMocks.calls, []);
+  } finally {
+    console.warn = originalWarn;
+  }
+});
+
 test('CRON route returns 200 for a successful authenticated synchronization', async () => {
   const { GET } = await routeModule;
   routeState.__cronRouteMocks.refresh = async () => ({
