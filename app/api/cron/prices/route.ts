@@ -14,10 +14,23 @@ function safeEqual(a: string, b: string): boolean {
 
 function isAuthorized(request: NextRequest): boolean {
   const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
   const authorization = request.headers.get('authorization');
-  if (!authorization?.startsWith('Bearer ')) return false;
-  return safeEqual(authorization.slice('Bearer '.length), secret);
+  const bearerPrefixPresent = authorization?.startsWith('Bearer ') ?? false;
+  const authorized = secret && bearerPrefixPresent
+    ? safeEqual(authorization!.slice('Bearer '.length), secret)
+    : false;
+
+  // Temporary diagnostic: only booleans, never credentials, token fragments, or hashes.
+  // Vercel uses this user-agent for both scheduled and manual Cron Job invocations.
+  if (!authorized && request.headers.get('user-agent') === 'vercel-cron/1.0') {
+    console.warn('CRON_AUTH_DIAGNOSTIC', {
+      secretConfigured: Boolean(secret),
+      authorizationHeaderPresent: authorization !== null,
+      bearerPrefixPresent,
+      secretHasInvalidHeaderChars: /[\r\n\x00-\x1f\x7f]/.test(secret ?? ''),
+    });
+  }
+  return authorized;
 }
 
 export async function GET(request: NextRequest) {
