@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "OROTITAN_PRE_CERTIFICATION_CHECKLIST_REPORT_V0.1",
+  "title": "OroTitan Pre-Certification Checklist Report V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "company",
+    "run_id",
+    "data_cutoff",
+    "checklist_version",
+    "checklist_iteration",
+    "question_ledger_ref",
+    "total_candidate_questions_generated",
+    "total_questions_executed",
+    "dropped_duplicate_count",
+    "dropped_already_resolved_count",
+    "dropped_non_material_count",
+    "pass_count",
+    "concern_count",
+    "reopen_count",
+    "fail_count",
+    "material_concerns",
+    "blind_spots_identified",
+    "company_specific_questions",
+    "reopen_required",
+    "fail_reasons",
+    "affected_analytical_blocks",
+    "saturation_record",
+    "checklist_status",
+    "ready_for_certification"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "PRE_CERTIFICATION_CHECKLIST_REPORT"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "data_cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "checklist_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checklist_iteration": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "question_ledger_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "total_candidate_questions_generated": {
+      "type": "integer",
+      "minimum": 100
+    },
+    "total_questions_executed": {
+      "type": "integer",
+      "minimum": 100
+    },
+    "dropped_duplicate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dropped_already_resolved_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dropped_non_material_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "pass_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "concern_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reopen_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "fail_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "material_concerns": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blind_spots_identified": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "company_specific_questions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "reopen_required": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fail_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "affected_analytical_blocks": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "saturation_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_depth_satisfied",
+        "mandatory_families_covered",
+        "company_specific_coverage",
+        "all_material_concerns_dispositioned",
+        "final_zero_yield_passes",
+        "stop_reason"
+      ],
+      "properties": {
+        "minimum_depth_satisfied": {
+          "type": "boolean"
+        },
+        "mandatory_families_covered": {
+          "type": "boolean"
+        },
+        "company_specific_coverage": {
+          "enum": [
+            "PASS",
+            "INSUFFICIENT"
+          ]
+        },
+        "all_material_concerns_dispositioned": {
+          "type": "boolean"
+        },
+        "final_zero_yield_passes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stop_reason": {
+          "enum": [
+            "NO_ADDITIONAL_MATERIAL_DECISION_USEFUL_QUESTION_IDENTIFIED",
+            "BLOCKED_REOPEN",
+            "BLOCKED_FAIL",
+            "PAUSED_MISSING_INPUT"
+          ]
+        }
+      }
+    },
+    "checklist_status": {
+      "enum": [
+        "PASS",
+        "PASS_WITH_CONCERNS",
+        "REOPEN",
+        "FAIL"
+      ]
+    },
+    "ready_for_certification": {
+      "enum": [
+        "YES",
+        "NO"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "checklist_status": {
+            "enum": [
+              "REOPEN",
+              "FAIL"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ready_for_certification": {
+            "const": "NO"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "checklist_status": {
+            "enum": [
+              "PASS",
+              "PASS_WITH_CONCERNS"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "ready_for_certification": {
+            "const": "YES"
+          }
+        }
+      }
+    }
+  ]
+}

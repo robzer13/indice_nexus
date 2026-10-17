@@ -1,0 +1,201 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "OROTITAN_PRE_CERTIFICATION_QUESTION_LEDGER_V0.1",
+  "title": "OroTitan Pre-Certification Question Ledger V0.1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "company",
+    "run_id",
+    "data_cutoff",
+    "checklist_version",
+    "checklist_iteration",
+    "questions"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "PRE_CERTIFICATION_QUESTION_LEDGER"
+    },
+    "schema_version": {
+      "const": "0.1"
+    },
+    "company": {
+      "type": "string",
+      "minLength": 1
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "data_cutoff": {
+      "type": "string",
+      "format": "date"
+    },
+    "checklist_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checklist_iteration": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "questions": {
+      "type": "array",
+      "minItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "question_id",
+          "question_family",
+          "question_text",
+          "company_specific",
+          "origin_trigger",
+          "why_material",
+          "novelty_basis",
+          "answer_or_judgment",
+          "status",
+          "evidence_references",
+          "affected_blocks",
+          "decision_impact"
+        ],
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "question_family": {
+            "enum": [
+              "CROSS_BLOCK_CONSISTENCY",
+              "GREAT_INVESTOR_DECISION_THINKING",
+              "WORLD_IN_MOTION",
+              "OPERATIONAL_REALITY_SUPPLY_CHAIN",
+              "TECHNOLOGY_AI",
+              "SECOND_ORDER_EFFECTS",
+              "COUNTERFACTUALS",
+              "COMPANY_SPECIFIC_CHALLENGE",
+              "OTHER_MATERIAL_CHALLENGE"
+            ]
+          },
+          "question_subfamily": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "question_text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "company_specific": {
+            "type": "boolean"
+          },
+          "origin_trigger": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "why_material": {
+            "type": "string",
+            "minLength": 1
+          },
+          "novelty_basis": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answer_or_judgment": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "enum": [
+              "PASS",
+              "CONCERN",
+              "REOPEN",
+              "FAIL"
+            ]
+          },
+          "evidence_references": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "affected_blocks": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "RESEARCH",
+                "BUSINESS_MODEL",
+                "MOAT",
+                "RUNWAY",
+                "RETURN_QUALITY",
+                "FCF_FORENSIC",
+                "CAPITAL_ALLOCATION",
+                "MANAGEMENT_GOVERNANCE",
+                "RISK_RESILIENCE",
+                "VALUATION",
+                "CERTIFICATION",
+                "OTHER"
+              ]
+            }
+          },
+          "reopen_target": {
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "enum": [
+                "RESEARCH",
+                "BUSINESS_MODEL",
+                "MOAT",
+                "RUNWAY",
+                "RETURN_QUALITY",
+                "FCF_FORENSIC",
+                "CAPITAL_ALLOCATION",
+                "MANAGEMENT_GOVERNANCE",
+                "RISK_RESILIENCE",
+                "VALUATION"
+              ]
+            }
+          },
+          "decision_impact": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mitigation_or_resolution": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "first_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "second_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "third_order_effect": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    }
+  }
+}
