@@ -237,8 +237,10 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
         return result("HANDOFF", "CERTIFICATION_RECONCILIATION", "VALUATION_LOCK_ADMITTED", prompt(s, "CERTIFICATION_RECONCILIATION", current));
       }
       if (current.gates.READY_FOR_VALUATION === true) {
-        for (const g of ["FUNDAMENTAL_RED_TEAM_COMPLETE", "DENOMINATOR_ADMISSION_VALID",
-          "VALUATION_DATE_ALIGNMENT_VALID", "DCF_BASIS_ADMITTED", "EV_BRIDGE_GOVERNED"] as const) gate(current, g);
+        // The Valuation-phase economic/date checks cannot pre-exist Valuation.
+        // V2 Fundamentals->Valuation requires only the verified Fundamentals
+        // Lock, mandatory Red Team, and its READY_FOR_VALUATION checkpoint.
+        gate(current, "FUNDAMENTAL_RED_TEAM_COMPLETE");
         requireArtifacts(s, current, ["FUNDAMENTALS_LOCK", "FUNDAMENTAL_RED_TEAM_RECORD"]);
         return result("HANDOFF", "VALUATION", "FUNDAMENTALS_LOCK_ADMITTED", prompt(s, "VALUATION", current));
       }
