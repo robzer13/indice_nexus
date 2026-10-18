@@ -8,7 +8,7 @@
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { readFileSync } from "node:fs";
-import { computeCanonicalSnapshot } from "../v1/contract";
+import { computeCanonicalSnapshot, type CanonicalContractInput } from "../v1/contract";
 import { validateV2ResearchSnapshotForPersistence } from "../v2/research-snapshot-schema";
 import type { VerifiedContent } from "./pilotage-typed-gates-v3-1";
 import { resolveValuationDateAlignment, type ValuationDateAlignmentInput } from "./valuation-date-alignment";
@@ -153,6 +153,8 @@ export interface D4CandidateCheck {
   canonicalCandidateAdmitted: false;
   publicationAuthorized: false;
   computed: ReturnType<typeof computeCanonicalSnapshot>;
+  canonicalContractInput: CanonicalContractInput;
+  candidatePayload: Record<string, unknown>;
 }
 
 /**
@@ -190,5 +192,7 @@ export function verifyIntegrationCandidateD4(input: {
     upstreamTimingReconciled: verified.upstreamTimingReconciled,
     historyCasValidated: false, i2Pass: false, i3bPass: false,
     canonicalCandidateAdmitted: false, publicationAuthorized: false, computed,
+    canonicalContractInput: validated.canonicalContract as CanonicalContractInput,
+    candidatePayload: candidate,
   };
 }
