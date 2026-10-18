@@ -6,17 +6,14 @@
  * registered SHA-256, Git blob SHA, size, authority and active manifest.
  */
 import { isDeepStrictEqual } from "node:util";
-import { readFileSync } from "node:fs";
+import schemaJson from "../../../docs/orotitan-equity/proposals/OROTITAN_I2_FULL_PRECISION_PROVENANCE_SCHEMA_D6_V0_1_PROPOSED.json";
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { validateCanonicalContract, computeCanonicalSnapshot,
   type CanonicalContractInput } from "../v1/contract";
 import type { VerifiedContent } from "./pilotage-typed-gates-v3-1";
 
-const schema = JSON.parse(readFileSync(new URL(
-  "../../../docs/orotitan-equity/proposals/OROTITAN_I2_FULL_PRECISION_PROVENANCE_SCHEMA_D6_V0_1_PROPOSED.json",
-  import.meta.url,
-), "utf8")) as object;
+const schema = schemaJson as object;
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateSchema = ajv.compile(schema);
