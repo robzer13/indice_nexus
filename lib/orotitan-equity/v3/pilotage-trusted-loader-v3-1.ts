@@ -144,6 +144,34 @@ function matchingOutput(ref: unknown, row: ArtifactRow): boolean {
     (store.blob_sha === undefined || store.blob_sha === row.github_blob_sha) &&
     (store.storage_uri === undefined || store.storage_uri === row.storage_uri);
 }
+/**
+ * The frozen V3.1 pack has two legitimate RAW_CANONICAL_V1 locator extensions
+ * that the legacy V1 stage-manifest JSON schema does not describe.
+ * This projection is used ONLY by the V1 schema validator, AFTER exact
+ * comparison to the unmodified, immutable V3.1 pack. Unknown extensions
+ * remain rejected. No persisted bytes, hashes, or original objects change.
+ */
+function schemaCompatibleManifest(json: Record<string, unknown>): Record<string, unknown> {
+  const original = json.contract_pins;
+  check(isObject(original), "MANIFEST_CONTRACT_PINS_NOT_OBJECT");
+  const projected: Record<string, unknown> = {};
+  for (const [name, pin] of Object.entries(original)) {
+    if (!isObject(pin) || !isObject(pin.locator)) {
+      projected[name] = pin;
+      continue;
+    }
+    const locator = { ...pin.locator };
+    if (Object.prototype.hasOwnProperty.call(locator, "locator_format")) {
+      check((name === "investment_policy" || name === "execution_patch") &&
+        locator.locator_format === "RAW_CANONICAL_V1",
+        "UNRECOGNIZED_LEGACY_PIN_LOCATOR_FORMAT");
+      delete locator.locator_format;
+    }
+    projected[name] = { ...pin, locator };
+  }
+  return { ...json, contract_pins: projected };
+}
+
 function expectedStageContext(run: RunRow, st: StageRow): StageManifestValidationContext {
   return {
     runId: run.run_id, stage: st.stage_code, stageRevision: st.stage_revision,
@@ -202,9 +230,9 @@ async function verifyStage(
   check(json.manifest_id === manifestRow.artifact_id &&
     json.manifest_kind === kind && json.stage === row.stage_code &&
     json.run_id === row.run_id, "MANIFEST_IDENTITY_MISMATCH");
-  const schema = validateStageManifest(json, expectedStageContext(run, row));
-  check(schema.ok, "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
   check(isDeepStrictEqual(json.contract_pins, run.contract_pins), "MANIFEST_CONTRACT_PINS_MISMATCH");
+  const schema = validateStageManifest(schemaCompatibleManifest(json), expectedStageContext(run, row));
+  check(schema.ok, "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
   const handoff = json.handoff_gate;
   check(isObject(handoff) && handoff.name === GATE[row.stage_code] &&
     handoff.state === row.handoff_gate_state, "MANIFEST_HANDOFF_GATE_MISMATCH");
