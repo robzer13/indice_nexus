@@ -56,6 +56,7 @@ create table d7_sandbox.approved_inputs (
   issuer_id uuid not null,
   security_id uuid not null,
   payload_sha256 text not null check (payload_sha256 ~ '^[a-f0-9]{64}$'),
+  cash_flow_basis text not null check (cash_flow_basis in ('FCFF','FCFE','OWNER_EARNINGS')),
   approval_source text not null check (approval_source = 'D7_TEST_ONLY_APPROVED')
 );
 revoke all on d7_sandbox.approved_inputs from public, anon, authenticated, service_role;
@@ -84,6 +85,7 @@ declare
   reference_date date;
   denominator_repr text;
   digest_sha256 text;
+  approved_basis text;
 begin
   if p_run_id is null or p_dossier_id is null or p_canonical_payload is null
      or jsonb_typeof(p_canonical_payload) is distinct from 'object' then
@@ -185,14 +187,19 @@ begin
   -- No self-asserted PASS is consumed. The sandbox authorization is held in a
   -- superuser-managed fixture table; there is no API role INSERT privilege.
   digest_sha256 := encode(public.digest(convert_to(p_canonical_payload::text,'UTF8'),'sha256'),'hex');
-  if not exists (
-    select 1 from d7_sandbox.approved_inputs a
+  select a.cash_flow_basis into approved_basis
+    from d7_sandbox.approved_inputs a
     where a.candidate_snapshot_id=id and a.run_id=p_run_id
       and a.dossier_id=p_dossier_id and a.issuer_id=issuer and a.security_id=security
       and a.payload_sha256=digest_sha256
-      and a.approval_source='D7_TEST_ONLY_APPROVED'
-  ) then
+      and a.approval_source='D7_TEST_ONLY_APPROVED';
+  if not found then
     raise exception 'D7_TRUSTED_ADMISSION_MISSING_OR_STALE' using errcode='23514';
+  end if;
+  if (approved_basis='FCFF' and timing->>'ev_to_equity_bridge_date' is distinct from data_cutoff::text)
+     or (approved_basis in ('FCFE','OWNER_EARNINGS') and
+       timing->>'ev_to_equity_bridge_date' is distinct from 'NOT_APPLICABLE') then
+    raise exception 'D7_EV_BRIDGE_DATE_OR_DCF_BASIS_INVALID' using errcode='23514';
   end if;
 
   if previous.snapshot_id is not null then
