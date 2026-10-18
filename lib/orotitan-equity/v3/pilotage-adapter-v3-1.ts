@@ -162,7 +162,9 @@ function prompt(s: PilotageSnapshot, phase: Phase, x: StageState): string {
   // Handoffs consume the PREDECESSOR FINAL proof set, not the empty next stage.
   const evidenceStage = phase === "FUNDAMENTALS" ? s.stages.RESEARCH ?? x :
     phase === "INTEGRATION" ? s.stages.DEEP_DIVE ?? x : x;
-  const refs = evidenceStage.artifacts.filter(a => artifactValid(s, evidenceStage, a)).map(a => ({
+  const refs = [evidenceStage.manifest, ...evidenceStage.artifacts]
+    .filter((a): a is ArtifactProof => a !== null && artifactValid(s, evidenceStage, a))
+    .map(a => ({
     artifact_id: a.artifactId, version: a.version, sha256: a.sha256, artifact_type: a.artifactType,
   }));
   return [
