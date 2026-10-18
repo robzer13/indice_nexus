@@ -18,6 +18,8 @@ import { verifyDeepDiveTypedLocks, assessIntegrationReportsReadOnly,
   type VerifiedContent } from "./pilotage-typed-gates-v3-1";
 import { verifyIntegrationCandidateD4 } from "./pilotage-integration-recompute-v3-1";
 import type { ValuationDateAlignmentInput } from "./valuation-date-alignment";
+import { verifyHistoricalPrecheckD5, verifyI2LineageD5,
+  type D5Dossier, type D5SnapshotRow } from "./pilotage-evidence-history-v3-1";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -51,6 +53,9 @@ export type TrustedPilotagePort = {
   getStages(runId: string): Promise<StageRow[]>;
   getArtifacts(runId: string): Promise<ArtifactRow[]>;
   getIssuer(issuerId: string): Promise<IdentityRow | null>;
+  /** Mandatory for FINAL Integration; optional for legacy read-only fixture ports. */
+  getDossier?(dossierId: string): Promise<D5Dossier | null>;
+  getSnapshot?(snapshotId: string): Promise<D5SnapshotRow | null>;
   readImmutableBytes(row: ArtifactRow): Promise<Uint8Array>;
 };
 
@@ -403,7 +408,64 @@ export async function loadTrustedPilotageSnapshot(input: {
         checks.upstreamTimingReconciled && !checks.historyCasValidated &&
         !checks.i2Pass && !checks.i3bPass && !checks.publicationAuthorized,
         "D4_UNVERIFIED_PUBLICATION_GATE_ELEVATION");
-      // A valid candidate is not a full I2/I3-B PASS. No gate is elevated.
+      // D5 uses the exact FULL-PRECISION input artifact ref embedded in the
+      // byte-verified new-run Valuation Lock and exact active FINAL bytes.
+      const locks = dd?.verifiedContents.filter(x => x.proof.artifactType === "VALUATION_LOCK") ?? [];
+      check(locks.length === 1 && locks[0].mediaType === "application/json",
+        "D5_VALUATION_LOCK_NOT_VERIFIED");
+      let lock: unknown;
+      try { lock = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(locks[0].bytes)); }
+      catch { throw new TrustedLoaderError("D5_VALUATION_LOCK_INVALID_JSON"); }
+      check(isObject(lock) && isObject(lock.full_precision_inputs_artifact),
+        "D5_FULL_PRECISION_LOCK_REF_MISSING");
+      const ref = lock.full_precision_inputs_artifact;
+      const records = dd?.verifiedContents.filter(x =>
+        x.proof.artifactType === "SCORING_INPUTS_FULL_PRECISION") ?? [];
+      check(records.length === 1, "D5_FULL_PRECISION_INPUT_NOT_VERIFIED");
+      const lineage = verifyI2LineageD5({
+        candidateCanonicalInput: checks.canonicalContractInput,
+        fullPrecision: records[0],
+        expectedRunId: run.run_id,
+        expectedDataCutoff: run.data_cutoff,
+        expectedArtifactId: String(ref.artifact_id),
+        expectedVersion: Number(ref.version),
+        expectedSha256: String(ref.content_sha256),
+      });
+      check(lineage.fullPrecisionInputsMatch && !lineage.i2EndToEndPass &&
+        !lineage.publicationAuthorized, "D5_UNVERIFIED_I2_GATE_ELEVATION");
+
+      // D5 pointer/history checks are read-only and repeated to detect races.
+      // Any future writer must still execute SELECT FOR UPDATE + CAS in SQL.
+      check(input.port.getDossier !== undefined && input.port.getSnapshot !== undefined,
+        "D5_HISTORY_READ_PORT_NOT_CONFIGURED");
+      const observedDossier = await input.port.getDossier(run.dossier_id!);
+      check(observedDossier !== null, "D5_DOSSIER_NOT_FOUND");
+      const snapshotId = checks.candidatePayload.snapshot_id;
+      check(typeof snapshotId === "string" && UUID.test(snapshotId),
+        "D5_CANDIDATE_SNAPSHOT_ID_INVALID");
+      const [baseline, existing] = await Promise.all([
+        run.baseline_snapshot_id ? input.port.getSnapshot(run.baseline_snapshot_id) : Promise.resolve(null),
+        input.port.getSnapshot(snapshotId),
+      ]);
+      const historical = verifyHistoricalPrecheckD5({
+        observed: { dossier: observedDossier, baseline, existingCandidate: existing },
+        candidate: checks.candidatePayload, runId: run.run_id,
+        dossierId: run.dossier_id!, issuerId: run.issuer_id!,
+        securityId: run.security_id!, expectedBaselineId: run.baseline_snapshot_id,
+      });
+      check(historical.historicalRowsConsistent && !historical.transactionCasValidated &&
+        !historical.historyTransitionPass && !historical.publicationAuthorized,
+        "D5_UNVERIFIED_HISTORY_PASS");
+      const [dossierAfter, baselineAfter, candidateAfter] = await Promise.all([
+        input.port.getDossier(run.dossier_id!),
+        run.baseline_snapshot_id ? input.port.getSnapshot(run.baseline_snapshot_id) : Promise.resolve(null),
+        input.port.getSnapshot(snapshotId),
+      ]);
+      check(isDeepStrictEqual(observedDossier, dossierAfter) &&
+        isDeepStrictEqual(baseline, baselineAfter) &&
+        isDeepStrictEqual(existing, candidateAfter), "D5_HISTORY_CHANGED_DURING_VERIFICATION");
+      // Even successful D5 read-only checks are NOT I2_PASS or I3B_PASS.
+
     }
   }
   const stageStates: PilotageSnapshot["stages"] = {};
