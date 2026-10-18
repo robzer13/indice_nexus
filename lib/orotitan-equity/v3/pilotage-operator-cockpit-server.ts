@@ -7,7 +7,7 @@ import {
   type RuntimeEnvironmentObservation,
 } from "./runtime-bootstrap-v3-0-3";
 import {
-  createServerPilotageReadPort, loadServerPilotageDecision,
+  assertProductionUrl, createServerPilotageReadPort, loadServerPilotageDecision,
 } from "./pilotage-trusted-loader-server";
 import { TrustedLoaderError } from "./pilotage-trusted-loader-v3-1";
 import {
@@ -89,6 +89,7 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
       publicationAuthorized: false, mutationPerformed: false };
   }
 
+  assertProductionUrl();
   const client = createServerSupabaseClient();
   const { data, error } = await client.from("orotitan_runs")
     .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at")
