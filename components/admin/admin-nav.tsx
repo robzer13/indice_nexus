@@ -7,6 +7,7 @@ const links = [
   ['/admin/prices', 'Cours'],
   ['/admin/paper', 'Portefeuille virtuel'],
   ['/admin/data-health', 'Data Health'],
+  ['/admin/orotitan', 'Pilotage V3.1'],
 ] as const;
 
 export function AdminNav() {
