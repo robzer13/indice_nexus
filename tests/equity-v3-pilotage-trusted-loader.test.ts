@@ -184,7 +184,8 @@ test("same-length byte tampering fails SHA-256", async () => {
 test("wrong immutable URI fails before handoff", async () => {
   const f = fixture(true);
   f.artifacts[0].storage_uri = "github://forged/repo@commit/path";
-  await fails(f, "IMMUTABLE_URI_MISMATCH");
+  // Manifest and Registry immutable locators disagree before the byte check.
+  await fails(f, "OUTPUT_ARTIFACT_MANIFEST_MISMATCH");
 });
 test("missing authoritative output fails exact bundle count", async () => {
   const f = fixture(true);
