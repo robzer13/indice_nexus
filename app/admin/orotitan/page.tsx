@@ -124,7 +124,7 @@ export default async function OroTitanPilotagePage({
             </li>)}
           </ul>
         </div> : <p className="text-sm text-slate-400">
-          Aucun blocage détaillé dans ce champ du Registry. Cela ne prouve pas l'admissibilité du run.
+          Aucun blocage détaillé dans ce champ du Registry. Cela ne prouve pas l’admissibilité du run.
         </p>}
       </section>}
 
