@@ -103,6 +103,33 @@ select (payload->>'snapshot_id')::uuid,run_id,dossier_id,issuer_id,security_id,
  'FCFF', 'D7_TEST_ONLY_APPROVED'
 from d7_sandbox.fixtures;
 
+-- Physical V3.1 schema-pair firewall must reject mixed V3.1/2.0.0 rows
+-- even when invoked by the superuser inside the disposable database.
+do $physical$
+declare
+ f record;
+ rejected boolean := false;
+begin
+ select * into f from d7_sandbox.fixtures where name='p1';
+ begin
+   insert into public.research_snapshots(
+     snapshot_id,dossier_id,issuer_id,security_id,report_id,execution_mode,
+     data_cutoff,calculation_date,report_version,method_version,
+     calculation_version,evidence_ledger_version,contract_version,schema_version,canonical_payload)
+   values(
+     '93000000-0000-4000-8000-000000000199',f.dossier_id,f.issuer_id,f.security_id,
+     'illegal-version-pair','ANALYZE','2026-09-18','2026-09-18',
+     'r3','m3','c3','e3','04_SCREENER_SCHEMA_V3_1','2.0.0',
+     jsonb_set(f.payload,'{snapshot_id}','"93000000-0000-4000-8000-000000000199"')
+   );
+ exception when check_violation then rejected := true;
+ end;
+ if not rejected then raise exception 'D7 mixed V3.1/2.0.0 physical schema pair was accepted'; end if;
+ if exists(select 1 from public.research_snapshots where snapshot_id='93000000-0000-4000-8000-000000000199')
+ then raise exception 'D7 physical schema firewall persisted an invalid row'; end if;
+end;
+$physical$;
+
 grant select on d7_sandbox.fixtures to service_role;
 
 -- Used only by this harness; unlike a client-supplied PASS, proofs are
@@ -141,6 +168,7 @@ declare
  bad_ev record;
  pointer uuid;
  before_count bigint;
+ rejected_v2 boolean;
  resp jsonb;
  foreign_issuer uuid;
 begin
@@ -204,6 +232,14 @@ begin
  perform d7_sandbox.expect_rejection('stale historical replay','23505',f.run_id,f.dossier_id,null,f.payload);
  pointer:=(select current_snapshot_id from public.research_dossiers where dossier_id=f.dossier_id);
  perform d7_sandbox.expect_rejection('foreign issuer/security FK','23503',bad.run_id,bad.dossier_id,pointer,bad.payload);
+ rejected_v2 := false;
+ begin
+   -- The V2 writer must not silently downgrade a V3.1 payload into V2.
+   perform public.persist_orotitan_research_snapshot_v2(
+     f3.dossier_id,pointer,f3.payload);
+ exception when check_violation then rejected_v2 := true;
+ end;
+ if not rejected_v2 then raise exception 'D7 V2 writer accepted hidden V3.1 overlay'; end if;
  if (select count(*) from public.research_snapshots)<>before_count+2 then raise exception 'D7 rejected cases inserted rows'; end if;
  if (select count(*) from public.research_snapshots where contract_version='04_SCREENER_SCHEMA_V3_1')<>2
  then raise exception 'D7 sandbox V3.1 row count incorrect'; end if;
