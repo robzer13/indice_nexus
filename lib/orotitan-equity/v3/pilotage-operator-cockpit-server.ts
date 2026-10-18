@@ -12,11 +12,11 @@ import {
 import { TrustedLoaderError } from "./pilotage-trusted-loader-v3-1";
 import {
   asOperatorDecision, asOperatorRun, safeVerifierReason,
-  type OperatorDecision, type OperatorRun, type RunSummary,
+  type OperatorDecision, type OperatorRun, type RunSummary, type OperatorStageObservation,
 } from "./pilotage-operator-view-v3-1";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-const LIMIT = 30;
+const LIMIT = 100;
 const PROJECT_REF = runtimeBootstrap.production_environment.project_ref;
 
 export type OperatorCockpitData = {
@@ -92,14 +92,30 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
   assertProductionUrl();
   const client = createServerSupabaseClient();
   const { data, error } = await client.from("orotitan_runs")
-    .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at")
+    .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at,process_version,pilotage_contract_version")
     .order("created_at", { ascending: false }).limit(LIMIT);
   if (error) {
     return { runs: [], selectedRunId, preview: null,
       previewState: "BLOCKED", blockerCode: "REGISTRY_LIST_QUERY_FAILED",
       publicationAuthorized: false, mutationPerformed: false };
   }
-  const runs = ((data ?? []) as RunSummary[]).map(asOperatorRun);
+  const registry = (data ?? []) as RunSummary[];
+  let stages: OperatorStageObservation[] = [];
+  if (registry.length > 0) {
+    const result = await client.from("orotitan_run_stages")
+      .select("run_id,stage_code,lifecycle_status,contract_status_code,handoff_gate_state,active_manifest_kind,stage_revision,blocker_summary")
+      .in("run_id", registry.map(x => x.run_id)).limit(LIMIT * 3);
+    if (result.error) {
+      return { runs: registry.map(row => asOperatorRun(row)), selectedRunId,
+        preview: null, previewState: "BLOCKED",
+        blockerCode: "REGISTRY_STAGES_QUERY_FAILED",
+        publicationAuthorized: false, mutationPerformed: false };
+    }
+    stages = (result.data ?? []) as OperatorStageObservation[];
+  }
+  const stageIndex = new Map(stages.map(st => [st.run_id + ":" + st.stage_code, st]));
+  const runs = registry.map(row => asOperatorRun(
+    row, stageIndex.get(row.run_id + ":" + row.current_stage) ?? null));
   if (!selectedRunId) {
     return { runs, selectedRunId: null, preview: null,
       previewState: "NOT_SELECTED", blockerCode: null,
@@ -111,6 +127,13 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
       port.getRun(selectedRunId), port.getStages(selectedRunId),
     ]);
     if (!run) throw new TrustedLoaderError("RUN_NOT_FOUND");
+    if (run.process_version !== "3.1" || run.pilotage_contract_version !== "3.1") {
+      throw new TrustedLoaderError("LEGACY_RUN_USE_VERSIONED_PILOTAGE");
+    }
+    if (run.run_status === "BLOCKED" || run.run_status === "PAUSED" ||
+      run.run_status === "CANCELLED") {
+      throw new TrustedLoaderError("RUN_NOT_EXECUTABLE_UPSTREAM");
+    }
     const current = stages.find(s => s.stage_code === run.current_stage);
     if (!current) throw new TrustedLoaderError("CURRENT_STAGE_MISSING");
     // Management API observation is independent of Registry and of the URL pin.
