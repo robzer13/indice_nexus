@@ -99,6 +99,8 @@ test("Research FINAL admits Fundamentals but no Valuation shortcut", () => {
   const value = planPilotageV31(snapshot("DEEP_DIVE"));
   assert.equal(value.outcome, "HANDOFF");
   assert.equal(value.phase, "FUNDAMENTALS");
+  assert.match(value.exactPrompt ?? "", /RESEARCH_SOURCE_MANIFEST/);
+  assert.match(value.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST_FINAL/);
 });
 test("wrong environment is a hard stop", () => {
   const s = snapshot();
@@ -191,6 +193,8 @@ test("Deep Dive FINAL admits Integration", () => {
   const d = planPilotageV31(snapshot("INTEGRATION"));
   assert.equal(d.outcome, "HANDOFF");
   assert.equal(d.phase, "INTEGRATION");
+  assert.match(d.exactPrompt ?? "", /DEEP_DIVE_REPORT/);
+  assert.match(d.exactPrompt ?? "", /DEEP_DIVE_STAGE_MANIFEST_FINAL/);
 });
 test("Deep Dive reopen invalidates dependent Integration", () => {
   const s = snapshot("INTEGRATION");
