@@ -156,6 +156,20 @@ export function verifyDeepDiveTypedLocks(input: {
       need(Object.keys(raw).length === fields.length &&
         fields.every(k => Object.prototype.hasOwnProperty.call(raw, k)),
         "VALUATION_DATE_INPUT_SHAPE_INVALID");
+      const booleans = ["hasNumericReferencePrice", "referencePriceStalenessResolved",
+        "denominatorBridgeResolved", "evBridgeRollforwardResolved", "marketCapShareCountResolved"];
+      need(booleans.every(k => typeof raw[k] === "boolean"), "VALUATION_DATE_BOOLEAN_FIELD_INVALID");
+      const dates = ["dataCutoff", "valuationDate", "timeOrigin",
+        "economicShareCountDate", "shareCountAsOfDate", "perShareOutputDate"];
+      need(dates.every(k => typeof raw[k] === "string" && /^\d{4}-\d{2}-\d{2}$/.test(raw[k] as string)),
+        "VALUATION_DATE_REQUIRED_DATE_INVALID");
+      const nullableDates = ["referencePriceDate", "evToEquityBridgeDate", "marketCapShareCountDate"];
+      need(nullableDates.every(k => raw[k] === null || (typeof raw[k] === "string" &&
+        /^\d{4}-\d{2}-\d{2}$/.test(raw[k] as string))), "VALUATION_DATE_OPTIONAL_DATE_INVALID");
+      need(["EXACT", "BOUNDED", "UNKNOWN"].includes(raw.economicShareCountRepresentation as string),
+        "VALUATION_DATE_REPRESENTATION_INVALID");
+      need(["FCFF", "FCFE", "OWNER_EARNINGS"].includes(raw.cashFlowBasis as string),
+        "VALUATION_DATE_CASH_FLOW_BASIS_INVALID");
       need(raw.dataCutoff === input.dataCutoff, "VALUATION_DATE_CUTOFF_MISMATCH");
       const date = resolveValuationDateAlignment(raw as unknown as ValuationDateAlignmentInput);
       result.observedDateAlignment = date.valuationAdmission && date.blockers.length === 0 ?
