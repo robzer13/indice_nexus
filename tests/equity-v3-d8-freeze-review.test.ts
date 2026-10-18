@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 
 const root = new URL("../", import.meta.url);
-const path = "docs/orotitan-equity/d8/OROTITAN_D8_REVIEW_BASELINE_V1_0.json";
+const path = "docs/orotitan-equity/d8/OROTITAN_D8_REVIEW_BASELINE_V1_1.json";
 const baseline = JSON.parse(readFileSync(new URL(path, root), "utf8")) as {
   manifest_version: string;
   repository: string;
@@ -31,7 +31,7 @@ function fileBytes(name: string): Buffer {
   return readFileSync(new URL(name, root));
 }
 test("D8 pins every reviewed source by its exact Git blob identity", () => {
-  assert.equal(baseline.manifest_version, "OROTITAN_D8_REVIEW_BASELINE_V1.0");
+  assert.equal(baseline.manifest_version, "OROTITAN_D8_REVIEW_BASELINE_V1.1");
   assert.equal(baseline.repository, "robzer13/indice_nexus");
   assert.equal(baseline.immutable_review_pins.length, 9);
   const unique = new Set<string>();
