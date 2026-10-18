@@ -20,6 +20,7 @@ import { verifyIntegrationCandidateD4 } from "./pilotage-integration-recompute-v
 import type { ValuationDateAlignmentInput } from "./valuation-date-alignment";
 import { verifyHistoricalPrecheckD5, verifyI2LineageD5,
   type D5Dossier, type D5SnapshotRow } from "./pilotage-evidence-history-v3-1";
+import { verifyD6ProposedProvenance } from "./pilotage-provenance-d6-v3-1";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -433,6 +434,25 @@ export async function loadTrustedPilotageSnapshot(input: {
       });
       check(lineage.fullPrecisionInputsMatch && !lineage.i2EndToEndPass &&
         !lineage.publicationAuthorized, "D5_UNVERIFIED_I2_GATE_ELEVATION");
+      // Proposed D6 per-input/source lineage is stricter than D5's
+      // full-precision envelope, but is NOT yet a frozen analytical authority.
+      const researchVerified = index.get("RESEARCH");
+      check(researchVerified?.state.manifest?.kind === "FINAL",
+        "D6_RESEARCH_FINAL_NOT_VERIFIED");
+      const sourceVerified = [...dd!.verifiedContents, ...researchVerified.verifiedContents];
+      const d6 = verifyD6ProposedProvenance({
+        fullPrecision: records[0],
+        sourceArtifacts: sourceVerified,
+        expectedRunId: run.run_id,
+        expectedDataCutoff: run.data_cutoff,
+        expectedStageRevision: dd!.state.revision,
+        expectedContractSetSha256: run.contract_set_sha256,
+        candidateCanonicalInput: checks.canonicalContractInput,
+      });
+      check(d6.exactSourceBindingsVerified && d6.proposedSchemaValidated &&
+        !d6.methodologyFreezeApproved && !d6.analyticalCertificationProven &&
+        !d6.i2Pass && !d6.i3bPass && !d6.publicationAuthorized,
+        "D6_UNVERIFIED_PUBLISHING_AUTHORITY_ELEVATION");
 
       // D5 pointer/history checks are read-only and repeated to detect races.
       // Any future writer must still execute SELECT FOR UPDATE + CAS in SQL.
