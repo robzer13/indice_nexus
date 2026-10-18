@@ -8,7 +8,8 @@ do $d7$
 begin
   -- The runner enforces PGHOST loopback. In containerized PostgreSQL the
   -- server-side listening address is frequently a bridge-network IP.
-  if current_database() !~ '^orotitan_d7_[0-9]+
+  if current_database() !~ '^orotitan_d7_[0-9]+$'
+     or session_user <> 'postgres' then
     raise exception 'D7_SANDBOX_ONLY: refusing non-fixture database/session';
   end if;
   if to_regprocedure('public.persist_orotitan_research_snapshot_v2(uuid,uuid,jsonb)') is null then
