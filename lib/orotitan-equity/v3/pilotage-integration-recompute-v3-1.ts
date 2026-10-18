@@ -9,7 +9,7 @@ import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import schemaJson from "../../../contracts/orotitan-equity/v3/04_SCREENER_SCHEMA_V3_1.json";
 import { computeCanonicalSnapshot, type CanonicalContractInput } from "../v1/contract";
-import { validateV2ResearchSnapshotForPersistence } from "../v2/research-snapshot-schema";
+import { validateV2ResearchSnapshotForPersistence } from "./pilotage-v2-bundled-validator";
 import type { VerifiedContent } from "./pilotage-typed-gates-v3-1";
 import { resolveValuationDateAlignment, type ValuationDateAlignmentInput } from "./valuation-date-alignment";
 
