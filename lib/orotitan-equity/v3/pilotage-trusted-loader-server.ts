@@ -3,6 +3,7 @@ import "server-only";
 import { requireAdminSession } from "../../auth/admin-session";
 import { createServerSupabaseClient } from "../../supabase/server";
 import { runtimeBootstrap, type RuntimeEnvironmentObservation } from "./runtime-bootstrap-v3-0-3";
+import type { D5Dossier, D5SnapshotRow } from "./pilotage-evidence-history-v3-1";
 import {
   loadTrustedPilotageDecision,
   type ArtifactRow, type IdentityRow, type RunRow, type StageRow,
@@ -115,6 +116,20 @@ export function createServerPilotageReadPort(client: DbClient): TrustedPilotageP
         .eq("issuer_id", issuerId).maybeSingle();
       if (error) throw new TrustedLoaderError("REGISTRY_ISSUER_QUERY_FAILED");
       return data as IdentityRow | null;
+    },
+    async getDossier(dossierId) {
+      const { data, error } = await client.from("research_dossiers")
+        .select("dossier_id,issuer_id,current_snapshot_id,active")
+        .eq("dossier_id", dossierId).maybeSingle();
+      if (error) throw new TrustedLoaderError("D5_DOSSIER_QUERY_FAILED");
+      return data as D5Dossier | null;
+    },
+    async getSnapshot(snapshotId) {
+      const { data, error } = await client.from("research_snapshots")
+        .select("snapshot_id,dossier_id,issuer_id,security_id,report_id,execution_mode,data_cutoff,calculation_date,report_version,method_version,calculation_version,evidence_ledger_version,contract_version,schema_version,canonical_payload")
+        .eq("snapshot_id", snapshotId).maybeSingle();
+      if (error) throw new TrustedLoaderError("D5_SNAPSHOT_QUERY_FAILED");
+      return data as D5SnapshotRow | null;
     },
     readImmutableBytes: fetchImmutableGithubBytes,
   };
