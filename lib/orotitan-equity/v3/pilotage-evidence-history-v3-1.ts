@@ -156,8 +156,17 @@ export function verifyHistoricalPrecheckD5(input: {
   const d = input.observed.dossier;
   requireTrue(d.dossier_id === input.dossierId && d.issuer_id === input.issuerId &&
     d.active === true, "D5_HISTORY_DOSSIER_IDENTITY_INVALID");
-  requireTrue(samePointer(d.current_snapshot_id, input.expectedBaselineId),
-    "D5_HISTORY_POINTER_CHANGED");
+  const existing = input.observed.existingCandidate;
+  // For a new candidate, the expected baseline must still be the current
+  // pointer. For an exact idempotent replay, the current pointer is already
+  // the candidate, as in the V1/V2 SQL writers.
+  if (existing === null) {
+    requireTrue(samePointer(d.current_snapshot_id, input.expectedBaselineId),
+      "D5_HISTORY_POINTER_CHANGED");
+  } else {
+    requireTrue(d.current_snapshot_id === snapshotId,
+      "D5_HISTORY_IDEMPOTENT_REPLAY_POINTER_MISMATCH");
+  }
   const baseline = input.observed.baseline;
   if (input.expectedBaselineId !== null) {
     requireTrue(baseline !== null && baseline.snapshot_id === input.expectedBaselineId &&
@@ -166,7 +175,6 @@ export function verifyHistoricalPrecheckD5(input: {
     requireTrue(baseline.security_id === input.securityId,
       "D5_HISTORY_BASELINE_SECURITY_MISMATCH");
   } else requireTrue(baseline === null, "D5_HISTORY_UNEXPECTED_BASELINE");
-  const existing = input.observed.existingCandidate;
   if (existing === null) {
     requireTrue(snapshotId !== input.expectedBaselineId,
       "D5_HISTORY_CANDIDATE_EQUALS_BASELINE_WITHOUT_ROW");
