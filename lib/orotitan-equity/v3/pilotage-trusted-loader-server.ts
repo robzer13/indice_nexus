@@ -15,7 +15,7 @@ const MAX_BYTES = 35 * 1024 * 1024;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const REPO = /^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/;
 
-function assertProductionUrl(): void {
+export function assertProductionUrl(): void {
   const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
   if (!value) throw new TrustedLoaderError("SUPABASE_URL_MISSING");
   let url: URL;
