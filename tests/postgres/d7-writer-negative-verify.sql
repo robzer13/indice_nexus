@@ -24,7 +24,7 @@ begin
     or has_table_privilege('service_role','public.research_snapshots','UPDATE')
     or has_table_privilege('service_role','public.research_snapshots','DELETE')
  then raise exception 'D7_API_ROLE_CAN_BYPASS_WRITER'; end if;
- if not (select p.prosecdef and p.proconfig @> array['search_path=pg_catalog, public, d7_sandbox']::text[]
+ if not (select p.prosecdef and p.proconfig @> array['search_path=pg_catalog, d7_sandbox']::text[]
   from pg_proc p where p.oid='d7_sandbox.persist_v31_candidate(uuid,uuid,uuid,jsonb)'::regprocedure)
  then raise exception 'D7_FUNCTION_SEARCH_PATH_NOT_FIXED'; end if;
 end $$;
