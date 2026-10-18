@@ -137,6 +137,8 @@ function history(f = fixture(), expectedBaselineId: string | null = ids.baseline
       existingCandidate: f.existingCandidate },
     candidate: f.payload, runId: ids.run, dossierId: ids.dossier,
     issuerId: ids.issuer, securityId: ids.security, expectedBaselineId,
+    expectedWriterContractVersion: "04_SCREENER_SCHEMA_V2",
+    expectedWriterSchemaVersion: "2.0.0",
   });
 }
 test("historical first-write precheck observes exact baseline but never CAS proof", () => {
@@ -186,4 +188,23 @@ test("first-ever dossier with null pointer can be prechecked without inventing a
   f.baseline = null as unknown as D5SnapshotRow;
   const result = history(f, null);
   assert.equal(result.mode, "NEW_SNAPSHOT_PRECHECK");
+});
+
+test("idempotent replay requires pinned writer version authority", () => {
+  const f = fixture();
+  f.existingCandidate = snapshotRow(ids.candidate, f.payload);
+  f.dossier.current_snapshot_id = ids.candidate;
+  fails(() => verifyHistoricalPrecheckD5({
+    observed: { dossier: f.dossier, baseline: f.baseline, existingCandidate: f.existingCandidate },
+    candidate: f.payload, runId: ids.run, dossierId: ids.dossier,
+    issuerId: ids.issuer, securityId: ids.security,
+    expectedBaselineId: ids.baseline,
+  }), "D5_HISTORY_WRITER_VERSION_NOT_AUTHORITATIVE");
+});
+test("idempotent replay rejects incorrect physical schema pair", () => {
+  const f = fixture();
+  f.existingCandidate = snapshotRow(ids.candidate, f.payload);
+  f.existingCandidate.schema_version = "3.1.0";
+  f.dossier.current_snapshot_id = ids.candidate;
+  fails(() => history(f), "D5_HISTORY_WRITER_VERSION_CONFLICT");
 });
