@@ -10,7 +10,7 @@ D5 resolves the current Valuation Lock's full_precision_inputs_artifact referenc
 
 ## 2. Historical state checks
 
-The D2 port is extended with SELECT-only reads from research_dossiers and research_snapshots. D5 verifies current dossier/issuer/security identity, baseline snapshot ownership, and for a new candidate that the current pointer equals the run baseline and the requested snapshot ID is unused. For an exact retry, the existing candidate must be the current pointer and its identity, versions, metadata and canonical JSON payload must match. Dossier and snapshots are re-read after checking for changes.
+The D2 port is extended with SELECT-only reads from research_dossiers and research_snapshots. D5 verifies current dossier/issuer/security identity, baseline snapshot ownership, and for a new candidate that the current pointer equals the run baseline and the requested snapshot ID is unused. For an exact retry, the existing candidate must be the current pointer and its identity, versions, metadata and canonical JSON payload must match. The expected physical writer contract_version / schema_version pair must be supplied by an independently approved authority; without it, replay precheck is refused. D5 does not guess a V3.1 writer version. Dossier and snapshots are re-read after checking for changes.
 
 **Critical limitation:** read/verify/re-read cannot replace an atomic SELECT FOR UPDATE plus compare-and-swap in the authoritative SQL writer. D5 always returns transactionCasValidated=false, historyTransitionPass=false and publicationAuthorized=false. No V3.1 writer deployment or API route is assumed.
 
