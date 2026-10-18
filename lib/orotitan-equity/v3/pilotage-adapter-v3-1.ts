@@ -217,8 +217,9 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
       need(r.status === "ACTIVE", "RUN_STATUS_STAGE_MISMATCH");
       const research = requirePrevious(s, current, "RESEARCH");
       requireFinal(s, research, ["READY_FOR_DEEP_DIVE", "FINAL_OUTPUTS_VERIFIED"], [
-        "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER",
-        "RESEARCH_GAP_REGISTER", "INPUT_SUFFICIENCY_ASSESSMENT", "CLASSIFICATION_INPUT_RECORD",
+        "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
+        "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
+        "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
       ]);
       need(current.lifecycle === "NOT_STARTED" || current.lifecycle === "IN_PROGRESS", "DEEP_DIVE_NOT_EXECUTABLE");
       if (current.lifecycle === "NOT_STARTED") {
@@ -245,7 +246,10 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
     }
     const dd = requirePrevious(s, current, "DEEP_DIVE");
     requireFinal(s, dd, ["READY_FOR_INTEGRATION", "FINAL_OUTPUTS_VERIFIED"], [
-      "FUNDAMENTALS_LOCK", "VALUATION_LOCK", "CERTIFICATION_ARTIFACT", "DEEP_DIVE_REPORT",
+      "DEEP_DIVE_REPORT", "EVIDENCE_LEDGER", "CONFLICT_LEDGER", "CALCULATION_LEDGER",
+      "MATERIAL_ASSUMPTION_REGISTER", "ANALYTICAL_BLOCK_OUTPUTS", "CROSS_BLOCK_RECONCILIATION_RECORD",
+      "RED_TEAM_PREMORTEM_RECORD", "VALUATION_ARTIFACT", "CERTIFICATION_ARTIFACT",
+      "OROTITAN_TERMINAL_GATE_ARTIFACT", "READINESS_NEXT_ACTION_ARTIFACT",
     ]);
     if (current.lifecycle === "NOT_STARTED" || current.lifecycle === "IN_PROGRESS") {
       need(r.status === "ACTIVE", "RUN_STATUS_STAGE_MISMATCH");
