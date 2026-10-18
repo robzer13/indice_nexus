@@ -167,6 +167,20 @@ begin
     raise exception 'D7_UNKNOWN_DENOMINATOR_BLOCKED' using errcode='23514';
   end if;
 
+  -- Distinguish an immutable snapshot-ID conflict from an untrusted proof.
+  -- Even an unapproved replay cannot silently reuse a different payload.
+  select * into previous from public.research_snapshots where snapshot_id=id;
+  if found and (
+       previous.dossier_id is distinct from p_dossier_id
+       or previous.issuer_id is distinct from issuer
+       or previous.security_id is distinct from security
+       or previous.contract_version is distinct from '04_SCREENER_SCHEMA_V3_1'
+       or previous.schema_version is distinct from '3.1.0'
+       or previous.canonical_payload is distinct from p_canonical_payload
+     ) then
+    raise exception 'D7_SNAPSHOT_ID_CONFLICT' using errcode='23505';
+  end if;
+
   -- No self-asserted PASS is consumed. The sandbox authorization is held in a
   -- superuser-managed fixture table; there is no API role INSERT privilege.
   digest_sha256 := encode(public.digest(convert_to(p_canonical_payload::text,'UTF8'),'sha256'),'hex');
@@ -180,8 +194,7 @@ begin
     raise exception 'D7_TRUSTED_ADMISSION_MISSING_OR_STALE' using errcode='23514';
   end if;
 
-  select * into previous from public.research_snapshots where snapshot_id=id;
-  if found then
+  if previous.snapshot_id is not null then
     if previous.dossier_id=p_dossier_id and previous.issuer_id=issuer
        and previous.security_id=security and previous.contract_version='04_SCREENER_SCHEMA_V3_1'
        and previous.schema_version='3.1.0' and previous.canonical_payload=p_canonical_payload
