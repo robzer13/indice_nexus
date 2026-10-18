@@ -69,7 +69,7 @@ create function d7_sandbox.persist_v31_candidate(
   p_canonical_payload jsonb
 ) returns jsonb
 language plpgsql security definer
-set search_path = pg_catalog, public, d7_sandbox
+set search_path = pg_catalog, d7_sandbox
 as $function$
 declare
   d record;
