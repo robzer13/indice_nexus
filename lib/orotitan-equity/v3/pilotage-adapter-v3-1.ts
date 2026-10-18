@@ -146,7 +146,7 @@ function validate(s: PilotageSnapshot): StageState {
   need(UUID.test(r.runId) && UUID.test(r.issuerId) && UUID.test(r.securityId) &&
     UUID.test(r.dossierId), "RUN_IDENTITY_INVALID");
   need(r.company.trim().length > 0 && r.companyCommandName.trim().length > 0 &&
-    /^[A-Za-z0-9 .&'()-]+$/.test(r.companyCommandName), "COMPANY_COMMAND_INVALID");
+    r.companyCommandName.length <= 256 && !/[\x00-\x1f\x7f]/.test(r.companyCommandName), "COMPANY_COMMAND_INVALID");
   need(/^\d{4}-\d{2}-\d{2}$/.test(r.dataCutoff), "DATA_CUTOFF_INVALID");
   need(r.processVersion === pins.contract_pins.process.version &&
     r.pilotageVersion === pins.contract_pins.pilotage.version &&
@@ -159,7 +159,10 @@ function validate(s: PilotageSnapshot): StageState {
 }
 function prompt(s: PilotageSnapshot, phase: Phase, x: StageState): string {
   const p = STAGE_PINS[x.code];
-  const refs = x.artifacts.filter(a => artifactValid(s, x, a)).map(a => ({
+  // Handoffs consume the PREDECESSOR FINAL proof set, not the empty next stage.
+  const evidenceStage = phase === "FUNDAMENTALS" ? s.stages.RESEARCH ?? x :
+    phase === "INTEGRATION" ? s.stages.DEEP_DIVE ?? x : x;
+  const refs = evidenceStage.artifacts.filter(a => artifactValid(s, evidenceStage, a)).map(a => ({
     artifact_id: a.artifactId, version: a.version, sha256: a.sha256, artifact_type: a.artifactType,
   }));
   return [
@@ -190,7 +193,7 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
   const sv = x?.stateVersion ?? 0;
   const fp = createHash("sha256").update([
     "OROTITAN_PILOTAGE_V3_1_READONLY", r.runId, r.currentStage,
-    String(r.stateVersion), String(sv), x?.manifest?.sha256 ?? "NULL",
+    String(r.stateVersion), String(sv), String(x?.revision ?? 0), x?.manifest?.sha256 ?? "NULL",
   ].join("\n"), "utf8").digest("hex");
   const result = (outcome: PilotageDecision["outcome"], phase: Phase | null, reasonCode: string, exactPrompt: string | null): PilotageDecision =>
     ({ outcome, phase, reasonCode, exactPrompt, expectedRunStateVersion: r.stateVersion,
