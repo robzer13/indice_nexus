@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { loadAdminPilotageCockpit } from "@/lib/orotitan-equity/v3/pilotage-operator-cockpit-server";
+import { filterOperatorRuns, operatorTriageTotals, type OperatorFilter } from "@/lib/orotitan-equity/v3/pilotage-operator-view-v3-1";
 
 export const metadata: Metadata = { title: "Pilotage OroTitan V3.1 — diagnostic" };
 export const dynamic = "force-dynamic";
@@ -15,6 +16,9 @@ const explanations: Record<string, string> = {
   ENVIRONMENT_OBSERVATION_HTTP_REJECTED: "Le jeton Management API ne permet pas de confirmer ce projet.",
   ENVIRONMENT_OBSERVATION_NOT_ADMITTED: "L’état, le nom ou la région du projet ne correspondent pas aux autorités épinglées.",
   RUN_NOT_FOUND: "Run absent du Registry.",
+  LEGACY_RUN_USE_VERSIONED_PILOTAGE: "Ce run utilise une méthodologie historique. Consultez les données enregistrées ; le vérificateur V3.1 ne s’applique pas à sa version.",
+  RUN_NOT_EXECUTABLE_UPSTREAM: "Le Registry signale un run bloqué, en pause ou annulé. Corrigez d’abord ses blocages enregistrés avant toute reprise.",
+  REGISTRY_STAGES_QUERY_FAILED: "Impossible de consulter les étapes du Registry. Ne pas interpréter l’absence de blocages comme un feu vert.",
   CURRENT_STAGE_MISSING: "L’étape courante déclarée par le run est absente du Registry.",
   D5_FULL_PRECISION_INPUT_NOT_VERIFIED: "Artefact full-precision requis non vérifié.",
   D6_PROPOSED_SCHEMA_INVALID: "Format de provenance D6 invalide ou non conforme.",
@@ -36,9 +40,13 @@ export default async function OroTitanPilotagePage({
   if (!(await isAdminAuthenticated())) redirect("/admin");
   const query = await searchParams;
   const selected = typeof query.run === "string" ? query.run : null;
+  const view: OperatorFilter = query.view === "all" || query.view === "blocked" ? query.view : "v31";
   let data: Awaited<ReturnType<typeof loadAdminPilotageCockpit>> | null = null;
   try { data = await loadAdminPilotageCockpit(selected); }
   catch { /* No internal exception details or secrets in the administrator UI. */ }
+  const totals = data ? operatorTriageTotals(data.runs) : null;
+  const displayed = data ? filterOperatorRuns(data.runs, view) : [];
+  const currentObservation = selected ? data?.runs.find(row => row.runId === selected) : null;
 
   return <main className="space-y-6">
     <header className="space-y-2">
@@ -75,6 +83,51 @@ export default async function OroTitanPilotagePage({
     {!data ? <section role="status" className="rounded-xl border border-rose-900 bg-rose-950/20 p-4 text-sm text-rose-200">
       Le diagnostic n’est pas disponible. Vérifier la configuration serveur et la connexion Registry.
     </section> : <>
+      {totals && <section aria-label="État de la file observée" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        {[
+          ["Runs observés", totals.observed],
+          ["En cours", totals.active],
+          ["Bloqués", totals.blocked],
+          ["V3.1 à traiter", totals.v31Active + totals.v31Blocked],
+        ].map(([label, value]) => <div key={label} className="rounded-lg border border-slate-800 bg-slate-900/65 p-4">
+          <p className="text-xs text-slate-400">{label}</p>
+          <p className="mt-1 text-2xl font-semibold text-white">{value}</p>
+        </div>)}
+        <p className="col-span-full text-xs text-slate-500">
+          {totals.v31} run(s) V3.1, dont {totals.v31Active} actif(s) et {totals.v31Blocked} bloqué(s).
+          Statuts observés, sans preuve cryptographique. Fenêtre limitée aux 100 derniers runs.
+        </p>
+      </section>}
+
+      {currentObservation && <section className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/70 p-5">
+        <div><p className="text-xs uppercase tracking-wider text-slate-400">État enregistré — non vérifié par D2–D8</p>
+          <h2 className="mt-1 text-lg font-semibold text-white">
+            Run {currentObservation.processVersion} · {currentObservation.stage} · {currentObservation.status}
+          </h2>
+        </div>
+        <p className="text-xs text-slate-400">
+          Étape : {currentObservation.stageLifecycle} · Handoff : {currentObservation.handoffGateState}
+          · Manifeste : {currentObservation.activeManifestKind ?? "aucun"}
+        </p>
+        {currentObservation.contractStatusCode && <p className="break-all font-mono text-xs text-amber-200">
+          Code Registry : {currentObservation.contractStatusCode}
+        </p>}
+        {currentObservation.blockers.length > 0 ? <div>
+          <h3 className="font-semibold text-amber-100">Blocages et résolutions enregistrés</h3>
+          <ul className="mt-3 space-y-3">
+            {currentObservation.blockers.map((item, i) => <li key={i} className="rounded-lg border border-amber-900/50 bg-amber-950/10 p-3 text-sm text-slate-200">
+              {item.code && <p className="mb-1 font-mono text-xs text-amber-300">{item.code}</p>}
+              <p className="break-words">{item.text}</p>
+              {item.resolution && <p className="mt-2 break-words text-cyan-200">
+                Résolution demandée : {item.resolution}
+              </p>}
+            </li>)}
+          </ul>
+        </div> : <p className="text-sm text-slate-400">
+          Aucun blocage détaillé dans ce champ du Registry. Cela ne prouve pas l'admissibilité du run.
+        </p>}
+      </section>}
+
       {data.previewState === "BLOCKED" ? <section role="status" className="rounded-xl border border-amber-800 bg-amber-950/20 p-5">
         <h2 className="font-semibold text-amber-100">Vérification bloquée — aucune admission</h2>
         <p className="mt-2 font-mono text-sm text-amber-200">{data.blockerCode}</p>
@@ -107,21 +160,41 @@ export default async function OroTitanPilotagePage({
       </section>}
 
       <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-        <h2 className="font-semibold text-white">30 derniers runs du Registry</h2>
-        <p className="mt-1 text-xs text-slate-500">Observation uniquement · sélectionner un run pour vérifier les preuves.</p>
-        {data.runs.length === 0 ? <p className="mt-4 text-sm text-slate-400">Aucun run trouvé dans la fenêtre consultée.</p> :
-          <div className="mt-4 space-y-2">
-            {data.runs.map(run => <Link key={run.runId}
-              href={"/admin/orotitan?run=" + encodeURIComponent(run.runId)}
-              className={"block rounded-lg border p-3 text-sm transition hover:border-cyan-700 " +
+        <h2 className="font-semibold text-white">File de traitement et historique du Registry</h2>
+        <p className="mt-1 text-xs text-slate-500">
+          Observation uniquement · les versions historiques ne sont pas évaluées par le vérificateur V3.1.
+        </p>
+        <nav aria-label="Filtrer les runs" className="mt-4 flex flex-wrap gap-2">
+          {[
+            ["v31", "V3.1 à traiter"],
+            ["blocked", "Tous les blocages"],
+            ["all", "Toutes les versions"],
+          ].map(([filter,label]) => <Link key={filter} href={"/admin/orotitan?view=" + filter}
+            className={"rounded-lg border px-3 py-2 text-sm " +
+              (view === filter ? "border-cyan-700 bg-slate-800 text-white" :
+              "border-slate-700 text-slate-300 hover:border-cyan-800")}>{label}</Link>)}
+        </nav>
+        {displayed.length === 0 ? <p className="mt-4 text-sm text-slate-400">
+          Aucun run dans ce filtre. Vous pouvez consulter les autres versions.
+        </p> :
+          <div className="mt-4 space-y-3">
+            {displayed.map(run => <Link key={run.runId}
+              href={"/admin/orotitan?run=" + encodeURIComponent(run.runId) + "&view=" + view}
+              className={"block rounded-lg border p-4 text-sm transition hover:border-cyan-700 " +
                 (run.runId === data.selectedRunId ? "border-cyan-800 bg-slate-800" : "border-slate-800 bg-slate-950/40")}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <span className="break-all font-mono text-xs text-cyan-200">{run.runId}</span>
-                <span className="font-medium text-slate-200">{run.status}</span>
+                <span className="font-medium text-slate-200">V{run.processVersion} · {run.status}</span>
               </div>
-              <p className="mt-1 text-xs text-slate-400">
-                {run.stage} · {run.mode} · cutoff {run.cutoff} · état #{run.stateVersion}
+              <p className="mt-2 text-xs text-slate-400">
+                {run.stage} / {run.stageLifecycle} · {run.mode} · cutoff {run.cutoff} · état #{run.stateVersion}
               </p>
+              {run.contractStatusCode && <p className="mt-2 break-all font-mono text-xs text-amber-200">
+                {run.contractStatusCode}
+              </p>}
+              {run.blockers.length > 0 && <p className="mt-2 line-clamp-2 text-xs text-amber-100">
+                {run.blockers.length} blocage(s) documenté(s) · {run.blockers[0].text}
+              </p>}
             </Link>)}
           </div>}
       </section>
