@@ -142,6 +142,9 @@ export function verifyHistoricalPrecheckD5(input: {
   issuerId: string;
   securityId: string;
   expectedBaselineId: string | null;
+  /** Must come from an independently approved physical writer authority. */
+  expectedWriterContractVersion?: string | null;
+  expectedWriterSchemaVersion?: string | null;
 }): D5HistoryResult {
   requireTrue(UUID.test(input.runId) && UUID.test(input.dossierId) &&
     UUID.test(input.issuerId) && UUID.test(input.securityId) &&
@@ -191,6 +194,14 @@ export function verifyHistoricalPrecheckD5(input: {
   }
   requireTrue(existing.snapshot_id === snapshotId,
     "D5_HISTORY_RETURNED_CANDIDATE_ID_MISMATCH");
+  requireTrue(typeof input.expectedWriterContractVersion === "string" &&
+    input.expectedWriterContractVersion.length > 0 &&
+    typeof input.expectedWriterSchemaVersion === "string" &&
+    input.expectedWriterSchemaVersion.length > 0,
+    "D5_HISTORY_WRITER_VERSION_NOT_AUTHORITATIVE");
+  requireTrue(existing.contract_version === input.expectedWriterContractVersion &&
+    existing.schema_version === input.expectedWriterSchemaVersion,
+    "D5_HISTORY_WRITER_VERSION_CONFLICT");
   // The frozen V1/V2 I3-B writers reject any snapshot_id reuse with changed
   // payload, identity, version or pointer state, even for the same dossier.
   requireTrue(existing.dossier_id === input.dossierId &&
