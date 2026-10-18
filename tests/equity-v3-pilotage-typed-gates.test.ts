@@ -205,3 +205,31 @@ test("I2 and I3-B PASS reports are not independent validation", () => {
   assert.equal(x.i2Recomputed, false);
   assert.equal(x.i3bComposedValidated, false);
 });
+
+test("string truthy boolean cannot spoof the V3.1 timing resolver", () => {
+  const f = fixture(true);
+  const raw = read(f.timing!);
+  const time = raw.valuation_date_alignment as Record<string, unknown>;
+  time.denominatorBridgeResolved = "true";
+  overwrite(f.timing!, raw);
+  fail(f.evaluate, "VALUATION_DATE_BOOLEAN_FIELD_INVALID");
+});
+test("a missing timing field cannot be treated as an admitted date gate", () => {
+  const f = fixture(true);
+  const raw = read(f.timing!);
+  const time = raw.valuation_date_alignment as Record<string, unknown>;
+  delete time.shareCountAsOfDate;
+  overwrite(f.timing!, raw);
+  fail(f.evaluate, "VALUATION_DATE_INPUT_SHAPE_INVALID");
+});
+test("a false temporal bridge never gives Certification or I2 authority", () => {
+  const f = fixture(true);
+  const raw = read(f.timing!);
+  const time = raw.valuation_date_alignment as Record<string, unknown>;
+  time.evBridgeRollforwardResolved = false;
+  overwrite(f.timing!, raw);
+  const g = f.evaluate();
+  assert.equal(g.observedDateAlignment, "BLOCKED");
+  assert.equal(g.gates.READY_FOR_CERTIFICATION, undefined);
+  assert.equal(g.gates.I2_PASS, undefined);
+});
