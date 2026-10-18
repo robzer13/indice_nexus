@@ -14,6 +14,8 @@ import {
 import { activeContractPinPack, assertProductionEnvironment, assertRuntimeBootstrapIntegrity,
   type RuntimeEnvironmentObservation } from "./runtime-bootstrap-v3-0-3";
 import { validateStageManifest, type StageManifestValidationContext } from "../v1/stage-manifest";
+import { verifyDeepDiveTypedLocks, assessIntegrationReportsReadOnly,
+  type VerifiedContent } from "./pilotage-typed-gates-v3-1";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -198,7 +200,12 @@ function locateManifestRow(stage: StageRow, rows: ArtifactRow[]): ArtifactRow | 
   return matches[0];
 }
 
-type VerifiedStage = { state: StageState; manifest: Record<string, unknown> | null; row: StageRow };
+type VerifiedStage = {
+  state: StageState;
+  manifest: Record<string, unknown> | null;
+  row: StageRow;
+  verifiedContents: VerifiedContent[];
+};
 
 async function verifyStage(
   port: TrustedPilotagePort, run: RunRow, row: StageRow, artifacts: ArtifactRow[],
@@ -217,7 +224,7 @@ async function verifyStage(
   if (!manifestRow) {
     check(row.lifecycle_status === "NOT_STARTED" || row.lifecycle_status === "IN_PROGRESS" ||
       row.lifecycle_status === "BLOCKED" || row.lifecycle_status === "PAUSED", "COMPLETE_WITHOUT_FINAL_MANIFEST");
-    return { state, manifest: null, row };
+    return { state, manifest: null, row, verifiedContents: [] };
   }
   const kind = row.active_manifest_kind!;
   const [authorityClass, authorityState] = expectedAuthority(kind);
@@ -253,12 +260,16 @@ async function verifyStage(
     expectedByKey.set(k, value);
   }
   const verified: ArtifactProof[] = [];
+  const verifiedContents: VerifiedContent[] = [];
   for (const artifact of registrations) {
     const reference = expectedByKey.get(key(artifact));
     check(matchingOutput(reference, artifact), "OUTPUT_ARTIFACT_MANIFEST_MISMATCH");
     check(artifact.authority_class === authorityClass &&
       artifact.authority_state === authorityState, "OUTPUT_ARTIFACT_AUTHORITY_MISMATCH");
-    verified.push(bytesProof(artifact, await port.readImmutableBytes(artifact)));
+    const bytes = await port.readImmutableBytes(artifact);
+    const proof = bytesProof(artifact, bytes);
+    verified.push(proof);
+    verifiedContents.push({ proof, bytes, mediaType: artifact.media_type });
   }
   const m: ManifestProof = {
     ...mp, kind, stageRevision: row.stage_revision, gatesVerifiedAgainstBytes: true,
@@ -276,7 +287,7 @@ async function verifyStage(
   // CHECKPOINT phase gates and Integration I2/I3-B PASS are deliberately NOT
   // inferred from the existence of output files. They require dedicated
   // authoritative validators of the actual typed artifact content.
-  return { state, manifest: json, row };
+  return { state, manifest: json, row, verifiedContents };
 }
 
 function validateParentProof(previous: VerifiedStage, current: VerifiedStage): void {
@@ -344,6 +355,26 @@ export async function loadTrustedPilotageSnapshot(input: {
   check(issuer !== null && issuer.issuer_id === run.issuer_id, "ISSUER_IDENTITY_NOT_FOUND");
   const verified = await Promise.all(stages.map(st => verifyStage(input.port, run, st, artifacts)));
   const index = new Map(verified.map(v => [v.state.code, v]));
+  const dd = index.get("DEEP_DIVE");
+  if (dd?.manifest && dd.state.manifest) {
+    const research = index.get("RESEARCH");
+    check(research?.state.manifest?.kind === "FINAL", "TYPED_LOCK_RESEARCH_FINAL_MISSING");
+    const typed = verifyDeepDiveTypedLocks({
+      runId: run.run_id, dataCutoff: run.data_cutoff,
+      stageRevision: dd.state.revision,
+      manifestKind: dd.state.manifest.kind,
+      researchFinalManifest: research.state.manifest,
+      currentOutputs: dd.verifiedContents,
+      researchOutputs: research.verifiedContents,
+    });
+    dd.state.gates = { ...dd.state.gates, ...typed.gates };
+  }
+  if (run.current_stage === "INTEGRATION") {
+    // Presence or a self-reported PASS in reports is never I2/I3-B proof.
+    const noReportElevation = assessIntegrationReportsReadOnly();
+    check(noReportElevation.i2Recomputed === false &&
+      noReportElevation.i3bComposedValidated === false, "UNVERIFIED_I2_I3B_ELEVATION");
+  }
   const stageStates: PilotageSnapshot["stages"] = {};
   for (const v of verified) stageStates[v.state.code] = v.state;
   if (run.current_stage === "DEEP_DIVE") {
