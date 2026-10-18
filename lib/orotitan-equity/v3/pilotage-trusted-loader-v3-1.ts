@@ -21,6 +21,8 @@ import type { ValuationDateAlignmentInput } from "./valuation-date-alignment";
 import { verifyHistoricalPrecheckD5, verifyI2LineageD5,
   type D5Dossier, type D5SnapshotRow } from "./pilotage-evidence-history-v3-1";
 import { verifyD6ProposedProvenance } from "./pilotage-provenance-d6-v3-1";
+import { projectV31CheckpointForSchema, CheckpointCompatError,
+  type VerifiedCheckpointParent } from "./pilotage-checkpoint-compat-v3-1";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -246,7 +248,57 @@ async function verifyStage(
     json.manifest_kind === kind && json.stage === row.stage_code &&
     json.run_id === row.run_id, "MANIFEST_IDENTITY_MISMATCH");
   check(isDeepStrictEqual(json.contract_pins, run.contract_pins), "MANIFEST_CONTRACT_PINS_MISMATCH");
-  const schema = validateStageManifest(schemaCompatibleManifest(json), expectedStageContext(run, row));
+  // Only sealed CHECKPOINTs may use the historical V3.1 shape projection.
+  // Parent content is independently verified from immutable Git bytes before
+  // we build a schema-only reference; no hash or evidence is invented.
+  let validationView = schemaCompatibleManifest(json);
+  if (kind === "CHECKPOINT" && run.process_version === "3.1" &&
+      run.pilotage_contract_version === "3.1") {
+    const parentRefs = json.parent_manifests;
+    check(Array.isArray(parentRefs) && parentRefs.length <= 1,
+      "CHECKPOINT_PARENT_SHAPE_INVALID");
+    const parents: VerifiedCheckpointParent[] = [];
+    for (const parent of parentRefs) {
+      check(isObject(parent), "CHECKPOINT_PARENT_SHAPE_INVALID");
+      const parentId = typeof parent.artifact_id === "string" ? parent.artifact_id :
+        typeof parent.manifest_id === "string" ? parent.manifest_id : null;
+      const version = parent.version;
+      check(typeof parentId === "string" && UUID.test(parentId) &&
+        Number.isSafeInteger(version) && Number(version) > 0 &&
+        Number(version) < manifestRow.version,
+        "CHECKPOINT_PARENT_SHAPE_INVALID");
+      const matches = matching.filter(a => a.artifact_id === parentId &&
+        a.version === version && a.artifact_type === row.stage_code + "_STAGE_MANIFEST" &&
+        a.authority_class === "CHECKPOINT_STAGE_OUTPUT" &&
+        a.artifact_status === "SEALED");
+      check(matches.length === 1, "CHECKPOINT_PARENT_REFERENCE_UNVERIFIED");
+      const previous = matches[0];
+      const previousBytes = await port.readImmutableBytes(previous);
+      const previousProof = bytesProof(previous, previousBytes);
+      const previousJson = readJson(previousBytes);
+      check(previousJson.manifest_id === parentId &&
+        previousJson.manifest_kind === "CHECKPOINT" &&
+        previousJson.stage === row.stage_code &&
+        previousJson.run_id === run.run_id &&
+        previousJson.stage_revision === row.stage_revision,
+        "CHECKPOINT_PARENT_IDENTITY_INVALID");
+      parents.push({
+        artifactId: previousProof.artifactId, version: previousProof.version,
+        sha256: previousProof.sha256,
+        runId: previousProof.runId, stageCode: previousProof.stageCode,
+      });
+    }
+    try {
+      validationView = projectV31CheckpointForSchema({
+        manifest: validationView, run, stage: row,
+        activeManifest: manifestRow, verifiedParents: parents,
+      });
+    } catch (error) {
+      if (error instanceof CheckpointCompatError) throw new TrustedLoaderError(error.code);
+      throw error;
+    }
+  }
+  const schema = validateStageManifest(validationView, expectedStageContext(run, row));
   check(schema.ok, "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
   const handoff = json.handoff_gate;
   check(isObject(handoff) && handoff.name === GATE[row.stage_code] &&
