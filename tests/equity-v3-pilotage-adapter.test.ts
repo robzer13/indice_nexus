@@ -168,15 +168,22 @@ function fundamentals(): PilotageSnapshot {
   };
   return s;
 }
-test("Fundamentals checkpoint admits Valuation with exact gates and lock", () => {
-  assert.equal(planPilotageV31(fundamentals()).phase, "VALUATION");
+test("Fundamentals admits Valuation before valuation-only economic gates are known", () => {
   const s = fundamentals();
   s.stages.DEEP_DIVE!.gates.DENOMINATOR_ADMISSION_VALID = false;
-  blocked(s, "GATE_NOT_ADMITTED_DENOMINATOR_ADMISSION_VALID");
-});
-test("valuation date mismatch blocks Valuation", () => {
-  const s = fundamentals();
   s.stages.DEEP_DIVE!.gates.VALUATION_DATE_ALIGNMENT_VALID = false;
+  s.stages.DEEP_DIVE!.gates.DCF_BASIS_ADMITTED = false;
+  s.stages.DEEP_DIVE!.gates.EV_BRIDGE_GOVERNED = false;
+  assert.equal(planPilotageV31(s).phase, "VALUATION");
+  s.stages.DEEP_DIVE!.gates.FUNDAMENTAL_RED_TEAM_COMPLETE = false;
+  blocked(s, "GATE_NOT_ADMITTED_FUNDAMENTAL_RED_TEAM_COMPLETE");
+});
+test("valuation date mismatch blocks Certification, not Valuation entry", () => {
+  const s = fundamentals();
+  const dd = s.stages.DEEP_DIVE!;
+  dd.artifacts = [...dd.artifacts, artifact("DEEP_DIVE", "VALUATION_LOCK", 6)];
+  dd.gates.READY_FOR_CERTIFICATION = true;
+  dd.gates.VALUATION_DATE_ALIGNMENT_VALID = false;
   blocked(s, "GATE_NOT_ADMITTED_VALUATION_DATE_ALIGNMENT_VALID");
 });
 test("Valuation lock admits Certification only, never Integration", () => {
