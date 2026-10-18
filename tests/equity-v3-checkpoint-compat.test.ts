@@ -148,8 +148,15 @@ test("real-shaped V4 RESEARCH checkpoint is verified without handoff/publication
   assert.equal(result.publicationAuthorized,false);
   assert.equal(result.mutationPerformed,false);
   assert.equal(JSON.stringify(f.raw),rawBefore);
+  // The loader first applies its existing, separately pinned RAW_CANONICAL_V1
+  // locator projection. Mimic that *schema-only* step without mutating the raw.
+  const schemaInput = JSON.parse(JSON.stringify(f.raw)) as Record<string,unknown>;
+  for (const key of ["investment_policy","execution_patch"]) {
+    const pin=(schemaInput.contract_pins as Record<string,{locator:Record<string,unknown>}>)[key];
+    if (pin.locator.locator_format === "RAW_CANONICAL_V1") delete pin.locator.locator_format;
+  }
   const projected=projectV31CheckpointForSchema({
-    manifest:f.raw,run:f.run,stage:f.stage,activeManifest:f.rows[2],
+    manifest:schemaInput,run:f.run,stage:f.stage,activeManifest:f.rows[2],
     verifiedParents:[{artifactId:ids.manifest,version:3,sha256:f.rows[0].content_sha256,
       runId:ids.run,stageCode:"RESEARCH"}],
   });
