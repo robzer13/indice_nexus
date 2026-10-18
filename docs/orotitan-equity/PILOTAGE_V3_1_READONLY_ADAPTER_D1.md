@@ -31,7 +31,7 @@ In particular, the boolean bytesVerified and gatesVerifiedAgainstBytes fields ar
 | --- | --- | --- |
 | Research NOT_STARTED/IN_PROGRESS | Continue Research | BLOCKED |
 | Research FINAL verified; Deep Dive NOT_STARTED | Handoff Fundamentals | BLOCKED |
-| Deep Dive Fundamentals CHECKPOINT + Valuation admission + lock | Handoff Valuation | BLOCKED |
+| Deep Dive Fundamentals CHECKPOINT + verified Fundamentals Lock and Red Team | Handoff Valuation | BLOCKED |
 | Deep Dive Valuation CHECKPOINT + new-run Valuation Lock | Handoff Certification | BLOCKED |
 | Deep Dive FINAL verified; Integration NOT_STARTED | Handoff Integration | BLOCKED |
 | Integration FINAL + exact candidate + I2 PASS + I3-B PASS | Prompt GO PUBLISH company only | BLOCKED |
