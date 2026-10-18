@@ -7,16 +7,13 @@
  */
 import Ajv2020 from "ajv/dist/2020";
 import addFormats from "ajv-formats";
-import { readFileSync } from "node:fs";
+import schemaJson from "../../../contracts/orotitan-equity/v3/04_SCREENER_SCHEMA_V3_1.json";
 import { computeCanonicalSnapshot, type CanonicalContractInput } from "../v1/contract";
 import { validateV2ResearchSnapshotForPersistence } from "../v2/research-snapshot-schema";
 import type { VerifiedContent } from "./pilotage-typed-gates-v3-1";
 import { resolveValuationDateAlignment, type ValuationDateAlignmentInput } from "./valuation-date-alignment";
 
-const schema = JSON.parse(readFileSync(
-  new URL("../../../contracts/orotitan-equity/v3/04_SCREENER_SCHEMA_V3_1.json", import.meta.url),
-  "utf8",
-)) as Record<string, unknown>;
+const schema = schemaJson as Record<string, unknown>;
 const ajv = new Ajv2020({ strict: false, allErrors: true });
 addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateV31 = ajv.compile(schema);
