@@ -1,7 +1,6 @@
 import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
-import schemaJson from "../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V2.json";
-import v1CompatJson from "../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.10.json";
+import { readFileSync } from "node:fs";
 import {
   validateResearchSnapshotForPersistenceAgainstSchema,
   type ResearchSnapshot,
@@ -19,12 +18,16 @@ export type ValidatedV2ResearchSnapshot = {
   canonicalContract: Record<string, unknown>;
 };
 
-const schema = schemaJson as JsonObject;
+const schema = JSON.parse(
+  readFileSync(new URL("../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V2.json", import.meta.url), "utf8"),
+) as JsonObject;
 const ajv = new Ajv2020({ allErrors: true, strict: false });
 addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);
 const validateOverlay = ajv.compile(schema);
 
-const v1CompatSchema = v1CompatJson as JsonObject;
+const v1CompatSchema = JSON.parse(
+  readFileSync(new URL("../../../contracts/orotitan-equity/v2/04_SCREENER_SCHEMA_V1_COMPAT_V2.0.10.json", import.meta.url), "utf8"),
+) as JsonObject;
 const v1CompatAjv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
 addFormats(v1CompatAjv as unknown as Parameters<typeof addFormats>[0]);
 for (const keyword of [
