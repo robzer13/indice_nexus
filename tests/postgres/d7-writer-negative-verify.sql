@@ -88,12 +88,19 @@ from d7_sandbox.fixtures f cross join lateral (
  select m.security_id from public.legacy_company_identity_map m
  where m.issuer_id<>f.issuer_id order by m.legacy_company_id limit 1
 ) m where f.name='p1';
+insert into d7_sandbox.fixtures
+select 'bad_ev',run_id,dossier_id,issuer_id,security_id,
+ jsonb_set(
+   jsonb_set(jsonb_set(payload,'{snapshot_id}','"93000000-0000-4000-8000-000000000105"'),
+     '{report_id}','"d7-wrong-ev"'),
+   '{v3_methodology,valuation_timing,ev_to_equity_bridge_date}','"NOT_APPLICABLE"')
+from d7_sandbox.fixtures where name='p1';
 
 insert into d7_sandbox.approved_inputs
-(candidate_snapshot_id,run_id,dossier_id,issuer_id,security_id,payload_sha256,approval_source)
+(candidate_snapshot_id,run_id,dossier_id,issuer_id,security_id,payload_sha256,cash_flow_basis,approval_source)
 select (payload->>'snapshot_id')::uuid,run_id,dossier_id,issuer_id,security_id,
  encode(public.digest(convert_to(payload::text,'UTF8'),'sha256'),'hex'),
- 'D7_TEST_ONLY_APPROVED'
+ 'FCFF', 'D7_TEST_ONLY_APPROVED'
 from d7_sandbox.fixtures;
 
 grant select on d7_sandbox.fixtures to service_role;
@@ -131,6 +138,7 @@ declare
  f2 record;
  f3 record;
  bad record;
+ bad_ev record;
  pointer uuid;
  before_count bigint;
  resp jsonb;
@@ -140,6 +148,7 @@ begin
  select * into f2 from d7_sandbox.fixtures where name='p2';
  select * into f3 from d7_sandbox.fixtures where name='p3';
  select * into bad from d7_sandbox.fixtures where name='bad_security';
+ select * into bad_ev from d7_sandbox.fixtures where name='bad_ev';
  if f.dossier_id is null or bad.security_id is null then raise exception 'D7 missing fixtures'; end if;
 
  -- Before any positive flow, all unauthorized routes must refuse.
@@ -148,6 +157,7 @@ begin
  perform d7_sandbox.expect_rejection('forged PASS','23514',f.run_id,f.dossier_id,null,
    f.payload||'{"I2_PASS":true,"I3B_PASS":true,"GO_PUBLISH":true}'::jsonb);
  perform d7_sandbox.expect_rejection('wrong run proof','23514','b1000000-0000-4000-8000-000000000001',f.dossier_id,null,f.payload);
+ perform d7_sandbox.expect_rejection('wrong FCFF EV bridge','23514',bad_ev.run_id,bad_ev.dossier_id,null,bad_ev.payload);
  perform d7_sandbox.expect_rejection('missing overlay','23514',f.run_id,f.dossier_id,null,f.payload-'v3_methodology');
  perform d7_sandbox.expect_rejection('wrong issuer','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{issuer_id}','"b1000000-0000-4000-8000-000000000002"'));
@@ -164,6 +174,15 @@ begin
    jsonb_set(f.payload,'{v3_methodology,economic_share_count,lower_bound}','1'::jsonb,true));
  perform d7_sandbox.expect_rejection('unknown denominator','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,economic_share_count,representation}','"UNKNOWN"'));
+ perform d7_sandbox.expect_rejection('reversed bounded range','23514',f.run_id,f.dossier_id,null,
+   jsonb_set(jsonb_set(jsonb_set(jsonb_set(jsonb_set(jsonb_set(
+     f.payload,'{v3_methodology,economic_share_count,representation}','"BOUNDED"'),
+     '{v3_methodology,economic_share_count,propagation_status}','"RANGE_PROPAGATED"'),
+     '{v3_methodology,economic_share_count,lower_bound}','200'::jsonb,true),
+     '{v3_methodology,economic_share_count,upper_bound}','100'::jsonb,true),
+     '{v3_methodology,economic_share_count,bound_completeness}','"COMPLETE"',true),
+     '{v3_methodology,economic_share_count,unbounded_movement_classes}','0'::jsonb,true));
+
  perform d7_sandbox.expect_rejection('date tuple misaligned','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,valuation_timing,per_share_output_date}','"2026-09-17"'));
  perform d7_sandbox.expect_rejection('market cap date mismatch','23514',f.run_id,f.dossier_id,null,
