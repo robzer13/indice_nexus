@@ -16,6 +16,8 @@ import { activeContractPinPack, assertProductionEnvironment, assertRuntimeBootst
 import { validateStageManifest, type StageManifestValidationContext } from "../v1/stage-manifest";
 import { verifyDeepDiveTypedLocks, assessIntegrationReportsReadOnly,
   type VerifiedContent } from "./pilotage-typed-gates-v3-1";
+import { verifyIntegrationCandidateD4 } from "./pilotage-integration-recompute-v3-1";
+import type { ValuationDateAlignmentInput } from "./valuation-date-alignment";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -374,6 +376,35 @@ export async function loadTrustedPilotageSnapshot(input: {
     const noReportElevation = assessIntegrationReportsReadOnly();
     check(noReportElevation.i2Recomputed === false &&
       noReportElevation.i3bComposedValidated === false, "UNVERIFIED_I2_I3B_ELEVATION");
+  }
+  if (run.current_stage === "INTEGRATION") {
+    const integration = index.get("INTEGRATION");
+    check(integration !== undefined, "D4_INTEGRATION_STAGE_MISSING");
+    if (integration.state.manifest?.kind === "FINAL") {
+      const c = integration.verifiedContents.filter(x =>
+        x.proof.artifactType === "CANONICAL_SNAPSHOT_CANDIDATE");
+      check(c.length === 1, "D4_CANDIDATE_NOT_EXACT");
+      const valuation = dd?.verifiedContents.filter(x =>
+        x.proof.artifactType === "VALUATION_ARTIFACT") ?? [];
+      check(valuation.length === 1 && valuation[0].mediaType === "application/json",
+        "D4_UPSTREAM_VALUATION_ARTIFACT_MISSING");
+      let parsed: unknown;
+      try { parsed = JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(valuation[0].bytes)); }
+      catch { throw new TrustedLoaderError("D4_UPSTREAM_VALUATION_ARTIFACT_INVALID"); }
+      check(isObject(parsed) && isObject(parsed.valuation_date_alignment),
+        "D4_UPSTREAM_TIMING_PROOF_MISSING");
+      const checks = verifyIntegrationCandidateD4({
+        candidate: c[0], dossierId: run.dossier_id!,
+        issuerId: run.issuer_id!, securityId: run.security_id!,
+        dataCutoff: run.data_cutoff,
+        upstreamTiming: parsed.valuation_date_alignment as unknown as ValuationDateAlignmentInput,
+      });
+      check(checks.i2CandidateRecomputed && checks.v31CandidateSchemaPassed &&
+        checks.upstreamTimingReconciled && !checks.historyCasValidated &&
+        !checks.i2Pass && !checks.i3bPass && !checks.publicationAuthorized,
+        "D4_UNVERIFIED_PUBLICATION_GATE_ELEVATION");
+      // A valid candidate is not a full I2/I3-B PASS. No gate is elevated.
+    }
   }
   const stageStates: PilotageSnapshot["stages"] = {};
   for (const v of verified) stageStates[v.state.code] = v.state;
