@@ -204,7 +204,7 @@ begin
    jsonb_set(f.payload,'{v3_methodology,economic_share_count,representation}','"UNKNOWN"'));
  perform d7_sandbox.expect_rejection('reversed bounded range','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,economic_share_count}',
-     (f.payload::jsonb->'v3_methodology'->'economic_share_count' - 'exact_count')
+     ((f.payload::jsonb->'v3_methodology'->'economic_share_count') - 'exact_count'::text)
      || '{"representation":"BOUNDED","propagation_status":"RANGE_PROPAGATED","lower_bound":200,"upper_bound":100,"bound_completeness":"COMPLETE","unbounded_movement_classes":0}'::jsonb));
 
  perform d7_sandbox.expect_rejection('date tuple misaligned','23514',f.run_id,f.dossier_id,null,
