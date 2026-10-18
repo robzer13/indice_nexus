@@ -175,13 +175,9 @@ begin
  perform d7_sandbox.expect_rejection('unknown denominator','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,economic_share_count,representation}','"UNKNOWN"'));
  perform d7_sandbox.expect_rejection('reversed bounded range','23514',f.run_id,f.dossier_id,null,
-   jsonb_set(jsonb_set(jsonb_set(jsonb_set(jsonb_set(jsonb_set(
-     f.payload,'{v3_methodology,economic_share_count,representation}','"BOUNDED"'),
-     '{v3_methodology,economic_share_count,propagation_status}','"RANGE_PROPAGATED"'),
-     '{v3_methodology,economic_share_count,lower_bound}','200'::jsonb,true),
-     '{v3_methodology,economic_share_count,upper_bound}','100'::jsonb,true),
-     '{v3_methodology,economic_share_count,bound_completeness}','"COMPLETE"',true),
-     '{v3_methodology,economic_share_count,unbounded_movement_classes}','0'::jsonb,true));
+   jsonb_set(f.payload,'{v3_methodology,economic_share_count}',
+     (f.payload->'v3_methodology'->'economic_share_count' - 'exact_count')
+     || '{"representation":"BOUNDED","propagation_status":"RANGE_PROPAGATED","lower_bound":200,"upper_bound":100,"bound_completeness":"COMPLETE","unbounded_movement_classes":0}'::jsonb));
 
  perform d7_sandbox.expect_rejection('date tuple misaligned','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,valuation_timing,per_share_output_date}','"2026-09-17"'));
