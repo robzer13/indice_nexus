@@ -183,10 +183,10 @@ begin
  perform d7_sandbox.expect_rejection('missing attest','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{snapshot_id}','"93000000-0000-4000-8000-000000000188"'));
  perform d7_sandbox.expect_rejection('forged PASS','23514',f.run_id,f.dossier_id,null,
-   f.payload||'{"I2_PASS":true,"I3B_PASS":true,"GO_PUBLISH":true}'::jsonb);
+   f.payload::jsonb||'{"I2_PASS":true,"I3B_PASS":true,"GO_PUBLISH":true}'::jsonb);
  perform d7_sandbox.expect_rejection('wrong run proof','23514','b1000000-0000-4000-8000-000000000001',f.dossier_id,null,f.payload);
  perform d7_sandbox.expect_rejection('wrong FCFF EV bridge','23514',bad_ev.run_id,bad_ev.dossier_id,null,bad_ev.payload);
- perform d7_sandbox.expect_rejection('missing overlay','23514',f.run_id,f.dossier_id,null,f.payload-'v3_methodology');
+ perform d7_sandbox.expect_rejection('missing overlay','23514',f.run_id,f.dossier_id,null,(f.payload::jsonb - 'v3_methodology'));
  perform d7_sandbox.expect_rejection('wrong issuer','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{issuer_id}','"b1000000-0000-4000-8000-000000000002"'));
  perform d7_sandbox.expect_rejection('incorrect reference date','23514',f.run_id,f.dossier_id,null,
@@ -204,7 +204,7 @@ begin
    jsonb_set(f.payload,'{v3_methodology,economic_share_count,representation}','"UNKNOWN"'));
  perform d7_sandbox.expect_rejection('reversed bounded range','23514',f.run_id,f.dossier_id,null,
    jsonb_set(f.payload,'{v3_methodology,economic_share_count}',
-     (f.payload->'v3_methodology'->'economic_share_count' - 'exact_count')
+     (f.payload::jsonb->'v3_methodology'->'economic_share_count' - 'exact_count')
      || '{"representation":"BOUNDED","propagation_status":"RANGE_PROPAGATED","lower_bound":200,"upper_bound":100,"bound_completeness":"COMPLETE","unbounded_movement_classes":0}'::jsonb));
 
  perform d7_sandbox.expect_rejection('date tuple misaligned','23514',f.run_id,f.dossier_id,null,
