@@ -1,7 +1,7 @@
 import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { createHash } from "node:crypto";
-import { readFileSync } from "node:fs";
+import schemaJson from "../../../contracts/orotitan-equity/v1/OROTITAN_STAGE_MANIFEST_SCHEMA_V1.json";
 
 type JsonObject = Record<string, unknown>;
 
@@ -32,9 +32,7 @@ export type StageManifestValidationResult =
   | { ok: true; manifest: JsonObject; downstreamAdmission: boolean }
   | { ok: false; stage: "schema" | "contract"; errors: string[] };
 
-const schema = JSON.parse(
-  readFileSync(new URL("../../../contracts/orotitan-equity/v1/OROTITAN_STAGE_MANIFEST_SCHEMA_V1.json", import.meta.url), "utf8"),
-) as JsonObject;
+const schema = schemaJson as JsonObject;
 
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
 addFormats(ajv as unknown as Parameters<typeof addFormats>[0]);

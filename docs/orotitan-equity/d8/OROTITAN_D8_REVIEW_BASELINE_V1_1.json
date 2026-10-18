@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OroTitan D8 read-only reviewed design baseline V1.0 — NOT methodology freeze",
+  "manifest_version": "OROTITAN_D8_REVIEW_BASELINE_V1.1",
+  "repository": "robzer13/indice_nexus",
+  "source_branch": "feat/orotitan-pilotage-v31-adapter-20261018",
+  "as_of_date": "2026-10-18",
+  "decision": "TECHNICAL_DESIGN_BASELINE_PINNED_REVIEW_ONLY",
+  "freeze_scope": "GIT_BLOB_IDENTITIES_AND_NONPRODUCTION_REVIEW_BOUNDARIES_ONLY",
+  "methodology_freeze_approved": false,
+  "i2_end_to_end_certified": false,
+  "i3b_end_to_end_certified": false,
+  "physical_writer_v31_approved": false,
+  "v31_writer_installed_in_production": false,
+  "provenance_body_schema_approved": false,
+  "published_snapshot_v31_admitted": false,
+  "production_migration_authorized": false,
+  "publication_authorized": false,
+  "gate": {
+    "production_state": "NO_GO",
+    "reasons": [
+      "D6_UPSTREAM_SOURCE_BODY_SCHEMA_NOT_FROZEN",
+      "D6_SOURCE_ROLE_MAPPING_NOT_APPROVED_AS_EVIDENCE_AUTHORITY",
+      "D6_COMPLETE_ECONOMIC_AND_ANALYTICAL_LINEAGE_UNPROVEN",
+      "D7_ATTESTATION_PROTOTYPE_TEST_ONLY_NOT_A_PRODUCTION_AUTHORITY",
+      "D7_PRIVATE_TRANSACTIONAL_WRITER_V31_NOT_INSTALLED",
+      "V31_PHYSICAL_SCHEMA_VERSION_PAIR_NOT_ADMITTED",
+      "D7_TRUE_PARALLEL_CAS_RACE_NOT_INDEPENDENTLY_TESTED",
+      "RUN_STAGE_MANIFEST_CAS_AND_PUBLICATION_IDEMPOTENCY_NOT_IMPLEMENTED_AT_WRITER_BOUNDARY",
+      "RAW_IMMUTABLE_BYTES_SHA256_VERSUS_JSONB_SERIALIZATION_NEEDS_EXACT_PROJECTION",
+      "EXPLICIT_GO_PUBLISH_WITH_SEPARATE_AUTHORIZATION_NOT_CONNECTED"
+    ]
+  },
+  "immutable_review_pins": [
+    {
+      "path": "docs/orotitan-equity/proposals/OROTITAN_I2_FULL_PRECISION_PROVENANCE_SCHEMA_D6_V0_1_PROPOSED.json",
+      "git_blob_sha1": "7defe4b7d0a3dc21d1bc2c920c33e8d75e0b8a3e"
+    },
+    {
+      "path": "docs/orotitan-equity/PILOTAGE_V3_1_D7_PHYSICAL_WRITER_CONTRACT_PROPOSED.md",
+      "git_blob_sha1": "1014b0333ca2d0be8fa3b7b5357aaa1a00cc2b59"
+    },
+    {
+      "path": "lib/orotitan-equity/v3/pilotage-provenance-d6-v3-1.ts",
+      "git_blob_sha1": "9ee4fb436e90d3c909dee104ac1257e4fd786dbe"
+    },
+    {
+      "path": "tests/postgres/d7-sandbox-writer.sql",
+      "git_blob_sha1": "77cc6fc0a3ec74b7c8766c6fe73280d403a38fba"
+    },
+    {
+      "path": "tests/postgres/d7-writer-negative-verify.sql",
+      "git_blob_sha1": "6cff4c7e82cbc5c12e03ae58478374dfafc835ba"
+    },
+    {
+      "path": "contracts/orotitan-equity/v3/OROTITAN_INTEGRATION_STAGE_CONTRACT_V3_1_FREEZE_V3.1.md",
+      "git_blob_sha1": "13e0b9a6953d6502989a74111c57e86d73f8b40d"
+    },
+    {
+      "path": "contracts/orotitan-equity/v3/04_INTEGRATION_SPEC_V3_1.md",
+      "git_blob_sha1": "8099d1c7f4544e4902e48cbd2491671fafc20e9f"
+    },
+    {
+      "path": "contracts/orotitan-equity/v3/04_SCREENER_SCHEMA_V3_1.json",
+      "git_blob_sha1": "be68c1dec97c7e0a0967241152858c65298dfa43"
+    },
+    {
+      "path": "docs/orotitan-equity/I3B_VALIDATED_SNAPSHOT_WRITER_V1.2.md",
+      "git_blob_sha1": "1183054128cf276abc626c770da58d39accba49e"
+    }
+  ],
+  "source_baseline": "OROTITAN_D8_REVIEW_BASELINE_V1.0",
+  "change_reason": "D9 static JSON schema module loading required for the operational Next.js admin cockpit; technical evidence semantics unchanged and no new production authority granted"
+}

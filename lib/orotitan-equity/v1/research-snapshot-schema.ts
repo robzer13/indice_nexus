@@ -1,6 +1,6 @@
 import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
-import { readFileSync } from "node:fs";
+import schemaJson from "../../../contracts/orotitan-equity/v1/04_SCREENER_SCHEMA_V1_PATCHED.json";
 import { validateCanonicalContract, type CanonicalContractInput } from "./contract";
 import { assertInvestmentPolicyV1 } from "./investment-policy";
 import { selectNormalizationReturn } from "./n-basis";
@@ -27,7 +27,7 @@ export type ResearchSnapshotSchemaValidator = ((input: unknown) => boolean) & {
   errors?: ErrorObject[] | null;
 };
 
-const schema = JSON.parse(readFileSync(new URL("../../../contracts/orotitan-equity/v1/04_SCREENER_SCHEMA_V1_PATCHED.json", import.meta.url), "utf8")) as JsonObject;
+const schema = schemaJson as JsonObject;
 const ajv = new Ajv2020({ allErrors: true, strict: true, strictRequired: false, strictTypes: false });
 // ajv-formats types its plugin against the default Ajv class, while this contract requires the Draft 2020 implementation.
 // The runtime plugin API is compatible; bridge only the package-level type mismatch without changing validator behavior.
