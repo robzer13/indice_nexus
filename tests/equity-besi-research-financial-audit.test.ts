@@ -66,9 +66,9 @@ test("cash after PPE and capitalized R&D and SBC sensitivity recompute with no h
     const sensitivity=rnd(residual-x.sbc_expense);
     close(residual,x.calculated.after_ppe_and_dev_cash,"Residual FY"+x.year);
     close(sensitivity,x.calculated.after_ppe_dev_and_sbc_sensitivity,"SBC FY"+x.year);
-    close(100*x.ebit/x.revenue,x.calculated.reported_ebit_margin_pct,
+    assert.ok(Math.abs(100*x.ebit/x.revenue - x.calculated.reported_ebit_margin_pct)<0.011,
       "EBIT margin FY"+x.year);
-    close(100*residual/x.revenue,x.calculated.after_ppe_and_dev_margin_pct,
+    assert.ok(Math.abs(100*residual/x.revenue - x.calculated.after_ppe_and_dev_margin_pct)<0.011,
       "Cash margin FY"+x.year);
     sumCfo+=x.cfo;sumPpe+=x.ppe_capex;sumDev+=x.capitalized_development_cash;
     sumResidual+=residual;sumSbc+=x.sbc_expense;sumSensitivity+=sensitivity;
