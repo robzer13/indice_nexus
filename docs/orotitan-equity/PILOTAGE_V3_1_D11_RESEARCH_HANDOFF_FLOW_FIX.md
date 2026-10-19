@@ -96,3 +96,34 @@ CI lint/TypeScript/tests/PG/build sur le commit exact ; tests négatifs
 d'absence d'artefacts V2, anciens aliases refusés, CHECKPOINT toujours
 non admissible comme Research FINAL. PR en brouillon, ni fusion, ni
 déploiement, ni écriture Supabase.
+
+
+## Validation D11 complémentaire : transaction complète en PostgreSQL 17 isolé
+
+Le test `tests/postgres/research-v31-handoff-registry-e2e.sql`, exécuté par
+`tests/postgres/run-research-v31-handoff-e2e-tests.sh` dans
+`npm run test:postgres`, applique toutes les migrations Registry jusqu'à
+V1.12, puis **uniquement dans la base éphémère** la fonction de compatibilité
+SQL proposée. Il réutilise les contrôles de bundle-persistence du Registry
+actuel (attestation d'un objet staged NON_AUTHORITATIVE, événement
+`PERSISTENCE_ATTESTED`, receipt V1.1, vérification des bytes/base64,
+hash SHA256, hash Git blob et référencement de l'artefact).
+
+Il exerce les RPC opérationnelles réelles et les **15 pins authentiques
+du Contract Set V3.1** : création du run, liaison issuer/security/dossier,
+démarrage Research, enregistrement du CHECKPOINT NO, refus de Deep Dive
+avant FINAL, refus de FINAL aux types V1 ou à classification manquante,
+refus CAS obsolète sans promotion `AUTHORITATIVE`, enregistrement FINAL
+avec les 7 vrais outputs Research V2, idempotence de la finalisation,
+supersession du CHECKPOINT, puis `start_orotitan_stage(DEEP_DIVE)` admis.
+
+Résultat CI intégralement réussi au commit `5eab339c782cb588ec2ca10823f5b7c1739982d8` :
+https://github.com/robzer13/indice_nexus/actions/runs/39308914305
+
+**Portée exacte** : test de transaction réel dans une base locale avec
+fixtures et attestations simulées par l'API de persistance du Registry.
+Il ne lit pas réellement le dépôt d'artefacts GitHub dans le CI, et il ne
+valide pas la suffisance analytique du dossier Besi. Aucune fonction SQL
+n'a été installée en production, aucune mutation d'un run réel, aucun
+handoff effectif de Besi. La migration reste une autorisation distincte
+après revue du SQL et protocole de déploiement/retour arrière.
