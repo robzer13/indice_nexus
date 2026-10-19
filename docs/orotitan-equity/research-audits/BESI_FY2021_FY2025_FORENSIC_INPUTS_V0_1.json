@@ -1,0 +1,234 @@
+{
+  "dataset_id": "BESI_FINANCIAL_FORENSICS_2021_2025_RESEARCH_DRAFT_V0_1",
+  "status": "DRAFT_RESEARCH_INPUTS_NOT_CERTIFIED",
+  "company": "BE Semiconductor Industries N.V.",
+  "ticker": "BESI",
+  "canonical_run_id": "48b9426b-4d0d-4858-9d87-efcd13ac415d",
+  "data_cutoff": "2026-10-12",
+  "prepared_on": "2026-10-19",
+  "currency": "EUR",
+  "unit": "EURm_except_ratios",
+  "source_hierarchy": [
+    {
+      "id": "FY2022_RELEASE_FY2021_COMPARATIVES",
+      "published": "2023-02-22",
+      "url": "https://www.globenewswire.com/fr/news-release/2023/02/22/2612890/0/en/be-semiconductor-industries-n-v-announces-q4-22-and-full-year-2022-results.html",
+      "scope": "2021 and 2022 audited year-end condensed cash flows; 2021 full annual note audit outstanding"
+    },
+    {
+      "id": "FY2022_RELEASE",
+      "published": "2023-02-22",
+      "url": "https://www.globenewswire.com/fr/news-release/2023/02/22/2612890/0/en/be-semiconductor-industries-n-v-announces-q4-22-and-full-year-2022-results.html",
+      "scope": "2022 released audited year-end financials"
+    },
+    {
+      "id": "FY2024_ESEF_FY2023_COMPARATIVES",
+      "published": "2025-02-28",
+      "url": "https://financialfilings.com/filings/be-semiconductor-industries-nv/annual-report-esef/2025/5830006/",
+      "scope": "Audited FY2023 comparatives in FY2024 ESEF annual report; full 2023 prior report also listed on Besi IR"
+    },
+    {
+      "id": "FY2024_ESEF",
+      "published": "2025-02-28",
+      "url": "https://financialfilings.com/filings/be-semiconductor-industries-nv/annual-report-esef/2025/5830006/",
+      "scope": "Audited FY2024 annual report incl accounting policies, capitalized development and tax note"
+    },
+    {
+      "id": "FY2025_RELEASE",
+      "published": "2026-02-19",
+      "url": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/02/19/Connect_q4-2025.pdf",
+      "scope": "Issuer FY2025 earnings release, labelled audited FY cash flow columns; full audit-note reconciliation remains open"
+    },
+    {
+      "id": "ANNUALS_OFFICIAL_INDEX",
+      "published": "2026-03-16",
+      "url": "https://www.besi.com/investor-relations/financial-reports-and-publications/financial-reports/",
+      "scope": "Official annual report index with FY2021-FY2025"
+    }
+  ],
+  "methodology": {
+    "input_provenance": "Original issuer releases and ESEF cashflow tables before 2026-10-12; rounded financial highlights for EBIT/revenue/net income/equity/debt/deposits. No unverified filling of unreported inputs.",
+    "formula_after_ppe_and_dev_cash": "cfo - ppe_capex - capitalized_development_cash",
+    "formula_sbc_sensitivity": "after_ppe_and_dev_cash - sbc_expense; not a literal cash payout and not a certified owner-earnings metric",
+    "formula_book_financing_proxy": "equity + interest_bearing_debt - cash_deposits; NOT approved invested capital (may exclude operating leases, goodwill and material financing/nonoperating adjustments)",
+    "working_capital_sign": "negative number means a cash outflow within the audited CFO bridge",
+    "earnings_tax_2024": "Reported 2024 tax 6.528 EURm on pretax 188.520 EURm; issuer says underlying tax rate excluding net exceptional benefit about 13.1%; illustrative normalized 2024 net income = pretax*(1-0.131) = 163.824 EURm, NOT certified normal earnings",
+    "separate_capex_2025": "FY2025 5.164 EURm acquisition of investment property is recorded as a separate investing line and excluded from conventional PPE_capex and the simple residual; consider in a cash deployment analysis, do not silently classify as recurring maintenance capex"
+  },
+  "years": [
+    {
+      "year": 2021,
+      "revenue": 749.3,
+      "ebit": 317.6,
+      "net_income_rounded": 282.4,
+      "pretax_income": 303.84,
+      "cfo": 277.854,
+      "ppe_capex": 5.337,
+      "capitalized_development_cash": 23.015,
+      "sbc_expense": 16.409,
+      "working_capital_movement": -59.733,
+      "cash_tax_paid": 9.651,
+      "da": 17.564,
+      "cash_deposits": 672.2,
+      "interest_bearing_debt": 301.8,
+      "equity": 619.3,
+      "investment_property_acquisition": null,
+      "filing": "FY2022_RELEASE_FY2021_COMPARATIVES",
+      "calculated": {
+        "reported_ebit_margin_pct": 42.39,
+        "after_ppe_and_dev_cash": 249.502,
+        "after_ppe_dev_and_sbc_sensitivity": 233.093,
+        "after_ppe_and_dev_margin_pct": 33.3,
+        "net_cash_deposits_minus_debt": 370.4,
+        "book_financing_proxy_not_roic": 248.9,
+        "implied_reported_tax_rate_pct_using_rounded_net_income": 7.06
+      }
+    },
+    {
+      "year": 2022,
+      "revenue": 722.9,
+      "ebit": 294.1,
+      "net_income_rounded": 240.6,
+      "pretax_income": 275.49,
+      "cfo": 271.871,
+      "ppe_capex": 6.78,
+      "capitalized_development_cash": 21.613,
+      "sbc_expense": 15.259,
+      "working_capital_movement": -21.553,
+      "cash_tax_paid": 35.353,
+      "da": 22.992,
+      "cash_deposits": 671.7,
+      "interest_bearing_debt": 325.2,
+      "equity": 628.5,
+      "investment_property_acquisition": null,
+      "filing": "FY2022_RELEASE",
+      "calculated": {
+        "reported_ebit_margin_pct": 40.68,
+        "after_ppe_and_dev_cash": 243.478,
+        "after_ppe_dev_and_sbc_sensitivity": 228.219,
+        "after_ppe_and_dev_margin_pct": 33.68,
+        "net_cash_deposits_minus_debt": 346.5,
+        "book_financing_proxy_not_roic": 282,
+        "implied_reported_tax_rate_pct_using_rounded_net_income": 12.66
+      }
+    },
+    {
+      "year": 2023,
+      "revenue": 578.9,
+      "ebit": 213.4,
+      "net_income_rounded": 177.1,
+      "pretax_income": 207.689,
+      "cfo": 208.572,
+      "ppe_capex": 6.899,
+      "capitalized_development_cash": 21.121,
+      "sbc_expense": 19.107,
+      "working_capital_movement": -26.819,
+      "cash_tax_paid": 27.562,
+      "da": 25.732,
+      "cash_deposits": 413.5,
+      "interest_bearing_debt": 300.5,
+      "equity": 421.4,
+      "investment_property_acquisition": null,
+      "filing": "FY2024_ESEF_FY2023_COMPARATIVES",
+      "calculated": {
+        "reported_ebit_margin_pct": 36.86,
+        "after_ppe_and_dev_cash": 180.552,
+        "after_ppe_dev_and_sbc_sensitivity": 161.445,
+        "after_ppe_and_dev_margin_pct": 31.19,
+        "net_cash_deposits_minus_debt": 113,
+        "book_financing_proxy_not_roic": 308.4,
+        "implied_reported_tax_rate_pct_using_rounded_net_income": 14.73
+      }
+    },
+    {
+      "year": 2024,
+      "revenue": 607.5,
+      "ebit": 195.6,
+      "net_income_rounded": 182,
+      "pretax_income": 188.52,
+      "cfo": 201.083,
+      "ppe_capex": 12.039,
+      "capitalized_development_cash": 19.437,
+      "sbc_expense": 30.067,
+      "working_capital_movement": -39.095,
+      "cash_tax_paid": 23.264,
+      "da": 28.601,
+      "cash_deposits": 672.3,
+      "interest_bearing_debt": 528.5,
+      "equity": 501.3,
+      "investment_property_acquisition": null,
+      "filing": "FY2024_ESEF",
+      "calculated": {
+        "reported_ebit_margin_pct": 32.2,
+        "after_ppe_and_dev_cash": 169.607,
+        "after_ppe_dev_and_sbc_sensitivity": 139.54,
+        "after_ppe_and_dev_margin_pct": 27.92,
+        "net_cash_deposits_minus_debt": 143.8,
+        "book_financing_proxy_not_roic": 357.5,
+        "implied_reported_tax_rate_pct_using_rounded_net_income": 3.46
+      }
+    },
+    {
+      "year": 2025,
+      "revenue": 591.3,
+      "ebit": 173.1,
+      "net_income_rounded": 131.6,
+      "pretax_income": 153.948,
+      "cfo": 178.141,
+      "ppe_capex": 15.795,
+      "capitalized_development_cash": 25.994,
+      "sbc_expense": 16.375,
+      "working_capital_movement": -14.442,
+      "cash_tax_paid": 28.252,
+      "da": 33.723,
+      "cash_deposits": 543,
+      "interest_bearing_debt": 507,
+      "equity": 416.4,
+      "investment_property_acquisition": 5.164,
+      "filing": "FY2025_RELEASE",
+      "calculated": {
+        "reported_ebit_margin_pct": 29.27,
+        "after_ppe_and_dev_cash": 136.352,
+        "after_ppe_dev_and_sbc_sensitivity": 119.977,
+        "after_ppe_and_dev_margin_pct": 23.06,
+        "net_cash_deposits_minus_debt": 36,
+        "book_financing_proxy_not_roic": 380.4,
+        "implied_reported_tax_rate_pct_using_rounded_net_income": 14.52
+      }
+    }
+  ],
+  "five_year_totals": {
+    "cfo": 1137.521,
+    "ppe_capex": 46.85,
+    "capitalized_development_cash": 111.18,
+    "after_ppe_and_dev_cash": 979.491,
+    "sbc_expense": 97.217,
+    "after_ppe_dev_and_sbc_sensitivity": 882.274
+  },
+  "admission": {
+    "financial_statement_columns_cross_checked": true,
+    "full_FY2021_FY2022_standalone_audited_note_crosscheck": false,
+    "C003_conflict_resolved": false,
+    "G012_source_coverage_resolved": false,
+    "maintenance_vs_growth_development_split_proven": false,
+    "working_capital_normalization_approved": false,
+    "sbc_economic_cost_approved": false,
+    "normalized_sustainable_cash_taxes_approved": false,
+    "roic_economic_certified": false,
+    "owner_earnings_certified": false,
+    "research_final_admitted": false,
+    "handoff_deep_dive_authorized": false,
+    "writer_v31_authorized": false,
+    "publication_authorized": false
+  },
+  "unresolved_next_evidence": [
+    "2021/2022 original signed ESEF standalone full-document IFRS annex and EY opinion cross-check",
+    "FY2021-FY2025 intangibles goodwill and development capitalization full rollforwards and impairment notes",
+    "FY2020-FY2025 operating working capital, non-operating asset liabilities reconciliation, changes in definition",
+    "Lease liabilities, net working capital, contract assets, customer advances, cash-and-deposits definition and cash exclusion from invested capital",
+    "Reconstruct cash taxes by geography, Swiss credit relief, deferred tax rollforwards and 2024 one-off amounts",
+    "R&D maintenance versus growth R&D allocations and equity compensation real economic dilution across the cycle",
+    "Normalize cash conversion through semiconductor equipment cycle without relying solely on the 2021 peak",
+    "Resolve material C003 customer count definition separately before any technology moat / runway numerical claims"
+  ]
+}
