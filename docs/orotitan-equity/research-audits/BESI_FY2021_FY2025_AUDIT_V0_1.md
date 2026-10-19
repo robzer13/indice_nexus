@@ -51,6 +51,21 @@ De 2021 à 2025, chiffre d'affaires **−21,1 %**, EBIT **−45,5 %**, CFO **−
 
 **Périmètre FY2025 :** acquisition de propriété d'investissement de **5,164 M€** présente comme ligne distincte des flux d'investissement, exclue du « PPE capex » usuel ci-dessus ; elle doit figurer dans l'analyse des décaissements totaux et du caractère récurrent/non récurrent, sans l'imputer automatiquement à la maintenance. Les mouvements des dépôts financiers ne sont pas des investissements opérationnels récurrents.
 
+## 3 bis. Allocation réelle aux actionnaires : comparaison sur cinq ans
+
+| FY | Dividendes versés (M€) | Rachats d'actions propres (M€) | Sorties cumulées vers actionnaires (M€) |
+|---|---:|---:|---:|
+| 2021 | 129,357 | 50,096 | **179,453** |
+| 2022 | 269,467 | 146,781 | **416,248** |
+| 2023 | 222,109 | 213,387 | **435,496** |
+| 2024 | 171,534 | 79,833 | **251,367** |
+| 2025 | 172,811 | 81,967 | **254,778** |
+| **Cumul cinq ans** | **965,278** | **572,064** | **1 537,342** |
+
+**Résultat matériel :** les distributions cumulées (`1 537,342 M€`) dépassent le résiduel mécanique CFO − PPE − développement immobilisé (`979,491 M€`) de **557,851 M€**. Cela **ne prouve pas** une insuffisance de financement ni un défaut de création de valeur : il faut reconstituer la variation des dépôts financiers, l'émission de dette 2022 et 2024, les conversions d'emprunts, les loyers IFRS 16, l'effet du change et la trésorerie initiale. Le **net cash** publié passe de **370,4 M€ à fin 2021** à **36,0 M€ à fin 2025** malgré des variations de dette significatives.
+
+Ce constat identifie un deuxième chantier concret après l'audit des flux : **G007 / G014, la soutenabilité de l'allocation du capital**. Ne pas assimiler rachats et dividendes à des charges de l'EBIT ou les déduire à nouveau du CFO. Source : lignes `dividends paid` et `purchase of treasury shares` des tableaux de flux annuels cités en section 1.
+
 ## 4. Retraitement fiscal : la distorsion FY2024
 
 Dans le rapport annuel FY2024, Besi constate **6,528 M€** de charge fiscale sur **188,520 M€** de résultat avant impôt, soit un taux apparent de **3,46 %**. La société attribue le taux anormalement bas à environ **18,2 M€ d'avantages fiscaux nets**, et indique un taux d'environ **13,1 % hors ajustements** (contre 13,6 % l'année précédente). [Rapport annuel FY2024 ESEF](https://financialfilings.com/filings/be-semiconductor-industries-nv/annual-report-esef/2025/5830006/).
