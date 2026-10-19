@@ -257,3 +257,24 @@ test("same state produces same fingerprint; manifest is invalid after reopen", (
   s.stages.INTEGRATION!.revision++;
   blocked(s, "MANIFEST_REVISION_STALE");
 });
+
+
+test("Research FINAL handoff enforces V2-specified sufficiency and classification artifacts", () => {
+  const s = snapshot("DEEP_DIVE");
+  const outputs = s.stages.RESEARCH!.artifacts;
+  assert.ok(outputs.some(a => a.artifactType === "INPUT_SUFFICIENCY_ASSESSMENT"));
+  assert.ok(outputs.some(a => a.artifactType === "CLASSIFICATION_INPUT_RECORD"));
+  // A fabricated legacy-named bundle is not accepted as a replacement.
+  s.stages.RESEARCH!.artifacts = outputs.map(a =>
+    a.artifactType === "INPUT_SUFFICIENCY_ASSESSMENT" ?
+      {...a, artifactType: "DD_INPUT_SUFFICIENCY_RECORD"} :
+    a.artifactType === "CLASSIFICATION_INPUT_RECORD" ?
+      {...a, artifactType: "ANALYSIS_INPUT_LOCK"} : a);
+  blocked(s, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_INPUT_SUFFICIENCY_ASSESSMENT");
+});
+test("Research FINAL without the classification record is not admitted", () => {
+  const s = snapshot("DEEP_DIVE");
+  s.stages.RESEARCH!.artifacts = s.stages.RESEARCH!.artifacts
+    .filter(a => a.artifactType !== "CLASSIFICATION_INPUT_RECORD");
+  blocked(s, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_CLASSIFICATION_INPUT_RECORD");
+});
