@@ -232,9 +232,15 @@ BEGIN
   EXCEPTION WHEN serialization_failure THEN v_failure := TRUE;
   END;
   IF NOT v_failure THEN RAISE EXCEPTION 'D11 E2E: stale CAS admitted'; END IF;
+  -- Persistence *candidates* and audit attestations are intentionally durable
+  -- before finalization. What MUST remain absent after a failed CAS is any
+  -- AUTHORITATIVE FINAL promotion or active FINAL stage pointer.
   IF EXISTS (SELECT 1 FROM public.orotitan_artifacts WHERE run_id=v_run
-    AND artifact_id=v_final_id) THEN
-    RAISE EXCEPTION 'D11 E2E: failed FINAL left durable artifacts';
+    AND artifact_id=v_final_id AND authority_state='AUTHORITATIVE')
+    OR EXISTS (SELECT 1 FROM public.orotitan_run_stages
+      WHERE run_id=v_run AND stage_code='RESEARCH'
+      AND active_manifest_kind='FINAL') THEN
+    RAISE EXCEPTION 'D11 E2E: failed FINAL promoted canonical authority';
   END IF;
 
   -- Successful persisted finalize, one real transaction, exact seven V2 types.
