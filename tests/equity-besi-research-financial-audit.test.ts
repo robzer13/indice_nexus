@@ -16,6 +16,7 @@ const data = JSON.parse(readFileSync(new URL(
     sbc_expense:number;working_capital_movement:number;cash_tax_paid:number;
     da:number;net_financial_expense_adjustment:number;net_cash_interest_received_paid:number;
     cash_deposits:number;interest_bearing_debt:number;equity:number;filing:string;
+    dividends_paid:number;treasury_share_purchases:number;
     calculated:{
       cash_flow_statement_recomputed:number;
       cfo_reconciliation_residual:number;
@@ -24,6 +25,7 @@ const data = JSON.parse(readFileSync(new URL(
       reported_ebit_margin_pct:number;
       after_ppe_and_dev_margin_pct:number;
       net_cash_deposits_minus_debt:number;
+      shareholder_cash_distributions:number;
       book_financing_proxy_not_roic:number;
     }
   }>;
@@ -93,6 +95,25 @@ test("2024 unusually low tax and separate 2025 investment property must not be h
   // Unusual 2025 property acquisition is not silently included in PPE capex.
   assert.equal((y25 as unknown as {investment_property_acquisition:number}).investment_property_acquisition,5.164);
   close(y24.cfo,201.083,"2024 audited CFO");
+});
+
+test("reported dividends and repurchases are recorded separately from CFO/capex", () => {
+  const amounts:Record<number,[number,number]> = {
+    2021:[129.357,50.096],2022:[269.467,146.781],
+    2023:[222.109,213.387],2024:[171.534,79.833],
+    2025:[172.811,81.967],
+  };
+  for(const x of data.years) {
+    close(x.dividends_paid,amounts[x.year][0],"cash dividends FY"+x.year);
+    close(x.treasury_share_purchases,amounts[x.year][1],"buybacks FY"+x.year);
+    close(x.dividends_paid+x.treasury_share_purchases,
+      x.calculated.shareholder_cash_distributions,
+      "distribution FY"+x.year);
+  }
+  close(data.five_year_totals.dividends_paid,965.278,"five year dividends");
+  close(data.five_year_totals.treasury_share_purchases,572.064,"five year buybacks");
+  close(data.five_year_totals.shareholder_cash_distributions,1537.342,"five year total distributions");
+  close(data.five_year_totals.distributions_over_mechanical_cash_residual,557.851,"distribution comparison");
 });
 
 test("audit remains explicitly non-authoritative despite complete arithmetic reconciliation", () => {
