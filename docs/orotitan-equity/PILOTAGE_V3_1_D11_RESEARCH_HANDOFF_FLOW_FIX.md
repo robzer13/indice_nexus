@@ -15,17 +15,34 @@ Le contrat effectivement épinglé pour Research V3.1 est
 - `CLASSIFICATION_INPUT_RECORD`
 
 Les couches D1 et D2 de Pilotage demandaient à tort deux types distincts :
-`DD_INPUT_SUFFICIENCY_RECORD` et `ANALYSIS_INPUT_LOCK`. Un Research FINAL
-complètement conforme aurait été rejeté lors d'un handoff vers Fundamentals
-faute de ces deux aliases non spécifiés par l'autorité Research épinglée.
+`DD_INPUT_SUFFICIENCY_RECORD` et `ANALYSIS_INPUT_LOCK`. **Troisième couche
+identifiée :** le validateur de manifeste V1 et la fonction SQL **actuellement
+installée en production** `public.orotitan_assert_required_outputs(text,jsonb)`
+imposent les mêmes anciens noms. Un Research FINAL conforme au contrat V2
+serait donc rejeté dans le pipeline ET par le Registry historique.
 
 ## Correction isolée, non déployée
 
 Une constante commune reflète les sept noms exacts du contrat V2.
 Le vérificateur D2 (artefacts signés, contenu référencé par le FINAL) et
 le planificateur D1 partagent maintenant cette source de vérité.
-Les tests refusent les aliases historiques incorrects. **Il ne s'agit ni
-d'un changement du contrat gelé, ni d'une tolérance à l'absence de preuve.**
+Pour ne pas modifier le validateur V1 épinglé, D2 lui transmet exclusivement
+une **copie de validation de schéma** des deux noms V2 sous la désignation
+historique V1. Les octets, les références Git, les types persistés, les hashes
+et les gates sont exclusivement calculés sur les sept vrais types V2.
+Les tests refusent les anciens noms substitués aux vrais artefacts V2.
+**Il ne s'agit ni d'un changement du contrat gelé, ni d'une tolérance à
+l'absence de preuve.**
+
+**Blocage physique restant :** la fonction SQL de production est toujours
+V1-only. Sa mise en conformité nécessite une migration **version-aware**
+qui garde inchangé le cas V1 et exige les sept types V2 pour la version
+`OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0`. Un script proposé,
+**non installé**, est conservé à
+`docs/orotitan-equity/proposals/D11_V31_RESEARCH_FINAL_REGISTRY_V2_SQL_PROPOSED.sql`.
+Il exige revue SQL négative et autorisation distincte avant toute migration.
+Tant que ce point n'est pas résolu, aucune preuve de handoff physique V3.1
+n'est revendiquée.
 
 L'entrée en Fundamentals continue à exiger :
 `RESEARCH = COMPLETE`, `FINAL Research Stage Manifest` vérifié,
