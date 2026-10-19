@@ -20,7 +20,7 @@ const ENV = { projectRef: "cugpgtzygqqlxetyeven", projectName: "orotitan-screene
 const RESEARCH_OUTPUTS = [
   "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
   "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-  "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
+  "INPUT_SUFFICIENCY_ASSESSMENT", "CLASSIFICATION_INPUT_RECORD",
 ];
 
 function digest(bytes: Uint8Array, kind: "sha256" | "sha1"): string {
@@ -165,7 +165,7 @@ test("byte-verified FINAL manifest and canonical outputs admit Fundamentals", as
   assert.equal(decision.outcome, "HANDOFF");
   assert.equal(decision.phase, "FUNDAMENTALS");
   assert.match(decision.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST/);
-  assert.match(decision.exactPrompt ?? "", /ANALYSIS_INPUT_LOCK/);
+  assert.match(decision.exactPrompt ?? "", /CLASSIFICATION_INPUT_RECORD/);
   assert.equal(decision.publicationAuthorized, false);
 });
 test("tampered output bytes fail SHA-256", async () => {
