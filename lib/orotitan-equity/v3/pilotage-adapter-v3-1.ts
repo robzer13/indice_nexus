@@ -6,6 +6,7 @@
  */
 import { createHash } from "node:crypto";
 import pins from "../../../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json";
+import { RESEARCH_FINAL_REQUIRED_ARTIFACT_TYPES } from "./pilotage-research-final-artifacts-v3-1";
 import bootstrap from "../../../contracts/orotitan-equity/v3/runtime/OROTITAN_RUNTIME_BOOTSTRAP_V3.0.3.json";
 
 export type StageCode = "RESEARCH" | "DEEP_DIVE" | "INTEGRATION";
@@ -216,11 +217,8 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
     if (r.currentStage === "DEEP_DIVE") {
       need(r.status === "ACTIVE", "RUN_STATUS_STAGE_MISMATCH");
       const research = requirePrevious(s, current, "RESEARCH");
-      requireFinal(s, research, ["READY_FOR_DEEP_DIVE", "FINAL_OUTPUTS_VERIFIED"], [
-        "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-        "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-        "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
-      ]);
+      requireFinal(s, research, ["READY_FOR_DEEP_DIVE", "FINAL_OUTPUTS_VERIFIED"],
+        RESEARCH_FINAL_REQUIRED_ARTIFACT_TYPES);
       need(current.lifecycle === "NOT_STARTED" || current.lifecycle === "IN_PROGRESS", "DEEP_DIVE_NOT_EXECUTABLE");
       if (current.lifecycle === "NOT_STARTED") {
         need(current.manifest === null, "NOT_STARTED_WITH_MANIFEST");
