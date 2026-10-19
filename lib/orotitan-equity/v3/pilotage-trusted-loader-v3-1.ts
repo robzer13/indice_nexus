@@ -23,6 +23,7 @@ import { verifyHistoricalPrecheckD5, verifyI2LineageD5,
 import { verifyD6ProposedProvenance } from "./pilotage-provenance-d6-v3-1";
 import { projectV31CheckpointForSchema, CheckpointCompatError,
   type VerifiedCheckpointParent } from "./pilotage-checkpoint-compat-v3-1";
+import { RESEARCH_FINAL_REQUIRED_ARTIFACT_TYPES } from "./pilotage-research-final-artifacts-v3-1";
 
 export type RunRow = {
   run_id: string; issuer_id: string | null; security_id: string | null;
@@ -77,9 +78,7 @@ const GATE: Record<StageCode, string> = {
   INTEGRATION: "READY_TO_PUBLISH",
 };
 const REQUIRED: Record<StageCode, readonly string[]> = {
-  RESEARCH: ["RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-    "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK"],
+  RESEARCH: RESEARCH_FINAL_REQUIRED_ARTIFACT_TYPES,
   DEEP_DIVE: ["DEEP_DIVE_REPORT", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
     "CALCULATION_LEDGER", "MATERIAL_ASSUMPTION_REGISTER", "ANALYTICAL_BLOCK_OUTPUTS",
     "CROSS_BLOCK_RECONCILIATION_RECORD", "RED_TEAM_PREMORTEM_RECORD",
