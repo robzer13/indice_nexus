@@ -1,8 +1,8 @@
 \set ON_ERROR_STOP on
 -- This is a full Registry transaction test, on a disposable local PostgreSQL 17 DB.
--- Run V1 operational test first, in the SAME session, to preserve its pg_temp
--- immutable manifest-receipt helpers. V1 receives the version-aware successor.
-\ir registry-v1-verify.sql
+-- Run the live V1 bundle attestation regression in the SAME session; reuse
+-- its management-plane, exact-byte receipt helpers for the V3.1 transition.
+\ir registry-v1-bundle-persistence-integrity-verify.sql
 
 DO $$
 DECLARE
@@ -82,12 +82,14 @@ BEGIN
   IF NOT v_failure THEN RAISE EXCEPTION 'D11 E2E: Deep Dive started without Research FINAL'; END IF;
 
   v_checkpoint_regs := jsonb_build_array(
-    pg_temp.registry_artifact_registration(
-      v_checkpoint_output_id,'EVIDENCE_LEDGER_CHECKPOINT',
-      'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT','4','d11/v31/checkpoint-output.json'
+    pg_temp.bpi_attested_registration(
+      v_run,'RESEARCH',v_checkpoint_output_id,1,
+      'EVIDENCE_LEDGER_CHECKPOINT','evidence_ledger_checkpoint',
+      '{"kind":"CHECKPOINT"}','d11/v31/checkpoint-output.json',
+      'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT','{"kind":"CHECKPOINT"}'::jsonb
     )
   );
-  SELECT jsonb_agg(pg_temp.registry_artifact_ref(value))
+  SELECT jsonb_agg(pg_temp.bpi_ref(value))
   INTO v_checkpoint_refs FROM jsonb_array_elements(v_checkpoint_regs);
   v_manifest := jsonb_build_object(
     'manifest_schema_version','1.0.0', 'manifest_id',v_checkpoint_id,
@@ -106,9 +108,11 @@ BEGIN
     'open_material_limitations','[]'::jsonb,'parent_manifests','[]'::jsonb,
     'started_at','2026-10-12T12:00:00Z','completed_at',NULL
   );
-  v_checkpoint_manifest_reg := pg_temp.registry_manifest_registration(
-    v_checkpoint_id,v_manifest,'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT',
-    'd11/v31/checkpoint-manifest.json'
+  v_checkpoint_manifest_reg := pg_temp.bpi_attested_registration(
+    v_run,'RESEARCH',v_checkpoint_id,1,'RESEARCH_STAGE_MANIFEST',
+    'research_stage_manifest',v_manifest::text,
+    'd11/v31/checkpoint-manifest.json',
+    'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT',v_manifest
   );
   SELECT state_version INTO v_run_sv FROM public.orotitan_runs WHERE run_id = v_run;
   SELECT state_version INTO v_stage_sv FROM public.orotitan_run_stages WHERE run_id = v_run AND stage_code='RESEARCH';
@@ -138,18 +142,21 @@ BEGIN
   -- Generate the seven *actual* V2 Research contract outputs.
   WITH items AS (
     SELECT artifact_type, ordinal,
-      gen_random_uuid() AS artifact_id,
-      substr('123456789abcdef',ordinal::integer,1) AS hash_char
+      gen_random_uuid() AS artifact_id
     FROM unnest(v_required) WITH ORDINALITY AS t(artifact_type,ordinal)
   ), regs AS (
     SELECT ordinal,
-      pg_temp.registry_artifact_registration(
-        artifact_id,artifact_type,'AUTHORITATIVE_STAGE_OUTPUT',
-        'AUTHORITATIVE',hash_char,'d11/v31/final-'||ordinal||'.json'
+      pg_temp.bpi_attested_registration(
+        v_run,'RESEARCH',artifact_id,1,artifact_type,
+        lower(artifact_type),
+        jsonb_build_object('artifact_type',artifact_type,'ordinal',ordinal)::text,
+        'd11/v31/final-'||ordinal||'.json',
+        'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',
+        jsonb_build_object('artifact_type',artifact_type,'ordinal',ordinal)
       ) AS reg FROM items
   )
   SELECT jsonb_agg(reg ORDER BY ordinal),
-    jsonb_agg(pg_temp.registry_artifact_ref(reg) ORDER BY ordinal)
+    jsonb_agg(pg_temp.bpi_ref(reg) ORDER BY ordinal)
   INTO v_final_regs,v_final_refs FROM regs;
 
   v_manifest := jsonb_build_object(
@@ -171,9 +178,11 @@ BEGIN
     'started_at','2026-10-12T12:00:00Z',
     'completed_at','2026-10-12T15:00:00Z'
   );
-  v_final_manifest_reg := pg_temp.registry_manifest_registration(
-    v_final_id,v_manifest,'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',
-    'd11/v31/final-manifest.json'
+  v_final_manifest_reg := pg_temp.bpi_attested_registration(
+    v_run,'RESEARCH',v_final_id,1,'RESEARCH_STAGE_MANIFEST',
+    'research_stage_manifest',v_manifest::text,
+    'd11/v31/final-manifest.json',
+    'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',v_manifest
   );
 
   -- Refuse bogus output vocabulary in the *actual* finalization transaction.
@@ -188,10 +197,8 @@ BEGIN
       ELSE value END)
      FROM jsonb_array_elements(v_final_refs))
   );
-  v_false_manifest_reg := pg_temp.registry_manifest_registration(
-    v_final_id,v_false_manifest,'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',
-    'd11/v31/false-manifest.json'
-  );
+  -- The V2 contract check fails before the bundle receipt boundary.
+  v_false_manifest_reg := v_final_manifest_reg;
   v_failure := FALSE;
   BEGIN
     PERFORM public.finalize_orotitan_stage(
@@ -204,10 +211,7 @@ BEGIN
 
   -- Missing classification output likewise cannot finalize.
   v_false_manifest := jsonb_set(v_manifest,'{output_artifacts}',v_final_refs - 6);
-  v_false_manifest_reg := pg_temp.registry_manifest_registration(
-    v_final_id,v_false_manifest,'AUTHORITATIVE_STAGE_OUTPUT','AUTHORITATIVE',
-    'd11/v31/incomplete-manifest.json'
-  );
+  v_false_manifest_reg := v_final_manifest_reg;
   v_failure := FALSE;
   BEGIN
     PERFORM public.finalize_orotitan_stage(
