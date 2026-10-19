@@ -54,7 +54,8 @@
     "working_capital_sign": "negative number means a cash outflow within the audited CFO bridge",
     "earnings_tax_2024": "Reported 2024 tax 6.528 EURm on pretax 188.520 EURm; issuer says underlying tax rate excluding net exceptional benefit about 13.1%; illustrative normalized 2024 net income = pretax*(1-0.131) = 163.824 EURm, NOT certified normal earnings",
     "separate_capex_2025": "FY2025 5.164 EURm acquisition of investment property is recorded as a separate investing line and excluded from conventional PPE_capex and the simple residual; consider in a cash deployment analysis, do not silently classify as recurring maintenance capex",
-    "formula_audited_cfo_reconciliation": "pretax_income + da + sbc_expense + net_financial_expense_adjustment + working_capital_movement - cash_tax_paid + net_cash_interest_received_paid"
+    "formula_audited_cfo_reconciliation": "pretax_income + da + sbc_expense + net_financial_expense_adjustment + working_capital_movement - cash_tax_paid + net_cash_interest_received_paid",
+    "distribution_interpretation": "Gross cash dividends and treasury buybacks exceed simple cash-after-PPE-and-R&D-capitalization over the full period; do not infer a cash flow shortfall or financing bridge without changes in deposits, debt, leases, convertible notes, and FX."
   },
   "years": [
     {
@@ -84,10 +85,13 @@
         "book_financing_proxy_not_roic": 248.9,
         "implied_reported_tax_rate_pct_using_rounded_net_income": 7.06,
         "cash_flow_statement_recomputed": 277.854,
-        "cfo_reconciliation_residual": 0
+        "cfo_reconciliation_residual": 0,
+        "shareholder_cash_distributions": 179.453
       },
       "net_financial_expense_adjustment": 13.743,
-      "net_cash_interest_received_paid": -4.318
+      "net_cash_interest_received_paid": -4.318,
+      "dividends_paid": 129.357,
+      "treasury_share_purchases": 50.096
     },
     {
       "year": 2022,
@@ -116,10 +120,13 @@
         "book_financing_proxy_not_roic": 282,
         "implied_reported_tax_rate_pct_using_rounded_net_income": 12.66,
         "cash_flow_statement_recomputed": 271.871,
-        "cfo_reconciliation_residual": 0
+        "cfo_reconciliation_residual": 0,
+        "shareholder_cash_distributions": 416.248
       },
       "net_financial_expense_adjustment": 18.626,
-      "net_cash_interest_received_paid": -3.59
+      "net_cash_interest_received_paid": -3.59,
+      "dividends_paid": 269.467,
+      "treasury_share_purchases": 146.781
     },
     {
       "year": 2023,
@@ -148,10 +155,13 @@
         "book_financing_proxy_not_roic": 308.4,
         "implied_reported_tax_rate_pct_using_rounded_net_income": 14.73,
         "cash_flow_statement_recomputed": 208.572,
-        "cfo_reconciliation_residual": 0
+        "cfo_reconciliation_residual": 0,
+        "shareholder_cash_distributions": 435.496
       },
       "net_financial_expense_adjustment": 5.703,
-      "net_cash_interest_received_paid": 4.722
+      "net_cash_interest_received_paid": 4.722,
+      "dividends_paid": 222.109,
+      "treasury_share_purchases": 213.387
     },
     {
       "year": 2024,
@@ -180,10 +190,13 @@
         "book_financing_proxy_not_roic": 357.5,
         "implied_reported_tax_rate_pct_using_rounded_net_income": 3.46,
         "cash_flow_statement_recomputed": 201.083,
-        "cfo_reconciliation_residual": 0
+        "cfo_reconciliation_residual": 0,
+        "shareholder_cash_distributions": 251.367
       },
       "net_financial_expense_adjustment": 7.071,
-      "net_cash_interest_received_paid": 9.183
+      "net_cash_interest_received_paid": 9.183,
+      "dividends_paid": 171.534,
+      "treasury_share_purchases": 79.833
     },
     {
       "year": 2025,
@@ -212,10 +225,13 @@
         "book_financing_proxy_not_roic": 380.4,
         "implied_reported_tax_rate_pct_using_rounded_net_income": 14.52,
         "cash_flow_statement_recomputed": 178.141,
-        "cfo_reconciliation_residual": 0
+        "cfo_reconciliation_residual": 0,
+        "shareholder_cash_distributions": 254.778
       },
       "net_financial_expense_adjustment": 19.108,
-      "net_cash_interest_received_paid": -2.319
+      "net_cash_interest_received_paid": -2.319,
+      "dividends_paid": 172.811,
+      "treasury_share_purchases": 81.967
     }
   ],
   "five_year_totals": {
@@ -224,7 +240,11 @@
     "capitalized_development_cash": 111.18,
     "after_ppe_and_dev_cash": 979.491,
     "sbc_expense": 97.217,
-    "after_ppe_dev_and_sbc_sensitivity": 882.274
+    "after_ppe_dev_and_sbc_sensitivity": 882.274,
+    "dividends_paid": 965.278,
+    "treasury_share_purchases": 572.064,
+    "shareholder_cash_distributions": 1537.342,
+    "distributions_over_mechanical_cash_residual": 557.851
   },
   "admission": {
     "financial_statement_columns_cross_checked": true,
