@@ -120,7 +120,7 @@ export function oauthResourceMetadata(config: McpOAuthConfig) {
   return {
     resource: config.audience,
     authorization_servers: [config.issuer],
-    scopes_supported: [MCP_SCOPE_READ, MCP_SCOPE_WRITE],
+    scopes_supported: ["email", "profile"],
   };
 }
 
