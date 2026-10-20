@@ -12,6 +12,16 @@ export function isAllowedChatGptRedirect(value: unknown): value is string {
     (value === CHATGPT_REDIRECT_STABLE || CHATGPT_CALLBACK_ID.test(value));
 }
 
+export function isAllowedChatGptReturnUrl(value:unknown):value is string {
+  if(typeof value!=="string" || value.length>2500)return false;
+  try {
+    const url=new URL(value);
+    return url.protocol==="https:" && url.origin==="https://chatgpt.com" &&
+      !url.username && !url.password && url.hash==="" &&
+      isAllowedChatGptRedirect(url.origin+url.pathname);
+  }catch{return false;}
+}
+
 export function isAuthorizationId(value: unknown): value is string {
   return typeof value === "string" && UUID.test(value);
 }
