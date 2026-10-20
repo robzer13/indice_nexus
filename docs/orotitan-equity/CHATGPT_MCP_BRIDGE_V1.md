@@ -240,3 +240,49 @@ Restent à obtenir avant activation :
 Références :
 - https://supabase.com/docs/guides/auth/oauth-server/oauth-flows
 - https://supabase.com/docs/guides/auth/oauth-server/token-security
+
+
+## D21 — Sécurité d'audience OAuth et protection anti-déploiements (2026-10-20)
+
+**Correctif de sécurité :** le `aud="authenticated"` standard des jetons
+Supabase ne suffit pas à autoriser un serveur MCP distant. ChatGPT transmet
+une valeur `resource` dans ses requêtes d'autorisation OAuth et de token ;
+le serveur ressource doit vérifier que le token a été émis **pour cette
+ressource particulière**, indépendamment de la signature et de l'utilisateur.
+
+Le vérificateur MCP exige donc désormais **simultanément** :
+- JWT RS256 ou ES256 valide, émetteur JWKS épinglé, `aud="authenticated"`,
+  claims de durée valides ;
+- `sub` dans la liste des utilisateurs autorisés et `client_id` dans la
+  liste explicite des applications OAuth autorisées ;
+- rôle `authenticated` ;
+- claim **signé** `resource` exactement égal à
+  `https://<domaine-pilote>/api/orotitan/mcp`.
+
+**Point d'intégration restant :** Supabase n'ajoute pas ce claim ressource
+aux tokens OAuth standard dans la configuration actuellement observée. Un
+**Custom Access Token Hook** spécifique au `client_id` enregistré de ChatGPT
+devra être conçu, audité et testé (en gardant inchangés les tokens d'autres
+clients). Cela implique une configuration Auth partagée et nécessitera un
+accord de migration distinct ; aucune fonction/SQL/hook n'est installé ici.
+L'autre voie consiste à utiliser une autorité OAuth externe capable d'émettre
+des jetons nativement liés à la ressource. Ne pas supprimer le contrôle
+`resource` pour forcer une connexion prématurée.
+
+Les tests vérifient le refus d'un JWT valide mais sans `resource`, ou avec
+une autre ressource, et l'acceptation de jetons RS256/ES256 correctement liés.
+Aucun déploiement Vercel ni activation de MCP n'est déclenché par ce correctif.
+
+**Protection des quotas :** `vercel.json` conserve le cron
+`/api/cron/prices` et désactive **uniquement** les déploiements Git
+automatiques de la branche
+`fix/orotitan-v31-research-handoff-artifact-contract-20261019`.
+Les autres branches (notamment production) ne sont pas désactivées par
+ce mécanisme. Les réglages Vercel complémentaires d'arrêt des previews
+sur `orotitan-screener` et `orotitan-vnext-pilotage` restent distincts.
+Déploiement manuel uniquement sur jalon approuvé.
+
+Sources de compatibilité :
+- https://developers.openai.com/plugins/build/auth
+- https://supabase.com/docs/guides/auth/oauth-server/token-security
+- https://vercel.com/docs/project-configuration/git-configuration
