@@ -137,8 +137,14 @@ export default async function OroTitanPilotagePage({
       {currentObservation && <section id="orotitan-blockers" className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900/70 p-5 scroll-mt-6 sm:p-6">
         <div><p className="text-xs uppercase tracking-wider text-slate-400">État enregistré — non vérifié par D2–D8</p>
           <h2 className="mt-1 text-lg font-semibold text-white">
-            Run {currentObservation.processVersion} · {currentObservation.stage} · {currentObservation.status}
+            {currentObservation.issuerName ?? "Émetteur non renseigné"}
+            {currentObservation.ticker ? <span className="ml-2 font-mono text-sm font-normal text-cyan-300">
+              {currentObservation.ticker}
+            </span> : null}
           </h2>
+          <p className="mt-1 text-xs text-slate-400">
+            Version {currentObservation.processVersion} · {displayStage(currentObservation.stage)} · {displayStatus(currentObservation.status)}
+          </p>
         </div>
         <p className="text-xs text-slate-400">
           Étape : {currentObservation.stageLifecycle} · Handoff : {currentObservation.handoffGateState}
@@ -209,8 +215,17 @@ export default async function OroTitanPilotagePage({
               href={"/admin/orotitan?run=" + encodeURIComponent(run.runId) + "&view=" + view}
               className={"block rounded-xl border p-4 text-sm transition hover:border-cyan-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 " +
                 (run.runId === data.selectedRunId ? "border-cyan-800 bg-slate-800" : "border-slate-800 bg-slate-950/40")}>
-              <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="break-all font-mono text-xs text-cyan-200">{run.runId}</span>
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="truncate text-base font-semibold text-white">
+                    {run.issuerName ?? "Émetteur non renseigné"}
+                  </p>
+                  <p className="mt-1 text-xs text-cyan-200">
+                    {run.ticker ? `Action ${run.ticker} · ` : ""}
+                    {displayStage(run.stage)}
+                    {run.isin ? ` · ISIN ${run.isin}` : ""}
+                  </p>
+                </div>
                 <span className={"rounded-full border px-2.5 py-1 text-xs font-medium " +
                   (hasObservedBlockers(run) ? "border-amber-800 bg-amber-950/30 text-amber-200" :
                     "border-slate-700 bg-slate-900 text-slate-300")}>
@@ -218,7 +233,10 @@ export default async function OroTitanPilotagePage({
                 </span>
               </div>
               <p className="mt-2 text-xs text-slate-400">
-                {displayStage(run.stage)} · {run.stageLifecycle} · {run.mode} · cutoff {run.cutoff} · état #{run.stateVersion}
+                {run.stageLifecycle} · {run.mode} · cutoff {run.cutoff} · état #{run.stateVersion}
+              </p>
+              <p className="mt-1 break-all font-mono text-[11px] text-slate-500">
+                Run {run.runId}
               </p>
               {run.contractStatusCode && <p className="mt-2 break-all font-mono text-xs text-amber-200">
                 {run.contractStatusCode}
