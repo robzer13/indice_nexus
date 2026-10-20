@@ -28,38 +28,73 @@ Sur l'endpoint `/api/orotitan/mcp` (Streamable HTTP, SDK officiel MCP v2) :
 Aucun outil d'analyse IA, de promotion d'artefacts GitHub, de modification
 du Registry, de finalisation, de publication ou de modification de schéma.
 
-## Authentification et phase pilote (NON PRÊT À CONNECTER EN PRODUCTION)
+## Authentification OAuth 2.1 préparée (sans émission de jetons)
 
-L'endpoint est **coupé par défaut** :
-`OROTITAN_MCP_ENABLED=false`. Il exige en plus :
-- `OROTITAN_MCP_PUBLIC_ORIGIN` : origine HTTPS exacte de l'application,
-  sans route ni barre oblique terminale ;
-- `OROTITAN_MCP_READ_TOKEN` : secret serveur d'au moins 48 caractères,
-  présenté uniquement dans l'en-tête HTTP Authorization Bearer ;
-- `OROTITAN_MCP_ALLOWED_RUN_IDS` : allow-list de 1 à 25 UUID existants exacts.
-  Aucune route ne peut explorer un run non autorisé.
+**Le connecteur n'est pas déployé ni raccordé à ChatGPT.**
 
-Le dépôt MCP est doublement désactivé :
-`OROTITAN_MCP_WRITE_ENABLED=false` et
-`OROTITAN_MANUAL_INTAKE_ENABLED=false`. La correspondance des versions est revérifiée
-au dernier moment, l'écriture restant une quarantaine et non un stage writer.
+Le bridge fonctionne en mode `OAUTH` seulement lorsque les paramètres
+serveur ci-dessous sont configurés, et `OROTITAN_MCP_ENABLED=true`.
+Un fournisseur d'identité externe **établi** doit délivrer des access tokens
+JWT RS256. OroTitan est uniquement le **resource server** : il ne possède
+ni endpoint d'autorisation, ni secret client OAuth, ni user store séparé.
 
-**Limitation réelle :** le portail de connexion des plugins ChatGPT ne propose pas
-actuellement un flux d'installation par API key/bearer statique ; sa connexion
-personnalisée requiert une méthode de connexion et les droits du compte
-compatibles. Ce prototype au token fixe est un **point de départ pour des tests
-HTTP privés**, pas une connexion ChatGPT déjà installable. Avant toute activation
-publique : intégrer **OAuth 2.1 / PKCE, scopes read/write, rotation/révocation
-de tokens**, gestion d'identité distincte de la session admin navigateur,
-protection contre abus, déploiement HTTPS isolé, puis tests avec ChatGPT.
-La prise en charge des actions d'écriture peut dépendre de l'offre ChatGPT ;
-ne promettre aucune disponibilité sans vérification du compte.
+Variables d'environnement (jamais `NEXT_PUBLIC_`) :
+- `OROTITAN_MCP_PUBLIC_ORIGIN` : origine HTTPS exacte du déploiement approuvé ;
+- `OROTITAN_MCP_AUTH_MODE=OAUTH` ;
+- `OROTITAN_MCP_OAUTH_ISSUER` : issuer OAuth HTTPS exact ;
+- `OROTITAN_MCP_OAUTH_JWKS_URI` : JWKS HTTPS sur le même hôte que l'issuer ;
+- `OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS` : allow-list des identifiants OAuth `sub` ;
+- `OROTITAN_MCP_ALLOWED_RUN_IDS` : allow-list de 1 à 25 UUID du Registry.
+
+Chaque requête MCP valide la **signature RS256 via les clés JWKS externes**
+(`jose`), l'issuer `iss`, l'audience `aud` strictement égale à
+`https://<app>/api/orotitan/mcp`, l'expiration, l'âge du token
+(≤ 1 heure), l'identité `sub` dans l'allow-list et la portée
+`orotitan.read`. Un token avec `orotitan.write` seulement ne suffit pas.
+Une écriture exige en plus `orotitan.write` dans le jeton et les
+deux flags indépendants `OROTITAN_MCP_WRITE_ENABLED=true` et
+`OROTITAN_MANUAL_INTAKE_ENABLED=true`. Les lots JSON-RPC sont
+refusés lorsque l'écriture est activée, pour ne pas contourner les scopes.
+
+Découverte RFC 9728 :
+`/.well-known/oauth-protected-resource` n'est servie que lorsque
+l'auth OAuth est configurée ; les 401 du MCP indiquent cette URL via
+`WWW-Authenticate`. Cela **ne remplace pas** le serveur d'autorisation
+du fournisseur d'identité, lequel doit exposer sa discovery OAuth et
+assurer l'autorization-code + PKCE S256, la liaison `resource` → audience,
+l'identification du client par CIMD/DCR, le consentement et le renouvellement
+des access tokens. Les protocoles de révocation et de renouvellement
+restent la responsabilité du fournisseur choisi et de son exploitation.
+
+**Limite du SDK actuellement épinglé :** `@modelcontextprotocol/server@2.0.0`
+ne permet pas de déclarer directement `securitySchemes` sur
+`registerTool` dans ses types. Les scopes sont donc appliqués
+strictement à la frontière HTTP ; la prise en charge complète de
+l'interface d'authentification par outil et sa métadonnée nécessite
+une mise à jour du SDK ou un adaptateur testé. Aucune compatibilité
+d'installation ChatGPT n'est revendiquée tant que ce point n'est pas
+validé de bout en bout.
+
+Le raccourci hérité par bearer statique ne fonctionne qu'avec
+`OROTITAN_MCP_AUTH_MODE=TEST_BEARER` ET `NODE_ENV != production`.
+Il ne donne aucun moyen de contourner OAuth en production.
+
+La documentation du Help Center en date du 20 octobre 2026
+annonce les connexions MCP personnalisées pour **ChatGPT Business
+et Enterprise/Edu** avec permissions adéquates. Aucun droit
+d'installation ne peut être déduit du seul code du serveur.
+https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt
 
 ## Test de non-régression et gates
 - Les tests unitaires définissent les protections : rejet sans token, rejet
   d'UUID non whitelistes, double flag pour écriture, route SDK officiel,
   réutilisation D1/D2, absence de mutation du Registry.
-- Aucun appel Supabase/GitHub de production n'est nécessaire aux tests.
+- Les tests de signatures JWT/claims RS256 utilisent des clés éphémères locales,
+  sans fournisseur externe ni jeton véritable.
+- Une lecture Supabase de Besi a été réalisée séparément en lecture seule :
+  état ACTIVE/RESEARCH, version run 6, CHECKPOINT/NO, six blocages. Ce constat
+  ne démontre pas un échange MCP réussi depuis ChatGPT.
+- Aucun appel Supabase/GitHub de production n'est nécessaire aux tests de code.
 - Un résultat `RECEIVED_NOT_VERIFIED` n'est pas un manifest FINAL.
 - Un Research CHECKPOINT/NO (notamment le run Besi bloqué) ne doit jamais
   être promu à Fundamentals sur la base de son simple enregistrement.
@@ -68,8 +103,9 @@ ne promettre aucune disponibilité sans vérification du compte.
 
 ## Jalons de mise en service séparés
 1. Validation du code PR / test HTTP isolé (route désactivée par défaut).
-2. Ajouter OAuth et tester l'authentification dans ChatGPT selon les droits
-   réellement disponibles.
+2. Configurer un IdP OAuth 2.1 compatible (PKCE/CIMD ou DCR/resource/audience),
+   valider la métadonnée d'auth par outil, puis tester ChatGPT avec un compte
+   et les droits réels nécessaires.
 3. Déploiement de la route lecture seule, strictement bornée aux runs autorisés,
    après autorisation explicite.
 4. Préparation puis autorisation *distincte* d'une transmission de livrables en
