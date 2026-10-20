@@ -65,6 +65,7 @@ export function mcpOAuthConfig(env: NodeJS.ProcessEnv): McpOAuthConfig | null {
     jwksUri: jwks.href,
     resourceMetadataUrl: origin.origin + "/.well-known/oauth-protected-resource",
     allowedSubjects: new Set(subjects),
+    allowedClients: new Set(clients),
   };
 }
 
