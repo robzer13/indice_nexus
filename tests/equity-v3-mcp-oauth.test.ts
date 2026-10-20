@@ -80,6 +80,19 @@ test("MCP OAuth verifies signature, issuer, Supabase audience, client registrati
     (error:unknown)=>error instanceof McpOAuthError);
 });
 
+test("MCP OAuth accepts asymmetrically signed ES256 Supabase tokens for approved clients",async()=>{
+  const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
+  const jwk=await exportJWK(publicKey);
+  const keys=createLocalJWKSet({keys:[{...jwk,kid:"ec1",alg:"ES256",use:"sig"}]});
+  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123"})
+    .setProtectedHeader({alg:"ES256",kid:"ec1"})
+    .setIssuer(config.issuer).setAudience(config.tokenAudience)
+    .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
+  const identity=await verifyMcpOAuthBearer("Bearer "+jwt,config,keys);
+  assert.equal(identity.subject,"user-123");
+  assert.deepEqual([...identity.scopes],[MCP_SCOPE_READ]);
+});
+
 test("MCP OAuth discovery route and dispatch require validated metadata and scope",()=>{
   const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
   const meta=readFileSync(new URL("../app/.well-known/oauth-protected-resource/route.ts",import.meta.url),"utf8");
