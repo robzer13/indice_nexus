@@ -77,6 +77,11 @@ export function isOAuthPayloadAdmitted(payload: JWTPayload, config: McpOAuthConf
     config.allowedSubjects.has(payload.sub) &&
     typeof clientId === "string" &&
     config.allowedClients.has(clientId) &&
+    // ChatGPT requires resource-bound access tokens. Supabase's default
+    // aud="authenticated" is not sufficient to prove the token was minted
+    // for this MCP resource. A reviewed, client-specific access-token hook
+    // must add this signed claim before we can activate the bridge.
+    payload.resource === config.audience &&
     payload.role === "authenticated" &&
     typeof payload.exp === "number" && typeof payload.iat === "number";
 }
