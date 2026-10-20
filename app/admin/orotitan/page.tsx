@@ -3,12 +3,12 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 import { AdminNav } from "@/components/admin/admin-nav";
-import { OroTitanPromptCopy } from "@/components/admin/orotitan-prompt-copy";
+import { OroTitanWorkflowJourney } from "@/components/admin/orotitan-workflow-journey";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { loadAdminPilotageCockpit } from "@/lib/orotitan-equity/v3/pilotage-operator-cockpit-server";
 import { filterOperatorRuns, operatorTriageTotals, type OperatorFilter } from "@/lib/orotitan-equity/v3/pilotage-operator-view-v3-1";
 
-export const metadata: Metadata = { title: "Pilotage OroTitan V3.1 — diagnostic" };
+export const metadata: Metadata = { title: "OroTitan — Parcours des analyses" };
 export const dynamic = "force-dynamic";
 
 const explanations: Record<string, string> = {
@@ -49,38 +49,57 @@ export default async function OroTitanPilotagePage({
   const displayed = data ? filterOperatorRuns(data.runs, view) : [];
   const currentObservation = selected ? data?.runs.find(row => row.runId === selected) : null;
 
-  return <main className="space-y-6">
-    <header className="space-y-2">
-      <p className="text-xs font-semibold uppercase tracking-[.2em] text-cyan-400">OroTitan · Pilotage V3.1</p>
-      <h1 className="text-3xl font-semibold text-white">Diagnostic des runs</h1>
-      <p className="max-w-3xl text-sm leading-6 text-slate-400">
-        État réel du Registry et vérification des preuves immuables. OroTitan fournit le
-        prompt de chaque étape admissible, à copier puis à exécuter manuellement dans ChatGPT.
-        Aucune IA, transition de stage ou publication n&apos;est déclenchée depuis cette page.
-      </p>
+  return <main className="mx-auto max-w-7xl space-y-6 pb-12">
+    <header className="flex flex-wrap items-end justify-between gap-4">
+      <div className="max-w-3xl space-y-2">
+        <p className="text-xs font-semibold uppercase tracking-[.2em] text-cyan-400">
+          OroTitan · Espace de travail
+        </p>
+        <h1 className="text-3xl font-semibold tracking-tight text-white sm:text-4xl">
+          Pilotage des analyses
+        </h1>
+        <p className="text-sm leading-6 text-slate-400">
+          Suivez les phases, identifiez la prochaine action et copiez le prompt de travail.
+          L&apos;analyse reste manuelle dans ChatGPT ; aucune IA ni transition automatique.
+        </p>
+      </div>
+      <span className="rounded-full border border-slate-700 bg-slate-900 px-3 py-1.5 text-xs font-medium text-slate-300">
+        Mode manuel · V3.1
+      </span>
     </header>
     <AdminNav />
-    <section className="rounded-xl border border-amber-800/70 bg-amber-950/20 p-4 text-sm text-amber-100" aria-label="Limite de publication">
-      <strong>Publication V3.1 interdite.</strong> Le gel D8 est un gel technique de revue,
-      pas une homologation du writer. Les contrôles I2/I3-B, l’attestation de publication
-      et le CAS transactionnel demeurent des prérequis distincts.
-    </section>
+    <aside className="flex flex-wrap items-start gap-3 rounded-xl border border-amber-900/60 bg-amber-950/15 px-4 py-3 text-sm leading-6 text-amber-100"
+      aria-label="Limite de publication">
+      <span aria-hidden="true" className="font-bold text-amber-400">!</span>
+      <p className="flex-1"><strong>Publication V3.1 non autorisée.</strong> Le cockpit permet
+        la lecture et la préparation des prompts, jamais la publication ni la modification
+        du Registry. Les contrôles I2/I3-B et le writer restent distincts.</p>
+    </aside>
 
-    <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-      <h2 className="font-semibold text-white">Rechercher un run</h2>
-      <form method="GET" className="mt-3 flex flex-col gap-3 sm:flex-row" action="/admin/orotitan">
+    <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+      <div className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-semibold text-white">Ouvrir un dossier</h2>
+        <p className="text-xs text-slate-400">Sélectionnez un run existant · accès lecture seule</p>
+      </div>
+      <form method="GET" className="mt-4 flex flex-col gap-3 sm:flex-row" action="/admin/orotitan">
         <input type="text" name="run" required defaultValue={selected ?? ""}
-          placeholder="UUID du run OroTitan"
+          placeholder="Identifiant du run (UUID)"
           aria-label="Identifiant UUID du run"
-          className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2.5 font-mono text-sm text-white"
+          className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-3 font-mono text-sm text-white outline-none transition focus:border-cyan-500 focus:ring-2 focus:ring-cyan-700/40"
           maxLength={36} />
-        <button className="rounded-lg bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-300">
-          Vérifier en lecture seule
+        <button className="rounded-lg bg-cyan-400 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300">
+          Ouvrir et vérifier
         </button>
       </form>
       <p className="mt-2 text-xs text-slate-500">La liste est une observation du Registry, non une validation des artefacts.
         La vérification complète nécessite aussi une observation indépendante de l’état Supabase.</p>
     </section>
+
+    {currentObservation && data ? <OroTitanWorkflowJourney
+      run={currentObservation}
+      preview={data.preview}
+      previewState={data.previewState}
+    /> : null}
 
     {!data ? <section role="status" className="rounded-xl border border-rose-900 bg-rose-950/20 p-4 text-sm text-rose-200">
       Le diagnostic n’est pas disponible. Vérifier la configuration serveur et la connexion Registry.
@@ -101,7 +120,7 @@ export default async function OroTitanPilotagePage({
         </p>
       </section>}
 
-      {currentObservation && <section className="space-y-3 rounded-xl border border-slate-700 bg-slate-900/70 p-5">
+      {currentObservation && <section id="orotitan-blockers" className="space-y-3 rounded-2xl border border-slate-700 bg-slate-900/70 p-5 scroll-mt-6 sm:p-6">
         <div><p className="text-xs uppercase tracking-wider text-slate-400">État enregistré — non vérifié par D2–D8</p>
           <h2 className="mt-1 text-lg font-semibold text-white">
             Run {currentObservation.processVersion} · {currentObservation.stage} · {currentObservation.status}
@@ -136,7 +155,7 @@ export default async function OroTitanPilotagePage({
         <p className="mt-2 text-sm leading-6 text-amber-100/90">{getMessage(data.blockerCode)}</p>
       </section> : null}
 
-      {data.preview && <section className="space-y-4 rounded-xl border border-cyan-900/70 bg-slate-900/70 p-5">
+      {data.preview && <section className="space-y-4 rounded-2xl border border-cyan-900/70 bg-slate-900/70 p-5 sm:p-6">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">Contrôle cryptographique D2–D8</p>
           <h2 className="mt-2 text-lg font-semibold text-white">Diagnostic vérifié : {data.preview.outcome}</h2>
@@ -151,14 +170,10 @@ export default async function OroTitanPilotagePage({
           <div className="sm:col-span-2"><dt>Empreinte d’état observé</dt>
             <dd className="break-all font-mono text-white">{data.preview.stateFingerprintSha256}</dd></div>
         </dl>
-        {data.preview.verifiedPrompt ? <OroTitanPromptCopy
-          prompt={data.preview.verifiedPrompt}
-          phase={data.preview.phase}
-        /> : null}
       </section>}
 
-      <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-        <h2 className="font-semibold text-white">File de traitement et historique du Registry</h2>
+      <section className="rounded-2xl border border-slate-800 bg-slate-900/60 p-5 sm:p-6">
+        <h2 className="text-lg font-semibold text-white">Mes dossiers et historique</h2>
         <p className="mt-1 text-xs text-slate-500">
           Observation uniquement · les versions historiques ne sont pas évaluées par le vérificateur V3.1.
         </p>
