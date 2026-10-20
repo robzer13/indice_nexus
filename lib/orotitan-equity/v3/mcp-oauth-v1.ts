@@ -107,8 +107,8 @@ export async function verifyMcpOAuthBearer(
   const jwt = authorization.slice(7);
   try {
     const { payload } = await jwtVerify(jwt, keys, {
-      issuer: config.issuer, audience: config.audience,
-      algorithms: ["RS256"], requiredClaims: ["iss","aud","sub","exp","iat"],
+      issuer: config.issuer, audience: config.tokenAudience,
+      algorithms: ["RS256","ES256"], requiredClaims: ["iss","aud","sub","exp","iat"],
       maxTokenAge: "1h", clockTolerance: "5s",
     });
     if (!isOAuthPayloadAdmitted(payload,config)) {
