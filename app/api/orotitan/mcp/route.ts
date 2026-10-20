@@ -94,7 +94,7 @@ function createServer(): McpServer {
 }
 
 // Official SDK handles Streamable HTTP: 2026 protocol plus stateless legacy.
-const handler=createMcpHandler(createServer,{legacy:"stateless",maxRequestBodySize:250_000});
+const handler=createMcpHandler(createServer,{legacy:"stateless"});
 
 function plain(status:number,message:string,headers:Record<string,string>={}) {
   return new Response(message,{status,headers:{"cache-control":"no-store",...headers}});
@@ -120,6 +120,10 @@ function gate(request:Request):Response|null {
 export async function POST(request:Request):Promise<Response> {
   const denied=gate(request);
   if(denied)return denied;
+  const length=request.headers.get("content-length");
+  if(length!==null && (!/^\\d+$/.test(length) || Number(length)>250_000)) {
+    return plain(413,"Request too large");
+  }
   return handler.fetch(request);
 }
 export async function GET(request:Request):Promise<Response> {
