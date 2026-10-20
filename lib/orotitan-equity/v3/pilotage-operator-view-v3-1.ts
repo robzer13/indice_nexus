@@ -11,6 +11,7 @@ export type RunSummary = {
   canonical_mode: string;
   data_cutoff: string;
   issuer_id: string | null;
+  security_id?: string | null;
   state_version: number;
   created_at: string;
   process_version: string;
@@ -28,6 +29,13 @@ export type OperatorStageObservation = {
   blocker_summary: unknown;
 };
 
+export type OperatorIdentity = {
+  issuerId: string;
+  displayName: string;
+  ticker: string | null;
+  isin: string | null;
+};
+
 export type OperatorBlocker = {
   code: string | null;
   text: string;
@@ -36,6 +44,9 @@ export type OperatorBlocker = {
 
 export type OperatorRun = {
   runId: string;
+  issuerName: string | null;
+  ticker: string | null;
+  isin: string | null;
   status: string;
   stage: string;
   mode: string;
@@ -100,10 +111,15 @@ export function supportsPilotageV31(processVersion: string, pilotageVersion: str
 export function asOperatorRun(
   row: RunSummary,
   stage: OperatorStageObservation | null = null,
+  identity: OperatorIdentity | null = null,
 ): OperatorRun {
   const relevant = stage?.stage_code === row.current_stage && stage.run_id === row.run_id ? stage : null;
   return {
-    runId: row.run_id, status: row.run_status,
+    runId: row.run_id,
+    issuerName: identity?.issuerId === row.issuer_id ? identity.displayName : null,
+    ticker: identity?.issuerId === row.issuer_id ? identity.ticker : null,
+    isin: identity?.issuerId === row.issuer_id ? identity.isin : null,
+    status: row.run_status,
     stage: row.current_stage ?? "NOT_ASSIGNED", mode: row.canonical_mode,
     cutoff: row.data_cutoff, stateVersion: row.state_version,
     createdAt: row.created_at,
