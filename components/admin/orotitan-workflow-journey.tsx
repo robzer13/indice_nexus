@@ -65,8 +65,14 @@ export function OroTitanWorkflowJourney({ run, preview, previewState }: Props) {
           </a> : null}
         </div>
         <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Run sélectionné</p>
-          <p className="mt-2 break-all font-mono text-xs text-slate-100">{run.runId}</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-slate-400">Entreprise étudiée</p>
+          <h3 className="mt-2 text-lg font-semibold leading-snug text-white">
+            {run.issuerName ?? "Émetteur non renseigné"}
+          </h3>
+          {run.ticker ? <p className="mt-1 font-mono text-sm font-medium text-cyan-300">
+            {run.ticker}
+          </p> : null}
+          <p className="mt-3 break-all font-mono text-[11px] text-slate-500">{run.runId}</p>
           <dl className="mt-4 grid grid-cols-2 gap-3 text-sm xl:grid-cols-1">
             <div><dt className="text-xs text-slate-500">Étape Registry</dt>
               <dd className="mt-1 font-medium text-slate-200">{run.stage}</dd></div>
