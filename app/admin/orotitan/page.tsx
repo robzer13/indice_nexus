@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 import { AdminNav } from "@/components/admin/admin-nav";
-import { startFundamentalsFromResearch } from "./actions";
+import { OroTitanPromptCopy } from "@/components/admin/orotitan-prompt-copy";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { loadAdminPilotageCockpit } from "@/lib/orotitan-equity/v3/pilotage-operator-cockpit-server";
 import { filterOperatorRuns, operatorTriageTotals, type OperatorFilter } from "@/lib/orotitan-equity/v3/pilotage-operator-view-v3-1";
@@ -25,14 +25,6 @@ const explanations: Record<string, string> = {
   D6_PROPOSED_SCHEMA_INVALID: "Format de provenance D6 invalide ou non conforme.",
   V31_PUBLICATION_WRITER_NOT_ADMITTED: "Le writer V3.1 n’est pas homologué ; publication interdite.",
   REGISTRY_LIST_QUERY_FAILED: "Impossible de charger le Registry ; vérifier la connexion Supabase côté serveur.",
-  RESEARCH_FINAL_NOT_VERIFIED: "Research FINAL non admis : vérifier la suffisance et les sept artefacts avant Fundamentals.",
-  DOWNSTREAM_STAGE_ALREADY_REGISTERED: "Deep Dive existe déjà : utiliser la reprise plutôt que créer une seconde étape.",
-  STALE_RUN_CAS: "Le run a évolué. Actualiser le diagnostic avant de relancer la transition.",
-  STALE_STAGE_CAS: "L’étape Research a évolué. Actualiser avant de relancer.",
-  INVALID_EXPECTED_VERSIONS: "Versions du Registry manquantes ou invalides.",
-  REGISTRY_STAGE_START_REJECTED: "Le Registry a refusé la transition ; aucune admission forcée.",
-  REGISTRY_STAGE_START_NOT_CONFIRMED: "Réponse Registry inattendue. Vérifier l’état courant avant toute répétition.",
-  RESEARCH_STAGE_NOT_EXECUTABLE: "Research ne satisfait pas les préconditions d’exécution.",
 };
 
 function getMessage(code: string | null): string {
@@ -49,7 +41,6 @@ export default async function OroTitanPilotagePage({
   if (!(await isAdminAuthenticated())) redirect("/admin");
   const query = await searchParams;
   const selected = typeof query.run === "string" ? query.run : null;
-  const transition = typeof query.transition === "string" ? query.transition : null;
   const view: OperatorFilter = query.view === "all" || query.view === "blocked" ? query.view : "v31";
   let data: Awaited<ReturnType<typeof loadAdminPilotageCockpit>> | null = null;
   try { data = await loadAdminPilotageCockpit(selected); }
@@ -63,9 +54,9 @@ export default async function OroTitanPilotagePage({
       <p className="text-xs font-semibold uppercase tracking-[.2em] text-cyan-400">OroTitan · Pilotage V3.1</p>
       <h1 className="text-3xl font-semibold text-white">Diagnostic des runs</h1>
       <p className="max-w-3xl text-sm leading-6 text-slate-400">
-        État réel du Registry et vérification des preuves immuables. Le démarrage de Fundamentals
-        est une action administrateur explicite, limitée aux Research FINAL admissibles.
-        Aucune création de run, validation I3-B ou publication ici.
+        État réel du Registry et vérification des preuves immuables. OroTitan fournit le
+        prompt de chaque étape admissible, à copier puis à exécuter manuellement dans ChatGPT.
+        Aucune IA, transition de stage ou publication n'est déclenchée depuis cette page.
       </p>
     </header>
     <AdminNav />
@@ -90,19 +81,6 @@ export default async function OroTitanPilotagePage({
       <p className="mt-2 text-xs text-slate-500">La liste est une observation du Registry, non une validation des artefacts.
         La vérification complète nécessite aussi une observation indépendante de l’état Supabase.</p>
     </section>
-
-    {transition && <section role="status"
-      className={"rounded-xl border p-4 text-sm " +
-        (transition === "started" && currentObservation?.stage === "DEEP_DIVE" &&
-        currentObservation.stageLifecycle === "IN_PROGRESS" ?
-          "border-emerald-800 bg-emerald-950/20 text-emerald-100" :
-          "border-amber-800 bg-amber-950/20 text-amber-100")}>
-      {transition === "started" ?
-        (currentObservation?.stage === "DEEP_DIVE" && currentObservation.stageLifecycle === "IN_PROGRESS" ?
-          "Deep Dive démarré dans le Registry. Fundamentals peut maintenant être exécuté." :
-          "Transition demandée. Vérifier le run courant dans le Registry avant de poursuivre.") :
-        <><strong>Transition non admise : </strong><code>{transition}</code>. {getMessage(transition)}</>}
-    </section>}
 
     {!data ? <section role="status" className="rounded-xl border border-rose-900 bg-rose-950/20 p-4 text-sm text-rose-200">
       Le diagnostic n’est pas disponible. Vérifier la configuration serveur et la connexion Registry.
@@ -167,41 +145,16 @@ export default async function OroTitanPilotagePage({
           </p>
         </div>
         <p className="text-sm text-slate-200">{data.preview.nextAction}</p>
-        {data.preview.outcome === "HANDOFF" &&
-        data.preview.phase === "FUNDAMENTALS" &&
-        data.preview.reasonCode === "RESEARCH_FINAL_ADMITTED_START_REQUIRED" &&
-        selected ? <form action={startFundamentalsFromResearch}
-          className="space-y-3 rounded-lg border border-cyan-800/70 bg-slate-950/70 p-4">
-          <p className="text-sm text-slate-200">
-            Research FINAL vérifié : les sept sorties exigées sont admises. Le Registry
-            peut créer la première étape Deep Dive et ouvrir Fundamentals.
-          </p>
-          <input type="hidden" name="runId" value={selected} />
-          <input type="hidden" name="expectedRunStateVersion" value={data.preview.runStateVersion} />
-          <input type="hidden" name="expectedResearchStageStateVersion" value={data.preview.stageStateVersion} />
-          <button type="submit"
-            className="rounded-lg bg-cyan-400 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-300">
-            Démarrer Fundamentals
-          </button>
-          <p className="text-xs text-slate-400">
-            Nouvelle vérification des preuves avant l’action et CAS transactionnel.
-            Aucun contournement des blocages Research ni publication.
-          </p>
-        </form> : null}
         <dl className="grid gap-3 text-xs text-slate-400 sm:grid-cols-2">
           <div><dt>Version run</dt><dd className="font-mono text-white">{data.preview.runStateVersion}</dd></div>
           <div><dt>Version étape</dt><dd className="font-mono text-white">{data.preview.stageStateVersion}</dd></div>
           <div className="sm:col-span-2"><dt>Empreinte d’état observé</dt>
             <dd className="break-all font-mono text-white">{data.preview.stateFingerprintSha256}</dd></div>
         </dl>
-        {data.preview.verifiedPrompt ? <details className="border-t border-slate-800 pt-4">
-          <summary className="cursor-pointer text-sm font-medium text-cyan-300">
-            Voir le handoff proposé (non exécuté)
-          </summary>
-          <pre className="mt-3 max-h-96 overflow-auto whitespace-pre-wrap break-words rounded-lg bg-slate-950 p-4 text-xs text-slate-300">
-            {data.preview.verifiedPrompt}
-          </pre>
-        </details> : null}
+        {data.preview.verifiedPrompt ? <OroTitanPromptCopy
+          prompt={data.preview.verifiedPrompt}
+          phase={data.preview.phase}
+        /> : null}
       </section>}
 
       <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
