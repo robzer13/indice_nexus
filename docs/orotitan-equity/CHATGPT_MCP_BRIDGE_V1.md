@@ -194,3 +194,49 @@ Références :
 - https://supabase.com/docs/guides/auth/oauth-server/getting-started
 - https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication
 - https://developers.openai.com/plugins/build/auth
+
+
+## D16 — Compatibilité réelle avec les jetons Supabase OAuth (lecture seule)
+
+Après création du premier utilisateur Auth (compte confirmé, nombre vérifié par
+SQL en lecture seule), la documentation officielle de Supabase précise que
+**les scopes personnalisés OAuth ne sont pas disponibles** actuellement :
+seuls `openid`, `email`, `profile` et `phone` sont pris en charge.
+Les scopes OIDC ne limitent pas l'accès aux API/ressources métier.
+
+Le resource server MCP a donc été corrigé pour **ne pas exiger**
+`orotitan.read` comme scope OAuth ni `aud=<URL MCP>` dans le JWT :
+- discovery de la **ressource MCP** à `/api/orotitan/mcp` (RFC 9728)
+  et authorization server Supabase distinct ;
+- validation JWT asymétrique `RS256` ou `ES256` par JWKS,
+  issuer exact de Supabase, audience standard `authenticated`,
+  expiration, âge maximum 1h ;
+- obligation **simultanée** d'un `sub` de l'utilisateur humain autorisé,
+  d'un `client_id` OAuth signé et explicitement autorisé
+  (`OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS`), et du rôle `authenticated` ;
+  un simple access token obtenu par e-mail/mot de passe sans `client_id`
+  ne suffit pas pour accéder au MCP ;
+- maintien de la liste stricte des UUID de dossiers autorisés ;
+- écriture MCP **interdite en toutes circonstances dans ce pilote**,
+  même si les anciens flags sont mis à `true`. Il faudra concevoir
+  ultérieurement une permission d'écriture réellement vérifiable côté serveur.
+
+Attention : ce correctif remplace, pour le pilote, les hypothèses de
+`orotitan.read` et `aud=URL MCP` décrites dans les sections historiques
+D13-D15 de ce dossier. Ne pas installer de Custom Access Token Hook dans
+Supabase prod simplement pour modifier l'audience : cela toucherait aussi
+les sessions utilisateur normales. La compatibilité exacte des JWT
+réellement émis doit être validée lors du premier test OAuth complet,
+sans divulguer ces jetons.
+
+Restent à obtenir avant activation :
+- une application OAuth enregistrée et son `client_id` ;
+- la confirmation d'une clé JWT **asymétrique** dans Authentication →
+  JWT Signing Keys (les JWT HS256 ne sont jamais acceptés par ce MCP) ;
+- une URL HTTPS publique et contrôlée pour `/oauth/consent`, la
+  configuration du Site URL d'Auth et le mode de connexion ChatGPT ;
+- validation explicite d'un déploiement séparé du code de la PR.
+
+Références :
+- https://supabase.com/docs/guides/auth/oauth-server/oauth-flows
+- https://supabase.com/docs/guides/auth/oauth-server/token-security
