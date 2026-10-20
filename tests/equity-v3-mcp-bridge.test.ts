@@ -10,6 +10,7 @@ const besi="48b9426b-4d0d-4858-9d87-efcd13ac415d";
 const other="11111111-1111-4111-8111-111111111111";
 const token="s".repeat(64);
 const good:NodeJS.ProcessEnv={
+  NODE_ENV:"test",
   OROTITAN_MCP_ENABLED:"true",
   OROTITAN_MCP_ALLOWED_RUN_IDS:besi,
   OROTITAN_MCP_READ_TOKEN:token,
@@ -18,8 +19,8 @@ const good:NodeJS.ProcessEnv={
 };
 
 test("MCP is disabled by default and denies requests without a valid bearer",()=>{
-  assert.equal(mcpEnabled({}),false);
-  assert.equal(authorizeMcpBearer("Bearer "+token,{}),false);
+  assert.equal(mcpEnabled({NODE_ENV:"test"}),false);
+  assert.equal(authorizeMcpBearer("Bearer "+token,{NODE_ENV:"test"}),false);
   assert.equal(authorizeMcpBearer(null,good),false);
   assert.equal(authorizeMcpBearer("Bearer "+token.slice(1),good),false);
   assert.equal(authorizeMcpBearer("Basic "+token,good),false);
