@@ -278,3 +278,60 @@ test("Research FINAL without the classification record is not admitted", () => {
     .filter(a => a.artifactType !== "CLASSIFICATION_INPUT_RECORD");
   blocked(s, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_CLASSIFICATION_INPUT_RECORD");
 });
+
+
+function completedResearchAwaitingDeepDiveStart(): PilotageSnapshot {
+  const s = snapshot();
+  const research = s.stages.RESEARCH!;
+  research.lifecycle = "COMPLETE";
+  research.manifest = manifest("RESEARCH", "FINAL");
+  research.artifacts = RESEARCH.map((type, i) => artifact("RESEARCH", type, i));
+  research.gates = { READY_FOR_DEEP_DIVE: true, FINAL_OUTPUTS_VERIFIED: true };
+  delete s.stages.DEEP_DIVE;
+  return s;
+}
+
+test("D11 product: completed verified Research starts Fundamentals without an existing Deep Dive row", () => {
+  const d = planPilotageV31(completedResearchAwaitingDeepDiveStart());
+  assert.equal(d.outcome, "HANDOFF");
+  assert.equal(d.phase, "FUNDAMENTALS");
+  assert.equal(d.reasonCode, "RESEARCH_FINAL_ADMITTED_START_REQUIRED");
+  assert.match(d.exactPrompt ?? "", /REGISTRY_STAGE = DEEP_DIVE/);
+  assert.match(d.exactPrompt ?? "", /CURRENT_REGISTRY_STAGE = RESEARCH/);
+  assert.match(d.exactPrompt ?? "", /EXPECTED_STAGE_STATE_VERSION = NOT_STARTED/);
+  assert.match(d.exactPrompt ?? "", /CLASSIFICATION_INPUT_RECORD/);
+  assert.match(d.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST_FINAL/);
+  assert.match(d.exactPrompt ?? "", /EXPECTED_STAGE_CONTRACT = OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V3_1/);
+  assert.equal(d.mutationPerformed, false);
+  assert.equal(d.publicationAuthorized, false);
+});
+
+test("D11 product: neither CHECKPOINT nor unverified Research FINAL starts Fundamentals", () => {
+  const c = completedResearchAwaitingDeepDiveStart();
+  c.stages.RESEARCH!.manifest = manifest("RESEARCH", "CHECKPOINT");
+  blocked(c, "MANIFEST_KIND_MISMATCH");
+
+  const g = completedResearchAwaitingDeepDiveStart();
+  g.stages.RESEARCH!.gates.READY_FOR_DEEP_DIVE = false;
+  blocked(g, "GATE_NOT_ADMITTED_READY_FOR_DEEP_DIVE");
+
+  const m = completedResearchAwaitingDeepDiveStart();
+  m.stages.RESEARCH!.artifacts = m.stages.RESEARCH!.artifacts.filter(
+    a => a.artifactType !== "CLASSIFICATION_INPUT_RECORD");
+  blocked(m, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_CLASSIFICATION_INPUT_RECORD");
+
+  const h = completedResearchAwaitingDeepDiveStart();
+  h.stages.RESEARCH!.artifacts = h.stages.RESEARCH!.artifacts.map(a =>
+    a.artifactType === "EVIDENCE_LEDGER" ? { ...a, bytesVerified: false } : a);
+  blocked(h, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_EVIDENCE_LEDGER");
+});
+
+test("D11 product: no duplicate Deep Dive creation, no stale CAS", () => {
+  const duplicate = completedResearchAwaitingDeepDiveStart();
+  duplicate.stages.DEEP_DIVE = stage("DEEP_DIVE", "NOT_STARTED", 1);
+  blocked(duplicate, "DOWNSTREAM_STAGE_ALREADY_REGISTERED");
+
+  const stale = completedResearchAwaitingDeepDiveStart();
+  stale.expectedCurrentStageStateVersion--;
+  blocked(stale, "STALE_STAGE_CAS");
+});
