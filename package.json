@@ -17,6 +17,7 @@
     "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
     "@supabase/supabase-js": "2.110.7",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
