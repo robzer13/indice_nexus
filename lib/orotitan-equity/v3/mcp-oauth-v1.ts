@@ -47,6 +47,7 @@ export function mcpOAuthConfig(env: NodeJS.ProcessEnv): McpOAuthConfig | null {
   const jwks = strictHttps(env.OROTITAN_MCP_OAUTH_JWKS_URI);
   const subjectsRaw = env.OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS;
   const subjects = subjectsRaw?.split(",").map(s => s.trim()) ?? [];
+  const clients = env.OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS?.split(",").map(s => s.trim()) ?? [];
   if (!origin || !issuer || !jwks || origin.pathname !== "/" ||
     issuer.pathname.endsWith("//") || jwks.origin !== issuer.origin ||
     subjects.length < 1 || subjects.length > 10 ||
