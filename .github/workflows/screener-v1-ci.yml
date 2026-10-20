@@ -21,6 +21,7 @@ on:
       - 'schema.sql'
       - 'seed.sql'
       - 'README_SCREENER_V1*.md'
+      - 'mcp-public-gateway/**'
       - '.github/workflows/screener-v1-ci.yml'
   push:
     branches:
@@ -45,6 +46,7 @@ on:
       - 'schema.sql'
       - 'seed.sql'
       - 'README_SCREENER_V1*.md'
+      - 'mcp-public-gateway/**'
       - '.github/workflows/screener-v1-ci.yml'
 
 jobs:
@@ -91,3 +93,7 @@ jobs:
           PGPASSWORD: postgres
       - name: Production build
         run: npm run build
+      - name: Standalone public MCP gateway build
+        run: |
+          npm install --prefix mcp-public-gateway --no-audit --no-fund
+          npm run build --prefix mcp-public-gateway
