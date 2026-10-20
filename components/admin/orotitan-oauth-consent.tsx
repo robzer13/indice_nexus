@@ -104,8 +104,8 @@ export function OroTitanOauthConsent({
         throw new Error("CONSENT_CONTEXT_CHANGED");
       }
       const result=decision==="approve"?
-        await supabase.auth.oauth.approveAuthorization(authorizationId):
-        await supabase.auth.oauth.denyAuthorization(authorizationId);
+        await supabase.auth.oauth.approveAuthorization(authorizationId,{skipBrowserRedirect:true}):
+        await supabase.auth.oauth.denyAuthorization(authorizationId,{skipBrowserRedirect:true});
       if(result.error || !result.data?.redirect_url ||
         !isAllowedChatGptReturnUrl(result.data.redirect_url)){
         throw new Error("CONSENT_REDIRECT_REJECTED");
