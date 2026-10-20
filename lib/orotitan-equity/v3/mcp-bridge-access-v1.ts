@@ -19,7 +19,8 @@ export function mcpEnabled(env: NodeJS.ProcessEnv): boolean {
   return env.OROTITAN_MCP_ENABLED === "true";
 }
 
-export function mcpWriteEnabled(_env: NodeJS.ProcessEnv): boolean {
+export function mcpWriteEnabled(env: NodeJS.ProcessEnv): boolean {
+  void env;
   // Read-only OAuth pilot: Supabase does not support custom OAuth resource
   // scopes yet. Never infer write authority from OIDC email/profile scopes.
   // A separately reviewed capability mechanism is required before release.
