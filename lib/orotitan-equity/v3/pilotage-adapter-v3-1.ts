@@ -188,11 +188,49 @@ function prompt(s: PilotageSnapshot, phase: Phase, x: StageState): string {
     "EXPECTED_STAGE_STATE_VERSION = " + (needsDeepDiveStart ? "NOT_STARTED" : x.stateVersion),
     "EXPECTED_INPUT_ARTIFACTS = " + JSON.stringify(refs),
     "PUBLICATION_AUTHORIZED = NO",
-    "LOAD AND VERIFY AUTHORITATIVE REGISTRY STATE AND EXACT ARTIFACT BYTES BEFORE WORK.",
+    "MANUAL_EXECUTION = YES; NO AUTOMATIC_MODEL_CALL_OR_REGISTRY_MUTATION",
+    ...(needsDeepDiveStart ? [
+      "PENDING_REGISTRY_TRANSITION = RESEARCH_FINAL_TO_DEEP_DIVE_STAGE_START",
+      "STAGE_START_AUTHORIZATION = SEPARATE_FROM_THIS_PROMPT",
+    ] : []),
+    ...PHASE_TASKS[phase],
+    "LOAD AND VERIFY AUTHORITATIVE REGISTRY STATE, PINNED CONTRACTS AND EXACT ARTIFACT BYTES BEFORE WORK.",
     "DO NOT USE THIS BOOTSTRAP AS ANALYTICAL EVIDENCE.",
     "FAIL CLOSED ON VERSION / ID / STATUS / HASH / LINEAGE MISMATCH.",
   ].join("\n");
 }
+
+
+// Manual, phase-scoped execution instructions. The pinned contracts and exact
+// immutable artifacts remain the only authorities; this text adds no evidence
+// and dispatches no model, API or Registry mutation.
+const PHASE_TASKS: Record<Phase, readonly string[]> = {
+  RESEARCH: [
+    "MANUAL_TASK: Acquire and normalize point-in-time evidence, identify independent sources, register material conflicts, hypotheses and gaps, assess input sufficiency and factual taxonomy inputs.",
+    "RESEARCH_OUTPUTS: Version the Research Source Manifest, Evidence Ledger, Conflict Ledger, material hypothesis register, gap register, Input Sufficiency Assessment and Classification Input Record under the pinned Research V2 contract.",
+    "RESEARCH_BOUNDARY: No final moat or quality verdict, DCF, fair value, scores or investment thesis. A missing material input requires a documented CHECKPOINT/NO, never a fabricated FINAL.",
+  ],
+  FUNDAMENTALS: [
+    "MANUAL_TASK: Verify Research FINAL, the READY_FOR_DEEP_DIVE=YES gate and all exact Research V2 inputs. Execute only Fundamentals: business model, economic quality, moat, runway, return quality, FCF/Owner Earnings and forensic, capital allocation, governance, outside view, risk/resilience and Fundamental Red Team.",
+    "FUNDAMENTALS_OUTPUTS: Prepare the required FUNDAMENTALS_LOCK, Fundamental Red Team record and governed Deep Dive CHECKPOINT through the separately authorized artifact/Registry workflow.",
+    "FUNDAMENTALS_BOUNDARY: Do not calculate or certify final valuation, OVS, Investment Score, final OQS, terminal gate or investment thesis. If Deep Dive has not been started in the Registry, request the separate controlled start before persisting any Deep Dive outputs.",
+  ],
+  VALUATION: [
+    "MANUAL_TASK: Verify the admitted Fundamentals Lock, READY_FOR_VALUATION and pinned Valuation authorities; calculate the valuation using the approved methods and exact full-precision inputs.",
+    "VALUATION_CONTROLS: Apply the V3.1 date-alignment/denominator and DCF timing authorities, including VALUATION_DATE=DATA_CUTOFF. If required economic share-count or EV bridge inputs are not admissible, block affected outputs.",
+    "VALUATION_OUTPUTS: Prepare the full-precision calculation evidence, VALUATION_LOCK and governed Deep Dive CHECKPOINT, without certifying final OVS or Investment Score.",
+  ],
+  CERTIFICATION_RECONCILIATION: [
+    "MANUAL_TASK: Verify the new-run Valuation Lock and READY_FOR_CERTIFICATION. Perform non-creative reconciliation, certify admissible calculations and governed final scores, apply the terminal conjunctive gate and determine readiness/next action.",
+    "CERTIFICATION_OUTPUTS: Produce the exact required Deep Dive final artifacts and FINAL Stage Manifest only when all certification and reconciliation controls pass.",
+    "CERTIFICATION_BOUNDARY: Route unresolved material evidence or inconsistencies upstream; never invent a valuation, silently rewrite Fundamentals or publish.",
+  ],
+  INTEGRATION: [
+    "MANUAL_TASK: Verify Deep Dive FINAL and READY_FOR_INTEGRATION. Map to the canonical snapshot schema, validate data and semantic states, execute deterministic I2 reconciliation, historical transition checks and I3-B admission.",
+    "INTEGRATION_OUTPUTS: Prepare a canonical snapshot candidate and governed Integration Stage Manifest only after all required controls pass.",
+    "INTEGRATION_BOUNDARY: Do not recalculate the analysis or move the canonical pointer. Publication requires separate authorization and a separately admitted writer.",
+  ],
+};
 
 /** Advisory only. Never performs an RPC, state transition, analytical computation or publication. */
 export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
