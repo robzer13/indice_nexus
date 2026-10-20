@@ -71,12 +71,6 @@ export function mcpOAuthConfig(env: NodeJS.ProcessEnv): McpOAuthConfig | null {
   };
 }
 
-function tokenScopes(payload: JWTPayload): ReadonlySet<string> {
-  const scope = payload.scope;
-  if (typeof scope !== "string" || scope.length > 2000) return new Set();
-  return new Set(scope.split(" ").filter(Boolean));
-}
-
 export function isOAuthPayloadAdmitted(payload: JWTPayload, config: McpOAuthConfig): boolean {
   const clientId = payload.client_id;
   return typeof payload.sub === "string" &&
@@ -120,7 +114,7 @@ export async function verifyMcpOAuthBearer(
     if (!isOAuthPayloadAdmitted(payload,config)) {
       throw new McpOAuthError("OAUTH_IDENTITY_OR_SCOPE_DENIED");
     }
-    return {subject: payload.sub!, scopes: tokenScopes(payload)};
+    return {subject: payload.sub!, scopes: new Set([MCP_SCOPE_READ])};
   } catch (error) {
     if (error instanceof McpOAuthError) throw error;
     throw new McpOAuthError("OAUTH_VERIFICATION_FAILED");
