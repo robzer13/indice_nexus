@@ -45,7 +45,6 @@ function createServer(): McpServer {
     title:"Consulter un dossier OroTitan",
     description:"Lire le run, l'étape et les blocages depuis Supabase. Observation non validée, jamais une preuve autoritative.",
     inputSchema:runSchema,
-    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await getMcpRunContext(run_id,process.env));}
@@ -56,7 +55,6 @@ function createServer(): McpServer {
     title:"Obtenir le prompt vérifié de l'étape",
     description:"Vérifier les preuves immuables GitHub, le contrat et l'état Registry. Renvoie le prompt exact uniquement si le handoff est admis; ne lance aucune IA, transition ni publication.",
     inputSchema:runSchema,
-    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await getMcpNextPrompt(run_id,process.env));}
@@ -67,7 +65,6 @@ function createServer(): McpServer {
     title:"Consulter les fichiers transmis à OroTitan",
     description:"Lister seulement les livrables en quarantaine privée, reçus mais non vérifiés. Aucune preuve d'admission ou de phase terminée.",
     inputSchema:runSchema,
-    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await listMcpSubmissions(run_id,process.env));}
@@ -86,7 +83,6 @@ function createServer(): McpServer {
         filename:z.string().min(1).max(160),
         content:z.string().min(1).max(100_000),
       }).strict(),
-      securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ,MCP_SCOPE_WRITE]}],
       annotations:{readOnlyHint:false,destructiveHint:false,idempotentHint:true,openWorldHint:false},
     },async({run_id,expected_stage,expected_run_state_version,filename,content:text})=>{
       try{return content(await submitMcpWorkProduct({
