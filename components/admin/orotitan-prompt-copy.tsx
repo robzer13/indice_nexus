@@ -38,7 +38,7 @@ export function OroTitanPromptCopy({ prompt, phase }: { prompt: string; phase: s
       </pre>
     </details>
     <p className="text-xs text-slate-400">
-      Après l'analyse, les résultats doivent être vérifiés et enregistrés en artefacts
+      Après l&apos;analyse, les résultats doivent être vérifiés et enregistrés en artefacts
       avant qu'un nouveau handoff puisse être admis. Aucun changement d'état automatique.
     </p>
   </div>;
