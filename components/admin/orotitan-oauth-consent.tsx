@@ -75,7 +75,7 @@ export function OroTitanOauthConsent({
     }finally{setBusy(false);}
   },[supabase,authorizationId,siteOrigin]);
 
-  useEffect(()=>{void refresh();},[refresh]);
+  useEffect(()=>{void Promise.resolve().then(refresh);},[refresh]);
 
   async function login(event:React.FormEvent<HTMLFormElement>){
     event.preventDefault();setActing(true);setError("");
@@ -122,18 +122,18 @@ export function OroTitanOauthConsent({
       <p className="text-xs font-semibold uppercase tracking-widest text-cyan-300">
         OroTitan Equity Research · Connexion sécurisée
       </p>
-      <h1 className="mt-3 text-2xl font-semibold">Autorisation d'accès ChatGPT</h1>
+      <h1 className="mt-3 text-2xl font-semibold">Autorisation d&apos;accès ChatGPT</h1>
       <p className="mt-3 text-sm leading-6 text-slate-300">
         Cette autorisation permet uniquement de consulter les dossiers OroTitan
         préalablement autorisés. Elle ne lance aucune analyse et ne peut ni
         valider une étape ni publier un résultat.
       </p>
-      {busy?<p className="mt-5 text-sm" role="status">Vérification de l'identité…</p>:null}
+      {busy?<p className="mt-5 text-sm" role="status">Vérification de l&apos;identité…</p>:null}
       {error?<p role="alert" className="mt-5 rounded-lg border border-rose-900 bg-rose-950/40 p-3 text-sm text-rose-200">{error}</p>:null}
       {!busy&&!identity?<form className="mt-6 space-y-4" onSubmit={event=>void login(event)}>
         <p className="text-sm text-slate-300">
           Connectez-vous avec un compte Supabase Auth créé et autorisé pour OroTitan.
-          Le mot de passe de l'administration OroTitan ne fonctionne pas ici.
+          Le mot de passe de l&apos;administration OroTitan ne fonctionne pas ici.
         </p>
         <label className="block text-sm">Adresse e-mail du compte autorisé
           <input required type="email" autoComplete="username" value={email}
@@ -161,7 +161,7 @@ export function OroTitanOauthConsent({
           </ul>
           <p className="mt-2 text-xs text-amber-200">
             Les droits effectifs restent limités côté serveur à la lecture des runs
-            explicitement autorisés. Aucun droit d'écriture n'est activé.
+            explicitement autorisés. Aucun droit d&apos;écriture n&apos;est activé.
           </p>
         </div>
         <div className="flex flex-wrap gap-3">
