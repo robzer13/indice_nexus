@@ -32,6 +32,8 @@
 ## Contrôles
 - Session admin serveur obligatoire en GET/POST, URL Supabase épinglée, run préexistant,
   stage contrôlé par la base et non le formulaire, statut autorisé ACTIVE / PAUSED / BLOCKED.
+  Le formulaire renvoie l'étape et la version CAS observées ; le serveur rejette tout dépôt
+  si le Registry a changé depuis l'affichage, plutôt que d'attacher un document à la mauvaise phase.
 - POST exige une origine strictement identique au site courant et multipart/form-data.
 - Un fichier par demande, format restrictif, taille maximale 1 Mo, encodage UTF-8,
   JSON racine objet, max. 100 objets par étape, écriture sans upsert.
