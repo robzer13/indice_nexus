@@ -159,7 +159,11 @@ function validate(s: PilotageSnapshot): StageState {
   return current;
 }
 function prompt(s: PilotageSnapshot, phase: Phase, x: StageState): string {
-  const p = STAGE_PINS[x.code];
+  // Research FINAL may be COMPLETE before Deep Dive has ever been created.
+  // The handoff targets the pinned Deep Dive contract, but references Research
+  // as the only source of authoritative input evidence.
+  const needsDeepDiveStart = phase === "FUNDAMENTALS" && x.code === "RESEARCH";
+  const p = needsDeepDiveStart ? STAGE_PINS.DEEP_DIVE : STAGE_PINS[x.code];
   // Handoffs consume the PREDECESSOR FINAL proof set, not the empty next stage.
   const evidenceStage = phase === "FUNDAMENTALS" ? s.stages.RESEARCH ?? x :
     phase === "INTEGRATION" ? s.stages.DEEP_DIVE ?? x : x;
@@ -174,13 +178,14 @@ function prompt(s: PilotageSnapshot, phase: Phase, x: StageState): string {
     "RUN_ID = " + s.run.runId,
     "DATA_CUTOFF = " + s.run.dataCutoff,
     "CONTRACT_SET_SHA256 = " + pins.contract_set_sha256,
-    "REGISTRY_STAGE = " + x.code,
+    "REGISTRY_STAGE = " + (needsDeepDiveStart ? "DEEP_DIVE" : x.code),
+    "CURRENT_REGISTRY_STAGE = " + x.code,
     "EXECUTION_PHASE = " + phase,
     "EXPECTED_STAGE_CONTRACT = " + p.name,
     "EXPECTED_STAGE_CONTRACT_VERSION = " + p.version,
     "EXPECTED_STAGE_CONTRACT_SHA256 = " + p.content_sha256,
     "EXPECTED_RUN_STATE_VERSION = " + s.run.stateVersion,
-    "EXPECTED_STAGE_STATE_VERSION = " + x.stateVersion,
+    "EXPECTED_STAGE_STATE_VERSION = " + (needsDeepDiveStart ? "NOT_STARTED" : x.stateVersion),
     "EXPECTED_INPUT_ARTIFACTS = " + JSON.stringify(refs),
     "PUBLICATION_AUTHORIZED = NO",
     "LOAD AND VERIFY AUTHORITATIVE REGISTRY STATE AND EXACT ARTIFACT BYTES BEFORE WORK.",
@@ -209,6 +214,13 @@ export function planPilotageV31(s: PilotageSnapshot): PilotageDecision {
     need(current.lifecycle !== "BLOCKED" && current.lifecycle !== "PAUSED", "STAGE_BLOCKED_OR_PAUSED");
     if (r.currentStage === "RESEARCH") {
       need(r.status === "ACTIVE", "RUN_STATUS_STAGE_MISMATCH");
+      if (current.lifecycle === "COMPLETE") {
+        requireFinal(s, current, ["READY_FOR_DEEP_DIVE", "FINAL_OUTPUTS_VERIFIED"],
+          RESEARCH_FINAL_REQUIRED_ARTIFACT_TYPES);
+        need(s.stages.DEEP_DIVE === undefined, "DOWNSTREAM_STAGE_ALREADY_REGISTERED");
+        return result("HANDOFF", "FUNDAMENTALS", "RESEARCH_FINAL_ADMITTED_START_REQUIRED",
+          prompt(s, "FUNDAMENTALS", current));
+      }
       need(current.lifecycle === "NOT_STARTED" || current.lifecycle === "IN_PROGRESS", "RESEARCH_STAGE_NOT_EXECUTABLE");
       need(current.manifest === null || current.lifecycle === "IN_PROGRESS", "RESEARCH_MANIFEST_INCONSISTENT");
       if (current.manifest) requireManifest(s, current, "CHECKPOINT");
