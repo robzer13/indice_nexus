@@ -59,6 +59,9 @@ test("manual intake route requires admin, origin and production flag and never c
   assert.match(route,/request\.headers\.get\("origin"\)/);
   assert.match(route,/upsert: false/);
   assert.match(route,/findRun\(client, runId\)/);
+  assert.match(route,/run\.current_stage !== expectedStage/);
+  assert.match(route,/run\.state_version !== expectedRunVersion/);
+  assert.match(component,/expectedRunStateVersion/);
   assert.doesNotMatch(route,/\.rpc\s*\(|\.insert\s*\(|\.update\s*\(|\.delete\s*\(/);
   assert.doesNotMatch(route,/register_manifest|attest_orotitan|start_orotitan_stage|finalize_orotitan_stage/);
   assert.match(component,/RECEIVED_NOT_VERIFIED/);
