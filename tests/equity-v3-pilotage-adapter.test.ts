@@ -298,12 +298,26 @@ test("D11 product: completed verified Research starts Fundamentals without an ex
   assert.equal(d.reasonCode, "RESEARCH_FINAL_ADMITTED_START_REQUIRED");
   assert.match(d.exactPrompt ?? "", /REGISTRY_STAGE = DEEP_DIVE/);
   assert.match(d.exactPrompt ?? "", /CURRENT_REGISTRY_STAGE = RESEARCH/);
+  assert.match(d.exactPrompt ?? "", /MANUAL_EXECUTION = YES; NO AUTOMATIC_MODEL_CALL_OR_REGISTRY_MUTATION/);
+  assert.match(d.exactPrompt ?? "", /PENDING_REGISTRY_TRANSITION = RESEARCH_FINAL_TO_DEEP_DIVE_STAGE_START/);
+  assert.match(d.exactPrompt ?? "", /FUNDAMENTALS_OUTPUTS:/);
   assert.match(d.exactPrompt ?? "", /EXPECTED_STAGE_STATE_VERSION = NOT_STARTED/);
   assert.match(d.exactPrompt ?? "", /CLASSIFICATION_INPUT_RECORD/);
   assert.match(d.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST_FINAL/);
   assert.match(d.exactPrompt ?? "", /EXPECTED_STAGE_CONTRACT = OROTITAN_DEEP_DIVE_STAGE_CONTRACT_V3_1/);
   assert.equal(d.mutationPerformed, false);
   assert.equal(d.publicationAuthorized, false);
+});
+
+test("D11 manual prompts are scoped to the phase, not a remote AI call", () => {
+  const research = planPilotageV31(snapshot());
+  assert.match(research.exactPrompt ?? "", /RESEARCH_BOUNDARY:/);
+  assert.match(research.exactPrompt ?? "", /MANUAL_EXECUTION = YES/);
+  const fundamentals = planPilotageV31(snapshot("DEEP_DIVE"));
+  assert.match(fundamentals.exactPrompt ?? "", /FUNDAMENTALS_BOUNDARY:/);
+  assert.doesNotMatch(fundamentals.exactPrompt ?? "", /PENDING_REGISTRY_TRANSITION/);
+  const integration = planPilotageV31(snapshot("INTEGRATION"));
+  assert.match(integration.exactPrompt ?? "", /INTEGRATION_OUTPUTS:/);
 });
 
 test("D11 product: neither CHECKPOINT nor unverified Research FINAL starts Fundamentals", () => {
