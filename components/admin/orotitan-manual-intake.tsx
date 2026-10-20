@@ -12,6 +12,8 @@ type UploadEntry = {
 type Payload = {
   ok?: boolean;
   enabled?: boolean;
+  currentStage?: string;
+  runStateVersion?: number;
   files?: UploadEntry[];
   code?: string;
   status?: string;
@@ -23,6 +25,7 @@ const ERROR: Record<string, string> = {
   INTAKE_DISABLED: "Le dépôt de fichiers n’est pas encore activé.",
   INTAKE_ORIGIN_REJECTED: "Origine de la demande refusée.",
   INTAKE_RUN_NOT_EDITABLE: "Ce run est publié, annulé ou fermé aux nouveaux dépôts.",
+  INTAKE_RUN_CHANGED_REFRESH: "Le run a évolué depuis sa consultation. Rechargez le dossier avant de déposer le fichier.",
   INTAKE_IDENTITY_INVALID: "L’identifiant du run est invalide.",
   INTAKE_RUN_NOT_FOUND: "Run introuvable dans le Registry.",
   INTAKE_FILE_SIZE_INVALID: "Fichier vide ou dépassant 1 Mo.",
@@ -39,6 +42,8 @@ const ERROR: Record<string, string> = {
 
 export function OroTitanManualIntake({ runId }: { runId: string }) {
   const [enabled, setEnabled] = useState(false);
+  const [currentStage, setCurrentStage] = useState<string | null>(null);
+  const [runStateVersion, setRunStateVersion] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [entries, setEntries] = useState<UploadEntry[]>([]);
@@ -52,6 +57,10 @@ export function OroTitanManualIntake({ runId }: { runId: string }) {
       setLoading(true);
       setEntries([]);
       setEnabled(false);
+      setFile(null);
+      setNotice("");
+      setCurrentStage(null);
+      setRunStateVersion(null);
       setError("");
       try {
         const response = await fetch("/api/orotitan/manual-intake?run=" + encodeURIComponent(runId), {
@@ -61,6 +70,8 @@ export function OroTitanManualIntake({ runId }: { runId: string }) {
         if (!response.ok || !result.ok) throw new Error(result.code ?? "INTAKE_UNAVAILABLE");
         if (!controller.signal.aborted) {
           setEnabled(result.enabled === true);
+          setCurrentStage(result.currentStage ?? null);
+          setRunStateVersion(result.runStateVersion ?? null);
           setEntries(result.files ?? []);
         }
       } catch (err) {
@@ -74,7 +85,8 @@ export function OroTitanManualIntake({ runId }: { runId: string }) {
   }, [runId]);
 
   async function submit() {
-    if (!file || !enabled || submitting || file.size === 0 || file.size > 1_000_000) {
+    if (!file || !enabled || !currentStage || !runStateVersion ||
+      submitting || file.size === 0 || file.size > 1_000_000) {
       setError("Sélectionnez un fichier texte de 1 Mo maximum.");
       return;
     }
@@ -84,6 +96,8 @@ export function OroTitanManualIntake({ runId }: { runId: string }) {
     try {
       const body = new FormData();
       body.set("run", runId);
+      body.set("expectedStage", currentStage);
+      body.set("expectedRunStateVersion", String(runStateVersion));
       body.set("file", file);
       const response = await fetch("/api/orotitan/manual-intake", {
         method: "POST", credentials: "same-origin", cache: "no-store", body,
@@ -132,15 +146,19 @@ export function OroTitanManualIntake({ runId }: { runId: string }) {
     <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
       <div className="space-y-3 rounded-xl border border-slate-800 bg-slate-950/50 p-4">
         <h3 className="text-sm font-semibold text-white">Ajouter un document</h3>
+        <p className="text-xs text-slate-400">
+          Étape Registry concernée : <strong className="text-slate-200">{currentStage ?? "À déterminer"}</strong>
+        </p>
         <label htmlFor="orotitan-intake-file" className="block text-xs leading-5 text-slate-400">
           Un fichier à la fois · JSON, Markdown, texte ou CSV · 1 Mo maximum
         </label>
         <input id="orotitan-intake-file" type="file" accept=".json,.md,.txt,.csv"
+          key={runId}
           disabled={!enabled || submitting || loading}
           onChange={event => { setFile(event.target.files?.[0] ?? null); setError(""); }}
           className="block w-full min-w-0 rounded-xl border border-dashed border-slate-700 bg-slate-900 p-3 text-sm text-slate-200 file:mr-3 file:rounded-lg file:border-0 file:bg-slate-700 file:px-3 file:py-2 file:text-sm file:font-medium file:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400 disabled:opacity-60" />
         <button type="button" onClick={() => void submit()}
-          disabled={!enabled || !file || submitting || loading}
+          disabled={!enabled || !file || !currentStage || !runStateVersion || submitting || loading}
           className="min-h-11 w-full rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cyan-300 disabled:cursor-not-allowed disabled:opacity-40">
           {submitting ? "Réception en cours…" : "Déposer sans valider l’étape"}
         </button>
