@@ -27,13 +27,18 @@ const explanations: Record<string, string> = {
   REGISTRY_LIST_QUERY_FAILED: "Impossible de charger le Registry ; vérifier la connexion Supabase côté serveur.",
 };
 
+const STAGE_NAMES: Record<string, string> = {
+  RESEARCH: "Research", DEEP_DIVE: "Deep Dive", INTEGRATION: "Intégration",
+};
+const RUN_STATUSES: Record<string, string> = {
+  ACTIVE: "Actif", BLOCKED: "Bloqué", PAUSED: "En pause",
+  PUBLISHED: "Publié", READY_TO_PUBLISH: "Publication en attente",
+};
 function displayStage(code: string): string {
-  return { RESEARCH: "Research", DEEP_DIVE: "Deep Dive", INTEGRATION: "Intégration" }[code] ?? code;
+  return STAGE_NAMES[code] ?? code;
 }
-
 function displayStatus(code: string): string {
-  return { ACTIVE: "Actif", BLOCKED: "Bloqué", PAUSED: "En pause",
-    PUBLISHED: "Publié", READY_TO_PUBLISH: "Publication en attente" }[code] ?? code;
+  return RUN_STATUSES[code] ?? code;
 }
 
 function getMessage(code: string | null): string {
