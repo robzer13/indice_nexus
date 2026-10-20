@@ -56,7 +56,7 @@ export default async function OroTitanPilotagePage({
       <p className="max-w-3xl text-sm leading-6 text-slate-400">
         État réel du Registry et vérification des preuves immuables. OroTitan fournit le
         prompt de chaque étape admissible, à copier puis à exécuter manuellement dans ChatGPT.
-        Aucune IA, transition de stage ou publication n'est déclenchée depuis cette page.
+        Aucune IA, transition de stage ou publication n&apos;est déclenchée depuis cette page.
       </p>
     </header>
     <AdminNav />
