@@ -6,7 +6,7 @@ import {
 } from "@/lib/orotitan-equity/v3/mcp-bridge-access-v1";
 import {
   mcpOAuthConfig, verifyMcpOAuthBearer, oauthChallenge,
-  MCP_SCOPE_READ, MCP_SCOPE_WRITE, type McpOAuthIdentity,
+  MCP_SCOPE_WRITE, type McpOAuthIdentity,
 } from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
 import {
   getMcpRunContext, getMcpNextPrompt, listMcpSubmissions, submitMcpWorkProduct,
@@ -154,6 +154,10 @@ export async function POST(request:Request):Promise<Response> {
     let parsed:unknown;
     try{parsed=await request.clone().json();}
     catch{return plain(400,"Invalid JSON-RPC body");}
+    // Batch requests could smuggle a write past a single-call scope check.
+    if (!parsed || typeof parsed!=="object" || Array.isArray(parsed)) {
+      return plain(400,"Single JSON-RPC request required");
+    }
     if(parsed && typeof parsed==="object" && !Array.isArray(parsed)) {
       const call=parsed as {method?:unknown;params?:unknown};
       const params=call.params && typeof call.params==="object" ?
