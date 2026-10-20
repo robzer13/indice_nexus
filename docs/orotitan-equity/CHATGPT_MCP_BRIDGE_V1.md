@@ -119,3 +119,78 @@ https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-ch
 - https://developers.openai.com/plugins/deploy/submission
 - https://help.openai.com/en/articles/12584461-connecting-custom-mcp-servers-in-chatgpt
 - https://github.com/modelcontextprotocol/typescript-sdk/blob/main/docs/serving/http.md
+
+
+## D15 — Consentement Supabase Auth : maquette isolée et prérequis effectifs
+
+Une page `/oauth/consent?authorization_id=...` a été ajoutée à la PR,
+**OFF par défaut** avec `OROTITAN_OAUTH_CONSENT_ENABLED=false`.
+Son fonctionnement prévu respecte le parcours décrit dans la documentation
+Supabase OAuth Server (version bêta) :
+
+- Connexion explicite avec un **véritable utilisateur Supabase Auth déjà
+  créé** (par mot de passe, sans inscription automatique), distinct du
+  mot de passe administrateur OroTitan.
+- Vérification de session Supabase par `auth.getUser()`, puis
+  contrôle serveur via `auth.getUser(access_token)` et liste d'UUID
+  utilisateurs autorisés; aucune confiance aveugle dans le stockage navigateur.
+- Lecture de `authorization_id` via
+  `supabase.auth.oauth.getAuthorizationDetails`, affiche le client,
+  l'URL de retour et les scopes effectivement demandés.
+- Consentement **explicite** : `approveAuthorization` ou
+  `denyAuthorization`. Uniquement les callbacks connus de
+  `chatgpt.com` sont admis, avec préservation du code et du state.
+- L'écran ne confère lui-même aucun droit de lecture du Registry :
+  le serveur MCP doit toujours vérifier le JWT OAuth, le bon run
+  et l'admission du prompt.
+- Routes `/oauth/consent` et `/api/orotitan/oauth/eligibility`
+  non opérationnelles hors déploiement HTTPS/configuration expresse.
+  La connexion admin HMAC existante demeure intacte.
+
+**Blocage réellement constaté au 2026-10-20, lecture seule :
+`auth.users` dans `orotitan-screener` contient zéro utilisateur.**
+Avant toute activation, un administrateur doit créer/inviter
+une identité Supabase Auth humaine destinée à cette connexion
+et recueillir son consentement. Ne jamais transmettre un mot de
+passe, une clé OAuth ou un jeton dans une conversation ChatGPT.
+
+**Points de compatibilité encore ouverts, non contournés :**
+
+1. Le `Site URL` Auth affiché dans Supabase est
+   `http://localhost:3000` ; `/oauth/consent` doit être réellement
+   accessible sous un domaine HTTPS revu avant activation. Changer le
+   Site URL peut affecter les flux d'authentification existants.
+2. La signature par défaut des JWT Supabase peut être `HS256`, tandis
+   que le resource server MCP n'accepte actuellement que `RS256`
+   et une JWKS HTTPS. Vérifier l'algorithme du projet et planifier
+   une migration asymétrique séparément si nécessaire.
+3. Les scopes standards Supabase OAuth sont `openid`, `email`,
+   `profile`, `phone`. Notre MCP requiert les claims
+   `orotitan.read` et une audience `/api/orotitan/mcp` exacte.
+   **Aucun jeton Supabase standard ne doit être supposé admissible.**
+   Il faut tester/implémenter les claims adaptés via la fonctionnalité
+   `Custom Access Token Hook`, sans écraser les claims essentiels
+   Supabase, et certifier l'échange avant déploiement.
+4. ChatGPT exige OAuth 2.1 / PKCE S256, une discovery d'AS
+   cohérente, et identification du client CIMD, DCR ou client
+   pré-enregistré. Les callback URLs doivent être exactes. Le
+   serveur MCP doit aussi fournir la métadonnée d'outil compatible.
+5. L'environnement Vercel de prévisualisation est protégé par SSO;
+   prévoir un accès de test explicitement autorisé plutôt que
+   désactiver globalement la protection.
+6. Les paramètres d'activation OAuth et les secrets sont tous
+   **absents** de la configuration Vercel consultée. Pas de
+   configuration automatique ni de merge/deploy/activation.
+
+**Conditions de sortie pour un premier test Besi :** un utilisateur Auth
+admis, un issuer/JWKS vérifié, token scoped vers l'audience MCP,
+un endpoint joignable depuis ChatGPT, la connexion OAuth de ChatGPT
+réussie, et une lecture indépendante du run
+`48b9426b-4d0d-4858-9d87-efcd13ac415d`
+confirmant Research CHECKPOINT/NO et ses six blockers.
+Aucun progrès de phase n'est déduit de la connexion.
+
+Références :
+- https://supabase.com/docs/guides/auth/oauth-server/getting-started
+- https://supabase.com/docs/guides/auth/oauth-server/mcp-authentication
+- https://developers.openai.com/plugins/build/auth
