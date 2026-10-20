@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import {
   createLocalJWKSet, exportJWK, generateKeyPair, SignJWT,
 } from "jose";
@@ -74,7 +75,6 @@ test("MCP OAuth independently verifies RS256 signature, issuer, audience, subjec
 });
 
 test("MCP OAuth discovery route and dispatch require validated metadata and scope",()=>{
-  const {readFileSync}=require("node:fs") as typeof import("node:fs");
   const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
   const meta=readFileSync(new URL("../app/.well-known/oauth-protected-resource/route.ts",import.meta.url),"utf8");
   assert.match(route,/verifyMcpOAuthBearer/);
