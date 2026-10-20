@@ -159,3 +159,45 @@ test("D10 admin server routes legacy versions away from V3.1 verification", () =
   assert.match(server,/pilotage_contract_version/);
   assert.doesNotMatch(server,/\.rpc\s*\(|\.insert\s*\(|\.update\s*\(|\.delete\s*\(/);
 });
+
+
+test("D12 dossier identifies shares by issuer name and associated ticker without inferring authority", () => {
+  const run = {
+    run_id: "11111111-1111-4111-8111-111111111111",
+    run_status: "ACTIVE", current_stage: "RESEARCH",
+    canonical_mode: "ANALYZE", data_cutoff: "2026-10-12",
+    issuer_id: "22222222-2222-4222-8222-222222222222",
+    security_id: "33333333-3333-4333-8333-333333333333",
+    state_version: 4, created_at: "2026-10-12",
+    process_version: "3.1", pilotage_contract_version: "3.1",
+  };
+  const identity = {
+    issuerId: run.issuer_id,
+    displayName: "Example Company", ticker: "EXM", isin: "NL0000000001",
+  };
+  const named = asOperatorRun(run, null, identity);
+  assert.equal(named.issuerName, "Example Company");
+  assert.equal(named.ticker, "EXM");
+  assert.equal(named.isin, "NL0000000001");
+  assert.equal(named.runId, run.run_id);
+  assert.equal(named.stage, "RESEARCH");
+  assert.equal(Object.hasOwn(named, "ready"), false);
+
+  const stale = asOperatorRun(run, null, { ...identity, issuerId: "44444444-4444-4444-8444-444444444444" });
+  assert.equal(stale.issuerName, null);
+  assert.equal(stale.ticker, null);
+  const unnamed = asOperatorRun(run);
+  assert.equal(unnamed.issuerName, null);
+  assert.equal(unnamed.ticker, null);
+});
+
+test("D12 company and ticker come from existing tables with issuer-bound security only", () => {
+  const server = readFileSync(new URL("../lib/orotitan-equity/v3/pilotage-operator-cockpit-server.ts", import.meta.url), "utf8");
+  const page = readFileSync(new URL("../app/admin/orotitan/page.tsx", import.meta.url), "utf8");
+  assert.match(server, /from\("issuers"\)/);
+  assert.match(server, /from\("securities"\)/);
+  assert.match(server, /security\?\.issuer_id === issuer\.issuer_id/);
+  assert.match(page, /run\.issuerName/);
+  assert.match(page, /run\.ticker/);
+  assert.doesNotMatch(server, /\.rpc\s*\(|\.insert\s*\(|\.update\s*\(|\.delete\s*\(/);
+});
