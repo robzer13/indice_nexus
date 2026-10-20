@@ -286,3 +286,31 @@ Sources de compatibilité :
 - https://developers.openai.com/plugins/build/auth
 - https://supabase.com/docs/guides/auth/oauth-server/token-security
 - https://vercel.com/docs/project-configuration/git-configuration
+
+
+## D24 — Scoped delegated Registry observation design (2026-10-20)
+
+The public ChatGPT OAuth resource server now routes `get_orotitan_run` through a
+**per-request Supabase user JWT**, using only a publishable API key and the
+verified caller's bearer token. A stateless handler is created for each request
+and captures the verified token in an isolated closure. The pilot's protected
+resource, exact OAuth client and user, and the single Besi run are still checked
+by the HTTP OAuth gate and run allowlist.
+
+The other public OAuth MCP tools (`get_orotitan_next_prompt`,
+`list_orotitan_submissions`) **fail closed**, because their existing privileged
+verification/storage paths have not yet received narrowly scoped access designs.
+They remain available only to the existing private, non-production test mode.
+The write tool remains disabled unconditionally.
+
+**Do not enable the pilot yet.** Production Supabase RLS audit on 2026-10-20
+found `orotitan_runs`, `orotitan_run_stages`, `issuers`, and `securities`
+with RLS enabled but **no SELECT privileges** for the `authenticated` role,
+and no policies. The delegated read must therefore fail closed until a separately
+reviewed migration provisions restricted column SELECT grants and RLS policies
+for exactly the enrolled OAuth client/subject and Besi run, and verifies direct
+API access cannot reveal other rows. Do not grant unrestricted authenticated
+SELECT, weaken RLS, or copy the service-role key into the public pilot.
+
+No production Supabase schema/credential/auth changes or Vercel deployment
+were made for this code-only milestone.

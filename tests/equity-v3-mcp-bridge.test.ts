@@ -49,6 +49,21 @@ test("MCP write tools are disabled for the Supabase OAuth pilot regardless of fl
     OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
 });
 
+test("Public OAuth read uses only caller JWT and publishable key, never service_role",()=>{
+  const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
+  const service=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-bridge-service-v1.ts",import.meta.url),"utf8");
+  assert.match(route,/createMcpHandler\(\(\)=>createServer\(bearer\)/);
+  assert.match(route,/handlerForRequest\(request,identity\)/);
+  assert.match(route,/getMcpRunContextDelegated\(run_id,delegatedJwt,process\.env\)/);
+  assert.match(route,/if\(delegatedJwt\)throw new McpBridgeError\("DELEGATED_PROMPT_READ_DISABLED"\)/);
+  assert.match(route,/if\(delegatedJwt\)throw new McpBridgeError\("DELEGATED_QUARANTINE_READ_DISABLED"\)/);
+  assert.match(service,/global:\{headers:\{Authorization:"Bearer "\+jwt\}\}/);
+  assert.match(service,/SUPABASE_PUBLISHABLE_KEY/);
+  assert.match(service,/requireMcpRun\(runIdRaw,env\)/);
+  const delegated=service.split("function delegatedClient(")[1].split("async function getRun(")[0];
+  assert.doesNotMatch(delegated,/SUPABASE_SERVICE_ROLE_KEY|createServerSupabaseClient/);
+});
+
 test("MCP route uses official Streamable HTTP SDK and guards the full endpoint",()=>{
   const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
   const service=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-bridge-service-v1.ts",import.meta.url),"utf8");

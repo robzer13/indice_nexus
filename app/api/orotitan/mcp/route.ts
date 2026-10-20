@@ -9,7 +9,8 @@ import {
   MCP_SCOPE_WRITE, type McpOAuthIdentity,
 } from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
 import {
-  getMcpRunContext, getMcpNextPrompt, listMcpSubmissions, submitMcpWorkProduct,
+  getMcpRunContext, getMcpRunContextDelegated, getMcpNextPrompt,
+  listMcpSubmissions, submitMcpWorkProduct,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-service-v1";
 
 export const runtime = "nodejs";
@@ -35,7 +36,7 @@ function failure(error: unknown) {
     text:JSON.stringify({ok:false,code,admitted:false})}]};
 }
 
-function createServer(): McpServer {
+function createServer(delegatedJwt: string | null): McpServer {
   const server=new McpServer({name:NAME,version:VERSION},{capabilities:{tools:{}}});
   const runSchema=z.object({
     run_id:z.string().uuid().describe("Exact OroTitan Registry run UUID"),
@@ -47,7 +48,9 @@ function createServer(): McpServer {
     inputSchema:runSchema,
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
-    try{return content(await getMcpRunContext(run_id,process.env));}
+    try{return content(delegatedJwt
+      ? await getMcpRunContextDelegated(run_id,delegatedJwt,process.env)
+      : await getMcpRunContext(run_id,process.env));}
     catch(err){return failure(err);}
   });
 
@@ -57,7 +60,12 @@ function createServer(): McpServer {
     inputSchema:runSchema,
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
-    try{return content(await getMcpNextPrompt(run_id,process.env));}
+    try{
+      // D2 verification uses privileged immutable-evidence readers; do not
+      // call that path from the public OAuth pilot before scoped review.
+      if(delegatedJwt)throw new McpBridgeError("DELEGATED_PROMPT_READ_DISABLED");
+      return content(await getMcpNextPrompt(run_id,process.env));
+    }
     catch(err){return failure(err);}
   });
 
@@ -67,7 +75,10 @@ function createServer(): McpServer {
     inputSchema:runSchema,
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
-    try{return content(await listMcpSubmissions(run_id,process.env));}
+    try{
+      if(delegatedJwt)throw new McpBridgeError("DELEGATED_QUARANTINE_READ_DISABLED");
+      return content(await listMcpSubmissions(run_id,process.env));
+    }
     catch(err){return failure(err);}
   });
 
@@ -97,8 +108,12 @@ function createServer(): McpServer {
   return server;
 }
 
-// Official SDK handles Streamable HTTP: 2026 protocol plus stateless legacy.
-const handler=createMcpHandler(createServer,{legacy:"stateless"});
+// Stateless MCP handlers are constructed per HTTP request. The verified JWT
+// is captured in request-local closures; no process-global bearer/context.
+function handlerForRequest(request:Request,identity:McpOAuthIdentity|null) {
+  const bearer=identity?request.headers.get("authorization")?.slice(7)??null:null;
+  return createMcpHandler(()=>createServer(bearer),{legacy:"stateless"});
+}
 
 function plain(status:number,message:string,headers:Record<string,string>={}) {
   return new Response(message,{status,headers:{"cache-control":"no-store",...headers}});
@@ -170,13 +185,13 @@ export async function POST(request:Request):Promise<Response> {
       }
     }
   }
-  return handler.fetch(request);
+  return handlerForRequest(request,identity).fetch(request);
 }
 export async function GET(request:Request):Promise<Response> {
-  const {denied}=await gate(request);
-  return denied ?? handler.fetch(request);
+  const {denied,identity}=await gate(request);
+  return denied ?? handlerForRequest(request,identity).fetch(request);
 }
 export async function DELETE(request:Request):Promise<Response> {
-  const {denied}=await gate(request);
-  return denied ?? handler.fetch(request);
+  const {denied,identity}=await gate(request);
+  return denied ?? handlerForRequest(request,identity).fetch(request);
 }

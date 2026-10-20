@@ -1,4 +1,5 @@
 import "server-only";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * MCP service: deliberately narrow, server-side bridge to the existing
@@ -36,6 +37,26 @@ function client(): DbClient {
   return createServerSupabaseClient();
 }
 
+/**
+ * MCP OAuth callers must use their own short-lived Supabase JWT under RLS.
+ * Never use service_role or a server-side privileged fallback for this path.
+ * The Registry tables currently deny authenticated SELECT (verified
+ * 2026-10-20); it will remain blocked until narrow RLS+GRANT review.
+ */
+function delegatedClient(jwt: string, env: NodeJS.ProcessEnv): DbClient {
+  assertProductionUrl();
+  const key=env.SUPABASE_PUBLISHABLE_KEY;
+  if (!key || !/^sb_publishable_[a-zA-Z0-9_-]{12,}$/.test(key) ||
+    !/^[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+$/.test(jwt) ||
+    jwt.length > 9000) {
+    throw new McpBridgeError("DELEGATED_DATABASE_ACCESS_NOT_CONFIGURED");
+  }
+  return createClient(env.NEXT_PUBLIC_SUPABASE_URL!,key,{
+    global:{headers:{Authorization:"Bearer "+jwt}},
+    auth:{persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+  });
+}
+
 async function getRun(db: DbClient, runId: string): Promise<Run> {
   const { data, error } = await db.from("orotitan_runs")
     .select("run_id,issuer_id,security_id,run_status,current_stage,state_version,data_cutoff,process_version,pilotage_contract_version,canonical_mode")
@@ -63,7 +84,18 @@ async function labels(db: DbClient, run: Run) {
 /** Registry observation: identifiers, blockers and stage are NOT a verified prompt. */
 export async function getMcpRunContext(runIdRaw: string, env: NodeJS.ProcessEnv) {
   const runId = requireMcpRun(runIdRaw,env);
-  const db=client();
+  return observeRunContext(client(),runId);
+}
+
+/** JWT already signature/issuer/resource/client validated at the HTTP gate. */
+export async function getMcpRunContextDelegated(
+  runIdRaw: string,jwt: string,env: NodeJS.ProcessEnv,
+) {
+  const runId=requireMcpRun(runIdRaw,env);
+  return observeRunContext(delegatedClient(jwt,env),runId);
+}
+
+async function observeRunContext(db: DbClient,runId: string) {
   const run=await getRun(db,runId);
   const [identity, stageResponse] = await Promise.all([
     labels(db,run),
