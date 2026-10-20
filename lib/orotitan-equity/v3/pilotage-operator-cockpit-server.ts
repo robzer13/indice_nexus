@@ -12,7 +12,8 @@ import {
 import { TrustedLoaderError } from "./pilotage-trusted-loader-v3-1";
 import {
   asOperatorDecision, asOperatorRun, safeVerifierReason,
-  type OperatorDecision, type OperatorRun, type RunSummary, type OperatorStageObservation,
+  type OperatorDecision, type OperatorRun, type RunSummary,
+  type OperatorStageObservation, type OperatorIdentity,
 } from "./pilotage-operator-view-v3-1";
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -92,7 +93,7 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
   assertProductionUrl();
   const client = createServerSupabaseClient();
   const { data, error } = await client.from("orotitan_runs")
-    .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at,process_version,pilotage_contract_version")
+    .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,security_id,state_version,created_at,process_version,pilotage_contract_version")
     .order("created_at", { ascending: false }).limit(LIMIT);
   if (error) {
     return { runs: [], selectedRunId, preview: null,
@@ -113,9 +114,45 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
     }
     stages = (result.data ?? []) as OperatorStageObservation[];
   }
+  // Display-only issuer/security labels: do not use these observations for
+  // analysis, authority checks or admission decisions. A failed lookup leaves
+  // the underlying run accessible under its immutable Registry ID.
+  const issuerIds = [...new Set(registry.map(x => x.issuer_id).filter(
+    (value): value is string => typeof value === "string" && value.length > 0))];
+  const securityIds = [...new Set(registry.map(x => x.security_id).filter(
+    (value): value is string => typeof value === "string" && value.length > 0))];
+
+  type IssuerLabel = { issuer_id: string; display_name: string };
+  type SecurityLabel = { security_id: string; issuer_id: string; ticker: string | null; isin: string | null };
+  let issuers: IssuerLabel[] = [];
+  let securities: SecurityLabel[] = [];
+  if (issuerIds.length > 0) {
+    const result = await client.from("issuers")
+      .select("issuer_id,display_name").in("issuer_id", issuerIds).limit(LIMIT);
+    if (!result.error) issuers = (result.data ?? []) as IssuerLabel[];
+  }
+  if (securityIds.length > 0) {
+    const result = await client.from("securities")
+      .select("security_id,issuer_id,ticker,isin").in("security_id", securityIds).limit(LIMIT);
+    if (!result.error) securities = (result.data ?? []) as SecurityLabel[];
+  }
+  const issuerIndex = new Map(issuers.map(item => [item.issuer_id, item]));
+  const securityIndex = new Map(securities.map(item => [item.security_id, item]));
+
   const stageIndex = new Map(stages.map(st => [st.run_id + ":" + st.stage_code, st]));
-  const runs = registry.map(row => asOperatorRun(
-    row, stageIndex.get(row.run_id + ":" + row.current_stage) ?? null));
+  const runs = registry.map(row => {
+    const issuer = row.issuer_id ? issuerIndex.get(row.issuer_id) : null;
+    const security = row.security_id ? securityIndex.get(row.security_id) : null;
+    const safeSecurity = issuer && security?.issuer_id === issuer.issuer_id ? security : null;
+    const identity: OperatorIdentity | null = issuer ? {
+      issuerId: issuer.issuer_id,
+      displayName: issuer.display_name,
+      ticker: safeSecurity?.ticker ?? null,
+      isin: safeSecurity?.isin ?? null,
+    } : null;
+    return asOperatorRun(row,
+      stageIndex.get(row.run_id + ":" + row.current_stage) ?? null, identity);
+  });
   if (!selectedRunId) {
     return { runs, selectedRunId: null, preview: null,
       previewState: "NOT_SELECTED", blockerCode: null,
