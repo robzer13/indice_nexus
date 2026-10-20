@@ -129,6 +129,6 @@ export function oauthResourceMetadata(config: McpOAuthConfig) {
   };
 }
 
-export function oauthChallenge(config: McpOAuthConfig, scope = MCP_SCOPE_READ): string {
-  return `Bearer resource_metadata="${config.resourceMetadataUrl}", scope="${scope}"`;
+export function oauthChallenge(config: McpOAuthConfig): string {
+  return `Bearer resource_metadata="${config.resourceMetadataUrl}"`;
 }
