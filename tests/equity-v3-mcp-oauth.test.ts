@@ -43,17 +43,18 @@ test("MCP OAuth resource metadata and config fail closed",()=>{
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan.example.org/login"}),null);
 });
 
-test("MCP OAuth independently verifies RS256 signature, issuer, audience, subject and scope",async()=>{
+test("MCP OAuth verifies signature, issuer, Supabase audience, client registration and subject",async()=>{
   const {publicKey,privateKey}=await generateKeyPair("RS256",{extractable:true});
   const jwk=await exportJWK(publicKey);
   const keys=createLocalJWKSet({keys:[{...jwk,kid:"testkey",alg:"RS256",use:"sig"}]});
   const issue=async(input?:{
-    issuer?:string;audience?:string;subject?:string;scope?:string;exp?:string;
+    issuer?:string;audience?:string;subject?:string;client?:string;role?:string;exp?:string;
   })=>{
-    let builder=new SignJWT({scope:input?.scope??MCP_SCOPE_READ})
+    let builder=new SignJWT({client_id:input?.client??"approved-client-123",
+      role:input?.role??"authenticated"})
       .setProtectedHeader({alg:"RS256",kid:"testkey"})
       .setIssuer(input?.issuer??config.issuer)
-      .setAudience(input?.audience??config.audience)
+      .setAudience(input?.audience??config.tokenAudience)
       .setSubject(input?.subject??"user-123")
       .setIssuedAt();
     builder=builder.setExpirationTime(input?.exp??"10m");
@@ -71,7 +72,8 @@ test("MCP OAuth independently verifies RS256 signature, issuer, audience, subjec
   await fails(await issue({audience:"https://other.example.org/api/orotitan/mcp"}));
   await fails(await issue({issuer:"https://another.example.org"}));
   await fails(await issue({subject:"user-999"}));
-  await fails(await issue({scope:MCP_SCOPE_WRITE}));
+  await fails(await issue({client:"not-approved-client"}));
+  await fails(await issue({role:"anon"}));
   await fails(await issue({exp:"-30m"}));
   await fails(good.slice(0,-5)+"BADxx");
   await assert.rejects(()=>verifyMcpOAuthBearer(null,config,keys),
