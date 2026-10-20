@@ -119,8 +119,14 @@ export function asOperatorRun(
 
 export type OperatorFilter = "v31" | "blocked" | "all";
 
+/** Registry observations, not a verified gate or permission to advance. */
+export function hasObservedBlockers(x: OperatorRun): boolean {
+  return x.status === "BLOCKED" || x.stageLifecycle === "BLOCKED" ||
+    x.contractStatusCode?.startsWith("BLOCKED_") === true || x.blockers.length > 0;
+}
+
 export function filterOperatorRuns(rows: readonly OperatorRun[], filter: OperatorFilter): OperatorRun[] {
-  if (filter === "blocked") return rows.filter(x => x.status === "BLOCKED");
+  if (filter === "blocked") return rows.filter(hasObservedBlockers);
   if (filter === "v31") return rows.filter(x => x.supportsV31Verifier && x.status !== "PUBLISHED");
   return [...rows];
 }
@@ -129,10 +135,10 @@ export function operatorTriageTotals(rows: readonly OperatorRun[]) {
   return {
     observed: rows.length,
     active: rows.filter(x => x.status === "ACTIVE").length,
-    blocked: rows.filter(x => x.status === "BLOCKED").length,
+    blocked: rows.filter(hasObservedBlockers).length,
     v31: rows.filter(x => x.supportsV31Verifier).length,
     v31Active: rows.filter(x => x.supportsV31Verifier && x.status === "ACTIVE").length,
-    v31Blocked: rows.filter(x => x.supportsV31Verifier && x.status === "BLOCKED").length,
+    v31Blocked: rows.filter(x => x.supportsV31Verifier && hasObservedBlockers(x)).length,
   };
 }
 
