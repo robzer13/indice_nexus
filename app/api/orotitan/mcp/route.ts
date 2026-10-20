@@ -166,7 +166,7 @@ export async function POST(request:Request):Promise<Response> {
         (!identity || !identity.scopes.has(MCP_SCOPE_WRITE))) {
         const config=mcpOAuthConfig(process.env);
         return plain(403,"Insufficient scope",config ?
-          {"www-authenticate":oauthChallenge(config,MCP_SCOPE_WRITE)} : {});
+          {"www-authenticate":oauthChallenge(config)} : {});
       }
     }
   }
