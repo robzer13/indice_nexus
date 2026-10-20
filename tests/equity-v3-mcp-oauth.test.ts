@@ -48,10 +48,10 @@ test("MCP OAuth verifies signature, issuer, Supabase audience, client registrati
   const jwk=await exportJWK(publicKey);
   const keys=createLocalJWKSet({keys:[{...jwk,kid:"testkey",alg:"RS256",use:"sig"}]});
   const issue=async(input?:{
-    issuer?:string;audience?:string;subject?:string;client?:string;role?:string;exp?:string;
+    issuer?:string;audience?:string;subject?:string;client?:string;role?:string;resource?:string;exp?:string;
   })=>{
     let builder=new SignJWT({client_id:input?.client??"approved-client-123",
-      role:input?.role??"authenticated"})
+      role:input?.role??"authenticated",resource:input?.resource??config.audience})
       .setProtectedHeader({alg:"RS256",kid:"testkey"})
       .setIssuer(input?.issuer??config.issuer)
       .setAudience(input?.audience??config.tokenAudience)
@@ -74,6 +74,7 @@ test("MCP OAuth verifies signature, issuer, Supabase audience, client registrati
   await fails(await issue({subject:"user-999"}));
   await fails(await issue({client:"not-approved-client"}));
   await fails(await issue({role:"anon"}));
+  await fails(await issue({resource:"https://other.example.org/api/orotitan/mcp"}));
   await fails(await issue({exp:"-30m"}));
   await fails(good.slice(0,-5)+"BADxx");
   await assert.rejects(()=>verifyMcpOAuthBearer(null,config,keys),
@@ -84,13 +85,27 @@ test("MCP OAuth accepts asymmetrically signed ES256 Supabase tokens for approved
   const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
   const jwk=await exportJWK(publicKey);
   const keys=createLocalJWKSet({keys:[{...jwk,kid:"ec1",alg:"ES256",use:"sig"}]});
-  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123"})
+  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123",resource:config.audience})
     .setProtectedHeader({alg:"ES256",kid:"ec1"})
     .setIssuer(config.issuer).setAudience(config.tokenAudience)
     .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
   const identity=await verifyMcpOAuthBearer("Bearer "+jwt,config,keys);
   assert.equal(identity.subject,"user-123");
   assert.deepEqual([...identity.scopes],[MCP_SCOPE_READ]);
+});
+
+
+test("MCP OAuth rejects an otherwise valid Supabase OAuth JWT without a signed resource binding",async()=>{
+  const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
+  const jwk=await exportJWK(publicKey);
+  const keys=createLocalJWKSet({keys:[{...jwk,kid:"ec2",alg:"ES256",use:"sig"}]});
+  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123"})
+    .setProtectedHeader({alg:"ES256",kid:"ec2"})
+    .setIssuer(config.issuer).setAudience("authenticated")
+    .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
+  await assert.rejects(()=>verifyMcpOAuthBearer("Bearer "+jwt,config,keys),
+    (error:unknown)=>error instanceof McpOAuthError &&
+      error.code==="OAUTH_IDENTITY_OR_SCOPE_DENIED");
 });
 
 test("MCP OAuth discovery route and dispatch require validated metadata and scope",()=>{
