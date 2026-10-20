@@ -106,7 +106,7 @@ test("UX manual prompt button stays separate from analytical progress and any wr
   const copy = readFileSync(new URL("../components/admin/orotitan-prompt-copy.tsx", import.meta.url), "utf8");
   const page = readFileSync(new URL("../app/admin/orotitan/page.tsx", import.meta.url), "utf8");
   assert.match(ui, /role="progressbar"/);
-  assert.match(ui, /position, non taux/);
+  assert.match(ui, /Position, non taux/);
   assert.match(ui, /OroTitanPromptCopy/);
   assert.match(copy, /navigator\.clipboard\.writeText/);
   assert.match(page, /OroTitanWorkflowJourney/);
