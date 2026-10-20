@@ -5,6 +5,10 @@ import {
   authorizeMcpBearer, mcpEnabled, mcpWriteEnabled, McpBridgeError,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-access-v1";
 import {
+  mcpOAuthConfig, verifyMcpOAuthBearer, oauthChallenge,
+  MCP_SCOPE_READ, MCP_SCOPE_WRITE, type McpOAuthIdentity,
+} from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
+import {
   getMcpRunContext, getMcpNextPrompt, listMcpSubmissions, submitMcpWorkProduct,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-service-v1";
 
@@ -41,6 +45,7 @@ function createServer(): McpServer {
     title:"Consulter un dossier OroTitan",
     description:"Lire le run, l'étape et les blocages depuis Supabase. Observation non validée, jamais une preuve autoritative.",
     inputSchema:runSchema,
+    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await getMcpRunContext(run_id,process.env));}
@@ -51,6 +56,7 @@ function createServer(): McpServer {
     title:"Obtenir le prompt vérifié de l'étape",
     description:"Vérifier les preuves immuables GitHub, le contrat et l'état Registry. Renvoie le prompt exact uniquement si le handoff est admis; ne lance aucune IA, transition ni publication.",
     inputSchema:runSchema,
+    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await getMcpNextPrompt(run_id,process.env));}
@@ -61,6 +67,7 @@ function createServer(): McpServer {
     title:"Consulter les fichiers transmis à OroTitan",
     description:"Lister seulement les livrables en quarantaine privée, reçus mais non vérifiés. Aucune preuve d'admission ou de phase terminée.",
     inputSchema:runSchema,
+    securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ]}],
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{return content(await listMcpSubmissions(run_id,process.env));}
@@ -79,6 +86,7 @@ function createServer(): McpServer {
         filename:z.string().min(1).max(160),
         content:z.string().min(1).max(100_000),
       }).strict(),
+      securitySchemes:[{type:"oauth2",scopes:[MCP_SCOPE_READ,MCP_SCOPE_WRITE]}],
       annotations:{readOnlyHint:false,destructiveHint:false,idempotentHint:true,openWorldHint:false},
     },async({run_id,expected_stage,expected_run_state_version,filename,content:text})=>{
       try{return content(await submitMcpWorkProduct({
@@ -100,37 +108,75 @@ function plain(status:number,message:string,headers:Record<string,string>={}) {
   return new Response(message,{status,headers:{"cache-control":"no-store",...headers}});
 }
 
-function gate(request:Request):Response|null {
-  if(!mcpEnabled(process.env)) return plain(404,"Not found");
+type GateResult = { denied: Response | null; identity: McpOAuthIdentity | null };
+
+async function gate(request:Request):Promise<GateResult> {
+  function deny(response:Response):GateResult {return {denied:response,identity:null};}
+  if(!mcpEnabled(process.env)) return deny(plain(404,"Not found"));
   const site=process.env.OROTITAN_MCP_PUBLIC_ORIGIN;
   let url:URL;
-  try{url=new URL(request.url);}catch{return plain(400,"Invalid URL");}
-  // Explicit HTTPS origin, no preview/wildcard/attacker-selected Host trust.
+  try{url=new URL(request.url);}catch{return deny(plain(400,"Invalid URL"));}
   if(!site || !/^https:\/\/[^/]+$/.test(site) || url.origin!==site) {
-    return plain(503,"MCP endpoint not configured");
+    return deny(plain(503,"MCP endpoint not configured"));
   }
   const origin=request.headers.get("origin");
-  if(origin && origin!==site)return plain(403,"Origin rejected");
-  if(!authorizeMcpBearer(request.headers.get("authorization"),process.env)) {
-    return plain(401,"Authentication required",{"www-authenticate":'Bearer realm="orotitan-mcp"'});
+  if(origin && origin!==site)return deny(plain(403,"Origin rejected"));
+
+  if(process.env.OROTITAN_MCP_AUTH_MODE==="OAUTH") {
+    const config=mcpOAuthConfig(process.env);
+    if(!config)return deny(plain(503,"OAuth not configured"));
+    try {
+      const identity=await verifyMcpOAuthBearer(
+        request.headers.get("authorization"),config);
+      return {denied:null,identity};
+    } catch {
+      return deny(plain(401,"Authentication required",{
+        "www-authenticate":oauthChallenge(config),
+      }));
+    }
   }
-  return null;
+  // Static bearer can only be exercised on a private development server.
+  // Never expose this shortcut in a production deployment.
+  if(process.env.OROTITAN_MCP_AUTH_MODE==="TEST_BEARER" &&
+    process.env.NODE_ENV!=="production" &&
+    authorizeMcpBearer(request.headers.get("authorization"),process.env)) {
+    return {denied:null,identity:null};
+  }
+  return deny(plain(401,"OAuth required"));
 }
 
 export async function POST(request:Request):Promise<Response> {
-  const denied=gate(request);
+  const {denied,identity}=await gate(request);
   if(denied)return denied;
   const length=request.headers.get("content-length");
   if(length!==null && (!/^\\d+$/.test(length) || Number(length)>250_000)) {
     return plain(413,"Request too large");
   }
+  // Scope-aware tool dispatch: the write tool is NEVER callable with only
+  // orotitan.read, even if the caller bypasses the ChatGPT consent UI.
+  if(mcpWriteEnabled(process.env)) {
+    let parsed:unknown;
+    try{parsed=await request.clone().json();}
+    catch{return plain(400,"Invalid JSON-RPC body");}
+    if(parsed && typeof parsed==="object" && !Array.isArray(parsed)) {
+      const call=parsed as {method?:unknown;params?:unknown};
+      const params=call.params && typeof call.params==="object" ?
+        call.params as {name?:unknown} : null;
+      if(call.method==="tools/call" && params?.name==="submit_orotitan_work_product" &&
+        (!identity || !identity.scopes.has(MCP_SCOPE_WRITE))) {
+        const config=mcpOAuthConfig(process.env);
+        return plain(403,"Insufficient scope",config ?
+          {"www-authenticate":oauthChallenge(config,MCP_SCOPE_WRITE)} : {});
+      }
+    }
+  }
   return handler.fetch(request);
 }
 export async function GET(request:Request):Promise<Response> {
-  const denied=gate(request);
+  const {denied}=await gate(request);
   return denied ?? handler.fetch(request);
 }
 export async function DELETE(request:Request):Promise<Response> {
-  const denied=gate(request);
+  const {denied}=await gate(request);
   return denied ?? handler.fetch(request);
 }
