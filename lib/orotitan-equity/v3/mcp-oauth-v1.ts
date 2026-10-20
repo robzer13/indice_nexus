@@ -78,9 +78,12 @@ function tokenScopes(payload: JWTPayload): ReadonlySet<string> {
 }
 
 export function isOAuthPayloadAdmitted(payload: JWTPayload, config: McpOAuthConfig): boolean {
+  const clientId = payload.client_id;
   return typeof payload.sub === "string" &&
     config.allowedSubjects.has(payload.sub) &&
-    tokenScopes(payload).has(MCP_SCOPE_READ) &&
+    typeof clientId === "string" &&
+    config.allowedClients.has(clientId) &&
+    payload.role === "authenticated" &&
     typeof payload.exp === "number" && typeof payload.iat === "number";
 }
 
