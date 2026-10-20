@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { isAllowedChatGptRedirect } from "@/lib/orotitan-equity/v3/mcp-consent-policy-v1";
+import { isAllowedChatGptRedirect, isAllowedChatGptReturnUrl } from "@/lib/orotitan-equity/v3/mcp-consent-policy-v1";
 
 type Details = {
-  client?:{name?:string};
+  client?:{id?:string;name?:string};
   redirect_uri?:string;
   scope?:string;
   authorization_id?:string;
@@ -56,7 +56,7 @@ export function OroTitanOauthConsent({
       if(detailError||!data)throw new Error("AUTHORIZATION_NOT_FOUND");
       const next=data as Details;
       if("redirect_url" in next && !("authorization_id" in next)){
-        if(!isAllowedChatGptRedirect(next.redirect_url)){
+        if(!isAllowedChatGptReturnUrl(next.redirect_url)){
           throw new Error("REDIRECT_NOT_CHATGPT");
         }
         window.location.assign(next.redirect_url!);
@@ -100,14 +100,14 @@ export function OroTitanOauthConsent({
       if(checkError||!latest||!("authorization_id" in latest)||
         !isAllowedChatGptRedirect(latest.redirect_uri)||
         latest.redirect_uri!==details.redirect_uri||
-        latest.client?.name!==details.client?.name){
+        latest.client?.id!==details.client?.id){
         throw new Error("CONSENT_CONTEXT_CHANGED");
       }
       const result=decision==="approve"?
         await supabase.auth.oauth.approveAuthorization(authorizationId):
         await supabase.auth.oauth.denyAuthorization(authorizationId);
       if(result.error || !result.data?.redirect_url ||
-        !isAllowedChatGptRedirect(result.data.redirect_url.split("?")[0])){
+        !isAllowedChatGptReturnUrl(result.data.redirect_url)){
         throw new Error("CONSENT_REDIRECT_REJECTED");
       }
       window.location.assign(result.data.redirect_url);
