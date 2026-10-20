@@ -127,3 +127,32 @@ valide pas la suffisance analytique du dossier Besi. Aucune fonction SQL
 n'a été installée en production, aucune mutation d'un run réel, aucun
 handoff effectif de Besi. La migration reste une autorisation distincte
 après revue du SQL et protocole de déploiement/retour arrière.
+
+
+## D11 interface utilisateur : prompt manuel, aucune IA ni transition automatique
+
+Dans le cockpit `/admin/orotitan?run=<RUN_ID>`, l'opérateur choisit un run,
+consulte ses blocages et lance une vérification D2/D1 **en lecture seule**.
+Uniquement si une phase est admissible, l'interface propose :
+**« Copier le prompt <PHASE> »** et **« Afficher le prompt complet »**.
+
+Le texte copiable contient la phase exacte, les pins de contrat V3.1,
+les références versionnées et SHA des artefacts immuables,
+les versions CAS observées, ainsi que les consignes analytiques et interdits
+propres à Research, Fundamentals, Valuation, Certification ou Integration.
+Ce prompt est exécuté **manuellement dans ChatGPT par l'opérateur**, jamais
+envoyé automatiquement à un modèle. Les résultats sont ensuite relus et
+persistés par le flux autorisé d'artefacts/Registry avant tout nouveau handoff.
+
+Cas particulier : après un Research FINAL vérifié alors qu'aucun
+`DEEP_DIVE` n'existe, Pilotage peut **proposer** le prompt Fundamentals,
+mais ce prompt contient `PENDING_REGISTRY_TRANSITION` et exige un
+`start_orotitan_stage(DEEP_DIVE)` séparément autorisé **avant la
+persistance** de tout nouvel output. Copier le prompt n'effectue pas
+cette transition et ne constitue ni une admission de nouveaux artefacts
+ni une validation analytique.
+
+Une première itération D11 avait créé un bouton de démarrage automatique
+de Deep Dive. Cette action et ses helpers RPC ont été retirés avant merge
+car **hors du besoin produit**. Seule la copie du prompt manuel reste
+sur la page. Aucun changement de production, aucune IA/API ajoutée.
