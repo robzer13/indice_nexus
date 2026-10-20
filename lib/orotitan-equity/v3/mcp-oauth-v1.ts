@@ -52,7 +52,10 @@ export function mcpOAuthConfig(env: NodeJS.ProcessEnv): McpOAuthConfig | null {
     issuer.pathname.endsWith("//") || jwks.origin !== issuer.origin ||
     subjects.length < 1 || subjects.length > 10 ||
     subjects.some(s => s.length < 4 || s.length > 160 || !/^[a-zA-Z0-9_.:@|-]+$/.test(s)) ||
-    new Set(subjects).size !== subjects.length) return null;
+    new Set(subjects).size !== subjects.length ||
+    clients.length < 1 || clients.length > 10 ||
+    clients.some(s => s.length < 6 || s.length > 160 || !/^[a-zA-Z0-9_-]+$/.test(s)) ||
+    new Set(clients).size !== clients.length) return null;
 
   // Audience/resource identifier is fixed by the host, never a model input.
   const resource = origin.origin + "/api/orotitan/mcp";
