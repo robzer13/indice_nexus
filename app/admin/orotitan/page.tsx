@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 
 import { AdminNav } from "@/components/admin/admin-nav";
 import { OroTitanWorkflowJourney } from "@/components/admin/orotitan-workflow-journey";
+import { OroTitanManualIntake } from "@/components/admin/orotitan-manual-intake";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { loadAdminPilotageCockpit } from "@/lib/orotitan-equity/v3/pilotage-operator-cockpit-server";
 import { filterOperatorRuns, hasObservedBlockers, operatorTriageTotals, type OperatorFilter } from "@/lib/orotitan-equity/v3/pilotage-operator-view-v3-1";
@@ -113,6 +114,10 @@ export default async function OroTitanPilotagePage({
       run={currentObservation}
       preview={data.preview}
       previewState={data.previewState}
+    /> : null}
+
+    {currentObservation && data ? <OroTitanManualIntake
+      runId={currentObservation.runId}
     /> : null}
 
     {!data ? <section role="status" className="rounded-xl border border-rose-900 bg-rose-950/20 p-4 text-sm text-rose-200">
