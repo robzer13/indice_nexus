@@ -1,0 +1,17 @@
+{
+  "name": "orotitan-mcp-public-test-gateway",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "scripts": {
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "16.3.3",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  }
+}
