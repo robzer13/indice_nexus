@@ -24,5 +24,6 @@ export default async function OauthConsentPage({searchParams}:Props){
     supabaseUrl={cfg.supabaseUrl}
     publishableKey={cfg.publishableKey}
     siteOrigin={cfg.siteOrigin}
+    allowedClientIds={cfg.allowedClientIds}
   />;
 }

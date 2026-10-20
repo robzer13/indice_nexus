@@ -2,10 +2,11 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@supabase/supabase-js";
-import { isAllowedChatGptRedirect, isAllowedChatGptReturnUrl } from "@/lib/orotitan-equity/v3/mcp-consent-policy-v1";
+import { consentClientId, isAllowedChatGptRedirect, isAllowedChatGptReturnUrl } from "@/lib/orotitan-equity/v3/mcp-consent-policy-v1";
 
 type Details = {
-  client?:{id?:string;name?:string};
+  client?:{id?:string;client_id?:string;name?:string};
+  client_id?:string;
   redirect_uri?:string;
   scope?:string;
   authorization_id?:string;
@@ -17,11 +18,12 @@ type Props = {
   supabaseUrl: string;
   publishableKey: string;
   siteOrigin: string;
+  allowedClientIds: readonly string[];
 };
 
 /** OAuth credentials are separate from OroTitan's admin-cookie authentication. */
 export function OroTitanOauthConsent({
-  authorizationId,supabaseUrl,publishableKey,siteOrigin,
+  authorizationId,supabaseUrl,publishableKey,siteOrigin,allowedClientIds,
 }:Props) {
   const supabase=useMemo(()=>createClient(supabaseUrl,publishableKey,{
     auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true},
@@ -65,7 +67,10 @@ export function OroTitanOauthConsent({
       if(!isAllowedChatGptRedirect(next.redirect_uri)){
         throw new Error("REDIRECT_NOT_CHATGPT");
       }
-      if(!next.client?.name)throw new Error("CLIENT_IDENTITY_MISSING");
+      if(!next.client?.name ||
+        !allowedClientIds.includes(consentClientId(next)??"")){
+        throw new Error("CLIENT_NOT_ALLOWLISTED");
+      }
       setIdentity(user.email??user.id);
       setDetails(next);
     }catch{
@@ -73,7 +78,7 @@ export function OroTitanOauthConsent({
       setIdentity(null);
       setError("Demande ou identité non autorisée. Contactez l'administrateur OroTitan.");
     }finally{setBusy(false);}
-  },[supabase,authorizationId,siteOrigin]);
+  },[supabase,authorizationId,siteOrigin,allowedClientIds]);
 
   useEffect(()=>{void Promise.resolve().then(refresh);},[refresh]);
 
@@ -100,7 +105,8 @@ export function OroTitanOauthConsent({
       if(checkError||!latest||!("authorization_id" in latest)||
         !isAllowedChatGptRedirect(latest.redirect_uri)||
         latest.redirect_uri!==details.redirect_uri||
-        latest.client?.id!==details.client?.id){
+        !allowedClientIds.includes(consentClientId(latest)??"") ||
+        consentClientId(latest)!==consentClientId(details)){
         throw new Error("CONSENT_CONTEXT_CHANGED");
       }
       const result=decision==="approve"?
