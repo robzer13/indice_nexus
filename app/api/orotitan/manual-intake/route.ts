@@ -27,17 +27,17 @@ async function authorizedClient(): Promise<Client | null> {
 
 async function findRun(client: Client, runId: string) {
   const { data, error } = await client.from("orotitan_runs")
-    .select("run_id,current_stage,run_status").eq("run_id", runId).maybeSingle();
+    .select("run_id,current_stage,run_status,state_version").eq("run_id", runId).maybeSingle();
   if (error) throw new IntakeError("INTAKE_RUN_QUERY_FAILED");
   if (!data) throw new IntakeError("INTAKE_RUN_NOT_FOUND");
-  return data as {run_id: string; current_stage: string | null; run_status: string};
+  return data as {run_id: string; current_stage: string | null; run_status: string; state_version: number};
 }
 
 function outcome(err: unknown): Response {
   const code = err instanceof IntakeError ? err.code : "INTAKE_UNAVAILABLE";
   const status = code === "INTAKE_RUN_NOT_FOUND" ? 404 :
     code === "INTAKE_DISABLED" ? 403 :
-    code === "INTAKE_LIMIT_REACHED" ? 409 :
+    code === "INTAKE_LIMIT_REACHED" || code === "INTAKE_RUN_CHANGED_REFRESH" ? 409 :
     code.startsWith("INTAKE_FILE") || code.startsWith("INTAKE_JSON") ||
     code.startsWith("INTAKE_NOT_UTF8") || code === "INTAKE_IDENTITY_INVALID" ?
       400 : 503;
@@ -72,6 +72,7 @@ export async function GET(request: Request): Promise<Response> {
       .filter((item): item is NonNullable<typeof item> => item !== null);
     return reply({
       ok: true, enabled: isEnabled(), currentStage: run.current_stage,
+      runStateVersion: run.state_version,
       files, limit: MANUAL_INTAKE_MAX_FILES_PER_STAGE,
       authority: "QUARANTINE_ONLY_NOT_REGISTRY",
       nextAction: "VERIFY_AND_REGISTER_SEPARATELY",
@@ -101,8 +102,12 @@ export async function POST(request: Request): Promise<Response> {
   try { form = await request.formData(); }
   catch { return reply({ ok: false, code: "INTAKE_MULTIPART_INVALID" }, 400); }
   const runId = form.get("run");
+  const expectedStage = form.get("expectedStage");
+  const expectedRunVersion = Number(form.get("expectedRunStateVersion"));
   const files = form.getAll("file");
-  if (!isRunId(runId) || files.length !== 1 || !(files[0] instanceof File)) {
+  if (!isRunId(runId) || typeof expectedStage !== "string" ||
+    !Number.isSafeInteger(expectedRunVersion) || expectedRunVersion < 1 ||
+    files.length !== 1 || !(files[0] instanceof File)) {
     return reply({ ok: false, code: "INTAKE_REQUEST_INVALID" }, 400);
   }
   const upload = files[0];
@@ -111,6 +116,9 @@ export async function POST(request: Request): Promise<Response> {
   }
   try {
     const run = await findRun(client, runId);
+    if (run.current_stage !== expectedStage || run.state_version !== expectedRunVersion) {
+      throw new IntakeError("INTAKE_RUN_CHANGED_REFRESH");
+    }
     if (!MANUAL_INTAKE_ALLOWED_RUN_STATUSES.includes(
       run.run_status as typeof MANUAL_INTAKE_ALLOWED_RUN_STATUSES[number])) {
       throw new IntakeError("INTAKE_RUN_NOT_EDITABLE");
