@@ -12,6 +12,7 @@ export type McpOAuthConfig = {
   jwksUri: string;
   resourceMetadataUrl: string;
   allowedSubjects: ReadonlySet<string>;
+  allowedClients: ReadonlySet<string>;
 };
 export type McpOAuthIdentity = {
   subject: string;
