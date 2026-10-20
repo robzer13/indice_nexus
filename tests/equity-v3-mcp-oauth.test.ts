@@ -17,17 +17,19 @@ const base: NodeJS.ProcessEnv = {
   OROTITAN_MCP_OAUTH_ISSUER:"https://id.example.org/oauth",
   OROTITAN_MCP_OAUTH_JWKS_URI:"https://id.example.org/oauth/jwks",
   OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"user-123",
+  OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:"approved-client-123",
 };
 const config=mcpOAuthConfig(base)!;
 
 test("MCP OAuth resource metadata and config fail closed",()=>{
   assert.equal(config.issuer,"https://id.example.org/oauth");
   assert.equal(config.audience,"https://orotitan.example.org/api/orotitan/mcp");
+  assert.equal(config.tokenAudience,"authenticated");
   assert.equal(config.resourceMetadataUrl,"https://orotitan.example.org/.well-known/oauth-protected-resource");
   assert.deepEqual(oauthResourceMetadata(config),{
     resource:config.audience,
     authorization_servers:[config.issuer],
-    scopes_supported:[MCP_SCOPE_READ,MCP_SCOPE_WRITE],
+    scopes_supported:["email","profile"],
   });
   assert.match(oauthChallenge(config),/resource_metadata="https:/);
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_ENABLED:"false"}),null);
@@ -35,6 +37,8 @@ test("MCP OAuth resource metadata and config fail closed",()=>{
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ISSUER:"http://id.example.org"}),null);
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_JWKS_URI:"https://attacker.example.com/jwks"}),null);
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"*"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:""}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:"*"}),null);
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"user-123,user-123"}),null);
   assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan.example.org/login"}),null);
 });
