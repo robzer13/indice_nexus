@@ -39,14 +39,14 @@ test("MCP allows only explicit exact run IDs and no wildcard or invalid UUID",()
   assert.equal(allowedMcpRuns({...good,OROTITAN_MCP_ALLOWED_RUN_IDS:besi+","+besi}).size,0);
 });
 
-test("MCP cannot advertise or execute writing without both independent feature flags",()=>{
+test("MCP write tools are disabled for the Supabase OAuth pilot regardless of flags",()=>{
   assert.equal(mcpWriteEnabled(good),false);
   assert.equal(mcpWriteEnabled({...good,OROTITAN_MCP_WRITE_ENABLED:"true"}),false);
   assert.equal(mcpWriteEnabled({...good,OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
   assert.equal(mcpWriteEnabled({...good,OROTITAN_MCP_ENABLED:"false",
     OROTITAN_MCP_WRITE_ENABLED:"true",OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
   assert.equal(mcpWriteEnabled({...good,OROTITAN_MCP_WRITE_ENABLED:"true",
-    OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),true);
+    OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
 });
 
 test("MCP route uses official Streamable HTTP SDK and guards the full endpoint",()=>{
