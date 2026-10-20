@@ -9,6 +9,7 @@ import { createRemoteJWKSet, jwtVerify, type JWTPayload, type JWTVerifyGetKey } 
 export type McpOAuthConfig = {
   issuer: string;
   audience: string;
+  tokenAudience: "authenticated";
   jwksUri: string;
   resourceMetadataUrl: string;
   allowedSubjects: ReadonlySet<string>;
@@ -62,6 +63,7 @@ export function mcpOAuthConfig(env: NodeJS.ProcessEnv): McpOAuthConfig | null {
   return {
     issuer: issuer.href.replace(/\/$/, ""),
     audience: resource,
+    tokenAudience: "authenticated",
     jwksUri: jwks.href,
     resourceMetadataUrl: origin.origin + "/.well-known/oauth-protected-resource",
     allowedSubjects: new Set(subjects),
