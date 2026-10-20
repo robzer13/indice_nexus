@@ -4,5 +4,10 @@
       "path": "/api/cron/prices",
       "schedule": "15 22 * * 1-5"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": {
+      "fix/orotitan-v31-research-handoff-artifact-contract-20261019": false
+    }
+  }
 }
