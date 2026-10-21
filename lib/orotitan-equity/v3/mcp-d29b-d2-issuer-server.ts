@@ -29,7 +29,7 @@ type StageCode=HandoffAttestationV1["stage"];
 export class D29bIssuerError extends Error {
   constructor(readonly code:string){super(code);}
 }
-const deny=(code:string):never=>{throw new D29bIssuerError(code);};
+function deny(code:string):never {throw new D29bIssuerError(code);}
 
 /** An issuance is not a Registry write, stage start, or publishing GO.
  * A separately authorized process must store the result with an auditable
