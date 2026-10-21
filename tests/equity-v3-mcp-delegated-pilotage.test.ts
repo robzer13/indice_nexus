@@ -65,7 +65,7 @@ test("D29a: OAuth never calls the privileged immutable-proof verifier",()=>{
   const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
   const service=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-bridge-service-v1.ts",import.meta.url),"utf8");
   const helper=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-delegated-pilotage-v1.ts",import.meta.url),"utf8");
-  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env\)/);
+  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env,identity\)/);
   assert.match(route,/getMcpNextPrompt\(run_id,process\.env\)/);
   assert.match(service,/getMcpRunContextDelegated\(runIdRaw,jwt,env\)/);
   const delegated=service.split("export async function getMcpNextPromptDelegated(")[1]

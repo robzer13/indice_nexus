@@ -1,4 +1,6 @@
 -- D29b — PROPOSAL ONLY. DO NOT EXECUTE IN LIVE SUPABASE.
+-- Revocation is a trusted internal operation: mark revoked_at and make RLS hide
+-- the receipt on the next read. No OAuth write privileges are granted.
 -- A separately approved, audited signer must populate signed receipts only after
 -- independently completing D2 immutable-byte/hash/contract/gate verification.
 -- This is *not* the existing D28 GRANT/RLS migration and is not authorized here.
@@ -31,6 +33,7 @@ create table public.orotitan_mcp_verified_handoffs (
   signature_base64url text not null check (length(signature_base64url) between 80 and 100),
   issued_at timestamptz not null,
   expires_at timestamptz not null,
+  revoked_at timestamptz null,
   created_at timestamptz not null default now(),
   constraint d29b_ttl_short
     check(expires_at > issued_at and expires_at <= issued_at + interval '5 minutes'),
@@ -58,6 +61,7 @@ using (
     'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp'
   and mcp_resource = (select auth.jwt()->>'resource')
   and expires_at > now()
+  and revoked_at is null
 );
 
 -- Independently approved writer/signing automation and key custody are OUT OF SCOPE.

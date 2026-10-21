@@ -66,10 +66,10 @@ test("MCP POST Content-Length accepts numeric payload sizes and rejects malforme
 test("Public OAuth read uses only caller JWT and publishable key, never service_role",()=>{
   const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
   const service=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-bridge-service-v1.ts",import.meta.url),"utf8");
-  assert.match(route,/createMcpHandler\(\(\)=>createServer\(bearer\)/);
+  assert.match(route,/createMcpHandler\(\(\)=>createServer\(bearer,identity\)/);
   assert.match(route,/handlerForRequest\(request,identity\)/);
   assert.match(route,/getMcpRunContextDelegated\(run_id,delegatedJwt,process\.env\)/);
-  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env\)/);
+  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env,identity\)/);
   assert.match(route,/if\(delegatedJwt\)throw new McpBridgeError\("DELEGATED_QUARANTINE_READ_DISABLED"\)/);
   assert.match(service,/global:\{headers:\{Authorization:"Bearer "\+jwt\}\}/);
   assert.match(service,/SUPABASE_PUBLISHABLE_KEY/);

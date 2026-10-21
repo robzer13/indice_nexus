@@ -18,6 +18,8 @@ import {
 } from "./manual-intake-v3-1";
 import { McpBridgeError, mcpWriteEnabled, requireMcpRun } from "./mcp-bridge-access-v1";
 import { delegatedPilotageStatus } from "./mcp-delegated-pilotage-v1";
+import { inspectD29bReceipt, parseD29bVerifierKeys } from "./mcp-d29b-delegated-reader-v1";
+import type { McpOAuthIdentity } from "./mcp-oauth-v1";
 
 type DbClient = ReturnType<typeof createServerSupabaseClient>;
 type Run = {
@@ -131,9 +133,55 @@ async function observeRunContext(db: DbClient,runId: string) {
  */
 export async function getMcpNextPromptDelegated(
   runIdRaw: string, jwt: string, env: NodeJS.ProcessEnv,
+  identity: McpOAuthIdentity | null = null,
 ) {
   const observed=await getMcpRunContextDelegated(runIdRaw,jwt,env);
-  return delegatedPilotageStatus(observed);
+  const fallback=delegatedPilotageStatus(observed);
+  // The default deployed behavior remains D29a. No D29b issuer, receipts,
+  // RLS table or verifier keys are automatically installed by this code.
+  if(env.OROTITAN_MCP_D29B_READ_ENABLED!=="true" ||
+    fallback.status!=="UNVERIFIED_NO_PROMPT" || !identity) return fallback;
+  const keys=parseD29bVerifierKeys(env.OROTITAN_MCP_D29B_VERIFIER_KEYS_JSON);
+  if(keys.length===0) return fallback;
+  const db=delegatedClient(jwt,env); // publishable key + verified caller JWT
+  const allowedRun=requireMcpRun(runIdRaw,env);
+  const port={
+    observeState:async()=>{
+      const x=await observeRunContext(db,allowedRun);
+      return {
+        subject:identity.subject,clientId:identity.clientId,
+        resource:identity.resource,runId:x.runId,
+        runStatus:x.runStatus,stage:x.registryStage,
+        stageLifecycle:x.stageLifecycle,handoffGateState:x.handoffGateState,
+        activeManifestKind:x.activeManifestKind,
+        contractStatusCode:x.contractStatusCode,
+        observedBlockerCount:x.blockers.length,
+        processVersion:x.processVersion,pilotageVersion:x.pilotageVersion,
+        dataCutoff:x.dataCutoff,runStateVersion:x.runStateVersion,
+        stageStateVersion:x.stageStateVersion,
+      };
+    },
+    findReceipt:async()=>{
+      const {data,error}=await db.from("orotitan_mcp_verified_handoffs")
+        .select("receipt_id,key_id,payload_base64url,signature_base64url,expires_at")
+        .eq("run_id",allowedRun).maybeSingle();
+      if(error) throw new McpBridgeError("D29B_RECEIPT_READ_UNAVAILABLE");
+      if(!data)return null;
+      return {
+        receiptId:data.receipt_id,keyId:data.key_id,
+        payloadBase64Url:data.payload_base64url,
+        signatureBase64Url:data.signature_base64url,expiresAt:data.expires_at,
+      };
+    },
+  };
+  const result=await inspectD29bReceipt(port,keys,()=>Math.floor(Date.now()/1000));
+  if(result.status!=="SIGNED_D2_HANDOFF_VERIFIED") {
+    return {...fallback,d29bReasonCode:result.reasonCode};
+  }
+  // This only returns a manual, signed D2-verified prompt. Never a Registry
+  // mutation, stage start, publication, service_role read or artifact payload.
+  return {...fallback,...result,verifiedPrompt:result.prompt,
+    verificationPerformed:true};
 }
 
 /**

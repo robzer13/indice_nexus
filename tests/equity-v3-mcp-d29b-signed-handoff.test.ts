@@ -1,7 +1,9 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { createHash, generateKeyPairSync, sign } from "node:crypto";
 import pins from "../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json";
+import { inspectD29bReceipt, parseD29bVerifierKeys } from "../lib/orotitan-equity/v3/mcp-d29b-delegated-reader-v1";
 import {
   HANDOFF_PURPOSE, HANDOFF_SIGNATURE_DOMAIN, verifyDelegatedD2Handoff,
   type CallerBoundState, type HandoffAttestationV1,
@@ -159,4 +161,87 @@ test("D29b: unsigned final gate or signed invalid handoff cannot advance",()=>{
   assert.equal(deny(signedFinal),"REGISTRY_STATE_DRIFT_OR_BLOCKED");
   assert.equal(deny(signed({...fixture(),runStatus:"PUBLISHED" as "ACTIVE"})),
     "OUTCOME_NOT_ADMITTED");
+});
+
+test("D29b: dual RLS receipt reads + two Registry CAS observations permit only a fresh signed result",async()=>{
+  const envelope=signed(fixture());
+  const receipt={
+    receiptId:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    keyId:envelope.keyId,payloadBase64Url:envelope.payloadBase64Url,
+    signatureBase64Url:envelope.signatureBase64Url,
+    expiresAt:new Date((now+60)*1000).toISOString(),
+  };
+  let observations=0,reads=0;
+  const result=await inspectD29bReceipt({
+    observeState:async()=>{observations++;return live();},
+    findReceipt:async()=>{reads++;return receipt;},
+  },ring,()=>now);
+  assert.equal(result.status,"SIGNED_D2_HANDOFF_VERIFIED");
+  assert.equal(result.prompt,prompt);
+  assert.equal(result.publicationAuthorized,false);
+  assert.equal(observations,2);
+  assert.equal(reads,2);
+});
+
+test("D29b: mid-read state drift or receipt revocation prevents signed prompt release",async()=>{
+  const envelope=signed(fixture());
+  const receipt={
+    receiptId:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    keyId:envelope.keyId,payloadBase64Url:envelope.payloadBase64Url,
+    signatureBase64Url:envelope.signatureBase64Url,
+    expiresAt:new Date((now+60)*1000).toISOString(),
+  };
+  let observations=0;
+  const changed=await inspectD29bReceipt({
+    observeState:async()=>++observations===1?live():{...live(),runStateVersion:7},
+    findReceipt:async()=>receipt,
+  },ring,()=>now);
+  assert.equal(changed.status,"SIGNED_D2_HANDOFF_DENIED");
+  assert.equal(changed.reasonCode,"REGISTRY_CHANGED_DURING_READ");
+  assert.equal(changed.prompt,null);
+  let readCount=0;
+  const revoked=await inspectD29bReceipt({
+    observeState:async()=>live(),
+    findReceipt:async()=>++readCount===1?receipt:null,
+  },ring,()=>now);
+  assert.equal(revoked.reasonCode,"D2_RECEIPT_REVOKED_OR_ROTATED");
+  assert.equal(revoked.prompt,null);
+  const rotated=await inspectD29bReceipt({
+    observeState:async()=>live(),
+    findReceipt:async()=>++readCount===2?receipt:{...receipt,signatureBase64Url:"changed"},
+  },ring,()=>now);
+  assert.equal(rotated.status,"SIGNED_D2_HANDOFF_DENIED");
+  const outage=await inspectD29bReceipt({
+    observeState:async()=>{throw new Error("db unavailable");},
+    findReceipt:async()=>receipt,
+  },ring,()=>now);
+  assert.equal(outage.reasonCode,"D29B_VERIFICATION_UNAVAILABLE");
+  assert.equal(outage.prompt,null);
+});
+test("D29b: absent, expired and malformed RLS receipts fail closed",async()=>{
+  const p={observeState:async()=>live(),findReceipt:async()=>null};
+  const absent=await inspectD29bReceipt(p,ring,()=>now);
+  assert.equal(absent.reasonCode,"D2_RECEIPT_ABSENT_OR_REVOKED");
+  assert.equal(absent.prompt,null);
+  const expired=await inspectD29bReceipt({
+    observeState:async()=>live(),
+    findReceipt:async()=>({
+      receiptId:"aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      keyId:"test-d2-key-v1",payloadBase64Url:"x",signatureBase64Url:"x",
+      expiresAt:new Date((now-1)*1000).toISOString(),
+    }),
+  },ring,()=>now);
+  assert.equal(expired.reasonCode,"D2_RECEIPT_EXPIRED_OR_MALFORMED");
+});
+test("D29b: trusted verification key config is explicit, bounded, duplicate-safe",()=>{
+  assert.deepEqual(parseD29bVerifierKeys(undefined),[]);
+  assert.deepEqual(parseD29bVerifierKeys('{"evil":"data"}'),[]);
+  assert.deepEqual(parseD29bVerifierKeys("not-json"),[]);
+  assert.deepEqual(parseD29bVerifierKeys(JSON.stringify([...ring,...ring])),[]);
+  assert.deepEqual(parseD29bVerifierKeys(JSON.stringify(ring)),ring);
+  const source=readFileSync(new URL("../lib/orotitan-equity/v3/mcp-bridge-service-v1.ts",import.meta.url),"utf8");
+  assert.match(source,/OROTITAN_MCP_D29B_READ_ENABLED!=="true"/);
+  assert.match(source,/delegatedClient\(jwt,env\)/);
+  assert.match(source,/inspectD29bReceipt\(port,keys/);
+  assert.doesNotMatch(source,/privateKeyPem|D29B_PRIVATE_KEY/);
 });
