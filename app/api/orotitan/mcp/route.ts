@@ -37,7 +37,7 @@ function failure(error: unknown) {
     text:JSON.stringify({ok:false,code,admitted:false})}]};
 }
 
-function createServer(delegatedJwt: string | null): McpServer {
+function createServer(delegatedJwt: string | null, identity: McpOAuthIdentity | null): McpServer {
   const server=new McpServer({name:NAME,version:VERSION},{capabilities:{tools:{}}});
   const runSchema=z.object({
     run_id:z.string().uuid().describe("Exact OroTitan Registry run UUID"),
@@ -63,7 +63,7 @@ function createServer(delegatedJwt: string | null): McpServer {
   },async({run_id})=>{
     try{
       return content(delegatedJwt
-        ? await getMcpNextPromptDelegated(run_id,delegatedJwt,process.env)
+        ? await getMcpNextPromptDelegated(run_id,delegatedJwt,process.env,identity)
         : await getMcpNextPrompt(run_id,process.env));
     }
     catch(err){return failure(err);}
@@ -112,7 +112,7 @@ function createServer(delegatedJwt: string | null): McpServer {
 // is captured in request-local closures; no process-global bearer/context.
 function handlerForRequest(request:Request,identity:McpOAuthIdentity|null) {
   const bearer=identity?request.headers.get("authorization")?.slice(7)??null:null;
-  return createMcpHandler(()=>createServer(bearer),{legacy:"stateless"});
+  return createMcpHandler(()=>createServer(bearer,identity),{legacy:"stateless"});
 }
 
 function plain(status:number,message:string,headers:Record<string,string>={}) {
