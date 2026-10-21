@@ -142,6 +142,30 @@ export async function issueIndependentlyVerifiedD29bReceipt(
     HANDOFF_SIGNATURE_DOMAIN+payloadBase64Url,"utf8"));
   if(!(signature instanceof Uint8Array) || signature.byteLength!==64)
     deny("D29B_SIGNING_ADAPTER_REJECTED");
+  // Remote KMS signing can take time. Reject a changed Registry or switched
+  // active manifest before handing a receipt to any future private writer.
+  const [finalRun,finalStages,finalArtifacts]=await Promise.all([
+    port.getRun(input.runId),port.getStages(input.runId),port.getArtifacts(input.runId),
+  ]);
+  const finalStage=finalStages.find(x=>x.stage_code===current.stage_code);
+  const finalManifest=finalArtifacts.find(x=>
+    x.artifact_id===manifest[0].artifact_id &&
+    x.version===manifest[0].version && x.run_id===run.run_id);
+  if(!finalRun || !finalStage || !finalManifest ||
+    finalRun.state_version!==run.state_version ||
+    finalRun.run_status!=="ACTIVE" ||
+    finalRun.current_stage!==current.stage_code ||
+    finalRun.data_cutoff!==run.data_cutoff ||
+    finalStage.state_version!==current.state_version ||
+    finalStage.stage_revision!==current.stage_revision ||
+    finalStage.lifecycle_status!==current.lifecycle_status ||
+    finalStage.handoff_gate_state!==current.handoff_gate_state ||
+    finalStage.active_manifest_artifact_id!==current.active_manifest_artifact_id ||
+    finalStage.active_manifest_version!==current.active_manifest_version ||
+    finalStage.active_manifest_kind!==current.active_manifest_kind ||
+    asOperatorBlockers(finalStage.blocker_summary).length>0 ||
+    finalManifest.content_sha256!==manifest[0].content_sha256)
+    deny("D29B_REGISTRY_CHANGED_DURING_SIGNING");
   return {
     receipt:{version:1,keyId:signer.keyId,payloadBase64Url,
       signatureBase64Url:Buffer.from(signature).toString("base64url")},
