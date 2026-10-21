@@ -158,7 +158,8 @@ export function verifyDelegatedD2Handoff(
   let parsed:unknown;
   try { parsed=JSON.parse(raw.toString("utf8")); }
   catch { return denied("PAYLOAD_INVALID"); }
-  if(!safeObject(parsed) || !exactShape(parsed)) return denied("PAYLOAD_SHAPE_INVALID");
+  if(!safeObject(parsed) || raw.toString("utf8")!==JSON.stringify(parsed) ||
+    !exactShape(parsed)) return denied("PAYLOAD_SHAPE_INVALID");
   const p=parsed as HandoffAttestationV1;
   if(p.purpose!==HANDOFF_PURPOSE ||
     p.verifiedBy!=="D2_IMMUTABLE_BYTES_AND_CONTRACTS_V3_1" ||
