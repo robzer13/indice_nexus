@@ -3,13 +3,13 @@
  * The existing OroTitan HMAC admin cookie is NEVER an OAuth identity.
  * Supabase Auth must authenticate an explicitly enrolled human user.
  */
-export const CHATGPT_REDIRECT_STABLE = "https://chatgpt.com/connector_platform_oauth_redirect";
-const CHATGPT_CALLBACK_ID = /^https:\/\/chatgpt\.com\/connector\/oauth\/[a-zA-Z0-9_-]{1,160}$/;
+// Exact callback copied from the ChatGPT custom MCP setup UI on 2026-10-21.
+// No wildcard callbacks or legacy redirect accepted for this single pilot client.
+export const CHATGPT_PILOT_REDIRECT = "https://chatgpt.com/connector/oauth/tru5_CiXfOSM";
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function isAllowedChatGptRedirect(value: unknown): value is string {
-  return typeof value === "string" &&
-    (value === CHATGPT_REDIRECT_STABLE || CHATGPT_CALLBACK_ID.test(value));
+  return typeof value === "string" && value === CHATGPT_PILOT_REDIRECT;
 }
 
 export function isAllowedChatGptReturnUrl(value:unknown):value is string {

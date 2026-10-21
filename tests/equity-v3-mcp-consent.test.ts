@@ -36,21 +36,24 @@ test("OAuth consent is dark until user enrollment + site origin + public key pro
   assert.deepEqual(config?.allowedClientIds,["approved-client-123"]);
 });
 
-test("OAuth consent only accepts an explicit ChatGPT redirect, including returned code and state",()=>{
-  assert.equal(isAllowedChatGptRedirect("https://chatgpt.com/connector_platform_oauth_redirect"),true);
-  assert.equal(isAllowedChatGptRedirect("https://chatgpt.com/connector/oauth/Abc_12-0"),true);
-  assert.equal(isAllowedChatGptReturnUrl("https://chatgpt.com/connector_platform_oauth_redirect?code=123&state=abc"),true);
-  assert.equal(isAllowedChatGptReturnUrl("https://chatgpt.com/connector/oauth/abc?error=access_denied"),true);
+test("OAuth consent only accepts the exact user-provided ChatGPT callback and return URLs",()=>{
+  const expected="https://chatgpt.com/connector/oauth/tru5_CiXfOSM";
+  assert.equal(isAllowedChatGptRedirect(expected),true);
+  assert.equal(isAllowedChatGptReturnUrl(expected+"?code=123&state=abc"),true);
+  assert.equal(isAllowedChatGptReturnUrl(expected+"?error=access_denied"),true);
   for(const url of [
-    "https://evil.example.com/connector_platform_oauth_redirect",
-    "https://chatgpt.com.evil.example/connector_platform_oauth_redirect",
+    "https://chatgpt.com/connector_platform_oauth_redirect",
+    "https://chatgpt.com/connector/oauth/another_client",
+    "https://chatgpt.com/connector/oauth/tru5_CiXfOSM/",
+    "https://evil.example.com/connector/oauth/tru5_CiXfOSM",
+    "https://chatgpt.com.evil.example/connector/oauth/tru5_CiXfOSM",
     "https://chatgpt.com/other",
-    "https://chatgpt.com/connector/oauth/abc/extra",
     "javascript:alert(1)",
-    "//chatgpt.com/connector_platform_oauth_redirect",
-    "https://user@chatgpt.com/connector_platform_oauth_redirect",
-    "https://chatgpt.com/connector_platform_oauth_redirect#hash",
+    "//chatgpt.com/connector/oauth/tru5_CiXfOSM",
+    "https://user@chatgpt.com/connector/oauth/tru5_CiXfOSM",
+    expected+"#hash",
   ]){
+    assert.equal(isAllowedChatGptRedirect(url),false,url);
     assert.equal(isAllowedChatGptReturnUrl(url),false,url);
   }
   assert.equal(isAuthorizationId("48b9426b-4d0d-4858-9d87-efcd13ac415d"),true);
