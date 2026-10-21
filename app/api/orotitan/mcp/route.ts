@@ -1,5 +1,6 @@
 import { McpServer, createMcpHandler } from "@modelcontextprotocol/server";
 import { z } from "zod/v4";
+import { isAllowedMcpContentLength } from "@/lib/orotitan-equity/v3/mcp-content-length-v1";
 
 import {
   authorizeMcpBearer, mcpEnabled, mcpWriteEnabled, McpBridgeError,
@@ -159,8 +160,7 @@ async function gate(request:Request):Promise<GateResult> {
 export async function POST(request:Request):Promise<Response> {
   const {denied,identity}=await gate(request);
   if(denied)return denied;
-  const length=request.headers.get("content-length");
-  if(length!==null && (!/^\\d+$/.test(length) || Number(length)>250_000)) {
+  if(!isAllowedMcpContentLength(request.headers.get("content-length"))) {
     return plain(413,"Request too large");
   }
   // Scope-aware tool dispatch: the write tool is NEVER callable with only

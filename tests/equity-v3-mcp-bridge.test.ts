@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { isAllowedMcpContentLength } from "../lib/orotitan-equity/v3/mcp-content-length-v1";
 import {
   allowedMcpRuns, authorizeMcpBearer, mcpEnabled, mcpWriteEnabled,
   requireMcpRun, McpBridgeError,
@@ -47,6 +48,19 @@ test("MCP write tools are disabled for the Supabase OAuth pilot regardless of fl
     OROTITAN_MCP_WRITE_ENABLED:"true",OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
   assert.equal(mcpWriteEnabled({...good,OROTITAN_MCP_WRITE_ENABLED:"true",
     OROTITAN_MANUAL_INTAKE_ENABLED:"true"}),false);
+});
+
+test("MCP POST Content-Length accepts numeric payload sizes and rejects malformed or oversized headers",()=>{
+  assert.equal(isAllowedMcpContentLength(null),true); // chunked or streaming body
+  for(const value of ["0","1","250","4096","250000","000250"]) {
+    assert.equal(isAllowedMcpContentLength(value),true,`expected ${value} to pass`);
+  }
+  for(const value of ["","-1","+1","1.5"," 250","250 ","2e3","250001",
+    "999999999999999999999999999999999","\\\\d","NaN"]) {
+    assert.equal(isAllowedMcpContentLength(value),false,`expected ${value} to fail`);
+  }
+  const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
+  assert.match(route,/isAllowedMcpContentLength\(request\.headers\.get\("content-length"\)\)/);
 });
 
 test("Public OAuth read uses only caller JWT and publishable key, never service_role",()=>{
