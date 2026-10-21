@@ -69,7 +69,7 @@ test("Public OAuth read uses only caller JWT and publishable key, never service_
   assert.match(route,/createMcpHandler\(\(\)=>createServer\(bearer\)/);
   assert.match(route,/handlerForRequest\(request,identity\)/);
   assert.match(route,/getMcpRunContextDelegated\(run_id,delegatedJwt,process\.env\)/);
-  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env\)/);
+  assert.match(route,/getMcpNextPromptDelegated\(run_id,delegatedJwt,process\.env,identity\)/);
   assert.match(route,/if\(delegatedJwt\)throw new McpBridgeError\("DELEGATED_QUARANTINE_READ_DISABLED"\)/);
   assert.match(service,/global:\{headers:\{Authorization:"Bearer "\+jwt\}\}/);
   assert.match(service,/SUPABASE_PUBLISHABLE_KEY/);
