@@ -11,7 +11,7 @@ import {
 } from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
 import {
   getMcpRunContext, getMcpRunContextDelegated, getMcpNextPrompt,
-  listMcpSubmissions, submitMcpWorkProduct,
+  getMcpNextPromptDelegated, listMcpSubmissions, submitMcpWorkProduct,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-service-v1";
 
 export const runtime = "nodejs";
@@ -57,15 +57,14 @@ function createServer(delegatedJwt: string | null): McpServer {
 
   server.registerTool("get_orotitan_next_prompt",{
     title:"Obtenir le prompt vérifié de l'étape",
-    description:"Vérifier les preuves immuables GitHub, le contrat et l'état Registry. Renvoie le prompt exact uniquement si le handoff est admis; ne lance aucune IA, transition ni publication.",
+    description:"Pilotage en lecture seule. OAuth : état et blocages Registry non vérifiés, aucun prompt d'exécution. Un prompt exact exige une vérification indépendante des preuves immuables et des contrats.",
     inputSchema:runSchema,
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{
-      // D2 verification uses privileged immutable-evidence readers; do not
-      // call that path from the public OAuth pilot before scoped review.
-      if(delegatedJwt)throw new McpBridgeError("DELEGATED_PROMPT_READ_DISABLED");
-      return content(await getMcpNextPrompt(run_id,process.env));
+      return content(delegatedJwt
+        ? await getMcpNextPromptDelegated(run_id,delegatedJwt,process.env)
+        : await getMcpNextPrompt(run_id,process.env));
     }
     catch(err){return failure(err);}
   });
