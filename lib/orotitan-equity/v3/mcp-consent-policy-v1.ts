@@ -32,8 +32,15 @@ export function consentClientId(details: {
   return ids.length>0 && new Set(ids).size===1 ? ids[0] : null;
 }
 
+/**
+ * Supabase OAuth `authorization_id` is an opaque, short-lived reference, not
+ * necessarily a UUID. Validate only its bounded URL-safe transport shape;
+ * Supabase Auth remains authoritative for its existence/client/expiry.
+ * Do not log it or embed it in public diagnostic messages.
+ */
+const OAUTH_AUTHORIZATION_ID = /^[A-Za-z0-9_-]{16,160}$/;
 export function isAuthorizationId(value: unknown): value is string {
-  return typeof value === "string" && UUID.test(value);
+  return typeof value === "string" && OAUTH_AUTHORIZATION_ID.test(value);
 }
 
 export function oauthConsentConfig(env: NodeJS.ProcessEnv) {

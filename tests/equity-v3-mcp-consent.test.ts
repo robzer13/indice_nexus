@@ -56,8 +56,21 @@ test("OAuth consent only accepts the exact user-provided ChatGPT callback and re
     assert.equal(isAllowedChatGptRedirect(url),false,url);
     assert.equal(isAllowedChatGptReturnUrl(url),false,url);
   }
+  // Supabase currently returns opaque URL-safe authorization IDs (e.g. 32 chars).
+  // This check must never require a UUID; the SDK validates authorization existence.
+  assert.equal(isAuthorizationId("abcdefghijklmnop0123456789ABCDEF"),true);
   assert.equal(isAuthorizationId("48b9426b-4d0d-4858-9d87-efcd13ac415d"),true);
-  assert.equal(isAuthorizationId("../bad"),false);
+  assert.equal(isAuthorizationId("abc_DEF-0123456789ghi"),true);
+  for (const invalid of [
+    null,undefined,123,["abcdefghijklmnop0123456789ABCDEF"],
+    "../bad","too-short", "a".repeat(161), "a".repeat(15),
+    "abcdefghijklmnop0123456789ABCDEF?next=x",
+    "abcdefghijklmnop0123456789ABCDEF#fragment",
+    "abcdefghijklmnop0123456789ABCDEF/../",
+    "abcdefghijklmnop0123456789ABCDEF ",
+    "abcdefghijklmnop0123456789ABCDEF%20",
+    "abcdefghijklmnop0123456789ABCDEF\\n",
+  ]) assert.equal(isAuthorizationId(invalid),false,String(invalid));
 });
 
 test("Consent client ID must be stable, not merely a display name",()=>{
