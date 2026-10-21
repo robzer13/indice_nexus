@@ -17,6 +17,8 @@ export type McpOAuthConfig = {
 };
 export type McpOAuthIdentity = {
   subject: string;
+  clientId: string; // server-verified JWT claim
+  resource: string; // server-pinned audience, matched to signed JWT
   scopes: ReadonlySet<string>;
 };
 
@@ -119,7 +121,8 @@ export async function verifyMcpOAuthBearer(
     if (!isOAuthPayloadAdmitted(payload,config)) {
       throw new McpOAuthError("OAUTH_IDENTITY_OR_SCOPE_DENIED");
     }
-    return {subject: payload.sub!, scopes: new Set([MCP_SCOPE_READ])};
+    return {subject:payload.sub!,clientId:payload.client_id as string,
+      resource:config.audience,scopes:new Set([MCP_SCOPE_READ])};
   } catch (error) {
     if (error instanceof McpOAuthError) throw error;
     throw new McpOAuthError("OAUTH_VERIFICATION_FAILED");
