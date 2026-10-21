@@ -17,6 +17,7 @@ import {
   parseIntakeObject, validateIntakeBytes,
 } from "./manual-intake-v3-1";
 import { McpBridgeError, mcpWriteEnabled, requireMcpRun } from "./mcp-bridge-access-v1";
+import { delegatedPilotageStatus } from "./mcp-delegated-pilotage-v1";
 
 type DbClient = ReturnType<typeof createServerSupabaseClient>;
 type Run = {
@@ -123,6 +124,16 @@ async function observeRunContext(db: DbClient,runId: string) {
     nextStepAuthorized: false,
     instruction:"Observed status only. Use get_orotitan_next_prompt for independent evidence verification.",
   };
+}
+
+/** D29a: OAuth returns only an RLS-scoped blocker/status observation.
+ * This MUST NOT call privileged D2 readers or reconstruct a verified prompt.
+ */
+export async function getMcpNextPromptDelegated(
+  runIdRaw: string, jwt: string, env: NodeJS.ProcessEnv,
+) {
+  const observed=await getMcpRunContextDelegated(runIdRaw,jwt,env);
+  return delegatedPilotageStatus(observed);
 }
 
 /**
