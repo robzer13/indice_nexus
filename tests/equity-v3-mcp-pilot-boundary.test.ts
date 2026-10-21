@@ -13,7 +13,7 @@ const admitted:NodeJS.ProcessEnv={
 test("only explicitly configured isolated pilot uses public gateway view",()=>{
   assert.equal(isIsolatedMcpPilot(admitted),true);
   for(const env of [
-    {NODE_ENV:"test"},{...admitted,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan-screener.vercel.app"},
+    {NODE_ENV:"test" as const},{...admitted,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan-screener.vercel.app"},
     {...admitted,OROTITAN_OAUTH_SITE_ORIGIN:"https://orotitan-screener.vercel.app"},
     {...admitted,OROTITAN_MCP_AUTH_MODE:"TEST_BEARER"},
   ])assert.equal(isIsolatedMcpPilot(env),false);
