@@ -4,6 +4,7 @@ import { readFileSync } from "node:fs";
 import { isIsolatedMcpPilot, isPilotPublicPath, PILOT_ORIGIN } from "../lib/orotitan-equity/v3/mcp-pilot-boundary-v1";
 
 const admitted:NodeJS.ProcessEnv={
+  NODE_ENV:"test",
   OROTITAN_MCP_PUBLIC_ORIGIN:PILOT_ORIGIN,
   OROTITAN_OAUTH_SITE_ORIGIN:PILOT_ORIGIN,
   OROTITAN_MCP_AUTH_MODE:"OAUTH",
@@ -12,7 +13,7 @@ const admitted:NodeJS.ProcessEnv={
 test("only explicitly configured isolated pilot uses public gateway view",()=>{
   assert.equal(isIsolatedMcpPilot(admitted),true);
   for(const env of [
-    {},{...admitted,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan-screener.vercel.app"},
+    {NODE_ENV:"test"},{...admitted,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan-screener.vercel.app"},
     {...admitted,OROTITAN_OAUTH_SITE_ORIGIN:"https://orotitan-screener.vercel.app"},
     {...admitted,OROTITAN_MCP_AUTH_MODE:"TEST_BEARER"},
   ])assert.equal(isIsolatedMcpPilot(env),false);
