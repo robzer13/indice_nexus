@@ -174,7 +174,7 @@ export function verifyDelegatedD2Handoff(
     !UUID.test(p.runId) || !UUID.test(p.subject) ||
     !stringIs(p.clientId) || p.clientId.length<6 ||
     !stringIs(p.resource) ||
-    !/^\\d{4}-\\d{2}-\\d{2}$/.test(p.dataCutoff) ||
+    !/^\d{4}-\d{2}-\d{2}$/.test(p.dataCutoff) ||
     !Number.isSafeInteger(p.runStateVersion) || p.runStateVersion<1 ||
     !Number.isSafeInteger(p.stageStateVersion) || p.stageStateVersion<1 ||
     !Number.isSafeInteger(p.verifiedArtifactsCount) ||
