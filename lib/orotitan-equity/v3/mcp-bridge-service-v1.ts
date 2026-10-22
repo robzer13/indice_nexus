@@ -18,6 +18,8 @@ import {
 } from "./manual-intake-v3-1";
 import { McpBridgeError, mcpWriteEnabled, requireMcpRun } from "./mcp-bridge-access-v1";
 import { delegatedPilotageStatus } from "./mcp-delegated-pilotage-v1";
+import { buildRecoveryWorklist } from "./pilotage-blocker-recovery-v3-1";
+import type { OperatorRun } from "./pilotage-operator-view-v3-1";
 
 type DbClient = ReturnType<typeof createServerSupabaseClient>;
 type Run = {
@@ -134,6 +136,67 @@ export async function getMcpNextPromptDelegated(
 ) {
   const observed=await getMcpRunContextDelegated(runIdRaw,jwt,env);
   return delegatedPilotageStatus(observed);
+}
+
+/**
+ * OAuth-only, least-privileged blocker worklist. The caller's independently
+ * verified short-lived JWT is used with the publishable key under RLS.
+ * No service-role fallback, no quarantine read and no D2 verification.
+ * Returns a DIAGNOSTIC PLAN, never accepted evidence or a stage transition.
+ */
+export async function getMcpRecoveryWorklistDelegated(
+  runIdRaw: string, jwt: string, env: NodeJS.ProcessEnv,
+) {
+  const observed=await getMcpRunContextDelegated(runIdRaw,jwt,env);
+  if(observed.processVersion!=="3.1" || observed.pilotageVersion!=="3.1") {
+    throw new McpBridgeError("RECOVERY_UNSUPPORTED_CONTRACT_VERSION");
+  }
+  if(!observed.registryStage || !Number.isSafeInteger(observed.stageStateVersion) ||
+    !Number.isSafeInteger(observed.runStateVersion)) {
+    throw new McpBridgeError("RECOVERY_STAGE_STATE_UNAVAILABLE");
+  }
+  const asRun:OperatorRun={
+    runId:observed.runId,
+    issuerName:observed.issuerName,
+    ticker:observed.ticker,
+    isin:observed.isin,
+    status:observed.runStatus,
+    stage:observed.registryStage,
+    mode:observed.mode,
+    cutoff:observed.dataCutoff,
+    stateVersion:observed.runStateVersion,
+    createdAt:"",
+    processVersion:observed.processVersion,
+    pilotageVersion:observed.pilotageVersion,
+    stageLifecycle:observed.stageLifecycle,
+    contractStatusCode:observed.contractStatusCode,
+    handoffGateState:observed.handoffGateState,
+    activeManifestKind:observed.activeManifestKind,
+    blockers:observed.blockers,
+    supportsV31Verifier:true,
+  };
+  const worklist=buildRecoveryWorklist(asRun);
+  return {
+    status:"WORKLIST_ONLY_NOT_VERIFIED" as const,
+    trust:"REGISTRY_OBSERVATION_NOT_ARTIFACT_VERIFICATION" as const,
+    runId:observed.runId,
+    stage:observed.registryStage,
+    dataCutoff:observed.dataCutoff,
+    runStateVersion:observed.runStateVersion,
+    stageStateVersion:observed.stageStateVersion,
+    contractStatusCode:observed.contractStatusCode,
+    handoffGateState:observed.handoffGateState,
+    activeManifestKind:observed.activeManifestKind,
+    tasks:worklist.tasks,
+    mayAdvance:false as const,
+    mayPublish:false as const,
+    mayMutate:false as const,
+    verifiedResearchPerformed:false as const,
+    nextStepAuthorized:false as const,
+    publicationAuthorized:false as const,
+    mutationPerformed:false as const,
+    guidance:"Public research leads may be investigated separately, but no task is closed until independently verified, version-bound immutable evidence is admitted. No uploads, transitions, or publication are authorized by this tool.",
+  };
 }
 
 /**
