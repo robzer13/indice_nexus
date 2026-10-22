@@ -5,6 +5,7 @@ import type { OperatorRun } from "../lib/orotitan-equity/v3/pilotage-operator-vi
 
 const run = (changes:Partial<OperatorRun>={}):OperatorRun=>({
   runId:"48b9426b-4d0d-4858-9d87-efcd13ac415d",
+  issuerName:"Besi",ticker:"BESI",isin:"NL0012866412",
   status:"ACTIVE",stage:"RESEARCH",mode:"ANALYZE",cutoff:"2026-10-12",
   stateVersion:6,createdAt:"2026-10-12T00:00:00Z",
   processVersion:"3.1",pilotageVersion:"3.1",stageLifecycle:"IN_PROGRESS",
