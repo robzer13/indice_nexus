@@ -20,7 +20,7 @@ export function CompanyForm({ company }: { company?: CompanyRecord }) {
       <Field name="sector" label="Secteur" defaultValue={company?.sector ?? ''}/>
       <label className="text-sm text-slate-400">Statut de suivi<select name="active" defaultValue={company?.active === false ? 'false' : 'true'} className="mt-1 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100"><option value="true">Active</option><option value="false">Inactive</option></select></label>
     </div>
-    <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4 text-xs leading-5 text-slate-500">Auto Trader doit rester en <strong className="text-slate-300">GBP / MINOR / 0 décimale / multiplicateur 100</strong>. Modifier une société ne modifie aucun snapshot ni aucun cours historique.</div>
+    <div className="rounded-lg border border-cyan-900/50 bg-cyan-950/20 p-4 text-sm leading-6 text-cyan-100">Cet enregistrement ajoute le titre au suivi administratif <strong>sans publier d’analyse</strong>. Connecté comme administrateur, tu le retrouveras dans la section « Titres ajoutés au suivi — non publiés » du Screener. Les scores et seuils ne seront affichés qu’après publication canonique validée.</div><div className="rounded-lg border border-slate-800 bg-slate-950/60 p-4 text-xs leading-5 text-slate-500">Auto Trader doit rester en <strong className="text-slate-300">GBP / MINOR / 0 décimale / multiplicateur 100</strong>. Modifier une société ne modifie aucun snapshot ni aucun cours historique.</div>
     <div className="flex justify-end"><button className="rounded-lg bg-cyan-500 px-5 py-2.5 text-sm font-semibold text-slate-950 hover:bg-cyan-400">{editing ? 'Enregistrer les métadonnées' : 'Créer la société'}</button></div>
   </form>;
 }
