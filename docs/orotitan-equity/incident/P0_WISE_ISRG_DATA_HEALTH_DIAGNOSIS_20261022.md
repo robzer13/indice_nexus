@@ -1,6 +1,7 @@
 # P0 Screener — Wise WSE / ISRG Data Health, 2026-10-22
 
-**Status: AUDITED PROPOSAL — NOT APPLIED — Requires separate production-data GO.**
+**Status: APPLIED TO SUPABASE PRODUCTION ON 2026-10-22 (USER-AUTHORIZED).**
+The exact SQL from Git commit `f28eab1020119ae9664f3b8f248095ca589a397c` was validated with `BEGIN … ROLLBACK`, pre-state rechecked, then applied with `COMMIT` to Supabase project `cugpgtzygqqlxetyeven`. SQL update guarded Wise's single NULL symbol and inserted exactly 2 previously absent audited crosswalk rows. No Vercel/GitHub merge needed or performed.
 Screener production is `orotitan-screener`, GitHub main
 `86a26f44cd576b40d37a385eb3623bbeb526c423`. D29b and VNext are excluded.
 
@@ -80,3 +81,14 @@ or its exclusions.** Do not insert by ticker matching or legacy UUID coincidence
 
 If the operator does not separately approve this data mutation, retain the
 current fail-closed warnings and do not bypass them in the UI.
+
+## Verified production postconditions (2026-10-22)
+
+- `legacy_company_identity_map` total **37 → 39** (+2).
+- Published active canonical dossiers **34**; exact crosswalk resolution **32/34 → 34/34**.
+- Wise security symbol `NULL → WSE:NASDAQ`; ISRG canonical symbol remains `ISRG`.
+- Stored Yahoo Nasdaq USD quotes remain **11.05 USD WSE** and **428.12 USD ISRG**, dated 2026-10-21 20:00 UTC.
+- No immutable analysis snapshot, market-price history, RLS or Registry mutation.
+- **Do not rerun the SQL**: its guard intentionally rejects already assigned identity rows.
+- GitHub PR is an auditable DRAFT document/test proposal, not a pending database migration.
+- UI Data Health must be smoke-tested by the operator following refresh; zero warnings is a prediction, not yet independently verified in the UI.
