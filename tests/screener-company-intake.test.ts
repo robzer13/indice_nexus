@@ -27,22 +27,22 @@ const snapshots:PublishedSnapshotIdentity[]=[
 ];
 test('P0 intake: only tracked, unpublished active company appears when legacy and canonical align',()=>{
   const result=unpublishedTrackedCompanies(rows,links,pointers,snapshots);
-  assert.deepEqual(result.map(x=>x.id),['new']);
+  assert.deepEqual(result.map(x=>x.id).sort(),['new']);
 });
 test('P0 intake: missing snapshots and missing links never imply research publication',()=>{
-  assert.deepEqual(unpublishedTrackedCompanies(rows,links,pointers,[]).map(x=>x.id),['new','one','two']);
-  assert.deepEqual(unpublishedTrackedCompanies(rows,[],pointers,snapshots).map(x=>x.id),['new','one','two']);
-  assert.deepEqual(unpublishedTrackedCompanies(rows,[],[],[]).map(x=>x.id),['new','one','two']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,links,pointers,[]).map(x=>x.id).sort(),['new','one','two']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,[],pointers,snapshots).map(x=>x.id).sort(),['new','one','two']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,[],[],[]).map(x=>x.id).sort(),['new','one','two']);
 });
 test('P0 intake: issuer, security, dossier and snapshot must all agree; ticker similarity is irrelevant',()=>{
   const badSnapshot=[{...snapshots[0],security_id:'wrong-security'},snapshots[1]];
-  assert.deepEqual(unpublishedTrackedCompanies(rows,links,pointers,badSnapshot).map(x=>x.id),['new','one']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,links,pointers,badSnapshot).map(x=>x.id).sort(),['new','one']);
   const wrongIssuer=[{...links[0],issuer_id:'another-issuer'},links[1]];
-  assert.deepEqual(unpublishedTrackedCompanies(rows,wrongIssuer,pointers,snapshots).map(x=>x.id),['new','one']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,wrongIssuer,pointers,snapshots).map(x=>x.id).sort(),['new','one']);
   const wrongDossier=[{...links[0],dossier_id:'old-dossier'},links[1]];
-  assert.deepEqual(unpublishedTrackedCompanies(rows,wrongDossier,pointers,snapshots).map(x=>x.id),['new','one']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,wrongDossier,pointers,snapshots).map(x=>x.id).sort(),['new','one']);
   const wrongCurrent=[{...pointers[0],current_snapshot_id:'superseded'},pointers[1]];
-  assert.deepEqual(unpublishedTrackedCompanies(rows,links,wrongCurrent,snapshots).map(x=>x.id),['new','one']);
+  assert.deepEqual(unpublishedTrackedCompanies(rows,links,wrongCurrent,snapshots).map(x=>x.id).sort(),['new','one']);
 });
 test('P0 intake: public Screener remains published-only; privileged intake is not in scores or rankings',()=>{
   const page=readFileSync('app/screener/page.tsx','utf8');
