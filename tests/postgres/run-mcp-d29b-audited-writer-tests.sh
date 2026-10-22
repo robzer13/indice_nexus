@@ -47,11 +47,13 @@ grant execute on function auth.jwt() to authenticated;
 grant execute on function auth.uid() to authenticated;
 create table public.orotitan_runs(
  run_id uuid primary key,run_status text not null,
- current_stage text not null,state_version bigint not null,data_cutoff date not null);
+ current_stage text not null,state_version bigint not null,data_cutoff date not null,
+ process_version text not null default '3.1',pilotage_contract_version text not null default '3.1');
 create table public.orotitan_run_stages(
  run_id uuid not null,stage_code text not null,state_version bigint not null,
  lifecycle_status text not null,contract_status_code text not null,
  handoff_gate_state text not null,active_manifest_kind text not null,
+ blocker_summary jsonb not null default '[]'::jsonb,
  primary key(run_id,stage_code));
 alter table public.orotitan_runs enable row level security;
 alter table public.orotitan_run_stages enable row level security;

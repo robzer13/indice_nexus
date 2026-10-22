@@ -22,10 +22,11 @@ create schema orotitan_d29b_internal;
 revoke all on schema orotitan_d29b_internal from public,anon,authenticated;
 grant usage on schema orotitan_d29b_internal to orotitan_d29b_writer;
 -- Registry permissions are SELECT only; NEVER UPDATE stage/run state.
-grant select (run_id,run_status,current_stage,state_version,data_cutoff)
+grant select (run_id,run_status,current_stage,state_version,data_cutoff,
+  process_version,pilotage_contract_version)
   on public.orotitan_runs to orotitan_d29b_writer;
 grant select (run_id,stage_code,state_version,lifecycle_status,
-  contract_status_code,handoff_gate_state,active_manifest_kind)
+  contract_status_code,handoff_gate_state,active_manifest_kind,blocker_summary)
   on public.orotitan_run_stages to orotitan_d29b_writer;
 
 create policy d29b_writer_besi_run_read
@@ -74,6 +75,38 @@ create table orotitan_d29b_internal.receipt_audit (
 );
 revoke all on orotitan_d29b_internal.receipt_audit from public,anon,authenticated;
 grant insert on orotitan_d29b_internal.receipt_audit to orotitan_d29b_writer;
+
+-- Audit every receipt mutation, including direct private-role INSERT/UPDATE.
+-- The audit and receipt change commit or roll back atomically.
+create function orotitan_d29b_internal.audit_receipt_change_v1()
+returns trigger language plpgsql security invoker
+set search_path=pg_catalog,public,orotitan_d29b_internal
+as $audit_trigger$
+declare v_run_version bigint;v_stage_version bigint;v_kind text;
+begin
+  v_kind:=case when NEW.revoked_at is not null then 'ADMIN_REVOKED'
+    else 'SIGNED_STORED' end;
+  select state_version into v_run_version
+  from public.orotitan_runs where run_id=NEW.run_id;
+  select state_version into v_stage_version from public.orotitan_run_stages
+  where run_id=NEW.run_id and stage_code=
+    (select current_stage from public.orotitan_runs where run_id=NEW.run_id);
+  insert into orotitan_d29b_internal.receipt_audit(
+    receipt_id,run_id,event_kind,payload_sha256,key_id,run_state_version,
+    stage_state_version)
+  values(NEW.receipt_id,NEW.run_id,v_kind,
+    encode(sha256(convert_to(NEW.payload_base64url,'UTF8')),'hex'),
+    NEW.key_id,v_run_version,v_stage_version);
+  return null;
+end;
+$audit_trigger$;
+
+create trigger d29b_receipt_audit_v1
+after insert or update on public.orotitan_mcp_verified_handoffs
+for each row execute function orotitan_d29b_internal.audit_receipt_change_v1();
+revoke all on function orotitan_d29b_internal.audit_receipt_change_v1()
+from public,anon,authenticated;
+
 
 -- Security INVOKER: never bypass RLS; private schema not exposed through PostgREST.
 -- The privileged service MUST use SERIALIZABLE transaction isolation.
@@ -134,12 +167,6 @@ begin
     revoked_at=null,created_at=now()
   returning receipt_id into v_id;
 
-  insert into orotitan_d29b_internal.receipt_audit(
-    receipt_id,run_id,event_kind,payload_sha256,key_id,run_state_version,
-    stage_state_version)
-  values(v_id,p_run,'SIGNED_STORED',
-    encode(sha256(convert_to(p_payload,'UTF8')),'hex'),
-    p_key,p_run_version,p_stage_version);
   return v_id;
 end;
 $function$;
@@ -149,7 +176,6 @@ create function orotitan_d29b_internal.revoke_receipt_v1(
 ) returns boolean
 language plpgsql security invoker set search_path=pg_catalog,public,orotitan_d29b_internal
 as $function$
-declare v_payload text;v_key text;v_run_version bigint;v_stage_version bigint;
 begin
   if current_setting('transaction_isolation')<>'serializable'
   then raise exception 'D29b revocation requires SERIALIZABLE transaction'; end if;
@@ -159,18 +185,8 @@ begin
   update public.orotitan_mcp_verified_handoffs
   set revoked_at=clock_timestamp()
   where run_id=p_run and receipt_id=p_id and revoked_at is null
-  returning payload_base64url,key_id into v_payload,v_key;
+  ;
   if not found then return false;end if;
-  select state_version into v_run_version from public.orotitan_runs where run_id=p_run;
-  select state_version into v_stage_version from public.orotitan_run_stages
-  where run_id=p_run and stage_code=
-    (select current_stage from public.orotitan_runs where run_id=p_run);
-  insert into orotitan_d29b_internal.receipt_audit(
-    receipt_id,run_id,event_kind,payload_sha256,key_id,run_state_version,
-    stage_state_version)
-  values(p_id,p_run,'ADMIN_REVOKED',
-    encode(sha256(convert_to(v_payload,'UTF8')),'hex'),v_key,
-    v_run_version,v_stage_version);
   return true;
 end;
 $function$;
