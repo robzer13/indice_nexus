@@ -51,9 +51,10 @@ test("MCP recovery route is available only to verified OAuth delegation; not a s
   assert.match(wrapper,/RECOVERY_STAGE_STATE_UNAVAILABLE/);
   assert.match(wrapper,/runStateVersion:observed.runStateVersion/);
   assert.match(wrapper,/stageStateVersion:observed.stageStateVersion/);
-  for(const blocked of ["createServerSupabaseClient\(","loadTrustedPilotageDecision\(","listMcpSubmissions\(",
-    "\.insert\(","\.update\(","\.rpc\(","submitMcpWorkProduct\("]){
-    assert.doesNotMatch(wrapper,new RegExp(blocked));
+  for(const blocked of ["createServerSupabaseClient(", "loadTrustedPilotageDecision(",
+    "listMcpSubmissions(", ".insert(", ".update(", ".rpc(",
+    "submitMcpWorkProduct("]){
+    assert.equal(wrapper.includes(blocked),false,blocked);
   }
   assert.match(wrapper,/mayAdvance:false/);
   assert.match(wrapper,/mayPublish:false/);
