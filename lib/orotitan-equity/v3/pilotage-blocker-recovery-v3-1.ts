@@ -79,7 +79,7 @@ const recipes: ReadonlyArray<[RegExp, Recipe]> = [
     acceptanceEvidence:"Documents originaux identifiés et contrôle croisé des exercices, avec pages et versions vérifiables.",
     humanEscalation:ask,
   }],
-  [/(?:share count|denominator|dilut|treasury|options|nombre d.actions)/i,{
+  [/(?:share[ _-]count|denominator|dénominateur|dilut|treasury|options|nombre d.actions)/i,{
     kind:"SHARE_DENOMINATOR",
     workInstructions:[
       "Retracer capital émis, autocontrôle, options, conversions et événements entre les dates de référence.",
