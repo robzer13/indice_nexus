@@ -26,7 +26,7 @@ export type D29bKmsTransport={
 export class D29bKmsError extends Error {
   constructor(readonly code:string){super(code);}
 }
-const deny=(code:string):never=>{throw new D29bKmsError(code);};
+function deny(code:string):never {throw new D29bKmsError(code);}
 const VERSION_PATH=/^projects\/[a-z][a-z0-9-]{4,62}\/locations\/[a-z0-9-]+\/keyRings\/[A-Za-z0-9_-]{1,63}\/cryptoKeys\/[A-Za-z0-9_-]{1,63}\/cryptoKeyVersions\/[1-9][0-9]{0,8}$/;
 const B64=/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
 
@@ -73,9 +73,10 @@ export function createD29bGoogleKmsEd25519Adapter(
         typeof body.signature!=="string" ||
         body.signature.length!==88 || !B64.test(body.signature))
         deny("D29B_KMS_SIGNATURE_INVALID");
-      const signature=Buffer.from(body.signature,"base64");
+      const encoded=(body as {signature:string}).signature;
+      const signature=Buffer.from(encoded,"base64");
       if(signature.length!==64 ||
-        signature.toString("base64")!==body.signature)
+        signature.toString("base64")!==encoded)
         deny("D29B_KMS_SIGNATURE_INVALID");
       return signature;
     },
