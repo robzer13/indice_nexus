@@ -11,7 +11,8 @@ import {
 } from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
 import {
   getMcpRunContext, getMcpRunContextDelegated, getMcpNextPrompt,
-  getMcpNextPromptDelegated, listMcpSubmissions, submitMcpWorkProduct,
+  getMcpNextPromptDelegated, getMcpRecoveryWorklistDelegated,
+  listMcpSubmissions, submitMcpWorkProduct,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-service-v1";
 
 export const runtime = "nodejs";
@@ -67,6 +68,20 @@ function createServer(delegatedJwt: string | null): McpServer {
         : await getMcpNextPrompt(run_id,process.env));
     }
     catch(err){return failure(err);}
+  });
+
+  server.registerTool("get_orotitan_blocker_worklist",{
+    title:"Préparer la reprise d'un dossier bloqué",
+    description:"Retourne les tâches de recherche et critères de clôture pour chaque blocage Registry observé. Lecture déléguée OAuth/RLS seulement : aucun dépôt, aucune validation de preuve, aucun passage d'étape.",
+    inputSchema:runSchema,
+    annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
+  },async({run_id})=>{
+    try {
+      // No privileged fallback. Even private test-bearer mode cannot use this
+      // delegated-only operation without a verified user JWT.
+      if(!delegatedJwt) throw new McpBridgeError("RECOVERY_OAUTH_REQUIRED");
+      return content(await getMcpRecoveryWorklistDelegated(run_id,delegatedJwt,process.env));
+    } catch(err) {return failure(err);}
   });
 
   server.registerTool("list_orotitan_submissions",{
