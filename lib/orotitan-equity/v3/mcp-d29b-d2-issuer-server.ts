@@ -4,7 +4,7 @@ import "server-only";
  * process with an isolated HSM/KMS signing adapter and explicit run allowlist.
  * Never import this module from the public MCP route.
  */
-import { createHash } from "node:crypto";
+import { createHash, createPublicKey, verify } from "node:crypto";
 import { requireAdminSession } from "../../auth/admin-session";
 import { createServerSupabaseClient } from "../../supabase/server";
 import { createServerPilotageReadPort, assertProductionUrl } from "./pilotage-trusted-loader-server";
@@ -142,6 +142,21 @@ export async function issueIndependentlyVerifiedD29bReceipt(
     HANDOFF_SIGNATURE_DOMAIN+payloadBase64Url,"utf8"));
   if(!(signature instanceof Uint8Array) || signature.byteLength!==64)
     deny("D29B_SIGNING_ADAPTER_REJECTED");
+  // Require the remote KMS signature to verify against a separately pinned
+  // Ed25519 public key. No signer-selected JWK, URL or dynamic fallback.
+  if(!env.OROTITAN_D29B_SIGNER_PUBLIC_KEY_SPKI_PEM ||
+    env.OROTITAN_D29B_SIGNER_KEY_ID!==signer.keyId)
+    deny("D29B_SIGNER_PUBLIC_KEY_NOT_PINNED");
+  try {
+    const trustedKey=createPublicKey(env.OROTITAN_D29B_SIGNER_PUBLIC_KEY_SPKI_PEM);
+    if(trustedKey.asymmetricKeyType!=="ed25519" ||
+      !verify(null,Buffer.from(HANDOFF_SIGNATURE_DOMAIN+payloadBase64Url,"utf8"),
+        trustedKey,Buffer.from(signature)))
+      deny("D29B_SIGNER_SIGNATURE_INVALID");
+  } catch(e) {
+    if(e instanceof D29bIssuerError) throw e;
+    deny("D29B_SIGNER_SIGNATURE_INVALID");
+  }
   // Remote KMS signing can take time. Reject a changed Registry or switched
   // active manifest before handing a receipt to any future private writer.
   const [finalRun,finalStages,finalArtifacts]=await Promise.all([
