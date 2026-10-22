@@ -179,7 +179,7 @@ export function createD29bPgWriterPort(
   }
   async function revokeReceiptAtomically(
     runId:string,receiptId:string,reasonCode:string,
-  ):"REVOKED"|"NOT_FOUND"|Promise<"REVOKED"|"NOT_FOUND"> {
+  ):Promise<"REVOKED"|"NOT_FOUND"> {
     if(runId!==scope.runId || !UUID.test(receiptId) ||
       !["ADMIN_REVOKED","POST_STORE_MISMATCH"].includes(reasonCode))
       deny("D29B_PG_REVOCATION_SCOPE_INVALID");
