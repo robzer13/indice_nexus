@@ -1,0 +1,123 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import { readFileSync } from "node:fs";
+import {
+  createLocalJWKSet, exportJWK, generateKeyPair, SignJWT,
+} from "jose";
+import {
+  mcpOAuthConfig, verifyMcpOAuthBearer, oauthResourceMetadata,
+  oauthChallenge, MCP_SCOPE_READ, MCP_SCOPE_WRITE, McpOAuthError,
+} from "../lib/orotitan-equity/v3/mcp-oauth-v1";
+
+const base: NodeJS.ProcessEnv = {
+  NODE_ENV:"test",
+  OROTITAN_MCP_ENABLED:"true",
+  OROTITAN_MCP_AUTH_MODE:"OAUTH",
+  OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan.example.org",
+  OROTITAN_MCP_OAUTH_ISSUER:"https://id.example.org/oauth",
+  OROTITAN_MCP_OAUTH_JWKS_URI:"https://id.example.org/oauth/jwks",
+  OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"user-123",
+  OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:"approved-client-123",
+};
+const config=mcpOAuthConfig(base)!;
+
+test("MCP OAuth resource metadata and config fail closed",()=>{
+  assert.equal(config.issuer,"https://id.example.org/oauth");
+  assert.equal(config.audience,"https://orotitan.example.org/api/orotitan/mcp");
+  assert.equal(config.tokenAudience,"authenticated");
+  assert.equal(config.resourceMetadataUrl,"https://orotitan.example.org/.well-known/oauth-protected-resource");
+  assert.deepEqual(oauthResourceMetadata(config),{
+    resource:config.audience,
+    authorization_servers:[config.issuer],
+    scopes_supported:["email","profile"],
+  });
+  assert.match(oauthChallenge(config),/resource_metadata="https:/);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_ENABLED:"false"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_AUTH_MODE:"TEST_BEARER"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ISSUER:"http://id.example.org"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_JWKS_URI:"https://attacker.example.com/jwks"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"*"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:""}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_CLIENT_IDS:"*"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_OAUTH_ALLOWED_SUBJECTS:"user-123,user-123"}),null);
+  assert.equal(mcpOAuthConfig({...base,OROTITAN_MCP_PUBLIC_ORIGIN:"https://orotitan.example.org/login"}),null);
+});
+
+test("MCP OAuth verifies signature, issuer, Supabase audience, client registration and subject",async()=>{
+  const {publicKey,privateKey}=await generateKeyPair("RS256",{extractable:true});
+  const jwk=await exportJWK(publicKey);
+  const keys=createLocalJWKSet({keys:[{...jwk,kid:"testkey",alg:"RS256",use:"sig"}]});
+  const issue=async(input?:{
+    issuer?:string;audience?:string;subject?:string;client?:string;role?:string;resource?:string;exp?:string;
+  })=>{
+    let builder=new SignJWT({client_id:input?.client??"approved-client-123",
+      role:input?.role??"authenticated",resource:input?.resource??config.audience})
+      .setProtectedHeader({alg:"RS256",kid:"testkey"})
+      .setIssuer(input?.issuer??config.issuer)
+      .setAudience(input?.audience??config.tokenAudience)
+      .setSubject(input?.subject??"user-123")
+      .setIssuedAt();
+    builder=builder.setExpirationTime(input?.exp??"10m");
+    return builder.sign(privateKey);
+  };
+  const good=await issue();
+  const identity=await verifyMcpOAuthBearer("Bearer "+good,config,keys);
+  assert.equal(identity.subject,"user-123");
+  assert.equal(identity.scopes.has(MCP_SCOPE_READ),true);
+  assert.equal(identity.scopes.has(MCP_SCOPE_WRITE),false);
+  const fails=async(value:string)=>{
+    await assert.rejects(()=>verifyMcpOAuthBearer("Bearer "+value,config,keys),
+      (error:unknown)=>error instanceof McpOAuthError);
+  };
+  await fails(await issue({audience:"https://other.example.org/api/orotitan/mcp"}));
+  await fails(await issue({issuer:"https://another.example.org"}));
+  await fails(await issue({subject:"user-999"}));
+  await fails(await issue({client:"not-approved-client"}));
+  await fails(await issue({role:"anon"}));
+  await fails(await issue({resource:"https://other.example.org/api/orotitan/mcp"}));
+  await fails(await issue({exp:"-30m"}));
+  await fails(good.slice(0,-5)+"BADxx");
+  await assert.rejects(()=>verifyMcpOAuthBearer(null,config,keys),
+    (error:unknown)=>error instanceof McpOAuthError);
+});
+
+test("MCP OAuth accepts asymmetrically signed ES256 Supabase tokens for approved clients",async()=>{
+  const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
+  const jwk=await exportJWK(publicKey);
+  const keys=createLocalJWKSet({keys:[{...jwk,kid:"ec1",alg:"ES256",use:"sig"}]});
+  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123",resource:config.audience})
+    .setProtectedHeader({alg:"ES256",kid:"ec1"})
+    .setIssuer(config.issuer).setAudience(config.tokenAudience)
+    .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
+  const identity=await verifyMcpOAuthBearer("Bearer "+jwt,config,keys);
+  assert.equal(identity.subject,"user-123");
+  assert.deepEqual([...identity.scopes],[MCP_SCOPE_READ]);
+});
+
+
+test("MCP OAuth rejects an otherwise valid Supabase OAuth JWT without a signed resource binding",async()=>{
+  const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
+  const jwk=await exportJWK(publicKey);
+  const keys=createLocalJWKSet({keys:[{...jwk,kid:"ec2",alg:"ES256",use:"sig"}]});
+  const jwt=await new SignJWT({role:"authenticated",client_id:"approved-client-123"})
+    .setProtectedHeader({alg:"ES256",kid:"ec2"})
+    .setIssuer(config.issuer).setAudience("authenticated")
+    .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
+  await assert.rejects(()=>verifyMcpOAuthBearer("Bearer "+jwt,config,keys),
+    (error:unknown)=>error instanceof McpOAuthError &&
+      error.code==="OAUTH_IDENTITY_OR_SCOPE_DENIED");
+});
+
+test("MCP OAuth discovery route and dispatch require validated metadata and scope",()=>{
+  const route=readFileSync(new URL("../app/api/orotitan/mcp/route.ts",import.meta.url),"utf8");
+  const meta=readFileSync(new URL("../app/.well-known/oauth-protected-resource/route.ts",import.meta.url),"utf8");
+  assert.match(route,/verifyMcpOAuthBearer/);
+  assert.match(route,/oauthChallenge/);
+  // SDK pinned at v2 lacks a typed securitySchemes config field.
+  // Transport-side OAuth JWT + per-tool write scope remain mandatory.
+  assert.match(route,/verifyMcpOAuthBearer/);
+  assert.match(route,/params\?\.name==="submit_orotitan_work_product"/);
+  assert.match(route,/identity\.scopes\.has\(MCP_SCOPE_WRITE\)/);
+  assert.match(route,/process\.env\.NODE_ENV!=="production"/);
+  assert.match(meta,/oauthResourceMetadata/);
+});

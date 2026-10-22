@@ -1,3 +1,4 @@
+import { isIsolatedMcpPilot } from "@/lib/orotitan-equity/v3/mcp-pilot-boundary-v1";
 import Link from 'next/link';
 import { CompanyStatusBadge } from '@/components/company-status-badge';
 import { EntryZoneBadge } from '@/components/entry-zone-badge';
@@ -14,6 +15,15 @@ import { prioritizeCompanies } from '@/lib/domain/prioritization';
 export const dynamic = 'force-dynamic';
 
 export default async function DashboardPage() {
+  // Public pilot never queries the privileged Screener data client.
+  if (isIsolatedMcpPilot(process.env)) {
+    return (<section className="mx-auto max-w-2xl rounded-xl border border-slate-800 bg-slate-900/60 p-7 text-slate-100">
+      <p className="text-xs font-semibold uppercase tracking-widest text-cyan-400">OroTitan Equity Research · Test MCP</p>
+      <h1 className="mt-3 text-2xl font-semibold">Passerelle ChatGPT — pilote Besi</h1>
+      <p className="mt-4 text-sm leading-6 text-slate-300">Ce domaine héberge uniquement le protocole MCP et le consentement OAuth de test. L&apos;accès au dossier Besi nécessite une identité autorisée et un jeton signé spécifique au service.</p>
+      <p className="mt-3 text-sm leading-6 text-slate-400">Aucune modification, validation ou publication de dossier n&apos;est possible depuis cette passerelle. Les permissions Supabase RLS et le hook OAuth ne sont pas encore installés.</p>
+    </section>);
+  }
   const companies = await getCompanyStates();
   const priorities = prioritizeCompanies(companies, 6);
   const enriched = companies.map((company) => {

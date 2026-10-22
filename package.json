@@ -13,10 +13,11 @@
     "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"tests/*.test.ts\" --max-warnings=0",
     "typecheck": "tsc --noEmit",
     "test": "tsx --test tests/*.test.ts",
-    "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh && bash tests/postgres/run-registry-v1-migration-tests.sh && bash tests/postgres/run-v2-canonical-migration-tests.sh && bash tests/postgres/run-d7-writer-candidate-tests.sh",
+    "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh && bash tests/postgres/run-registry-v1-migration-tests.sh && bash tests/postgres/run-v2-canonical-migration-tests.sh && bash tests/postgres/run-d7-writer-candidate-tests.sh && bash tests/postgres/run-research-v31-final-contract-proposal-tests.sh && bash tests/postgres/run-research-v31-handoff-e2e-tests.sh && bash tests/postgres/run-mcp-oauth-hook-proposal-tests.sh",
     "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh"
   },
   "dependencies": {
+    "@modelcontextprotocol/server": "2.0.0",
     "@supabase/supabase-js": "2.110.7",
     "ajv": "8.17.1",
     "ajv-formats": "3.0.1",
@@ -25,7 +26,8 @@
     "react-dom": "19.2.7",
     "server-only": "0.0.1",
     "zod": "4.4.3",
-    "yahoo-finance2": "4.0.2"
+    "yahoo-finance2": "4.0.2",
+    "jose": "6.2.12"
   },
   "devDependencies": {
     "@types/node": "22.20.1",
