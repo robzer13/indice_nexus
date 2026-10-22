@@ -22,10 +22,11 @@ create schema orotitan_d29b_internal;
 revoke all on schema orotitan_d29b_internal from public,anon,authenticated;
 grant usage on schema orotitan_d29b_internal to orotitan_d29b_writer;
 -- Registry permissions are SELECT only; NEVER UPDATE stage/run state.
-grant select (run_id,run_status,current_stage,state_version,data_cutoff)
+grant select (run_id,run_status,current_stage,state_version,data_cutoff,
+  process_version,pilotage_contract_version)
   on public.orotitan_runs to orotitan_d29b_writer;
 grant select (run_id,stage_code,state_version,lifecycle_status,
-  contract_status_code,handoff_gate_state,active_manifest_kind)
+  contract_status_code,handoff_gate_state,active_manifest_kind,blocker_summary)
   on public.orotitan_run_stages to orotitan_d29b_writer;
 
 create policy d29b_writer_besi_run_read
