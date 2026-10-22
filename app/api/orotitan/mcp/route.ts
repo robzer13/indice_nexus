@@ -11,6 +11,7 @@ import {
 } from "@/lib/orotitan-equity/v3/mcp-oauth-v1";
 import {
   getMcpRunContext, getMcpRunContextDelegated, getMcpNextPrompt,
+  getMcpNextPromptDelegated, getMcpRecoveryWorklistDelegated,
   listMcpSubmissions, submitMcpWorkProduct,
 } from "@/lib/orotitan-equity/v3/mcp-bridge-service-v1";
 
@@ -57,17 +58,30 @@ function createServer(delegatedJwt: string | null): McpServer {
 
   server.registerTool("get_orotitan_next_prompt",{
     title:"Obtenir le prompt vérifié de l'étape",
-    description:"Vérifier les preuves immuables GitHub, le contrat et l'état Registry. Renvoie le prompt exact uniquement si le handoff est admis; ne lance aucune IA, transition ni publication.",
+    description:"Pilotage en lecture seule. OAuth : état et blocages Registry non vérifiés, aucun prompt d'exécution. Un prompt exact exige une vérification indépendante des preuves immuables et des contrats.",
     inputSchema:runSchema,
     annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
   },async({run_id})=>{
     try{
-      // D2 verification uses privileged immutable-evidence readers; do not
-      // call that path from the public OAuth pilot before scoped review.
-      if(delegatedJwt)throw new McpBridgeError("DELEGATED_PROMPT_READ_DISABLED");
-      return content(await getMcpNextPrompt(run_id,process.env));
+      return content(delegatedJwt
+        ? await getMcpNextPromptDelegated(run_id,delegatedJwt,process.env)
+        : await getMcpNextPrompt(run_id,process.env));
     }
     catch(err){return failure(err);}
+  });
+
+  server.registerTool("get_orotitan_blocker_worklist",{
+    title:"Préparer la reprise d'un dossier bloqué",
+    description:"Retourne les tâches de recherche et critères de clôture pour chaque blocage Registry observé. Lecture déléguée OAuth/RLS seulement : aucun dépôt, aucune validation de preuve, aucun passage d'étape.",
+    inputSchema:runSchema,
+    annotations:{readOnlyHint:true,destructiveHint:false,openWorldHint:false},
+  },async({run_id})=>{
+    try {
+      // No privileged fallback. Even private test-bearer mode cannot use this
+      // delegated-only operation without a verified user JWT.
+      if(!delegatedJwt) throw new McpBridgeError("RECOVERY_OAUTH_REQUIRED");
+      return content(await getMcpRecoveryWorklistDelegated(run_id,delegatedJwt,process.env));
+    } catch(err) {return failure(err);}
   });
 
   server.registerTool("list_orotitan_submissions",{
