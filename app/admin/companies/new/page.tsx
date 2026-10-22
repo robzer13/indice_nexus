@@ -10,5 +10,5 @@ export default async function NewCompanyPage({ searchParams }: { searchParams: S
   if (!(await isAdminAuthenticated())) redirect('/admin');
   const query = await searchParams;
   const error = typeof query.error === 'string' ? query.error : null;
-  return <div className="space-y-6"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Référentiel</div><h1 className="mt-2 text-3xl font-semibold text-white">Nouvelle société</h1></div><AdminNav/>{error ? <div className="rounded-lg border border-rose-900 bg-rose-950/30 p-3 text-sm text-rose-200">{error}</div> : null}<CompanyForm/></div>;
+  return <div className="space-y-6"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Référentiel</div><h1 className="mt-2 text-3xl font-semibold text-white">Ajouter une action au suivi</h1><p className="mt-2 text-sm text-slate-400">Cette étape crée uniquement les métadonnées. L’action sera visible dans le suivi réservé à l’administration, sans analyse ni score inventé.</p></div><AdminNav/>{error ? <div className="rounded-lg border border-rose-900 bg-rose-950/30 p-3 text-sm text-rose-200">{error}</div> : null}<CompanyForm/></div>;
 }
