@@ -3,9 +3,9 @@
  * The adapter MUST be backed by a separately approved private transaction that
  * writes the live receipt and audit event atomically with its CAS guard.
  */
-import { createHash, createPublicKey, verify } from "node:crypto";
+import { createHash } from "node:crypto";
 import {
-  HANDOFF_SIGNATURE_DOMAIN, verifyDelegatedD2Handoff,
+  verifyDelegatedD2Handoff,
   type SignedHandoffEnvelope, type CallerBoundState, type HandoffVerifyKey,
 } from "./mcp-d29b-signed-handoff-gate";
 
