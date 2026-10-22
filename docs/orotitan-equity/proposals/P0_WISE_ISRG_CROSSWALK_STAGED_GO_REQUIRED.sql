@@ -95,20 +95,20 @@ END $$;
 
 -- One approved security-metadata repair: Wise canonical symbol was NULL.
 -- Do not change ISRG's valid 'ISRG' Nasdaq alias or historical market rows.
-UPDATE public.securities
-  SET market_data_symbol='WSE:NASDAQ'
-  WHERE security_id='cc46c84b-a073-448a-8109-fea143605ac0'::uuid
-    AND issuer_id='185329c2-c577-4461-9954-6ecfd75c7483'::uuid
-    AND ticker='WSE' AND isin='JE00BQKY0816'
-    AND market_data_symbol IS NULL;
-
-DO $$
+DO $
+DECLARE rows_updated integer;
 BEGIN
-  IF (SELECT market_data_symbol FROM public.securities
-      WHERE security_id='cc46c84b-a073-448a-8109-fea143605ac0'::uuid)
-      IS DISTINCT FROM 'WSE:NASDAQ'
-  THEN RAISE EXCEPTION 'P0_WISE_CANONICAL_SYMBOL_UPDATE_FAILED'; END IF;
-END $$;
+  UPDATE public.securities
+    SET market_data_symbol='WSE:NASDAQ'
+    WHERE security_id='cc46c84b-a073-448a-8109-fea143605ac0'::uuid
+      AND issuer_id='185329c2-c577-4461-9954-6ecfd75c7483'::uuid
+      AND ticker='WSE' AND isin='JE00BQKY0816'
+      AND market_data_symbol IS NULL;
+  GET DIAGNOSTICS rows_updated = ROW_COUNT;
+  IF rows_updated <> 1 THEN
+    RAISE EXCEPTION 'P0_WISE_CANONICAL_SYMBOL_UPDATE_FAILED';
+  END IF;
+END $;
 
 -- Exactly two audited, new crosswalk rows. No inferred UUID/ticker fallback.
 INSERT INTO public.legacy_company_identity_map
