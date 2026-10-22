@@ -8,6 +8,7 @@
  * The issuer independently verifies the returned signature with pinned SPKI.
  */
 import type { D29bSigningAdapter } from "./mcp-d29b-d2-issuer-server";
+import { crc32c } from "./mcp-d29b-crc32c-v1";
 
 export type KmsFetchResponse = {
   ok:boolean;
@@ -29,6 +30,7 @@ export class D29bKmsError extends Error {
 function deny(code:string):never {throw new D29bKmsError(code);}
 const VERSION_PATH=/^projects\/[a-z][a-z0-9-]{4,62}\/locations\/[a-z0-9-]+\/keyRings\/[A-Za-z0-9_-]{1,63}\/cryptoKeys\/[A-Za-z0-9_-]{1,63}\/cryptoKeyVersions\/[1-9][0-9]{0,8}$/;
 const B64=/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+const CRC32C_DECIMAL=/^(?:0|[1-9][0-9]{0,9})$/;
 
 export function createD29bGoogleKmsEd25519Adapter(
   input:{keyId:string;cryptoKeyVersion:string},
@@ -52,6 +54,11 @@ export function createD29bGoogleKmsEd25519Adapter(
       if(typeof accessToken!=="string" || accessToken.length<40 ||
         accessToken.length>8192 || !/^[A-Za-z0-9._~+\/-]+$/.test(accessToken))
         deny("D29B_KMS_IDENTITY_UNAVAILABLE");
+      // Google KMS verifies the raw data checksum and returns one for the
+      // signature. Fail closed on network timeout or integrity mismatch.
+      // This does not retry: the issuer owns backoff and retry budget.
+      const expectedName=input.cryptoKeyVersion;
+      const raw=Buffer.from(message);
       let response:KmsFetchResponse;
       try {
         response=await transport.request(endpoint,{
@@ -60,7 +67,10 @@ export function createD29bGoogleKmsEd25519Adapter(
             Authorization:"Bearer "+accessToken,
             "Content-Type":"application/json",
           },
-          body:JSON.stringify({data:Buffer.from(message).toString("base64")}),
+          body:JSON.stringify({
+            data:raw.toString("base64"),dataCrc32c:String(crc32c(raw)),
+          }),
+          signal:AbortSignal.timeout(8000),
         });
       } catch {deny("D29B_KMS_REQUEST_FAILED");}
       if(!response.ok || response.status!==200)
@@ -73,11 +83,22 @@ export function createD29bGoogleKmsEd25519Adapter(
         typeof body.signature!=="string" ||
         body.signature.length!==88 || !B64.test(body.signature))
         deny("D29B_KMS_SIGNATURE_INVALID");
-      const encoded=(body as {signature:string}).signature;
+      const responseData=body as Record<string,unknown>;
+      // Pin the exact key version and software protection level. The KMS
+      // response MUST acknowledge the data CRC32C check we requested.
+      if(responseData.name!==expectedName ||
+        responseData.verifiedDataCrc32c!==true ||
+        responseData.protectionLevel!=="SOFTWARE")
+        deny("D29B_KMS_KEY_OR_REQUEST_INTEGRITY_INVALID");
+      const encoded=responseData.signature as string;
       const signature=Buffer.from(encoded,"base64");
-      if(signature.length!==64 ||
-        signature.toString("base64")!==encoded)
+      if(signature.length!==64 || signature.toString("base64")!==encoded)
         deny("D29B_KMS_SIGNATURE_INVALID");
+      const sigCrc=responseData.signatureCrc32c;
+      if(typeof sigCrc!=="string" || !CRC32C_DECIMAL.test(sigCrc) ||
+        Number(sigCrc)>0xffffffff ||
+        crc32c(signature)!==Number(sigCrc))
+        deny("D29B_KMS_SIGNATURE_INTEGRITY_INVALID");
       return signature;
     },
   };

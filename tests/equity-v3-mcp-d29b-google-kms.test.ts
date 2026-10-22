@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {generateKeyPairSync,sign,verify} from "node:crypto";
+import {crc32c} from "../lib/orotitan-equity/v3/mcp-d29b-crc32c-v1";
 import {
  createD29bGoogleKmsEd25519Adapter,D29bKmsError,
  type D29bKmsTransport,
@@ -21,10 +22,15 @@ test("D29b KMS: sign exact raw Ed25519 message with pinned key-version URL",asyn
       assert.equal(arg.headers.Authorization,"Bearer "+token);
       assert.equal(arg.headers["Content-Type"],"application/json");
       const body=JSON.parse(arg.body);
-      assert.deepEqual(Object.keys(body),["data"]);
+      assert.deepEqual(Object.keys(body),["data","dataCrc32c"]);
       assert.equal(Buffer.from(body.data,"base64").toString("utf8"),signedInput.toString("utf8"));
+      assert.equal(body.dataCrc32c,String(crc32c(signedInput)));
+      assert.ok(arg.signal instanceof AbortSignal);
+      const signature=sign(null,signedInput,privateKey);
       return {ok:true,status:200,json:async()=>({
-        signature:sign(null,signedInput,privateKey).toString("base64"),
+        name:path,signature:signature.toString("base64"),
+        signatureCrc32c:String(crc32c(signature)),
+        verifiedDataCrc32c:true,protectionLevel:"SOFTWARE",
       })};
     },
   });
@@ -44,6 +50,40 @@ test("D29b KMS: reject redirectable or attacker-controlled endpoints",()=>{
     keyId:"test",cryptoKeyVersion:bad,
   },{accessToken:async()=>token,request:async()=>({ok:true,status:200,json:async()=>({})})}),
    (e:unknown)=>e instanceof D29bKmsError && e.code==="D29B_KMS_CONFIGURATION_INVALID");
+});
+
+test("D29b CRC32C: standard Castagnoli test vector",()=>{
+  assert.equal(crc32c(Buffer.from("123456789")),0xe3069283);
+  assert.equal(crc32c(Buffer.alloc(0)),0);
+  assert.equal(crc32c(Buffer.from("a")),0xc1d04330);
+});
+
+test("D29b KMS: integrity, protection-level and key-version failures reject signatures",async()=>{
+  const signed=sign(null,signedInput,privateKey);
+  const valid={
+    name:path,signature:signed.toString("base64"),
+    signatureCrc32c:String(crc32c(signed)),
+    verifiedDataCrc32c:true,protectionLevel:"SOFTWARE",
+  };
+  for(const [patch,code] of [
+    [{name:path+"/other"},"D29B_KMS_KEY_OR_REQUEST_INTEGRITY_INVALID"],
+    [{name:"projects/other/locations/europe-west1/keyRings/k/cryptoKeys/key/cryptoKeyVersions/1"},"D29B_KMS_KEY_OR_REQUEST_INTEGRITY_INVALID"],
+    [{verifiedDataCrc32c:false},"D29B_KMS_KEY_OR_REQUEST_INTEGRITY_INVALID"],
+    [{protectionLevel:"HSM"},"D29B_KMS_KEY_OR_REQUEST_INTEGRITY_INVALID"],
+    [{signatureCrc32c:"0"},"D29B_KMS_SIGNATURE_INTEGRITY_INVALID"],
+    [{signatureCrc32c:"4294967296"},"D29B_KMS_SIGNATURE_INTEGRITY_INVALID"],
+    [{signatureCrc32c:"-1"},"D29B_KMS_SIGNATURE_INTEGRITY_INVALID"],
+    [{signatureCrc32c:null},"D29B_KMS_SIGNATURE_INTEGRITY_INVALID"],
+  ] as [Record<string,unknown>,string][]) {
+    const adapter=createD29bGoogleKmsEd25519Adapter({
+      keyId:"test",cryptoKeyVersion:path,
+    },{accessToken:async()=>token,request:async()=>({
+      status:200,ok:true,json:async()=>({...valid,...patch}),
+    })});
+    await assert.rejects(()=>adapter.sign(signedInput),
+      (err:unknown)=>err instanceof D29bKmsError && err.code===code,
+      "expected "+code);
+  }
 });
 
 test("D29b KMS: malformed bearer, signatures, HTTP errors and outages fail closed",async()=>{
