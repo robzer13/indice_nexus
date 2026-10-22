@@ -154,7 +154,7 @@ export async function createCompanyAction(formData: FormData): Promise<void> {
   revalidatePath('/');
   revalidatePath('/screener');
   revalidatePath('/admin/companies');
-  redirect('/admin/companies?success=Société%20créée.');
+  redirect('/admin/companies?success=' + encodeURIComponent('Titre ajouté au suivi administratif. Analyse non publiée : aucun score ni seuil H ne sera affiché avant publication canonique.'));
 }
 
 export async function updateCompanyAction(formData: FormData): Promise<void> {
