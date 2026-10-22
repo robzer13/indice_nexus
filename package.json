@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "eslint \"app/**/*.{ts,tsx}\" \"components/**/*.{ts,tsx}\" \"lib/**/*.{ts,tsx}\" \"tests/*.test.ts\" --max-warnings=0",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/*.test.ts",
+    "test": "tsx --test tests/*.test.ts && node --test services/d29b-cloud-run-signer/*.test.mjs",
     "test:postgres": "bash tests/postgres/run-i1-migration-tests.sh && bash tests/postgres/run-i3-migration-tests.sh && bash tests/postgres/run-i3b-migration-tests.sh && bash tests/postgres/run-registry-v1-migration-tests.sh && bash tests/postgres/run-v2-canonical-migration-tests.sh && bash tests/postgres/run-d7-writer-candidate-tests.sh && bash tests/postgres/run-research-v31-final-contract-proposal-tests.sh && bash tests/postgres/run-research-v31-handoff-e2e-tests.sh && bash tests/postgres/run-mcp-oauth-hook-proposal-tests.sh && bash tests/postgres/run-mcp-d29b-signed-receipt-rls-tests.sh && bash tests/postgres/run-mcp-d29b-audited-writer-tests.sh",
     "test:registry:postgres": "bash tests/postgres/run-registry-v1-migration-tests.sh"
   },
