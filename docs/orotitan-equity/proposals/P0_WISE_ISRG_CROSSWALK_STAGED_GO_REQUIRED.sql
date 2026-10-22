@@ -95,7 +95,7 @@ END $$;
 
 -- One approved security-metadata repair: Wise canonical symbol was NULL.
 -- Do not change ISRG's valid 'ISRG' Nasdaq alias or historical market rows.
-DO $
+DO $$
 DECLARE rows_updated integer;
 BEGIN
   UPDATE public.securities
@@ -108,7 +108,7 @@ BEGIN
   IF rows_updated <> 1 THEN
     RAISE EXCEPTION 'P0_WISE_CANONICAL_SYMBOL_UPDATE_FAILED';
   END IF;
-END $;
+END $$;
 
 -- Exactly two audited, new crosswalk rows. No inferred UUID/ticker fallback.
 INSERT INTO public.legacy_company_identity_map
