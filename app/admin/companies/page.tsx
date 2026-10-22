@@ -16,7 +16,7 @@ export default async function CompaniesAdminPage({ searchParams }: { searchParam
   const success = typeof query.success === 'string' ? query.success : null;
 
   return <div className="space-y-6">
-    <div className="flex items-end justify-between gap-4"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Référentiel</div><h1 className="mt-2 text-3xl font-semibold text-white">Sociétés</h1><p className="mt-2 text-sm text-slate-400">Référentiel de suivi : une nouvelle société reste non publiée tant qu'aucun dossier de recherche canonique n'a été validé. Aucun snapshot ni cours historique n’est modifié.</p></div><Link href="/admin/companies/new" className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-slate-950">Nouvelle société</Link></div>
+    <div className="flex items-end justify-between gap-4"><div><div className="text-xs font-semibold uppercase tracking-[0.2em] text-cyan-400">Référentiel</div><h1 className="mt-2 text-3xl font-semibold text-white">Sociétés</h1><p className="mt-2 text-sm text-slate-400">Référentiel de suivi : une nouvelle société reste non publiée tant qu’aucun dossier de recherche canonique n’a été validé. Aucun snapshot ni cours historique n’est modifié.</p></div><Link href="/admin/companies/new" className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-slate-950">Nouvelle société</Link></div>
     <AdminNav/>
     {success ? <div className="rounded-lg border border-emerald-900 bg-emerald-950/25 p-3 text-sm text-emerald-200">{success}</div> : null}
     <div className="overflow-x-auto rounded-xl border border-slate-800">
