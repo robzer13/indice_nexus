@@ -95,9 +95,20 @@ export async function persistVerifiedD29bReceipt(
   const verdict=verifyDelegatedD2Handoff(issued.receipt,live,keys,nowSeconds());
   if(verdict.status!=="SIGNED_D2_HANDOFF_VERIFIED")
     deny("D29B_PERSISTENCE_PROOF_NOT_ADMITTED");
-  if(issued.issuedAt*1000>issued.expiresAt*1000 ||
-    issued.expiresAt*1000<=nowSeconds()*1000)
-    deny("D29B_PERSISTENCE_RECEIPT_EXPIRED");
+  // The outer metadata also goes to SQL. It must be identical to the already
+  // signature-validated body; a forged metadata expiry cannot prolong a TTL.
+  let signedTime:{issuedAt?:unknown;expiresAt?:unknown};
+  try {
+    signedTime=JSON.parse(Buffer.from(
+      issued.receipt.payloadBase64Url,"base64url").toString("utf8"));
+  } catch { deny("D29B_PERSISTENCE_SIGNED_METADATA_INVALID"); }
+  if(!Number.isSafeInteger(issued.issuedAt) ||
+    !Number.isSafeInteger(issued.expiresAt) ||
+    signedTime.issuedAt!==issued.issuedAt ||
+    signedTime.expiresAt!==issued.expiresAt ||
+    issued.issuedAt>=issued.expiresAt ||
+    issued.expiresAt<=nowSeconds())
+    deny("D29B_PERSISTENCE_SIGNED_METADATA_MISMATCH");
   const second=await port.observeCurrentState();
   if(!sameState(live,second))deny("D29B_PERSISTENCE_STATE_CHANGED");
   if(second.stage===null || second.stageStateVersion===null)
