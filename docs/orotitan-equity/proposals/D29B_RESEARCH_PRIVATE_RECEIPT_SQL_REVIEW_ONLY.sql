@@ -245,7 +245,7 @@ BEGIN
      OR p_media IS NULL OR p_media NOT IN
        ('application/json','text/markdown','text/plain','text/csv')
      OR p_size IS NULL OR p_size NOT BETWEEN 1 AND 1000000
-     OR p_source_date IS NULL OR p_source_date !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}
+     OR p_source_date IS NULL OR p_source_date !~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
      OR p_source_date::date > p_cutoff
      OR p_path IS NULL OR p_path !~ (
        '^research-intake/v1/'||p_run::text||'/RESEARCH/'||
@@ -277,112 +277,6 @@ BEGIN
     p_subject,p_client)
   ON CONFLICT(run_id,stage,run_state_version,stage_state_version,sha256)
     DO NOTHING RETURNING new_receipt.receipt_id INTO v_new;
-  SELECT q.* INTO v_found FROM orotitan_research_intake_private.receipts q
-    WHERE q.run_id=p_run AND q.stage='RESEARCH'
-      AND q.run_state_version=p_run_ver AND q.stage_state_version=p_stage_ver
-      AND q.sha256=p_sha;
-  IF NOT FOUND OR v_found.file_name<>p_filename OR
-     v_found.size_bytes<>p_size OR v_found.media_type<>p_media
-     OR v_found.issuer_id<>p_issuer OR
-     v_found.submitted_by_subject<>p_subject OR
-     v_found.submitted_by_client<>p_client OR
-     v_found.contract_pins_sha256<>p_pins THEN
-    RAISE EXCEPTION 'D29B_PRIVATE_DUPLICATE_MISMATCH';
-  END IF;
-  RETURN QUERY SELECT v_found.receipt_id::text,v_found.run_id::text,
-    v_found.issuer_id,v_found.stage,v_found.run_state_version,
-    v_found.stage_state_version,v_found.sha256,v_found.file_name,
-    v_found.size_bytes,v_found.submitted_by_subject,(v_new IS NULL),
-    v_found.object_path;
-END;
-$commit$;
-
-CREATE FUNCTION orotitan_research_intake_private.verifier_metadata_v1(
-  p_run uuid,p_issuer text,p_reviewer text,p_run_ver bigint,
-  p_stage_ver bigint,p_sha text
-) RETURNS TABLE (
-  receipt_id text,run_id text,issuer_id text,stage text,
-  run_state_version bigint,stage_state_version bigint,sha256 text,
-  file_name text,size_bytes bigint,submitted_by_subject text,
-  duplicate boolean,object_path text
-) LANGUAGE plpgsql STABLE SECURITY INVOKER
-SET search_path=pg_catalog,public,orotitan_research_intake_private
-AS $reader$
-BEGIN
-  IF current_user<>'orotitan_research_intake_reader'
-     OR p_run IS DISTINCT FROM
-       '48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid
-     OR p_sha IS NULL OR p_sha !~ '^[0-9a-f]{64}$' THEN
-    RETURN;
-  END IF;
-  IF NOT EXISTS(
-    SELECT 1 FROM orotitan_research_intake_private.verifier_grants g
-    JOIN public.orotitan_runs r ON r.run_id=g.run_id
-    JOIN public.orotitan_run_stages s ON s.run_id=r.run_id
-      AND s.stage_code='RESEARCH'
-    WHERE g.run_id=p_run AND g.issuer_id=p_issuer
-      AND g.issuer_id=r.issuer_id::text
-      AND g.reviewer_id=p_reviewer AND g.permission='READ_RECEIPT_METADATA'
-      AND g.revoked_at IS NULL AND now()>=g.issued_at AND now()<g.expires_at
-      AND g.expected_run_version=p_run_ver
-      AND g.expected_stage_version=p_stage_ver
-      AND r.current_stage='RESEARCH' AND r.state_version=p_run_ver
-      AND s.state_version=p_stage_ver
-  ) THEN RETURN; END IF;
-  RETURN QUERY SELECT q.receipt_id::text,q.run_id::text,q.issuer_id,
-    q.stage,q.run_state_version,q.stage_state_version,q.sha256,q.file_name,
-    q.size_bytes,q.submitted_by_subject,false,q.object_path
-    FROM orotitan_research_intake_private.receipts q
-    WHERE q.run_id=p_run AND q.issuer_id=p_issuer
-      AND q.stage='RESEARCH' AND q.run_state_version=p_run_ver
-      AND q.stage_state_version=p_stage_ver AND q.sha256=p_sha;
-END;
-$reader$;
-
-REVOKE ALL ON ALL FUNCTIONS IN SCHEMA orotitan_research_intake_private FROM PUBLIC;
-GRANT EXECUTE ON FUNCTION orotitan_research_intake_private.preflight_v1(
- uuid,text,text,text,text,text,bigint,bigint,date,text
-) TO orotitan_research_intake_writer;
-GRANT EXECUTE ON FUNCTION orotitan_research_intake_private.commit_receipt_v1(
- uuid,text,text,text,text,text,bigint,bigint,date,text,text,text,text,text,bigint,text
-) TO orotitan_research_intake_writer;
-GRANT EXECUTE ON FUNCTION orotitan_research_intake_private.verifier_metadata_v1(
- uuid,text,text,bigint,bigint,text
-) TO orotitan_research_intake_reader;
--- No grants to public, anon or authenticated.
-COMMIT;
-
-     OR p_source_date::date > p_cutoff
-     OR p_path IS NULL OR p_path !~ (
-       '^research-intake/v1/'||p_run::text||'/RESEARCH/'||
-       p_sha||'/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-'||
-       '[89ab][0-9a-f]{3}-[0-9a-f]{12}\\.(json|md|txt|csv)$'
-     ) OR p_media <> CASE right(p_filename,strpos(reverse(p_filename),'.')-1)
-       WHEN 'json' THEN 'application/json'
-       WHEN 'md' THEN 'text/markdown'
-       WHEN 'txt' THEN 'text/plain'
-       WHEN 'csv' THEN 'text/csv'
-       ELSE 'INVALID' END
-     OR right(p_path,strpos(reverse(p_path),'.')-1) <>
-       right(p_filename,strpos(reverse(p_filename),'.')-1) THEN
-    RAISE EXCEPTION 'D29B_PRIVATE_METADATA_DENIED';
-  END IF;
-  PERFORM pg_advisory_xact_lock(hashtextextended(p_run::text,71932));
-  -- Re-observe versions/grant after acquiring our private writer serialization lock.
-  IF NOT orotitan_research_intake_private.preflight_v1(
-      p_run,p_issuer,p_grant,p_subject,p_client,p_resource,
-      p_run_ver,p_stage_ver,p_cutoff,p_pins) THEN
-    RAISE EXCEPTION 'D29B_PRIVATE_CHANGED_AFTER_LOCK';
-  END IF;
-  INSERT INTO orotitan_research_intake_private.receipts(
-    run_id,issuer_id,stage,run_state_version,stage_state_version,
-    contract_pins_sha256,grant_id,sha256,file_name,media_type,object_path,
-    size_bytes,source_date,submitted_by_subject,submitted_by_client)
-  VALUES(p_run,p_issuer,'RESEARCH',p_run_ver,p_stage_ver,p_pins,p_grant,
-    p_sha,p_filename,p_media,p_path,p_size,p_source_date::date,
-    p_subject,p_client)
-  ON CONFLICT(run_id,stage,run_state_version,stage_state_version,sha256)
-    DO NOTHING RETURNING receipts.receipt_id INTO v_new;
   SELECT q.* INTO v_found FROM orotitan_research_intake_private.receipts q
     WHERE q.run_id=p_run AND q.stage='RESEARCH'
       AND q.run_state_version=p_run_ver AND q.stage_state_version=p_stage_ver
