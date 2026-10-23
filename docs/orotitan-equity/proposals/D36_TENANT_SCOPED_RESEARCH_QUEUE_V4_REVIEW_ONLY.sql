@@ -169,7 +169,7 @@ BEGIN
  ) VALUES(v.actor_subject,v.actor_resource,v_scope.issuer_id,
    v_scope.contract_pack_sha256,v_scope.cutoff_date)
  ON CONFLICT(actor_subject,actor_resource,issuer_id,contract_pack_sha256,cutoff_date)
- WHERE state='REQUESTED_NOT_EXECUTED' DO NOTHING
+ WHERE r.state='REQUESTED_NOT_EXECUTED' DO NOTHING
  RETURNING r.request_id INTO v_inserted;
  IF v_inserted IS NULL THEN
   SELECT * INTO STRICT v_request FROM orotitan_mobile_private.research_requests_v4 r
