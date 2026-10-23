@@ -131,7 +131,8 @@ BEGIN
       WHERE state<>'REQUESTED_NOT_EXECUTED') THEN
     RAISE EXCEPTION 'D30_REQUESTS_MUTATED_CANONICAL_STATE';
   END IF;
-END $tests$;
+END;
+$tests$;
 -- Late expiry tested outside main DO using an expired preview with valid CHECK.
 INSERT INTO orotitan_mobile_private.previews(preview_id,kind,actor_subject,
  actor_client,actor_resource,payload,fingerprint_sha256,created_at,expires_at)
@@ -158,4 +159,5 @@ BEGIN
   IF (SELECT count(*) FROM orotitan_mobile_private.command_requests)<>2 THEN
     RAISE EXCEPTION 'D30_EXPIRED_PREVIEW_SIDE_EFFECT';
   END IF;
-END $expired$;
+END;
+$expired$;
