@@ -88,6 +88,7 @@ class FakePort implements ResearchIntakePort {
     if (v.subject !== reviewer.subject || v.reviewerId !== reviewer.reviewerId ||
       runId !== RUN) return null;
     const grant: TrustedVerifierGrant = {
+      grantId: "approved-reviewer-grant",
       reviewerId: v.reviewerId, runId: RUN, issuerId: "besi-issuer-id",
       stage: "RESEARCH", runStateVersion: this.runVersion,
       stageStateVersion: this.stageVersion,

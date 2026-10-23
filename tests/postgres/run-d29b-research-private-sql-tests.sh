@@ -18,7 +18,7 @@ cleanup() {
     dropdb --if-exists --force "$db" >/dev/null 2>&1 || true
   fi
   if [[ "$provisioned" == 1 ]]; then
-    psql -X -v ON_ERROR_STOP=1 -d postgres -c       'DROP ROLE IF EXISTS orotitan_research_intake_writer,orotitan_research_intake_reader,orotitan_research_intake_receipt_executor;'       >/dev/null 2>&1 || true
+    psql -X -v ON_ERROR_STOP=1 -d postgres -c       'DROP ROLE IF EXISTS orotitan_research_intake_writer,orotitan_research_intake_reader,orotitan_research_intake_receipt_executor,orotitan_research_intake_verifier_executor;'       >/dev/null 2>&1 || true
   fi
 }
 trap cleanup EXIT
@@ -26,7 +26,7 @@ trap cleanup EXIT
 # tamper with a real private deployment or another test's global roles.
 count="$(psql -XAt -d postgres -c "SELECT count(*) FROM pg_roles
 WHERE rolname IN ('orotitan_research_intake_writer',
-'orotitan_research_intake_reader','orotitan_research_intake_receipt_executor')")"
+'orotitan_research_intake_reader','orotitan_research_intake_receipt_executor','orotitan_research_intake_verifier_executor')")"
 if [[ "$count" != 0 ]]; then
   echo "D29b: private roles already exist; aborting" >&2; exit 2
 fi

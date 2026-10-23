@@ -131,6 +131,7 @@ function make() {
     resolveVerifierGrant:async(a,runId):Promise<TrustedVerifierGrant|null>=>
       a.subject===reviewer.subject && a.reviewerId===reviewer.reviewerId &&
       runId===RUN?{
+        grantId:"approved-reviewer-grant",
         reviewerId:reviewer.reviewerId,runId:RUN,issuerId:"besi-issuer",
         stage:"RESEARCH",runStateVersion:receipts.liveVersion,
         stageStateVersion:receipts.liveStageVersion,

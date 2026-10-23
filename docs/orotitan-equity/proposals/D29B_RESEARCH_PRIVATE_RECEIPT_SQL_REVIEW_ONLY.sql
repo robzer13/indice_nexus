@@ -21,13 +21,16 @@ $guard$;
 
 CREATE ROLE orotitan_research_intake_writer NOLOGIN NOINHERIT NOBYPASSRLS;
 CREATE ROLE orotitan_research_intake_reader NOLOGIN NOINHERIT NOBYPASSRLS;
+-- Independent D2 verification function owner: NOLOGIN and non-bypass.
+CREATE ROLE orotitan_research_intake_verifier_executor NOLOGIN NOINHERIT NOBYPASSRLS;
 -- NOLOGIN dedicated function owner. The externally scoped writer is EXECUTE-only.
 CREATE ROLE orotitan_research_intake_receipt_executor NOLOGIN NOINHERIT NOBYPASSRLS;
 CREATE SCHEMA orotitan_research_intake_private;
 REVOKE ALL ON SCHEMA orotitan_research_intake_private FROM PUBLIC;
 GRANT USAGE ON SCHEMA orotitan_research_intake_private
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
-     orotitan_research_intake_receipt_executor;
+     orotitan_research_intake_receipt_executor,
+     orotitan_research_intake_verifier_executor;
 -- Intentionally no GRANT ROLE to any runtime principal, anon or authenticated.
 -- Independent identity approval and membership provisioning remain UNIMPLEMENTED.
 
@@ -35,20 +38,24 @@ GRANT USAGE ON SCHEMA orotitan_research_intake_private
 GRANT SELECT (run_id,issuer_id,run_status,current_stage,state_version,data_cutoff,
   contract_set_sha256) ON public.orotitan_runs
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
-     orotitan_research_intake_receipt_executor;
+     orotitan_research_intake_receipt_executor,
+     orotitan_research_intake_verifier_executor;
 GRANT SELECT (run_id,stage_code,state_version,lifecycle_status)
   ON public.orotitan_run_stages
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
-     orotitan_research_intake_receipt_executor;
+     orotitan_research_intake_receipt_executor,
+     orotitan_research_intake_verifier_executor;
 CREATE POLICY d29b_research_besi_run_read
   ON public.orotitan_runs FOR SELECT
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
-     orotitan_research_intake_receipt_executor
+     orotitan_research_intake_receipt_executor,
+     orotitan_research_intake_verifier_executor
   USING (run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid);
 CREATE POLICY d29b_research_besi_stage_read
   ON public.orotitan_run_stages FOR SELECT
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
-     orotitan_research_intake_receipt_executor
+     orotitan_research_intake_receipt_executor,
+     orotitan_research_intake_verifier_executor
   USING (run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid
     AND stage_code='RESEARCH');
 
@@ -126,13 +133,13 @@ ALTER TABLE orotitan_research_intake_private.receipt_audit ENABLE ROW LEVEL SECU
 GRANT SELECT ON orotitan_research_intake_private.submission_grants
   TO orotitan_research_intake_writer,orotitan_research_intake_receipt_executor;
 GRANT SELECT ON orotitan_research_intake_private.verifier_grants
-  TO orotitan_research_intake_reader;
+  TO orotitan_research_intake_verifier_executor;
 -- External writer has NO direct DML on receipts, even in the private schema.
 -- DML is limited to the isolated NOLOGIN function owner.
 GRANT SELECT,INSERT ON orotitan_research_intake_private.receipts
   TO orotitan_research_intake_receipt_executor;
 GRANT SELECT ON orotitan_research_intake_private.receipts
-  TO orotitan_research_intake_reader;
+  TO orotitan_research_intake_verifier_executor;
 GRANT INSERT ON orotitan_research_intake_private.receipt_audit
   TO orotitan_research_intake_receipt_executor;
 CREATE POLICY d29b_research_writer_grants ON
@@ -141,7 +148,7 @@ CREATE POLICY d29b_research_writer_grants ON
   USING(run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid);
 CREATE POLICY d29b_research_reader_grants ON
   orotitan_research_intake_private.verifier_grants FOR SELECT
-  TO orotitan_research_intake_reader
+  TO orotitan_research_intake_verifier_executor
   USING(run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid);
 CREATE POLICY d29b_research_executor_receipts_select ON
   orotitan_research_intake_private.receipts FOR SELECT
@@ -149,7 +156,7 @@ CREATE POLICY d29b_research_executor_receipts_select ON
   USING(run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid);
 CREATE POLICY d29b_research_reader_receipts_select ON
   orotitan_research_intake_private.receipts FOR SELECT
-  TO orotitan_research_intake_reader
+  TO orotitan_research_intake_verifier_executor
   USING(run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid);
 CREATE POLICY d29b_research_executor_receipts_insert ON
   orotitan_research_intake_private.receipts FOR INSERT
@@ -312,18 +319,19 @@ END;
 $commit$;
 
 CREATE FUNCTION orotitan_research_intake_private.verifier_metadata_v1(
-  p_run uuid,p_issuer text,p_reviewer text,p_run_ver bigint,
-  p_stage_ver bigint,p_sha text
+  p_run uuid,p_issuer text,p_reviewer text,p_grant_id text,
+  p_run_ver bigint,p_stage_ver bigint,p_sha text
 ) RETURNS TABLE (
   receipt_id text,run_id text,issuer_id text,stage text,
   run_state_version bigint,stage_state_version bigint,sha256 text,
   file_name text,size_bytes bigint,submitted_by_subject text,
   duplicate boolean,object_path text
-) LANGUAGE plpgsql STABLE SECURITY INVOKER
+) LANGUAGE plpgsql STABLE SECURITY DEFINER
 SET search_path=pg_catalog,public,orotitan_research_intake_private
 AS $reader$
 BEGIN
-  IF current_user<>'orotitan_research_intake_reader'
+  IF current_user<>'orotitan_research_intake_verifier_executor'
+     OR p_grant_id IS NULL OR length(p_grant_id)<8
      OR p_run IS DISTINCT FROM
        '48b9426b-4d0d-4858-9d87-efcd13ac415d'::uuid
      OR p_sha IS NULL OR p_sha !~ '^[0-9a-f]{64}$' THEN
@@ -335,6 +343,7 @@ BEGIN
     JOIN public.orotitan_run_stages s ON s.run_id=r.run_id
       AND s.stage_code='RESEARCH'
     WHERE g.run_id=p_run AND g.issuer_id=p_issuer
+      AND g.verifier_grant_id=p_grant_id
       AND g.issuer_id=r.issuer_id::text
       AND g.reviewer_id=p_reviewer AND g.permission='READ_RECEIPT_METADATA'
       AND g.revoked_at IS NULL AND now()>=g.issued_at AND now()<g.expires_at
@@ -363,6 +372,15 @@ ALTER FUNCTION orotitan_research_intake_private.commit_receipt_v1(
 ) OWNER TO orotitan_research_intake_receipt_executor;
 REVOKE CREATE ON SCHEMA orotitan_research_intake_private
   FROM orotitan_research_intake_receipt_executor;
+-- Independent reviewer needs no direct SELECT on grants/receipts. Its
+-- privileged function owner can read narrowly scoped RLS-protected metadata.
+GRANT CREATE ON SCHEMA orotitan_research_intake_private
+  TO orotitan_research_intake_verifier_executor;
+ALTER FUNCTION orotitan_research_intake_private.verifier_metadata_v1(
+ uuid,text,text,text,bigint,bigint,text
+) OWNER TO orotitan_research_intake_verifier_executor;
+REVOKE CREATE ON SCHEMA orotitan_research_intake_private
+  FROM orotitan_research_intake_verifier_executor;
 -- A missing function can no longer be created by the runtime role.
 -- Preflight is SECURITY INVOKER. The definer needs explicit EXECUTE.
 REVOKE ALL ON ALL FUNCTIONS IN SCHEMA orotitan_research_intake_private FROM PUBLIC;
@@ -373,7 +391,7 @@ GRANT EXECUTE ON FUNCTION orotitan_research_intake_private.commit_receipt_v1(
  uuid,text,text,text,text,text,bigint,bigint,date,text,text,text,text,text,bigint,text
 ) TO orotitan_research_intake_writer;
 GRANT EXECUTE ON FUNCTION orotitan_research_intake_private.verifier_metadata_v1(
- uuid,text,text,bigint,bigint,text
+ uuid,text,text,text,bigint,bigint,text
 ) TO orotitan_research_intake_reader;
 -- No grants to public, anon or authenticated.
 COMMIT;
