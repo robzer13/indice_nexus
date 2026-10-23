@@ -127,8 +127,8 @@ export function createPrivateResearchPgTransactionPort(
           "/RESEARCH/" + d.sha256 + "/")) {
         throw new ResearchIntakeError("INTAKE_PRIVATE_PG_BLOB_SCOPE_DENIED");
       }
-      const r = await inTransaction(pool, true, client =>
-        client.query<StoredRow>(
+      return inTransaction(pool, true, async client => {
+        const r = await client.query<StoredRow>(
           "SELECT * FROM orotitan_research_intake_private.commit_receipt_v1(" +
           "$1::uuid,$2::text,$3::text,$4::text,$5::text,$6::text," +
           "$7::bigint,$8::bigint,$9::date,$10::text,$11::text,$12::text," +
@@ -137,21 +137,28 @@ export function createPrivateResearchPgTransactionPort(
             d.runStateVersion,d.stageStateVersion,d.dataCutoff,
             d.contractPinsSha256,d.sha256,d.fileName,d.mediaType,
             stored.objectPath,d.sizeBytes,d.sourceDate],
-        ));
-      if (r.rows.length !== 1 || r.rows[0].run_id !== d.runId ||
-        r.rows[0].issuer_id !== d.issuerId ||
-        r.rows[0].stage !== "RESEARCH" ||
-        r.rows[0].sha256 !== d.sha256 ||
-        r.rows[0].file_name !== d.fileName ||
-        r.rows[0].submitted_by_subject !== g.subject ||
-        Number(r.rows[0].run_state_version) !== d.runStateVersion ||
-        Number(r.rows[0].stage_state_version) !== d.stageStateVersion ||
-        Number(r.rows[0].size_bytes) !== d.sizeBytes ||
-        typeof r.rows[0].object_path !== "string") {
-        throw new ResearchIntakeError("INTAKE_PRIVATE_PG_COMMIT_RESULT_INVALID");
-      }
-      return { receipt: rowToReceipt(r.rows[0]),
-        authoritativeObjectPath: r.rows[0].object_path };
+        );
+        const row = r.rows[0];
+        const prefix = "research-intake/v1/" + d.runId +
+          "/RESEARCH/" + d.sha256 + "/";
+        // Every returned row and object reference must be validated INSIDE
+        // the DB transaction. A bogus result must force ROLLBACK, not COMMIT.
+        if (r.rows.length !== 1 || !row ||
+          row.run_id !== d.runId || row.issuer_id !== d.issuerId ||
+          row.stage !== "RESEARCH" || row.sha256 !== d.sha256 ||
+          row.file_name !== d.fileName ||
+          row.submitted_by_subject !== g.subject ||
+          Number(row.run_state_version) !== d.runStateVersion ||
+          Number(row.stage_state_version) !== d.stageStateVersion ||
+          Number(row.size_bytes) !== d.sizeBytes ||
+          typeof row.object_path !== "string" ||
+          !row.object_path.startsWith(prefix) ||
+          (row.duplicate === false && row.object_path !== stored.objectPath)) {
+          throw new ResearchIntakeError("INTAKE_PRIVATE_PG_COMMIT_RESULT_INVALID");
+        }
+        const receipt = rowToReceipt(row);
+        return { receipt, authoritativeObjectPath: row.object_path };
+      });
     },
 
     async readVerifierMetadata(q: VerifierLookup, g: TrustedVerifierGrant) {
