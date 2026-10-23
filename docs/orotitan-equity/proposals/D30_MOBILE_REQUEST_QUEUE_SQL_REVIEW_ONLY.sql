@@ -121,7 +121,8 @@ BEGIN
    kind,target_key,actor_subject,actor_client,actor_resource,payload,fingerprint_sha256)
  VALUES(v_preview.kind,v_target,p_subject,p_client,p_resource,
    v_preview.payload,p_fingerprint)
- ON CONFLICT(kind,target_key) DO NOTHING RETURNING q.request_id INTO v_inserted;
+ ON CONFLICT ON CONSTRAINT d30_request_target_unique DO NOTHING
+ RETURNING q.request_id INTO v_inserted;
  IF v_inserted IS NULL THEN
    SELECT * INTO STRICT v_request FROM orotitan_mobile_private.command_requests q
    WHERE q.kind=v_preview.kind AND q.target_key=v_target;
