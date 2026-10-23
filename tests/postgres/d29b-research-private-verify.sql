@@ -284,7 +284,7 @@ BEGIN
     FROM orotitan_research_intake_private.verifier_metadata_v1(
       '48b9426b-4d0d-4858-9d87-efcd13ac415d',
       '33333333-3333-4333-8333-333333333333','independent-d2',
-      6,4,repeat('c',64));
+      'approved-reviewer-grant',6,4,repeat('c',64));
   IF n<>1 THEN RAISE EXCEPTION 'independent verifier metadata missing'; END IF;
   SELECT count(*) INTO n
     FROM orotitan_research_intake_private.verifier_metadata_v1(
@@ -302,7 +302,7 @@ BEGIN
     FROM orotitan_research_intake_private.verifier_metadata_v1(
       'd56a0bc9-4e80-48b3-b326-74d1fea15e63',
       '33333333-3333-4333-8333-333333333333','independent-d2',
-      6,4,repeat('c',64));
+      'approved-reviewer-grant',6,4,repeat('c',64));
   IF n<>0 THEN RAISE EXCEPTION 'cross-run reviewer could read'; END IF;
 END;
 $verifier$;
