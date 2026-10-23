@@ -143,7 +143,7 @@ BEGIN
  IF NOT FOUND OR v.approved_capability_sha256 IS NULL
  OR v.approved_at IS NULL OR v.revoked_at IS NOT NULL
  OR v.approved_at>clock_timestamp() OR clock_timestamp()>=v.expires_at
- OR digest(convert_to(p_sealed_capability,'UTF8'),'sha256')
+ OR public.digest(convert_to(p_sealed_capability,'UTF8'),'sha256')
     <> v.approved_capability_sha256 THEN
   RAISE EXCEPTION 'D32_CAPABILITY_ABSENT_REVOKED_EXPIRED_OR_MISMATCH';
  END IF;
