@@ -10,7 +10,7 @@ if (process.env.CI !== 'true' ||
   throw new Error('PRODUCT_BROWSER_ACCEPTANCE_CI_ONLY');
 }
 
-const browser = await chromium.launch({ headless: true, args: ['--no-sandbox'] });
+const browser = await chromium.launch({ headless: true, channel: 'chrome', args: ['--no-sandbox'] });
 try {
   async function login(context) {
     const page = await context.newPage();
