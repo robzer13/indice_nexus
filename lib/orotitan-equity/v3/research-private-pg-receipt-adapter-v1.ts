@@ -169,14 +169,14 @@ export function createPrivateResearchPgTransactionPort(
       if (q.runId !== g.runId || g.stage !== "RESEARCH" ||
         g.runStateVersion !== q.expectedRunStateVersion ||
         g.stageStateVersion !== q.expectedStageStateVersion ||
-        !g.mayReadQuarantineMetadata || !HASH.test(q.sha256)) {
+        !g.mayReadQuarantineMetadata || !g.grantId || !HASH.test(q.sha256)) {
         throw new ResearchIntakeError("INTAKE_PRIVATE_PG_VERIFIER_DENIED");
       }
       const r = await inTransaction(verifierPool, false, "READER", client =>
         client.query<StoredRow>(
           "SELECT * FROM orotitan_research_intake_private.verifier_metadata_v1(" +
-          "$1::uuid,$2::text,$3::text,$4::bigint,$5::bigint,$6::text)",
-          [q.runId,g.issuerId,g.reviewerId,
+          "$1::uuid,$2::text,$3::text,$4::text,$5::bigint,$6::bigint,$7::text)",
+          [q.runId,g.issuerId,g.reviewerId,g.grantId,
             q.expectedRunStateVersion,q.expectedStageStateVersion,q.sha256],
         ));
       if (r.rows.length > 1) {
