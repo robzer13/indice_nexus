@@ -12,7 +12,8 @@ BEGIN
  OR to_regclass('orotitan_mobile_private.previews') IS NOT NULL THEN
    RAISE EXCEPTION 'D30 LOCAL_POSTGRES_17_AND_CANONICAL_I1_REQUIRED';
  END IF;
-END $guard$;
+END;
+$guard$;
 
 CREATE SCHEMA orotitan_mobile_private;
 REVOKE ALL ON SCHEMA orotitan_mobile_private FROM PUBLIC;
@@ -139,7 +140,8 @@ BEGIN
  SET confirmed_request_id=v_request.request_id WHERE preview_id=p_preview;
  RETURN QUERY SELECT v_request.request_id,v_request.kind,v_request.state,
    (v_inserted IS NULL);
-END $confirm$;
+END;
+$confirm$;
 REVOKE ALL ON FUNCTION orotitan_mobile_private.confirm_request_v1(
  uuid,text,text,text,text) FROM PUBLIC;
 COMMIT;
