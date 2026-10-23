@@ -153,6 +153,7 @@ async function run() {
   const ver=query("SHOW server_version_num");
   assert.match(ver,/^17[0-9]{4}$/);
   updateResearchFixture();
+  const baselineRequests = countRequests(); // D32 fixtures already seeded the same disposable DB.
   const {publicKey,privateKey}=await generateKeyPair("ES256",{extractable:true});
   const jwk=await exportJWK(publicKey);
   const keys:JWTVerifyGetKey=createLocalJWKSet({
@@ -199,18 +200,18 @@ async function run() {
   await assert.rejects(procedures.confirm({
     previewId:pending.previewId,sealedCapability:dummy,
   }));
-  assert.equal(countRequests(),0);
+  assert.equal(countRequests(),baselineRequests);
   policy.allowed=false;
   await assert.rejects(approve(pending),e=>(e as Error).message.includes("D31_INDEPENDENT_AUTHORIZATION_DENIED"));
   policy.allowed=true;
   await assert.rejects(approve(pending,await bearer({client:SECOND_CLIENT})));
-  assert.equal(countRequests(),0);
+  assert.equal(countRequests(),baselineRequests);
 
   const capability=await approve(pending);
-  assert.equal(countRequests(),0); // Approval is not a queue insert.
+  assert.equal(countRequests(),baselineRequests); // Approval is not a queue insert.
   await assert.rejects(confirm(pending,capability,
     await bearer({client:SECOND_CLIENT})));
-  assert.equal(countRequests(),0);
+  assert.equal(countRequests(),baselineRequests);
   const [first,replayed]=await Promise.all([
     confirm(pending,capability),confirm(pending,capability),
   ]);
@@ -219,7 +220,7 @@ async function run() {
   assert.equal(first.state,"REQUESTED_NOT_EXECUTED");
   assert.equal(first.registryMutationPerformed,false);
   assert.equal(first.companyInserted,false);
-  assert.equal(countRequests(),1);
+  assert.equal(countRequests(),baselineRequests+1);
 
   const research=await makePreview("request_research");
   const researchCap=await approve(research);
@@ -227,14 +228,14 @@ async function run() {
   assert.equal(result.kind,"request_research");
   assert.equal(result.researchStarted,false);
   assert.equal(result.registryRunId,null);
-  assert.equal(countRequests(),2);
+  assert.equal(countRequests(),baselineRequests+2);
   const revoked=await makePreview("add_company");
   const revokedToken=await approve(revoked);
   query("SET ROLE orotitan_d32_approval_issuer; "+
     "SELECT orotitan_mobile_private.revoke_preview_v2("+
     uuid(revoked.previewId)+"); RESET ROLE;");
   await assert.rejects(confirm(revoked,revokedToken));
-  assert.equal(countRequests(),2);
+  assert.equal(countRequests(),baselineRequests+2);
   const last=query("SELECT count(*) FROM orotitan_mobile_private.command_requests "+
     "WHERE state<>'REQUESTED_NOT_EXECUTED'");
   assert.equal(last,"0");
