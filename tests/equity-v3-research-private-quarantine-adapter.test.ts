@@ -240,7 +240,10 @@ test("private Supabase Storage adapter sends upsert=false, reads exact bytes, no
           opts=options;
           return {data:{path},error:null};
         },
-        download:async(_path:string)=>({data:new Blob([bytes]),error:null}),
+        download:async(path:string)=>{
+          assert.ok(path.includes("/RESEARCH/"));
+          return {data:new Blob([bytes]),error:null};
+        },
       };
     }},
   } as unknown as Pick<SupabaseClient,"storage">;
