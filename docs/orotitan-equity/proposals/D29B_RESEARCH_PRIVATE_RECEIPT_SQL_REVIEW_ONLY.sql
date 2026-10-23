@@ -34,10 +34,12 @@ GRANT USAGE ON SCHEMA orotitan_research_intake_private
 -- These are new policies, limited to a single run. They do not grant UPDATE.
 GRANT SELECT (run_id,issuer_id,run_status,current_stage,state_version,data_cutoff,
   contract_set_sha256) ON public.orotitan_runs
-  TO orotitan_research_intake_writer,orotitan_research_intake_reader;
+  TO orotitan_research_intake_writer,orotitan_research_intake_reader,
+     orotitan_research_intake_receipt_executor;
 GRANT SELECT (run_id,stage_code,state_version,lifecycle_status)
   ON public.orotitan_run_stages
-  TO orotitan_research_intake_writer,orotitan_research_intake_reader;
+  TO orotitan_research_intake_writer,orotitan_research_intake_reader,
+     orotitan_research_intake_receipt_executor;
 CREATE POLICY d29b_research_besi_run_read
   ON public.orotitan_runs FOR SELECT
   TO orotitan_research_intake_writer,orotitan_research_intake_reader,
