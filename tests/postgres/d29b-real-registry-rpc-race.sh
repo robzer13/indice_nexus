@@ -138,7 +138,7 @@ BEGIN
     '48b9426b-4d0d-4858-9d87-efcd13ac415d',
     (SELECT issuer_id::text FROM public.orotitan_runs
      WHERE run_id='48b9426b-4d0d-4858-9d87-efcd13ac415d'),
-    'independent-d2',6,4,repeat('e',64));
+    'independent-d2','real-registry-review-grant',6,4,repeat('e',64));
   IF n<>0 THEN RAISE EXCEPTION 'D2 admitted stale metadata after actual Registry RPC'; END IF;
 END;
 $reader$;
