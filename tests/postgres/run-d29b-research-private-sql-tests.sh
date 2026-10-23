@@ -41,4 +41,5 @@ psql -X -v ON_ERROR_STOP=1 -d "$db"   -f "$root/tests/postgres/d29b-research-pri
 psql -X -v ON_ERROR_STOP=1 -d "$db"   -f "$root/docs/orotitan-equity/proposals/D29B_RESEARCH_PRIVATE_RECEIPT_SQL_REVIEW_ONLY.sql"   >/dev/null
 provisioned=1
 psql -X -v ON_ERROR_STOP=1 -d "$db"   -f "$root/tests/postgres/d29b-research-private-verify.sql" >/dev/null
+bash "$root/tests/postgres/d29b-research-private-race-verify.sh" "$db"
 echo 'D29b Research private SQL scoped/negative PG17 tests PASS; production untouched.'
