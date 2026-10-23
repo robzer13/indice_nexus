@@ -118,6 +118,7 @@ test("forged return row rejected with rollback",async()=>{
 test("independent metadata reads scoped and not source bytes",async()=>{
   const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   const g:TrustedVerifierGrant={
+    grantId:"approved-reviewer-grant",
     reviewerId:"independent-reviewer",runId:RUN,issuerId:"besi-issuer",
     stage:"RESEARCH",runStateVersion:6,stageStateVersion:4,
     issuedAtMs:100,expiresAtMs:200,mayReadQuarantineMetadata:true,
@@ -129,7 +130,7 @@ test("independent metadata reads scoped and not source bytes",async()=>{
   assert.equal(receipt?.sha256,HASH);
   assert.equal("bytes" in (receipt ?? {}),false);
   assert.equal(x.calls.some(v=>v.sql.includes("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY")),true);
-  assert.equal(x.calls.find(v=>v.sql.includes("verifier_metadata_v1"))?.params?.length,6);
+  assert.equal(x.calls.find(v=>v.sql.includes("verifier_metadata_v1"))?.params?.length,7);
   assert.ok(x.calls.some(v=>v.sql==="SET LOCAL ROLE orotitan_research_intake_reader"));
   await rejects("INTAKE_PRIVATE_PG_VERIFIER_DENIED",()=>port.readVerifierMetadata(
     {...q,runId:"d56a0bc9-4e80-48b3-b326-74d1fea15e63"},g));
