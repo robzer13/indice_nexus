@@ -63,6 +63,7 @@ test("MCP OAuth verifies signature, issuer, Supabase audience, client registrati
   const good=await issue();
   const identity=await verifyMcpOAuthBearer("Bearer "+good,config,keys);
   assert.equal(identity.subject,"user-123");
+  assert.equal(identity.clientId,"approved-client-123");
   assert.equal(identity.scopes.has(MCP_SCOPE_READ),true);
   assert.equal(identity.scopes.has(MCP_SCOPE_WRITE),false);
   const fails=async(value:string)=>{
@@ -91,6 +92,7 @@ test("MCP OAuth accepts asymmetrically signed ES256 Supabase tokens for approved
     .setSubject("user-123").setIssuedAt().setExpirationTime("5m").sign(privateKey);
   const identity=await verifyMcpOAuthBearer("Bearer "+jwt,config,keys);
   assert.equal(identity.subject,"user-123");
+  assert.equal(identity.clientId,"approved-client-123");
   assert.deepEqual([...identity.scopes],[MCP_SCOPE_READ]);
 });
 
