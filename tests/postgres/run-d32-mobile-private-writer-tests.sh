@@ -13,7 +13,8 @@ db="orotitan_d32_mobile_$$"
 roles=(orotitan_d32_approval_issuer orotitan_d32_command_submitter
        orotitan_d32_private_executor orotitan_d34_preview_issuer
        orotitan_d34_preview_reader orotitan_d34_vault_issuer
-       orotitan_d34_vault_reader)
+       orotitan_d34_vault_reader orotitan_d36_scope_issuer
+       orotitan_d36_research_submitter orotitan_d36_lifecycle_controller)
 created=0
 cleanup(){
  if [[ "$created" == 1 ]]; then
@@ -46,4 +47,8 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
 npx --no-install tsx "$root/tests/postgres/d34-mobile-private-preview-vault-e2e.ts" "$db"
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
  "$root/tests/postgres/d35-mobile-cross-stack-authz-audit.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
+ "$root/docs/orotitan-equity/proposals/D36_TENANT_SCOPED_RESEARCH_QUEUE_V4_REVIEW_ONLY.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
+ "$root/tests/postgres/d36-tenant-research-queue-verify.sql" >/dev/null
 echo 'D32 private PG17 mobile writer security tests PASSED (LOCAL fixture only).'
