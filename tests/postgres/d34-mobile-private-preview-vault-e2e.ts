@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import {execFileSync} from "node:child_process";
-import {randomBytes} from "node:crypto";
+import {createHash,randomBytes,randomUUID} from "node:crypto";
 import {createLocalJWKSet,exportJWK,generateKeyPair,SignJWT} from "jose";
 import {
   previewAddCompany, type DraftCommand, type MobileActor, type MobileCommandPrivatePort,
@@ -91,6 +91,30 @@ async function run(){
  // The limited preview reader receives a precise preview, not all rows.
  const loaded=privatePreview(preview.previewId);
  assert.equal(loaded?.fingerprintSha256,preview.fingerprintSha256);
+
+ // D35: even the restricted SQL issuer must fail closed on extra command
+ // fields or an unverified issuer/security crosswalk, despite a correct hash.
+ const fingerprint=(kind:string,payload:Record<string,string>)=>
+  createHash("sha256").update(JSON.stringify([
+   kind,Object.keys(payload).sort().map(k=>[k,payload[k]])
+  ])).digest("hex");
+ const previewSql=(kind:"add_company"|"request_research",
+   payload:Record<string,string>)=>
+  "SELECT orotitan_mobile_private.create_preview_v3("+
+   [u(randomUUID()),t(kind),t(actor.subject),t(actor.clientId),
+    t(resource),t(JSON.stringify(payload))+"::jsonb",
+    t(fingerprint(kind,payload)),"clock_timestamp()+interval '60 seconds'"].join(",")+")";
+ await assert.rejects(async()=>privateCall("orotitan_d34_preview_issuer",
+  previewSql("add_company",{...company,permission:"administrator"})));
+ const fakeResearch={
+  issuerId:"00000000-0000-4000-8000-000000000002",
+  name:"Unverified Synthetic Issuer",ticker:"D35BAD",
+  exchange:"XAMS",isin:"FR1234567890",
+ };
+ await assert.rejects(async()=>privateCall("orotitan_d34_preview_issuer",
+  previewSql("request_research",fakeResearch)));
+ assert.equal(privatePreview(preview.previewId)?.kind,"add_company");
+
  // A forged SHA cannot create another preview even through issuer role.
  const bad=preview.previewId.replace(/.$/,"0");
  await assert.rejects(async()=>privateCall("orotitan_d34_preview_issuer",
@@ -169,6 +193,7 @@ async function run(){
  assert.equal(res.researchStarted,false);
  assert.equal(Number(query("SELECT count(*) FROM orotitan_mobile_private.command_requests")),before+1);
  assert.equal(getEncrypted(),null); // vault read disabled after confirmation
+ assert.equal(privatePreview(preview.previewId),null); // post-confirm preview is closed
  assert.equal(query("SELECT to_regclass('public.orotitan_runs') IS NULL"),"t");
  console.log("D34 limited preview + encrypted AES-GCM vault -> D32 confirmation PASSED (local PG17 only).");
 }

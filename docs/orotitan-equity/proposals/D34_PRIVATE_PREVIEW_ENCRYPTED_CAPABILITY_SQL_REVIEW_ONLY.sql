@@ -87,6 +87,51 @@ BEGIN
    IS DISTINCT FROM p_fingerprint THEN
   RAISE EXCEPTION 'D34_PREVIEW_FINGERPRINT_DENIED';
  END IF;
+
+ -- Defense in depth: exact D30 identity shape and canonical I1 crosswalk.
+ -- This cannot replace independently authenticated server-level issuance.
+ IF (p_payload->>'name') IS NULL OR
+  length(p_payload->>'name') NOT BETWEEN 2 AND 160 OR
+  (p_payload->>'ticker') IS NULL OR
+  (p_payload->>'ticker') !~ '^[A-Z0-9][A-Z0-9.-]{0,19}$' OR
+  (p_payload->>'exchange') IS NULL OR
+  (p_payload->>'exchange') !~ '^[A-Z0-9][A-Z0-9_-]{1,39}$' OR
+  (p_payload->>'isin') IS NULL OR
+  (p_payload->>'isin') !~ '^[A-Z]{2}[A-Z0-9]{9}[0-9]$' THEN
+   RAISE EXCEPTION 'D35_PREVIEW_IDENTITY_FIELDS_DENIED';
+ END IF;
+ IF p_kind='add_company' THEN
+   IF (SELECT count(*) FROM jsonb_object_keys(p_payload))<>4 OR
+     NOT (p_payload ?& array['name','ticker','exchange','isin']) OR
+     EXISTS(SELECT 1 FROM public.securities s
+      WHERE (upper(s.exchange)=p_payload->>'exchange'
+       AND upper(s.ticker)=p_payload->>'ticker')
+       OR s.isin=p_payload->>'isin') OR
+     EXISTS(SELECT 1 FROM public.companies c
+      WHERE upper(c.exchange)=p_payload->>'exchange'
+       AND upper(c.ticker)=p_payload->>'ticker') THEN
+      RAISE EXCEPTION 'D35_COMPANY_ALREADY_TRACKED_OR_FIELDS_DENIED';
+   END IF;
+ ELSE
+   IF (SELECT count(*) FROM jsonb_object_keys(p_payload))<>5 OR
+     NOT (p_payload ?& array['issuerId','name','ticker','exchange','isin']) OR
+     (p_payload->>'issuerId') IS NULL OR
+     (p_payload->>'issuerId') !~
+      '^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$'
+   THEN
+      RAISE EXCEPTION 'D35_RESEARCH_IDENTITY_FIELDS_DENIED';
+   END IF;
+   IF NOT EXISTS(SELECT 1 FROM public.issuers i
+      JOIN public.securities s ON s.issuer_id=i.issuer_id
+      WHERE i.issuer_id=(p_payload->>'issuerId')::uuid
+       AND i.display_name=p_payload->>'name'
+       AND s.ticker=p_payload->>'ticker'
+       AND s.exchange=p_payload->>'exchange'
+       AND s.isin=p_payload->>'isin' AND s.isin<>'UNKNOWN') THEN
+      RAISE EXCEPTION 'D35_RESEARCH_CANONICAL_CROSSWALK_DENIED';
+   END IF;
+ END IF;
+
  INSERT INTO orotitan_mobile_private.previews(
   preview_id,kind,actor_subject,actor_client,actor_resource,
   payload,fingerprint_sha256,expires_at
@@ -110,7 +155,8 @@ BEGIN
  SELECT * INTO v FROM orotitan_mobile_private.previews
  WHERE preview_id=p_preview AND actor_subject=p_subject
  AND actor_client=p_client AND actor_resource=p_resource
- AND revoked_at IS NULL AND clock_timestamp()<expires_at;
+ AND revoked_at IS NULL AND confirmed_request_id IS NULL
+ AND clock_timestamp()<expires_at;
  IF NOT FOUND THEN RETURN NULL; END IF;
  RETURN jsonb_build_object(
   'previewId',v.preview_id,'kind',v.kind,
