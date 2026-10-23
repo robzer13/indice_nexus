@@ -44,4 +44,6 @@ npx --no-install tsx "$root/tests/postgres/d33-mobile-oauth-pg-e2e.ts" "$db"
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
  "$root/docs/orotitan-equity/proposals/D34_PRIVATE_PREVIEW_ENCRYPTED_CAPABILITY_SQL_REVIEW_ONLY.sql" >/dev/null
 npx --no-install tsx "$root/tests/postgres/d34-mobile-private-preview-vault-e2e.ts" "$db"
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
+ "$root/tests/postgres/d35-mobile-cross-stack-authz-audit.sql" >/dev/null
 echo 'D32 private PG17 mobile writer security tests PASSED (LOCAL fixture only).'
