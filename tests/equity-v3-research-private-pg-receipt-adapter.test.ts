@@ -59,7 +59,7 @@ async function rejects(code:string,fn:()=>Promise<unknown>){
 }
 
 test("private PostgreSQL adapter uses scoped preflight, serializable commit and parameterized SQL",async()=>{
-  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   await port.checkBeforeUpload(draft,grant);
   const committed=await port.commitReceiptAndAudit({
     draft,grant,stored:{objectPath:PATH,sha256:HASH,sizeBytes:15},
@@ -76,14 +76,14 @@ test("private PostgreSQL adapter uses scoped preflight, serializable commit and 
 });
 
 test("preflight DENIED never issues a write transaction",async()=>{
-  const x=fakePg({deny:true}),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg({deny:true}),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   await rejects("INTAKE_PRIVATE_PG_PREFLIGHT_DENIED",()=>port.checkBeforeUpload(draft,grant));
   assert.equal(x.calls.some(v=>v.sql.includes("commit_receipt_v1")),false);
   assert.equal(x.released,1);
 });
 
 test("bad issuer/actor/resource/pins or blob scope rejected before private connection",async()=>{
-  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   await rejects("INTAKE_PRIVATE_PG_SCOPE_DENIED",()=>port.checkBeforeUpload(
     {...draft,submittedByClientId:"rogue-client"},grant));
   await rejects("INTAKE_PRIVATE_PG_SCOPE_DENIED",()=>port.checkBeforeUpload(
@@ -97,7 +97,7 @@ test("bad issuer/actor/resource/pins or blob scope rejected before private conne
 });
 
 test("commit serialization failure rolls back and never returns an optimistic receipt",async()=>{
-  const x=fakePg({failCommit:true}),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg({failCommit:true}),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   await assert.rejects(()=>port.commitReceiptAndAudit({
     draft,grant,stored:{objectPath:PATH,sha256:HASH,sizeBytes:15},
   }),/serialization/);
@@ -107,7 +107,7 @@ test("commit serialization failure rolls back and never returns an optimistic re
 });
 
 test("forged return row rejected with rollback",async()=>{
-  const x=fakePg({badRow:true}),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg({badRow:true}),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   await rejects("INTAKE_PRIVATE_PG_COMMIT_RESULT_INVALID",
     ()=>port.commitReceiptAndAudit({
       draft,grant,stored:{objectPath:PATH,sha256:HASH,sizeBytes:15},
@@ -116,7 +116,7 @@ test("forged return row rejected with rollback",async()=>{
 });
 
 test("independent metadata reads scoped and not source bytes",async()=>{
-  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool);
+  const x=fakePg(),port=createPrivateResearchPgTransactionPort(x.pool,x.pool);
   const g:TrustedVerifierGrant={
     reviewerId:"independent-reviewer",runId:RUN,issuerId:"besi-issuer",
     stage:"RESEARCH",runStateVersion:6,stageStateVersion:4,
@@ -130,6 +130,7 @@ test("independent metadata reads scoped and not source bytes",async()=>{
   assert.equal("bytes" in (receipt ?? {}),false);
   assert.equal(x.calls.some(v=>v.sql.includes("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY")),true);
   assert.equal(x.calls.find(v=>v.sql.includes("verifier_metadata_v1"))?.params?.length,6);
+  assert.ok(x.calls.some(v=>v.sql==="SET LOCAL ROLE orotitan_research_intake_reader"));
   await rejects("INTAKE_PRIVATE_PG_VERIFIER_DENIED",()=>port.readVerifierMetadata(
     {...q,runId:"d56a0bc9-4e80-48b3-b326-74d1fea15e63"},g));
 });

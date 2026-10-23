@@ -18,12 +18,14 @@ export type PrivatePgClient = {
   release: () => void;
 };
 export type PrivatePgPool = { connect: () => Promise<PrivatePgClient> };
-const PRIVATE_ROLE = "orotitan_research_intake_writer";
+const PRIVATE_WRITE_ROLE = "orotitan_research_intake_writer";
+const PRIVATE_READ_ROLE = "orotitan_research_intake_reader";
 const RESOURCE = "https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp";
 const HASH = /^[0-9a-f]{64}$/;
 
 async function inTransaction<T>(
-  pool: PrivatePgPool, write: boolean, task: (client: PrivatePgClient) => Promise<T>,
+  pool: PrivatePgPool, write: boolean, role: "WRITER" | "READER",
+  task: (client: PrivatePgClient) => Promise<T>,
 ): Promise<T> {
   const client = await pool.connect();
   let active = false;
@@ -34,7 +36,8 @@ async function inTransaction<T>(
     active = true;
     // This fails unless the independently provisioned private principal has
     // membership. NEVER grant the role to anon, authenticated or OAuth runtime.
-    await client.query("SET LOCAL ROLE " + PRIVATE_ROLE);
+    await client.query("SET LOCAL ROLE " +
+      (role === "WRITER" ? PRIVATE_WRITE_ROLE : PRIVATE_READ_ROLE));
     const result = await task(client);
     await client.query("COMMIT");
     active = false;
@@ -102,12 +105,13 @@ function rowToReceipt(row: StoredRow): UnverifiedReceipt {
  * idempotency and forbidden Registry writes. No SQL migration is applied here.
  */
 export function createPrivateResearchPgTransactionPort(
-  pool: PrivatePgPool,
+  writerPool: PrivatePgPool,
+  verifierPool: PrivatePgPool,
 ): ResearchReceiptTransactionPort {
   return {
     async checkBeforeUpload(d, g) {
       assertPinnedDraft(d, g);
-      const r = await inTransaction(pool, false, client =>
+      const r = await inTransaction(writerPool, false, "WRITER", client =>
         client.query<{ allowed: boolean }>(
           "SELECT orotitan_research_intake_private.preflight_v1(" +
           "$1::uuid,$2::text,$3::text,$4::text,$5::text,$6::text," +
@@ -127,7 +131,7 @@ export function createPrivateResearchPgTransactionPort(
           "/RESEARCH/" + d.sha256 + "/")) {
         throw new ResearchIntakeError("INTAKE_PRIVATE_PG_BLOB_SCOPE_DENIED");
       }
-      return inTransaction(pool, true, async client => {
+      return inTransaction(writerPool, true, "WRITER", async client => {
         const r = await client.query<StoredRow>(
           "SELECT * FROM orotitan_research_intake_private.commit_receipt_v1(" +
           "$1::uuid,$2::text,$3::text,$4::text,$5::text,$6::text," +
@@ -168,7 +172,7 @@ export function createPrivateResearchPgTransactionPort(
         !g.mayReadQuarantineMetadata || !HASH.test(q.sha256)) {
         throw new ResearchIntakeError("INTAKE_PRIVATE_PG_VERIFIER_DENIED");
       }
-      const r = await inTransaction(pool, false, client =>
+      const r = await inTransaction(verifierPool, false, "READER", client =>
         client.query<StoredRow>(
           "SELECT * FROM orotitan_research_intake_private.verifier_metadata_v1(" +
           "$1::uuid,$2::text,$3::text,$4::bigint,$5::bigint,$6::text)",
