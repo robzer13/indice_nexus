@@ -46,8 +46,9 @@ allow untrusted URLs, external hosts or any production credential.
 The ordinary shared-test Supabase URL allowlist and hard denial of the
 OroTitan production project remain unchanged outside this fixture.
 
-Playwright Chromium is installed only on the disposable CI runner using
-`npm install --no-save --no-package-lock`; this PR does **not**
+Playwright drives the Google Chrome browser preinstalled on the GitHub Actions
+Ubuntu runner (Chromium engine). The Playwright Node adapter is installed
+ephemerally with `npm install --no-save --no-package-lock`; this PR does **not**
 change the application production dependency list or lockfile.
 
 ## Product acceptance and next gate
