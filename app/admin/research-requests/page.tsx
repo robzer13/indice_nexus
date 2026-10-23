@@ -3,10 +3,9 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { AdminNav } from '@/components/admin/admin-nav';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
-import { getAllCompanies } from '@/lib/data/company-admin';
 import {
-  isLocalResearchInboxEnabled, loadLocalResearchInbox,
-} from '@/lib/orotitan-equity/product/local-research-inbox-server';
+  researchInboxPilotMode, getPilotResearchCompanies, loadPilotResearchInbox,
+} from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import { requestResearchPilotAction } from './actions';
 
 export const dynamic = 'force-dynamic';
@@ -19,7 +18,8 @@ function stringParam(value: string | string[] | undefined): string | null {
 
 export default async function ResearchRequestsPage({ searchParams }: { searchParams: Params }) {
   if (!(await isAdminAuthenticated())) redirect('/admin');
-  const enabled = isLocalResearchInboxEnabled();
+  const mode = researchInboxPilotMode();
+  const enabled = mode !== 'disabled';
   const query = await searchParams;
 
   if (!enabled) {
@@ -39,7 +39,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
   }
 
   const [companies, requests] = await Promise.all([
-    getAllCompanies(), loadLocalResearchInbox(),
+    getPilotResearchCompanies(), loadPilotResearchInbox(),
   ]);
   const activeCompanies = companies.filter(c => c.active);
   const requestId = stringParam(query.request);
@@ -49,7 +49,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
   return <main className="space-y-6">
     <header className="space-y-2">
       <p className="text-xs font-semibold uppercase tracking-[.2em] text-cyan-400">
-        OroTitan · Produit · Pilote local
+        OroTitan · Produit · Pilote {mode === 'local' ? 'local' : 'partagé non-production'}
       </p>
       <h1 className="text-3xl font-semibold text-white">Boîte de réception Research</h1>
       <p className="max-w-3xl text-sm leading-6 text-slate-400">
@@ -60,16 +60,17 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
     </header>
     <AdminNav />
     <div role="status" className="rounded-xl border border-amber-800/60 bg-amber-950/20 p-4 text-sm text-amber-100">
-      <strong>Environnement de développement uniquement.</strong> Les données sont enregistrées
-      dans un fichier privé du serveur local, pas dans Supabase. Pas de synchronisation
-      entre plusieurs installations, ni de Registry run. Une société du Screener
+      <strong>Environnement de développement uniquement.</strong> {mode === 'local'
+        ? 'Les données restent dans un fichier privé sur cette machine : aucune synchronisation entre installations.'
+        : 'Les données sont enregistrées dans le projet Supabase de TEST explicitement isolé de la production. Les sessions utilisant ce même backend peuvent retrouver les mêmes demandes.'}
+      {' '}Aucun Registry run ni Research n’est lancé. Une société du Screener
       ne constitue pas automatiquement un émetteur Research identifié.
     </div>
 
     {requestId && (outcome === 'created' || outcome === 'existing') ?
       <section className="rounded-xl border border-cyan-900 bg-cyan-950/20 p-4 text-sm text-cyan-100">
         <strong>{outcome === 'created' ? 'Demande enregistrée.' : 'Demande déjà existante.'}</strong>
-        <p className="mt-2">Référence locale :
+        <p className="mt-2">Référence de demande :
           <code className="ml-2 break-all font-mono text-cyan-200">{requestId}</code>
         </p>
         <p className="mt-1 text-xs">Statut : REQUESTED_NOT_EXECUTED — aucun Research lancé.</p>
@@ -97,7 +98,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
           </select>
           <button disabled={!activeCompanies.length}
             className="rounded-lg bg-cyan-500 px-4 py-2.5 text-sm font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-50">
-            Enregistrer une demande locale
+            Enregistrer une demande {mode === 'local' ? 'locale' : 'partagée de test'}
           </button>
         </form>
         <p className="mt-3 text-xs text-slate-500">
@@ -133,8 +134,8 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
     <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
       <h2 className="text-lg font-semibold text-white">3. Retrouver les demandes</h2>
       <p className="mt-1 text-sm text-slate-400">
-        Historique local persistant sur cette machine. Deux clics sur la même entreprise
-        renvoient la même référence plutôt que de créer un doublon.
+        {mode === 'local' ? 'Historique local sur cette machine.' : 'Historique partagé dans le projet de test.'}
+        {' '}Deux demandes identiques pour une entreprise renvoient la même référence.
       </p>
       {requests.length === 0 ?
         <p className="mt-5 text-sm text-slate-400">Aucune demande enregistrée dans ce pilote.</p> :
