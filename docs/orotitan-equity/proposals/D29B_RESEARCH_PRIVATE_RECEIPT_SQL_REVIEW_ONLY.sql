@@ -96,7 +96,7 @@ CREATE TABLE orotitan_research_intake_private.receipts(
   receipt_status text NOT NULL DEFAULT 'RECEIVED_NOT_VERIFIED'
     CHECK(receipt_status='RECEIVED_NOT_VERIFIED'),
   created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
-  UNIQUE(run_id,stage,run_state_version,stage_state_version,sha256)
+  CONSTRAINT d29b_receipt_idempotent_key UNIQUE(run_id,stage,run_state_version,stage_state_version,sha256)
 );
 CREATE TABLE orotitan_research_intake_private.receipt_audit(
   event_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -277,7 +277,7 @@ BEGIN
   VALUES(p_run,p_issuer,'RESEARCH',p_run_ver,p_stage_ver,p_pins,p_grant,
     p_sha,p_filename,p_media,p_path,p_size,p_source_date::date,
     p_subject,p_client)
-  ON CONFLICT(run_id,stage,run_state_version,stage_state_version,sha256)
+  ON CONFLICT ON CONSTRAINT d29b_receipt_idempotent_key
     DO NOTHING RETURNING new_receipt.receipt_id INTO v_new;
   SELECT q.* INTO v_found FROM orotitan_research_intake_private.receipts q
     WHERE q.run_id=p_run AND q.stage='RESEARCH'
