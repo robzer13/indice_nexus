@@ -73,7 +73,7 @@ BEGIN
     WHERE jsonb_typeof(v.value)<>'string')
  OR p_fingerprint IS NULL OR p_fingerprint !~ '^[a-f0-9]{64}$'
  OR p_expires IS NULL OR p_expires<=v_now
- OR p_expires>v_now+interval '119 seconds' THEN
+ OR p_expires>v_now+interval '2 minutes' THEN
   RAISE EXCEPTION 'D34_PREVIEW_INPUT_DENIED';
  END IF;
  -- D30's TypeScript canonical SHA256:
