@@ -134,10 +134,15 @@ async function main(){
  await rejects(()=>call(changedScope,"read"));
  const expiry=await issue("read_preview",{nowMs:Date.now()-70_000});
  await rejects(()=>call(expiry,"read"));
- await rejects(()=>issue("read_preview",{bearer:await bearer({subject:OTHER_SUBJECT})}));
- await rejects(()=>issue("read_preview",{bearer:await bearer({client:OTHER_CLIENT})}));
- await rejects(()=>issue("read_preview",{bearer:await bearer({session:secondSessionId})}));
- await rejects(()=>issue("read_preview",{bearer:await bearer({withSession:false})}));
+ const [otherSubjectBearer,otherClientBearer,otherSessionBearer,missingSessionBearer]
+   =await Promise.all([
+     bearer({subject:OTHER_SUBJECT}),bearer({client:OTHER_CLIENT}),
+     bearer({session:secondSessionId}),bearer({withSession:false}),
+   ]);
+ await rejects(()=>issue("read_preview",{bearer:otherSubjectBearer}));
+ await rejects(()=>issue("read_preview",{bearer:otherClientBearer}));
+ await rejects(()=>issue("read_preview",{bearer:otherSessionBearer}));
+ await rejects(()=>issue("read_preview",{bearer:missingSessionBearer}));
  await rejects(()=>issue("issue_research_scope",{contractSha256:"f".repeat(64)}));
  await rejects(()=>issue("read_preview",{privateMacKey:Buffer.alloc(12)}));
  assert.equal(sql("SELECT count(*) FROM orotitan_mobile_private.d37_consumed_nonces"),"1");
