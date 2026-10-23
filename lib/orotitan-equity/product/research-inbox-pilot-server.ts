@@ -37,6 +37,22 @@ function sharedTestClient(): SupabaseClient {
   const ref = process.env.OROTITAN_SHARED_INBOX_TEST_PROJECT_REF;
   const rawUrl = process.env.OROTITAN_SHARED_INBOX_TEST_URL;
   const secret = process.env.OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY;
+  // CI-only loopback fixture emulates the minimum PostgREST API over a
+  // disposable PG17 database. It is intentionally unreachable in production.
+  // No credentials or hostname supplied by the browser are trusted here.
+  if (process.env.NODE_ENV === 'development' &&
+    process.env.CI === 'true' &&
+    process.env.OROTITAN_PRODUCT_BROWSER_FIXTURE === '1') {
+    if (ref !== 'local-browser-fixture' ||
+      rawUrl !== 'http://127.0.0.1:48761' ||
+      !secret || secret.length < 40 ||
+      process.env.NEXT_PUBLIC_SUPABASE_URL !== rawUrl) {
+      throw new Error('PRODUCT_BROWSER_FIXTURE_CONFIG_DENIED');
+    }
+    return createClient(rawUrl, secret, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
+    });
+  }
   if (!ref || !/^[a-z]{20}$/.test(ref) || ref === PROD_REF ||
     !rawUrl || !secret || secret.length < 40) {
     throw new Error('PRODUCT_SHARED_TEST_CONFIG_DENIED');
