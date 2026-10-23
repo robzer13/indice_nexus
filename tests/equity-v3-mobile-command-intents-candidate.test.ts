@@ -249,6 +249,6 @@ test("mobile: backend cannot fabricate completed analysis or company insertion",
   const x=new FakePrivateBackend();
   const p=await previewAddCompany(company,actor,x,NOW);
   const orig=x.atomicConfirm.bind(x);
-  x.atomicConfirm=async a=>({...await orig(a),companyInserted:true});
+  x.atomicConfirm=async a=>({...await orig(a),companyInserted:true} as unknown as CommandReceipt);
   await assertDenied(confirm(p,x),"MOBILE_UNTRUSTED_CONFIRM_RESULT");
 });
