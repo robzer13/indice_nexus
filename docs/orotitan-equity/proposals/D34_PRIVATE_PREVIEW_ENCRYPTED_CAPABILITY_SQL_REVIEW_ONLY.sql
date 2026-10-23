@@ -189,9 +189,9 @@ BEGIN
   'clientId',v.actor_client,'resource',v.actor_resource,
   'fingerprintSha256',v.fingerprint_sha256,
   'keyVersion',e.key_version,
-  'nonce',encode(e.nonce,'base64'),
-  'ciphertext',encode(e.ciphertext,'base64'),
-  'authTag',encode(e.auth_tag,'base64'));
+  'nonce',replace(encode(e.nonce,'base64'),chr(10),''),
+  'ciphertext',replace(encode(e.ciphertext,'base64'),chr(10),''),
+  'authTag',replace(encode(e.auth_tag,'base64'),chr(10),''));
 END;
 $vault$;
 REVOKE ALL ON FUNCTION orotitan_mobile_private.read_encrypted_capability_v3(
