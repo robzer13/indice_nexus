@@ -92,8 +92,8 @@ BEGIN
         AND upper(c.ticker)=v_preview.payload->>'ticker') THEN
       RAISE EXCEPTION 'D30_COMPANY_ALREADY_EXISTS';
    END IF;
-   v_target:='company:'||v_preview.payload->>'exchange'||':'||
-     v_preview.payload->>'ticker'||':'||v_preview.payload->>'isin';
+   v_target:='company:'||(v_preview.payload->>'exchange')||':'||
+     (v_preview.payload->>'ticker')||':'||(v_preview.payload->>'isin');
  ELSIF v_preview.kind='request_research' THEN
    IF NOT v_preview.payload ?& array['issuerId','name','ticker','exchange','isin']
      OR (v_preview.payload->>'issuerId') !~
