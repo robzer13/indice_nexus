@@ -117,7 +117,8 @@ async function withOfflineStorage<T>(
         }
         return;
       }
-      if (method === "GET" && url.pathname.startsWith(downloadPrefix)) {
+      if (method === "GET" && (url.pathname.startsWith(downloadPrefix) ||
+        url.pathname.startsWith(uploadPrefix))) {
         const data = fixture.objects.get(path);
         if (!data) {
           res.writeHead(404);
@@ -201,7 +202,8 @@ test("real supabase-js SDK over loopback: immutable POST + authenticated GET", a
     assert.equal(fixture.log[0].method, "POST");
     assert.notEqual(fixture.log[0].upsert, "true");
     assert.equal(fixture.log[1].method, "GET");
-    assert.match(fixture.log[1].path, /\/storage\/v1\/object\/authenticated\//);
+    assert.match(fixture.log[1].path,
+      /\/storage\/v1\/object\/(?:authenticated\/)?orotitan-research-evidence-quarantine-v1\//);
     assert.equal(fixture.log.some(x => /list|sign|public/.test(x.path)), false);
   });
 });
