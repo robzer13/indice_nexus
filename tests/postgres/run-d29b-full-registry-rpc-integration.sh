@@ -20,14 +20,14 @@ cleanup(){
   fi
   if [[ "$roles_created" == 1 ]]; then
     psql -X -v ON_ERROR_STOP=1 -d postgres -c \
-      'DROP ROLE IF EXISTS orotitan_research_intake_writer,orotitan_research_intake_reader,orotitan_research_intake_receipt_executor;' \
+      'DROP ROLE IF EXISTS orotitan_research_intake_writer,orotitan_research_intake_reader,orotitan_research_intake_receipt_executor,orotitan_research_intake_verifier_executor;' \
       >/dev/null 2>&1 || true
   fi
 }
 trap cleanup EXIT
 other="$(psql -XAt -d postgres -c "SELECT count(*) FROM pg_roles WHERE rolname IN (
   'orotitan_research_intake_writer','orotitan_research_intake_reader',
-  'orotitan_research_intake_receipt_executor')")"
+  'orotitan_research_intake_receipt_executor','orotitan_research_intake_verifier_executor')")"
 [[ "$other" == 0 ]] || { echo 'D29b: preexisting private roles, aborting' >&2; exit 2; }
 createdb "$db"
 created=1
