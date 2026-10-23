@@ -68,7 +68,7 @@ BEGIN
  OR p_resource IS DISTINCT FROM
   'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp'
  OR p_payload IS NULL OR jsonb_typeof(p_payload)<>'object'
- OR jsonb_object_length(p_payload) NOT BETWEEN 1 AND 8
+ OR (SELECT count(*) FROM jsonb_object_keys(p_payload)) NOT BETWEEN 1 AND 8
  OR EXISTS(SELECT 1 FROM jsonb_each(p_payload) v
     WHERE jsonb_typeof(v.value)<>'string')
  OR p_fingerprint IS NULL OR p_fingerprint !~ '^[a-f0-9]{64}$'
@@ -103,7 +103,7 @@ REVOKE ALL ON FUNCTION orotitan_mobile_private.create_preview_v3(
 CREATE FUNCTION orotitan_mobile_private.read_preview_v3(
  p_preview uuid,p_subject text,p_client text,p_resource text
 ) RETURNS jsonb
-LANGUAGE plpgsql STABLE SECURITY DEFINER
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER
 SET search_path=pg_catalog,orotitan_mobile_private AS $reader$
 DECLARE v orotitan_mobile_private.previews%ROWTYPE;
 BEGIN
@@ -170,7 +170,7 @@ REVOKE ALL ON FUNCTION orotitan_mobile_private.approve_and_store_capability_v3(
 CREATE FUNCTION orotitan_mobile_private.read_encrypted_capability_v3(
  p_preview uuid,p_subject text,p_client text,p_resource text
 ) RETURNS jsonb
-LANGUAGE plpgsql STABLE SECURITY DEFINER
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER
 SET search_path=pg_catalog,orotitan_mobile_private AS $vault$
 DECLARE v orotitan_mobile_private.previews%ROWTYPE;
         e orotitan_mobile_private.encrypted_capability_vault%ROWTYPE;
