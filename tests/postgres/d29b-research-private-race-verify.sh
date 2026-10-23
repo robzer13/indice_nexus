@@ -107,7 +107,7 @@ BEGIN
   SELECT count(*) INTO n FROM orotitan_research_intake_private.verifier_metadata_v1(
     '48b9426b-4d0d-4858-9d87-efcd13ac415d',
     '33333333-3333-4333-8333-333333333333',
-    'independent-d2',6,4,repeat('e',64)
+    'independent-d2','approved-reviewer-grant',6,4,repeat('e',64)
   );
   IF n<>0 THEN RAISE EXCEPTION 'post-race D2 exposed stale receipt'; END IF;
 END;
