@@ -37,4 +37,5 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/migrations/20260909_orotitan_equi
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/docs/orotitan-equity/proposals/D30_MOBILE_REQUEST_QUEUE_SQL_REVIEW_ONLY.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/docs/orotitan-equity/proposals/D32_MOBILE_PRIVATE_DATABASE_WRITER_REVIEW_ONLY.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/tests/postgres/d32-mobile-private-writer-verify.sql" >/dev/null
+bash "$root/tests/postgres/d32-mobile-private-writer-race.sh" "$db"
 echo 'D32 private PG17 mobile writer security tests PASSED (LOCAL fixture only).'
