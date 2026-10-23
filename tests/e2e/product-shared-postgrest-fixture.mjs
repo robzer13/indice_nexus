@@ -69,7 +69,8 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     if ((url.pathname === '/rest/v1/latest_company_state' ||
-      url.pathname === '/rest/v1/market_sync_runs') && req.method === 'GET') {
+      url.pathname === '/rest/v1/market_sync_runs' ||
+      url.pathname === '/rest/v1/research_dossiers') && req.method === 'GET') {
       emit(res, 200, []);
       return;
     }
