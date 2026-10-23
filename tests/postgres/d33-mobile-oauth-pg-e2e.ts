@@ -196,9 +196,6 @@ async function run() {
   // absent; only D32's limited submitter gets a private DB procedure.
   const pending=await makePreview("add_company");
   const dummy="a".repeat(100)+"."+"b".repeat(43);
-  assert.throws(()=>procedures.confirm({previewId:pending.previewId,
-    sealedCapability:dummy}),/D33_UNUSED_SYNC_ASSERT/);
-  // Above is deliberately a promise, not synchronous: test rejection below.
   await assert.rejects(procedures.confirm({
     previewId:pending.previewId,sealedCapability:dummy,
   }));
