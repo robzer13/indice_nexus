@@ -136,7 +136,50 @@ SET search_path=pg_catalog,orotitan_mobile_private AS $confirm$
 DECLARE v orotitan_mobile_private.previews%ROWTYPE;
 BEGIN
  IF p_sealed_capability IS NULL OR length(p_sealed_capability)>2200
- OR p_sealed_capability !~ '^[A-Za-z0-9_-]{20,1700}[.][A-Za-z0-9_-]{43}$'
+ OR length(split_part(p_sealed_capability,'.',1))<20
+ OR p_sealed_capability !~ '^[A-Za-z0-9_-]+[.][A-Za-z0-9_-]{43}
+ THEN RAISE EXCEPTION 'D32_SERVER_CAPABILITY_SHAPE_DENIED'; END IF;
+ SELECT * INTO v FROM orotitan_mobile_private.previews
+ WHERE preview_id=p_preview FOR UPDATE;
+ IF NOT FOUND OR v.approved_capability_sha256 IS NULL
+ OR v.approved_at IS NULL OR v.revoked_at IS NOT NULL
+ OR v.approved_at>clock_timestamp() OR clock_timestamp()>=v.expires_at
+ OR public.digest(convert_to(p_sealed_capability,'UTF8'),'sha256')
+    <> v.approved_capability_sha256 THEN
+  RAISE EXCEPTION 'D32_CAPABILITY_ABSENT_REVOKED_EXPIRED_OR_MISMATCH';
+ END IF;
+ -- D30 performs the current-company / issuer / security recheck and CAS.
+ -- This older function is never callable by the untrusted submitter role.
+ RETURN QUERY SELECT c.request_id,c.kind,c.state,c.duplicate
+ FROM orotitan_mobile_private.confirm_request_v1(
+  v.preview_id,v.actor_subject,v.actor_client,v.actor_resource,
+  v.fingerprint_sha256) c;
+END;
+$confirm$;
+REVOKE ALL ON FUNCTION orotitan_mobile_private.confirm_approved_request_v2(
+ uuid,text) FROM PUBLIC;
+
+-- Ownership transfer to a purpose-built non-login, RLS-obeying executor.
+-- Create is granted only briefly to satisfy PostgreSQL owner transfer.
+GRANT CREATE ON SCHEMA orotitan_mobile_private
+ TO orotitan_d32_private_executor;
+ALTER FUNCTION orotitan_mobile_private.approve_preview_v2(
+ uuid,text,text,text,text,text,text) OWNER TO orotitan_d32_private_executor;
+ALTER FUNCTION orotitan_mobile_private.revoke_preview_v2(uuid)
+ OWNER TO orotitan_d32_private_executor;
+ALTER FUNCTION orotitan_mobile_private.confirm_approved_request_v2(
+ uuid,text) OWNER TO orotitan_d32_private_executor;
+REVOKE CREATE ON SCHEMA orotitan_mobile_private
+ FROM orotitan_d32_private_executor;
+
+GRANT EXECUTE ON FUNCTION orotitan_mobile_private.approve_preview_v2(
+ uuid,text,text,text,text,text,text) TO orotitan_d32_approval_issuer;
+GRANT EXECUTE ON FUNCTION orotitan_mobile_private.revoke_preview_v2(uuid)
+ TO orotitan_d32_approval_issuer;
+GRANT EXECUTE ON FUNCTION orotitan_mobile_private.confirm_approved_request_v2(
+ uuid,text) TO orotitan_d32_command_submitter;
+COMMIT;
+
  THEN RAISE EXCEPTION 'D32_SERVER_CAPABILITY_SHAPE_DENIED'; END IF;
  SELECT * INTO v FROM orotitan_mobile_private.previews
  WHERE preview_id=p_preview FOR UPDATE;
