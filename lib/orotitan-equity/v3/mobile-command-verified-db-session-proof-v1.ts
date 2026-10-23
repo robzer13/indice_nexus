@@ -79,7 +79,7 @@ export async function issueD37OAuthSessionProof(args:{
     issuerId:args.issuerId??"",contractSha256:args.contractSha256??"",
     cutoff:args.cutoff??"",
   };
-  if(!UUID.test(scope.issuerId)||!SHA.test(scope.contractSha256)||
+  if(!(scope.issuerId===ZERO_UUID && args.operation==="read_preview") && !UUID.test(scope.issuerId) || !SHA.test(scope.contractSha256)||
     !/^\d{4}-\d{2}-\d{2}$/.test(scope.cutoff)) {
     throw new D37AuthorizationError("D37_SCOPE_DENIED");
   }
