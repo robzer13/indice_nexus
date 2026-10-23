@@ -99,6 +99,7 @@ export type UnverifiedReceipt = Readonly<{
 /** Independent verifier identity, itself authenticated by a privileged gate. */
 export type VerifierActor = Readonly<{ subject: string; reviewerId: string }>;
 export type TrustedVerifierGrant = Readonly<{
+  grantId: string;
   reviewerId: string;
   runId: string;
   issuerId: string;
@@ -275,7 +276,7 @@ export async function lookupResearchDraftForVerifierCandidate(
     throw new ResearchIntakeError("INTAKE_VERIFIER_QUERY_INVALID");
   }
   const grant = await port.resolveVerifierGrant(actor, lookup.runId);
-  if (!grant || !grant.mayReadQuarantineMetadata ||
+  if (!grant || !grant.grantId || !grant.mayReadQuarantineMetadata ||
     grant.reviewerId !== actor.reviewerId || !grant.issuerId ||
     grant.runId !== lookup.runId || grant.stage !== lookup.expectedStage ||
     grant.runStateVersion !== lookup.expectedRunStateVersion ||
