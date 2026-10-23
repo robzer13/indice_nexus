@@ -137,7 +137,7 @@ DECLARE v orotitan_mobile_private.previews%ROWTYPE;
 BEGIN
  IF p_sealed_capability IS NULL OR length(p_sealed_capability)>2200
  OR length(split_part(p_sealed_capability,'.',1))<20
- OR p_sealed_capability !~ '^[A-Za-z0-9_-]+[.][A-Za-z0-9_-]{43}
+ OR p_sealed_capability !~ '^[A-Za-z0-9_-]+[.][A-Za-z0-9_-]{43}$'
  THEN RAISE EXCEPTION 'D32_SERVER_CAPABILITY_SHAPE_DENIED'; END IF;
  SELECT * INTO v FROM orotitan_mobile_private.previews
  WHERE preview_id=p_preview FOR UPDATE;
