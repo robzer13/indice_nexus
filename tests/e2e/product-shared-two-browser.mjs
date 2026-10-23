@@ -49,11 +49,12 @@ try {
   const requestId = first.get('request');
   assert.match(requestId || '', /^[0-9a-f-]{36}$/i);
   assert.equal(first.get('result'), 'created');
-  assert.match(await phonePage.locator('body').innerText(), /REQUESTED_NOT_EXECUTED/);
+  await phonePage.getByText('REQUESTED_NOT_EXECUTED', { exact: false }).first().waitFor();
 
   // The second independently logged-in browser observes the same durable
   // receipt via the PostgreSQL-backed REST fixture, not shared cookies.
   await desktopPage.reload();
+  await desktopPage.getByText(requestId, { exact: false }).first().waitFor();
   const desktopText = await desktopPage.locator('body').innerText();
   assert.ok(desktopText.includes(requestId));
   assert.match(desktopText, /Synthetic Research Alpha/);
@@ -67,6 +68,7 @@ try {
   assert.equal(second.get('result'), 'existing');
 
   await phonePage.reload();
+  await phonePage.getByText(requestId, { exact: false }).first().waitFor();
   const matching = await phonePage.locator('tbody tr').count();
   assert.equal(matching, 1, 'Parallel browser sessions must not create a second request');
   assert.match(await phonePage.locator('body').innerText(), /aucun Registry run/i);
