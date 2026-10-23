@@ -49,7 +49,7 @@ export interface MobileCommandPrivatePort {
   lookupResearchTarget(issuerId: string): Promise<ResearchTarget | null>;
   storePreview(preview: DraftCommand): Promise<void>;
   atomicConfirm(args: {
-    previewId: string; actor: MobileActor;
+    kind: CommandKind; previewId: string; actor: MobileActor;
     fingerprintSha256: string; nowMs: number;
   }): Promise<CommandReceipt>;
 }
@@ -143,7 +143,7 @@ export async function previewAddCompany(
   if (status !== "NEW_UNAMBIGUOUS") {
     throw new MobileCommandError("MOBILE_IDENTITY_LOOKUP_UNAVAILABLE");
   }
-  const preview = previewPayload("add_company", normalized, actor, nowMs);
+  const preview = previewPayload("add_company", {...normalized}, actor, nowMs);
   await port.storePreview(preview);
   return preview;
 }
@@ -192,7 +192,7 @@ export async function confirmMobileCommand(
   }
   // Caller does not send issuer status, Registry state or "authority".
   const result = await port.atomicConfirm({
-    previewId: args.previewId, actor,
+    kind, previewId: args.previewId, actor,
     fingerprintSha256: args.fingerprintSha256, nowMs,
   });
   assertReceipt(result, kind, args.fingerprintSha256);
