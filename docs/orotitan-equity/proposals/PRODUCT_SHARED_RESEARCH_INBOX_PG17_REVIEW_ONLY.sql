@@ -48,6 +48,7 @@ BEGIN
   RAISE EXCEPTION 'PRODUCT_INBOX_COMPANY_NOT_ELIGIBLE';
  END IF;
  -- Ignore all client-supplied receipt snapshots and identifiers.
+ NEW.request_id:=gen_random_uuid();
  NEW.company_name:=c.name;
  NEW.ticker:=c.ticker;
  NEW.exchange:=c.exchange;
