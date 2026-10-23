@@ -44,7 +44,22 @@ BEGIN
     OR has_table_privilege('orotitan_research_intake_writer',
       'public.orotitan_runs','UPDATE')
     OR has_table_privilege('orotitan_research_intake_writer',
-      'public.orotitan_run_stages','UPDATE') THEN
+      'public.orotitan_run_stages','UPDATE')
+    OR has_table_privilege('orotitan_research_intake_writer',
+      'orotitan_research_intake_private.receipts','INSERT')
+    OR has_table_privilege('orotitan_research_intake_writer',
+      'orotitan_research_intake_private.receipts','UPDATE')
+    OR has_table_privilege('orotitan_research_intake_writer',
+      'orotitan_research_intake_private.receipts','SELECT')
+    OR has_table_privilege('orotitan_research_intake_writer',
+      'orotitan_research_intake_private.receipt_audit','INSERT')
+    OR has_table_privilege('orotitan_research_intake_reader',
+      'orotitan_research_intake_private.receipts','UPDATE')
+    OR has_function_privilege('authenticated',
+      'orotitan_research_intake_private.commit_receipt_v1(uuid,text,text,text,text,text,bigint,bigint,date,text,text,text,text,text,bigint,text)',
+      'EXECUTE')
+    OR has_schema_privilege('orotitan_research_intake_receipt_executor',
+      'orotitan_research_intake_private','CREATE') THEN
     RAISE EXCEPTION 'D29b unauthorized privilege detected';
   END IF;
 END;
@@ -96,6 +111,46 @@ BEGIN
   IF v THEN RAISE EXCEPTION 'stale stage admitted'; END IF;
 END;
 $scope$;
+RESET ROLE;
+
+-- Direct caller DML bypass must be impossible even if it knows all values.
+DO $privileged$
+BEGIN
+  IF EXISTS(SELECT 1 FROM pg_roles WHERE rolname='orotitan_research_intake_receipt_executor'
+            AND (rolcanlogin OR rolbypassrls OR rolsuper)) THEN
+    RAISE EXCEPTION 'isolated SECURITY DEFINER owner must have zero login/bypass';
+  END IF;
+  IF NOT has_function_privilege('orotitan_research_intake_writer',
+      'orotitan_research_intake_private.commit_receipt_v1(uuid,text,text,text,text,text,bigint,bigint,date,text,text,text,text,text,bigint,text)',
+      'EXECUTE') THEN
+    RAISE EXCEPTION 'external writer cannot call the guarded function';
+  END IF;
+END;
+$privileged$;
+SET ROLE orotitan_research_intake_writer;
+DO $direct_dml$
+DECLARE denied boolean;
+BEGIN
+  denied:=false;
+  BEGIN
+    INSERT INTO orotitan_research_intake_private.receipts(
+      run_id,issuer_id,stage,run_state_version,stage_state_version,
+      contract_pins_sha256,grant_id,sha256,file_name,media_type,object_path,
+      size_bytes,source_date,submitted_by_subject,submitted_by_client)
+    VALUES('48b9426b-4d0d-4858-9d87-efcd13ac415d',
+      '33333333-3333-4333-8333-333333333333','RESEARCH',6,4,
+      repeat('a',64),'approved-intake-grant',repeat('f',64),
+      'forged.json','application/json',
+      'research-intake/v1/forged',15,'2026-07-23','rogue','rogue');
+  EXCEPTION WHEN insufficient_privilege THEN denied:=true; END;
+  IF NOT denied THEN RAISE EXCEPTION 'DIRECT_BYPASS_INSERT_ACCEPTED'; END IF;
+  denied:=false;
+  BEGIN
+    UPDATE orotitan_research_intake_private.receipts SET file_name='rogue.json';
+  EXCEPTION WHEN insufficient_privilege THEN denied:=true; END;
+  IF NOT denied THEN RAISE EXCEPTION 'DIRECT_BYPASS_UPDATE_ACCEPTED'; END IF;
+END;
+$direct_dml$;
 RESET ROLE;
 
 BEGIN ISOLATION LEVEL SERIALIZABLE;
