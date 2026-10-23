@@ -113,8 +113,8 @@ BEGIN
  ELSE RAISE EXCEPTION 'D30_COMMAND_KIND_INVALID';
  END IF;
  IF v_preview.confirmed_request_id IS NOT NULL THEN
-   SELECT * INTO STRICT v_request FROM orotitan_mobile_private.command_requests
-   WHERE request_id=v_preview.confirmed_request_id;
+   SELECT * INTO STRICT v_request FROM orotitan_mobile_private.command_requests q
+   WHERE q.request_id=v_preview.confirmed_request_id;
    RETURN QUERY SELECT v_request.request_id,v_request.kind,v_request.state,true;
    RETURN;
  END IF;
