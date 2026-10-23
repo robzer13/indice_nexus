@@ -42,7 +42,7 @@ CREATE TABLE orotitan_mobile_private.command_requests (
  state text NOT NULL DEFAULT 'REQUESTED_NOT_EXECUTED'
   CHECK(state='REQUESTED_NOT_EXECUTED'),
  created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
- UNIQUE(kind,target_key)
+ CONSTRAINT d30_request_target_unique UNIQUE(kind,target_key)
 );
 ALTER TABLE orotitan_mobile_private.previews
  ADD CONSTRAINT d30_preview_confirmed_request_fkey
