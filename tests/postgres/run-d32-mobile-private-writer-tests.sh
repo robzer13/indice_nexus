@@ -24,7 +24,7 @@ cleanup(){
 trap cleanup EXIT
 # Abort on shared local cluster role collision, never remove someone else's role.
 for role in "${roles[@]}"; do
- if [[ "$(psql -XAt -d postgres -v role="$role" -c    "SELECT count(*) FROM pg_roles WHERE rolname=:'role'")" != 0 ]]; then
+ if [[ "$(psql -XAt -d postgres -c "SELECT count(*) FROM pg_roles WHERE rolname='$role'")" != 0 ]]; then
    echo "D32 local role name already exists; refusing: $role" >&2; exit 3;
  fi
 done
