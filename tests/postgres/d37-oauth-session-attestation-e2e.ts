@@ -149,7 +149,7 @@ async function main(){
 
  const scoped=await issue("issue_research_scope");
  await rejects(()=>call(scoped,"read")); // wrong operation, no nonce consumed
- assert.equal(call(scoped,"scope"),"t");
+ assert.equal(call(scoped,"scope"),"true");
  const scope=JSON.parse(sql("SELECT json_build_object("+
  "'issuer',issuer_id::text,'contract',contract_pack_sha256,"+
  "'cutoff',cutoff_date::text)::text FROM "+
