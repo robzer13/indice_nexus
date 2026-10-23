@@ -120,17 +120,20 @@ BEGIN
 END;
 $confirm$;
 RESET ROLE;
+-- Resolve the test request ID in the fixture owner session; the
+-- narrow lifecycle role itself has NO direct table SELECT permission.
+SELECT set_config('d36.fixture_request_to_close',request_id::text,false)
+FROM orotitan_mobile_private.research_requests_v4
+WHERE actor_subject='person-a-account'
+AND contract_pack_sha256=repeat('a',64)
+AND cutoff_date=current_date
+AND state='REQUESTED_NOT_EXECUTED';
 -- Independent worker closes A's original request, retaining its receipt.
 SET ROLE orotitan_d36_lifecycle_controller;
 DO $close$
 DECLARE id uuid;denied boolean:=false;
 BEGIN
- SELECT request_id INTO STRICT id
- FROM orotitan_mobile_private.research_requests_v4
- WHERE actor_subject='person-a-account'
- AND contract_pack_sha256=repeat('a',64)
- AND cutoff_date=current_date
- AND state='REQUESTED_NOT_EXECUTED';
+ id:=current_setting('d36.fixture_request_to_close')::uuid;
  IF NOT orotitan_mobile_private.close_research_request_v4(id,'FULFILLED') THEN
   RAISE EXCEPTION 'D36_CLOSURE_FAILED';
  END IF;
@@ -148,10 +151,7 @@ SET ROLE orotitan_d36_research_submitter;
 DO $reissue$
 DECLARE original uuid;new_id uuid;r record;
 BEGIN
- SELECT request_id INTO STRICT original
- FROM orotitan_mobile_private.research_requests_v4
- WHERE actor_subject='person-a-account'
- AND state='FULFILLED';
+ original:=current_setting('d36.fixture_request_to_close')::uuid;
  SELECT * INTO STRICT r FROM orotitan_mobile_private.confirm_scoped_research_v4(
   '36000000-0000-4000-8000-000000000006',
   repeat('F',100)||'.'||repeat('F',43));
