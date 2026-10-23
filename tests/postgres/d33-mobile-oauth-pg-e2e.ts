@@ -32,7 +32,7 @@ if (!/^orotitan_d32_mobile_[0-9]+$/.test(db??"") ||
   throw new Error("D33 refuses non-disposable PostgreSQL 17 or remote fixture");
 }
 const RESOURCE="https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp";
-const ISSUER="00000000-0000-4000-8000-000000000001";
+const ISSUER="00000000-0000-4000-8000-000000000002";
 const SUBJECT="d33-approved-operator";
 const CLIENT="d33-approved-client";
 const SECOND_CLIENT="d33-second-client";
@@ -67,7 +67,8 @@ function countRequests() {
   return Number(query("SELECT count(*) FROM orotitan_mobile_private.command_requests"));
 }
 function updateResearchFixture() {
-  query("UPDATE public.securities SET isin='GB1234567890' WHERE issuer_id="+uuid(ISSUER));
+  // D32 already queued Research for issuer #1; use distinct Beta fixture.
+  query("UPDATE public.securities SET isin='FR1234567890' WHERE issuer_id="+uuid(ISSUER));
 }
 class PostgresPreview implements Omit<MobileCommandPrivatePort,"atomicConfirm"> {
   async authorize(value:MobileActor):Promise<boolean>{
