@@ -51,4 +51,5 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
  "$root/docs/orotitan-equity/proposals/D36_TENANT_SCOPED_RESEARCH_QUEUE_V4_REVIEW_ONLY.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
  "$root/tests/postgres/d36-tenant-research-queue-verify.sql" >/dev/null
+bash "$root/tests/postgres/d36-cross-device-race.sh" "$db"
 echo 'D32 private PG17 mobile writer security tests PASSED (LOCAL fixture only).'
