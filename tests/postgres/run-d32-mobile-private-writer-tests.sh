@@ -11,7 +11,9 @@ case "$PGHOST" in 127.0.0.1|localhost|::1) ;; *)
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 db="orotitan_d32_mobile_$$"
 roles=(orotitan_d32_approval_issuer orotitan_d32_command_submitter
-       orotitan_d32_private_executor)
+       orotitan_d32_private_executor orotitan_d34_preview_issuer
+       orotitan_d34_preview_reader orotitan_d34_vault_issuer
+       orotitan_d34_vault_reader)
 created=0
 cleanup(){
  if [[ "$created" == 1 ]]; then
@@ -39,4 +41,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/docs/orotitan-equity/proposals/D3
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f  "$root/tests/postgres/d32-mobile-private-writer-verify.sql" >/dev/null
 bash "$root/tests/postgres/d32-mobile-private-writer-race.sh" "$db"
 npx --no-install tsx "$root/tests/postgres/d33-mobile-oauth-pg-e2e.ts" "$db"
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
+ "$root/docs/orotitan-equity/proposals/D34_PRIVATE_PREVIEW_ENCRYPTED_CAPABILITY_SQL_REVIEW_ONLY.sql" >/dev/null
+npx --no-install tsx "$root/tests/postgres/d34-mobile-private-preview-vault-e2e.ts" "$db"
 echo 'D32 private PG17 mobile writer security tests PASSED (LOCAL fixture only).'
