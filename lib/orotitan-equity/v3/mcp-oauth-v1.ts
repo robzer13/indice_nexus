@@ -19,6 +19,8 @@ export type McpOAuthIdentity = {
   subject: string;
   /** OAuth client_id is read ONLY from an already verified signed JWT. */
   clientId: string;
+  /** Optional signed Supabase session_id; D37 rejects tokens without it. */
+  sessionId?: string;
   scopes: ReadonlySet<string>;
 };
 
@@ -122,6 +124,7 @@ export async function verifyMcpOAuthBearer(
       throw new McpOAuthError("OAUTH_IDENTITY_OR_SCOPE_DENIED");
     }
     return {subject: payload.sub!, clientId: payload.client_id as string,
+      sessionId: typeof payload.session_id === "string" ? payload.session_id : undefined,
       scopes: new Set([MCP_SCOPE_READ])};
   } catch (error) {
     if (error instanceof McpOAuthError) throw error;
