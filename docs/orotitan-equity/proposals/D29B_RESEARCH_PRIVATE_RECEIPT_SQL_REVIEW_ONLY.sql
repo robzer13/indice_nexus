@@ -251,14 +251,16 @@ BEGIN
        '^research-intake/v1/'||p_run::text||'/RESEARCH/'||
        p_sha||'/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-'||
        '[89ab][0-9a-f]{3}-[0-9a-f]{12}[.](json|md|txt|csv)$'
-     ) OR p_media <> CASE right(p_filename,strpos(reverse(p_filename),'.')-1)
-       WHEN 'json' THEN 'application/json'
-       WHEN 'md' THEN 'text/markdown'
-       WHEN 'txt' THEN 'text/plain'
-       WHEN 'csv' THEN 'text/csv'
-       ELSE 'INVALID' END
-     OR right(p_path,strpos(reverse(p_path),'.')-1) <>
-       right(p_filename,strpos(reverse(p_filename),'.')-1) THEN
+     ) OR NOT (
+       (p_filename ~ '[.]json$' AND p_path ~ '[.]json$'
+         AND p_media='application/json')
+       OR (p_filename ~ '[.]md$' AND p_path ~ '[.]md$'
+         AND p_media='text/markdown')
+       OR (p_filename ~ '[.]txt$' AND p_path ~ '[.]txt$'
+         AND p_media='text/plain')
+       OR (p_filename ~ '[.]csv$' AND p_path ~ '[.]csv$'
+         AND p_media='text/csv')
+     ) THEN
     RAISE EXCEPTION 'D29B_PRIVATE_METADATA_DENIED';
   END IF;
   PERFORM pg_advisory_xact_lock(hashtextextended(p_run::text,71932));
