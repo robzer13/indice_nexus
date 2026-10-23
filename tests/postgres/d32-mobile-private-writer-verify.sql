@@ -6,28 +6,29 @@ WHERE issuer_id='00000000-0000-4000-8000-000000000001';
 -- ISIN values in this fixture are syntactically shaped, not market evidence.
 INSERT INTO orotitan_mobile_private.previews
 (preview_id,kind,actor_subject,actor_client,actor_resource,payload,
- fingerprint_sha256,expires_at)
+ fingerprint_sha256,created_at,expires_at)
 VALUES
 ('20000000-0000-4000-8000-000000000001','add_company',
  'approved-subject','approved-chatgpt-client',
  'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp',
  '{"name":"Lyra Test Co","ticker":"LYRA","exchange":"XAMS","isin":"NL1234567890"}',
- repeat('a',64),clock_timestamp()+interval '90 seconds'),
+ repeat('a',64),clock_timestamp(),clock_timestamp()+interval '90 seconds'),
 ('20000000-0000-4000-8000-000000000002','request_research',
  'approved-subject','approved-chatgpt-client',
  'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp',
  '{"issuerId":"00000000-0000-4000-8000-000000000001","name":"Alpha Display","ticker":"ALP","exchange":"LSE","isin":"GB1234567890"}',
- repeat('b',64),clock_timestamp()+interval '90 seconds'),
+ repeat('b',64),clock_timestamp(),clock_timestamp()+interval '90 seconds'),
 ('20000000-0000-4000-8000-000000000003','add_company',
  'approved-subject','approved-chatgpt-client',
  'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp',
  '{"name":"Revoke Co","ticker":"RVK","exchange":"XAMS","isin":"NL1111111111"}',
- repeat('c',64),clock_timestamp()+interval '90 seconds'),
+ repeat('c',64),clock_timestamp(),clock_timestamp()+interval '90 seconds'),
 ('20000000-0000-4000-8000-000000000004','add_company',
  'approved-subject','approved-chatgpt-client',
  'https://orotitan-chatgpt-mcp-pilot.vercel.app/api/orotitan/mcp',
  '{"name":"Expired Co","ticker":"EXP","exchange":"XAMS","isin":"NL2222222222"}',
- repeat('d',64),clock_timestamp()-interval '1 second');
+ repeat('d',64),clock_timestamp()-interval '110 seconds',
+ clock_timestamp()-interval '1 second');
 
 DO $priv$
 DECLARE role record;
