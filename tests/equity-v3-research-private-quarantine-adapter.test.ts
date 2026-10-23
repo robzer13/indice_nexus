@@ -59,7 +59,8 @@ const receipt = (d: PreparedResearchDraft, duplicate = false): UnverifiedReceipt
 class FakeBlob implements PrivateResearchBlobPort {
   objects = new Map<string, Uint8Array>();
   tamper = false;
-  async putImmutable(path: string, payload: Uint8Array) {
+  async putImmutable(path: string, payload: Uint8Array, mediaType: string) {
+    void mediaType;
     if (this.objects.has(path)) throw new Error("upsert forbidden");
     this.objects.set(path, Uint8Array.from(payload));
   }
