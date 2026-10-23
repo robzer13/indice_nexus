@@ -111,6 +111,12 @@ function open(token: ServerPrivateCapability, key: Uint8Array, now: number): Cap
     throw new CommandCapabilityError("D31_CAPABILITY_INVALID");
   }
   const supplied = Buffer.from(parts[1], "base64url");
+  // Base64URL's unused trailing bits may admit distinct textual spellings
+  // for identical decoded bytes. Reject every noncanonical representation.
+  if (Buffer.from(parts[0], "base64url").toString("base64url") !== parts[0] ||
+    supplied.toString("base64url") !== parts[1]) {
+    throw new CommandCapabilityError("D31_CAPABILITY_SIGNATURE_DENIED");
+  }
   const expected = hmac(parts[0],key);
   if (supplied.byteLength !== expected.byteLength ||
     !timingSafeEqual(supplied, expected)) {
