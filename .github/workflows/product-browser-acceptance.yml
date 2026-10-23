@@ -1,0 +1,48 @@
+name: Product Research Inbox — Two Browser Acceptance (Review Only)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/product-browser-acceptance.yml'
+      - 'tests/e2e/**'
+      - 'app/admin/research-requests/**'
+      - 'lib/orotitan-equity/product/**'
+      - 'docs/orotitan-equity/proposals/PRODUCT_SHARED_RESEARCH_INBOX_PG17_REVIEW_ONLY.sql'
+
+jobs:
+  shared-inbox-real-browser:
+    # This is a disposable CI-only acceptance test for the draft product PR.
+    if: startsWith(github.head_ref, 'review/orotitan-product-mvp-two-browser-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install app dependencies
+        run: npm install --no-audit --no-fund
+      - name: Install disposable Chromium test runner
+        run: |
+          npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Real two-browser Research acceptance using disposable PostgreSQL 17
+        run: bash tests/e2e/run-product-two-browser-smoke.sh
+        env:
+          CI: 'true'
+          PGHOST: 127.0.0.1
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
