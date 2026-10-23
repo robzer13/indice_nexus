@@ -90,3 +90,26 @@ Besi stage change, paid resource or ChatGPT write exposure is authorized.
 
 **Product decision:** next work is a *shared persistent inbox and honest
 status tracking*, not another generic OAuth/security prototype.
+
+## Triage décisionnel des PR #410–#418
+
+**Ne pas les fusionner en bloc** pour livrer ce premier parcours :
+- **#410 D30** — conserver le langage de demande/confirmation, les validations
+  et les exigences d'idempotence comme référence pour l'adaptateur partagé,
+  mais ne pas activer la fonction MCP candidate.
+- **#411–#414 D31–D34** — conserver les prototypes OAuth/capabilities/
+  rôles PostgreSQL/coffre AES-GCM comme matériau de revue de sécurité.
+  Aucun de ces composants n'est requis pour visualiser la boîte locale.
+- **#415 D35** — prendre en compte explicitement les constats de sécurité
+  et les critères de NON-LIVRAISON; rien à débloquer automatiquement.
+- **#416 D36** — reprendre ultérieurement la règle produit de déduplication
+  par opérateur/émetteur/contrat/cutoff, une fois l'identité canonique
+  et la file partagée validées.
+- **#417–#418 D37–D38** — conserver comme expériences d'isolation de session.
+  Ce ne sont pas des connecteurs ChatGPT opérationnels et ils ne
+  prouvent pas le support de l'OAuth mobile en production.
+
+**Prochaine PR produit souhaitée :** une seule boîte de réception Research
+partagée et accessible sur plusieurs appareils, accompagnée d'une revue
+séparée du schéma et des droits nécessaires. Pas de système parallèle
+de demandes dans le Screener et le Registry.
