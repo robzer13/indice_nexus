@@ -1,7 +1,7 @@
 \set ON_ERROR_STOP on
 -- D35 / review-only. Audit *disposable* PostgreSQL 17 ACLs after D34 E2E.
 DO $audit$
-DECLARE p record;priv_count int;
+DECLARE role_row record;
 BEGIN
  IF current_setting('server_version_num')::int NOT BETWEEN 170000 AND 179999
  OR to_regclass('orotitan_mobile_private.encrypted_capability_vault') IS NULL
@@ -15,14 +15,14 @@ BEGIN
   'orotitan_d34_vault_reader'))<>7 THEN
   RAISE EXCEPTION 'D35_PRIVATE_ROLE_MATRIX_INCOMPLETE';
  END IF;
- FOR p IN SELECT rolname,rolcanlogin,rolinherit,rolbypassrls,rolsuper
+ FOR role_row IN SELECT rolname,rolcanlogin,rolinherit,rolbypassrls,rolsuper
   FROM pg_roles WHERE rolname IN(
   'orotitan_d32_approval_issuer','orotitan_d32_command_submitter',
   'orotitan_d32_private_executor','orotitan_d34_preview_issuer',
   'orotitan_d34_preview_reader','orotitan_d34_vault_issuer',
   'orotitan_d34_vault_reader') LOOP
-  IF p.rolcanlogin OR p.rolinherit OR p.rolbypassrls OR p.rolsuper THEN
-    RAISE EXCEPTION 'D35_PRIVATE_ROLE_ELEVATION:%',p.rolname;
+  IF role_row.rolcanlogin OR role_row.rolinherit OR role_row.rolbypassrls OR role_row.rolsuper THEN
+    RAISE EXCEPTION 'D35_PRIVATE_ROLE_ELEVATION:%',role_row.rolname;
   END IF;
  END LOOP;
  IF EXISTS(SELECT 1 FROM pg_auth_members am
