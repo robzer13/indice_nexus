@@ -45,6 +45,10 @@ BEGIN
       'public.orotitan_runs','UPDATE')
     OR has_table_privilege('orotitan_research_intake_writer',
       'public.orotitan_run_stages','UPDATE')
+    OR has_table_privilege('orotitan_research_intake_reader',
+      'orotitan_research_intake_private.verifier_grants','SELECT')
+    OR has_table_privilege('orotitan_research_intake_reader',
+      'orotitan_research_intake_private.receipts','SELECT')
     OR has_table_privilege('orotitan_research_intake_writer',
       'orotitan_research_intake_private.receipts','INSERT')
     OR has_table_privilege('orotitan_research_intake_writer',
@@ -285,9 +289,15 @@ BEGIN
   SELECT count(*) INTO n
     FROM orotitan_research_intake_private.verifier_metadata_v1(
       '48b9426b-4d0d-4858-9d87-efcd13ac415d',
-      '33333333-3333-4333-8333-333333333333','forged-reviewer',
+      '33333333-3333-4333-8333-333333333333','forged-reviewer','approved-reviewer-grant',
       6,4,repeat('c',64));
   IF n<>0 THEN RAISE EXCEPTION 'forged reviewer could read'; END IF;
+  SELECT count(*) INTO n
+    FROM orotitan_research_intake_private.verifier_metadata_v1(
+      '48b9426b-4d0d-4858-9d87-efcd13ac415d',
+      '33333333-3333-4333-8333-333333333333','independent-d2',
+      'wrong-opaque-grant-id',6,4,repeat('c',64));
+  IF n<>0 THEN RAISE EXCEPTION 'reviewer without valid opaque grant could read'; END IF;
   SELECT count(*) INTO n
     FROM orotitan_research_intake_private.verifier_metadata_v1(
       'd56a0bc9-4e80-48b3-b326-74d1fea15e63',
