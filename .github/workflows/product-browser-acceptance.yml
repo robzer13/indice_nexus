@@ -34,10 +34,8 @@ jobs:
           node-version: '22'
       - name: Install app dependencies
         run: npm install --no-audit --no-fund
-      - name: Install disposable Chromium test runner
-        run: |
-          npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
-          npx playwright install --with-deps chromium
+      - name: Install Playwright test runner (use Chrome already present on Ubuntu runner)
+        run: npm install --no-save --no-package-lock --no-audit --no-fund playwright@1.56.1
       - name: Real two-browser Research acceptance using disposable PostgreSQL 17
         run: bash tests/e2e/run-product-two-browser-smoke.sh
         env:
