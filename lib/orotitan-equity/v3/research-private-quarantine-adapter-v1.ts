@@ -15,6 +15,13 @@ export const RESEARCH_PRIVATE_BUCKET = "orotitan-research-evidence-quarantine-v1
 export const RESEARCH_PRIVATE_PREFIX = "research-intake/v1";
 const HASH = /^[0-9a-f]{64}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const PRIVATE_OBJECT_PATH =
+  /^research-intake\/v1\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\/RESEARCH\/[0-9a-f]{64}\/[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\.(json|md|txt|csv)$/;
+function assertPrivateObjectPath(path: string): void {
+  if (!PRIVATE_OBJECT_PATH.test(path)) {
+    throw new ResearchIntakeError("INTAKE_PRIVATE_PATH_INVALID");
+  }
+}
 
 export type StoredPrivateBlob = Readonly<{
   objectPath: string;
@@ -72,7 +79,8 @@ export function privateAttemptObjectPath(
   if (!UUID.test(draft.runId) || draft.stage !== "RESEARCH" ||
     !HASH.test(draft.sha256) || !UUID.test(attemptId) ||
     !/^[A-Za-z0-9][A-Za-z0-9._-]{0,99}$/.test(draft.fileName) ||
-    draft.fileName.includes("..")) {
+    draft.fileName.includes("..") ||
+    !/\.(json|md|txt|csv)$/.test(draft.fileName)) {
     throw new ResearchIntakeError("INTAKE_PRIVATE_PATH_INVALID");
   }
   return [
@@ -96,12 +104,14 @@ export function createSupabasePrivateResearchBlobPort(
   const bucket = storageClient.storage.from(bucketName);
   return {
     async putImmutable(path, bytes, mediaType) {
+      assertPrivateObjectPath(path);
       const { error } = await bucket.upload(path, Buffer.from(bytes), {
         contentType: mediaType, cacheControl: "0", upsert: false,
       });
       if (error) throw new ResearchIntakeError("INTAKE_PRIVATE_UPLOAD_FAILED");
     },
     async readExact(path) {
+      assertPrivateObjectPath(path);
       const { data, error } = await bucket.download(path);
       if (error || !data) throw new ResearchIntakeError("INTAKE_PRIVATE_REREAD_FAILED");
       return new Uint8Array(await data.arrayBuffer());
