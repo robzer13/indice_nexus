@@ -17,7 +17,7 @@ cleanup(){
  if [[ "$created" == 1 ]]; then
    dropdb --if-exists --force "$db" >/dev/null 2>&1 || true
    for role in "${roles[@]}"; do
-     psql -XAt -d postgres -v role="$role" -c        "SELECT format('DROP ROLE IF EXISTS %I;', :'role') \\gexec" >/dev/null 2>&1 || true
+     psql -XAt -d postgres -c "DROP ROLE IF EXISTS $role;" >/dev/null 2>&1 || true
    done
  fi
 }
