@@ -4,6 +4,19 @@ Date: 2026-10-25
 Previous preview: PR #423, deployed, independently accepted on real desktop + Android mobile.
 Current proposal: read-only pre-run preparation card. **No execution, GO, RUN_ID, schema mutation, production deploy, publication or contract change.**
 
+## SHADOW Preview deployment / CI acceptance update
+
+- CI commit: `0a2298dbe5b7653b96cf49ec976579afb010e8a0`.
+- `Screener CI` run `40143330597` **SUCCESS** after fixing PostgreSQL UUID test validation.
+- `Product Research Inbox — Two Browser Acceptance` run `40143330638` **SUCCESS**, isolated PostgreSQL 17 and two Chromium browser contexts.
+- Protected Vercel Preview deployment `dpl_4v3oJmWbbMGY2wZjtEy9fydapvbN` **READY**, `target=null` (Preview), commit `0a2298dbe5b7653b96cf49ec976579afb010e8a0`.
+- URL: `https://orotitan-research-shadow-preview-8ubr8wgoo-orotitan.vercel.app/admin/research-requests`
+- Dedicated Vercel project `prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE`, team SSO applies to **all** deployments; `live=false`, no production env variables present at deployment inspection.
+- PostgreSQL UUID validation now checks canonical database syntax rather than imposing a version/variant requirement (necessary for seeded `RC1` data); authorization remains strictly disabled.
+- SHADOW-only DB verification: 2 requests both `REQUESTED_NOT_EXECUTED`, 4 historical `orotitan_runs`, 5 historical artifacts. No writes, GO or Registry run creation.
+- **Real phone acceptance of the NEW section 5 (Pre-run card) remains unverified** and must not be conflated with the prior physical-device acceptance of section 4.
+- This status is an **isolated test deployment**, not a production release or a merge of the draft PR.
+
 ## Governing authorities and precise boundaries
 
 - `OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V1_FREEZE_V1.0.1`, §§4–10, requires issuer/security identity, canonical dossier state, entry path, ANALYZE/INITIAL or REFRESH choice and a concise pre-run card. A separate `GO <COMPANY>` authorizes execution, and must occur **before** a persistent RUN_ID. A different `GO PUBLISH` is needed for publication.
