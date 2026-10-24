@@ -20,6 +20,7 @@ import {
 export type ResearchInboxPilotMode = 'disabled' | 'local' | 'shared-test';
 
 const PROD_REF = 'cugpgtzygqqlxetyeven';
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export function researchInboxPilotMode(): ResearchInboxPilotMode {
   // On Vercel, both Preview and Production MUST obey the single strict
@@ -143,8 +144,10 @@ export async function getPilotResearchIdentitySnapshot(
     }
     const candidateRows = data as Array<Record<string, unknown>>;
     if (candidateRows.some(row =>
-      typeof row.security_id !== 'string' || typeof row.issuer_id !== 'string' ||
-      typeof row.ticker !== 'string' || typeof row.exchange !== 'string',
+      typeof row.security_id !== 'string' || !UUID_RE.test(row.security_id) ||
+      typeof row.issuer_id !== 'string' || !UUID_RE.test(row.issuer_id) ||
+      typeof row.ticker !== 'string' || !row.ticker.trim() ||
+      typeof row.exchange !== 'string' || !row.exchange.trim(),
     )) {
       return { verified: false, securities: [] };
     }
