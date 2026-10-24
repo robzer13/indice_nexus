@@ -21,7 +21,11 @@ export type ResearchInboxPilotMode = 'disabled' | 'local' | 'shared-test';
 const PROD_REF = 'cugpgtzygqqlxetyeven';
 
 export function researchInboxPilotMode(): ResearchInboxPilotMode {
-  if (isHostedShadowResearchEnabled(process.env)) return 'shared-test';
+  // On Vercel, both Preview and Production MUST obey the single strict
+  // SHADOW-only hosted gate, even if someone overrides NODE_ENV.
+  if (process.env.VERCEL_ENV) {
+    return isHostedShadowResearchEnabled(process.env) ? 'shared-test' : 'disabled';
+  }
   if (process.env.NODE_ENV !== 'development') return 'disabled';
   if (process.env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '1') return 'shared-test';
   if (process.env.OROTITAN_LOCAL_REQUESTS_ENABLED === '1') return 'local';
