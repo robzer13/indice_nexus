@@ -1,4 +1,5 @@
 import 'server-only';
+import { isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
 import { join } from 'node:path';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { getAllCompanies } from '@/lib/data/company-admin';
@@ -12,14 +13,19 @@ import {
 
 /**
  * One web UI, two strictly gated pilot backends.
- * "shared" can only be used in development with an explicitly configured,
- * separate TEST Supabase project. It cannot write to OroTitan production.
+ * "shared" is available in isolated development or the exact, explicitly
+ * enabled Vercel Preview targeting SHADOW, never OroTitan production.
  */
 export type ResearchInboxPilotMode = 'disabled' | 'local' | 'shared-test';
 
 const PROD_REF = 'cugpgtzygqqlxetyeven';
 
 export function researchInboxPilotMode(): ResearchInboxPilotMode {
+  // On Vercel, both Preview and Production MUST obey the single strict
+  // SHADOW-only hosted gate, even if someone overrides NODE_ENV.
+  if (process.env.VERCEL_ENV) {
+    return isHostedShadowResearchEnabled(process.env) ? 'shared-test' : 'disabled';
+  }
   if (process.env.NODE_ENV !== 'development') return 'disabled';
   if (process.env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '1') return 'shared-test';
   if (process.env.OROTITAN_LOCAL_REQUESTS_ENABLED === '1') return 'local';
@@ -63,7 +69,8 @@ function sharedTestClient(): SupabaseClient {
   if (url.protocol !== 'https:' || url.hostname !== ref + '.supabase.co' ||
     url.username || url.password || url.pathname !== '/' ||
     url.search || url.hash ||
-    url.origin === process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    (url.origin === process.env.NEXT_PUBLIC_SUPABASE_URL &&
+      !isHostedShadowResearchEnabled(process.env))) {
     throw new Error('PRODUCT_SHARED_TEST_URL_DENIED');
   }
   return createClient(url.toString(), secret, {

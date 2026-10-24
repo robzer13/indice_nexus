@@ -9,7 +9,7 @@ import {
 import { requestResearchPilotAction } from './actions';
 
 export const dynamic = 'force-dynamic';
-export const metadata: Metadata = { title: 'Demandes Research — pilote local OroTitan' };
+export const metadata: Metadata = { title: 'Demandes Research — pilote isolé OroTitan' };
 
 type Params = Promise<Record<string, string | string[] | undefined>>;
 function stringParam(value: string | string[] | undefined): string | null {
@@ -32,7 +32,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
       </header>
       <AdminNav />
       <section className="rounded-xl border border-amber-900 bg-amber-950/20 p-5 text-sm text-amber-100">
-        Le pilote local est désactivé. Aucun formulaire d’écriture n’est accessible en production.
+        Le pilote non-production est désactivé. Aucun formulaire d’écriture n’est accessible sans configuration autorisée.
         Cette page ne crée ni entreprise, ni demande cloud, ni run OroTitan.
       </section>
     </main>;
@@ -60,7 +60,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
     </header>
     <AdminNav />
     <div role="status" className="rounded-xl border border-amber-800/60 bg-amber-950/20 p-4 text-sm text-amber-100">
-      <strong>Environnement de développement uniquement.</strong> {mode === 'local'
+      <strong>Environnement de test non-production uniquement.</strong> {mode === 'local'
         ? 'Les données restent dans un fichier privé sur cette machine : aucune synchronisation entre installations.'
         : 'Les données sont enregistrées dans le projet Supabase de TEST explicitement isolé de la production. Les sessions utilisant ce même backend peuvent retrouver les mêmes demandes.'}
       {' '}Aucun Registry run ni Research n’est lancé. Une société du Screener

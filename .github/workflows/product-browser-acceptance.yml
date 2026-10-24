@@ -12,7 +12,7 @@ on:
 jobs:
   shared-inbox-real-browser:
     # This is a disposable CI-only acceptance test for the draft product PR.
-    if: startsWith(github.head_ref, 'review/orotitan-product-mvp-two-browser-')
+    if: startsWith(github.head_ref, 'review/orotitan-product-mvp-two-browser-') || startsWith(github.head_ref, 'review/orotitan-product-hosted-shadow-preview-')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     services:
