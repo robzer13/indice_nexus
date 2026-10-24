@@ -147,6 +147,7 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
       </p>
       {requests.length === 0 ?
         <p className="mt-5 text-sm text-slate-400">Aucune demande enregistrée dans ce pilote.</p> :
+        <>
         <div className="mt-4 space-y-3 md:hidden">
           {requests.map(r => <article key={r.requestId}
             data-testid="research-mobile-request"
@@ -193,7 +194,8 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
               </tr>)}
             </tbody>
           </table>
-        </div>}
+        </div>
+        </>}
     </section>
     <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
       <h2 className="text-lg font-semibold text-white">4. Préflight Pilotage · lecture seule</h2>
