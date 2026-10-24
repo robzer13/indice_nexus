@@ -5,8 +5,12 @@ import { AdminNav } from '@/components/admin/admin-nav';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
 import {
   researchInboxPilotMode, getPilotResearchCompanies, loadPilotResearchInbox,
+  getPilotResearchIdentitySnapshot,
 } from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import { requestResearchPilotAction } from './actions';
+import {
+  assessResearchIntakePreflight, PREFLIGHT_BLOCKER_TEXT,
+} from '@/lib/orotitan-equity/product/research-intake-preflight-v1';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Demandes Research — pilote isolé OroTitan' };
@@ -42,6 +46,10 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
     getPilotResearchCompanies(), loadPilotResearchInbox(),
   ]);
   const activeCompanies = companies.filter(c => c.active);
+  const identitySnapshot = await getPilotResearchIdentitySnapshot(requests);
+  const preflightByRequest = new Map(requests.map(r => [
+    r.requestId, assessResearchIntakePreflight(r, identitySnapshot),
+  ]));
   const requestId = stringParam(query.request);
   const outcome = stringParam(query.result);
   const error = stringParam(query.error);
@@ -139,7 +147,33 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
       </p>
       {requests.length === 0 ?
         <p className="mt-5 text-sm text-slate-400">Aucune demande enregistrée dans ce pilote.</p> :
-        <div className="mt-4 overflow-x-auto">
+        <div className="mt-4 space-y-3 md:hidden">
+          {requests.map(r => <article key={r.requestId}
+            data-testid="research-mobile-request"
+            className="space-y-3 rounded-xl border border-slate-700 bg-slate-950/70 p-4">
+            <div>
+              <p className="font-semibold text-white">{r.companyName}</p>
+              <p className="mt-1 text-xs text-slate-400">{r.ticker} · {r.exchange}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div>
+                <p className="text-slate-500">Date</p>
+                <p className="mt-1 text-slate-300">{new Date(r.createdAt).toLocaleString('fr-FR')}</p>
+              </div>
+              <div>
+                <p className="text-slate-500">État</p>
+                <p className="mt-1 text-amber-200">Demandé · non exécuté</p>
+              </div>
+            </div>
+            <div className="border-t border-slate-800 pt-3">
+              <p className="text-xs text-slate-500">Référence de demande</p>
+              <code data-testid="research-request-reference"
+                className="mt-1 block break-all font-mono text-xs text-cyan-200">{r.requestId}</code>
+            </div>
+            <p className="text-xs font-medium text-amber-300">Préflight Pilotage : bloqué</p>
+          </article>)}
+        </div>
+        <div className="mt-4 hidden overflow-x-auto md:block">
           <table className="w-full min-w-[680px] text-left text-sm">
             <thead className="border-b border-slate-700 text-xs uppercase text-slate-500">
               <tr><th className="py-3 pr-4">Entreprise</th><th className="py-3 pr-4">Date</th>
@@ -154,11 +188,53 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
                   {new Date(r.createdAt).toLocaleString('fr-FR')}
                 </td>
                 <td className="py-4 pr-4 text-amber-200">Demandé · non exécuté</td>
-                <td className="break-all py-4 font-mono text-xs text-slate-400">{r.requestId}</td>
+                <td data-testid="research-request-reference"
+                  className="break-all py-4 font-mono text-xs text-slate-400">{r.requestId}</td>
               </tr>)}
             </tbody>
           </table>
         </div>}
+    </section>
+    <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
+      <h2 className="text-lg font-semibold text-white">4. Préflight Pilotage · lecture seule</h2>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+        Contrôles préparatoires selon les contrats gelés. Une demande ne vaut
+        jamais autorisation. Ce panneau ne valide aucun GO, ne crée aucun RUN_ID
+        et ne lance ni Research ni publication.
+      </p>
+      <div className="mt-4 space-y-3">
+        {requests.map(r => {
+          const preflight = preflightByRequest.get(r.requestId);
+          if (!preflight) throw new Error('PRODUCT_PREFLIGHT_MISSING');
+          return <details key={r.requestId}
+            data-testid="research-pilotage-preflight"
+            className="rounded-lg border border-slate-700 bg-slate-950/60 p-4">
+            <summary className="cursor-pointer text-sm font-semibold text-white">
+              {r.companyName} · <span className="text-amber-300">BLOQUÉ · GO non autorisé</span>
+            </summary>
+            <div className="mt-3 space-y-3 text-sm text-slate-300">
+              <p>
+                Correspondances titre/lieu de cotation dans le Registry :{' '}
+                <strong>{preflight.candidateCount === null
+                  ? 'non vérifiées' : preflight.candidateCount}</strong>.
+                {' '}Une correspondance unique ne suffit pas à confirmer l’émetteur.
+              </p>
+              <ul className="list-disc space-y-2 pl-5">
+                {preflight.blockerCodes.map(code => <li key={code}>
+                  {PREFLIGHT_BLOCKER_TEXT[code]}
+                </li>)}
+              </ul>
+              <p className="text-xs text-amber-200">
+                Décision : BLOCKED_NOT_AUTHORIZED — l’exécution nécessite un GO explicite
+                après contrôle d’identité, mode, dossier, coupure et contrats.
+              </p>
+            </div>
+          </details>;
+        })}
+        {requests.length === 0 && <p className="text-sm text-slate-400">
+          Aucun préflight : aucune demande enregistrée.
+        </p>}
+      </div>
     </section>
   </main>;
 }
