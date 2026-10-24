@@ -1,7 +1,29 @@
 # OroTitan Hosted Research — Vercel isolation inventory / first deployment blocker (2026-10-24)
 
-**Status: ISOLATED VERCEL PROJECT READY; RESEARCH HOSTED URL NOT DEPLOYED.**
+**Status update (2026-10-24): LIVE ISOLATED VERCEL PREVIEW READY; physical device acceptance NOT YET VERIFIED.**
 No Research executed, no new Registry run, no production Supabase writes, no PR merge or GO PUBLISH.
+
+## Update: isolated nonproduction deployment READY (2026-10-24)
+
+The following observations **supersede the historical first-attempt blocker below**:
+
+- User added Preview-only `ADMIN_PASSWORD`, `ADMIN_SESSION_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, and `OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY` via Vercel secure environment UI. Their secret values have not been retrieved or recorded.
+- Inspection found mistakenly duplicated Production-scoped entries. These were neutralized and user deleted them. A final inspection showed **zero Production-scoped environment variables** and all ten expected variables scoped to Preview.
+- Protected, isolated **staging** bootstrap, target explicitly `staging`, deployment ID `dpl_D9FrstymU5jTohfGR6qNoSY4vbwu`, became `READY`. No bootstrap `production` deployment was needed or authorized.
+- After bootstrap, explicit `target=preview` was rejected by Vercel API 400 (only `production`, `staging` or custom target string allowed). A subsequent targetless Git deployment correctly returned **`target=null` (Preview)** rather than Production, and became `READY`.
+- **Research Preview** ID `dpl_3ZmpJtxaZb6uEAm7carxvEGiYBat`, target `null` (= Vercel Preview), commit `1354319219c99695239a0f24ed2bc8ffd5444310`, protected test URL:
+
+  `https://orotitan-research-shadow-preview-ig6b7z2r5-orotitan.vercel.app/admin/research-requests`
+
+- `OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED=1` was set **only on this separate project's Preview env** before deploying. The code independently rejects Vercel Production, arbitrary Supabase refs and missing/unequal service keys.
+- Project SSO / Vercel Authentication remains **all deployments**, and `orotitan-research-shadow-preview` remains separate from the production `orotitan-screener` project. Project `live=false` at inspection (no new public production site).
+- Real hosted Shadow SQL verification following deployment: **2 companies, 1 request (`REQUESTED_NOT_EXECUTED`, `registry_run_id=NULL`), 4 existing Registry runs, 5 artifacts**. This verifies stable DB state, **not HTTP application behavior**.
+- The code's GitHub Actions two-browser Chromium/PG17 and Screener CI checks were previously **SUCCESS**. Their fixture uses a disposable local database, **not** hosted Shadow API.
+- The protected hosted URL could not be accessed by the server-side browsing tools; it still requires **manual authenticated acceptance on a real phone and separate computer**. Do not claim web UI or cross-device acceptance until the user tests both.
+
+**Acceptance procedure**: Login to Vercel Deployment Protection on both devices using an eligible team account; then enter the separately configured `ADMIN_PASSWORD` in app admin. Open `/admin/research-requests`; check existing `Synthetic Research Alpha` receipt; submit `Synthetic Research Beta` once; record the returned UUID without disclosing cookies or secrets; refresh and navigate from a second physical device to confirm the same persistent UUID. Re-submit Beta and verify deduplication; check SQL that no new `orotitan_runs` or artifacts were created. Remain entirely nonproduction.
+
+---
 
 ## Project created, verified
 
