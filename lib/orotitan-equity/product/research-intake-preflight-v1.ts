@@ -38,7 +38,7 @@ export type ResearchPreflight = Readonly<{
   blockerCodes: readonly PreflightBlockerCode[];
 }>;
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Never infer an issuer from a fuzzy company name or a ticker alone. */
 export function assessResearchIntakePreflight(
