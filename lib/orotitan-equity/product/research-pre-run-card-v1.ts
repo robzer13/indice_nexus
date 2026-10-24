@@ -56,7 +56,7 @@ export type PreRunCard = Readonly<{
   executionAdmitted: false;
   blockingReasons: readonly string[];
 }>;
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const VALID_RUN_STATUS = new Set([
   'CREATED','ACTIVE','PAUSED','BLOCKED','READY_TO_PUBLISH','PUBLISHED','CANCELLED',
 ]);
