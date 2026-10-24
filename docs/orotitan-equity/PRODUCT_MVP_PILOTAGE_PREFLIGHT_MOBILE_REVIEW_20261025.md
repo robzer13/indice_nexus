@@ -11,7 +11,9 @@
 - URL: `https://orotitan-research-shadow-preview-npkellb16-orotitan.vercel.app/admin/research-requests`
 - Target project `prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE`, protected by Vercel Authentication for **all** deployments, no Production-scoped env variables at pre-deployment inspection; Next.js Shadow Preview enable gate remains mandatory.
 - Supabase SHADOW post-deploy audit (read only): exactly `2` Research request receipts, `4` existing Registry runs, `5` existing artifacts. New code has no run-creation or mutation path.
-- Physical device acceptance of **the NEW preflight and card UI** remains pending operator inspection. Do not claim the older two-physical-device acceptance proves the new UI.
+- **Physical mobile acceptance of the NEW UI completed via operator-supplied screenshots (2026-10-25).** Mobile request cards showed both persistent Alpha and Beta UUIDs, matching the authenticated desktop view. A separate screenshot showed the Beta preflight expanded, with exact ticker/exchange Registry candidate count **0** and blockers: no matching security, canonical mode + dossier unresolved, missing DATA_CUTOFF, contract/artefact references not verified, and explicit GO missing. The displayed verdict was `BLOCKED_NOT_AUTHORIZED`. Alpha preflight remained collapsed in the submitted screenshot: only its blocked summary, not its expanded explanations, was observed.
+- **Read-only SHADOW re-audit after mobile acceptance:** 2 request receipts, both `REQUESTED_NOT_EXECUTED` and `registry_run_id=NULL`; 4 pre-existing Registry runs and 5 artifacts unchanged. This supports no new Research execution.
+- **Acceptance disposition:** hosted cross-device Research receipt continuity, responsive mobile UUID cards, and expanded Beta read-only preflight UI are accepted for the synthetic pilot. This does **not** approve execution functionality, real-world issuer resolution, stage admission, Registry run creation, contract verification or GO PUBLISH.
 
 
 
