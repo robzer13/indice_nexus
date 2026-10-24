@@ -1,6 +1,19 @@
 # OroTitan Research MVP — Pilotage preflight + mobile receipts (review proposal, 2026-10-25)
 
-**Review-only design. Not deployed to hosted Preview, not merged to main, no Research execution or GO PUBLISH.**
+**Status: REVIEW-ONLY PR; deployed to isolated, SSO-protected SHADOW Preview for UI acceptance. NOT merged to main. NO Research execution or GO PUBLISH.**
+
+## Deploy / acceptance update (2026-10-25)
+
+- Successful CI on commit `e3bca8af104de7ccca46248a30d8f85cdbfe53bb`:
+  - Screener CI run `40137688094` = SUCCESS (lint, typecheck, unit/PG migration tests, build).
+  - Research Two Browser Acceptance run `40137688079` = SUCCESS (isolated PG17 + Chromium mobile/desktop contexts).
+- New protected Vercel Preview deploy `dpl_4LUHSo3DQerPF6wTk1mNeeLGVD6C`, commit `e3bca8af104de7ccca46248a30d8f85cdbfe53bb`, `target=null` (Preview), `readyState=READY`.
+- URL: `https://orotitan-research-shadow-preview-npkellb16-orotitan.vercel.app/admin/research-requests`
+- Target project `prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE`, protected by Vercel Authentication for **all** deployments, no Production-scoped env variables at pre-deployment inspection; Next.js Shadow Preview enable gate remains mandatory.
+- Supabase SHADOW post-deploy audit (read only): exactly `2` Research request receipts, `4` existing Registry runs, `5` existing artifacts. New code has no run-creation or mutation path.
+- Physical device acceptance of **the NEW preflight and card UI** remains pending operator inspection. Do not claim the older two-physical-device acceptance proves the new UI.
+
+
 
 ## Authoritative contract boundaries
 
@@ -41,4 +54,4 @@ A *future* proposal may persist a versioned pre-run card with a real issuer/secu
 
 ## Hosted Preview deployment boundary
 
-The presently deployed protected Preview URL from prior PR #422 continues running commit `1354319219c99695239a0f24ed2bc8ffd5444310`; this draft branch is **not deployed**. A later opt-in shadow-only Preview redeploy must verify project ID `prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE`, exact SHA, SSO all, all Preview-only secrets, no Production env, strict SHADOW ref `awgsurdyvsyolcgpnygh`, and post-deploy absence of new Registry runs/artifacts.
+The earlier PR #422 protected Preview URL remains a distinct historical deployment. The new protected Preview URL and pinned SHA are listed in the deployment update above; this PR remains **DRAFT** and has not been merged. A later opt-in shadow-only Preview redeploy must verify project ID `prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE`, exact SHA, SSO all, all Preview-only secrets, no Production env, strict SHADOW ref `awgsurdyvsyolcgpnygh`, and post-deploy absence of new Registry runs/artifacts.
