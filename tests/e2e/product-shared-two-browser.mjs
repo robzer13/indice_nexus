@@ -54,7 +54,8 @@ try {
   // The second independently logged-in browser observes the same durable
   // receipt via the PostgreSQL-backed REST fixture, not shared cookies.
   await desktopPage.reload();
-  await desktopPage.getByText(requestId, { exact: false }).first().waitFor();
+  await desktopPage.locator('[data-testid="research-request-reference"]:visible')
+    .filter({ hasText: requestId }).first().waitFor();
   const desktopText = await desktopPage.locator('body').innerText();
   assert.ok(desktopText.includes(requestId));
   assert.match(desktopText, /Synthetic Research Alpha/);
@@ -67,8 +68,18 @@ try {
     'Both browser sessions must return identical persistent request UUID');
   assert.equal(second.get('result'), 'existing');
 
+  assert.equal(await desktopPage.locator('[data-testid="research-pilotage-preflight"]').count(), 1,
+    'Pilotage read-only preflight must be visible as a separately expandable gate');
+  await desktopPage.locator('[data-testid="research-pilotage-preflight"]').first().locator('summary').click();
+  await desktopPage.getByText('BLOCKED_NOT_AUTHORIZED', { exact: false }).waitFor();
+  assert.equal(await desktopPage.getByRole('button', { name: /GO|lancer Research/i }).count(), 0,
+    'A request must never expose a hidden run-creation or GO button');
+
   await phonePage.reload();
-  await phonePage.getByText(requestId, { exact: false }).first().waitFor();
+  await phonePage.locator('[data-testid="research-request-reference"]:visible')
+    .filter({ hasText: requestId }).first().waitFor();
+  assert.equal(await phonePage.locator('[data-testid="research-mobile-request"]:visible').count(), 1,
+    'Phone must show a legible receipt card without horizontally scrolling a table');
   const matching = await phonePage.locator('tbody tr').count();
   assert.equal(matching, 1, 'Parallel browser sessions must not create a second request');
   assert.match(await phonePage.locator('body').innerText(), /aucun Registry run/i);
