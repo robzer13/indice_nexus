@@ -70,7 +70,12 @@ try {
 
   assert.equal(await desktopPage.locator('[data-testid="research-pilotage-preflight"]').count(), 1,
     'Pilotage read-only preflight must be visible as a separately expandable gate');
-  await desktopPage.locator('[data-testid="research-pilotage-preflight"]').first().locator('summary').click();
+  assert.equal(await desktopPage.locator('[data-testid="pilotage-pre-run-card"]').count(), 1,
+    'A blocked read-only pre-run card must be shown for every request');
+  await desktopPage.getByText('PRÉPARATION · EXÉCUTION BLOQUÉE').first().waitFor();
+  assert.equal(await desktopPage.getByRole('button', { name: /GO <|Autoriser exécution|Créer un RUN_ID/i }).count(), 0,
+    'Read-only pre-run cards cannot expose execution-authorizing controls');
+    await desktopPage.locator('[data-testid="research-pilotage-preflight"]').first().locator('summary').click();
   await desktopPage.getByText('BLOCKED_NOT_AUTHORIZED', { exact: false }).waitFor();
   assert.equal(await desktopPage.getByRole('button', { name: /GO|lancer Research/i }).count(), 0,
     'A request must never expose a hidden run-creation or GO button');
