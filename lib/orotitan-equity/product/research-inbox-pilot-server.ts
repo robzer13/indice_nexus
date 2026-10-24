@@ -1,11 +1,12 @@
 import 'server-only';
 import { isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
+import type { ResearchIdentitySnapshot } from './research-intake-preflight-v1';
 import { join } from 'node:path';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { getAllCompanies } from '@/lib/data/company-admin';
 import {
   enqueueLocalResearchRequest, listLocalResearchRequests,
-  type ResearchInboxCompany,
+  type ResearchInboxCompany, type ResearchInboxRequest,
 } from './local-research-inbox-v1';
 import {
   enqueueSharedResearchCandidate, listSharedResearchInboxCandidate,
@@ -112,4 +113,52 @@ export async function requestPilotResearch(companyId: string) {
     return enqueueSharedResearchCandidate({ client: sharedTestClient(), companyId });
   }
   throw new Error('PRODUCT_PILOT_DISABLED');
+}
+
+/**
+ * Read-only Registry candidate lookup. This does not confirm issuer identity,
+ * pick a canonical mode, attach an execution GO, or write any run or request.
+ * CI/local fixture does not expose Registry data and must fail closed.
+ */
+export async function getPilotResearchIdentitySnapshot(
+  requests: readonly ResearchInboxRequest[],
+): Promise<ResearchIdentitySnapshot> {
+  if (!isHostedShadowResearchEnabled(process.env)) {
+    return { verified: false, securities: [] };
+  }
+  if (requests.length === 0) return { verified: true, securities: [] };
+  const tickers = [...new Set(requests.map(r => r.ticker.trim().toUpperCase()))];
+  if (tickers.length === 0 || tickers.length > 500) {
+    return { verified: false, securities: [] };
+  }
+  try {
+    const { data, error } = await sharedTestClient()
+      .from('securities')
+      .select('security_id,issuer_id,ticker,exchange')
+      .in('ticker', tickers)
+      .limit(1000);
+    // A capped/incomplete dataset must NEVER be mistaken for a unique match.
+    if (error || !data || data.length >= 1000) {
+      return { verified: false, securities: [] };
+    }
+    const candidateRows = data as Array<Record<string, unknown>>;
+    if (candidateRows.some(row =>
+      typeof row.security_id !== 'string' || typeof row.issuer_id !== 'string' ||
+      typeof row.ticker !== 'string' || typeof row.exchange !== 'string',
+    )) {
+      return { verified: false, securities: [] };
+    }
+    return {
+      verified: true,
+      securities: candidateRows.map(row => ({
+        securityId: row.security_id as string,
+        issuerId: row.issuer_id as string,
+        ticker: row.ticker as string,
+        exchange: row.exchange as string,
+      })),
+    };
+  } catch {
+    // Explicit unknown, rather than erroneously claiming no issuer exists.
+    return { verified: false, securities: [] };
+  }
 }
