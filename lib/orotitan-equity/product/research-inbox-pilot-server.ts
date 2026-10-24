@@ -1,6 +1,7 @@
 import 'server-only';
 import { isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
 import type { ResearchIdentitySnapshot } from './research-intake-preflight-v1';
+import type { ResearchRegistryRoutingSnapshot } from './research-pre-run-card-v1';
 import { join } from 'node:path';
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { getAllCompanies } from '@/lib/data/company-admin';
@@ -163,5 +164,111 @@ export async function getPilotResearchIdentitySnapshot(
   } catch {
     // Explicit unknown, rather than erroneously claiming no issuer exists.
     return { verified: false, securities: [] };
+  }
+}
+
+/**
+ * Read-only SHADOW Registry routing snapshot. Never upgrades a Research
+ * request to a run, never writes dossiers, and never confirms legal identity.
+ * Only the exact hosted SHADOW Preview may query canonical Registry tables.
+ */
+export async function getPilotResearchRegistryRoutingSnapshot(
+  identity: ResearchIdentitySnapshot,
+): Promise<ResearchRegistryRoutingSnapshot> {
+  const unavailable: ResearchRegistryRoutingSnapshot = {
+    verified: false, issuers: [], dossiers: [], snapshots: [], runs: [],
+  };
+  if (!isHostedShadowResearchEnabled(process.env) || !identity.verified) {
+    return unavailable;
+  }
+  const issuerIds = [...new Set(identity.securities.map(s => s.issuerId))];
+  if (!issuerIds.every(id => UUID_RE.test(id)) || issuerIds.length > 100) {
+    return unavailable;
+  }
+  if (issuerIds.length === 0) {
+    return { verified: true, issuers: [], dossiers: [], snapshots: [], runs: [] };
+  }
+  try {
+    const client = sharedTestClient();
+    const [issuerResult, dossierResult, runResult] = await Promise.all([
+      client.from('issuers')
+        .select('issuer_id,display_name,legal_name,country,reporting_currency')
+        .in('issuer_id', issuerIds).limit(500),
+      client.from('research_dossiers')
+        .select('dossier_id,issuer_id,current_snapshot_id,active')
+        .in('issuer_id', issuerIds).limit(500),
+      client.from('orotitan_runs')
+        .select('run_id,issuer_id,run_status')
+        .in('issuer_id', issuerIds).limit(500),
+    ]);
+    if (issuerResult.error || dossierResult.error || runResult.error ||
+      !issuerResult.data || !dossierResult.data || !runResult.data ||
+      issuerResult.data.length >= 500 || dossierResult.data.length >= 500 ||
+      runResult.data.length >= 500) return unavailable;
+
+    const issuers = issuerResult.data as Record<string, unknown>[];
+    const dossiers = dossierResult.data as Record<string, unknown>[];
+    const runs = runResult.data as Record<string, unknown>[];
+    if (issuers.some(i => !UUID_RE.test(String(i.issuer_id ?? '')) ||
+      typeof i.display_name !== 'string' ||
+      (i.legal_name !== null && typeof i.legal_name !== 'string') ||
+      (i.country !== null && typeof i.country !== 'string') ||
+      (i.reporting_currency !== null && typeof i.reporting_currency !== 'string'))) {
+      return unavailable;
+    }
+    if (dossiers.some(d => !UUID_RE.test(String(d.dossier_id ?? '')) ||
+      !UUID_RE.test(String(d.issuer_id ?? '')) ||
+      typeof d.active !== 'boolean' ||
+      (d.current_snapshot_id !== null && !UUID_RE.test(String(d.current_snapshot_id))))) {
+      return unavailable;
+    }
+    if (runs.some(run => !UUID_RE.test(String(run.run_id ?? '')) ||
+      !UUID_RE.test(String(run.issuer_id ?? '')) ||
+      typeof run.run_status !== 'string')) return unavailable;
+
+    const snapshotIds = [...new Set(dossiers
+      .filter(d => d.active && d.current_snapshot_id)
+      .map(d => String(d.current_snapshot_id)))];
+    let snapshots: Record<string, unknown>[] = [];
+    if (snapshotIds.length > 0) {
+      const result = await client.from('research_snapshots')
+        .select('snapshot_id,issuer_id,dossier_id')
+        .in('snapshot_id', snapshotIds).limit(500);
+      if (result.error || !result.data || result.data.length >= 500) return unavailable;
+      snapshots = result.data as Record<string, unknown>[];
+      if (snapshots.some(snapshot =>
+        !UUID_RE.test(String(snapshot.snapshot_id ?? '')) ||
+        !UUID_RE.test(String(snapshot.issuer_id ?? '')) ||
+        !UUID_RE.test(String(snapshot.dossier_id ?? '')))) return unavailable;
+    }
+
+    return {
+      verified: true,
+      issuers: issuers.map(i => ({
+        issuerId: i.issuer_id as string,
+        displayName: i.display_name as string,
+        legalName: i.legal_name as string | null,
+        country: i.country as string | null,
+        reportingCurrency: i.reporting_currency as string | null,
+      })),
+      dossiers: dossiers.map(d => ({
+        dossierId: d.dossier_id as string,
+        issuerId: d.issuer_id as string,
+        active: d.active as boolean,
+        currentSnapshotId: d.current_snapshot_id as string | null,
+      })),
+      snapshots: snapshots.map(snapshot => ({
+        snapshotId: snapshot.snapshot_id as string,
+        issuerId: snapshot.issuer_id as string,
+        dossierId: snapshot.dossier_id as string,
+      })),
+      runs: runs.map(run => ({
+        runId: run.run_id as string,
+        issuerId: run.issuer_id as string,
+        runStatus: run.run_status as string,
+      })),
+    };
+  } catch {
+    return unavailable;
   }
 }
