@@ -5,12 +5,15 @@ import { AdminNav } from '@/components/admin/admin-nav';
 import { isAdminAuthenticated } from '@/lib/auth/admin-session';
 import {
   researchInboxPilotMode, getPilotResearchCompanies, loadPilotResearchInbox,
-  getPilotResearchIdentitySnapshot,
+  getPilotResearchIdentitySnapshot, getPilotResearchRegistryRoutingSnapshot,
 } from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import { requestResearchPilotAction } from './actions';
 import {
   assessResearchIntakePreflight, PREFLIGHT_BLOCKER_TEXT,
 } from '@/lib/orotitan-equity/product/research-intake-preflight-v1';
+import {
+  buildResearchPreRunCard, PRE_RUN_REASON_LABELS,
+} from '@/lib/orotitan-equity/product/research-pre-run-card-v1';
 
 export const dynamic = 'force-dynamic';
 export const metadata: Metadata = { title: 'Demandes Research — pilote isolé OroTitan' };
@@ -47,6 +50,9 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
   ]);
   const activeCompanies = companies.filter(c => c.active);
   const identitySnapshot = await getPilotResearchIdentitySnapshot(requests);
+  const routingSnapshot = await getPilotResearchRegistryRoutingSnapshot(identitySnapshot);
+  const preRunCards = requests.map(r =>
+    buildResearchPreRunCard(r, identitySnapshot, routingSnapshot));
   const preflightByRequest = new Map(requests.map(r => [
     r.requestId, assessResearchIntakePreflight(r, identitySnapshot),
   ]));
@@ -235,6 +241,80 @@ export default async function ResearchRequestsPage({ searchParams }: { searchPar
         })}
         {requests.length === 0 && <p className="text-sm text-slate-400">
           Aucun préflight : aucune demande enregistrée.
+        </p>}
+      </div>
+    </section>
+    <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5"
+      data-testid="pilotage-pre-run-cards">
+      <h2 className="text-lg font-semibold text-white">5. Fiches pré-run · propositions non autorisées</h2>
+      <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-400">
+        Lecture des identités et dossiers du Registry Shadow. Les modes proposés ne sont
+        ni un mandat, ni une certification d’identité, ni un GO. DATA_CUTOFF et pins
+        contractuels devront être fixés avant toute création de run. Aucune écriture.
+      </p>
+      <div className="mt-4 space-y-4">
+        {preRunCards.map(card => <article key={card.requestId}
+          data-testid="pilotage-pre-run-card"
+          className="rounded-xl border border-slate-700 bg-slate-950/60 p-4">
+          <div className="flex flex-wrap items-start justify-between gap-2">
+            <div>
+              <h3 className="font-semibold text-white">{card.displayedCompany}</h3>
+              <p className="mt-1 break-all font-mono text-xs text-slate-500">
+                Demande : {card.requestId}
+              </p>
+            </div>
+            <span className="text-xs font-semibold text-amber-300">
+              PRÉPARATION · EXÉCUTION BLOQUÉE
+            </span>
+          </div>
+          <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
+            <div><dt className="text-slate-500">Émetteur candidat</dt>
+              <dd className="mt-1 text-slate-200">{card.issuerDisplayName ?? 'Non résolu'}</dd>
+              {card.candidateIssuerId && <dd className="mt-1 break-all font-mono text-xs text-slate-500">
+                {card.candidateIssuerId}
+              </dd>}</div>
+            <div><dt className="text-slate-500">Nom légal / pays</dt>
+              <dd className="mt-1 text-slate-200">
+                {card.legalIssuerName ?? 'Non vérifié'} · {card.country ?? 'Pays non vérifié'}
+              </dd></div>
+            <div><dt className="text-slate-500">Parcours / proposition de mode</dt>
+              <dd className="mt-1 text-slate-200">
+                {card.entryPath} · {card.canonicalModeProposal ?? 'Indéterminé'}
+                {card.runTypeProposal ? ` / ${card.runTypeProposal}` : ''}
+              </dd></div>
+            <div><dt className="text-slate-500">Dossier / baseline</dt>
+              <dd className="mt-1 break-all text-slate-200">
+                {card.baselineSnapshotId
+                  ? `Snapshot ${card.baselineSnapshotId}`
+                  : card.runTypeProposal === 'INITIAL'
+                    ? 'Aucun dossier identifié — à confirmer'
+                    : 'Non vérifié'}
+              </dd></div>
+            <div><dt className="text-slate-500">DATA_CUTOFF</dt>
+              <dd className="mt-1 text-amber-200">Non fixé — à résoudre au lancement</dd></div>
+            <div><dt className="text-slate-500">Contrats / GO d’exécution</dt>
+              <dd className="mt-1 text-amber-200">Non vérifiés / GO non reçu</dd></div>
+          </dl>
+          <p className="mt-4 text-sm text-slate-300">
+            Pipeline envisagé : RESEARCH → DEEP DIVE → INTEGRATION.
+            Publication interdite sans GO PUBLISH distinct.
+          </p>
+          <details className="mt-3 rounded-lg border border-slate-800 p-3">
+            <summary className="cursor-pointer text-sm text-amber-300">
+              Voir les blocages ({card.blockingReasons.length})
+            </summary>
+            <ul className="mt-3 list-disc space-y-2 pl-5 text-sm text-slate-300">
+              {card.blockingReasons.map(code => <li key={code}>
+                {PRE_RUN_REASON_LABELS[code] ?? 'Contrôle non résolu'}
+              </li>)}
+            </ul>
+          </details>
+          <p className="mt-3 text-xs text-amber-200">
+            RUN_ID = aucun · EXECUTION_ADMITTED = false · GO PUBLISH = non autorisé
+          </p>
+        </article>)}
+        {preRunCards.length === 0 && <p className="text-sm text-slate-400">
+          Aucune fiche pré-run tant qu’aucune demande n’existe.
         </p>}
       </div>
     </section>
