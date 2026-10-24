@@ -123,10 +123,14 @@ export function buildResearchPreRunCard(
       if (dossiers.length > 1) {
         reasons.push('MULTIPLE_ACTIVE_CANONICAL_DOSSIERS');
       } else if (dossiers.length === 0) {
-        // A proposal, never a commitment. A future validation must verify that
-        // there is genuinely no canonical dossier elsewhere/under an alias.
-        mode = 'ANALYZE';
-        runType = 'INITIAL';
+        // A historical/inactive dossier is NOT equivalent to no dossier.
+        if (registry.dossiers.some(d => d.issuerId === issuerId)) {
+          reasons.push('HISTORICAL_DOSSIER_STATE_NEEDS_REVIEW');
+        } else {
+          // Proposal only. Alias and issuer identity still require confirmation.
+          mode = 'ANALYZE';
+          runType = 'INITIAL';
+        }
       } else {
         const dossier = dossiers[0];
         const baselines = registry.snapshots.filter(s =>
@@ -197,6 +201,7 @@ export const PRE_RUN_REASON_LABELS: Readonly<Record<string, string>> = {
   LEGAL_ISSUER_IDENTITY_INCOMPLETE: 'Nom légal, pays ou identité de l’émetteur incomplets.',
   ISSUER_HUMAN_CONFIRMATION_REQUIRED: 'Confirmer explicitement émetteur et titre avant tout GO.',
   MULTIPLE_ACTIVE_CANONICAL_DOSSIERS: 'Plusieurs dossiers actifs ; ne pas choisir automatiquement.',
+  HISTORICAL_DOSSIER_STATE_NEEDS_REVIEW: 'Dossier historique inactif présent ; choix INITIAL ou REFRESH non autorisé.',
   CANONICAL_BASELINE_INVALID_OR_MISSING: 'Snapshot canonique de référence absent ou incohérent.',
   RUN_REGISTRY_STATE_INVALID: 'Statut ou identité d’un run existant invalide.',
   EXISTING_NONTERMINAL_RUN_REVIEW: 'Un run non terminal existe ; vérifier la reprise avant création.',
