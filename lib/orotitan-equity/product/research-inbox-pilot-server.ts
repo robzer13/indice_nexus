@@ -21,7 +21,7 @@ import {
 export type ResearchInboxPilotMode = 'disabled' | 'local' | 'shared-test';
 
 const PROD_REF = 'cugpgtzygqqlxetyeven';
-const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function researchInboxPilotMode(): ResearchInboxPilotMode {
   // On Vercel, both Preview and Production MUST obey the single strict
