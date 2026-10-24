@@ -3,6 +3,26 @@
 **Status update (2026-10-24): LIVE ISOLATED VERCEL PREVIEW READY; physical device acceptance NOT YET VERIFIED.**
 No Research executed, no new Registry run, no production Supabase writes, no PR merge or GO PUBLISH.
 
+## Real desktop + phone acceptance evidence (2026-10-24)
+
+The operator manually used the protected SHADOW Preview on a **real desktop browser and a real mobile browser**, submitted the synthetic Beta Research request, and provided screenshots from both devices.
+
+**Directly observed from screenshots**
+- Desktop: Research inbox displayed two requests (Synthetic Research Alpha and Synthetic Research Beta), both `Demandé · non exécuté`; pilot run counter `0`. The desktop URL included `result=existing` for Beta and returned request UUID `b20f2252-5b5d-4ccc-b24e-f1d7b26a4dce`.
+- Phone: the same two companies were visible with matching dates and times, total requests `2`, not-executed requests `2`, pilot run counter `0`.
+- Thus **physical cross-device shared-list retrieval and rendering is evidenced**. This is not merely two emulated Chromium contexts.
+- **Remaining proof gap:** the mobile screenshot shows only company/date columns; mobile UUIDs/status columns were beyond the horizontal scroll. Strict per-device UUID equality is **not visually evidenced** yet. User can swipe horizontally on the request table to expose the References.
+- **Mobile UX observation:** request table overflows horizontally and requires a horizontal swipe to see the request UUID. Consider a separate responsive request-card layout in a later review PR; do not silently alter the validated deployed SHA.
+
+**Authoritative Supabase SHADOW read-back after the screenshots** (SELECT only) returned exactly:
+- `Synthetic Research Alpha`: request UUID `29402dfe-3f7d-43a1-bb08-e0b6c001141a`, status `REQUESTED_NOT_EXECUTED`, `registry_run_id = NULL`.
+- `Synthetic Research Beta`: request UUID `b20f2252-5b5d-4ccc-b24e-f1d7b26a4dce`, status `REQUESTED_NOT_EXECUTED`, `registry_run_id = NULL`.
+- Prior run/artifact count in this acceptance was 4/5; the application itself reports no Research runs created by this pilot. Do not assert these counts are freshly re-audited from this screenshot alone.
+
+**Acceptance disposition:** hosted SHADOW Research request inbox is functional on real desktop and phone and shares the same request set. Strict physical-device UUID parity awaits mobile References-column inspection. This does **not** authorize any Research execution, Registry run creation, GO PUBLISH or production merge. PR remains draft.
+
+---
+
 ## Update: isolated nonproduction deployment READY (2026-10-24)
 
 The following observations **supersede the historical first-attempt blocker below**:
