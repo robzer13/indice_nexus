@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { validateV2ResearchSnapshotForPersistence } from "../lib/orotitan-equity/v2/research-snapshot-schema";
 import {
   validateV2ResearchSnapshotForPersistenceWithLongThesis,
@@ -13,6 +14,7 @@ import {
   persistValidatedV2ResearchSnapshotWithLongThesis,
 } from "../lib/orotitan-equity/v2/persistence-core-thesis-compat";
 import { validateV2ProductSemantics } from "../lib/orotitan-equity/v2/product";
+import { verifyCertifiedThesisAndCandidate } from "../lib/orotitan-equity/v2/certified-thesis-source-admission";
 
 const dossierId = "00000000-0000-4000-8000-000000000001";
 const issuerId = "00000000-0000-4000-8000-000000000002";
@@ -183,11 +185,84 @@ test("compact UI preview is never the canonical stored text",()=>{
   assert.throws(()=>compactThesisForDisplay(full,0));
 });
 
+
+const testRunId = "00000000-0000-4000-8000-000000000099";
+const cutoff = "2026-09-15";
+function sealedSource(body: Record<string, unknown>) {
+  const bytesUtf8 = JSON.stringify(body);
+  return {
+    bytesUtf8,
+    expectedSha256: createHash("sha256").update(bytesUtf8, "utf8").digest("hex"),
+    expectedBytes: Buffer.byteLength(bytesUtf8, "utf8"),
+    expectedVersion: 1,
+  };
+}
+function makeSealedSourceProof(candidate: Record<string,unknown>) {
+  const mapped=thesis(candidate);
+  const thesisSource={
+    QUALITY_CASE:mapped.quality_case,
+    VALUATION_CASE:mapped.valuation_case,
+    KEY_RISK:mapped.key_risk,
+  };
+  return {
+    runId:testRunId,issuerId,securityId,dataCutoff:cutoff,
+    structuredThesis:sealedSource({
+      run_id:testRunId,data_cutoff:cutoff,stage:"DEEP_DIVE",
+      artifact_type:"STRUCTURED_INVESTMENT_THESIS_ARTIFACT",version:1,...thesisSource,
+    }),
+    deepDiveReport:sealedSource({
+      run_id:testRunId,data_cutoff:cutoff,stage:"DEEP_DIVE",
+      artifact_type:"DEEP_DIVE_REPORT",version:1,thesis:thesisSource,
+    }),
+  };
+}
+
+test("exact sealed upstream 385/284/1100 text admits without any canonical rewrite",()=>{
+  const input=longThesis();
+  const before=JSON.stringify(input);
+  const proof=makeSealedSourceProof(input);
+  const check=verifyCertifiedThesisAndCandidate({
+    ...proof,dossierId,canonicalCandidate:input,
+  });
+  assert.equal(check.admittedForValidation,true,JSON.stringify(check));
+  assert.equal(JSON.stringify(input),before);
+});
+
+test("candidate rewriting, source inconsistency or cutoff mismatch fail closed",()=>{
+  const source=longThesis(),proof=makeSealedSourceProof(source);
+  const tampered=structuredClone(source);
+  thesis(tampered).quality_case="SHORTENED";
+  let x=verifyCertifiedThesisAndCandidate({...proof,dossierId,canonicalCandidate:tampered});
+  assert.equal(x.admittedForValidation,false);
+  if(!x.admittedForValidation)assert.ok(x.errors.includes("CANDIDATE_REWRITES_CERTIFIED_THESIS:quality_case"));
+
+  const changed=structuredClone(source);
+  (changed.data_lock as Record<string,unknown>).data_cutoff="2025-01-01";
+  x=verifyCertifiedThesisAndCandidate({...proof,dossierId,canonicalCandidate:changed});
+  assert.equal(x.admittedForValidation,false);
+  if(!x.admittedForValidation)assert.ok(x.errors.includes("CANDIDATE_IDENTITY_OR_DATA_CUTOFF_MISMATCH"));
+
+  const forged=structuredClone(proof);
+  forged.structuredThesis.bytesUtf8 += " ";
+  x=verifyCertifiedThesisAndCandidate({...forged,dossierId,canonicalCandidate:source});
+  assert.equal(x.admittedForValidation,false);
+  if(!x.admittedForValidation)assert.ok(x.errors.some(e=>e.includes("SEALED_ARTIFACT_BYTES_OR_HASH_MISMATCH")));
+
+  const conflicting=structuredClone(proof);
+  const report=JSON.parse(conflicting.deepDiveReport.bytesUtf8);
+  report.thesis.QUALITY_CASE="another certified version";
+  conflicting.deepDiveReport=sealedSource(report);
+  x=verifyCertifiedThesisAndCandidate({...conflicting,dossierId,canonicalCandidate:source});
+  assert.equal(x.admittedForValidation,false);
+  if(!x.admittedForValidation)assert.ok(x.errors.includes("CERTIFIED_SOURCE_REPORT_CONFLICT:quality_case"));
+});
+
 test("opt-in writer sends exact admitted canonical payload only on validation PASS",async()=>{
   const input=longThesis();
+  const certifiedSourceProof=makeSealedSourceProof(input);
   let calls=0;
   const result=await persistValidatedV2ResearchSnapshotWithLongThesis({
-    dossierId,expectedCurrentSnapshotId:null,canonicalPayload:input,
+    dossierId,expectedCurrentSnapshotId:null,canonicalPayload:input,certifiedSourceProof,
   },async args=>{
     calls++;
     assert.strictEqual(args.p_canonical_payload,input);
@@ -201,6 +276,7 @@ test("opt-in writer sends exact admitted canonical payload only on validation PA
   (invalid.v2_product as Record<string,unknown>).classification="untrusted";
   await assert.rejects(persistValidatedV2ResearchSnapshotWithLongThesis({
     dossierId,expectedCurrentSnapshotId:null,canonicalPayload:invalid,
+    certifiedSourceProof:makeSealedSourceProof(input),
   },async()=>{
     calls++;
     throw new Error("RPC MUST NOT BE CALLED ON INVALID INPUT");
