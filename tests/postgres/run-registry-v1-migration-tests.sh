@@ -92,8 +92,32 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_cas_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry13" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_successor_verify"
 
-# The controlled, allowlisted cancellation RPC is additive: exercise it exclusively
-# in the temporary local database and roll all synthetic cancellation rows back.
+# The Pilotage-attempts table is provisioned externally to the frozen
+# Registry V1.12 migration chain (observed live). The cancellation migration must
+# FAIL CLOSED when that dependency is absent.
+if psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_migration" >/dev/null 2>&1; then
+  echo 'Cancellation migration unexpectedly admitted missing Pilotage attempts prerequisite' >&2
+  exit 4
+fi
+
+# Mirror exactly the external production relation's columns and run FK in the
+# THROWAWAY test DB. No production schema is created or changed here.
+psql -X -v ON_ERROR_STOP=1 -d "$database" <<'SQL' >/dev/null
+create table public.orotitan_pilotage_attempts(
+  attempt_id uuid primary key default gen_random_uuid(),
+  run_id uuid not null references public.orotitan_runs(run_id) on delete restrict,
+  stage_code text not null,
+  run_state_version bigint not null,
+  stage_state_version bigint not null,
+  state_fingerprint_sha256 text not null,
+  requested_operation text not null,
+  exact_next_action text not null,
+  first_seen_at timestamptz not null default now()
+);
+SQL
+
+# The allowlisted cancellation RPC is additive: exercise it in this temporary
+# database and roll all synthetic cancellation rows back after verification.
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_migration" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_verify"
 
