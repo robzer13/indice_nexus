@@ -19,6 +19,8 @@ export type ExactThesisAdmissionInput = Readonly<{
   runId: string;
   dataCutoff: string;
   dossierId: string;
+  issuerId: string;
+  securityId: string;
   structuredThesis: SealedThesisArtifact;
   deepDiveReport: SealedThesisArtifact;
   canonicalCandidate: unknown;
@@ -91,6 +93,13 @@ export function verifyCertifiedThesisAndCandidate(
   if (!isObject(candidate) || !isObject(candidate.v2_product) ||
       !isObject(candidate.v2_product.investment_thesis)) {
     return reject("CANONICAL_CANDIDATE_THESIS_MISSING");
+  }
+
+  if (!isObject(candidate.data_lock) ||
+      candidate.data_lock.data_cutoff !== input.dataCutoff ||
+      candidate.issuer_id !== input.issuerId ||
+      candidate.security_id !== input.securityId) {
+    return reject("CANDIDATE_IDENTITY_OR_DATA_CUTOFF_MISMATCH");
   }
 
   const candidateThesis = candidate.v2_product.investment_thesis;
