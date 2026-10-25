@@ -30,6 +30,8 @@ bundle_receipt_verify="$root/tests/postgres/registry-v1-bundle-persistence-integ
 successor_cas_verify="$root/tests/postgres/registry-v1-methodology-successor-cas-verify.sql"
 attestation_authority_verify="$root/tests/postgres/registry-v1-persistence-attestation-authority-verify.sql"
 valuation_date_successor_verify="$root/tests/postgres/registry-v1-valuation-date-successor-verify.sql"
+cancellation_migration="$root/migrations/20261025_orotitan_registry_controlled_run_cancellation_v1.sql"
+cancellation_verify="$root/tests/postgres/registry-controlled-run-cancellation-v1-verify.sql"
 database="orotitan_registry_v1_$$"
 cleanup() { dropdb --if-exists --force "$database" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
@@ -90,9 +92,14 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_cas_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry13" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_successor_verify"
 
+# The controlled, allowlisted cancellation RPC is additive: exercise it exclusively
+# in the temporary local database and roll all synthetic cancellation rows back.
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_migration" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_verify"
+
 # The operational matrix is registry-only and must still leave legacy and
 # canonical identity rows byte-equivalent at the row-json level.
 test "$legacy_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(c)::text, ',' order by c.id) from companies c)||(select string_agg(row_to_json(s)::text, ',' order by s.id) from snapshots s)||(select string_agg(row_to_json(p)::text, ',' order by p.id) from market_prices p)||(select string_agg(row_to_json(r)::text, ',' order by r.id) from market_sync_runs r))")"
 test "$identity_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(i)::text, ',' order by i.issuer_id) from issuers i)||(select string_agg(row_to_json(s)::text, ',' order by s.security_id) from securities s)||(select string_agg(row_to_json(d)::text, ',' order by d.dossier_id) from research_dossiers d)||(select string_agg(row_to_json(m)::text, ',' order by m.legacy_company_id) from legacy_company_identity_map m))")"
 
-echo 'Registry V1.6/V1.7/V1.8 + forward bundle persistence + V1.9 + V1.10 + V1.11 + V1.12 valuation-date successor PostgreSQL 17 regression: PASS ALL'
+echo 'Registry V1.6–V1.12 + controlled run cancellation PostgreSQL 17 regression: PASS ALL'
