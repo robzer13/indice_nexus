@@ -3,6 +3,56 @@
 -- Code review + non-production tests required before deployment. No production DML here.
 begin;
 
+
+-- PRODUCTION PREREQUISITE: Pilotage attempts are provisioned outside the
+-- historical V1.12 Registry migration chain. Refuse deployment if missing.
+-- No replacement table is fabricated in production.
+do $dependency$
+declare
+  v_columns text[];
+begin
+  if to_regclass('public.orotitan_pilotage_attempts') is null then
+    raise exception 'CLEANUP_PILOTAGE_ATTEMPTS_DEPENDENCY_MISSING'
+      using errcode='42P01';
+  end if;
+
+  select array_agg(attname || ':' ||
+        pg_catalog.format_type(atttypid,atttypmod) || ':' ||
+        attnotnull::text order by attnum)
+  into v_columns
+  from pg_catalog.pg_attribute
+  where attrelid='public.orotitan_pilotage_attempts'::regclass
+    and attnum>0 and not attisdropped;
+
+  if v_columns is distinct from array[
+    'attempt_id:uuid:true',
+    'run_id:uuid:true',
+    'stage_code:text:true',
+    'run_state_version:bigint:true',
+    'stage_state_version:bigint:true',
+    'state_fingerprint_sha256:text:true',
+    'requested_operation:text:true',
+    'exact_next_action:text:true',
+    'first_seen_at:timestamp with time zone:true'
+  ]::text[] then
+    raise exception 'CLEANUP_PILOTAGE_ATTEMPTS_SCHEMA_MISMATCH'
+      using errcode='23514';
+  end if;
+
+  if not exists (
+    select 1
+    from pg_catalog.pg_constraint c
+    where c.conrelid='public.orotitan_pilotage_attempts'::regclass
+      and c.contype='f'
+      and pg_catalog.pg_get_constraintdef(c.oid) =
+        'FOREIGN KEY (run_id) REFERENCES orotitan_runs(run_id) ON DELETE RESTRICT'
+  ) then
+    raise exception 'CLEANUP_PILOTAGE_ATTEMPTS_RUN_FK_MISSING'
+      using errcode='23514';
+  end if;
+end;
+$dependency$;
+
 create or replace function public.cancel_orotitan_redundant_run_v1(
   p_run_id uuid,
   p_expected_state_version bigint,
