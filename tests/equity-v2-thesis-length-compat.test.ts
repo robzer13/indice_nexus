@@ -15,6 +15,8 @@ import {
 import { validateV2ProductSemantics } from "../lib/orotitan-equity/v2/product";
 
 const dossierId = "00000000-0000-4000-8000-000000000001";
+const issuerId = "00000000-0000-4000-8000-000000000002";
+const securityId = "00000000-0000-4000-8000-000000000003";
 
 function v2Discover(): Record<string, unknown> {
   return {
