@@ -21,6 +21,12 @@ Qualys replacement shares exact dossier, issuer/security, data cutoff and baseli
 
 Veolia is an empty sibling of a genuine same-parent, same-contract and same-cutoff V3.1 run with Deep Dive artifacts. Its historical parent `76ee7eb1-8658-4038-83bf-e2c951db731a` remains untouched. The BLOCKED valuation denominator is **not resolved by this cancellation**.
 
+## External Pilotage dependency (review finding #428)
+
+The table `public.orotitan_pilotage_attempts` exists in the live Supabase project, but its creation is absent from the checked-in historic Registry V1.12 migrations. Its observed production identity is **nine non-null columns**, in this order: `attempt_id uuid`, `run_id uuid`, `stage_code text`, `run_state_version bigint`, `stage_state_version bigint`, `state_fingerprint_sha256 text`, `requested_operation text`, `exact_next_action text`, `first_seen_at timestamptz`; it has a foreign key on `run_id` to `public.orotitan_runs(run_id)` with `ON DELETE RESTRICT`.
+
+**Do not manufacture an alternative production table.** The cancellation migration now aborts before installing its RPC unless the externally provisioned relation matches the exact expected columns and foreign key. The isolated PostgreSQL runner *first* asserts that migration is rejected without the relation; then it creates a matching test-only relation and executes the migration and transactional cancellation regression matrix. The test database is discarded and no production relation is changed.
+
 ## Migration
 
 `migrations/20261025_orotitan_registry_controlled_run_cancellation_v1.sql`
