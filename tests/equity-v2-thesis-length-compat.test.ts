@@ -130,7 +130,10 @@ test("new overlay only differs by three thesis maxLength restrictions and metada
   for (const k of ["$id","title","description","x-orotitan-compatibility-authority","x-orotitan-difference"]) {
     delete frozen[k];delete compatible[k];
   }
-  const p = (((frozen.properties as any).v2_product.properties.investment_thesis.properties)) as Record<string,{minLength?:number,maxLength?:number}>;
+  const propertyRoot = frozen.properties as Record<string, unknown>;
+  const productNode = (propertyRoot.v2_product as Record<string, unknown>).properties as Record<string, unknown>;
+  const thesisNode = (productNode.investment_thesis as Record<string, unknown>).properties as Record<string, unknown>;
+  const p = thesisNode as Record<string, { minLength?: number; maxLength?: number }>;
   for (const key of ["quality_case","valuation_case","key_risk"]) {
     assert.equal(p[key].maxLength,240);
     assert.equal(p[key].minLength,1);
