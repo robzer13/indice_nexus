@@ -61,10 +61,14 @@ test("altered source SHA or length cannot enter app validator",()=>{
 });
 test("source-candidate rewrites, wrong cutoff or issuer fail closed",()=>{
   for(const key of ["interpret","refresh","cutoff","issuer"]) {
-    const input=fixture();const candidate=structuredClone(input.candidate) as Record<string, any>;
-    if(key==="interpret")candidate.l2_research_fundamentals.analytical_metrics.return_interpretability="INTERPRETABLE_WITH_LIMITATIONS";
-    if(key==="refresh")candidate.l4_operational_state.refresh_class="NOT_APPLICABLE";
-    if(key==="cutoff")candidate.data_lock.data_cutoff="2026-01-01";
+    const input=fixture();const candidate=structuredClone(input.candidate) as Record<string, unknown>;
+    const l2=candidate.l2_research_fundamentals as Record<string, unknown>;
+    const metrics=l2.analytical_metrics as Record<string, unknown>;
+    const l4=candidate.l4_operational_state as Record<string, unknown>;
+    const lock=candidate.data_lock as Record<string, unknown>;
+    if(key==="interpret")metrics.return_interpretability="INTERPRETABLE_WITH_LIMITATIONS";
+    if(key==="refresh")l4.refresh_class="NOT_APPLICABLE";
+    if(key==="cutoff")lock.data_cutoff="2026-01-01";
     if(key==="issuer")candidate.issuer_id="00000000-0000-4000-8000-000000000007";
     const x=validateFicoStyleExactLiteralsFromSealedSources({...input,candidate});
     assert.equal(x.ok,false);
