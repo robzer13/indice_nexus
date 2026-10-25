@@ -17,7 +17,7 @@ Prior ad-hoc SQL cleanup was blocked by tool security controls; SELECT verificat
 | `d5cd803b-f959-4e41-ba55-5fbfc2a7d245` (Qualys V1 REFRESH) | 3 | `e41a8fe0-29cb-45e3-8bca-b1f19ac67d12` (PUBLISHED V2) | `REDUNDANT_HISTORICAL_REFRESH_ALREADY_PUBLISHED_V2` |
 | `d56a0bc9-4e80-48b3-b326-74d1fea15e63` (Veolia V3.1) | 2 | `a4cf9002-b52d-4440-8902-adc70bd777dd` (BLOCKED Deep Dive with artifacts) | `EMPTY_PARALLEL_METHOD_V3_1_SUCCESSOR_REDUNDANT` |
 
-Qualys replacement shares exact dossier, issuer/security, data cutoff and baseline; V2 published snapshot remains `e42a1396-357a-42f5-ae0c-5e750f321180`. The old V1 refresh retains eight historical artifacts.
+Qualys replacement shares exact dossier, issuer/security, data cutoff and baseline; V2 published snapshot remains `e42a1396-357a-42f5-ae0c-5e750f321180`. The old V1 refresh retains eight historical artifacts. It also retains **eight immutable outgoing `REVALIDATES` edges** to historical published V1 run `96e034d1-a3f7-460f-8207-7720b07f2fe1`; these links are not downstream consumers and must remain unmodified after closure. Cancellation refuses all **incoming** artifact edges and verifies the exact eight Qualys outgoing links.
 
 Veolia is an empty sibling of a genuine same-parent, same-contract and same-cutoff V3.1 run with Deep Dive artifacts. Its historical parent `76ee7eb1-8658-4038-83bf-e2c951db731a` remains untouched. The BLOCKED valuation denominator is **not resolved by this cancellation**.
 

@@ -161,7 +161,7 @@ begin
      or exists (select 1 from public.orotitan_runs
                 where parent_run_id=p_run_id)
      or exists (select 1 from public.orotitan_artifact_edges
-                where parent_run_id=p_run_id or child_run_id=p_run_id)
+                where parent_run_id=p_run_id)
      or exists (select 1 from public.orotitan_pilotage_attempts
                 where run_id=p_run_id)
      or exists (select 1 from public.orotitan_run_events
@@ -189,6 +189,21 @@ begin
        or v_stage.lifecycle_status <> 'COMPLETE'
        or v_stage.handoff_gate_state <> 'YES'
        or v_artifact_count <> 8
+       -- Historical Qualys refresh has eight immutable REVALIDATES edges
+       -- pointing TO its published V1 baseline. These are outgoing lineage,
+       -- not downstream dependencies that prevent administrative cancellation.
+       -- Preserve all eight edges exactly; reject any unexpected edge identity.
+       or (
+         select count(*)
+         from public.orotitan_artifact_edges e
+         where e.child_run_id=p_run_id
+       ) <> 8
+       or exists (
+         select 1 from public.orotitan_artifact_edges e
+         where e.child_run_id=p_run_id
+           and (e.parent_run_id <> '96e034d1-a3f7-460f-8207-7720b07f2fe1'::uuid
+                or e.relation_type <> 'REVALIDATES')
+       )
        or v_replacement.run_status <> 'PUBLISHED'
        or v_replacement.published_at is null
        or v_replacement.process_version <> '2.0'
@@ -218,6 +233,10 @@ begin
        or v_stage.lifecycle_status <> 'IN_PROGRESS'
        or v_stage.active_manifest_artifact_id is not null
        or v_artifact_count <> 0
+       or exists (
+         select 1 from public.orotitan_artifact_edges e
+         where e.child_run_id=p_run_id
+       )
        or v_replacement.process_version <> '3.1'
        or v_replacement.pilotage_contract_version <> '3.1'
        or v_replacement.contract_set_sha256 is distinct from v_target.contract_set_sha256

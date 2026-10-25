@@ -87,6 +87,10 @@ insert into public.orotitan_runs
   process_version,pilotage_contract_version,contract_pins,contract_set_sha256,
   state_version,published_at)
 values
+ ('96e034d1-a3f7-460f-8207-7720b07f2fe1','test:cancel:qualys:historical-initial',
+  'd37ccfaa-4dad-47c3-9b44-a752522cd7d5','5ca6f4a2-a796-55fd-58f8-0798a4b04fbe','17f57723-a218-8327-841a-04c5f5513174',
+  null,null,'IMPOSED_COMPANY','ANALYZE','INITIAL','PUBLISHED','INTEGRATION',
+  '2026-09-14','1.0','1.0.1',pg_temp.test_registry_contract_pins(),repeat('0',64),15,now()),
  ('d5cd803b-f959-4e41-ba55-5fbfc2a7d245','test:cancel:qualys:v1',
   'd37ccfaa-4dad-47c3-9b44-a752522cd7d5','5ca6f4a2-a796-55fd-58f8-0798a4b04fbe','17f57723-a218-8327-841a-04c5f5513174',
   null,'960fa825-adad-4bea-bd43-c45847c4c78c','IMPOSED_COMPANY','REFRESH','REFRESH','ACTIVE','RESEARCH',
@@ -116,6 +120,7 @@ insert into public.orotitan_run_stages
  (run_id,stage_code,stage_contract_name,stage_contract_version,stage_contract_sha256,
   lifecycle_status,handoff_gate_name,handoff_gate_state,started_at,completed_at)
 values
+ ('96e034d1-a3f7-460f-8207-7720b07f2fe1','RESEARCH','TEST','1',repeat('a',64),'COMPLETE','READY_FOR_DEEP_DIVE','YES',now(),now()),
  ('d5cd803b-f959-4e41-ba55-5fbfc2a7d245','RESEARCH','TEST','1',repeat('a',64),'COMPLETE','READY_FOR_DEEP_DIVE','YES',now(),now()),
  ('d56a0bc9-4e80-48b3-b326-74d1fea15e63','RESEARCH','TEST','1',repeat('a',64),'IN_PROGRESS','READY_FOR_DEEP_DIVE','NOT_EVALUATED',now(),null),
  ('a4cf9002-b52d-4440-8902-adc70bd777dd','DEEP_DIVE','TEST','1',repeat('a',64),'BLOCKED','READY_FOR_INTEGRATION','NOT_EVALUATED',now(),null);
@@ -127,6 +132,28 @@ select 1,'d5cd803b-f959-4e41-ba55-5fbfc2a7d245','RESEARCH','TEST_ARTIFACT',
        'test-qualys-'||i,'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT','application/json',
        10,repeat('c',64),'SUPABASE_STORAGE','test://qualys/'||i,'test','qualys/'||i
 from generate_series(1,8) i;
+-- Mirror the eight Qualys outgoing REVALIDATES edges to historical V1.
+-- They must be preserved, never confused with incoming consumers of this run.
+insert into public.orotitan_artifacts
+ (version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,media_type,
+  size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
+select 1,'96e034d1-a3f7-460f-8207-7720b07f2fe1','RESEARCH','TEST_ARTIFACT',
+       'test-qualys-history-'||i,'CHECKPOINT_STAGE_OUTPUT','CHECKPOINT','application/json',
+       10,repeat('d',64),'SUPABASE_STORAGE','test://qualys/history/'||i,'test','qualys/history/'||i
+from generate_series(1,8) i;
+
+insert into public.orotitan_artifact_edges (
+ child_run_id,child_artifact_id,child_version,
+ parent_run_id,parent_artifact_id,parent_version,relation_type
+)
+select child.run_id,child.artifact_id,child.version,
+       parent.run_id,parent.artifact_id,parent.version,'REVALIDATES'
+from public.orotitan_artifacts child
+join public.orotitan_artifacts parent
+  on parent.logical_name = replace(child.logical_name,'test-qualys-','test-qualys-history-')
+where child.run_id='d5cd803b-f959-4e41-ba55-5fbfc2a7d245'::uuid
+  and parent.run_id='96e034d1-a3f7-460f-8207-7720b07f2fe1'::uuid;
+
 insert into public.orotitan_artifacts
  (version,run_id,stage_code,artifact_type,logical_name,authority_class,authority_state,media_type,
   size_bytes,content_sha256,storage_backend,storage_uri,supabase_bucket,supabase_object_path)
@@ -196,6 +223,9 @@ begin
      or (select run_status from public.orotitan_runs where run_id=qr) <> 'PUBLISHED'
      or (select run_status from public.orotitan_runs where run_id=vr) <> 'BLOCKED'
      or (select count(*) from public.orotitan_artifacts where run_id=q) <> 8
+     or (select count(*) from public.orotitan_artifact_edges
+         where child_run_id=q and relation_type='REVALIDATES'
+           and parent_run_id='96e034d1-a3f7-460f-8207-7720b07f2fe1') <> 8
      or (select current_snapshot_id from public.research_dossiers
          where dossier_id='17f57723-a218-8327-841a-04c5f5513174') is distinct from
          'e42a1396-357a-42f5-ae0c-5e750f321180'::uuid
