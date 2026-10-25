@@ -4,6 +4,10 @@ import {
   type V2ResearchSnapshot,
 } from "./research-snapshot-schema-thesis-compat";
 import { ResearchSnapshotValidationError, type PersistenceResult } from "../v1/persistence-core";
+import {
+  verifyCertifiedThesisAndCandidate,
+  type ExactThesisAdmissionInput,
+} from "./certified-thesis-source-admission";
 
 export type V2SnapshotRpc = (args: {
   p_dossier_id: string;
@@ -15,6 +19,7 @@ export type PersistValidatedV2ResearchSnapshotInput = {
   dossierId: string;
   expectedCurrentSnapshotId: string | null;
   canonicalPayload: unknown;
+  certifiedSourceProof: Omit<ExactThesisAdmissionInput, "canonicalCandidate" | "dossierId">;
 };
 
 function isUuid(value: unknown): value is string {
@@ -41,6 +46,14 @@ export async function persistValidatedV2ResearchSnapshotWithLongThesis(
   if (!isUuid(input.dossierId)) throw new Error("dossierId must be a UUID compatible with physical persistence");
   if (input.expectedCurrentSnapshotId !== null && !isUuid(input.expectedCurrentSnapshotId)) {
     throw new Error("expectedCurrentSnapshotId must be null or a UUID");
+  }
+  const sourceGate = verifyCertifiedThesisAndCandidate({
+    ...input.certifiedSourceProof,
+    dossierId: input.dossierId,
+    canonicalCandidate: input.canonicalPayload,
+  });
+  if (!sourceGate.admittedForValidation) {
+    throw new Error(`V2.0.11 SEALED SOURCE ADMISSION DENIED: ${sourceGate.errors.join("; ")}`);
   }
   const validation = validateV2ResearchSnapshotForPersistenceWithLongThesis(input.canonicalPayload, input.dossierId);
   if (!validation.ok) throw new ResearchSnapshotValidationError(validation);
