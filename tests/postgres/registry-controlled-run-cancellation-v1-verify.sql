@@ -62,6 +62,24 @@ update public.research_dossiers
   set current_snapshot_id='e42a1396-357a-42f5-ae0c-5e750f321180'
   where dossier_id='17f57723-a218-8327-841a-04c5f5513174';
 
+-- V1.5 requires all 13 contract-pin records even in isolated fixtures.
+-- Synthetic immutable locators are test-only, never analytical authority.
+create function pg_temp.test_registry_contract_pins()
+returns jsonb language sql stable as $pins$
+  select jsonb_object_agg(k,jsonb_build_object(
+    'name','TEST_'||k,
+    'version','1.0',
+    'content_sha256',repeat('f',64),
+    'locator',jsonb_build_object(
+      'backend','HASH_ADDRESSED_PRIVATE_STORE',
+      'storage_uri','test://frozen-pins/'||k)))
+  from unnest(array[
+    'process','pilotage','research_stage','deep_dive_stage','integration_stage',
+    'analysis_standard','master_prompt','investment_policy','execution_patch',
+    'integration_spec','screener_schema','i2','i3b'
+  ]) as t(k);
+$pins$;
+
 insert into public.orotitan_runs
  (run_id,creation_idempotency_key,issuer_id,security_id,dossier_id,parent_run_id,baseline_snapshot_id,
   entry_path,canonical_mode,run_type,run_status,current_stage,data_cutoff,
@@ -71,26 +89,26 @@ values
  ('d5cd803b-f959-4e41-ba55-5fbfc2a7d245','test:cancel:qualys:v1',
   'd37ccfaa-4dad-47c3-9b44-a752522cd7d5','5ca6f4a2-a796-55fd-58f8-0798a4b04fbe','17f57723-a218-8327-841a-04c5f5513174',
   null,'960fa825-adad-4bea-bd43-c45847c4c78c','IMPOSED_COMPANY','REFRESH','REFRESH','ACTIVE','RESEARCH',
-  '2026-09-15','1.0','1.0.1','{}',repeat('1',64),3,null),
+  '2026-09-15','1.0','1.0.1',pg_temp.test_registry_contract_pins(),repeat('1',64),3,null),
  ('e41a8fe0-29cb-45e3-8bca-b1f19ac67d12','test:cancel:qualys:v2',
   'd37ccfaa-4dad-47c3-9b44-a752522cd7d5','5ca6f4a2-a796-55fd-58f8-0798a4b04fbe','17f57723-a218-8327-841a-04c5f5513174',
   null,'960fa825-adad-4bea-bd43-c45847c4c78c','IMPOSED_COMPANY','ANALYZE','REFRESH','PUBLISHED','INTEGRATION',
-  '2026-09-15','2.0','2.0','{}',repeat('2',64),10,now()),
+  '2026-09-15','2.0','2.0',pg_temp.test_registry_contract_pins(),repeat('2',64),10,now()),
  ('76ee7eb1-8658-4038-83bf-e2c951db731a','test:cancel:veolia:parent',
   'b7dd4445-ae1e-4f33-985b-216d83e3fbde','71bc5f4a-662e-4628-872f-c86d292a81be','59a08ccd-ceb4-42c2-ab04-aabec5cdc330',
   null,null,'IMPOSED_COMPANY','ANALYZE','INITIAL','BLOCKED','DEEP_DIVE',
-  '2026-09-22','3.0','3.0','{}',repeat('3',64),8,null),
+  '2026-09-22','3.0','3.0',pg_temp.test_registry_contract_pins(),repeat('3',64),8,null),
  ('d56a0bc9-4e80-48b3-b326-74d1fea15e63','test:cancel:veolia:empty',
   'b7dd4445-ae1e-4f33-985b-216d83e3fbde','71bc5f4a-662e-4628-872f-c86d292a81be','59a08ccd-ceb4-42c2-ab04-aabec5cdc330',
   '76ee7eb1-8658-4038-83bf-e2c951db731a',null,
   'IMPOSED_COMPANY','ANALYZE','INITIAL','ACTIVE','RESEARCH',
-  '2026-09-22','3.1','3.1','{}',
+  '2026-09-22','3.1','3.1',pg_temp.test_registry_contract_pins(),
   '3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2',2,null),
  ('a4cf9002-b52d-4440-8902-adc70bd777dd','test:cancel:veolia:sibling',
   'b7dd4445-ae1e-4f33-985b-216d83e3fbde','71bc5f4a-662e-4628-872f-c86d292a81be','59a08ccd-ceb4-42c2-ab04-aabec5cdc330',
   '76ee7eb1-8658-4038-83bf-e2c951db731a',null,
   'IMPOSED_COMPANY','ANALYZE','INITIAL','BLOCKED','DEEP_DIVE',
-  '2026-09-22','3.1','3.1','{}',
+  '2026-09-22','3.1','3.1',pg_temp.test_registry_contract_pins(),
   '3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2',7,null);
 
 insert into public.orotitan_run_stages
