@@ -26,6 +26,15 @@ begin
 end;
 $acl$;
 
+-- Pilotage attempts arrived after the frozen V1.12 fixture migration set.
+-- Production already has this table; the isolated test database does not.
+-- Create the minimal local dependency only inside this rolled-back transaction.
+create table public.orotitan_pilotage_attempts (
+  attempt_id uuid primary key default gen_random_uuid(),
+  run_id uuid not null references public.orotitan_runs(run_id),
+  requested_operation text
+);
+
 insert into public.issuers (issuer_id,display_name) values
  ('d37ccfaa-4dad-47c3-9b44-a752522cd7d5','Test Qualys'),
  ('b7dd4445-ae1e-4f33-985b-216d83e3fbde','Test Veolia');
