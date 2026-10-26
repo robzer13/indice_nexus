@@ -232,4 +232,109 @@ begin
   then raise exception 'CANCELLATION_POSTCONDITIONS_NOT_MET'; end if;
 end;
 $tests$;
+-- Historical publish events are the only accepted proof of snapshot ownership.
+-- Do not infer ownership from cutoff, run status, or created_at.
+insert into public.orotitan_run_events
+ (run_id,stage_code,event_type,idempotency_key,
+  request_fingerprint_sha256,actor_type,payload)
+values
+ ('96e034d1-a3f7-460f-8207-7720b07f2fe1','INTEGRATION','PUBLISH_SUCCEEDED',
+  'test:qualys:v1-published',repeat('a',64),'PUBLISHER',
+  jsonb_build_object('snapshot_id','960fa825-adad-4bea-bd43-c45847c4c78c')),
+ ('e41a8fe0-29cb-45e3-8bca-b1f19ac67d12','INTEGRATION','PUBLISH_SUCCEEDED',
+  'test:qualys:v2-published',repeat('b',64),'PUBLISHER',
+  jsonb_build_object('snapshot_id','e42a1396-357a-42f5-ae0c-5e750f321180'));
+
+-- Regression for status priority: READY_TO_PUBLISH Integration must beat newer
+-- ACTIVE Research on the same as-yet-unpublished issuer.
+insert into public.issuers(issuer_id,display_name)
+values('13277d16-1af8-4100-923a-e729518cc423','TEST publish-ready');
+insert into public.securities(security_id,issuer_id,ticker,exchange,trading_currency)
+values('1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+       '13277d16-1af8-4100-923a-e729518cc423','TREADY','TEST','USD');
+insert into public.research_dossiers(dossier_id,issuer_id,candidate_episode)
+values('b41d6785-738c-4142-80f9-5d0267996575',
+       '13277d16-1af8-4100-923a-e729518cc423',
+       'c787e75e-c171-41f6-bf25-78c47dce2dbb');
+insert into public.orotitan_runs(
+ run_id,creation_idempotency_key,issuer_id,security_id,dossier_id,
+ entry_path,canonical_mode,run_type,run_status,current_stage,data_cutoff,
+ process_version,pilotage_contract_version,contract_pins,contract_set_sha256,state_version
+) values(
+ 'ccf4a83e-539a-4860-873a-ecaa67c90252','test:ready-to-publish',
+ '13277d16-1af8-4100-923a-e729518cc423',
+ '1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+ 'b41d6785-738c-4142-80f9-5d0267996575',
+ 'IMPOSED_COMPANY','ANALYZE','INITIAL','READY_TO_PUBLISH','INTEGRATION',
+ '2026-09-19','3.0','3.0',pg_temp.test_registry_contract_pins(),repeat('c',64),3
+),(
+ 'c429ec86-886c-4ac8-8c88-ea4678b34b2c','test:newer-research',
+ '13277d16-1af8-4100-923a-e729518cc423',
+ '1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+ 'b41d6785-738c-4142-80f9-5d0267996575',
+ 'IMPOSED_COMPANY','ANALYZE','INITIAL','ACTIVE','RESEARCH',
+ '2026-09-21','3.1','3.1',pg_temp.test_registry_contract_pins(),repeat('d',64),2
+);
+
+-- Reference selection: synthetic Qualys canonical publication + Veolia blocked
+-- sibling must each resolve to exactly one stable operational pointer.
+do $references$
+declare
+  v_dossiers integer;
+  v_runs integer;
+  v_published integer;
+  v_receipt jsonb;
+  v_blocked boolean;
+begin
+  select count(*) into v_dossiers from public.research_dossiers where active=true;
+  select count(*) into v_published from public.research_dossiers
+    where active=true and current_snapshot_id is not null;
+  select count(distinct r.issuer_id) into v_runs
+    from public.orotitan_runs r
+    join public.research_dossiers d on d.dossier_id=r.dossier_id
+    where d.active=true and r.run_status <> 'CANCELLED';
+  v_receipt:=public.bootstrap_orotitan_references_v1(v_dossiers,v_runs,v_published);
+  if (v_receipt->>'reference_runs')::integer <> v_runs
+    or (select count(*) from public.orotitan_issuer_reference_runs_v1)<>v_runs
+    or (select count(*) from public.orotitan_current_reference_run_v1)<>v_dossiers
+  then raise exception 'REFERENCE_BOOTSTRAP_MISMATCH'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='d37ccfaa-4dad-47c3-9b44-a752522cd7d5')
+      is distinct from 'e41a8fe0-29cb-45e3-8bca-b1f19ac67d12'::uuid
+  then raise exception 'QUALYS_WRONG_REFERENCE'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='13277d16-1af8-4100-923a-e729518cc423')
+      is distinct from 'ccf4a83e-539a-4860-873a-ecaa67c90252'::uuid
+  then raise exception 'READY_TO_PUBLISH_NOT_PREFERRED'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='b7dd4445-ae1e-4f33-985b-216d83e3fbde')
+      is distinct from 'a4cf9002-b52d-4440-8902-adc70bd777dd'::uuid
+  then raise exception 'VEOLIA_WRONG_REFERENCE'; end if;
+
+  v_blocked:=false;
+  begin
+    perform public.bootstrap_orotitan_references_v1(v_dossiers,v_runs,v_published);
+  exception when check_violation then v_blocked:=true;
+  end;
+  if not v_blocked then raise exception 'UNSAFE_REFERENCE_REBOOTSTRAP'; end if;
+
+  v_blocked:=false;
+  begin
+    update public.orotitan_issuer_reference_runs_v1
+      set selection_policy='NEW_ISSUER_REFERENCE_V1'
+      where issuer_id='b7dd4445-ae1e-4f33-985b-216d83e3fbde';
+  exception when check_violation then v_blocked:=true;
+  end;
+  if not v_blocked then raise exception 'REFERENCE_MUTATION_NOT_BLOCKED'; end if;
+
+  if has_function_privilege('anon','public.bootstrap_orotitan_references_v1(integer,integer,integer)','EXECUTE')
+    or has_function_privilege('authenticated','public.enroll_orotitan_reference_run_v1(uuid,bigint)','EXECUTE')
+    or not has_function_privilege('service_role','public.bootstrap_orotitan_references_v1(integer,integer,integer)','EXECUTE')
+  then raise exception 'REFERENCE_SECURITY_BOUNDARY_FAILED'; end if;
+end;
+$references$;
+
 rollback;

@@ -11,6 +11,7 @@ export type RunSummary = {
   canonical_mode: string;
   data_cutoff: string;
   issuer_id: string | null;
+  issuer_name?: string | null;
   state_version: number;
   created_at: string;
   process_version: string;
@@ -36,6 +37,7 @@ export type OperatorBlocker = {
 
 export type OperatorRun = {
   runId: string;
+  issuerName: string;
   status: string;
   stage: string;
   mode: string;
@@ -103,7 +105,7 @@ export function asOperatorRun(
 ): OperatorRun {
   const relevant = stage?.stage_code === row.current_stage && stage.run_id === row.run_id ? stage : null;
   return {
-    runId: row.run_id, status: row.run_status,
+    runId: row.run_id, issuerName: row.issuer_name ?? row.issuer_id ?? "Inconnu", status: row.run_status,
     stage: row.current_stage ?? "NOT_ASSIGNED", mode: row.canonical_mode,
     cutoff: row.data_cutoff, stateVersion: row.state_version,
     createdAt: row.created_at,

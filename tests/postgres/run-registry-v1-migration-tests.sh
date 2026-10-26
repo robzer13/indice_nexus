@@ -31,6 +31,7 @@ successor_cas_verify="$root/tests/postgres/registry-v1-methodology-successor-cas
 attestation_authority_verify="$root/tests/postgres/registry-v1-persistence-attestation-authority-verify.sql"
 valuation_date_successor_verify="$root/tests/postgres/registry-v1-valuation-date-successor-verify.sql"
 cancellation_migration="$root/migrations/20261025_orotitan_registry_controlled_run_cancellation_v1.sql"
+reference_migration="$root/migrations/20261026_orotitan_single_reference_run_v1.sql"
 cancellation_verify="$root/tests/postgres/registry-controlled-run-cancellation-v1-verify.sql"
 database="orotitan_registry_v1_$$"
 cleanup() { dropdb --if-exists --force "$database" >/dev/null 2>&1 || true; }
@@ -119,6 +120,9 @@ SQL
 # The allowlisted cancellation RPC is additive: exercise it in this temporary
 # database and roll all synthetic cancellation rows back after verification.
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_migration" >/dev/null
+# The reference-selection contract installs before the synthetic cancellation
+# matrix, which verifies a canonical one-run-per-issuer projection.
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$reference_migration" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$cancellation_verify"
 
 # The operational matrix is registry-only and must still leave legacy and
