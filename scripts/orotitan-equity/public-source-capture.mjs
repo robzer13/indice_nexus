@@ -21,6 +21,10 @@ export function validateSourceUrl(input) {
     if (!/^\/(en\/)?(company|investors|news)\//.test(u.pathname)) throw Error('ISSUER_PATH_INVALID');
     return {url:u.href,issuer:'ASML',hostname:u.hostname};
   }
+  if (u.hostname === 'www.investor.asml.com') {
+    if (!/^\/static-files\/[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(u.pathname)) throw Error('INVESTOR_STATIC_PATH_INVALID');
+    return {url:u.href,issuer:'ASML_PDF',hostname:u.hostname};
+  }
   if (u.hostname === 'ourbrand.asml.com') {
     if (!/^\/m\/[A-Za-z0-9_-]+\/original\/[A-Za-z0-9_.-]+\.pdf$/i.test(u.pathname)) throw Error('ISSUER_PDF_PATH_INVALID');
     return {url:u.href,issuer:'ASML_PDF',hostname:u.hostname};
