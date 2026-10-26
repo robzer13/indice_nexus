@@ -1,6 +1,6 @@
 import {
   createPrivateKey, createPublicKey, sign, verify, randomUUID,
-  type KeyLike, type KeyObject,
+  KeyObject, type KeyLike,
 } from "node:crypto";
 import {
   rereadPrivateCandidate,
@@ -84,13 +84,13 @@ function validateAttestorId(attestorId: string, keyId: string, nonce: string): v
   fail(UUID.test(nonce), "CHALLENGE_NONCE_INVALID");
 }
 function asPrivateKey(key: KeyLike): KeyObject {
-  const obj = createPrivateKey(key);
-  fail(obj.asymmetricKeyType === "ed25519", "ATTESTOR_KEY_MUST_BE_ED25519");
+  const obj = key instanceof KeyObject ? key : createPrivateKey(key);
+  fail(obj.type === "private" && obj.asymmetricKeyType === "ed25519", "ATTESTOR_KEY_MUST_BE_ED25519");
   return obj;
 }
 function asPublicKey(key: KeyLike): KeyObject {
-  const obj = createPublicKey(key);
-  fail(obj.asymmetricKeyType === "ed25519", "VERIFIER_KEY_MUST_BE_ED25519");
+  const obj = key instanceof KeyObject ? key : createPublicKey(key);
+  fail(obj.type === "public" && obj.asymmetricKeyType === "ed25519", "VERIFIER_KEY_MUST_BE_ED25519");
   return obj;
 }
 /**
