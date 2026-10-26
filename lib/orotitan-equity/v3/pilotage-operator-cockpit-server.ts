@@ -106,8 +106,7 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
   const observed = (data ?? []) as Array<Partial<RunSummary> & {issuer_name: string}>;
   const pendingIssuers = observed.filter(x => !x.run_id)
     .map(x => x.issuer_name);
-  const registry = observed.filter((x): x is RunSummary & {issuer_name: string} =>
-    typeof x.run_id === "string") as RunSummary[];
+  const registry = observed.filter(x => typeof x.run_id === "string") as RunSummary[];
   let stages: OperatorStageObservation[] = [];
   if (registry.length > 0) {
     const result = await client.from("orotitan_run_stages")
