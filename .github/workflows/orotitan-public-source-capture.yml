@@ -35,7 +35,7 @@ jobs:
         id: capture
         continue-on-error: true
         env:
-          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://ourbrand.asml.com/m/3136300aa4999bc1/original/2026_01_28_Presentation-Investor-Relations-Q4-2025.pdf' }}
+          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://ourbrand.asml.com/m/71076aaad607de4d/original/asml-2025-annual-report-based-on-us-gaap.pdf' }}
           SOURCE_PUBLICATION_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.source_publication_date || '' }}
           SOURCE_CAPTURE_DIR: captured-public-source
           DATA_CUTOFF: '2026-09-21'
