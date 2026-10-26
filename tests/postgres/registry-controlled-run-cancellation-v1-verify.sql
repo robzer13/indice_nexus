@@ -232,6 +232,19 @@ begin
   then raise exception 'CANCELLATION_POSTCONDITIONS_NOT_MET'; end if;
 end;
 $tests$;
+-- Historical publish events are the only accepted proof of snapshot ownership.
+-- Do not infer ownership from cutoff, run status, or created_at.
+insert into public.orotitan_run_events
+ (run_id,stage_code,event_type,idempotency_key,
+  request_fingerprint_sha256,actor_type,payload)
+values
+ ('96e034d1-a3f7-460f-8207-7720b07f2fe1','INTEGRATION','PUBLISH_SUCCEEDED',
+  'test:qualys:v1-published',repeat('a',64),'PUBLISHER',
+  jsonb_build_object('snapshot_id','960fa825-adad-4bea-bd43-c45847c4c78c')),
+ ('e41a8fe0-29cb-45e3-8bca-b1f19ac67d12','INTEGRATION','PUBLISH_SUCCEEDED',
+  'test:qualys:v2-published',repeat('b',64),'PUBLISHER',
+  jsonb_build_object('snapshot_id','e42a1396-357a-42f5-ae0c-5e750f321180'));
+
 -- Reference selection: synthetic Qualys canonical publication + Veolia blocked
 -- sibling must each resolve to exactly one stable operational pointer.
 do $references$
