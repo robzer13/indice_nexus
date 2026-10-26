@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       source_url:
-        description: 'Public SEC issuer archive HTML, issuer ASML HTML or issuer-hosted PDF; NO private URLs'
+        description: 'Public SEC HTML or public issuer ASML static-file/PDF only; NO private URLs'
         required: true
         type: string
       source_publication_date:
@@ -35,7 +35,7 @@ jobs:
         id: capture
         continue-on-error: true
         env:
-          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://ourbrand.asml.com/m/71076aaad607de4d/original/asml-2025-annual-report-based-on-us-gaap.pdf' }}
+          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://www.investor.asml.com/static-files/5dc79e92-9e59-4a06-af63-22eb4408af16' }}
           SOURCE_PUBLICATION_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.source_publication_date || '' }}
           SOURCE_CAPTURE_DIR: captured-public-source
           DATA_CUTOFF: '2026-09-21'
