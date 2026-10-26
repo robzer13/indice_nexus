@@ -73,7 +73,7 @@ test("capture hash mismatch, invalid PDF signature rejected", async () => {
 test("untrusted and insecure source URLs fail before upload", async () => {
   await failure(() => uploadPrivateCandidate(fixture().writer, { ...source(), sourceUrl: "https://evil.example/hack.pdf" }), "UNTRUSTED_SOURCE_HOST");
   await failure(() => uploadPrivateCandidate(fixture().writer, { ...source(), sourceUrl: "http://www.sec.gov/Archives/f.pdf" }), "UNSAFE_SOURCE_URL");
-  await failure(() => uploadPrivateCandidate(fixture().writer, { ...source(), sourceUrl: "https://www.sec.gov@evil.example/test" }), "UNTRUSTED_SOURCE_HOST");
+  await failure(() => uploadPrivateCandidate(fixture().writer, { ...source(), sourceUrl: "https://www.sec.gov@evil.example/test" }), "UNSAFE_SOURCE_URL");
 });
 test("cannot silently upsert an existing content-addressed object", async () => {
   const f = fixture();
