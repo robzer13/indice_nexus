@@ -245,6 +245,37 @@ values
   'test:qualys:v2-published',repeat('b',64),'PUBLISHER',
   jsonb_build_object('snapshot_id','e42a1396-357a-42f5-ae0c-5e750f321180'));
 
+-- Regression for status priority: READY_TO_PUBLISH Integration must beat newer
+-- ACTIVE Research on the same as-yet-unpublished issuer.
+insert into public.issuers(issuer_id,display_name)
+values('13277d16-1af8-4100-923a-e729518cc423','TEST publish-ready');
+insert into public.securities(security_id,issuer_id,ticker,exchange,trading_currency)
+values('1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+       '13277d16-1af8-4100-923a-e729518cc423','TREADY','TEST','USD');
+insert into public.research_dossiers(dossier_id,issuer_id,candidate_episode)
+values('b41d6785-738c-4142-80f9-5d0267996575',
+       '13277d16-1af8-4100-923a-e729518cc423',
+       'c787e75e-c171-41f6-bf25-78c47dce2dbb');
+insert into public.orotitan_runs(
+ run_id,creation_idempotency_key,issuer_id,security_id,dossier_id,
+ entry_path,canonical_mode,run_type,run_status,current_stage,data_cutoff,
+ process_version,pilotage_contract_version,contract_pins,contract_set_sha256,state_version
+) values(
+ 'ccf4a83e-539a-4860-873a-ecaa67c90252','test:ready-to-publish',
+ '13277d16-1af8-4100-923a-e729518cc423',
+ '1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+ 'b41d6785-738c-4142-80f9-5d0267996575',
+ 'IMPOSED_COMPANY','ANALYZE','INITIAL','READY_TO_PUBLISH','INTEGRATION',
+ '2026-09-19','3.0','3.0',pg_temp.test_registry_contract_pins(),repeat('c',64),3
+),(
+ 'c429ec86-886c-4ac8-8c88-ea4678b34b2c','test:newer-research',
+ '13277d16-1af8-4100-923a-e729518cc423',
+ '1c67ad66-d73b-431e-a4c3-ea28190fdc12',
+ 'b41d6785-738c-4142-80f9-5d0267996575',
+ 'IMPOSED_COMPANY','ANALYZE','INITIAL','ACTIVE','RESEARCH',
+ '2026-09-21','3.1','3.1',pg_temp.test_registry_contract_pins(),repeat('d',64),2
+);
+
 -- Reference selection: synthetic Qualys canonical publication + Veolia blocked
 -- sibling must each resolve to exactly one stable operational pointer.
 do $references$
@@ -272,6 +303,11 @@ begin
         where issuer_id='d37ccfaa-4dad-47c3-9b44-a752522cd7d5')
       is distinct from 'e41a8fe0-29cb-45e3-8bca-b1f19ac67d12'::uuid
   then raise exception 'QUALYS_WRONG_REFERENCE'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='13277d16-1af8-4100-923a-e729518cc423')
+      is distinct from 'ccf4a83e-539a-4860-873a-ecaa67c90252'::uuid
+  then raise exception 'READY_TO_PUBLISH_NOT_PREFERRED'; end if;
 
   if (select run_id from public.orotitan_issuer_reference_runs_v1
         where issuer_id='b7dd4445-ae1e-4f33-985b-216d83e3fbde')
