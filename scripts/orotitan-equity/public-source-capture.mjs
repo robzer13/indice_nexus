@@ -21,13 +21,22 @@ export function validateSourceUrl(input) {
     if (!/^\/(en\/)?(company|investors|news)\//.test(u.pathname)) throw Error('ISSUER_PATH_INVALID');
     return {url:u.href,issuer:'ASML',hostname:u.hostname};
   }
+  if (u.hostname === 'ourbrand.asml.com') {
+    if (!/^\/m\/[A-Za-z0-9_-]+\/original\/[A-Za-z0-9_.-]+\.pdf$/i.test(u.pathname)) throw Error('ISSUER_PDF_PATH_INVALID');
+    return {url:u.href,issuer:'ASML_PDF',hostname:u.hostname};
+  }
   throw Error('HOST_NOT_ALLOWED');
 }
 export function checkOriginalResponse({status,contentType,contentEncoding,body,expectedMarkers=[]}) {
   if(status!==200) throw Error('NON_200_HTTP_RESPONSE');
-  if(!/^text\/html(?:\s*;|$)/i.test(contentType??'')) throw Error('NON_HTML_CONTENT_TYPE');
+  const isPdf=/^application\/pdf(?:\s*;|$)/i.test(contentType??'');
+  if(!isPdf&&!/^text\/html(?:\s*;|$)/i.test(contentType??'')) throw Error('NON_HTML_OR_PDF_CONTENT_TYPE');
   if(contentEncoding && contentEncoding.toLowerCase()!=='identity') throw Error('ENCODING_NOT_IDENTITY');
   if(!Buffer.isBuffer(body)||body.length<256||body.length>MAX_BYTES) throw Error('INVALID_DOCUMENT_SIZE');
+  if(isPdf) {
+    if(body.subarray(0,5).toString('ascii')!=='%PDF-' || !body.subarray(Math.max(0,body.length-4096)).toString('latin1').includes('%%EOF')) throw Error('NOT_PDF_DOCUMENT');
+    return {bytes:body.length,sha256:createHash('sha256').update(body).digest('hex')};
+  }
   const sample=body.subarray(0,Math.min(body.length,1000000)).toString('utf8').toLowerCase();
   if(!/<(?:!doctype\s+html|html)(?:\s|>)/i.test(sample)) throw Error('NOT_HTML_DOCUMENT');
   if(/captcha|request rate threshold exceeded|access denied|<title>\s*(?:error|403)|automated tool/i.test(sample)) throw Error('BLOCK_OR_ERROR_RESPONSE');
@@ -67,7 +76,7 @@ export async function capture({url,outDir,contact,declaredPublicationDate=null,c
   const {source,body,validation,contentType,etag,lastModified}=await downloadHttpsOriginal(url,contact);
   const declared=validatePublicationDate(declaredPublicationDate,cutoff);
   await mkdir(outDir,{recursive:true});
-  const filename=validation.sha256+'.html';
+  const filename=validation.sha256+(source.issuer==='ASML_PDF'?'.pdf':'.html');
   const filepath=path.join(outDir,filename);
   try {await writeFile(filepath,body,{flag:'wx',mode:0o600});}
   catch(error) {
