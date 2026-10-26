@@ -21,6 +21,7 @@ const PROJECT_REF = runtimeBootstrap.production_environment.project_ref;
 
 export type OperatorCockpitData = {
   runs: OperatorRun[];
+  pendingIssuers?: string[];
   selectedRunId: string | null;
   preview: OperatorDecision | null;
   previewState: "NOT_SELECTED" | "VERIFIED" | "BLOCKED";
@@ -91,15 +92,22 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
 
   assertProductionUrl();
   const client = createServerSupabaseClient();
-  const { data, error } = await client.from("orotitan_runs")
-    .select("run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at,process_version,pilotage_contract_version")
+  const { data, error } = await client.from("orotitan_current_reference_run_v1")
+    .select("issuer_name,run_id,run_status,current_stage,canonical_mode,data_cutoff,issuer_id,state_version,created_at,process_version,pilotage_contract_version")
     .order("created_at", { ascending: false }).limit(LIMIT);
   if (error) {
     return { runs: [], selectedRunId, preview: null,
       previewState: "BLOCKED", blockerCode: "REGISTRY_LIST_QUERY_FAILED",
       publicationAuthorized: false, mutationPerformed: false };
   }
-  const registry = (data ?? []) as RunSummary[];
+  // The operational list contains at most one pinned reference per active issuer.
+  // Four dossiers may legitimately have no run yet; expose them separately
+  // rather than silently counting them as active runs.
+  const observed = (data ?? []) as Array<Partial<RunSummary> & {issuer_name: string}>;
+  const pendingIssuers = observed.filter(x => !x.run_id)
+    .map(x => x.issuer_name);
+  const registry = observed.filter((x): x is RunSummary & {issuer_name: string} =>
+    typeof x.run_id === "string") as RunSummary[];
   let stages: OperatorStageObservation[] = [];
   if (registry.length > 0) {
     const result = await client.from("orotitan_run_stages")
@@ -117,7 +125,7 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
   const runs = registry.map(row => asOperatorRun(
     row, stageIndex.get(row.run_id + ":" + row.current_stage) ?? null));
   if (!selectedRunId) {
-    return { runs, selectedRunId: null, preview: null,
+    return { runs, pendingIssuers, selectedRunId: null, preview: null,
       previewState: "NOT_SELECTED", blockerCode: null,
       publicationAuthorized: false, mutationPerformed: false };
   }
@@ -144,11 +152,11 @@ export async function loadAdminPilotageCockpit(selectedRunId: string | null): Pr
       verifiedEnvironment,
     });
     const preview = asOperatorDecision(decision);
-    return { runs, selectedRunId, preview, previewState: "VERIFIED",
+    return { runs, pendingIssuers, selectedRunId, preview, previewState: "VERIFIED",
       blockerCode: preview.outcome === "BLOCKED" ? preview.reasonCode : null,
       publicationAuthorized: false, mutationPerformed: false };
   } catch (error) {
-    return { runs, selectedRunId, preview: null, previewState: "BLOCKED",
+    return { runs, pendingIssuers, selectedRunId, preview: null, previewState: "BLOCKED",
       blockerCode: safeVerifierReason(error), publicationAuthorized: false, mutationPerformed: false };
   }
 }
