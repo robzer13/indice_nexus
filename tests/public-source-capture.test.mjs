@@ -42,3 +42,10 @@ test('validates issuer-hosted public PDF source and binary body bytes',()=>{
   assert.throws(()=>checkOriginalResponse({status:200,contentType:'application/pdf',body:content}));
   assert.throws(()=>validateSourceUrl('https://ourbrand.asml.com/private/internals.pdf'));
 });
+
+test('only canonical public investor static-file UUID downloads are allowed',()=>{
+  assert.equal(validateSourceUrl('https://www.investor.asml.com/static-files/5dc79e92-9e59-4a06-af63-22eb4408af16').issuer,'ASML_PDF');
+  assert.throws(()=>validateSourceUrl('https://www.investor.asml.com/static-files/../../secret'));
+  assert.throws(()=>validateSourceUrl('https://www.investor.asml.com/static-files/not-a-uuid'));
+  assert.throws(()=>validateSourceUrl('https://www.investor.asml.com/static-files/5dc79e92-9e59-4a06-af63-22eb4408af16?token=x'));
+});
