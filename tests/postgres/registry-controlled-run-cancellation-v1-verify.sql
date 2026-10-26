@@ -232,4 +232,60 @@ begin
   then raise exception 'CANCELLATION_POSTCONDITIONS_NOT_MET'; end if;
 end;
 $tests$;
+-- Reference selection: synthetic Qualys canonical publication + Veolia blocked
+-- sibling must each resolve to exactly one stable operational pointer.
+do $references$
+declare
+  v_dossiers integer;
+  v_runs integer;
+  v_published integer;
+  v_receipt jsonb;
+  v_blocked boolean;
+begin
+  select count(*) into v_dossiers from public.research_dossiers where active=true;
+  select count(*) into v_published from public.research_dossiers
+    where active=true and current_snapshot_id is not null;
+  select count(distinct r.issuer_id) into v_runs
+    from public.orotitan_runs r
+    join public.research_dossiers d on d.dossier_id=r.dossier_id
+    where d.active=true and r.run_status <> 'CANCELLED';
+  v_receipt:=public.bootstrap_orotitan_references_v1(v_dossiers,v_runs,v_published);
+  if (v_receipt->>'reference_runs')::integer <> v_runs
+    or (select count(*) from public.orotitan_issuer_reference_runs_v1)<>v_runs
+    or (select count(*) from public.orotitan_current_reference_run_v1)<>v_dossiers
+  then raise exception 'REFERENCE_BOOTSTRAP_MISMATCH'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='d37ccfaa-4dad-47c3-9b44-a752522cd7d5')
+      is distinct from 'e41a8fe0-29cb-45e3-8bca-b1f19ac67d12'::uuid
+  then raise exception 'QUALYS_WRONG_REFERENCE'; end if;
+
+  if (select run_id from public.orotitan_issuer_reference_runs_v1
+        where issuer_id='b7dd4445-ae1e-4f33-985b-216d83e3fbde')
+      is distinct from 'a4cf9002-b52d-4440-8902-adc70bd777dd'::uuid
+  then raise exception 'VEOLIA_WRONG_REFERENCE'; end if;
+
+  v_blocked:=false;
+  begin
+    perform public.bootstrap_orotitan_references_v1(v_dossiers,v_runs,v_published);
+  exception when check_violation then v_blocked:=true;
+  end;
+  if not v_blocked then raise exception 'UNSAFE_REFERENCE_REBOOTSTRAP'; end if;
+
+  v_blocked:=false;
+  begin
+    update public.orotitan_issuer_reference_runs_v1
+      set selection_policy='NEW_ISSUER_REFERENCE_V1'
+      where issuer_id='b7dd4445-ae1e-4f33-985b-216d83e3fbde';
+  exception when check_violation then v_blocked:=true;
+  end;
+  if not v_blocked then raise exception 'REFERENCE_MUTATION_NOT_BLOCKED'; end if;
+
+  if has_function_privilege('anon','public.bootstrap_orotitan_references_v1(integer,integer,integer)','EXECUTE')
+    or has_function_privilege('authenticated','public.enroll_orotitan_reference_run_v1(uuid,bigint)','EXECUTE')
+    or not has_function_privilege('service_role','public.bootstrap_orotitan_references_v1(integer,integer,integer)','EXECUTE')
+  then raise exception 'REFERENCE_SECURITY_BOUNDARY_FAILED'; end if;
+end;
+$references$;
+
 rollback;
