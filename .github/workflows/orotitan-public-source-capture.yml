@@ -33,7 +33,6 @@ jobs:
         run: node --test tests/public-source-capture.test.mjs
       - name: Capture a public issuer page without Registry admission
         id: capture
-        continue-on-error: true
         env:
           SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://www.investor.asml.com/static-files/5dc79e92-9e59-4a06-af63-22eb4408af16' }}
           SOURCE_PUBLICATION_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.source_publication_date || '' }}
