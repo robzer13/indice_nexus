@@ -83,8 +83,12 @@ begin
     select r.issuer_id,r.run_id,r.state_version,
       row_number() over(partition by r.issuer_id order by
         case when d.current_snapshot_id is not null
-          then case when r.run_status='PUBLISHED' then 0 else 1 end
-          else case when r.run_status in ('ACTIVE','BLOCKED') then 0 else 1 end
+          then case when r.run_status='PUBLISHED' and exists (
+            select 1 from public.orotitan_run_events e
+            where e.run_id=r.run_id and e.event_type='PUBLISH_SUCCEEDED'
+              and e.payload->>'snapshot_id'=d.current_snapshot_id::text
+          ) then 0 else 1 end
+          else case when r.run_status in ('ACTIVE','BLOCKED','READY_TO_PUBLISH') then 0 else 1 end
         end,
         case when d.current_snapshot_id is not null then 0
           else case r.current_stage
@@ -118,7 +122,11 @@ begin
     where r.issuer_id is distinct from ref.issuer_id
        or r.dossier_id is distinct from d.dossier_id
        or r.run_status='CANCELLED'
-       or (d.current_snapshot_id is not null and r.run_status<>'PUBLISHED')
+       or (d.current_snapshot_id is not null and (
+             r.run_status<>'PUBLISHED' or not exists(
+               select 1 from public.orotitan_run_events e
+               where e.run_id=r.run_id and e.event_type='PUBLISH_SUCCEEDED'
+                 and e.payload->>'snapshot_id'=d.current_snapshot_id::text)))
        or (d.current_snapshot_id is null and r.run_status='PUBLISHED')
   ) then raise exception 'OROTITAN_REFERENCE_SELECTION_INVALID' using errcode='23514'; end if;
 
