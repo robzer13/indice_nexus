@@ -33,3 +33,12 @@ test('publication metadata is declared only, and post-cutoff dates rejected',()=
   assert.throws(()=>validatePublicationDate('2026-09-28','2026-09-21'));
   assert.throws(()=>validatePublicationDate('2026-02-31','2026-09-21'));
 });
+
+test('validates issuer-hosted public PDF source and binary body bytes',()=>{
+  assert.equal(validateSourceUrl('https://ourbrand.asml.com/m/3136300aa4999bc1/original/2026_01_28_Presentation-Investor-Relations-Q4-2025.pdf').issuer,'ASML_PDF');
+  const pdf=Buffer.from('%PDF-1.7\n'+('PDF binary payload not HTML\n').repeat(45)+'%%EOF\n');
+  const out=checkOriginalResponse({status:200,contentType:'application/pdf',body:pdf});
+  assert.equal(out.sha256,createHash('sha256').update(pdf).digest('hex'));
+  assert.throws(()=>checkOriginalResponse({status:200,contentType:'application/pdf',body:content}));
+  assert.throws(()=>validateSourceUrl('https://ourbrand.asml.com/private/internals.pdf'));
+});
