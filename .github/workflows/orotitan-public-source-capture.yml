@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       source_url:
-        description: 'Public SEC issuer archive HTML or public ASML issuer HTML only; NO private URLs'
+        description: 'Public SEC issuer archive HTML, issuer ASML HTML or issuer-hosted PDF; NO private URLs'
         required: true
         type: string
       source_publication_date:
@@ -35,7 +35,7 @@ jobs:
         id: capture
         continue-on-error: true
         env:
-          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://www.asml.com/en/company/governance/shareholders/shareholder-meetings/agm-2026' }}
+          SOURCE_URL: ${{ github.event_name == 'workflow_dispatch' && inputs.source_url || 'https://ourbrand.asml.com/m/3136300aa4999bc1/original/2026_01_28_Presentation-Investor-Relations-Q4-2025.pdf' }}
           SOURCE_PUBLICATION_DATE: ${{ github.event_name == 'workflow_dispatch' && inputs.source_publication_date || '' }}
           SOURCE_CAPTURE_DIR: captured-public-source
           DATA_CUTOFF: '2026-09-21'
@@ -45,7 +45,12 @@ jobs:
         if: always()
         run: |
           echo "Source capture status: ${{ steps.capture.outcome }}"
-          echo "A code-level test pass is not source-byte attestation or OroTitan Registry admission."
+          echo "### Unattested public source capture" >> "$GITHUB_STEP_SUMMARY"
+          echo "Transport: ${{ steps.capture.outcome }}. Original-byte receipt if and only if the artifact upload step succeeds." >> "$GITHUB_STEP_SUMMARY"
+          echo "No source admission, historical cutoff identity, Registry mutation or certification is performed." >> "$GITHUB_STEP_SUMMARY"
+          if [ "${{ steps.capture.outcome }}" != "success" ]; then
+            echo "::warning::Public source byte capture FAILED; do not interpret the green offline-test job as evidence admission."
+          fi
       - name: Upload public issuer source bytes and unadmitted receipt
         if: steps.capture.outcome == 'success'
         uses: actions/upload-artifact@v4
