@@ -40,7 +40,7 @@ export default async function OroTitanPilotagePage({
   if (!(await isAdminAuthenticated())) redirect("/admin");
   const query = await searchParams;
   const selected = typeof query.run === "string" ? query.run : null;
-  const view: OperatorFilter = query.view === "all" || query.view === "blocked" ? query.view : "v31";
+  const view: OperatorFilter = query.view === "v31" || query.view === "blocked" ? query.view : "all";
   let data: Awaited<ReturnType<typeof loadAdminPilotageCockpit>> | null = null;
   try { data = await loadAdminPilotageCockpit(selected); }
   catch { /* No internal exception details or secrets in the administrator UI. */ }
@@ -51,9 +51,9 @@ export default async function OroTitanPilotagePage({
   return <main className="space-y-6">
     <header className="space-y-2">
       <p className="text-xs font-semibold uppercase tracking-[.2em] text-cyan-400">OroTitan · Pilotage V3.1</p>
-      <h1 className="text-3xl font-semibold text-white">Diagnostic des runs</h1>
+      <h1 className="text-3xl font-semibold text-white">Runs de référence par entreprise</h1>
       <p className="max-w-3xl text-sm leading-6 text-slate-400">
-        État réel du Registry et vérification des preuves immuables. Lecture seule :
+        Un seul run opérationnel sélectionné par entreprise, archives conservées dans le Registry. Lecture seule :
         aucune création de run, exécution de stage, validation I3-B ou publication.
       </p>
     </header>
@@ -85,7 +85,7 @@ export default async function OroTitanPilotagePage({
     </section> : <>
       {totals && <section aria-label="État de la file observée" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          ["Runs observés", totals.observed],
+          ["Entreprises avec run de référence", totals.observed],
           ["En cours", totals.active],
           ["Bloqués", totals.blocked],
           ["V3.1 à traiter", totals.v31Active + totals.v31Blocked],
@@ -95,7 +95,7 @@ export default async function OroTitanPilotagePage({
         </div>)}
         <p className="col-span-full text-xs text-slate-500">
           {totals.v31} run(s) V3.1, dont {totals.v31Active} actif(s) et {totals.v31Blocked} bloqué(s).
-          Statuts observés, sans preuve cryptographique. Fenêtre limitée aux 100 derniers runs.
+          Statuts observés, sans preuve cryptographique. Références uniques figées ; archives non affichées dans la file.
         </p>
       </section>}
 
@@ -159,16 +159,22 @@ export default async function OroTitanPilotagePage({
         </details> : null}
       </section>}
 
+      {data.pendingIssuers && data.pendingIssuers.length > 0 && <section aria-label="Entreprises sans run" className="rounded-xl border border-amber-800/60 bg-slate-900/60 p-5">
+        <h2 className="font-semibold text-amber-100">Entreprises sans run de référence ({data.pendingIssuers.length})</h2>
+        <p className="mt-2 text-sm text-slate-300">{data.pendingIssuers.join(" · ")}</p>
+        <p className="mt-2 text-xs text-slate-500">Ces dossiers nécessitent la création d’un run conforme et son enrôlement explicite.</p>
+      </section>}
+
       <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-        <h2 className="font-semibold text-white">File de traitement et historique du Registry</h2>
+        <h2 className="font-semibold text-white">File opérationnelle — une référence par entreprise</h2>
         <p className="mt-1 text-xs text-slate-500">
-          Observation uniquement · les versions historiques ne sont pas évaluées par le vérificateur V3.1.
+          Observation uniquement · les runs historiques restent dans le Registry mais sont exclus de cette file.
         </p>
         <nav aria-label="Filtrer les runs" className="mt-4 flex flex-wrap gap-2">
           {[
             ["v31", "V3.1 à traiter"],
             ["blocked", "Tous les blocages"],
-            ["all", "Toutes les versions"],
+            ["all", "Toutes les références"],
           ].map(([filter,label]) => <Link key={filter} href={"/admin/orotitan?view=" + filter}
             className={"rounded-lg border px-3 py-2 text-sm " +
               (view === filter ? "border-cyan-700 bg-slate-800 text-white" :
@@ -183,7 +189,7 @@ export default async function OroTitanPilotagePage({
               className={"block rounded-lg border p-4 text-sm transition hover:border-cyan-700 " +
                 (run.runId === data.selectedRunId ? "border-cyan-800 bg-slate-800" : "border-slate-800 bg-slate-950/40")}>
               <div className="flex flex-wrap items-center justify-between gap-2">
-                <span className="break-all font-mono text-xs text-cyan-200">{run.runId}</span>
+                <span className="text-sm font-semibold text-cyan-200">{run.issuerName} <span className="ml-2 break-all font-mono text-xs font-normal text-slate-400">{run.runId}</span></span>
                 <span className="font-medium text-slate-200">V{run.processVersion} · {run.status}</span>
               </div>
               <p className="mt-2 text-xs text-slate-400">
