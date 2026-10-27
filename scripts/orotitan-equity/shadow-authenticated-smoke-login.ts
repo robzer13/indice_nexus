@@ -76,8 +76,7 @@ export async function runAuthenticatedShadowSmoke(env: NodeJS.ProcessEnv): Promi
   env.SUPABASE_TEST_WRITER_JWT = writer.accessToken;
   env.SUPABASE_TEST_READER_JWT = attestor.accessToken;
   env.ATTESTOR_TEST_PRIVATE_KEY_PEM_BASE64 =
-    keys.privateKey.export({ type: "pkcs8", format: "pem" }).toString().replace(/\r/g, "")
-      && Buffer.from(keys.privateKey.export({ type: "pkcs8", format: "pem" })).toString("base64");
+    Buffer.from(keys.privateKey.export({ type: "pkcs8", format: "pem" })).toString("base64");
   env.ATTESTOR_TEST_PINNED_PUBLIC_KEY_PEM_BASE64 =
     Buffer.from(keys.publicKey.export({ type: "spki", format: "pem" })).toString("base64");
   // Avoid holding the passwords in process.env after successful sign-in.
