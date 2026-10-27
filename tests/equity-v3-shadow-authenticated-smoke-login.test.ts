@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { parseShadowLocalConfig } from "../scripts/orotitan-equity/shadow-authenticated-smoke-login";
 
 const valid = (): NodeJS.ProcessEnv => ({
+  NODE_ENV: "test",
   PREFLIGHT_NONPROD_APPROVED: "YES",
   SUPABASE_TEST_URL: "https://aaaaaaaaaaaaaaaaaaaa.supabase.co",
   SUPABASE_TEST_REF: "aaaaaaaaaaaaaaaaaaaa",
