@@ -56,7 +56,7 @@ async function main() {
     wu.data.user.id !== ru.data.user.id, "AUTH_IDENTITY_UNVERIFIED");
   const buffer = Buffer.from("%PDF-1.7\n" + ("Synthetic shadow-only PDF. No issuer information.\n").repeat(14) + "%%EOF\n");
   const sourceSha = createHash("sha256").update(buffer).digest("hex");
-  const bucket = "orotitan-source-files-v1";
+  const bucket = "orotitan-source-files-v1" as const;
   const uploadReq = {
     runId: randomUUID(), artifactId: randomUUID(), version: 1, bucket,
     bytes: buffer, mediaType: "application/pdf" as const,
