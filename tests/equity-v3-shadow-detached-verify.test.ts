@@ -72,6 +72,7 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
     };
     writeFileSync(receipt, JSON.stringify(wrapped));
     const config: NodeJS.ProcessEnv = {
+      NODE_ENV: "test",
       PREFLIGHT_NONPROD_APPROVED: "YES",
       SUPABASE_TEST_REF: SHADOW_REF, SUPABASE_PRODUCTION_REF: PRODUCTION_REF,
       SHADOW_GATE_TRUSTED_ATTESTOR_ID: "separate-attestor",
