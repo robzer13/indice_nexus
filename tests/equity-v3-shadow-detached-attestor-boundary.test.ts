@@ -98,6 +98,7 @@ test("detached verifier: independent pinned nonce and key required", () => {
     SHADOW_GATE_TRUSTED_KEY_ID: "test-key-1",
     SHADOW_GATE_PINNED_CHALLENGE_NONCE: randomUUID(),
     SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE: "/trusted/pub.pem",
+    SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256: "a".repeat(64),
     SHADOW_GATE_HANDOFF_FILE: "/tmp/handoff.json",
     SHADOW_GATE_RECEIPT_FILE: "/tmp/receipt.json",
   };
@@ -108,4 +109,7 @@ test("detached verifier: independent pinned nonce and key required", () => {
   assert.throws(() => parseDetachedVerifierConfig({
     ...cfg, SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE: "",
   }), /DETACHED_ENV_REQUIRED/);
+  assert.throws(() => parseDetachedVerifierConfig({
+    ...cfg, SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256: "not-a-digest",
+  }), /DETACHED_PUBLIC_KEY_PIN_INVALID/);
 });
