@@ -4,6 +4,7 @@
  * NO Supabase token, private signing key or Registry credentials required.
  */
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -41,6 +42,8 @@ export function runDetachedVerifier(env: NodeJS.ProcessEnv): void {
   // Import the public key from separate local configuration, never from the
   // untrusted receipt or source handoff.
   const publicKey = readFileSync(c.publicKeyFile, "utf8");
+  const keyFingerprint = createHash("sha256").update(Buffer.from(publicKey, "utf8")).digest("hex");
+  assertThat(keyFingerprint === c.publicKeySha256, "DETACHED_PUBLIC_KEY_FINGERPRINT_MISMATCH");
   const checked = verifySignedReread(result.envelope as SignedRereadEnvelope, handoff.locator, {
     trustedAttestorId: c.attestorId, trustedKeyId: c.keyId,
     trustedPublicKey: publicKey, challengeNonce: c.challengeNonce,
