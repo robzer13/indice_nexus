@@ -31,10 +31,10 @@ Pin and review the Git commit of this PR before local execution. Use Node.js 22.
 Use **two distinct controlled hosts/accounts** for Gate and Attestor, and keep the existing Writer account on a third isolated operator context for a meaningful independence demonstration. On the Attestor host create an Ed25519 PKCS#8 keypair under an operator-controlled secret directory, using an approved key-management mechanism or a protected local implementation. Example Node 22 offline generation (run ON THE ATTESTOR HOST only):
 
 ```powershell
-node -e "const c=require('node:crypto'),f=require('node:fs');const p=c.generateKeyPairSync('ed25519');f.writeFileSync(process.env.SHADOW_DETACHED_PRIVATE_KEY_FILE,p.privateKey.export({type:'pkcs8',format:'pem'}),{flag:'wx',mode:0o600});f.writeFileSync(process.env.SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE,p.publicKey.export({type:'spki',format:'pem'}),{flag:'wx',mode:0o600})"
+node -e "const c=require('node:crypto'),f=require('node:fs');const p=c.generateKeyPairSync('ed25519');f.writeFileSync(process.env.SHADOW_DETACHED_PRIVATE_KEY_FILE,p.privateKey.export({type:'pkcs8',format:'pem'}),{flag:'wx',mode:0o600});f.writeFileSync(process.env.SHADOW_DETACHED_PUBLIC_EXPORT_FILE,p.publicKey.export({type:'spki',format:'pem'}),{flag:'wx',mode:0o600})"
 ```
 
-**Windows caveat:** `mode:0o600` is NOT an adequate Windows ACL audit. Restrict and independently inspect the filesystem ACL before use. Better use an approved secret manager/HSM when a real independent service is deployed. Transfer ONLY the public key to the Gate via a separately authenticated channel. Gate pins the public-key SHA-256 fingerprint out of band and records Attestor/key identity. Never transfer the private key.
+**Windows caveat:** `mode:0o600` is NOT an adequate Windows ACL audit. Restrict and independently inspect the filesystem ACL before use. Better use an approved secret manager/HSM when a real independent service is deployed. Transfer ONLY the public key to the Gate via a separately authenticated channel. Gate pins the exact public-PEM SHA-256 fingerprint out of band and records Attestor/key identity. The offline verifier REQUIRES `SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256` and recomputes the SHA-256 of the received public PEM to prevent a key-swap. Compute it locally on Gate as `(Get-FileHash -Algorithm SHA256 $env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE).Hash.ToLowerInvariant()`, then compare it to the separately authenticated expected digest before pinning. Never transfer the private key.
 
 ### Gate: create a fresh challenge
 
@@ -86,13 +86,14 @@ $env:SUPABASE_PRODUCTION_REF = "cugpgtzygqqlxetyeven"
 $env:SHADOW_GATE_HANDOFF_FILE = "C:\\secure-gate\\handoff.json"
 $env:SHADOW_GATE_RECEIPT_FILE = "C:\\secure-gate\\receipt.json"
 $env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE = "C:\\secure-gate\\pinned-signer-public.pem"
+$env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256 = "<sha256-of-approved-public-pem-as-lowercase-hex>"
 $env:SHADOW_GATE_PINNED_CHALLENGE_NONCE = "<the-gate-generated-nonce>"
 $env:SHADOW_GATE_TRUSTED_ATTESTOR_ID = "independent-shadow-attestor"
 $env:SHADOW_GATE_TRUSTED_KEY_ID = "independent-shadow-key-1"
 npx --no-install tsx scripts/orotitan-equity/shadow-detached-verify.ts
 ```
 
-The verifier rejects altered metadata/hash, an unexpected key/attestor ID, stale timestamp, wrong nonce, altered signature and any attempt to flip certification flags. A passing signature **does not** cause automatic release or Registry admission. The 10-minute signature freshness check applies at time of Gate verification. There is no persistent nonce-consumption database yet; replay tracking beyond that window is deployment work.
+The verifier rejects altered metadata/hash, an unexpected key/attestor ID, stale timestamp, wrong nonce, public-key PEM bytes that do not match the independently pinned SHA-256, altered signature and any attempt to flip certification flags. A passing signature **does not** cause automatic release or Registry admission. The 10-minute signature freshness check applies at time of Gate verification. There is no persistent nonce-consumption database yet; replay tracking beyond that window is deployment work.
 
 ## 4. Retention & immutability: hard boundaries
 
