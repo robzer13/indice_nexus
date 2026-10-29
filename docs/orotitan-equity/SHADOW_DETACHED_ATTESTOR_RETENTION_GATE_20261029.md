@@ -21,7 +21,7 @@ The implementation checks only what software can observe: credentials in the cur
 - `scripts/orotitan-equity/shadow-detached-challenge.ts`: Gate-side offline handoff and nonce, exact synthetic source locator.
 - `scripts/orotitan-equity/shadow-detached-attestor-login.ts`: Attestor-only password login, server Auth verification, no Writer context.
 - `scripts/orotitan-equity/shadow-detached-attestor.ts`: Attestor-only authenticated reread (SHA-256) and Ed25519 signed receipt written create-only to an operator-selected local file.
-- `scripts/orotitan-equity/shadow-detached-verify.ts`: Gate-side offline verification with public key and nonce PINNED OUTSIDE the receipt.
+- `scripts/orotitan-equity/shadow-detached-verify.ts`: Gate-side offline verification with public key and nonce PINNED OUTSIDE the receipt, followed by exclusive local audit append.\n- `lib/orotitan-equity/v3/shadow-detached-gate-local-audit.ts`: SHA-256 chained local JSONL ledger that rejects replayed challenge nonce, truncated records, hash tampering and concurrent appends; **not WORM**.
 - `lib/orotitan-equity/v3/shadow-detached-attestor-boundary.ts`: fail-closed project/ref, synthetic bytes, source locator, role and secret-separation guards.
 
 ### Provisioning prerequisites
@@ -89,14 +89,14 @@ $env:SUPABASE_PRODUCTION_REF = "cugpgtzygqqlxetyeven"
 $env:SHADOW_GATE_HANDOFF_FILE = "C:\\secure-gate\\handoff.json"
 $env:SHADOW_GATE_RECEIPT_FILE = "C:\\secure-gate\\receipt.json"
 $env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE = "C:\\secure-gate\\pinned-signer-public.pem"
-$env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256 = "<sha256-of-approved-public-pem-as-lowercase-hex>"
+$env:SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256 = "<sha256-of-approved-public-pem-as-lowercase-hex>"\n$env:SHADOW_GATE_AUDIT_LEDGER_FILE = "C:\\secure-gate\\gate-local-audit.jsonl"
 $env:SHADOW_GATE_PINNED_CHALLENGE_NONCE = "<the-gate-generated-nonce>"
 $env:SHADOW_GATE_TRUSTED_ATTESTOR_ID = "independent-shadow-attestor"
 $env:SHADOW_GATE_TRUSTED_KEY_ID = "independent-shadow-key-1"
 npx --no-install tsx scripts/orotitan-equity/shadow-detached-verify.ts
 ```
 
-The verifier rejects altered metadata/hash, an unexpected key/attestor ID, stale timestamp, wrong nonce, public-key PEM bytes that do not match the independently pinned SHA-256, altered signature and any attempt to flip certification flags. A passing signature **does not** cause automatic release or Registry admission. The 10-minute signature freshness check applies at time of Gate verification. There is no persistent nonce-consumption database yet; replay tracking beyond that window is deployment work.
+The verifier rejects altered metadata/hash, an unexpected key/attestor ID, stale timestamp, wrong nonce, public-key PEM bytes that do not match the independently pinned SHA-256, altered signature and any attempt to flip certification flags. After successful signature verification, it requires a local SHA-256 chained audit ledger and rejects reuse of a previously accepted nonce on that Gate host. The audit ledger must be protected from untrusted file writes; mirror and externally anchor its latest digest in a separately administered immutable archive, otherwise the local admin can rewrite the entire chain. The verifier always emits `auditDurability: LOCAL_ONLY_NOT_WORM`. A passing signature **does not** cause automatic release or Registry admission. The 10-minute signature freshness check applies at Gate verification. The Gate records accepted challenge nonces in a protected local hash-chain ledger and refuses replay against that ledger. The local ledger provides no remote, cross-host or admin-proof replay enforcement and is not a persistent Registry or WORM audit service.
 
 ## 4. Retention & immutability: hard boundaries
 
@@ -121,7 +121,7 @@ Storage RLS with create-only Writer INSERT and Attestor GET/GET_INFO proves **no
 |---|---|
 | Two Auth principals, writer create, reader GET | PASS, actual HTTP on 2026-10-29 |
 | Exact bytes & pinned signature in single operator smoke | PASS, synthetic only |
-| Detached script and immutable-key input controls | IMPLEMENTED, CI validation required |
+| Detached script, trusted-key pin and nonce controls | IMPLEMENTED, CI validation required |\n| Local Gate SHA-256 audit ledger / replay denial | IMPLEMENTED, CI validation required; NOT WORM |\n| Remote anchored audit log and retention proof | NOT IMPLEMENTED |
 | Separate real Attestor host/key custody | NOT TESTED |
 | Independent immutable retained copy (WORM) | NOT IMPLEMENTED |
 | Re-read at later sampling time | NOT TESTED |
