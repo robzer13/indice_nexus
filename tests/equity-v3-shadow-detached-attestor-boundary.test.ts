@@ -26,6 +26,7 @@ function validHandoff() {
 }
 function validAttestorEnv(): NodeJS.ProcessEnv {
   return {
+    NODE_ENV: "test",
     PREFLIGHT_NONPROD_APPROVED: "YES",
     SUPABASE_TEST_REF: SHADOW_REF,
     SUPABASE_PRODUCTION_REF: PRODUCTION_REF,
@@ -92,6 +93,7 @@ test("detached attestor: no opting in, service key, or Writer credentials", () =
 });
 test("detached verifier: independent pinned nonce and key required", () => {
   const cfg: NodeJS.ProcessEnv = {
+    NODE_ENV: "test",
     PREFLIGHT_NONPROD_APPROVED: "YES",
     SUPABASE_TEST_REF: SHADOW_REF, SUPABASE_PRODUCTION_REF: PRODUCTION_REF,
     SHADOW_GATE_TRUSTED_ATTESTOR_ID: "separate-attestor",
