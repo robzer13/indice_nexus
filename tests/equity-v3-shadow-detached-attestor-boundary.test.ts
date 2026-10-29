@@ -101,6 +101,7 @@ test("detached verifier: independent pinned nonce and key required", () => {
     SHADOW_GATE_PINNED_CHALLENGE_NONCE: randomUUID(),
     SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE: "/trusted/pub.pem",
     SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256: "a".repeat(64),
+    SHADOW_GATE_AUDIT_LEDGER_FILE: "/protected/audit.jsonl",
     SHADOW_GATE_HANDOFF_FILE: "/tmp/handoff.json",
     SHADOW_GATE_RECEIPT_FILE: "/tmp/receipt.json",
   };
