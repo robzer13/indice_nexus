@@ -5,6 +5,9 @@
  */
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
+import {
+  appendGateLocalAudit, hashReceivedReceipt,
+} from "../../lib/orotitan-equity/v3/shadow-detached-gate-local-audit";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -26,12 +29,15 @@ export function runDetachedVerifier(env: NodeJS.ProcessEnv): void {
   const c = parseDetachedVerifierConfig(env);
   assertThat(resolve(c.handoffFile) !== resolve(c.receiptFile) &&
     resolve(c.publicKeyFile) !== resolve(c.receiptFile) &&
-    resolve(c.publicKeyFile) !== resolve(c.handoffFile),
+    resolve(c.publicKeyFile) !== resolve(c.handoffFile) &&
+    ![c.handoffFile, c.receiptFile, c.publicKeyFile].some(p =>
+      resolve(p) === resolve(c.auditLedgerFile)),
     "DETACHED_VERIFIER_FILE_BOUNDARY_INVALID");
   const handoff = parseDetachedHandoff(JSON.parse(readFileSync(c.handoffFile, "utf8")) as unknown);
   assertThat(handoff.challengeNonce === c.challengeNonce,
     "DETACHED_GATE_NONCE_NOT_PINNED");
-  const result = asObject(JSON.parse(readFileSync(c.receiptFile, "utf8")) as unknown);
+  const rawReceipt = readFileSync(c.receiptFile);
+  const result = asObject(JSON.parse(rawReceipt.toString("utf8")) as unknown);
   assertThat(result.schema === "OROTITAN_SHADOW_DETACHED_RECEIPT_V1_NONAUTHORITATIVE" &&
     result.transport === "EXACT_BYTES_REREAD" &&
     result.sourcePersistenceCertified === false &&
@@ -53,7 +59,18 @@ export function runDetachedVerifier(env: NodeJS.ProcessEnv): void {
     checked.registryAdmission === false && checked.registryAttestation === false &&
     checked.independentPrincipalProven === false,
     "DETACHED_REGISTRY_ESCALATION_DENIED");
+  const log = appendGateLocalAudit(c.auditLedgerFile, {
+    challengeNonce: c.challengeNonce,
+    receiptDigest: hashReceivedReceipt(rawReceipt),
+    storageUri: handoff.locator.uri,
+    bytesSha256: handoff.locator.sha256,
+    keyId: c.keyId, attestorId: c.attestorId,
+    verifiedAtUtc: new Date().toISOString(),
+  });
   console.log(JSON.stringify({
+    auditSequence: log.sequence,
+    localAuditDigest: log.digest,
+    auditDurability: log.evidenceDurability,
     schema: "OROTITAN_SHADOW_DETACHED_GATE_V1_NONAUTHORITATIVE",
     signature: checked.signature,
     exactByteRereadClaim: checked.bytesRereadClaim,
