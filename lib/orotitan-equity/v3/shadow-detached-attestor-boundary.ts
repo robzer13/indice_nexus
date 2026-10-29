@@ -117,6 +117,7 @@ export interface DetachedVerifierConfig {
   receiptFile: string;
   publicKeyFile: string;
   publicKeySha256: string;
+  auditLedgerFile: string;
   challengeNonce: string;
   attestorId: string;
   keyId: string;
@@ -137,6 +138,7 @@ export function parseDetachedVerifierConfig(env: NodeJS.ProcessEnv): DetachedVer
   return {
     attestorId, keyId, challengeNonce, publicKeySha256,
     publicKeyFile: required(env, "SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE"),
+    auditLedgerFile: required(env, "SHADOW_GATE_AUDIT_LEDGER_FILE"),
     handoffFile: required(env, "SHADOW_GATE_HANDOFF_FILE"),
     receiptFile: required(env, "SHADOW_GATE_RECEIPT_FILE"),
   };
