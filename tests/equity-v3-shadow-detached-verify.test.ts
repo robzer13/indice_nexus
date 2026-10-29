@@ -52,6 +52,7 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
     const handoff = join(folder, "handoff.json");
     const receipt = join(folder, "receipt.json");
     const publicPem = join(folder, "trusted-public.pem");
+    const auditLedger = join(folder, "gate-audit.jsonl");
     const handoffObj = {
       schema: "OROTITAN_SHADOW_DETACHED_HANDOFF_V1",
       challengeNonce: nonce, locator,
@@ -79,6 +80,7 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
       SHADOW_GATE_TRUSTED_KEY_ID: "test-key-1",
       SHADOW_GATE_PINNED_CHALLENGE_NONCE: nonce,
       SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE: publicPem,
+      SHADOW_GATE_AUDIT_LEDGER_FILE: auditLedger,
       SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256:
         createHash("sha256").update(readFileSync(publicPem)).digest("hex"),
       SHADOW_GATE_HANDOFF_FILE: handoff,
@@ -91,6 +93,8 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
     assert.match(printed.join(""), /VALID_PINNED_ED25519/);
     assert.match(printed.join(""), /"registryAdmitted": false/);
     assert.match(printed.join(""), /"immutableStorageCertified": false/);
+    assert.match(printed.join(""), /"auditDurability": "LOCAL_ONLY_NOT_WORM"/);
+    assert.throws(() => runDetachedVerifier(config), /GATE_LOCAL_AUDIT_REPLAY/);
     assert.throws(() => runDetachedVerifier({
       ...config, SHADOW_GATE_PINNED_CHALLENGE_NONCE: randomUUID(),
     }), /DETACHED_GATE_NONCE_NOT_PINNED/);
