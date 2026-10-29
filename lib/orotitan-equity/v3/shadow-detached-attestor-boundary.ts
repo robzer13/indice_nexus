@@ -116,6 +116,7 @@ export interface DetachedVerifierConfig {
   handoffFile: string;
   receiptFile: string;
   publicKeyFile: string;
+  publicKeySha256: string;
   challengeNonce: string;
   attestorId: string;
   keyId: string;
@@ -129,10 +130,12 @@ export function parseDetachedVerifierConfig(env: NodeJS.ProcessEnv): DetachedVer
   const keyId = required(env, "SHADOW_GATE_TRUSTED_KEY_ID");
   requireGuard(idPattern.test(attestorId) && idPattern.test(keyId),
     "DETACHED_VERIFIER_ID_INVALID");
+  const publicKeySha256 = required(env, "SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256");
+  requireGuard(/^[0-9a-f]{64}$/.test(publicKeySha256), "DETACHED_PUBLIC_KEY_PIN_INVALID");
   const challengeNonce = required(env, "SHADOW_GATE_PINNED_CHALLENGE_NONCE");
   requireGuard(noncePattern.test(challengeNonce), "DETACHED_VERIFIER_NONCE_INVALID");
   return {
-    attestorId, keyId, challengeNonce,
+    attestorId, keyId, challengeNonce, publicKeySha256,
     publicKeyFile: required(env, "SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE"),
     handoffFile: required(env, "SHADOW_GATE_HANDOFF_FILE"),
     receiptFile: required(env, "SHADOW_GATE_RECEIPT_FILE"),
