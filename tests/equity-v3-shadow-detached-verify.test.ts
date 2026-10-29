@@ -31,9 +31,9 @@ function input() {
   };
   const reader = {
     storage: {
-      getBucket: async (_name: string) => ({data: {public: false}, error: null}),
-      from: (_name: string) => ({
-        download: async (_path: string) => ({
+      getBucket: async () => ({data: {public: false}, error: null}),
+      from: () => ({
+        download: async () => ({
           data: {arrayBuffer: async () => Uint8Array.from(data).buffer},
           error: null,
         }),
