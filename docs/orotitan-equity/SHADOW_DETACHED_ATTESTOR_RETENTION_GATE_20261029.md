@@ -31,6 +31,9 @@ Pin and review the Git commit of this PR before local execution. Use Node.js 22.
 Use **two distinct controlled hosts/accounts** for Gate and Attestor, and keep the existing Writer account on a third isolated operator context for a meaningful independence demonstration. On the Attestor host create an Ed25519 PKCS#8 keypair under an operator-controlled secret directory, using an approved key-management mechanism or a protected local implementation. Example Node 22 offline generation (run ON THE ATTESTOR HOST only):
 
 ```powershell
+# Create these protected directories on the Attestor host before this step.
+$env:SHADOW_DETACHED_PRIVATE_KEY_FILE = "C:\\attestor-private\\signer-private.pem"
+$env:SHADOW_DETACHED_PUBLIC_EXPORT_FILE = "C:\\attestor-private\\signer-public-export.pem"
 node -e "const c=require('node:crypto'),f=require('node:fs');const p=c.generateKeyPairSync('ed25519');f.writeFileSync(process.env.SHADOW_DETACHED_PRIVATE_KEY_FILE,p.privateKey.export({type:'pkcs8',format:'pem'}),{flag:'wx',mode:0o600});f.writeFileSync(process.env.SHADOW_DETACHED_PUBLIC_EXPORT_FILE,p.publicKey.export({type:'spki',format:'pem'}),{flag:'wx',mode:0o600})"
 ```
 
