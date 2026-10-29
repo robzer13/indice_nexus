@@ -78,6 +78,8 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
       SHADOW_GATE_TRUSTED_KEY_ID: "test-key-1",
       SHADOW_GATE_PINNED_CHALLENGE_NONCE: nonce,
       SHADOW_GATE_TRUSTED_PUBLIC_PEM_FILE: publicPem,
+      SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256:
+        createHash("sha256").update(readFileSync(publicPem)).digest("hex"),
       SHADOW_GATE_HANDOFF_FILE: handoff,
       SHADOW_GATE_RECEIPT_FILE: receipt,
     };
@@ -94,6 +96,9 @@ test("independent public key + verifier nonce validate signed exact-byte reread"
     assert.throws(() => runDetachedVerifier({
       ...config, SHADOW_GATE_TRUSTED_KEY_ID: "wrong-key-1",
     }), /SIGNED_RECEIPT_TRUST_BINDING_MISMATCH/);
+    assert.throws(() => runDetachedVerifier({
+      ...config, SHADOW_GATE_TRUSTED_PUBLIC_PEM_SHA256: "b".repeat(64),
+    }), /DETACHED_PUBLIC_KEY_FINGERPRINT_MISMATCH/);
     const altered = JSON.parse(readFileSync(receipt,"utf8"));
     altered.sourcePersistenceCertified = true;
     writeFileSync(receipt, JSON.stringify(altered));
