@@ -123,11 +123,25 @@ from ASML/SEC. Its receipt explicitly records
 `sourceDocumentAuthenticityVerified:false`, `registryAdmitted:false`.
 Such a receipt cannot satisfy Research Evidence Ledger admission or unfreeze
 `READY_FOR_DEEP_DIVE` without independent source authentication.
-No Q3 file has been uploaded by this research review.
+A browser-provided Q3 file was subsequently archived by the administrator; see Section VIII ter below. This research review itself has not uploaded any Q3 file.
+
+## VIII ter. Captured Q3 browser-supplied PDF — SHADOW observed 2026-10-30
+
+The administrator submitted a 12-page **Financial statements US GAAP PDF** through the strictly gated SHADOW upload page. A direct read-only query of Supabase Storage confirms **one PDF object** and **one receipt JSON** in the PRIVATE bucket `orotitan-source-files-v1`:
+
+- `PDF_SIZE_BYTES = 1,369,295`, MIME `application/pdf`, created and last updated **2026-10-30T13:02:08.032176Z**.
+- `SHA256_FROM_SHA_ADDRESSED_PATH = 562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9`.
+- `PDF_OBJECT = research-acquisition-v1/asml/asof-2026-10-30/q3-2026/browser-supplied/562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9.pdf`.
+- `RECEIPT_OBJECT = research-acquisition-v1/asml/asof-2026-10-30/q3-2026/browser-receipts/562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9.json`, 926 bytes, recorded immediately after PDF.
+- The authenticated application reported **readback SHA-256 success**, but this research review has NOT independently recomputed the SHA by downloading the private bytes.
+
+**Interpretation:** private custody / content-addressed receipt = observed. Source authenticity / independent byte identity with ASML or Euronext = NOT VERIFIED. A dated Euronext-hosted copy is available as [possible official binary reference](https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf), but its bytes **were not downloaded and compared**. The PDF's text and document content have not been reviewed through an admitted forensic evidence procedure.
+
+`GAP-001 = PARTIALLY_PROGRESSSED_NOT_CLOSED`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED`; no source acceptance, stage finalization, data certification or Registry write.
 
 ## IX. Next authorized Research actions
 
-1. Capture Q3 source bytes from a trusted issuer/SEC origin **into private source storage**, no uploads to public GitHub; hash, timestamp and verify custody.
+1. Independently authenticate the browser-supplied Q3 PDF by byte-for-byte hash comparison against a trusted issuer/Euronext source or equivalent documented provenance; keep SHADOW receipt non-admitted until evidence requirements pass.
 2. Prepare full financial evidence ledgers (normalized claims + conflicts + calculation proof + exact as-of dates) using frozen Research contract, including 2025 20-F and interim 2026.
 3. Reconcile exact share denominator and XAMS quote at a coherent market price instant.
 4. Produce required Research manifests only once bytes have been sealed and independently reviewed. Do not self-certify or enter Deep Dive on a human summary.
