@@ -187,6 +187,8 @@ corroboration, not proof of independent economic information.
 
 **G001/G006 authority conflict review (v0.3):** [dated issuer share ledger, four mutually inconsistent vendor share-counts, employee treasury delivery mechanics and exact issuer-authority request (NOT SENT)](./ASML_2026-10-30_a1e59126_G001_G006_AUTHORITY_CONFLICT_V0_3.md). **Conclusion:** exact 2026-10-30 economic shares UNKNOWN; 2026-10-29 XAMS EUR 1,504.80 vendor close is corroborated, but original official unadjusted EOD custody remains missing. Do not average vendors or calculate certified market cap.
 
+**G001/G006 materiality resolution proposal (v0.4):** [two-track solution, 0.532% vendor-count sensitivity, 2026-10-05 Euronext capital-increase notice and bounded Pilotage adjudication](./ASML_2026-10-30_a1e59126_G001_G006_MATERIALITY_RESOLUTION_PROPOSAL_V0_4.md). It is a **PROPOSAL only**: analytical RESEARCH working scenarios may continue, but it neither waives a frozen source requirement nor permits stage completion, official market capitalization, ROIC/Owner Earnings certification or publication. The **2026-10-08 Euronext corporate action** requires original notice verification.
+
 ## IX. Next authorized Research actions
 
 1. Review and approve the now-confirmed SHA match to the separately uploaded Euronext-labeled PDF; establish admissible source provenance, file custody, issuer/filing context and authority requirements independently. Only then consider Registry admission (not automatic).
