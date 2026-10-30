@@ -1,0 +1,530 @@
+{
+  "schema": "ASML_CYCLE_ANALOG_AND_CASH_STRESS_REPLAY_V0_7",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "informationCutoff": "2026-10-30",
+  "currency": "EUR",
+  "units": "EUR_MILLIONS",
+  "classification": "NON_ADMITTED_RESEARCH_SCENARIO_STRESS_ONLY",
+  "primarySources": [
+    {
+      "id": "ASML_2022_FY",
+      "published": "2023-01-25",
+      "url": "https://www.asml.com/en/news/press-releases/2023/q4-2022-financial-results",
+      "scope": "FY2022 rounded sales, IBM and annual net bookings"
+    },
+    {
+      "id": "ASML_2023_FY",
+      "published": "2024-01-24",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu27.6-billion-net-sales-and-eu7.8-billion-net-income-2023",
+      "scope": "FY2023 rounded FY2022 comparisons and IBM decline"
+    },
+    {
+      "id": "ASML_2024_USGAAP_20F",
+      "published": "2025-02",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000093796625000009/asml-20241231.htm",
+      "scope": "FY2023 and FY2024 US GAAP systems, IBM, EBIT and group FCF"
+    },
+    {
+      "id": "ASML_2025_FY",
+      "published": "2026-01-28",
+      "url": "https://investor.asml.com/news-releases/news-release-details/q4-2025-financial-results",
+      "scope": "FY2025 bookings 28,035m, backlog 38,797m, total and IBM"
+    },
+    {
+      "id": "SEMI_2023_BILLINGS",
+      "published": "2024-04-10",
+      "url": "https://www.semi.org/en/news-media-press-releases/semi-press-releases/global-semiconductor-equipment-billings-slip-to-%24106.3-billion-in-2023-semi-reports",
+      "scope": "2023 global -1.3%, Taiwan -27%, Korea -7%, China +29% equipment spending"
+    },
+    {
+      "id": "TSMC_2023_AR",
+      "published": "2024",
+      "url": "https://investor.tsmc.com/static/annualReports/2023/english/index.html",
+      "scope": "2023 revenue -4.5% NTD, operating margin 42.6 vs 49.5% 2022"
+    },
+    {
+      "id": "SAMSUNG_2023_CAPEX",
+      "published": "2024-01-31",
+      "url": "https://www.samsung.com/global/ir/reports-disclosures/public-disclosure-view.84117/",
+      "scope": "2023 Device Solutions 48.4 KRW trillion CapEx, does not equal ASML spend"
+    },
+    {
+      "id": "V04_CENTRAL",
+      "repoPath": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_SCENARIOS_V0_4.json",
+      "scope": "Prior non-admitted 2027-29 central scenario, not a factual forecast"
+    }
+  ],
+  "historicalAsml": [
+    {
+      "year": 2022,
+      "netBookingsEURm": 30674,
+      "netSalesEURm": 21173,
+      "systemSalesEURm": 15430,
+      "ibmSalesEURm": 5743,
+      "unitSource": "rounded annual official FY2022 columns",
+      "ebitEURm": null,
+      "fcfEURm": null,
+      "bookingsGrowthYoYPct": null,
+      "systemSalesGrowthYoYPct": null,
+      "ibmSalesGrowthYoYPct": null,
+      "bookingsToSameYearSystemSalesRatio": 1.988,
+      "bookingsNotSameYearRevenue": true
+    },
+    {
+      "year": 2023,
+      "netBookingsEURm": 20040,
+      "netSalesEURm": 27558.5,
+      "systemSalesEURm": 21938.6,
+      "ibmSalesEURm": 5619.9,
+      "unitSource": "ASML US GAAP 2024 20-F and FY2024 issuer announcement",
+      "ebitEURm": 9042.3,
+      "fcfEURm": 3247.2,
+      "bookingsGrowthYoYPct": -34.67,
+      "systemSalesGrowthYoYPct": 42.18,
+      "ibmSalesGrowthYoYPct": -2.14,
+      "bookingsToSameYearSystemSalesRatio": 0.913,
+      "bookingsNotSameYearRevenue": true
+    },
+    {
+      "year": 2024,
+      "netBookingsEURm": 18899,
+      "netSalesEURm": 28262.9,
+      "systemSalesEURm": 21768.7,
+      "ibmSalesEURm": 6494.2,
+      "unitSource": "ASML US GAAP FY2024 financials",
+      "ebitEURm": 9022.6,
+      "fcfEURm": 9083.1,
+      "bookingsGrowthYoYPct": -5.69,
+      "systemSalesGrowthYoYPct": -0.77,
+      "ibmSalesGrowthYoYPct": 15.56,
+      "bookingsToSameYearSystemSalesRatio": 0.868,
+      "bookingsNotSameYearRevenue": true
+    },
+    {
+      "year": 2025,
+      "netBookingsEURm": 28035,
+      "netSalesEURm": 32667.3,
+      "systemSalesEURm": 24474.3,
+      "ibmSalesEURm": 8193,
+      "unitSource": "ASML US GAAP FY2025 20-F and Jan28 2026 release",
+      "ebitEURm": 11301.4,
+      "fcfEURm": 11027.3,
+      "bookingsGrowthYoYPct": 48.34,
+      "systemSalesGrowthYoYPct": 12.43,
+      "ibmSalesGrowthYoYPct": 26.16,
+      "bookingsToSameYearSystemSalesRatio": 1.145,
+      "bookingsNotSameYearRevenue": true
+    }
+  ],
+  "historicalIndependentlyObserved": {
+    "tsmc2023RevenueGrowthNTDPct": -4.5,
+    "tsmc2023OperatingMarginPct": 42.6,
+    "tsmc2022OperatingMarginPct": 49.5,
+    "semi2023GlobalEquipmentBillingsGrowthPct": -1.3,
+    "semi2023TaiwanEquipmentBillingsGrowthPct": -27,
+    "semi2023KoreaEquipmentBillingsGrowthPct": -7,
+    "semi2023ChinaEquipmentBillingsGrowthPct": 29,
+    "samsung2023DeviceSolutionsCapexKRWTrillion": 48.4,
+    "noDirectTSMCAndSamsungCapexToASMLOrderIdentity": true
+  },
+  "historicalMath": {
+    "FY2023BookingsDropPct": -34.67,
+    "FY2024SystemsGrowthPct": -0.77,
+    "FY2023IBMDeclinePct": -2.14,
+    "FY2023to2024FcfIncreasePct": 179.72,
+    "FY2023to2024EbitChangePct": -0.22
+  },
+  "lagDesign": {
+    "illustrativeCommercialNewOrderShockYear": 2027,
+    "historicalBookShock2023Pct": -34.67,
+    "historicalOrderDeclineIsNotAppliedAsDirectRevenueDecline": true,
+    "years": [
+      2027,
+      2028,
+      2029
+    ],
+    "revenueTransmissionUnknown": true,
+    "unchanged2027RevenueIllustratesBacklogBufferNotProofOfFullProtection": true,
+    "historicalAnalogDoesNotFitTransmissionCoefficients": true,
+    "cashPPEAndIntangiblesHeldInNominalEURAtV04CentralFor2028to2029": true,
+    "DAndAHeldAtV04Central": true,
+    "RAndDAndSGAStickyToV04Central": true,
+    "taxHypothesisPct": 18,
+    "cashTimingShockRevenuePctIsAdditionalOperatingCashOutflowNotActualWorkingCapitalDelta": true,
+    "doNotTreat2022to2024HistoryAsPredictiveProbabilities": true
+  },
+  "stressAssumptions": [
+    {
+      "id": "LIMITED",
+      "label": "Transmission faible",
+      "systemRevenueHaircut": [
+        0,
+        0.05,
+        0.03
+      ],
+      "ibmMixedRevenueHaircut": [
+        0,
+        0.02,
+        0
+      ],
+      "systemGrossMarginPenaltyPp": [
+        0,
+        1,
+        0.5
+      ],
+      "ibmGrossMarginPenaltyPp": [
+        0,
+        2,
+        1
+      ],
+      "cashTimingStressPctOfRevisedRevenue": [
+        0,
+        -1,
+        -0.5
+      ],
+      "statisticalProbability": null
+    },
+    {
+      "id": "HISTORICAL_STYLE",
+      "label": "Stress historique stylisé",
+      "systemRevenueHaircut": [
+        0,
+        0.12,
+        0.08
+      ],
+      "ibmMixedRevenueHaircut": [
+        0,
+        0.05,
+        0.02
+      ],
+      "systemGrossMarginPenaltyPp": [
+        0,
+        2,
+        1.5
+      ],
+      "ibmGrossMarginPenaltyPp": [
+        0,
+        3,
+        2
+      ],
+      "cashTimingStressPctOfRevisedRevenue": [
+        0,
+        -4,
+        -2
+      ],
+      "statisticalProbability": null
+    },
+    {
+      "id": "SEVERE",
+      "label": "Stress prolongé",
+      "systemRevenueHaircut": [
+        0,
+        0.25,
+        0.15
+      ],
+      "ibmMixedRevenueHaircut": [
+        0,
+        0.1,
+        0.06
+      ],
+      "systemGrossMarginPenaltyPp": [
+        0,
+        4,
+        3
+      ],
+      "ibmGrossMarginPenaltyPp": [
+        0,
+        6,
+        4
+      ],
+      "cashTimingStressPctOfRevisedRevenue": [
+        0,
+        -8,
+        -4
+      ],
+      "statisticalProbability": null
+    }
+  ],
+  "projections": [
+    {
+      "stressId": "LIMITED",
+      "year": 2027,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 34842.85,
+      "ibmMixedEURm": 13461.91,
+      "revenueEURm": 48304.76,
+      "blendedGrossMarginPct": 55.69,
+      "ebitEURm": 20100.94,
+      "ebitMarginPct": 41.61,
+      "nopatProxyEURm": 16482.77,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1255.92,
+      "cashCapexEURm": 2656.76,
+      "cashTimingEURm": 0,
+      "cashStressProxyEURm": 15081.93,
+      "cashStressMarginPct": 31.22,
+      "deltaCashVsOriginalCentralEURm": 0,
+      "deltaCashVsCentralPct": 0,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "LIMITED",
+      "year": 2028,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 35748.77,
+      "ibmMixedEURm": 14380.01,
+      "revenueEURm": 50128.78,
+      "blendedGrossMarginPct": 54.49,
+      "ebitEURm": 19851.76,
+      "ebitMarginPct": 39.6,
+      "nopatProxyEURm": 16278.44,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1359.9,
+      "cashCapexEURm": 2876.71,
+      "cashTimingEURm": -501.29,
+      "cashStressProxyEURm": 14260.34,
+      "cashStressMarginPct": 28.45,
+      "deltaCashVsOriginalCentralEURm": -2041.33,
+      "deltaCashVsCentralPct": -12.52,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "LIMITED",
+      "year": 2029,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 39056.47,
+      "ibmMixedEURm": 15847.36,
+      "revenueEURm": 54903.83,
+      "blendedGrossMarginPct": 54.77,
+      "ebitEURm": 21949.75,
+      "ebitMarginPct": 39.98,
+      "nopatProxyEURm": 17998.8,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1458.91,
+      "cashCapexEURm": 3086.15,
+      "cashTimingEURm": -274.52,
+      "cashStressProxyEURm": 16097.04,
+      "cashStressMarginPct": 29.32,
+      "deltaCashVsOriginalCentralEURm": -1129.19,
+      "deltaCashVsCentralPct": -6.56,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "HISTORICAL_STYLE",
+      "year": 2027,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 34842.85,
+      "ibmMixedEURm": 13461.91,
+      "revenueEURm": 48304.76,
+      "blendedGrossMarginPct": 55.69,
+      "ebitEURm": 20100.94,
+      "ebitMarginPct": 41.61,
+      "nopatProxyEURm": 16482.77,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1255.92,
+      "cashCapexEURm": 2656.76,
+      "cashTimingEURm": 0,
+      "cashStressProxyEURm": 15081.93,
+      "cashStressMarginPct": 31.22,
+      "deltaCashVsOriginalCentralEURm": 0,
+      "deltaCashVsCentralPct": 0,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "HISTORICAL_STYLE",
+      "year": 2028,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 33114.65,
+      "ibmMixedEURm": 13939.81,
+      "revenueEURm": 47054.45,
+      "blendedGrossMarginPct": 53.43,
+      "ebitEURm": 17675.03,
+      "ebitMarginPct": 37.56,
+      "nopatProxyEURm": 14493.53,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1359.9,
+      "cashCapexEURm": 2876.71,
+      "cashTimingEURm": -1882.18,
+      "cashStressProxyEURm": 11094.54,
+      "cashStressMarginPct": 23.58,
+      "deltaCashVsOriginalCentralEURm": -5207.13,
+      "deltaCashVsCentralPct": -31.94,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "HISTORICAL_STYLE",
+      "year": 2029,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 37043.25,
+      "ibmMixedEURm": 15530.41,
+      "revenueEURm": 52573.66,
+      "blendedGrossMarginPct": 53.73,
+      "ebitEURm": 20126.49,
+      "ebitMarginPct": 38.28,
+      "nopatProxyEURm": 16503.72,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1458.91,
+      "cashCapexEURm": 3086.15,
+      "cashTimingEURm": -1051.47,
+      "cashStressProxyEURm": 13825,
+      "cashStressMarginPct": 26.3,
+      "deltaCashVsOriginalCentralEURm": -3401.22,
+      "deltaCashVsCentralPct": -19.74,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "SEVERE",
+      "year": 2027,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 34842.85,
+      "ibmMixedEURm": 13461.91,
+      "revenueEURm": 48304.76,
+      "blendedGrossMarginPct": 55.69,
+      "ebitEURm": 20100.94,
+      "ebitMarginPct": 41.61,
+      "nopatProxyEURm": 16482.77,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1255.92,
+      "cashCapexEURm": 2656.76,
+      "cashTimingEURm": 0,
+      "cashStressProxyEURm": 15081.93,
+      "cashStressMarginPct": 31.22,
+      "deltaCashVsOriginalCentralEURm": 0,
+      "deltaCashVsCentralPct": 0,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "SEVERE",
+      "year": 2028,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 28222.71,
+      "ibmMixedEURm": 13206.13,
+      "revenueEURm": 41428.84,
+      "blendedGrossMarginPct": 50.95,
+      "ebitEURm": 13643.54,
+      "ebitMarginPct": 32.93,
+      "nopatProxyEURm": 11187.7,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1359.9,
+      "cashCapexEURm": 2876.71,
+      "cashTimingEURm": -3314.31,
+      "cashStressProxyEURm": 6356.58,
+      "cashStressMarginPct": 15.34,
+      "deltaCashVsOriginalCentralEURm": -9945.08,
+      "deltaCashVsCentralPct": -61.01,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    },
+    {
+      "stressId": "SEVERE",
+      "year": 2029,
+      "comparedWith": "V04_CENTRAL_SAME_YEAR",
+      "shockAssumedStartsFromOrdersIn2027": true,
+      "systemsEURm": 34224.74,
+      "ibmMixedEURm": 14896.52,
+      "revenueEURm": 49121.26,
+      "blendedGrossMarginPct": 52.03,
+      "ebitEURm": 17437.14,
+      "ebitMarginPct": 35.5,
+      "nopatProxyEURm": 14298.45,
+      "rdAndSgaFixedAtOriginalCentralCase": true,
+      "daEURm": 1458.91,
+      "cashCapexEURm": 3086.15,
+      "cashTimingEURm": -1964.85,
+      "cashStressProxyEURm": 10706.36,
+      "cashStressMarginPct": 21.8,
+      "deltaCashVsOriginalCentralEURm": -6519.86,
+      "deltaCashVsCentralPct": -37.85,
+      "indicativeMarketCapNotUsed": true,
+      "probability": null,
+      "certifiedCFO": false,
+      "ownerEarnings": false
+    }
+  ],
+  "earlyWarningTests": [
+    {
+      "factor": "Orders",
+      "metric": "Accepted system bookings/backlog quality versus booked shipment plans",
+      "status": "2026_Q1_TO_Q3_BOOKINGS_UNDISCLOSED",
+      "notInferred": true
+    },
+    {
+      "factor": "Customer capex",
+      "metric": "TSMC/Samsung/Intel actual wafer-fab lithography deployment and guidance revisions, not their total capex",
+      "status": "NEEDS_UPDATED_ISSUER_MAPPING"
+    },
+    {
+      "factor": "IBM upgrade mix",
+      "metric": "Service/option sales, usage-sensitive OnPulse, service GM, optional productivity upgrades",
+      "status": "SUBSEGMENT_EXACT_REVENUE_NOT_DISCLOSED"
+    },
+    {
+      "factor": "Cash conversion",
+      "metric": "Customer deposits collected versus noncurrent contract liability balance and reported CFO assets/liabilities",
+      "status": "2026_CURRENT_CONTRACT_LIABILITY_SPLIT_UNDISCLOSED"
+    },
+    {
+      "factor": "Supply",
+      "metric": "ZEISS optics ramp, EXE/NXE acceptance timelines, export licenses",
+      "status": "NEEDS_SUPPLIER_ISSUER_EVIDENCE"
+    },
+    {
+      "factor": "Return",
+      "metric": "Quarterly time-weighted gross operating assets and true net invested capital",
+      "status": "ROIC_NOT_CERTIFIED"
+    }
+  ],
+  "governance": {
+    "runStatusExpected": "ACTIVE",
+    "stageExpected": "RESEARCH",
+    "registryAdmission": false,
+    "sourceOriginNewUrlsHashSealed": false,
+    "readyForDeepDive": false,
+    "finalMoatOrReturnVerdict": false,
+    "dcfOrPriceTarget": false,
+    "readOnlySourceAcquisition": true
+  },
+  "validations": {
+    "fourYearsHistorical": true,
+    "threeStressOverlays": true,
+    "nineYears": true,
+    "bookingsShockExactlyHistorical2023": true,
+    "fy2024SystemSalesFlatish": true,
+    "fy2023IbmDeclined": true,
+    "all2027ReplayEqualsCentral": true,
+    "noCertifiedProfit": true,
+    "historicalVsHypotheticalClearlyDifferent": true,
+    "noNew2026Q3BookingsInferred": true
+  }
+}
