@@ -28,7 +28,7 @@ Machine-readable companion: [candidate evidence register](./ASML_2026-10-30_a1e5
 | S05 | [ASML issuer quarterly release](https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026) | 2026-10-14 | Q3 2026 | Same issuer facts as SEC, not independent confirmation |
 | S06 | [ASML share repurchases — 26 October](https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-6) | 2026-10-26 | trades 19–23 October | Exactly 343,310 shares; still no full share capital ledger |
 
-**Acquisition warning:**  SEC-hosted exhibits and issuer pages are original *locations* but inspection of their web-rendered contents does **not** provide captured raw bytes, content SHA-256, sealed custody or official Registry admission. ASML's investor static-file PDF endpoints can return HTTP 403 from cloud environments; SEC HTML is a candidate alternative, NOT automatically certified.
+**Acquisition warning:**  SEC Exhibit 99.3 embeds its financial slides as separate referenced images. **Do not archive only the HTML wrapper and claim the complete financial statements were sealed**: the linked slide images (or equivalent full official PDF) must be captured and integrity-checked as a consistent set. SEC-hosted exhibits and issuer pages are original *locations* but inspection of their web-rendered contents does **not** provide captured raw bytes, content SHA-256, sealed custody or official Registry admission. ASML's investor static-file PDF endpoints can return HTTP 403 from cloud environments; SEC HTML is a candidate alternative, NOT automatically certified.
 
 ## III. Evidence candidate ledger (partial) — all numbers EUR millions unless indicated
 
@@ -66,7 +66,7 @@ Arithmetic only (values €m):
 | 9M CFO minus PP&E and intangible purchases | 11,315.0 − 1,115.1 − 140.4 | **10,059.5** | *Raw simplified cash-flow bridge, not normalized FCF/Owner Earnings* |
 | Q3 CFO excluding recorded net asset/liability changes | 11,797.6 − 7,009.0 | **4,788.6** | *Sensitivity only: not normalized/sustainable CFO* |
 
-**Red flag for methodology:** about **59.4%** of Q3 operating CF comes from reported changes in assets/liabilities. The financial statements also show very large contract-liability movements. Distinguish customer prepayments, deferred revenue and working-capital timing before any cash-conversion, ROIC, owner-earnings or DCF judgments. Q3's nonoperating gain must be isolated from operating return quality.
+**Period check:** Q1 2026 CFO **−€2,185.6m**, Q2 **+€1,703.0m**, Q3 **+€11,797.6m** sum to the reported nine-month **+€11,315.0m**. Cash conversion is exceptionally sensitive to the third-quarter working-capital movement.\n\n**Red flag for methodology:** about **59.4%** of Q3 operating CF comes from reported changes in assets/liabilities. The financial statements also show very large contract-liability movements. Distinguish customer prepayments, deferred revenue and working-capital timing before any cash-conversion, ROIC, owner-earnings or DCF judgments. Q3's nonoperating gain must be isolated from operating return quality.
 
 ## V. Valuation-date alignment and market data
 
