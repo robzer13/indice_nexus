@@ -55,8 +55,8 @@ export default async function PrimarySourcesPage({searchParams}:{searchParams:Pa
         {q.error&&<div role="alert" className="space-y-1 text-sm text-rose-300">
           <p><strong>Capture non confirmée :</strong> {asmlCaptureErrorLabel(q.error)}</p>
           <p>Document concerné : {ASML_V29_SOURCES[activeSource].title}</p>
-          <p>Aucun fichier ne doit être tenu pour admis au Registry. Le détail brut de l'erreur n’est pas exposé.</p>
-        </div>
+          <p>Aucun fichier ne doit être tenu pour admis au Registry. Le détail brut de l’erreur n’est pas exposé.</p>
+        </div>}
       </section>
       <p className="text-sm text-slate-400">Les liens sont codés en dur dans la liste blanche.
         Si un émetteur redirige vers une autre origine, la capture est bloquée et l&apos;origine doit être examinée.
