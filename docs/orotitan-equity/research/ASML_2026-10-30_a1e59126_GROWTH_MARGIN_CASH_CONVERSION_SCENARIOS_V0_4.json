@@ -1,0 +1,383 @@
+{
+  "schema": "ASML_GROWTH_MARGIN_CASH_CONVERSION_SCENARIOS_V0_4",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "cutoff": "2026-10-30",
+  "accounting": "US_GAAP",
+  "unit": "EUR_MILLION",
+  "classification": "WORKING_RESEARCH_NON_ADMITTED",
+  "sources": [
+    {
+      "id": "2025-SEC-USGAAP",
+      "date": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R3.htm",
+      "fact": "2025 IBM sales €8193m, cost €4025.3m, gross margin 50.87%"
+    },
+    {
+      "id": "2026-Q3-GAAP",
+      "date": "2026-10-14",
+      "url": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "fact": "2026 9M reported IBM 8538.1m and R&D 3635.9m SG&A 957.6m",
+      "registryAdmitted": false
+    },
+    {
+      "id": "2026-Q3-OUTLOOK",
+      "date": "2026-10-14",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "fact": "FY 2026 revenue 44-45bn GM ~56%, Q4 guidance revenue, R&D and SG&A"
+    }
+  ],
+  "guideBased2026Anchor": {
+    "year": 2026,
+    "sourceStatus": "GUIDANCE_DERIVED_NOT_FY_ACTUAL",
+    "revenue": 44500,
+    "ibm": 12238.1,
+    "systems": 32261.9,
+    "groupGm": 56,
+    "ibmGmHypothesis": 50.87,
+    "rd": 4835.9,
+    "sga": 1357.6,
+    "systemGmImplied": 57.945994
+  },
+  "anchorInterpretation": "44.5bn issuer revenue-guide midpoint, IBM 8538.1m 9M realized + 3.7bn approx Q4 outlook, IBM GM 50.87% is carried-forward 2025 actual as a hypothetical calibration input, systems GM is an algebraic residual not reported, 9M R&D/SG&A plus approximate Q4 budgets.",
+  "scenarioInputs": [
+    {
+      "id": "DOWNSIDE",
+      "name": "Reflux cyclique",
+      "sysGrowth": [
+        -0.15,
+        0.02,
+        0.04
+      ],
+      "ibmGrowth": [
+        -0.1,
+        0.02,
+        0.04
+      ],
+      "sysGm": [
+        51.5,
+        52.5,
+        53.5
+      ],
+      "ibmGm": [
+        44,
+        46,
+        48
+      ],
+      "rdGrowth": [
+        0.07,
+        0.07,
+        0.06
+      ],
+      "sgaGrowth": [
+        0.05,
+        0.05,
+        0.05
+      ],
+      "tax": 20,
+      "da": 2.5,
+      "capex": [
+        6,
+        5.5,
+        5
+      ],
+      "wc": [
+        -6,
+        -2,
+        0
+      ]
+    },
+    {
+      "id": "CENTRAL",
+      "name": "Continuité opérationnelle",
+      "sysGrowth": [
+        0.08,
+        0.08,
+        0.07
+      ],
+      "ibmGrowth": [
+        0.1,
+        0.09,
+        0.08
+      ],
+      "sysGm": [
+        57.5,
+        57.5,
+        57
+      ],
+      "ibmGm": [
+        51,
+        51.5,
+        51.5
+      ],
+      "rdGrowth": [
+        0.1,
+        0.1,
+        0.09
+      ],
+      "sgaGrowth": [
+        0.09,
+        0.09,
+        0.08
+      ],
+      "tax": 18,
+      "da": 2.6,
+      "capex": [
+        5.5,
+        5.5,
+        5.5
+      ],
+      "wc": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "id": "UPSIDE",
+      "name": "Montée en capacité",
+      "sysGrowth": [
+        0.16,
+        0.14,
+        0.1
+      ],
+      "ibmGrowth": [
+        0.15,
+        0.13,
+        0.11
+      ],
+      "sysGm": [
+        59.5,
+        60,
+        59.5
+      ],
+      "ibmGm": [
+        54,
+        55,
+        54
+      ],
+      "rdGrowth": [
+        0.14,
+        0.14,
+        0.12
+      ],
+      "sgaGrowth": [
+        0.12,
+        0.12,
+        0.11
+      ],
+      "tax": 17.5,
+      "da": 2.7,
+      "capex": [
+        7,
+        7,
+        6.5
+      ],
+      "wc": [
+        2,
+        1,
+        -2
+      ]
+    }
+  ],
+  "scenarioYears": [
+    {
+      "caseId": "DOWNSIDE",
+      "year": 2027,
+      "systemsRevenueEURm": 27422.615,
+      "ibmMixedRevenueEURm": 11014.29,
+      "revenueEURm": 38436.905,
+      "ibmShareRevenuePct": 28.656,
+      "groupGmPct": 49.351,
+      "ebitEURm": 12369.041,
+      "ebitMarginPct": 32.18,
+      "nopatProxyEURm": 9895.233,
+      "daProxyEURm": 960.923,
+      "cashCapexProxyEURm": 2306.214,
+      "wcCashStressEURm": -2306.214,
+      "cashStressProxyEURm": 6243.727,
+      "cashStressMarginPct": 16.244,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "DOWNSIDE",
+      "year": 2028,
+      "systemsRevenueEURm": 27971.067,
+      "ibmMixedRevenueEURm": 11234.576,
+      "revenueEURm": 39205.643,
+      "ibmShareRevenuePct": 28.656,
+      "groupGmPct": 50.637,
+      "ebitEURm": 12819.339,
+      "ebitMarginPct": 32.698,
+      "nopatProxyEURm": 10255.471,
+      "daProxyEURm": 980.141,
+      "cashCapexProxyEURm": 2156.31,
+      "wcCashStressEURm": -784.113,
+      "cashStressProxyEURm": 8295.189,
+      "cashStressMarginPct": 21.158,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "DOWNSIDE",
+      "year": 2029,
+      "systemsRevenueEURm": 29089.91,
+      "ibmMixedRevenueEURm": 11683.959,
+      "revenueEURm": 40773.869,
+      "ibmShareRevenuePct": 28.656,
+      "groupGmPct": 51.924,
+      "ebitEURm": 13730.991,
+      "ebitMarginPct": 33.676,
+      "nopatProxyEURm": 10984.793,
+      "daProxyEURm": 1019.347,
+      "cashCapexProxyEURm": 2038.693,
+      "wcCashStressEURm": 0,
+      "cashStressProxyEURm": 9965.446,
+      "cashStressMarginPct": 24.441,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "CENTRAL",
+      "year": 2027,
+      "systemsRevenueEURm": 34842.852,
+      "ibmMixedRevenueEURm": 13461.91,
+      "revenueEURm": 48304.762,
+      "ibmShareRevenuePct": 27.869,
+      "groupGmPct": 55.689,
+      "ebitEURm": 20100.94,
+      "ebitMarginPct": 41.613,
+      "nopatProxyEURm": 16482.771,
+      "daProxyEURm": 1255.924,
+      "cashCapexProxyEURm": 2656.762,
+      "wcCashStressEURm": 0,
+      "cashStressProxyEURm": 15081.933,
+      "cashStressMarginPct": 31.222,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "CENTRAL",
+      "year": 2028,
+      "systemsRevenueEURm": 37630.28,
+      "ibmMixedRevenueEURm": 14673.482,
+      "revenueEURm": 52303.762,
+      "ibmShareRevenuePct": 28.054,
+      "groupGmPct": 55.817,
+      "ebitEURm": 21729.851,
+      "ebitMarginPct": 41.545,
+      "nopatProxyEURm": 17818.478,
+      "daProxyEURm": 1359.898,
+      "cashCapexProxyEURm": 2876.707,
+      "wcCashStressEURm": 0,
+      "cashStressProxyEURm": 16301.668,
+      "cashStressMarginPct": 31.167,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "CENTRAL",
+      "year": 2029,
+      "systemsRevenueEURm": 40264.4,
+      "ibmMixedRevenueEURm": 15847.36,
+      "revenueEURm": 56111.76,
+      "ibmShareRevenuePct": 28.242,
+      "groupGmPct": 55.447,
+      "ebitEURm": 22992.028,
+      "ebitMarginPct": 40.975,
+      "nopatProxyEURm": 18853.463,
+      "daProxyEURm": 1458.906,
+      "cashCapexProxyEURm": 3086.147,
+      "wcCashStressEURm": 0,
+      "cashStressProxyEURm": 17226.222,
+      "cashStressMarginPct": 30.7,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "UPSIDE",
+      "year": 2027,
+      "systemsRevenueEURm": 37423.804,
+      "ibmMixedRevenueEURm": 14073.815,
+      "revenueEURm": 51497.619,
+      "ibmShareRevenuePct": 27.329,
+      "groupGmPct": 57.997,
+      "ebitEURm": 22833.585,
+      "ebitMarginPct": 44.339,
+      "nopatProxyEURm": 18837.708,
+      "daProxyEURm": 1390.436,
+      "cashCapexProxyEURm": 3604.833,
+      "wcCashStressEURm": 1029.952,
+      "cashStressProxyEURm": 17653.263,
+      "cashStressMarginPct": 34.28,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "UPSIDE",
+      "year": 2028,
+      "systemsRevenueEURm": 42663.137,
+      "ibmMixedRevenueEURm": 15903.411,
+      "revenueEURm": 58566.548,
+      "ibmShareRevenuePct": 27.154,
+      "groupGmPct": 58.642,
+      "ebitEURm": 26357.049,
+      "ebitMarginPct": 45.004,
+      "nopatProxyEURm": 21744.565,
+      "daProxyEURm": 1581.297,
+      "cashCapexProxyEURm": 4099.658,
+      "wcCashStressEURm": 585.665,
+      "cashStressProxyEURm": 19811.869,
+      "cashStressMarginPct": 33.828,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    },
+    {
+      "caseId": "UPSIDE",
+      "year": 2029,
+      "systemsRevenueEURm": 46929.45,
+      "ibmMixedRevenueEURm": 17652.786,
+      "revenueEURm": 64582.236,
+      "ibmShareRevenuePct": 27.334,
+      "groupGmPct": 57.997,
+      "ebitEURm": 28526.323,
+      "ebitMarginPct": 44.171,
+      "nopatProxyEURm": 23534.216,
+      "daProxyEURm": 1743.72,
+      "cashCapexProxyEURm": 4197.845,
+      "wcCashStressEURm": -1291.645,
+      "cashStressProxyEURm": 19788.447,
+      "cashStressMarginPct": 30.641,
+      "ownerEarningsCertified": false,
+      "IBMContractRecurringPct": null
+    }
+  ],
+  "cashFormula": "EBIT*(1-assumedOperatingTaxRate)+hypotheticalDA-hypotheticalCashPPEnIntangibleCapex+hypotheticalWC_CashTiming",
+  "cashDefinitions": {
+    "metric": "OPERATING_CASH_STRESS_PROXY",
+    "notPublishedCFO": true,
+    "notCertifiedFCFF": true,
+    "notOwnerEarnings": true,
+    "IBMSplitUnavailable": true,
+    "SBCExpenseRetainedInEBIT": true,
+    "workingCapitalPctOfAnnualRevenueScenarioNotMeasuredDeposits": true,
+    "noShareValuation": true,
+    "noDCF": true
+  },
+  "validation": {
+    "scenarios": 3,
+    "years": 3,
+    "rows": 9,
+    "revenueBridge": true,
+    "allRecordsHaveUnknownRecurringIBM": true,
+    "cashProxyNotCertified": true
+  },
+  "governance": {
+    "frozenResearchV2": true,
+    "registryWrites": false,
+    "stageCompleted": false,
+    "readyForDeepDive": false,
+    "reportFinalVerdict": false
+  }
+}
