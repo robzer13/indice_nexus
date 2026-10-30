@@ -1083,8 +1083,8 @@
     "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_MOAT_RUNWAY_OUTSIDE_VIEW_RESEARCH_WORKING_V0_1.md",
     "facts": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_OUTSIDE_VIEW_EVIDENCE_CANDIDATES_V0_1.json",
     "classification": "RESEARCH_WORKING_NON_ADMITTED",
-    "sources": 10,
-    "claims": 23,
+    "sources": 13,
+    "claims": 31,
     "hypotheses": 5,
     "risks": 6,
     "issuerServiceMixPct": {
@@ -1122,6 +1122,27 @@
     "moatVerdict": null,
     "runwayVerdict": null,
     "readyForDeepDive": false,
-    "registryWritesPerformed": false
+    "registryWritesPerformed": false,
+    "separateIndustryEquipmentEvidence": [
+      "SEMI_Q2_2026_BILLINGS",
+      "SEMI_JULY_2026_FORECAST"
+    ],
+    "issuerFY2026GuidanceRevisionEURBillion": [
+      {
+        "published": "2026-01-28",
+        "low": 34,
+        "high": 39
+      },
+      {
+        "published": "2026-07-15",
+        "low": 43,
+        "high": 45
+      },
+      {
+        "published": "2026-10-14",
+        "low": 44,
+        "high": 45
+      }
+    ]
   }
 }
