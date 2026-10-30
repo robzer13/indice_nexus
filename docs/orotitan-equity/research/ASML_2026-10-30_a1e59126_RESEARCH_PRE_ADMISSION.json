@@ -109,7 +109,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E002",
@@ -120,7 +129,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E003",
@@ -131,7 +149,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E004",
@@ -142,7 +169,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E005",
@@ -153,7 +189,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E006",
@@ -164,7 +209,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E007",
@@ -175,7 +229,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E008",
@@ -186,7 +249,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E009",
@@ -197,7 +269,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E010",
@@ -208,7 +289,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_OUTFLOW_ABS",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E011",
@@ -219,7 +309,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_OUTFLOW_ABS",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E012",
@@ -230,7 +329,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E013",
@@ -241,7 +349,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_OUTFLOW_ABS",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E014",
@@ -252,7 +369,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_OUTFLOW_ABS",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E015",
@@ -263,7 +389,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_NOT_SPOT_SHARE_COUNT",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E016",
@@ -274,7 +409,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "ARITHMETIC_SUM_8030_9_PLUS_4704_2",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 5,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E017",
@@ -329,7 +473,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED_OUTFLOW_ABS",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E022",
@@ -362,7 +515,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     },
     {
       "id": "E025",
@@ -373,7 +535,16 @@
       "sourceId": "SRC-SEC-EX993",
       "kind": "REPORTED",
       "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
-      "sourceBytesVerified": false
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
     }
   ],
   "calculationCandidates": [
@@ -707,5 +878,26 @@
       "registryWritesPerformed": false
     },
     "complementaryResearchNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md"
-  }
+  },
+  "qualifiedSourceCandidates": [
+    {
+      "id": "S-2026Q3-US-GAAP",
+      "sourceId": "SRC-EURONEXT-Q3-2026",
+      "datePublished": "2026-10-14",
+      "periodEnded": "2026-09-27",
+      "cutoff": "2026-10-30",
+      "mime": "application/pdf",
+      "pages": 12,
+      "sizeBytes": 1369295,
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "fileAuthenticityLevel": "PDF_MATCH_TO_USER_SUPPLIED_SECOND_COPY_AND_OFFICIAL_PUBLICATION_CONTEXT",
+      "custodyLevel": "PRIVATE_SHADOW_CREATE_ONLY_AND_APPLICATION_VERIFIED_READBACK",
+      "dataArithmeticQuality": "PASS_3_INVARIANTS",
+      "sourceFileContextVerified": true,
+      "independentSecureHostFileFetchVerified": false,
+      "registryAdmitted": false,
+      "formalEvidenceLedgerAuthority": "NONE",
+      "linkedClaims": 19
+    }
+  ]
 }
