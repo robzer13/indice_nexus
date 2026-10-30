@@ -999,5 +999,84 @@
     },
     "sourceAuthorityRequestPreparedNotSent": true,
     "registryAdmitted": false
+  },
+  "materialityResolutionProposalV04": {
+    "sourceNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_G001_G006_MATERIALITY_RESOLUTION_PROPOSAL_V0_4.md",
+    "category": "PILOTAGE_ADJUDICATION_REQUEST_NOT_APPROVED",
+    "cutoff": "2026-10-30",
+    "cause": "Exact current shares issued-minus-treasury non-public; gross repurchases omit treasury employee deliveries; Research V2 requires material sufficiency, not expressly an exact share-denominator for every preliminary sensitivity.",
+    "newOfficialCorporateActionLead": {
+      "issuer": "ASML",
+      "isin": "NL0010273215",
+      "venue": "XAMS",
+      "notice": "AMS_20261005_00873_EUR",
+      "issued": "2026-10-05",
+      "effective": "2026-10-08",
+      "eventType": "CE - Shares - Capital increase",
+      "source": "https://live.euronext.com/en/ajax/getNoticePublicData/NL0010273215-XAMS?alias=1&pageNum=1&pageSize=50",
+      "quantityVerified": false,
+      "originalNoticeBytesArchived": false,
+      "actionRequired": "OBTAIN_NOTICE_DETAILS_AND_RECONCILE_LEGAL_ISSUED_SHARE_COUNT"
+    },
+    "afmSource": {
+      "url": "https://www.afm.nl/nl-nl/sector/registers/meldingenregisters/geplaatst-kapitaal/details?id=180975",
+      "obligationDate": "2025-09-24",
+      "historicalIssuedCapital": 388147674,
+      "siteLastUpdatedNotSnapshotDate": true
+    },
+    "scenarioPrice": {
+      "eur": 1504.8,
+      "asOf": "2026-10-29",
+      "inputStatus": "VENDOR_CLOSE_CORROBORATED_BY_XAMS_LATE_TRADES_NOT_EOD_SEALED"
+    },
+    "vendorSensitivity": {
+      "shareCounts": [
+        {
+          "shares": 382462183,
+          "marketCapEURBillion": 575.5291
+        },
+        {
+          "shares": 382910000,
+          "marketCapEURBillion": 576.203
+        },
+        {
+          "shares": 384500000,
+          "marketCapEURBillion": 578.5956
+        }
+      ],
+      "spreadShares": 2037817,
+      "spreadMarketCapEURBillion": 3.0665,
+      "spreadRelativeToMiddleVendorPct": 0.5322,
+      "intervalCertified": false,
+      "priceCertified": false,
+      "mainMaterialityComparison": "LTM simple FCF 20999.4m vs working-capital-line-excluded FCF 13122.5m, neither is certified sustainable Owner Earnings"
+    },
+    "tracks": [
+      {
+        "kind": "A",
+        "name": "WORKING_FINANCIAL_SENSITIVITY",
+        "allowed": true,
+        "authority": "NON_ADMITTED_RESEARCH_WORKING_PAPERS_ONLY",
+        "stageCompletionAuthorized": false,
+        "formalVerdictAuthorized": false
+      },
+      {
+        "kind": "B",
+        "name": "EXACT_COUNT_CERTIFICATION",
+        "allowed": true,
+        "authority": "REQUEST_ORIGINAL_EURONEXT_NOTICE_AFM_CAPITAL_AND_ISSUER_TREASURY_LEDGER",
+        "stageCompletionAuthorized": false
+      }
+    ],
+    "proposedMaterialityPolicy": {
+      "requiresPilotageReview": true,
+      "approved": false,
+      "thresholdPct": null,
+      "doNotAutoChangeGate": true,
+      "canContinueIndependentEvidenceCollection": true,
+      "claimExactCountStillBlocked": true
+    },
+    "runRegistryStatusMustRemain": "ACTIVE/RESEARCH",
+    "registryWritesPerformed": false
   }
 }
