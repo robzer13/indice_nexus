@@ -11,6 +11,7 @@ import {retrieveAsmlQ2OfficialRelease,ASML_Q2_2026_PUBLIC_RELEASE}
 if (process.env.CI !== 'true' || process.env.NODE_ENV === 'production') {
   throw new Error('RECOVERY_LIVE_PROBE_CI_ONLY');
 }
+async function main() {
 const {candidate,bytes}=await retrieveAsmlQ2OfficialRelease();
 assert.equal(candidate.url,ASML_Q2_2026_PUBLIC_RELEASE.url);
 assert.equal(candidate.publicationDate,'2026-07-15');
@@ -28,3 +29,9 @@ console.log(JSON.stringify({
   registryAdmitted:false,
   archived:false,
 },null,2));
+
+}
+main().catch(error=>{
+  console.error('RECOVERY_LIVE_SOURCE_PROBE_FAILED:',error);
+  process.exitCode=1;
+});
