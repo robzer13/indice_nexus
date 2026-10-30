@@ -245,11 +245,11 @@
   "invariants": {
     "allReportedRevenueIdentitiesTrue": true,
     "q4IBMPlus9MIBMEqualsForecast": true,
-    "annual2016GuidanceNotRealized": true,
     "cashFlowReconciles": true,
     "workingCapitalStressReconciles": true,
     "sourceSealAdmitted": false,
-    "readyForDeepDive": false
+    "readyForDeepDive": false,
+    "annual2026GuidanceNotRealized": true
   },
   "notes": [
     "No numeric Q3 2026 booking amount can be imputed from liability delta.",
@@ -257,5 +257,31 @@
     "Company Q4 IBM guide (~EUR3.7bn) can be upgrade-led: recurring services not isolated.",
     "Working FCF sensitivity fractions have no probabilities and are not fair value or DCF.",
     "Price and share counts are noncertified valuation context."
-  ]
+  ],
+  "managementPreparedRemarks": {
+    "date": "2026-10-14",
+    "sourceId": "ASML-Q3-CALL-THIRD-PARTY",
+    "firstPartyWordsSecondaryTranscription": true,
+    "exactlyVerifiableTranscriptContent": true,
+    "originFileNotHashArchived": true,
+    "q3EuvSystemSalesEURBillionApprox": 4.1,
+    "q3NonEuvSystemsEURBillionApprox": 4.3,
+    "q3EuvHighNaSystemsIncluded": 1,
+    "q3LogicShareSystemSalesPct": 54,
+    "q3MemoryShareSystemSalesPct": 46,
+    "q3IbmAboveGuideEURBillionApprox": 0.4,
+    "q3NetIncomeMistralAiRevaluationGainEURBillionApprox": 0.5,
+    "fy2026GuidedEuvGrowthPct": "OVER_45",
+    "fy2026GuidedNonEuvSystemGrowthPctApprox": 20,
+    "fy2026GuidedIbmGrowthPctApprox": 50,
+    "fy2026GuidedMemorySystemsGrowthPctApprox": 75,
+    "fy2026GuidedLogicSystemsGrowthPctApprox": 10,
+    "fy2026GuidedChinaRevenueMixPctApprox": 20,
+    "notToBeInterpretedAs": [
+      "REALIZED_FY2026",
+      "ORDER_BACKLOG",
+      "NORMALIZED_FCF",
+      "AUDITED_SERVICE_RECURRING_REVENUE"
+    ]
+  }
 }
