@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {OfficialSourceCandidate} from '../lib/orotitan-equity/product/research-recovery-official-source-v1';
-import {ASML_Q2_2026_PUBLIC_RELEASE} from '../lib/orotitan-equity/product/research-recovery-official-source-v1';
+import {ASML_Q2_2026_PUBLIC_RELEASE,ASML_Q2_2026_OFFICIAL_PRESENTATION} from '../lib/orotitan-equity/product/research-recovery-official-source-v1';
 import {archiveAsmlCandidate,RECOVERY_PRIVATE_BUCKET} from '../lib/orotitan-equity/product/research-recovery-private-archive-v1';
 
 const body=Buffer.from('<html><title>ASML Q2 2026</title>'+'source'.repeat(90)+'</html>','utf8');
@@ -16,7 +16,7 @@ const candidate:OfficialSourceCandidate={
   admitted:false,historicalBytesCertified:false,
 };
 
-function fixture(opts:{public?:boolean;uploadCode?:string;uploadErrorCode?:string;stored?:Buffer;downloadFailure?:boolean}={}) {
+function fixture(opts:{public?:boolean;uploadCode?:string;uploadErrorCode?:string;stored?:Buffer;expectedBody?:Buffer;downloadFailure?:boolean}={}) {
   const log:{uploadPath?:string;uploadOptions?:Record<string,unknown>;downloads:number;uploads:number}={
     downloads:0,uploads:0,
   };
@@ -33,7 +33,7 @@ function fixture(opts:{public?:boolean;uploadCode?:string;uploadErrorCode?:strin
             log.uploads++;
             log.uploadPath=path;
             log.uploadOptions=options;
-            assert.deepEqual(data,body);
+            assert.deepEqual(data,opts.expectedBody??body);
             return {error:opts.uploadCode?{statusCode:opts.uploadCode,code:opts.uploadErrorCode}:null};
           },
           async download(path:string){
@@ -41,7 +41,7 @@ function fixture(opts:{public?:boolean;uploadCode?:string;uploadErrorCode?:strin
             assert.equal(path,log.uploadPath);
             return opts.downloadFailure
               ? {data:null,error:{message:'readback failed'}}
-              : {data:new Blob([new Uint8Array(opts.stored??body)]),error:null};
+              : {data:new Blob([new Uint8Array(opts.stored??opts.expectedBody??body)]),error:null};
           },
         };
       },
@@ -102,4 +102,24 @@ test('unexpected write failure, readback failure and byte mismatch fail closed',
   await assert.rejects(archiveAsmlCandidate(missing.client,candidate,body),/READBACK_FAILED/);
   const corrupt=fixture({stored:Buffer.from('different'.repeat(100))});
   await assert.rejects(archiveAsmlCandidate(corrupt.client,candidate,body),/READBACK_MISMATCH/);
+});
+
+test('official ASML PDF is archived create-only under its own matching SHA filename',async()=>{
+  const pdf=Buffer.concat([Buffer.from('%PDF-1.7\n'),Buffer.alloc(12000,0x20),Buffer.from('\n%%EOF\n')]);
+  const digest=createHash('sha256').update(pdf).digest('hex');
+  const fixturePdf=fixture({expectedBody:pdf});
+  const receipt=await archiveAsmlCandidate(fixturePdf.client,{
+    documentId:ASML_Q2_2026_OFFICIAL_PRESENTATION.documentId,
+    url:ASML_Q2_2026_OFFICIAL_PRESENTATION.url,
+    publicationDate:'2026-07-15',
+    retrievedAt:'2026-10-30T12:00:00.000Z',
+    byteSize:pdf.length,sha256:digest,
+    contentType:'application/pdf',
+    admitted:false,historicalBytesCertified:false,
+  },pdf);
+  assert.equal(receipt.path,'research-recovery-v1/asml-observation/q2-2026/'+digest+'.pdf');
+  assert.equal(receipt.verifiedReadback,true);
+  assert.equal(receipt.registryAdmitted,false);
+  assert.equal(fixturePdf.log.uploadOptions?.contentType,'application/pdf');
+  assert.equal(fixturePdf.log.uploadOptions?.upsert,false);
 });
