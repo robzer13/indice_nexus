@@ -51,6 +51,8 @@ Prior research documented **2,607,008** additional gross shares bought **2026-06
 
 **Blocking items:** exact economic shares at 2026-09-27 (2026 Q3 shows only rounded weighted average); complete 2026 share issue/cancellation and employee-delivery register; unsettled trades and settlement-date convention; no 2026-10-26–30 buyback notice publicly dated by the cutoff (weekly reporting lag). Vendor counts `382.91m`, `383.10m` (EPS weighted avg), and `385.42m` (some outstanding-share aggregators) are **not interchangeable**. `G001=BLOCKED_EXACT_COUNT`.
 
+**Methodology amendment (2026-10-30):** the initial narrative did not distinguish the US GAAP balance sheet's noncurrent contract liabilities from total contract liabilities. This is now corrected; a numerical +5,730.3m noncurrent movement is not all customer cash collections. The [extended quality/ROIC sensitivity v0.2](./ASML_2026-10-30_a1e59126_OWNER_EARNINGS_ROIC_VALUATION_SENSITIVITY_V0_2.md) documents the correction and reproducible alternatives. 
+
 ### C. Cash-flow reconciliation (unaudited US GAAP)
 
 All amounts **EUR millions**, directly from the PDF, p6 (Q3 / nine months) and p10 (quarterly bridge). Positive capex shown here as absolute cash outflows.
@@ -66,7 +68,7 @@ Arithmetical invariants: `−2185.6+1703.0+11797.6=11315.0`, and `−2607.9+1317
 
 Working capital details, Q3 2026:
 - `Changes in assets and liabilities = +7,009.0`, or **59.41%** of Q3 CFO 11,797.6. This aggregate movement is NOT all customer prepayments.
-- Contract liabilities rise **from 3,570.3 at 2026-06-28 to 9,300.6 at 2026-09-27**, change **+5,730.3** (balance-sheet delta, NOT a complete operating cash-flow bridge).
+- **NONCURRENT** contract liabilities rise **from 3,570.3 at 2026-06-28 to 9,300.6 at 2026-09-27**, change **+5,730.3** (US GAAP balance sheet pp5/9). These figures are **not total current-plus-noncurrent customer liabilities, not actual deposits received, and not the CFO contract-liability bridge**. The summary's current liabilities are aggregated. Interpret only as this NONCURRENT balance line.
 - Accounts receivable rise from **7,252.6 to 9,252.8**, change **+2,000.2**; inventories rise from **11,739.5 to 11,907.3**, change **+167.8**. These movements generally offset cash from advances and require cash/noncash and foreign-exchange adjustments.
 - Q3 includes **509.7** gain on equity investments in income and **−508.8** related adjustment in the indirect cash flow; these are not a recurring lithography operating result.
 - Share-based compensation in Q3 **73.2** and in 9M **162.8** is a noncash cash-flow add-back; potential equity dilution must be treated in return quality.
@@ -109,4 +111,4 @@ For business-model/earnings context: 2026 9M net sales **29,755.4** and manageme
 | ROIC | `BLOCKED` | NOPAT / invested-capital and nonoperating asset reconciliations |
 | Research completion | `BLOCKED` | Full required artifacts, gap/conflict/assumption ledgers, custody and stage manifest/self-audit |
 
-**Disposition:** Continue `ACTIVE / RESEARCH`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED` until full conditions. No registry change, no artefact admission, no GO PUBLISH, no changes to frozen process/methodology or source-dating.
+**New official venue print found:** [Euronext XAMS intraday archive for ASML, 2026-10-29](https://live.euronext.com/en/popout-page/getIntradayPrice/NL0010273215-XAMS) displays Trading-at-Last prints at EUR 1,504.80 at 17:39:46. This corroborates the vendor figure at the exact venue, **without certifying the official non-adjusted EOD price record**. See v0.2 for full trace.\n\n**Disposition:** Continue `ACTIVE / RESEARCH`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED` until full conditions. No registry change, no artefact admission, no GO PUBLISH, no changes to frozen process/methodology or source-dating.
