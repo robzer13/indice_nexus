@@ -1,0 +1,538 @@
+{
+  "schema": "OROTITAN_ASML_RESEARCH_BUSINESS_OUTSIDE_VIEW_WORKING_V0_1",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "cutoff": "2026-10-30",
+  "classification": "NON_AUTHORITATIVE_PRE_ADMISSION_RESEARCH_CANDIDATES",
+  "frozenResearchContract": "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0",
+  "authority": {
+    "moatVerdict": false,
+    "runwayVerdict": false,
+    "investmentThesis": false,
+    "valuationCertified": false,
+    "sourceBytesPrivatelyArchivedForThisNewSet": false,
+    "registryAdmitted": false,
+    "stageComplete": false,
+    "readyForDeepDive": false,
+    "published": false
+  },
+  "sources": [
+    {
+      "id": "ASML-AR25",
+      "date": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011377/asml-2025xannualxreportx.htm",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_ANNUAL",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "ASML-FY25",
+      "date": "2026-01-28",
+      "url": "https://www.asml.com/en/news/press-releases/2026/q4-2025-financial-results",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_FY25",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "ASML-Q3",
+      "date": "2026-10-14",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_Q3",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "ASML-Q3-GAAP",
+      "date": "2026-10-14",
+      "url": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+      "issuer": "ASML",
+      "class": "USER_UPLOADED_EURONEXT_LABELED_COPY",
+      "bytesSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "storedInPrivateShadow": true,
+      "registryAdmitted": false
+    },
+    {
+      "id": "ASML-Q3-SEC",
+      "date": "2026-10-14",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/a2026_10x14xpresentation.htm",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_SAME_EARNINGS_FAMILY",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "TSMC-Q3",
+      "date": "2026-10-15",
+      "url": "https://pr.tsmc.com/english/news-archives?field_category_target_id=1&field_issue_date%5Bmax%5D=2026-12-31&field_issue_date%5Bmin%5D=2026-01-01&queryYear=2026&title=",
+      "issuer": "TSMC",
+      "class": "SEPARATE_PRIMARY_CUSTOMER",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "TSMC-CALL",
+      "date": "2026-10-15",
+      "url": "https://www.fool.com/earnings/call-transcripts/2026/10/15/tsmc-tsm-q3-2026-earnings-call-transcript/",
+      "issuer": "TSMC",
+      "class": "CUSTOMER_CALL_TRANSCRIPT_THIRD_PARTY",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "SAMSUNG-Q3",
+      "date": "2026-10-29",
+      "url": "https://news.samsung.com/global/samsung-electronics-announces-third-quarter-2026-results",
+      "issuer": "Samsung",
+      "class": "SEPARATE_PRIMARY_CUSTOMER",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "INTEL-HIGHNA",
+      "date": "2026-09-08",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/intel-foundry-and-asml-collaborate-accelerate-industry-readiness-high-na-euv",
+      "issuer": "Intel and ASML",
+      "class": "JOINT_CO_MARKETING_COMPANY",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "SAMSUNG-HIGHNA",
+      "date": "2026-09-08",
+      "url": "https://semiconductor.samsung.com/news-events/news/samsung-electronics-and-asml-expand-strategic-collaboration-for-next-generation-semiconductor-manufacturing/",
+      "issuer": "Samsung and ASML",
+      "class": "JOINT_CO_MARKETING_COMPANY",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "SEMI-Q2-BILLINGS",
+      "date": "2026-09-03",
+      "url": "https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-billings-increased-23-percent-year-over-year-in-q2-2026-semi-reports",
+      "issuer": "SEMI",
+      "class": "INDEPENDENT_EQUIPMENT_INDUSTRY_DATA_AGGREGATION",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "SEMI-JUL-OUTLOOK",
+      "date": "2026-07-14",
+      "url": "https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-sales-forecast-to-reach-a-record-229-billion-dollars-in-2028-semi-reports",
+      "issuer": "SEMI",
+      "class": "INDEPENDENT_EQUIPMENT_INDUSTRY_FORECAST",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "ASML-Q2-2026",
+      "date": "2026-07-15",
+      "url": "https://investor.asml.com/news-releases/news-release-details/q2-2026-financial-results",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_Q2_FORWARD_LOOKING",
+      "bytesHashVerified": false
+    }
+  ],
+  "reported": [
+    {
+      "id": "B001",
+      "claim": "ASML FY2025 revenue",
+      "value": 32667,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2025",
+      "source": "ASML-FY25"
+    },
+    {
+      "id": "B002",
+      "claim": "ASML FY2024 revenue",
+      "value": 28263,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2024",
+      "source": "ASML-FY25"
+    },
+    {
+      "id": "B003",
+      "claim": "IBM FY2025 revenue",
+      "value": 8193,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2025",
+      "source": "ASML-FY25"
+    },
+    {
+      "id": "B004",
+      "claim": "IBM FY2024 revenue",
+      "value": 6494,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2024",
+      "source": "ASML-FY25"
+    },
+    {
+      "id": "B005",
+      "claim": "Q3 2026 ASML revenue",
+      "value": 11662,
+      "unit": "EUR_MILLIONS",
+      "period": "Q3_2026",
+      "source": "ASML-Q3-GAAP"
+    },
+    {
+      "id": "B006",
+      "claim": "Q3 2026 IBM revenue",
+      "value": 3288.8,
+      "unit": "EUR_MILLIONS",
+      "period": "Q3_2026",
+      "source": "ASML-Q3-GAAP"
+    },
+    {
+      "id": "B007",
+      "claim": "ASML 9M 2026 revenue",
+      "value": 29755.4,
+      "unit": "EUR_MILLIONS",
+      "period": "9M_2026",
+      "source": "ASML-Q3-GAAP"
+    },
+    {
+      "id": "B008",
+      "claim": "ASML 9M 2026 IBM revenue",
+      "value": 8538.1,
+      "unit": "EUR_MILLIONS",
+      "period": "9M_2026",
+      "source": "ASML-Q3-GAAP"
+    },
+    {
+      "id": "B009",
+      "claim": "2026 FY expected revenue lower bound",
+      "value": 44000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY_2026_GUIDE_AS_OF_OCT14",
+      "source": "ASML-Q3",
+      "forwardLooking": true
+    },
+    {
+      "id": "B010",
+      "claim": "2026 FY expected revenue upper bound",
+      "value": 45000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY_2026_GUIDE_AS_OF_OCT14",
+      "source": "ASML-Q3",
+      "forwardLooking": true
+    },
+    {
+      "id": "B011",
+      "claim": "2025 gross margin",
+      "value": 52.8,
+      "unit": "PERCENT",
+      "period": "FY2025",
+      "source": "ASML-FY25"
+    },
+    {
+      "id": "B012",
+      "claim": "2026 Q3 gross margin",
+      "value": 57.5,
+      "unit": "PERCENT",
+      "period": "Q3_2026",
+      "source": "ASML-Q3-GAAP"
+    },
+    {
+      "id": "B013",
+      "claim": "ASML 2025 R&D",
+      "value": 4700,
+      "unit": "EUR_MILLIONS_ROUNDED",
+      "period": "FY2025",
+      "source": "ASML-AR25"
+    },
+    {
+      "id": "B014",
+      "claim": "ASML customer China revenue proportion",
+      "value": 29.1,
+      "unit": "PERCENT",
+      "period": "FY2025",
+      "source": "ASML-AR25"
+    },
+    {
+      "id": "B015",
+      "claim": "ASML customer China revenue proportion",
+      "value": 36.1,
+      "unit": "PERCENT",
+      "period": "FY2024",
+      "source": "ASML-AR25"
+    },
+    {
+      "id": "B016",
+      "claim": "2025 EUV systems sales",
+      "value": 11600,
+      "unit": "EUR_MILLIONS_ROUNDED",
+      "period": "FY2025",
+      "source": "ASML-AR25"
+    },
+    {
+      "id": "B017",
+      "claim": "2025 DUV systems sales",
+      "value": 12000,
+      "unit": "EUR_MILLIONS_ROUNDED",
+      "period": "FY2025",
+      "source": "ASML-AR25"
+    },
+    {
+      "id": "B018",
+      "claim": "TSMC 2026 Q3 revenue",
+      "value": 46.72,
+      "unit": "USD_BILLIONS",
+      "period": "Q3_2026",
+      "source": "TSMC-Q3"
+    },
+    {
+      "id": "B019",
+      "claim": "TSMC Q3 year over year growth in USD",
+      "value": 41.2,
+      "unit": "PERCENT",
+      "period": "Q3_2026",
+      "source": "TSMC-Q3"
+    },
+    {
+      "id": "B020",
+      "claim": "TSMC 2026 capex budget lower",
+      "value": 60,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_GUIDE",
+      "source": "TSMC-CALL",
+      "forwardLooking": true
+    },
+    {
+      "id": "B021",
+      "claim": "TSMC 2026 capex budget upper",
+      "value": 64,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_GUIDE",
+      "source": "TSMC-CALL",
+      "forwardLooking": true
+    },
+    {
+      "id": "B022",
+      "claim": "Samsung FY2026 DS capital spending expected",
+      "value": 76.8,
+      "unit": "KRW_TRILLIONS",
+      "period": "FY2026_GUIDE",
+      "source": "SAMSUNG-Q3",
+      "forwardLooking": true
+    },
+    {
+      "id": "B023",
+      "claim": "Samsung Q3 2026 DS capital spending",
+      "value": 27.2,
+      "unit": "KRW_TRILLIONS",
+      "period": "Q3_2026",
+      "source": "SAMSUNG-Q3"
+    },
+    {
+      "id": "B024",
+      "claim": "SEMI worldwide semiconductor equipment billings 2026 Q2",
+      "value": 40.53,
+      "unit": "USD_BILLIONS",
+      "period": "Q2_2026",
+      "source": "SEMI-Q2-BILLINGS",
+      "assumption": false
+    },
+    {
+      "id": "B025",
+      "claim": "SEMI worldwide semiconductor equipment billings Q2 2026 YoY increase",
+      "value": 23,
+      "unit": "PERCENT_ROUNDED",
+      "period": "Q2_2026",
+      "source": "SEMI-Q2-BILLINGS"
+    },
+    {
+      "id": "B026",
+      "claim": "SEMI forecast of total OEM semiconductor equipment 2026",
+      "value": 165.9,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_FORECAST_AS_OF_JUL14",
+      "source": "SEMI-JUL-OUTLOOK",
+      "forwardLooking": true
+    },
+    {
+      "id": "B027",
+      "claim": "SEMI WFE equipment forecast 2026",
+      "value": 143.9,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_FORECAST_AS_OF_JUL14",
+      "source": "SEMI-JUL-OUTLOOK",
+      "forwardLooking": true
+    },
+    {
+      "id": "B028",
+      "claim": "ASML FY2026 January guidance lower",
+      "value": 34000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JAN28",
+      "source": "ASML-FY25",
+      "forwardLooking": true
+    },
+    {
+      "id": "B029",
+      "claim": "ASML FY2026 January guidance upper",
+      "value": 39000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JAN28",
+      "source": "ASML-FY25",
+      "forwardLooking": true
+    },
+    {
+      "id": "B030",
+      "claim": "ASML FY2026 July guidance lower",
+      "value": 43000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JUL15",
+      "source": "ASML-Q2-2026",
+      "forwardLooking": true
+    },
+    {
+      "id": "B031",
+      "claim": "ASML FY2026 July guidance upper",
+      "value": 45000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JUL15",
+      "source": "ASML-Q2-2026",
+      "forwardLooking": true
+    }
+  ],
+  "derivedWorking": [
+    {
+      "id": "M001",
+      "name": "IBM share of FY2024 revenue",
+      "value": 22.98,
+      "unit": "PERCENT",
+      "formula": "100*6494/28263"
+    },
+    {
+      "id": "M002",
+      "name": "IBM share of FY2025 revenue",
+      "value": 25.08,
+      "unit": "PERCENT",
+      "formula": "100*8193/32667"
+    },
+    {
+      "id": "M003",
+      "name": "IBM share of Q3 2026 sales",
+      "value": 28.2,
+      "unit": "PERCENT",
+      "formula": "100*3288.8/11662"
+    },
+    {
+      "id": "M004",
+      "name": "IBM share of 9M 2026 sales",
+      "value": 28.69,
+      "unit": "PERCENT",
+      "formula": "100*8538.1/29755.4"
+    },
+    {
+      "id": "M005",
+      "name": "2026 guidance lower vs FY2025 realized revenue",
+      "value": 34.69,
+      "unit": "PERCENT_FORWARD_PROJECTION",
+      "formula": "100*(44000/32667-1)"
+    },
+    {
+      "id": "M006",
+      "name": "2026 guidance upper vs FY2025 realized revenue",
+      "value": 37.75,
+      "unit": "PERCENT_FORWARD_PROJECTION",
+      "formula": "100*(45000/32667-1)"
+    }
+  ],
+  "workingHypotheses": [
+    {
+      "id": "H-B1",
+      "hypothesis": "Advanced node complexity increases lithography intensity per wafer",
+      "support": "ASML product roadmap and TSMC advanced-node mix",
+      "falsifier": "Customer tools/wafer intensity flat or lower on future node transitions",
+      "verdict": "NOT_TESTED"
+    },
+    {
+      "id": "H-B2",
+      "hypothesis": "Services and field upgrades stabilize economic cash conversion",
+      "support": "IBM mix FY2024 -> FY2025 -> Q3 2026",
+      "falsifier": "IBM demand equally cyclical, low margin or paid primarily through exceptional upgrades",
+      "verdict": "NOT_TESTED"
+    },
+    {
+      "id": "H-B3",
+      "hypothesis": "Customer plans through 2028 translate into accepted revenue on time",
+      "support": "Management demand statement and TSMC/Samsung spending",
+      "falsifier": "Capex cancellation, export denial, production supplier constraints, non-binding 2029-30 inquiries",
+      "verdict": "NOT_TESTED"
+    },
+    {
+      "id": "H-B4",
+      "hypothesis": "High-NA improvements yield superior economics per good wafer",
+      "support": "TSMC/Samsung technical roadmaps and Intel early use",
+      "falsifier": "Cost per layer, capex and tool availability inferior to multipatterning alternatives",
+      "verdict": "NOT_TESTED"
+    },
+    {
+      "id": "H-B5",
+      "hypothesis": "Zeiss optical capacity can scale with ASML fab/output targets",
+      "support": "Both ASML and suppliers investing",
+      "falsifier": "Delays, yield failures or bottleneck in sole-source high precision optics",
+      "verdict": "NOT_TESTED"
+    }
+  ],
+  "riskRegister": [
+    {
+      "id": "R-CUSTOMER",
+      "basis": "Customer concentration from FY2025 annual report",
+      "severityUnquantified": true
+    },
+    {
+      "id": "R-CHINA",
+      "basis": "China 29.1% FY2025 and export controls",
+      "severityUnquantified": true
+    },
+    {
+      "id": "R-SUPPLIER",
+      "basis": "Sole-source Carl Zeiss SMT optics",
+      "severityUnquantified": true
+    },
+    {
+      "id": "R-ADOPTION",
+      "basis": "High-NA economics and risk of customer delay",
+      "severityUnquantified": true
+    },
+    {
+      "id": "R-CASH",
+      "basis": "Q3 2026 operating cash timing and noncurrent contract liability",
+      "severityUnquantified": true
+    },
+    {
+      "id": "R-VALUATION",
+      "basis": "Uncertified share count and official XAMS EOD; vendor sensitivity only",
+      "severityUnquantified": true
+    }
+  ],
+  "scopeLimitations": [
+    "All external URLs in this new source set are not privately archived/hashed under the new run; the Q3 GAAP PDF is already held in SHADOW but not Registry-admitted.",
+    "Separate customer reports are independent issuers but their capex is not ASML orders.",
+    "Management forecast is not realized forward revenue and 2024 2030 opportunity range is stale relative to October 2026 FY guide.",
+    "Future orders interest is not booked sales.",
+    "No moat/runway/business quality verdict, DCF, share price target, investment score, or final investment thesis."
+  ],
+  "independentIndustryEvidence": {
+    "source": "SEMI",
+    "reportedQ22026EquipmentBillingsUSDBillion": 40.53,
+    "yoyPct": 23,
+    "forecastFY26EquipmentOemSalesUSDBillion": 165.9,
+    "forecastFY26WfeSalesUSDBillion": 143.9,
+    "supports": "GENERAL_EQUIPMENT_UPCYCLE",
+    "doesNotProve": [
+      "ASML_ACTUAL_ORDER_VOLUME",
+      "ASML_LITHOGRAPHY_TAM_AS_REVENUE",
+      "PERMANENT_SEMICAP_CYCLE_DYNAMICS"
+    ]
+  },
+  "issuer2026RevenueGuidanceHistory": [
+    {
+      "announcementDate": "2026-01-28",
+      "lowerEURMillion": 34000,
+      "upperEURMillion": 39000
+    },
+    {
+      "announcementDate": "2026-07-15",
+      "lowerEURMillion": 43000,
+      "upperEURMillion": 45000
+    },
+    {
+      "announcementDate": "2026-10-14",
+      "lowerEURMillion": 44000,
+      "upperEURMillion": 45000
+    }
+  ]
+}

@@ -38,6 +38,8 @@ SQL
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f schema.sql >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
  docs/orotitan-equity/proposals/PRODUCT_SHARED_RESEARCH_INBOX_PG17_REVIEW_ONLY.sql >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f \
+ migrations/20261030_orotitan_product_recovery_attempts_shadow_v1.sql >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" >/dev/null <<'SQL'
 INSERT INTO public.companies (
  id,slug,ticker,name,exchange,currency,quote_unit,price_decimals,
@@ -50,6 +52,7 @@ INSERT INTO public.companies (
 SQL
 
 export OROTITAN_PRODUCT_BROWSER_FIXTURE=1
+export OROTITAN_RECOVERY_E2E_FIXTURE=1
 export OROTITAN_SHARED_INBOX_TEST_ENABLED=1
 export OROTITAN_LOCAL_REQUESTS_ENABLED=0
 export OROTITAN_SHARED_INBOX_TEST_PROJECT_REF=local-browser-fixture
@@ -93,8 +96,23 @@ if ! node tests/e2e/product-shared-two-browser.mjs; then
   tail -100 /tmp/product-browser-rest.log >&2
   exit 1
 fi
+if ! node tests/e2e/product-recovery-two-click.mjs; then
+  echo 'Recovery browser test failed; Next.js server log:' >&2
+  tail -120 /tmp/product-browser-next.log >&2
+  echo 'Loopback REST fixture log:' >&2
+  tail -100 /tmp/product-browser-rest.log >&2
+  exit 1
+fi
+attempt_count="$(psql -XAt -d "$db" -c \
+ 'SELECT count(*) FROM public.orotitan_product_recovery_attempts_shadow_v1')"
+[[ "$attempt_count" == 4 ]] || {
+  echo "Expected exactly four persisted recovery attempts; got $attempt_count" >&2
+  exit 1
+}
 request_count="$(psql -XAt -d "$db" -c \
  'SELECT count(*) FROM public.orotitan_research_intake_requests')"
 [[ "$request_count" == 1 ]] || exit 1
 [[ "$(psql -XAt -d "$db" -c "SELECT to_regclass('public.orotitan_runs') IS NULL")" == t ]] || exit 1
 echo 'PRODUCT FULL WEB E2E SUCCESS: two Chromium sessions, real Next admin, shared PG17 request receipt.'
+
+echo 'PRODUCT RECOVERY FULL WEB E2E PASS: two-click admin, immutable PG17 attempts and verified synthetic private archive.'

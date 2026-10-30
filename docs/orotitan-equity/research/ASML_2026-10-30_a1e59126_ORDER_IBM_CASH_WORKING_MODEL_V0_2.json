@@ -1,0 +1,287 @@
+{
+  "schema": "OROTITAN_ASML_ORDER_TO_CASH_RESEARCH_WORKING_V0_2",
+  "status": "NON_ADMITTED_NO_REGISTRY_OR_STAGE_MUTATION",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "dataCutoff": "2026-10-30",
+  "financialPeriodEnd": "2026-09-27",
+  "historicalMarketReferenceDate": "2026-10-29",
+  "sources": [
+    {
+      "id": "ASML-FY2025-RESULTS",
+      "publicationDate": "2026-01-28",
+      "sourceUrl": "https://investor.asml.com/news-releases/news-release-details/q4-2025-financial-results",
+      "authority": "PRIMARY_ISSUER_DISCLOSURE",
+      "sourceContentBytesSealed": false
+    },
+    {
+      "id": "ASML-Q1-RESULTS",
+      "publicationDate": "2026-04-15",
+      "sourceUrl": "https://www.investor.asml.com/news-releases/news-release-details/q1-2026-financial-results",
+      "authority": "PRIMARY_ISSUER_DISCLOSURE",
+      "sourceContentBytesSealed": false
+    },
+    {
+      "id": "ASML-Q2-RESULTS",
+      "publicationDate": "2026-07-15",
+      "sourceUrl": "https://investor.asml.com/news-releases/news-release-details/q2-2026-financial-results",
+      "authority": "PRIMARY_ISSUER_DISCLOSURE",
+      "sourceContentBytesSealed": false
+    },
+    {
+      "id": "ASML-Q3-RESULTS",
+      "publicationDate": "2026-10-14",
+      "sourceUrl": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "authority": "PRIMARY_ISSUER_DISCLOSURE",
+      "sourceContentBytesSealed": false
+    },
+    {
+      "id": "ASML-Q3-PRESENTATION-SEC",
+      "publicationDate": "2026-10-14",
+      "sourceUrl": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/a2026_10x14xpresentation.htm",
+      "authority": "PRIMARY_ISSUER_SAME_FAMILY_DISCLOSURE",
+      "sourceContentBytesSealed": false
+    },
+    {
+      "id": "ASML-Q3-USGAAP-PDF",
+      "publicationDate": "2026-10-14",
+      "sourceUrl": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+      "authority": "SECONDARY_USER_SUPPLIED_EURONEXT_LABELED_COPY_SHA_MATCHES_SHADOW",
+      "pdfPages": 12,
+      "bytes": 1369295,
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "sourceContentBytesSealedInShadow": true,
+      "independentUserFileHashed": true,
+      "authorityRegistered": false
+    },
+    {
+      "id": "ASML-Q3-CALL-THIRD-PARTY",
+      "publicationDate": "2026-10-14",
+      "sourceUrl": "https://stockanalysis.com/quote/ams/ASML/transcripts/651248-q3-2026-investor-call/",
+      "authority": "SECONDARY_TRANSCRIPT_OF_ISSUER_CALL",
+      "sourceContentBytesSealed": false
+    }
+  ],
+  "orderBook": {
+    "lastQuantifiedSystemOrderBacklogAsOf": "2025-12-31",
+    "lastQuantifiedBacklogEURm": 38797,
+    "netBookingsFY2025EURm": 28035,
+    "netBookingsQ42025EURm": 13158,
+    "euvBookingsQ42025EURm": 7400,
+    "backlogToFY2025SystemRevenueRawRatio": 1.585,
+    "rawRatioIsFutureOrderCoverage": false,
+    "quarterlyFY2026ReleasesReviewed": [
+      "2026-04-15",
+      "2026-07-15",
+      "2026-10-14"
+    ],
+    "netBookingsQ12026": null,
+    "netBookingsQ22026": null,
+    "netBookingsQ32026": null,
+    "backlogQ32026": null,
+    "reason": "ASML quarterly news releases omit numeric bookings/backlog in 2026; 2025 figure does not update 2026.",
+    "managementOrderMomentumQualitative": true,
+    "interest2029And2030AcceptedOrders": false,
+    "customerDownpaymentsLagSignedPO": true,
+    "sourceForDownpayments": "ASML-Q3-CALL-THIRD-PARTY",
+    "downpaymentsAreExactBookingsAmount": false,
+    "fulfillmentRevenueRecognitionProofStillRequired": true
+  },
+  "reporting": {
+    "unit": "EUR_MILLION",
+    "periods": [
+      {
+        "period": "FY2024",
+        "grossRevenueEURm": 28263,
+        "ibmEURm": 6494,
+        "systemsEURm": 21769,
+        "reported": true,
+        "ibmMixPct": 22.98,
+        "identityValid": true
+      },
+      {
+        "period": "FY2025",
+        "grossRevenueEURm": 32667,
+        "ibmEURm": 8193,
+        "systemsEURm": 24474,
+        "reported": true,
+        "ibmMixPct": 25.08,
+        "identityValid": true
+      },
+      {
+        "period": "Q1_2026",
+        "grossRevenueEURm": 8766.9,
+        "ibmEURm": 2487.5,
+        "systemsEURm": 6279.4,
+        "reported": true,
+        "ibmMixPct": 28.37,
+        "identityValid": true
+      },
+      {
+        "period": "Q2_2026",
+        "grossRevenueEURm": 9326.5,
+        "ibmEURm": 2761.7,
+        "systemsEURm": 6564.8,
+        "reported": true,
+        "ibmMixPct": 29.61,
+        "identityValid": true
+      },
+      {
+        "period": "Q3_2026",
+        "grossRevenueEURm": 11662,
+        "ibmEURm": 3288.8,
+        "systemsEURm": 8373.2,
+        "reported": true,
+        "ibmMixPct": 28.2,
+        "identityValid": true
+      },
+      {
+        "period": "9M_2026",
+        "grossRevenueEURm": 29755.4,
+        "ibmEURm": 8538.1,
+        "systemsEURm": 21217.3,
+        "reported": true,
+        "ibmMixPct": 28.69,
+        "identityValid": true
+      }
+    ],
+    "ibmDefinition": "NET_SERVICE_AND_FIELD_OPTION_SALES_NOT_CERTIFIED_RECURRING_CONTRACT",
+    "ibmUpgradeCycleNotNormalized": true,
+    "guideFY2026": {
+      "q4IBMForecastEURmApprox": 3700,
+      "fy26RevenueGuidanceEURmLow": 44000,
+      "fy26RevenueGuidanceEURmHigh": 45000,
+      "fy26IBMForecastEURmApprox": 12238.1,
+      "fy26IBMGrowthVsFy25PctApprox": 49.37,
+      "fy26SystemSalesForecastEURmLowApprox": 31761.9,
+      "fy26SystemSalesForecastEURmHighApprox": 32761.9,
+      "fy26SystemSalesGrowthPctLowApprox": 29.78,
+      "fy26SystemSalesGrowthPctHighApprox": 33.86,
+      "fy26IBMRevenueMixPctLowApprox": 27.2,
+      "fy26IBMRevenueMixPctHighApprox": 27.81,
+      "fy26Q4RevenueImpliedEURmLowApprox": 14244.6,
+      "fy26Q4RevenueImpliedEURmHighApprox": 15244.6
+    },
+    "forecastIsNotRealized": true
+  },
+  "balanceSheet": {
+    "noncurrentContractLiabilitiesJune28EURm": 3570.3,
+    "noncurrentContractLiabilitiesSep27EURm": 9300.6,
+    "deltaEURm": 5730.3,
+    "aggregateCfoAssetsAndLiabilitiesQ32026EURm": 7009,
+    "balanceDeltaIsNotCfoCashFlow": true,
+    "balanceDeltaIsNotTotalDownpayments": true,
+    "doNotAddFlowsAndBalances": true
+  },
+  "cashFlow": {
+    "unit": "EUR_MILLION",
+    "actualArithmetic": {
+      "q42025CfoEURm": 11410.3,
+      "nineMonths2026CfoEURm": 11315,
+      "ltmCfoEURm": 22725.3,
+      "ltmCashPpeEURm": 1563,
+      "ltmCashIntangiblesEURm": 162.9,
+      "ltmPositiveNetAssetLiabilityCashLineEURm": 7876.9,
+      "ltmSimpleFCFEURm": 20999.4,
+      "ltmSimpleFcfExAssetLiabilityLineEURm": 13122.5
+    },
+    "scenarioNotProbability": true,
+    "marketCapitalizationIllustrativeEURbn": 576.203,
+    "vendorShareCountMillions": 382.91,
+    "officialShareCountVerified": false,
+    "priceEURPerShare": 1504.8,
+    "officialXamsEodBytesSealed": false,
+    "priceIs2026Oct29NotOct30Close": true,
+    "mechanicalRetentionSensitivity": [
+      {
+        "fractionOfObservedNetAssetLiabilityCfoChangeRetained": 0,
+        "candidateCashEURm": 13122.5,
+        "cashPerVendorShareEUR": 34.27,
+        "equityPriceToCandidateCashMultiple": 43.91,
+        "candidateCashYieldPct": 2.277,
+        "probability": null,
+        "ownerEarningsCertified": false
+      },
+      {
+        "fractionOfObservedNetAssetLiabilityCfoChangeRetained": 0.25,
+        "candidateCashEURm": 15091.725,
+        "cashPerVendorShareEUR": 39.41,
+        "equityPriceToCandidateCashMultiple": 38.18,
+        "candidateCashYieldPct": 2.619,
+        "probability": null,
+        "ownerEarningsCertified": false
+      },
+      {
+        "fractionOfObservedNetAssetLiabilityCfoChangeRetained": 0.5,
+        "candidateCashEURm": 17060.95,
+        "cashPerVendorShareEUR": 44.56,
+        "equityPriceToCandidateCashMultiple": 33.77,
+        "candidateCashYieldPct": 2.961,
+        "probability": null,
+        "ownerEarningsCertified": false
+      },
+      {
+        "fractionOfObservedNetAssetLiabilityCfoChangeRetained": 0.75,
+        "candidateCashEURm": 19030.175,
+        "cashPerVendorShareEUR": 49.7,
+        "equityPriceToCandidateCashMultiple": 30.28,
+        "candidateCashYieldPct": 3.303,
+        "probability": null,
+        "ownerEarningsCertified": false
+      },
+      {
+        "fractionOfObservedNetAssetLiabilityCfoChangeRetained": 1,
+        "candidateCashEURm": 20999.4,
+        "cashPerVendorShareEUR": 54.84,
+        "equityPriceToCandidateCashMultiple": 27.44,
+        "candidateCashYieldPct": 3.644,
+        "probability": null,
+        "ownerEarningsCertified": false
+      }
+    ],
+    "doNotEquateAnyScenarioToNormalizedOwnerEarnings": true,
+    "downpaymentsMayBeRecurringOrReverse": true,
+    "q32026InvestmentGainEURm": 509.7
+  },
+  "invariants": {
+    "allReportedRevenueIdentitiesTrue": true,
+    "q4IBMPlus9MIBMEqualsForecast": true,
+    "cashFlowReconciles": true,
+    "workingCapitalStressReconciles": true,
+    "sourceSealAdmitted": false,
+    "readyForDeepDive": false,
+    "annual2026GuidanceNotRealized": true
+  },
+  "notes": [
+    "No numeric Q3 2026 booking amount can be imputed from liability delta.",
+    "2029-2030 POs requested but not accepted by management as of Q3 call.",
+    "Company Q4 IBM guide (~EUR3.7bn) can be upgrade-led: recurring services not isolated.",
+    "Working FCF sensitivity fractions have no probabilities and are not fair value or DCF.",
+    "Price and share counts are noncertified valuation context."
+  ],
+  "managementPreparedRemarks": {
+    "date": "2026-10-14",
+    "sourceId": "ASML-Q3-CALL-THIRD-PARTY",
+    "firstPartyWordsSecondaryTranscription": true,
+    "exactlyVerifiableTranscriptContent": true,
+    "originFileNotHashArchived": true,
+    "q3EuvSystemSalesEURBillionApprox": 4.1,
+    "q3NonEuvSystemsEURBillionApprox": 4.3,
+    "q3EuvHighNaSystemsIncluded": 1,
+    "q3LogicShareSystemSalesPct": 54,
+    "q3MemoryShareSystemSalesPct": 46,
+    "q3IbmAboveGuideEURBillionApprox": 0.4,
+    "q3NetIncomeMistralAiRevaluationGainEURBillionApprox": 0.5,
+    "fy2026GuidedEuvGrowthPct": "OVER_45",
+    "fy2026GuidedNonEuvSystemGrowthPctApprox": 20,
+    "fy2026GuidedIbmGrowthPctApprox": 50,
+    "fy2026GuidedMemorySystemsGrowthPctApprox": 75,
+    "fy2026GuidedLogicSystemsGrowthPctApprox": 10,
+    "fy2026GuidedChinaRevenueMixPctApprox": 20,
+    "notToBeInterpretedAs": [
+      "REALIZED_FY2026",
+      "ORDER_BACKLOG",
+      "NORMALIZED_FCF",
+      "AUDITED_SERVICE_RECURRING_REVENUE"
+    ]
+  }
+}

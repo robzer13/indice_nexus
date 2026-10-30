@@ -1,5 +1,6 @@
 import 'server-only';
 import { isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
+import {isRecoveryCiBrowserFixture} from './research-recovery-ci-fixture';
 import type { ResearchIdentitySnapshot } from './research-intake-preflight-v1';
 import type { ResearchRegistryRoutingSnapshot } from './research-pre-run-card-v1';
 import { join } from 'node:path';
@@ -271,4 +272,16 @@ export async function getPilotResearchRegistryRoutingSnapshot(
   } catch {
     return unavailable;
   }
+}
+
+/** Service-role server-only SHADOW client for non-authoritative recovery journal. */
+export function getHostedShadowRecoveryClient(): SupabaseClient {
+  // CI-only loopback disposable PG17 fixture is NOT a hosted project.
+  // The normal hosted production safety gate remains unchanged.
+  if (!(isHostedShadowResearchEnabled(process.env) ||
+        isRecoveryCiBrowserFixture(process.env)) ||
+      researchInboxPilotMode() !== 'shared-test') {
+    throw new Error('PRODUCT_RECOVERY_NOT_HOSTED_SHADOW');
+  }
+  return sharedTestClient();
 }

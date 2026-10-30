@@ -1,0 +1,1391 @@
+{
+  "schema": "OROTITAN_RESEARCH_PRE_ADMISSION_CANDIDATE_V0_1",
+  "classification": "NON_AUTHORITATIVE_REVIEW_ONLY",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "issuer": "ASML Holding N.V.",
+  "isin": "NL0010273215",
+  "exchange": "Euronext Amsterdam",
+  "cutoff": "2026-10-30",
+  "runContract": "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0",
+  "recordedOn": "2026-10-30",
+  "authority": {
+    "registryAdmitted": false,
+    "stageFinalized": false,
+    "published": false,
+    "doNotInheritOldRunBlockers": true,
+    "bytesSealed": false,
+    "sourceSnapshotsAreNotHistoricallyCertified": true
+  },
+  "sources": [
+    {
+      "id": "SRC-SEC6K-20261014",
+      "authority": "PRIMARY_REGULATORY_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/0001628280-26-065813-index.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "Form 6-K, SEC accession 0001628280-26-065813",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX991",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/pressreleasefinancialresul.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.1 Press Release Financial Results Q3 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX992",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/a2026_10x14xpresentation.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.2 Investor Relations Presentation Q3 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX993",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/financial_statementsxusx.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.3 Unaudited US GAAP Q3 2026 Financial Statements",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-ASML-RELEASE",
+      "authority": "PRIMARY_ISSUER_WEBSITE",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "ASML Q3 2026 earnings press release",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-ASML-SBB-OCT26",
+      "authority": "PRIMARY_ISSUER_WEBSITE",
+      "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-6",
+      "sourceDate": "2026-10-26",
+      "dataAsOf": "2026-10-23",
+      "label": "Official share-buyback transactions 19-23 October 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-FT-20261029",
+      "authority": "SECONDARY_MARKET_VENDOR",
+      "url": "https://markets.ft.markitdigital.com/data/equities/tearsheet/historical?s=ASML%3AAEX",
+      "sourceDate": null,
+      "dataAsOf": "2026-10-29",
+      "label": "Financial Times Amsterdam historical prices, not exchange primary",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-INVESTING-20261029",
+      "authority": "SECONDARY_MARKET_VENDOR",
+      "url": "https://www.investing.com/equities/asml-holding-historical-data",
+      "sourceDate": null,
+      "dataAsOf": "2026-10-29",
+      "label": "Investing.com Amsterdam historical price corroboration",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-EURONEXT-Q3-2026",
+      "authority": "REGULATED_MARKET_ISSUER_FILING_DISTRIBUTION",
+      "url": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "Euronext dissemination copy of ASML US GAAP Q3 2026 (potential independent binary comparison)",
+      "rawBytesSealed": false
+    }
+  ],
+  "facts": [
+    {
+      "id": "E001",
+      "claim": "Q3 sales",
+      "value": 11662,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E002",
+      "claim": "Q3 net system sales",
+      "value": 8373.2,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E003",
+      "claim": "Q3 Installed Base Management sales",
+      "value": 3288.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E004",
+      "claim": "Q3 gross profit",
+      "value": 6699.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E005",
+      "claim": "Q3 operating income",
+      "value": 5172.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E006",
+      "claim": "Q3 net income",
+      "value": 4960.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E007",
+      "claim": "Q3 income gain on equity investments",
+      "value": 509.7,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E008",
+      "claim": "Q3 net cash from operations",
+      "value": 11797.6,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E009",
+      "claim": "Q3 changes in assets and liabilities in operating cash flow",
+      "value": 7009,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E010",
+      "claim": "Q3 purchases of property plant equipment",
+      "value": 413.3,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E011",
+      "claim": "Q3 purchases of intangible assets",
+      "value": 33.9,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E012",
+      "claim": "Nine months net cash from operations",
+      "value": 11315,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E013",
+      "claim": "Nine months purchases property plant equipment",
+      "value": 1115.1,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E014",
+      "claim": "Nine months purchases intangible assets",
+      "value": 140.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E015",
+      "claim": "Q3 basic weighted average shares",
+      "value": 383.1,
+      "unit": "MILLION_SHARES_ROUNDED",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_NOT_SPOT_SHARE_COUNT",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E016",
+      "claim": "Q3 net cash and short-term investments",
+      "value": 12735.1,
+      "unit": "EUR_MILLION",
+      "period": "2026-09-27",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "ARITHMETIC_SUM_8030_9_PLUS_4704_2",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 5,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E017",
+      "claim": "FY2026 guidance lower sales",
+      "value": 44000,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E018",
+      "claim": "FY2026 guidance upper sales",
+      "value": 45000,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E019",
+      "claim": "Q4 2026 sales guidance lower",
+      "value": 14200,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E020",
+      "claim": "Q4 2026 sales guidance upper",
+      "value": 15200,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E021",
+      "claim": "Q3 treasury shares repurchase cash outflow",
+      "value": 4071,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 6,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E022",
+      "claim": "Latest published weekly shares repurchased",
+      "value": 343310,
+      "unit": "SHARES",
+      "period": "2026-10-19_TO_2026-10-23",
+      "sourceId": "SRC-ASML-SBB-OCT26",
+      "kind": "SUM_OF_5_DAILY_TRADES",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E023",
+      "claim": "XAMS market close October 29 vendor candidate",
+      "value": 1504.8,
+      "unit": "EUR_PER_SHARE",
+      "period": "2026-10-29",
+      "sourceId": "SRC-FT-20261029",
+      "kind": "VENDOR_CLOSE_NOT_EXCHANGE_VERIFIED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E024",
+      "claim": "Nine months net sales",
+      "value": 29755.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    },
+    {
+      "id": "E025",
+      "claim": "Nine months net income",
+      "value": 10634.7,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false,
+      "supportingCapturedFile": {
+        "sourceId": "SRC-EURONEXT-Q3-2026",
+        "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+        "pdfPage": 3,
+        "matchMethod": "INDEPENDENT_PDF_TEXT_AND_DATA_INSPECTION",
+        "sourceChain": "USER_PROVIDED_EURONEXT_LABELED_COPY_SHA_MATCHED_TO_PRIVATE_SHADOW_RECEIPT",
+        "fileOriginCryptographicallyAttested": false,
+        "registryAdmitted": false
+      }
+    }
+  ],
+  "calculationCandidates": [
+    {
+      "id": "C001",
+      "formula": "Q3 operating cash flow minus purchases of PP&E and intangible assets",
+      "expression": "11797.6 - 413.3 - 33.9",
+      "value": 11350.4,
+      "unit": "EUR_MILLION",
+      "status": "ARITHMETIC_ONLY_NOT_OWNER_EARNINGS",
+      "inputs": [
+        "E008",
+        "E010",
+        "E011"
+      ]
+    },
+    {
+      "id": "C002",
+      "formula": "2026 9M operating cash flow minus purchases of PP&E and intangible assets",
+      "expression": "11315.0 - 1115.1 - 140.4",
+      "value": 10059.5,
+      "unit": "EUR_MILLION",
+      "status": "ARITHMETIC_ONLY_NOT_OWNER_EARNINGS",
+      "inputs": [
+        "E012",
+        "E013",
+        "E014"
+      ]
+    },
+    {
+      "id": "C003",
+      "formula": "Q3 cash flow less total change in assets/liabilities",
+      "expression": "11797.6 - 7009.0",
+      "value": 4788.6,
+      "unit": "EUR_MILLION",
+      "status": "SENSITIVITY_ONLY_NOT_NORMALIZED_CFO",
+      "inputs": [
+        "E008",
+        "E009"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "id": "GAP-001",
+      "priority": "CRITICAL",
+      "block": "SOURCE_BYTES",
+      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN. SEC EX-99.3 HTML references separately hosted slide images; capture the linked assets or equivalent full issuer official PDF as a complete source set, not only the HTML wrapper. Browser PDF copy now stored in SHADOW with create-only private object and application SHA readback; source origin / official byte-for-byte match NOT yet verified, so full original-source admissibility still blocked. Independent SHA256 computation of a second, user-provided Euronext-labeled PDF (1,369,295 bytes) matches the SHADOW content-addressed captured file exactly. This establishes identity of the two supplied copies; separately verified origin/custody authority and formal Evidence Ledger admission remain pending."
+    },
+    {
+      "id": "GAP-002",
+      "priority": "CRITICAL",
+      "block": "ECONOMIC_SHARE_COUNT",
+      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count. Primary AGM count on 2026-03-25 validated; 1,299,377 gross repurchases disclosed Sep21-Oct23 confirmed; issuer net share count still unavailable because of employee deliveries, cancellations, issuance, trade/settlement dates and later undisclosed trades. Source conflict v0.3: StatMuse 382,462,183 vs StockAnalysis Amsterdam 382.91m vs CompaniesMarketCap 384.50m vs YCharts 385.42m, all NON-AUTHORITATIVE; 2025 20-F documents quarter-end employee purchase plan shares delivered FROM TREASURY; issuer exact Oct count absent."
+    },
+    {
+      "id": "GAP-003",
+      "priority": "CRITICAL",
+      "block": "MARKET_PRICE",
+      "description": "Source official Euronext XAMS price with precisely stated as-of timestamp: Oct 30 official close only after completed session, otherwise Oct 29 close with date alignment; check unadjusted convention and corporate actions. Cross-vendor Oct29 XAMS displayed close EUR 1504.80 and volume 660425; Euronext official EOD bytes absent. Oct30 is still intraday at research time."
+    },
+    {
+      "id": "GAP-004",
+      "priority": "CRITICAL",
+      "block": "FCF_OWNER_EARNINGS",
+      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings. PDF supports quarterly 2026 CFO bridge Q1 -2185.6, Q2 +1703.0, Q3 +11797.6, and 9M +11315.0 EURm; Q3 NONCURRENT contract-liability balance delta +5730.3 (not total advances or cash collected) and changes assets/liabilities +7009.0, no normalized owner earnings."
+    },
+    {
+      "id": "GAP-005",
+      "priority": "HIGH",
+      "block": "ROIC",
+      "description": "Reconcile invested capital beginning and ending, NOPAT tax rate, operating/non-operating assets, lease and working capital. Do not use Q3 operating margin as ROIC."
+    },
+    {
+      "id": "GAP-006",
+      "priority": "HIGH",
+      "block": "OUTSIDE_VIEW",
+      "description": "Independent source diversification on EUV/DUV demand, TSMC/Samsung/Intel capex and High-NA economics, China export restrictions, supplier constraints and order-conversion risks."
+    },
+    {
+      "id": "GAP-007",
+      "priority": "HIGH",
+      "block": "BUSINESS_GOVERNANCE",
+      "description": "Review 2025 20-F primary disclosures on business model, competitive position, customer concentration, governance and sector risk; validate latest changes as of 2026-10-30."
+    },
+    {
+      "id": "GAP-008",
+      "priority": "HIGH",
+      "block": "RESEARCH_COMPLETION",
+      "description": "Prepare actual Evidence Ledger, Conflict Ledger, hypothesis register, gap register, classification input record, source manifest, sufficiency assessment, sealed research Stage Manifest; pass the immutable Research contract gateway before Deep Dive."
+    }
+  ],
+  "conflictCandidates": [
+    {
+      "id": "CON-001",
+      "issue": "Period share denominator",
+      "details": "383.1m Q3 basic weighted-average shares must not be substituted for shares outstanding at exact cutoff",
+      "status": "METHODOLOGY_RISK"
+    },
+    {
+      "id": "CON-002",
+      "issue": "Cash flow period/capital requirements",
+      "details": "2026 Q3 EUR 11,797.6m reported CFO contains EUR 7,009.0m positive assets/liabilities change; cannot extrapolate to normalized annual owner earnings",
+      "status": "NONRECURRING_RISK"
+    },
+    {
+      "id": "CON-003",
+      "issue": "Valuation market data",
+      "details": "Vendor EUR 1,504.80 October 29 close is not Oct 30 close, not official exchange-sealed unadjusted XAMS close",
+      "status": "SOURCE_AND_DATE_GAP"
+    },
+    {
+      "id": "CON-004",
+      "issue": "Vendor economic shares and provenance",
+      "details": "Vendor counts 382.462183m, 382.91m, 384.5m, 385.42m differ and carry incomplete dates/measurement definitions; no primary exact issued minus treasury as of cutoff.",
+      "status": "UNRESOLVED_BLOCKER"
+    }
+  ],
+  "hypothesisCandidates": [
+    {
+      "id": "H-001",
+      "question": "Do AI-related capacity plans convert to economically profitable orders after customer acceptance and export controls?",
+      "status": "UNTESTED"
+    },
+    {
+      "id": "H-002",
+      "question": "How much of Q3 cash generation is timing-dependent customer prepayment/contract-liability flows rather than sustainable operating economics?",
+      "status": "UNTESTED"
+    },
+    {
+      "id": "H-003",
+      "question": "Does High-NA EUV capacity ramp preserve operating return on invested capital when suppliers and customers scale simultaneously?",
+      "status": "UNTESTED"
+    }
+  ],
+  "classificationInputRecord": {
+    "country": "NL",
+    "listingCountry": "NL",
+    "isin": "NL0010273215",
+    "taxonomyCodes": "NOT_PROPOSED_UNTIL_FROZEN_TAXONOMY_CHECK",
+    "peaEligibility": "NOT_ASSESSED"
+  },
+  "inputSufficiency": {
+    "readyForDeepDive": false,
+    "reason": "New primary US GAAP FY2025 PPE footnotes and 2023-25 service segment gross margin validate company-wide depreciation, additions, cash investments, and high sensitivity of margins to revenue mix. IBM maintenance-only revenue, margins, upkeep CapEx and IBM standalone owner cash remain undisclosed; sensitivity is working-only. Continue Research with preserved non-admission.",
+    "missingCritical": [
+      "GAP-001",
+      "GAP-002",
+      "GAP-003",
+      "GAP-004"
+    ]
+  },
+  "provenanceNote": "Sources linked and read via public retrieval; source bytes are NOT locally sealed or uploaded to private object store by this review. No hash claimed. Sources hosted at SEC and issuer mirror reflect same underlying issuer, not independent economic corroboration. SEC EX-99.3 financial statements reference multiple slide images, which must be included in any immutable byte capture.",
+  "privateSourceCapture": {
+    "state": "BROWSER_SUPPLIED_SHADOW_STORED_BINARY_MATCH_TO_USER_EURONEXT_COPY_NON_ADMITTED",
+    "observedInDatabaseAt": "2026-10-30",
+    "bucket": "orotitan-source-files-v1",
+    "privateBucketVerified": true,
+    "projectClass": "SHADOW",
+    "sourcePath": "research-acquisition-v1/asml/asof-2026-10-30/q3-2026/browser-supplied/562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9.pdf",
+    "receiptPath": "research-acquisition-v1/asml/asof-2026-10-30/q3-2026/browser-receipts/562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9.json",
+    "sha256ClaimFromContentAddressedKey": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "sha256ReadbackReportedByAuthenticatedApplication": true,
+    "sha256IndependentlyRecomputedByResearchAgent": false,
+    "sourceBytes": 1369295,
+    "receiptBytes": 926,
+    "sourceStoredAtUTC": "2026-10-30T13:02:08.032176Z",
+    "sourceObjectUpdatedAtUTC": "2026-10-30T13:02:08.032176Z",
+    "originAuthenticated": false,
+    "documentAuthenticityVerified": false,
+    "registryAdmitted": false,
+    "independentComparisonSource": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+    "independentSourceBytesCompared": true,
+    "independentSourceByteCount": 1369295,
+    "independentSourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "independentSourceBinaryMatch": true,
+    "independentComparisonMethod": "sha256sum of full user-attached Euronext-labeled PDF, exact byte length checked against SHADOW receipt",
+    "independentComparisonEvidenceDate": "2026-10-30",
+    "independentFilePageCount": 12,
+    "independentFilePdfTitle": "Financial statements US GAAP Q3 2026",
+    "independentFileProducer": "Wdesk Fidelity Content Translations Version 017.002.008",
+    "externalDownloadChainCryptographicallyAttested": false
+  },
+  "externalPdfHashComparison": {
+    "result": "EXACT_MATCH",
+    "asOf": "2026-10-30",
+    "source": "USER_ATTACHED_EURONEXT_LABELED_COPY",
+    "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "bytes": 1369295,
+    "pdfPages": 12,
+    "officialEuronextUrl": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+    "serverToServerEuronextBytesVerified": false,
+    "sourceOriginAuthorityReviewPending": true
+  },
+  "reconciliationV01": {
+    "status": "PRE_ADMISSION_FINANCIAL_RECONCILIATION_ONLY",
+    "sourceReport": {
+      "sourceKind": "USER_SUPPLIED_EURONEXT_LABELED_ASML_US_GAAP_Q3_2026",
+      "pdfPages": 12,
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "byteSize": 1369295,
+      "fileReadAndHashedIndependent": true,
+      "privateStorageReadbackVerifiedByApplication": true,
+      "provenanceChainAttested": false,
+      "registryAdmitted": false
+    },
+    "asOf": {
+      "cutoff": "2026-10-30",
+      "quarterEnd": "2026-09-27",
+      "issuerPublishDate": "2026-10-14",
+      "marketReferenceDate": "2026-10-29",
+      "oct30OfficialEodAvailableAtResearchTime": false
+    },
+    "g001": {
+      "status": "BLOCKED",
+      "issuedAGMDate": "2026-03-25",
+      "issuedAtAGM": 388147674,
+      "treasuryAtAGM": 3224029,
+      "outstandingAtAGM": 384923645,
+      "basicSharesQ3WeightedAverageMillions": 383.1,
+      "exactOutstandingAsOfCutoff": null,
+      "buybackWeeks": [
+        {
+          "published": "2026-09-28",
+          "from": "2026-09-21",
+          "to": "2026-09-25",
+          "grossPurchased": 165200,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-2"
+        },
+        {
+          "published": "2026-10-05",
+          "from": "2026-09-28",
+          "to": "2026-10-02",
+          "grossPurchased": 277000,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-3"
+        },
+        {
+          "published": "2026-10-12",
+          "from": "2026-10-05",
+          "to": "2026-10-09",
+          "grossPurchased": 280000,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-4"
+        },
+        {
+          "published": "2026-10-19",
+          "from": "2026-10-12",
+          "to": "2026-10-16",
+          "grossPurchased": 233867,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-5"
+        },
+        {
+          "published": "2026-10-26",
+          "from": "2026-10-19",
+          "to": "2026-10-23",
+          "grossPurchased": 343310,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-6"
+        }
+      ],
+      "reportedGrossRepurchasesSep21ToOct23": 1299377,
+      "reportedGrossRepurchasesJun29ToSep18FromPriorNote": 2607008,
+      "conditionalReportedGrossRepurchasesJun29ToOct23": 3906385,
+      "notNetSharesOutstandingChange": true,
+      "possibleEmployeePlanUse": true,
+      "missing": [
+        "issued_and_treasury_exact_at_Q3_end",
+        "post_Q3_employee_delivery_and_issuance",
+        "cancellations_and_settlement_trade_date_effects",
+        "buybacks_2026-10-26_through_cutoff_not_yet_published"
+      ],
+      "conflictingVendorCountsDoNotCertifyShareCount": true
+    },
+    "cash": {
+      "unit": "EUR_MILLION",
+      "periods": {
+        "q1_2026": {
+          "cfo": -2185.6,
+          "ppe": 402.4,
+          "intangibles": 19.9,
+          "simpleFcf": -2607.9
+        },
+        "q2_2026": {
+          "cfo": 1703,
+          "ppe": 299.4,
+          "intangibles": 86.6,
+          "simpleFcf": 1317
+        },
+        "q3_2026": {
+          "cfo": 11797.6,
+          "ppe": 413.3,
+          "intangibles": 33.9,
+          "simpleFcf": 11350.4,
+          "changeInAssetsAndLiabilities": 7009,
+          "changePctCfo": 59.41,
+          "equityInvestmentGain": 509.7,
+          "noncurrentContractLiabilities": 9300.6,
+          "previousQuarterNoncurrentContractLiabilities": 3570.3,
+          "noncurrentContractLiabilitiesBalanceChange": 5730.3,
+          "totalContractLiabilitiesNotDerivedFromSummary": true,
+          "cashReceivedFromCustomerDepositsNotEqualToBalanceDelta": true
+        },
+        "nineMonths_2026": {
+          "cfo": 11315,
+          "ppe": 1115.1,
+          "intangibles": 140.4,
+          "simpleFcf": 10059.5
+        },
+        "ltm_through_2026_09_27": {
+          "cfo": 22725.3,
+          "ppeAndIntangibleCombined": 1725.9,
+          "simpleFcf": 20999.4
+        }
+      },
+      "classification": "CFO_AND_SIMPLE_FCF_ARITHMETIC_NOT_OWNER_EARNINGS",
+      "ownerEarningsCertified": false,
+      "roicCertified": false
+    },
+    "market": {
+      "venue": "XAMS",
+      "isin": "NL0010273215",
+      "reference": "2026-10-29_17_30_AMSTERDAM",
+      "vendorCrossCheckedCloseEUR": 1504.8,
+      "vendorVolume": 660425,
+      "officialXamsEndOfDayBytesSealed": false,
+      "oct30PriceStatus": "INTRADAY_NOT_A_CLOSE",
+      "vendorShareCountMillions": 382.91,
+      "illustrativeVendorEquityValueEURBillion": 576.203,
+      "certifiedMarketCap": null,
+      "certifiedEnterpriseValue": null,
+      "dividendExDateXams": "2026-10-26",
+      "dividendEUR": 1.88
+    },
+    "statusGates": {
+      "pdfBinaryIdentity": "MATCH",
+      "sourceAuthority": "NEEDS_FORMAL_ADMISSION_REVIEW",
+      "g001": "BLOCKED_EXACT_ISSUED_TREASURY_CUTOFF_VENDOR_CONFLICT",
+      "g006": "BLOCKED_OFFICIAL_NONADJUSTED_XAMS_EOD_BYTES",
+      "ownerEarnings": "BLOCKED",
+      "roic": "BLOCKED",
+      "researchReadyForDeepDive": false,
+      "registryWritesPerformed": false
+    },
+    "complementaryResearchNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md"
+  },
+  "qualifiedSourceCandidates": [
+    {
+      "id": "S-2026Q3-US-GAAP",
+      "sourceId": "SRC-EURONEXT-Q3-2026",
+      "datePublished": "2026-10-14",
+      "periodEnded": "2026-09-27",
+      "cutoff": "2026-10-30",
+      "mime": "application/pdf",
+      "pages": 12,
+      "sizeBytes": 1369295,
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "fileAuthenticityLevel": "PDF_MATCH_TO_USER_SUPPLIED_SECOND_COPY_AND_OFFICIAL_PUBLICATION_CONTEXT",
+      "custodyLevel": "PRIVATE_SHADOW_CREATE_ONLY_AND_APPLICATION_VERIFIED_READBACK",
+      "dataArithmeticQuality": "PASS_3_INVARIANTS",
+      "sourceFileContextVerified": true,
+      "independentSecureHostFileFetchVerified": false,
+      "registryAdmitted": false,
+      "formalEvidenceLedgerAuthority": "NONE",
+      "linkedClaims": 19
+    }
+  ],
+  "cashQualityAndValuationV02": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_OWNER_EARNINGS_ROIC_VALUATION_SENSITIVITY_V0_2.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ROIC_CASH_MULTIPLES_MODEL_V0_2.json",
+    "ltmReportedCfoEURMillion": 22725.3,
+    "ltmCfoAssetsLiabilitiesChangeEURMillion": 7876.9,
+    "ltmSimpleFcfEURMillion": 20999.4,
+    "ltmSimpleFcfExReportedWcChangeSensitivityEURMillion": 13122.5,
+    "ltmEbitEURMillion": 15217.9,
+    "ltmNopatMechanicalEURMillion": 12630.2,
+    "sourcePriceSupport": "OFFICIAL_EURONEXT_XAMS_2026_10_29_TRADING_AT_LAST_17_39_46_AT_1504_80_EUR",
+    "officialUnadjustedEodSealed": false,
+    "valuationIndicativeOnly": true,
+    "certifiedRoic": null,
+    "certifiedOwnerEarnings": null,
+    "accountingCorrection": "US GAAP contract liabilities 9300.6m Sep27 and 3570.3m Jun28 are NONCURRENT only; cannot equate to total customer advances or operating cash collections",
+    "historicalPublicationCutoff": "2026-10-30",
+    "runRegistryAdmitted": false
+  },
+  "sourceAuthorityG001G006V03": {
+    "status": "RESEARCH_AUTHORITY_TRIAGE_ONLY",
+    "sourceNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_G001_G006_AUTHORITY_CONFLICT_V0_3.md",
+    "asOfCutoff": "2026-10-30",
+    "issuerExactRecordDate": "2026-03-25",
+    "issuerIssuedAtRecordDate": 388147674,
+    "issuerTreasuryAtRecordDate": 3224029,
+    "issuerEconomicSharesAtRecordDate": 384923645,
+    "issuerRoundedH1OutstandingMillions": 384.1,
+    "epsQ3WeightedAverageMillions": 383.1,
+    "vendorShareCountConflict": [
+      {
+        "id": "STATMUSE_OCT2026",
+        "shares": 382462183,
+        "source": "https://www.statmuse.com/money/ask/asml-market-cap-in-2026",
+        "type": "VENDOR_ESTIMATE_ADR_LINKED_DAILY_HISTORICAL",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "STOCKANALYSIS_AMS_OCT2026",
+        "shares": 382910000,
+        "source": "https://stockanalysis.com/quote/ams/ASML/statistics/",
+        "type": "VENDOR_ESTIMATE_DISPLAYED_ROUNDED",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "COMPANIESMARKETCAP_OCT2026",
+        "shares": 384500000,
+        "source": "https://companiesmarketcap.com/asml/shares-outstanding/",
+        "type": "VENDOR_STALE_OR_ROUNDED",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "YCHARTS_2026_Q3",
+        "shares": 385420000,
+        "source": "https://ycharts.com/companies/ASML/shares_outstanding",
+        "type": "VENDOR_STALE_LOOKING_CONSTANT_2025_TO_Q32026",
+        "exactAsOfIssuerCertified": false
+      }
+    ],
+    "nonComparableMeasurements": [
+      "Q3_EPS_WEIGHTED_AVERAGE",
+      "LEGAL_ISSUED",
+      "TREASURY_HELD",
+      "ECONOMIC_OUTSTANDING_EX_TREASURY",
+      "VENDOR_DAILY_SHARE_PROXY"
+    ],
+    "mechanics": {
+      "employeePurchasePlanDeliveredFromTreasury": true,
+      "issuanceOrTransferOfTreasuryIncreasesEconomicShares": true,
+      "legalCancellationOfExistingTreasuryReducesIssuedAndTreasurySameNumber": true,
+      "legalCancellationAloneDoesNotRechangeEconomicOutstanding": true,
+      "plannedEmployeeBuybackAllocationDoesNotEqualExecutedDeliveries": true
+    },
+    "missingExact": [
+      "EXACT_ISSUED_AND_TREASURY_AS_OF_OCT30",
+      "SETTLED_BUYBACK_AND_EMPLOYEE_DELIVERY_RECONCILIATION",
+      "SHARE_CANCEL_AND_NEW_ISSUE_REGISTER",
+      "LATE_OCT_26_TO_30_TRADES_NOT_YET_PUBLISHED"
+    ],
+    "g001Certified": false,
+    "xams": {
+      "date": "2026-10-29",
+      "lastCompletedDayAtResearchTime": true,
+      "priceEUR": 1504.8,
+      "venue": "XAMS",
+      "priceOfficialLateTradingAtLastCorroborated": true,
+      "officialEndOfDayUnadjustedBytesSealed": false,
+      "g006Certified": false
+    },
+    "sourceAuthorityRequestPreparedNotSent": true,
+    "registryAdmitted": false
+  },
+  "materialityResolutionProposalV04": {
+    "sourceNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_G001_G006_MATERIALITY_RESOLUTION_PROPOSAL_V0_4.md",
+    "category": "PILOTAGE_ADJUDICATION_REQUEST_NOT_APPROVED",
+    "cutoff": "2026-10-30",
+    "cause": "Exact current shares issued-minus-treasury non-public; gross repurchases omit treasury employee deliveries; Research V2 requires material sufficiency, not expressly an exact share-denominator for every preliminary sensitivity.",
+    "newOfficialCorporateActionLead": {
+      "issuer": "ASML",
+      "isin": "NL0010273215",
+      "venue": "XAMS",
+      "notice": "AMS_20261005_00873_EUR",
+      "issued": "2026-10-05",
+      "effective": "2026-10-08",
+      "eventType": "CE - Shares - Capital increase",
+      "source": "https://live.euronext.com/en/ajax/getNoticePublicData/NL0010273215-XAMS?alias=1&pageNum=1&pageSize=50",
+      "quantityVerified": false,
+      "originalNoticeBytesArchived": false,
+      "actionRequired": "OBTAIN_NOTICE_DETAILS_AND_RECONCILE_LEGAL_ISSUED_SHARE_COUNT"
+    },
+    "afmSource": {
+      "url": "https://www.afm.nl/nl-nl/sector/registers/meldingenregisters/geplaatst-kapitaal/details?id=180975",
+      "obligationDate": "2025-09-24",
+      "historicalIssuedCapital": 388147674,
+      "siteLastUpdatedNotSnapshotDate": true
+    },
+    "scenarioPrice": {
+      "eur": 1504.8,
+      "asOf": "2026-10-29",
+      "inputStatus": "VENDOR_CLOSE_CORROBORATED_BY_XAMS_LATE_TRADES_NOT_EOD_SEALED"
+    },
+    "vendorSensitivity": {
+      "shareCounts": [
+        {
+          "shares": 382462183,
+          "marketCapEURBillion": 575.5291
+        },
+        {
+          "shares": 382910000,
+          "marketCapEURBillion": 576.203
+        },
+        {
+          "shares": 384500000,
+          "marketCapEURBillion": 578.5956
+        }
+      ],
+      "spreadShares": 2037817,
+      "spreadMarketCapEURBillion": 3.0665,
+      "spreadRelativeToMiddleVendorPct": 0.5322,
+      "intervalCertified": false,
+      "priceCertified": false,
+      "mainMaterialityComparison": "LTM simple FCF 20999.4m vs working-capital-line-excluded FCF 13122.5m, neither is certified sustainable Owner Earnings"
+    },
+    "tracks": [
+      {
+        "kind": "A",
+        "name": "WORKING_FINANCIAL_SENSITIVITY",
+        "allowed": true,
+        "authority": "NON_ADMITTED_RESEARCH_WORKING_PAPERS_ONLY",
+        "stageCompletionAuthorized": false,
+        "formalVerdictAuthorized": false
+      },
+      {
+        "kind": "B",
+        "name": "EXACT_COUNT_CERTIFICATION",
+        "allowed": true,
+        "authority": "REQUEST_ORIGINAL_EURONEXT_NOTICE_AFM_CAPITAL_AND_ISSUER_TREASURY_LEDGER",
+        "stageCompletionAuthorized": false
+      }
+    ],
+    "proposedMaterialityPolicy": {
+      "requiresPilotageReview": true,
+      "approved": false,
+      "thresholdPct": null,
+      "doNotAutoChangeGate": true,
+      "canContinueIndependentEvidenceCollection": true,
+      "claimExactCountStillBlocked": true
+    },
+    "runRegistryStatusMustRemain": "ACTIVE/RESEARCH",
+    "registryWritesPerformed": false
+  },
+  "businessOutsideViewWorkingV01": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_MOAT_RUNWAY_OUTSIDE_VIEW_RESEARCH_WORKING_V0_1.md",
+    "facts": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_OUTSIDE_VIEW_EVIDENCE_CANDIDATES_V0_1.json",
+    "classification": "RESEARCH_WORKING_NON_ADMITTED",
+    "sources": 13,
+    "claims": 31,
+    "hypotheses": 5,
+    "risks": 6,
+    "issuerServiceMixPct": {
+      "fy2024": 22.98,
+      "fy2025": 25.08,
+      "q32026": 28.2,
+      "nineMonths2026": 28.69
+    },
+    "separateCustomerPrimaryIssuerEvidence": [
+      "TSMC_Q3_2026",
+      "SAMSUNG_Q3_2026"
+    ],
+    "concentrationFacts": {
+      "asmlChinaRevenueShareFY2025Pct": 29.1,
+      "asmlChinaRevenueShareFY2024Pct": 36.1,
+      "soleOpticsSupplier": "Carl Zeiss SMT",
+      "issuerIsOnlyEuvSystemManufacturer": true
+    },
+    "newRiskPriority": [
+      "ASML-CUSTOMER-CAPEX-CONCENTRATION",
+      "ASML-SINGLE-SOURCE-OPTICS",
+      "ASML-EXPORT-RESTRICTIONS",
+      "ASML-HIGH-NA-ADOPTION",
+      "ASML-SERVICE-MIX-NONCONTRACTUAL",
+      "ASML-CASH-FLOW-CONVERSION"
+    ],
+    "requiresAdditionalValidation": [
+      "TSMC capex is not directly ASML bookings",
+      "Samsung capex is not directly ASML bookings",
+      "High-NA pipeline does not certify firm orders",
+      "EU version FCF and US GAAP must not be mixed",
+      "2025 annual full source not sealed in this new RUN"
+    ],
+    "status": "BUSINESS_OUTSIDE_VIEW_PRELIMINARY_RESEARCH_PROGRESS",
+    "moatVerdict": null,
+    "runwayVerdict": null,
+    "readyForDeepDive": false,
+    "registryWritesPerformed": false,
+    "separateIndustryEquipmentEvidence": [
+      "SEMI_Q2_2026_BILLINGS",
+      "SEMI_JULY_2026_FORECAST"
+    ],
+    "issuerFY2026GuidanceRevisionEURBillion": [
+      {
+        "published": "2026-01-28",
+        "low": 34,
+        "high": 39
+      },
+      {
+        "published": "2026-07-15",
+        "low": 43,
+        "high": 45
+      },
+      {
+        "published": "2026-10-14",
+        "low": 44,
+        "high": 45
+      }
+    ]
+  },
+  "orderIbmCashWorkingV02": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ORDER_TO_REVENUE_IBM_CASH_SENSITIVITY_V0_2.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ORDER_IBM_CASH_WORKING_MODEL_V0_2.json",
+    "sourceClaim": {
+      "lastQuantifiedBookingsYear": "2025",
+      "netBookingsFY2025EURm": 28035,
+      "netBookingsQ42025EURm": 13158,
+      "backlogAsOf": "2025-12-31",
+      "backlogEURm": 38797,
+      "q1Q2Q3_2026ExplicitNumericNetBookingsUnavailableInReleases": true,
+      "fy2026Q3QuantifiedBacklogUnavailable": true,
+      "latestReportedFigureNotCurrentBacklog": true
+    },
+    "orderQuality": {
+      "managementOrderDemandStrengtheningQualitative": true,
+      "contractedOrdersMayHaveDeposits": true,
+      "depositBalanceChangeIsNotBookingCashAmount": true,
+      "unaccepted2029And2030RequestsExcludedFromBookedOrders": true,
+      "noncurrentContractsJuneEURm": 3570.3,
+      "noncurrentContractsSeptemberEURm": 9300.6,
+      "noncurrentDeltaEURm": 5730.3
+    },
+    "ibm": {
+      "reportedNineMonthIBM2026EURm": 8538.1,
+      "q42026GuidedIBMApproxEURm": 3700,
+      "conditionalFY2026IBMApproxEURm": 12238.1,
+      "growthVsFY2025PctApprox": 49.37,
+      "fy2026RevenueGuidanceEURbn": [
+        44,
+        45
+      ],
+      "ibmAnnualizationIsNotActual": true,
+      "upgradesMayBeEpisodic": true
+    },
+    "cash": {
+      "ltmSimpleFcfEURm": 20999.4,
+      "ltmOperatingNetAssetLiabilityChangeEURm": 7876.9,
+      "ltmSimpleFcfExSingleCfoLineEURm": 13122.5,
+      "retentionShares": [
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1
+      ],
+      "marketCapScenarioEURbn": 576.203,
+      "scenarioValuationIsNotCertified": true,
+      "ownerEarningsCertified": false
+    },
+    "g001ExactShareCountStillBlocked": true,
+    "g006OfficialXamsEodStillBlocked": true,
+    "noRegistryWritesPerformed": true,
+    "readyForDeepDive": false,
+    "stageContractChanges": false,
+    "status": "RESEARCH_WORKING_NON_FINAL_NON_ADMITTED"
+  },
+  "ibmDurabilityV03": {
+    "review": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_REVENUE_DURABILITY_AND_CASH_QUALITY_RESEARCH_V0_3.md",
+    "workingModel": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_DURABILITY_WORKING_MODEL_V0_3.json",
+    "classification": "RESEARCH_WORKING_NOT_ADMITTED",
+    "usGaapAnnualIbmGrossProfitEURm": [
+      {
+        "year": 2023,
+        "revenue": 5619.9,
+        "cost": 3271.4,
+        "grossProfit": 2348.5,
+        "grossMarginPct": 41.79
+      },
+      {
+        "year": 2024,
+        "revenue": 6494.2,
+        "cost": 3364,
+        "grossProfit": 3130.2,
+        "grossMarginPct": 48.2
+      },
+      {
+        "year": 2025,
+        "revenue": 8193,
+        "cost": 4025.3,
+        "grossProfit": 4167.7,
+        "grossMarginPct": 50.87
+      }
+    ],
+    "revenueRecognitionTypes": [
+      "CONTRACT_TERM_FIXED_PRICE_SERVICE",
+      "EXTENDED_WARRANTIES",
+      "USAGE_LINKED_ONPULSE",
+      "SPARES_AND_LABOR",
+      "EPISODIC_FIELD_UPGRADES",
+      "RELOCATION_PROJECTS"
+    ],
+    "actualIbmLtmThroughQ32026EURm": 10672.2,
+    "fy2026IbmForecastApproxEURm": 12238.1,
+    "contractualRecurringSplit": {
+      "exactEURm": null,
+      "exactPct": null,
+      "publishedInReviewed2025USGAAPNotes": false,
+      "historicalRunRatesAreNotGuaranteedFloors": true
+    },
+    "liabilityFY2025": {
+      "totalContractLiabilitiesEURm": 19372.6,
+      "revenueRecognizedFromOpeningContractLiabilitiesEURm": 11516.6,
+      "notIbmOnly": true
+    },
+    "groupFcfEURm": {
+      "fy2023": 3247.2,
+      "fy2024": 9083.1,
+      "fy2025": 11027.3,
+      "ltmQ32026": 20999.4,
+      "ltmExNetWCLineSensitivity": 13122.5,
+      "doesNotDetermineIBMOwnerEarnings": true
+    },
+    "certified2026IBMGrossProfit": null,
+    "certifiedDurableIBMOwnerEarnings": null,
+    "sourceAdmissionApproved": false,
+    "keyUnknowns": [
+      "IBM_CONTRACTED_SERVICE_VS_UPGRADE_REVENUE",
+      "IBM_SEPARATE_CASH_CONVERSION",
+      "MAINTENANCE_CAPEX",
+      "2026_FULL_CUSTOMER_ADVANCES_BRIDGE"
+    ]
+  },
+  "financialGrowthCashScenariosV04": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_RESEARCH_REPORT_V0_4.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_SCENARIOS_V0_4.json",
+    "class": "NON_ADMITTED_RESEARCH_WORKING_STRESS_CASES",
+    "cutoff": "2026-10-30",
+    "years": [
+      2027,
+      2028,
+      2029
+    ],
+    "fy2026GuideDerivedAnchor": {
+      "salesEURm": 44500,
+      "ibmEURm": 12238.1,
+      "systemsEURm": 32261.9,
+      "groupGrossMarginPct": 56,
+      "carriedForwardFY2025IbmGmAsHypothesisPct": 50.87,
+      "systemGrossMarginAlgebraicResidualPct": 57.945994
+    },
+    "assumptionsProjectionsNotIssuerForecasts": true,
+    "hypotheticalScenarioOutputs2029": [
+      {
+        "scenario": "DOWNSIDE",
+        "systemAndIbmSalesEURm": 40773.869,
+        "operatingMarginPct": 33.676,
+        "cashStressProxyEURm": 9965.446,
+        "ibmContractualShareMeasured": false
+      },
+      {
+        "scenario": "CENTRAL",
+        "systemAndIbmSalesEURm": 56111.76,
+        "operatingMarginPct": 40.975,
+        "cashStressProxyEURm": 17226.222,
+        "ibmContractualShareMeasured": false
+      },
+      {
+        "scenario": "UPSIDE",
+        "systemAndIbmSalesEURm": 64582.236,
+        "operatingMarginPct": 44.171,
+        "cashStressProxyEURm": 19788.447,
+        "ibmContractualShareMeasured": false
+      }
+    ],
+    "normalization": {
+      "ownerEarningsCertifiable": false,
+      "IBMContractualRecurringAmount": null,
+      "workingCapitalCashTimingHypothesisNotCustomerDepositsProof": true,
+      "capexGrowthMaintenanceSplitNotConfirmed": true
+    },
+    "officialPriceAndSharesStillUncertified": true,
+    "preAdmission": true,
+    "registryWrites": false,
+    "researchComplete": false
+  },
+  "ibmAndSustainingCapexV05": {
+    "report": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_MAINTENANCE_CAPEX_MARGIN_CALIBRATION_REPORT_V0_5.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_MAINTENANCE_CAPEX_MARGIN_CALIBRATION_MODEL_V0_5.json",
+    "authority": "NON_ADMITTED_WORKING_RESEARCH",
+    "dataCutoff": "2026-10-30",
+    "purchasedPpeAndIntangiblesFY2025EURm": 1631.2,
+    "ppe2025AccountingAdditionsEURm": 1596.2,
+    "ppe2025DepreciationEURm": 916,
+    "capitalSpendClassification": "GROUP_CONSOLIDATED_NO_MAINTENANCE_SEGMENT_SPLIT",
+    "ppeDepCostOfSalesEURm": 532.1,
+    "ppeDepCostOfSalesIsNotIBMDepreciation": true,
+    "directServiceLaborAndPartsAlreadyInCostOfSales": true,
+    "operatingRAndDUsGaapFY2025EURm": 4698.8,
+    "ibm2023to2025GrossMarginPct": [
+      41.789,
+      48.1999,
+      50.869
+    ],
+    "ibmContractedMaintenanceRevenuePct": null,
+    "ibmStandaloneMaintenanceCashSpendEURm": null,
+    "maintenanceCapexActualEURm": null,
+    "hypotheticalGroupDepreciationMultipliers": [
+      0.75,
+      1,
+      1.25
+    ],
+    "hypothetical2029GroupCashStressRangeEURm": [
+      14893.127,
+      19559.317
+    ],
+    "stressRangeIsNotOwnerEarningsOrProbabilityBound": true,
+    "preservesExisting2027to2029BaseScenario": true,
+    "registryWritesPerformed": false,
+    "researchComplete": false
+  },
+  "cycleDownturnWorkingV07": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_CYCLE_DOWNTURN_HISTORICAL_REPLAY_REPORT_V0_7.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_CYCLE_DOWNTURN_HISTORICAL_REPLAY_MODEL_V0_7.json",
+    "status": "WORKING_RESEARCH_ONLY",
+    "historical": {
+      "bookingsFY2022EURm": 30674,
+      "bookingsFY2023EURm": 20040,
+      "bookingsFY2024EURm": 18899,
+      "bookingsFY2025EURm": 28035,
+      "bookingsDrop2023Pct": -34.67,
+      "systemsRevenueChange2024Pct": -0.77,
+      "ibmRevenueChange2023Pct": -2.15,
+      "ebitChange2024Pct": -0.22,
+      "groupFcfGrowth2024Pct": 179.72
+    },
+    "outsideView": [
+      "SEMI_2023_WORLD_AND_REGION_EQUIPMENT_DATA",
+      "TSMC_2023_ANNUAL_REPORT",
+      "SAMSUNG_2023_DS_CAPEX"
+    ],
+    "illustrative2028": {
+      "centralCashProxyEURm": 16301.67,
+      "limitedCashProxyEURm": 14260.34,
+      "stylizedCashProxyEURm": 11094.54,
+      "severeCashProxyEURm": 6356.58,
+      "certifiedNormalizedFreeCashFlow": false
+    },
+    "lagTransmissionCoefficientMeasured": false,
+    "hypotheticalScenariosAreStatisticalBounds": false,
+    "statusG001": "INDEPENDENT_NONBLOCKING",
+    "registryWritesPerformed": false,
+    "readyForDeepDive": false
+  }
+}

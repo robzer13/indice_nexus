@@ -6,6 +6,7 @@
  */
 import http from 'node:http';
 import { execFileSync } from 'node:child_process';
+import {handleRecoveryFixture} from './recovery-browser-http-fixture.mjs';
 
 const db = process.argv[2];
 const PORT = 48761;
@@ -64,6 +65,7 @@ const server = http.createServer(async (req, res) => {
       return;
     }
     const url = pathOf(req);
+    if(await handleRecoveryFixture({req,res,url,query,emit}))return;
     if (url.pathname === '/rest/v1/companies' && req.method === 'GET') {
       emit(res, 200, companies());
       return;
