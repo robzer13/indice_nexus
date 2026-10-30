@@ -62,6 +62,8 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: Verify the real issuer release and byte hash (read-only)
         run: npx tsx tests/e2e/recovery-official-source-live.ts
+      - name: Verify ASML Q3 SEC original exhibits and SHA (read-only)
+        run: npx tsx tests/e2e/asml-q3-sec-live.ts
         env:
           CI: 'true'
           NODE_ENV: test
