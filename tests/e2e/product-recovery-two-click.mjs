@@ -61,6 +61,9 @@ try{
 
   await page.getByRole('button',{name:'Lancer / reprendre un cycle borné'}).click();
   await page.waitForURL(/\/admin\/research-recovery\?.*result=no_new_automated_steps/,{timeout:60000});
+  // Navigation can finish before Next.js streams the durable journal section.
+  await page.getByText('REUSE_PRIMARY_ARTIFACTS · CANDIDATE_RECORDED').waitFor({timeout:30000});
+  await page.getByText('Cycle terminé : no_new_automated_steps.',{exact:false}).waitFor({timeout:30000});
   assert.match(await page.locator('body').innerText(),/Tentatives persistées\s*4/);
   const second=await getState();
   assert.deepEqual(second,first,'rerunning loop must not duplicate or replace archived bytes');
