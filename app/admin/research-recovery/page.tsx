@@ -32,7 +32,7 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
       <h1 className="text-3xl font-semibold text-white">Research Recovery Loop V1</h1>
       <p className="max-w-3xl text-sm leading-6 text-slate-400">
         Boucle de diagnostic, recherche de pièces déjà disponibles et journal de reprise durable.
-        Elle n'exécute aucun changement du Registry, ne certifie aucune source et ne publie aucune valorisation.
+        Elle n&apos;exécute aucun changement du Registry, ne certifie aucune source et ne publie aucune valorisation.
       </p>
     </header>
     <AdminNav/>
@@ -41,7 +41,7 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
     </section>:<>
       <div className="rounded-lg border border-amber-800/60 bg-amber-950/10 p-4 text-sm text-amber-100">
         <strong>Périmètre strict :</strong> journal de pré-résolution non autoritatif.
-        L'observation ASML est une copie datée en lecture seule de la production, pas un run SHADOW.
+        L&apos;observation ASML est une copie datée en lecture seule de la production, pas un run SHADOW.
         Aucune tentative enregistrée ici ne lève les blocages officiels.
       </div>
       <section className="rounded-lg border border-slate-800 bg-slate-900/60 p-5">
@@ -58,7 +58,7 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
         </form>
       </section>
       {(failed||single(q.error))&&<p role="alert" className="rounded-lg border border-rose-800 p-4 text-sm text-rose-200">
-        Lecture ou sauvegarde du journal impossible. Aucune conclusion ni autorisation n'a été créée.
+        Lecture ou sauvegarde du journal impossible. Aucune conclusion ni autorisation n&apos;a été créée.
       </p>}
       {snapshot&&<section className="space-y-5 rounded-lg border border-slate-800 bg-slate-900/55 p-5">
         <div>
