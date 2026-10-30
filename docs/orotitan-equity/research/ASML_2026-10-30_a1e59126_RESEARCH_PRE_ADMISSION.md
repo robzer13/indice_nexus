@@ -139,40 +139,51 @@ The administrator submitted a 12-page **Financial statements US GAAP PDF** throu
 
 `GAP-001 = PARTIALLY_PROGRESSSED_NOT_CLOSED`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED`; no source acceptance, stage finalization, data certification or Registry write.
 
-## VIII quater. Official publication linkage and independent cross-source status (2026-10-30)
+## VIII quater. Independent copy SHA-256 cross-check — MATCH (2026-10-30)
 
-**Verified documentary linkage — not binary equivalence:**
+**Evidence input**: user supplied a separately downloaded PDF labeled
+`cpr01_notified_Financial statements US GAAP Q3 2026.pdf`, following the
+[official Euronext-hosted Q3 2026 financial statements link](https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf).
 
-1. The [ASML official Q3 2026 quarterly downloads page](https://www.investor.asml.com/quarterly-results)
-   lists **Financial statements US GAAP PDF** in the October 14, 2026 Q3 package.
-   Its download link resolves to the exact static-file URL already pinned
-   in the SHADOW upload interface:
-   `https://www.investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0`.
-   Automated opening of that download returns **HTTP 403**.
-2. Euronext's [regulated issuer PDF attachment dated 2026-10-14](https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf)
-   is indexed under *Financial statements US GAAP Q3 2026* and contains the
-   Q3 ended 2026-09-27 gross margin **57.5%** and operating-income/net-sales
-   **44.4%**, aligned with the [ASML official quarterly press release](https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026).
-   Euronext is a second distribution venue of the *issuer's same source*, not
-   an economically independent corroboration.
-3. A direct unauthenticated download of the Euronext PDF from the research
-   execution environment **failed**. No Euronext PDF SHA-256 or authoritative
-   byte size was obtained. The 12-page, 1,369,295-byte browser upload remains
-   **unmatched at the binary level**. Size and title consistency alone do
-   not prove authenticity.
+**Independent local-file hash computation** (not a website text snippet):
 
-**Decision:** `OFFICIAL_PUBLICATION_LINK_CONFIRMED`,
-`EXTERNAL_PDF_BINARY_MATCH_UNVERIFIED`,
-`SHADOW_STORAGE_READBACK_REPORTED_VERIFIED`,
-`PRODUCTION_REGISTRY_ADMISSION = NO`.
-Do not set `originAuthenticated=true`, resolve GAP-001, or mark Research
-complete on this basis. The next decisive check is SHA-256 comparison of a
-separate file downloaded directly from ASML or Euronext with
-`562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9`.
+| Field | Euronext-labeled submitted PDF | SHADOW private stored capture receipt |
+|---|---|---|
+| SHA-256 | `562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9` | `562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9` |
+| Byte length | **1,369,295** | **1,369,295** |
+| Page count | **12** | 12 reported by the administrator, not separately measured from SHADOW bytes |
+| PDF metadata | title: `Financial statements US GAAP Q3 2026`; producer: Workiva/Wdesk; creation 2026-10-13 UTC; PDF 1.4 | original SHADOW file bytes not directly downloaded by research agent |
+
+**Binary comparison result:** `USER_SUPPLIED_EURONEXT_COPY_EQUALS_SHADOW_CAPTURE_SHA256 = YES`. The original SHADOW capture was written under a content-addressed path with mandatory
+application-side readback. The new uploaded PDF was independently SHA-256 hashed
+from the complete 1,369,295 local bytes, giving the **same** hash and size.
+
+**Document content spot-check:** T3 2026 sales **EUR 11,662.0m** and net income
+**EUR 4,960.4m** are printed on PDF page 3; gross margin **57.5%** on page 4;
+CFO **EUR 11,797.6m** and asset/liability change **EUR +7,009.0m** on page 6.
+These support the existing pre-admission facts, but do not replace the
+normal Evidence Ledger and independent quantitative review.
+
+**Limit of proof:** this comparison proves **content identity between two files**.
+The second file is an administrator/user-supplied download associated with the
+previously identified Euronext public URL, **not a cryptographically authenticated
+server-to-server Euronext download**. PDF title, metadata, publisher branding and
+the user's filename cannot alone establish chain-of-custody/origin cryptographically.
+The stored SHADOW object itself was not independently downloaded for SHA calculation
+during this review. The issuer's Euronext publication context remains documentary
+corroboration, not proof of independent economic information.
+
+**Decision:** `BINARY_MATCH_TO_SEPARATELY_SUPPLIED_EURONEXT_COPY = VERIFIED`;
+`SHADOW_APPLICATION_READBACK = VERIFIED_BY_APPLICATION`;
+`EXTERNAL_DOWNLOAD_CHAIN = NOT_CRYPTOGRAPHICALLY_ATTESTED`;
+`SOURCE_ORIGIN_AUTHENTICATED = PENDING_AUTHORITY_REVIEW`;
+`REGISTRY_ADMISSION = NO`.
+`GAP-001 = EVIDENCE_OF_SOURCE_IDENTITY_PROGRESS / OPEN`.
+`READY_FOR_DEEP_DIVE = NOT_EVALUATED`; NO Registry mutation.
 
 ## IX. Next authorized Research actions
 
-1. Independently authenticate the browser-supplied Q3 PDF by byte-for-byte hash comparison against a trusted issuer/Euronext source or equivalent documented provenance; keep SHADOW receipt non-admitted until evidence requirements pass.
+1. Review and approve the now-confirmed SHA match to the separately uploaded Euronext-labeled PDF; establish admissible source provenance, file custody, issuer/filing context and authority requirements independently. Only then consider Registry admission (not automatic).
 2. Prepare full financial evidence ledgers (normalized claims + conflicts + calculation proof + exact as-of dates) using frozen Research contract, including 2025 20-F and interim 2026.
 3. Reconcile exact share denominator and XAMS quote at a coherent market price instant.
 4. Produce required Research manifests only once bytes have been sealed and independently reviewed. Do not self-certify or enter Deep Dive on a human summary.
