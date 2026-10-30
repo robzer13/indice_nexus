@@ -689,7 +689,7 @@
   },
   "inputSufficiency": {
     "readyForDeepDive": false,
-    "reason": "PDF privately captured and independently SHA-matched to a second supplied copy; source authority/admission plus exact economic share count, official XAMS EOD, owner-earnings normalization and further Research coverage still incomplete.",
+    "reason": "Working-source acquisition progressed for order monetization, 2026 Q4 IBM guidance and cash normalization stress; exact 2026 quarterly bookings/backlog are not disclosed; no source authority admission, G001/G006 certified inputs, normalized Owner Earnings, required Research ledgers/manifests yet.",
     "missingCritical": [
       "GAP-001",
       "GAP-002",
@@ -1144,5 +1144,61 @@
         "high": 45
       }
     ]
+  },
+  "orderIbmCashWorkingV02": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ORDER_TO_REVENUE_IBM_CASH_SENSITIVITY_V0_2.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ORDER_IBM_CASH_WORKING_MODEL_V0_2.json",
+    "sourceClaim": {
+      "lastQuantifiedBookingsYear": "2025",
+      "netBookingsFY2025EURm": 28035,
+      "netBookingsQ42025EURm": 13158,
+      "backlogAsOf": "2025-12-31",
+      "backlogEURm": 38797,
+      "q1Q2Q3_2026ExplicitNumericNetBookingsUnavailableInReleases": true,
+      "fy2026Q3QuantifiedBacklogUnavailable": true,
+      "latestReportedFigureNotCurrentBacklog": true
+    },
+    "orderQuality": {
+      "managementOrderDemandStrengtheningQualitative": true,
+      "contractedOrdersMayHaveDeposits": true,
+      "depositBalanceChangeIsNotBookingCashAmount": true,
+      "unaccepted2029And2030RequestsExcludedFromBookedOrders": true,
+      "noncurrentContractsJuneEURm": 3570.3,
+      "noncurrentContractsSeptemberEURm": 9300.6,
+      "noncurrentDeltaEURm": 5730.3
+    },
+    "ibm": {
+      "reportedNineMonthIBM2026EURm": 8538.1,
+      "q42026GuidedIBMApproxEURm": 3700,
+      "conditionalFY2026IBMApproxEURm": 12238.1,
+      "growthVsFY2025PctApprox": 49.37,
+      "fy2026RevenueGuidanceEURbn": [
+        44,
+        45
+      ],
+      "ibmAnnualizationIsNotActual": true,
+      "upgradesMayBeEpisodic": true
+    },
+    "cash": {
+      "ltmSimpleFcfEURm": 20999.4,
+      "ltmOperatingNetAssetLiabilityChangeEURm": 7876.9,
+      "ltmSimpleFcfExSingleCfoLineEURm": 13122.5,
+      "retentionShares": [
+        0,
+        0.25,
+        0.5,
+        0.75,
+        1
+      ],
+      "marketCapScenarioEURbn": 576.203,
+      "scenarioValuationIsNotCertified": true,
+      "ownerEarningsCertified": false
+    },
+    "g001ExactShareCountStillBlocked": true,
+    "g006OfficialXamsEodStillBlocked": true,
+    "noRegistryWritesPerformed": true,
+    "readyForDeepDive": false,
+    "stageContractChanges": false,
+    "status": "RESEARCH_WORKING_NON_FINAL_NON_ADMITTED"
   }
 }
