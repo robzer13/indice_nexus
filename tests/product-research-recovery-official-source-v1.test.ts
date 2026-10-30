@@ -2,7 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
 import {
-  ASML_Q2_2026_PUBLIC_RELEASE,probeAsmlQ2OfficialRelease,
+  ASML_Q2_2026_PUBLIC_RELEASE,ASML_Q2_2026_OFFICIAL_PRESENTATION,
+  probeAsmlQ2OfficialRelease,retrievePreferredAsmlQ2OfficialSource,
 } from '../lib/orotitan-equity/product/research-recovery-official-source-v1';
 
 const q2='<html><title>ASML Q2 2026 financial results</title><main>'
@@ -71,4 +72,54 @@ test('malformed official contents, oversized bodies or advertised lengths fail c
 test('network failures never create a success-shaped candidate',async()=>{
   await assert.rejects(probeAsmlQ2OfficialRelease(
     (async()=>{throw Error('network unavailable');}) as typeof fetch),/network unavailable/);
+});
+
+const pdfBytes=Buffer.concat([
+  Buffer.from('%PDF-1.7\n'),
+  Buffer.alloc(15000,0x20),
+  Buffer.from('\n%%EOF\n'),
+]);
+function pdfResponse(body:Buffer=pdfBytes,url=ASML_Q2_2026_OFFICIAL_PRESENTATION.url){
+  const r=new Response(new Uint8Array(body),{status:200,headers:{'content-type':'application/pdf'}});
+  Object.defineProperty(r,'url',{value:url});
+  return r;
+}
+test('403 on investor HTML triggers only the pinned issuer-owned PDF, preserving attribution',async()=>{
+  const visited:string[]=[];
+  const f=(async(url:string|URL|Request,options?:RequestInit)=>{
+    visited.push(String(url));
+    assert.equal(options?.redirect,'error');
+    return visited.length===1?sourceReply(q2,403):pdfResponse();
+  }) as typeof fetch;
+  const result=await retrievePreferredAsmlQ2OfficialSource(f,'2026-09-21',
+    ()=>new Date('2026-10-30T11:00:00Z'));
+  assert.deepEqual(visited,[ASML_Q2_2026_PUBLIC_RELEASE.url,ASML_Q2_2026_OFFICIAL_PRESENTATION.url]);
+  assert.equal(result.candidate.contentType,'application/pdf');
+  assert.equal(result.candidate.documentId,ASML_Q2_2026_OFFICIAL_PRESENTATION.documentId);
+  assert.equal(result.candidate.url,ASML_Q2_2026_OFFICIAL_PRESENTATION.url);
+  assert.equal(result.candidate.admitted,false);
+  assert.equal(result.candidate.historicalBytesCertified,false);
+  assert.equal(result.candidate.sha256,createHash('sha256').update(pdfBytes).digest('hex'));
+});
+test('PDF fallback rejects truncated, missing signature and redirected content',async()=>{
+  const invalid=[
+    pdfResponse(Buffer.from('%PDF-1.7 invalid short %%EOF')),
+    pdfResponse(Buffer.concat([Buffer.from('BAD-'),Buffer.alloc(11000),Buffer.from('%%EOF')])),
+    pdfResponse(pdfBytes,'https://external.example/asset.pdf'),
+  ];
+  for(const lastResponse of invalid) {
+    const f=(async(url:string|URL|Request)=>{
+      return String(url)===ASML_Q2_2026_PUBLIC_RELEASE.url
+        ? sourceReply(q2,403):lastResponse;
+    }) as typeof fetch;
+    await assert.rejects(retrievePreferredAsmlQ2OfficialSource(f),
+      /RECOVERY_SOURCE_PDF_/);
+  }
+});
+test('PDF fallback cannot bypass pre-cutoff temporal gate or issuer URL origin',async()=>{
+  let calls=0;
+  const f=(async()=>{calls++;return pdfResponse();}) as typeof fetch;
+  await assert.rejects(retrievePreferredAsmlQ2OfficialSource(f,'2026-10-14'),
+    /RECOVERY_SOURCE_TEMPORAL_GATE/);
+  assert.equal(calls,0);
 });
