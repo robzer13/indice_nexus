@@ -111,4 +111,20 @@ At this price, **1 million shares of share-count error changes estimated equity 
 - `SOURCE_PDF`: byte match to second supplied Euronext-labeled file confirmed; full source origin and immutable admission review still distinct.
 - `RESEARCH_STAGE`: `IN_PROGRESS` and `READY_FOR_DEEP_DIVE=NOT_EVALUATED`; no registry write or publication.
 
+### Issuer 2025 share-label conflict — resolved by official footnote, not by silent editing
+
+The [ASML share-information page](https://www.investor.asml.com/share-information)
+has an inconsistent 2025 table: its field labels invert `issued` and
+`outstanding`. Its **same-page explanatory ownership footnote** explicitly says
+that **385,417,665 shares were issued and outstanding *excluding***
+2,730,009 issued shares held in treasury at **2025-12-31**.
+Hence **TOTAL ISSUED = 385,417,665 + 2,730,009 = 388,147,674**,
+which is also the 2026-03-25 AGM issued count. This **resolves the 2025
+display-label conflict** as a presentation reversal in that table,
+**not** a change in 2026 equity capitalization.
+The March AGM still documents a true increase in treasury between dates
+(2,730,009→3,224,029), while the exact October economic share count remains
+unreconciled. Preserve the original mislabeled source in Conflict Ledger;
+use the explanatory footnote and AGM as explicit reconciliation authority.
+
 **Next actual primary artifacts:** official shareholder/corporate action ledger at cutoff; official Euronext XAMS unadjusted **2026-10-29 EOD record**; issuer current/non-current customer-deposit note with cash settlements; 2025 US GAAP annual cash flow and 2026 interim US GAAP notes (separate from EU-IFRS); operating invested-capital policy and monthly working-capital profile. Do not quietly remove blockers to advance stage.
