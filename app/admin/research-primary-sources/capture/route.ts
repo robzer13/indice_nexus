@@ -4,13 +4,16 @@ import {isHostedShadowResearchEnabled} from '@/lib/orotitan-equity/product/hoste
 import {getHostedShadowRecoveryClient} from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {captureAsmlOfficialPdf,selectSource,type AsmlV29SourceId}
  from '@/lib/orotitan-equity/product/asml-official-pdf-capture-v29';
+import {classifyAsmlCaptureError}
+ from '@/lib/orotitan-equity/product/asml-capture-error-diagnostics-v291';
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
 export const maxDuration=60;
 
-function next(req:NextRequest,key:'result'|'error',value:string){
+function next(req:NextRequest,key:'result'|'error',value:string,sourceId:AsmlV29SourceId|null=null){
   const url=new URL('/admin/research-primary-sources',req.url);
   url.searchParams.set(key,value);
+  if(sourceId)url.searchParams.set('source',sourceId);
   return NextResponse.redirect(url,{status:303});
 }
 
@@ -28,16 +31,19 @@ export async function POST(req:NextRequest){
   const mime=(req.headers.get('content-type')??'').split(';')[0].trim();
   if(!['application/x-www-form-urlencoded','multipart/form-data'].includes(mime))
     return NextResponse.json({error:'UNSUPPORTED_CONTENT_TYPE'},{status:415});
+  let selectedSourceId:AsmlV29SourceId|null=null;
   try{
     const form=await req.formData();
     const selected=form.get('sourceId');
-    if(typeof selected!=='string')return next(req,'error','source_invalid');
+    if(typeof selected!=='string')return next(req,'error','SOURCE_SELECTION_INVALID');
     const source=selectSource(selected);
-    const receipt=await captureAsmlOfficialPdf(getHostedShadowRecoveryClient(),
-      source.id as AsmlV29SourceId);
-    return next(req,'result',`${receipt.sourceId}:${receipt.sha256}`);
-  }catch{
-    // No internal URLs, credentials, fetch details, or storage paths leaked.
-    return next(req,'error','capture_unavailable_or_failed');
+    selectedSourceId=source.id as AsmlV29SourceId;
+    const receipt=await captureAsmlOfficialPdf(getHostedShadowRecoveryClient(),selectedSourceId);
+    return next(req,'result',`${receipt.sourceId}:${receipt.sha256}`,selectedSourceId);
+  }catch(error){
+    const code=classifyAsmlCaptureError(error);
+    // Log only enumerated source and category; never log raw exceptions, URLs, cookies or secrets.
+    console.warn('ASML_V29_CAPTURE_FAILED',{sourceId:selectedSourceId??'UNVERIFIED',category:code});
+    return next(req,'error',code,selectedSourceId);
   }
 }
