@@ -5,6 +5,7 @@ import {AdminNav} from '@/components/admin/admin-nav';
 import {isAdminAuthenticated} from '@/lib/auth/admin-session';
 import {researchInboxPilotMode} from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {isHostedShadowResearchEnabled} from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import {isRecoveryCiBrowserFixture} from '@/lib/orotitan-equity/product/research-recovery-ci-fixture';
 import {getRecoverySnapshot,listRecoveryJournal} from '@/lib/orotitan-equity/product/research-recovery-shadow-server';
 import {ASML_Q2_2026_PUBLIC_RELEASE,ASML_Q2_2026_OFFICIAL_PRESENTATION} from '@/lib/orotitan-equity/product/research-recovery-official-source-v1';
 import {runResearchRecoveryAction} from './actions';
@@ -16,7 +17,8 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
   if(!(await isAdminAuthenticated()))redirect('/admin');
   const q=await searchParams;
   const source=single(q.source)??'asml-observation';
-  const enabled=researchInboxPilotMode()==='shared-test' && isHostedShadowResearchEnabled(process.env);
+  const enabled=researchInboxPilotMode()==='shared-test' &&
+    (isHostedShadowResearchEnabled(process.env)||isRecoveryCiBrowserFixture(process.env));
   let snapshot:Awaited<ReturnType<typeof getRecoverySnapshot>>|null=null;
   let journal:Awaited<ReturnType<typeof listRecoveryJournal>>=[];
   let failed=false;
