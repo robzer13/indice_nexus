@@ -18,6 +18,7 @@ create table if not exists public.orotitan_product_recovery_attempts_shadow_v1 (
 );
 alter table public.orotitan_product_recovery_attempts_shadow_v1 enable row level security;
 revoke all on public.orotitan_product_recovery_attempts_shadow_v1 from public, anon, authenticated;
+revoke all on public.orotitan_product_recovery_attempts_shadow_v1 from service_role;
 grant select, insert on public.orotitan_product_recovery_attempts_shadow_v1 to service_role;
 -- Prevent mutable edits even by backend service-role on the journal API.
 create or replace function public.orotitan_shadow_recovery_journal_immutable()
