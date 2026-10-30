@@ -6,6 +6,7 @@ import {isAdminAuthenticated} from '@/lib/auth/admin-session';
 import {researchInboxPilotMode} from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {isHostedShadowResearchEnabled} from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {getRecoverySnapshot,listRecoveryJournal} from '@/lib/orotitan-equity/product/research-recovery-shadow-server';
+import {ASML_Q2_2026_PUBLIC_RELEASE} from '@/lib/orotitan-equity/product/research-recovery-official-source-v1';
 import {runResearchRecoveryAction} from './actions';
 export const dynamic='force-dynamic';
 export const metadata:Metadata={title:'Research Recovery Loop V1 — SHADOW'};
@@ -101,9 +102,15 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
                 attempts.map(a=><div key={a.strategy} className="mt-3 border-t border-slate-800 pt-3">
                   <p className="text-xs font-medium text-cyan-200">{a.strategy} · {a.outcome}</p>
                   <p className="mt-1 text-sm text-slate-300">{a.detail}</p>
-                  {a.evidenceRefs.length>0&&<p className="mt-2 break-all font-mono text-xs text-slate-500">
-                    Candidats : {a.evidenceRefs.join(' · ')}
-                  </p>}
+                  {a.evidenceRefs.length>0&&<div className="mt-2 break-all font-mono text-xs text-slate-400">
+                    <span>Candidats non admis : </span>
+                    {a.evidenceRefs.map((ref,i)=><span key={ref}>
+                      {i>0?' · ':''}
+                      {ref===ASML_Q2_2026_PUBLIC_RELEASE.url
+                        ? <a className="text-cyan-300 underline" href={ref} target="_blank" rel="noopener noreferrer">Communiqué officiel ASML Q2 2026</a>
+                        : ref}
+                    </span>)}
+                  </div>}
                 </div>)}
             </article>;
           })}
