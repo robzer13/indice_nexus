@@ -189,6 +189,8 @@ corroboration, not proof of independent economic information.
 
 **G001/G006 materiality resolution proposal (v0.4):** [two-track solution, 0.532% vendor-count sensitivity, 2026-10-05 Euronext capital-increase notice and bounded Pilotage adjudication](./ASML_2026-10-30_a1e59126_G001_G006_MATERIALITY_RESOLUTION_PROPOSAL_V0_4.md). It is a **PROPOSAL only**: analytical RESEARCH working scenarios may continue, but it neither waives a frozen source requirement nor permits stage completion, official market capitalization, ROIC/Owner Earnings certification or publication. The **2026-10-08 Euronext corporate action** requires original notice verification.
 
+**Working ASML business / runway / outside-view Research (v0.1, 2026-10-30):** [source-scoped research note](./ASML_2026-10-30_a1e59126_BUSINESS_MOAT_RUNWAY_OUTSIDE_VIEW_RESEARCH_WORKING_V0_1.md) and [machine-readable evidence candidates](./ASML_2026-10-30_a1e59126_BUSINESS_OUTSIDE_VIEW_EVIDENCE_CANDIDATES_V0_1.json). Evidence covers 2025 annual report, Q3 2026 issuer statements, customer TSMC and Samsung 2026 reports, core lithography economics, technical adoption, service mix, supply-chain concentration and risk hypotheses. These are **working-source candidates and hypothesis tests, not a final moat/runway/quality verdict**. They proceed independently of incomplete `G001`, without overriding its certification gate.
+
 ## IX. Next authorized Research actions
 
 1. Review and approve the now-confirmed SHA match to the separately uploaded Euronext-labeled PDF; establish admissible source provenance, file custody, issuer/filing context and authority requirements independently. Only then consider Registry admission (not automatic).
