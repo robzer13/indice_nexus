@@ -114,10 +114,12 @@ No point estimates of moat value, return-on-capital advantage, price target, exp
 
 **No probabilities or return forecasts** until source-backed numerical scenarios and formal later-stage authority.
 
+**Quantified order-monetization bridge and cash-quality work (v0.2):** [source dated note](./ASML_2026-10-30_a1e59126_ORDER_TO_REVENUE_IBM_CASH_SENSITIVITY_V0_2.md), [reproducible model](./ASML_2026-10-30_a1e59126_ORDER_IBM_CASH_WORKING_MODEL_V0_2.json). New key finding: 2025 historical EUR 38.797bn system backlog is not current T3 2026 backlog; manager says customer down payments follow accepted POs; the current noncurrent liability balance cannot be equated to bookings. IBM Q4 ~EUR 3.7bn guide implies ~EUR 12.238bn FY2026 (~49.4% vs FY2025), subject to material upgrade demand. No final business verdict.
+
 ## 7. Unfinished Research requirements and non-G001 priority order
 
 1. Add **2025 official US GAAP consolidated cash flow and accounting policy notes** (2025 annual + 2026 interim) and reconcile sustainable Owner Earnings and normalized taxes/invested capital. Distinguish time-concentrated advances from durable FCF, and independent annual auditor opinions from interim unaudited reports.
-2. Reconcile ASML **orders, backlog and capacity** with cited definitions; **Q3 2026 net bookings numerical amount not independently verified in this dossier; DO NOT INVENT IT**. Verify quarterly source and separate annual booked backlog from non-binding future inquiries.
+2. Reconcile ASML **orders, backlog and capacity** with cited definitions; **the issuer Q1, Q2 and Q3 2026 results releases **do not disclose numeric quarterly bookings or Q3 backlog**. This is a disclosure gap, not an unperformed web search; do not invent it**. Verify quarterly source and separate annual booked backlog from non-binding future inquiries.
 3. Build ASML **2024–2026 customer-geography mix** and export-rule chronology; 29.1% China is FY2025 only.
 4. Test customer equipment CAPEX **to actual ASML addressable spend** (lithography equipment fraction, timing and node mix) rather than equating foundry capex to ASML sales.
 5. Extend **outside view** beyond publicly disclosed customer plans to semiconductor capex cycle independent sources (equipment industry data, foundry mix, AI-cycle reversal cases).
