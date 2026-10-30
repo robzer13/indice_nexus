@@ -48,6 +48,18 @@ test('only exact, enumerated document IDs are permitted',()=>{
   assert.throws(()=>selectSource('https://evil.example/file.pdf'),/UNKNOWN_SOURCE/);
   assert.throws(()=>selectSource('__proto__'),/UNKNOWN_SOURCE/);
 });
+test('Q3 issuer PDF uses official non-www host and rejects stale www alias',async()=>{
+  const src=selectSource('ASML_2026_Q3_US_GAAP');
+  assert.equal(src.url,'https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0');
+  assert.equal(src.originHost,'investor.asml.com');
+  assert.throws(
+    ()=>validateSameOriginRedirect(src,'https://www.investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0'),
+    /REDIRECT_OUTSIDE_ALLOWLIST/
+  );
+  const result=await acquireOfficialPdf('ASML_2026_Q3_US_GAAP',issuerFetch('ASML_2026_Q3_US_GAAP'));
+  assert.equal(result.finalUrl,src.url);
+  assert.equal(result.bytes.length,bytes.length);
+});
 test('allowlisted server TLS PDF capture persists immutable bytes and verified receipt',async()=>{
   const s=storageFixture();
   const receipt=await captureAsmlOfficialPdf(s.client,'ASML_2025_US_GAAP',issuerFetch(),
