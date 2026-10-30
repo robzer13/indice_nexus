@@ -52,7 +52,7 @@ test('fresh repeat uses persisted attempts and avoids duplicate investigations',
   await runRecoveryCycle(input,f.port);
   const second=await runRecoveryCycle({...input},f.port);
   assert.equal(second.attempted.length,0);
-  assert.equal(second.status,'EXHAUSTED');
+  assert.equal(second.status,'NO_NEW_AUTOMATED_STEPS');
   assert.equal(f.calls.length,4);
 });
 test('bounded cycles resume at next unattempted blocker',async()=>{
