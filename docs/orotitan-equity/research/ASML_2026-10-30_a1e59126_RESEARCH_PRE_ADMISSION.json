@@ -689,7 +689,7 @@
   },
   "inputSufficiency": {
     "readyForDeepDive": false,
-    "reason": "Provisional 2027-2029 systems/IBM sales, gross-margin, EBIT and working-capital cash-stress scenarios are reproducibly documented. Each driver is distinguished from historic reported US GAAP and FY2026 issuer guidance. IBM recurring share unknown; owner cash proxy not certified. Research still requires formal source authority, gap resolution and stage artifacts.",
+    "reason": "New primary US GAAP FY2025 PPE footnotes and 2023-25 service segment gross margin validate company-wide depreciation, additions, cash investments, and high sensitivity of margins to revenue mix. IBM maintenance-only revenue, margins, upkeep CapEx and IBM standalone owner cash remain undisclosed; sensitivity is working-only. Continue Research with preserved non-admission.",
     "missingCritical": [
       "GAP-001",
       "GAP-002",
@@ -1318,6 +1318,41 @@
     "officialPriceAndSharesStillUncertified": true,
     "preAdmission": true,
     "registryWrites": false,
+    "researchComplete": false
+  },
+  "ibmAndSustainingCapexV05": {
+    "report": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_MAINTENANCE_CAPEX_MARGIN_CALIBRATION_REPORT_V0_5.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_MAINTENANCE_CAPEX_MARGIN_CALIBRATION_MODEL_V0_5.json",
+    "authority": "NON_ADMITTED_WORKING_RESEARCH",
+    "dataCutoff": "2026-10-30",
+    "purchasedPpeAndIntangiblesFY2025EURm": 1631.2,
+    "ppe2025AccountingAdditionsEURm": 1596.2,
+    "ppe2025DepreciationEURm": 916,
+    "capitalSpendClassification": "GROUP_CONSOLIDATED_NO_MAINTENANCE_SEGMENT_SPLIT",
+    "ppeDepCostOfSalesEURm": 532.1,
+    "ppeDepCostOfSalesIsNotIBMDepreciation": true,
+    "directServiceLaborAndPartsAlreadyInCostOfSales": true,
+    "operatingRAndDUsGaapFY2025EURm": 4698.8,
+    "ibm2023to2025GrossMarginPct": [
+      41.789,
+      48.1999,
+      50.869
+    ],
+    "ibmContractedMaintenanceRevenuePct": null,
+    "ibmStandaloneMaintenanceCashSpendEURm": null,
+    "maintenanceCapexActualEURm": null,
+    "hypotheticalGroupDepreciationMultipliers": [
+      0.75,
+      1,
+      1.25
+    ],
+    "hypothetical2029GroupCashStressRangeEURm": [
+      14893.127,
+      19559.317
+    ],
+    "stressRangeIsNotOwnerEarningsOrProbabilityBound": true,
+    "preservesExisting2027to2029BaseScenario": true,
+    "registryWritesPerformed": false,
     "researchComplete": false
   }
 }
