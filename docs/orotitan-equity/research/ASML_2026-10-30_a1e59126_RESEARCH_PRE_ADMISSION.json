@@ -412,7 +412,7 @@
       "id": "GAP-001",
       "priority": "CRITICAL",
       "block": "SOURCE_BYTES",
-      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN."
+      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN. SEC EX-99.3 HTML references separately hosted slide images; capture the linked assets or equivalent full issuer official PDF as a complete source set, not only the HTML wrapper."
     },
     {
       "id": "GAP-002",
@@ -511,5 +511,5 @@
       "GAP-004"
     ]
   },
-  "provenanceNote": "Sources linked and read via public retrieval; source bytes are NOT locally sealed or uploaded to private object store by this review. No hash claimed. Sources hosted at SEC and issuer mirror reflect same underlying issuer, not independent economic corroboration."
+  "provenanceNote": "Sources linked and read via public retrieval; source bytes are NOT locally sealed or uploaded to private object store by this review. No hash claimed. Sources hosted at SEC and issuer mirror reflect same underlying issuer, not independent economic corroboration. SEC EX-99.3 financial statements reference multiple slide images, which must be included in any immutable byte capture."
 }
