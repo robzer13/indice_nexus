@@ -53,7 +53,7 @@ export default async function PrimarySourcesPage({searchParams}:{searchParams:Pa
         </p>}
       </section>
       <p className="text-sm text-slate-400">Les liens sont codés en dur dans la liste blanche.
-        Si un émetteur redirige vers une autre origine, la capture est bloquée et l'origine doit être examinée.
+        Si un émetteur redirige vers une autre origine, la capture est bloquée et l&apos;origine doit être examinée.
       </p>
     </>}
     <Link href="/admin/research-q3-sources" className="text-sm text-cyan-300 underline">
