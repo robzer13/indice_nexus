@@ -9,7 +9,7 @@ const q2='<html><title>ASML Q2 2026 financial results</title><main>'
   +'Press release - July 15, 2026. ASML published its 2026 second-quarter results. '
   +'Issuer official statement for the 2026 second quarter. '.repeat(8)+'</main></html>';
 
-function sourceReply(body=q2, status=200, type='text/html', url=ASML_Q2_2026_PUBLIC_RELEASE.url) {
+function sourceReply(body=q2, status=200, type='text/html', url:string=ASML_Q2_2026_PUBLIC_RELEASE.url) {
   const response=new Response(body,{status,headers:{'content-type':type}});
   Object.defineProperty(response,'url',{value:url});
   return response;
