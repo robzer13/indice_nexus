@@ -598,7 +598,7 @@
       "id": "GAP-002",
       "priority": "CRITICAL",
       "block": "ECONOMIC_SHARE_COUNT",
-      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count. Primary AGM count on 2026-03-25 validated; 1,299,377 gross repurchases disclosed Sep21-Oct23 confirmed; issuer net share count still unavailable because of employee deliveries, cancellations, issuance, trade/settlement dates and later undisclosed trades."
+      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count. Primary AGM count on 2026-03-25 validated; 1,299,377 gross repurchases disclosed Sep21-Oct23 confirmed; issuer net share count still unavailable because of employee deliveries, cancellations, issuance, trade/settlement dates and later undisclosed trades. Source conflict v0.3: StatMuse 382,462,183 vs StockAnalysis Amsterdam 382.91m vs CompaniesMarketCap 384.50m vs YCharts 385.42m, all NON-AUTHORITATIVE; 2025 20-F documents quarter-end employee purchase plan shares delivered FROM TREASURY; issuer exact Oct count absent."
     },
     {
       "id": "GAP-003",
@@ -655,6 +655,12 @@
       "issue": "Valuation market data",
       "details": "Vendor EUR 1,504.80 October 29 close is not Oct 30 close, not official exchange-sealed unadjusted XAMS close",
       "status": "SOURCE_AND_DATE_GAP"
+    },
+    {
+      "id": "CON-004",
+      "issue": "Vendor economic shares and provenance",
+      "details": "Vendor counts 382.462183m, 382.91m, 384.5m, 385.42m differ and carry incomplete dates/measurement definitions; no primary exact issued minus treasury as of cutoff.",
+      "status": "UNRESOLVED_BLOCKER"
     }
   ],
   "hypothesisCandidates": [
@@ -807,7 +813,8 @@
         "post_Q3_employee_delivery_and_issuance",
         "cancellations_and_settlement_trade_date_effects",
         "buybacks_2026-10-26_through_cutoff_not_yet_published"
-      ]
+      ],
+      "conflictingVendorCountsDoNotCertifyShareCount": true
     },
     "cash": {
       "unit": "EUR_MILLION",
@@ -872,8 +879,8 @@
     "statusGates": {
       "pdfBinaryIdentity": "MATCH",
       "sourceAuthority": "NEEDS_FORMAL_ADMISSION_REVIEW",
-      "g001": "BLOCKED",
-      "g006": "BLOCKED_PRIMARY_XAMS_EOD",
+      "g001": "BLOCKED_EXACT_ISSUED_TREASURY_CUTOFF_VENDOR_CONFLICT",
+      "g006": "BLOCKED_OFFICIAL_NONADJUSTED_XAMS_EOD_BYTES",
       "ownerEarnings": "BLOCKED",
       "roic": "BLOCKED",
       "researchReadyForDeepDive": false,
@@ -919,5 +926,78 @@
     "accountingCorrection": "US GAAP contract liabilities 9300.6m Sep27 and 3570.3m Jun28 are NONCURRENT only; cannot equate to total customer advances or operating cash collections",
     "historicalPublicationCutoff": "2026-10-30",
     "runRegistryAdmitted": false
+  },
+  "sourceAuthorityG001G006V03": {
+    "status": "RESEARCH_AUTHORITY_TRIAGE_ONLY",
+    "sourceNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_G001_G006_AUTHORITY_CONFLICT_V0_3.md",
+    "asOfCutoff": "2026-10-30",
+    "issuerExactRecordDate": "2026-03-25",
+    "issuerIssuedAtRecordDate": 388147674,
+    "issuerTreasuryAtRecordDate": 3224029,
+    "issuerEconomicSharesAtRecordDate": 384923645,
+    "issuerRoundedH1OutstandingMillions": 384.1,
+    "epsQ3WeightedAverageMillions": 383.1,
+    "vendorShareCountConflict": [
+      {
+        "id": "STATMUSE_OCT2026",
+        "shares": 382462183,
+        "source": "https://www.statmuse.com/money/ask/asml-market-cap-in-2026",
+        "type": "VENDOR_ESTIMATE_ADR_LINKED_DAILY_HISTORICAL",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "STOCKANALYSIS_AMS_OCT2026",
+        "shares": 382910000,
+        "source": "https://stockanalysis.com/quote/ams/ASML/statistics/",
+        "type": "VENDOR_ESTIMATE_DISPLAYED_ROUNDED",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "COMPANIESMARKETCAP_OCT2026",
+        "shares": 384500000,
+        "source": "https://companiesmarketcap.com/asml/shares-outstanding/",
+        "type": "VENDOR_STALE_OR_ROUNDED",
+        "exactAsOfIssuerCertified": false
+      },
+      {
+        "id": "YCHARTS_2026_Q3",
+        "shares": 385420000,
+        "source": "https://ycharts.com/companies/ASML/shares_outstanding",
+        "type": "VENDOR_STALE_LOOKING_CONSTANT_2025_TO_Q32026",
+        "exactAsOfIssuerCertified": false
+      }
+    ],
+    "nonComparableMeasurements": [
+      "Q3_EPS_WEIGHTED_AVERAGE",
+      "LEGAL_ISSUED",
+      "TREASURY_HELD",
+      "ECONOMIC_OUTSTANDING_EX_TREASURY",
+      "VENDOR_DAILY_SHARE_PROXY"
+    ],
+    "mechanics": {
+      "employeePurchasePlanDeliveredFromTreasury": true,
+      "issuanceOrTransferOfTreasuryIncreasesEconomicShares": true,
+      "legalCancellationOfExistingTreasuryReducesIssuedAndTreasurySameNumber": true,
+      "legalCancellationAloneDoesNotRechangeEconomicOutstanding": true,
+      "plannedEmployeeBuybackAllocationDoesNotEqualExecutedDeliveries": true
+    },
+    "missingExact": [
+      "EXACT_ISSUED_AND_TREASURY_AS_OF_OCT30",
+      "SETTLED_BUYBACK_AND_EMPLOYEE_DELIVERY_RECONCILIATION",
+      "SHARE_CANCEL_AND_NEW_ISSUE_REGISTER",
+      "LATE_OCT_26_TO_30_TRADES_NOT_YET_PUBLISHED"
+    ],
+    "g001Certified": false,
+    "xams": {
+      "date": "2026-10-29",
+      "lastCompletedDayAtResearchTime": true,
+      "priceEUR": 1504.8,
+      "venue": "XAMS",
+      "priceOfficialLateTradingAtLastCorroborated": true,
+      "officialEndOfDayUnadjustedBytesSealed": false,
+      "g006Certified": false
+    },
+    "sourceAuthorityRequestPreparedNotSent": true,
+    "registryAdmitted": false
   }
 }
