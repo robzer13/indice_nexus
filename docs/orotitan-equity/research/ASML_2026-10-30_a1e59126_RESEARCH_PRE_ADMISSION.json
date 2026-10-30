@@ -1078,5 +1078,50 @@
     },
     "runRegistryStatusMustRemain": "ACTIVE/RESEARCH",
     "registryWritesPerformed": false
+  },
+  "businessOutsideViewWorkingV01": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_MOAT_RUNWAY_OUTSIDE_VIEW_RESEARCH_WORKING_V0_1.md",
+    "facts": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_BUSINESS_OUTSIDE_VIEW_EVIDENCE_CANDIDATES_V0_1.json",
+    "classification": "RESEARCH_WORKING_NON_ADMITTED",
+    "sources": 10,
+    "claims": 23,
+    "hypotheses": 5,
+    "risks": 6,
+    "issuerServiceMixPct": {
+      "fy2024": 22.98,
+      "fy2025": 25.08,
+      "q32026": 28.2,
+      "nineMonths2026": 28.69
+    },
+    "separateCustomerPrimaryIssuerEvidence": [
+      "TSMC_Q3_2026",
+      "SAMSUNG_Q3_2026"
+    ],
+    "concentrationFacts": {
+      "asmlChinaRevenueShareFY2025Pct": 29.1,
+      "asmlChinaRevenueShareFY2024Pct": 36.1,
+      "soleOpticsSupplier": "Carl Zeiss SMT",
+      "issuerIsOnlyEuvSystemManufacturer": true
+    },
+    "newRiskPriority": [
+      "ASML-CUSTOMER-CAPEX-CONCENTRATION",
+      "ASML-SINGLE-SOURCE-OPTICS",
+      "ASML-EXPORT-RESTRICTIONS",
+      "ASML-HIGH-NA-ADOPTION",
+      "ASML-SERVICE-MIX-NONCONTRACTUAL",
+      "ASML-CASH-FLOW-CONVERSION"
+    ],
+    "requiresAdditionalValidation": [
+      "TSMC capex is not directly ASML bookings",
+      "Samsung capex is not directly ASML bookings",
+      "High-NA pipeline does not certify firm orders",
+      "EU version FCF and US GAAP must not be mixed",
+      "2025 annual full source not sealed in this new RUN"
+    ],
+    "status": "BUSINESS_OUTSIDE_VIEW_PRELIMINARY_RESEARCH_PROGRESS",
+    "moatVerdict": null,
+    "runwayVerdict": null,
+    "readyForDeepDive": false,
+    "registryWritesPerformed": false
   }
 }
