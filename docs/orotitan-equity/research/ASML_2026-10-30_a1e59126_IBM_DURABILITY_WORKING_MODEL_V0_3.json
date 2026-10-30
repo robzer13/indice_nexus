@@ -1,0 +1,240 @@
+{
+  "schema": "ASML_IBM_CONTRACTED_RECURRENCE_AND_CASH_QUALITY_WORKING_V0_3",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "dataCutoff": "2026-10-30",
+  "authority": {
+    "researchWorkingOnly": true,
+    "registryArtifactAdmitted": false,
+    "readyForDeepDive": false,
+    "durableIbmRevenueExactAmount": null,
+    "durableIbmRevenueExactPercent": null,
+    "durableIbmFcfExactEURm": null,
+    "upgradeRevenueAmount2026Q3EURm": null,
+    "sourceProvenanceAnnualSecHtmlSealed": false,
+    "gaap": "US_GAAP",
+    "fcfIssuerNonGaapDefinition": "CFO_LESS_PPE_PURCHASES_AND_INTANGIBLE_PURCHASES"
+  },
+  "sourceMap": [
+    {
+      "id": "ASML-USGAAP-FY2025-IS",
+      "publicationDate": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R3.htm",
+      "classification": "PRIMARY_US_GAAP_ISSUER_SEC_XBRL",
+      "supports": "FY2023_FY2025_IBM_REVENUE_COST_GROSS_PROFIT"
+    },
+    {
+      "id": "ASML-USGAAP-FY2025-ASC606",
+      "publicationDate": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R42.htm",
+      "classification": "PRIMARY_US_GAAP_ISSUER_SEC_XBRL",
+      "supports": "PRODUCT_CLASSIFICATIONS_TIMING"
+    },
+    {
+      "id": "ASML-USGAAP-FY2025-R13",
+      "publicationDate": "2026-02-25",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R13.htm",
+      "classification": "PRIMARY_US_GAAP_ISSUER_SEC_XBRL",
+      "supports": "CONTRACT_LIABILITIES_RPO"
+    },
+    {
+      "id": "ASML-FY2025-REPORT",
+      "publicationDate": "2026-02-25",
+      "url": "https://investor.asml.com/annual-reports/2025/financials",
+      "classification": "PRIMARY_ISSUER",
+      "supports": "IBM_DRIVERS_FCF"
+    },
+    {
+      "id": "ASML-FY2024-REPORT",
+      "publicationDate": "2025-02",
+      "url": "https://www.sec.gov/ixviewer/ix.html?doc=%2FArchives%2Fedgar%2Fdata%2F937966%2F000093796625000009%2Fasml-20241231.htm",
+      "classification": "PRIMARY_ISSUER",
+      "supports": "HISTORICAL_2023_2024_FCF"
+    },
+    {
+      "id": "ASML-Q3-2026-SHA",
+      "publicationDate": "2026-10-14",
+      "url": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+      "classification": "USER_PROVIDED_EURONEXT_LABEL_PDF_SHA_MATCHES_PRIVATE_SHADOW_RECEIPT",
+      "sourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "supports": "Q3_2026_IBM_CFO"
+    },
+    {
+      "id": "ASML-Q3-2026-RELEASE",
+      "publicationDate": "2026-10-14",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "classification": "PRIMARY_ISSUER",
+      "supports": "UPGRADES_DRIVING_IBM_ABOVE_GUIDANCE"
+    }
+  ],
+  "ibmHistorical": [
+    {
+      "fiscalYear": 2023,
+      "ibmRevenueEURm": 5619.9,
+      "ibmCostOfSalesEURm": 3271.4,
+      "totalRevenueEURm": 27558.5,
+      "issuerCfoEURm": 5443.4,
+      "issuerCapexPpeAndIntangiblesEURm": 2196.2,
+      "ibmGrossProfitEURm": 2348.5,
+      "ibmGrossMarginPct": 41.79,
+      "groupSimpleFCFEURm": 3247.2,
+      "groupSimpleFCFMarginPct": 11.78
+    },
+    {
+      "fiscalYear": 2024,
+      "ibmRevenueEURm": 6494.2,
+      "ibmCostOfSalesEURm": 3364,
+      "totalRevenueEURm": 28262.9,
+      "issuerCfoEURm": 11166.2,
+      "issuerCapexPpeAndIntangiblesEURm": 2083.1,
+      "ibmGrossProfitEURm": 3130.2,
+      "ibmGrossMarginPct": 48.2,
+      "groupSimpleFCFEURm": 9083.1,
+      "groupSimpleFCFMarginPct": 32.14
+    },
+    {
+      "fiscalYear": 2025,
+      "ibmRevenueEURm": 8193,
+      "ibmCostOfSalesEURm": 4025.3,
+      "totalRevenueEURm": 32667.3,
+      "issuerCfoEURm": 12658.5,
+      "issuerCapexPpeAndIntangiblesEURm": 1631.2,
+      "ibmGrossProfitEURm": 4167.7,
+      "ibmGrossMarginPct": 50.87,
+      "groupSimpleFCFEURm": 11027.3,
+      "groupSimpleFCFMarginPct": 33.76
+    }
+  ],
+  "actualLtmIbmThroughQ32026EURm": 10672.2,
+  "ibmFY2026ManagementGuidanceDerived": {
+    "q1ToQ3ActualEURm": 8538.1,
+    "q4ManagementGuideApproxEURm": 3700,
+    "totalProjectedFY2026ApproxEURm": 12238.1,
+    "realized": false
+  },
+  "revenueCharacterClasses": [
+    {
+      "code": "SERVICE_CONTRACTS_AND_EXTENDED_WARRANTIES",
+      "treatment": "OVER_CONTRACT_TERM",
+      "durability": "TERM_CONTRACTED_NONPERPETUAL",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    },
+    {
+      "code": "SOFTWARE_TIME_LICENSES",
+      "treatment": "OVER_LICENSE_TERM",
+      "durability": "TERM_CONTRACTED_NONPERPETUAL",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    },
+    {
+      "code": "ONPULSE_USAGE_MAINTENANCE",
+      "treatment": "AS_PULSES_BILLED",
+      "durability": "USE_LINKED_CYCLICAL",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    },
+    {
+      "code": "BILLABLE_SPARES_AND_LABOR",
+      "treatment": "POINT_IN_TIME",
+      "durability": "REPEAT_PURCHASE_POTENTIAL",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    },
+    {
+      "code": "FIELD_UPGRADES_AND_OPTIONS",
+      "treatment": "DELIVERY_OR_OVER_INSTALLATION",
+      "durability": "EPISODIC_PROJECT",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    },
+    {
+      "code": "FIELD_RELOCATION_PROJECTS",
+      "treatment": "PROJECT_PROGRESS",
+      "durability": "PROJECT_LUMPY",
+      "quantityDisclosedEURm": null,
+      "quantityUnknown": true
+    }
+  ],
+  "historicalWholeIbmRunRateStress": [
+    {
+      "anchorFiscalYear": 2023,
+      "historicalIbmTotalRevenueEURm": 5619.9,
+      "percentOfLtm2026Ibm": 52.66,
+      "percentOfManagement2026IbmGuidance": 45.92,
+      "isDurableRecurringRevenueBound": false,
+      "isActualContractedAnnualRevenue": false,
+      "class": "HISTORICAL_FULL_ACTIVITY_RUN_RATE_STRESS_ONLY"
+    },
+    {
+      "anchorFiscalYear": 2024,
+      "historicalIbmTotalRevenueEURm": 6494.2,
+      "percentOfLtm2026Ibm": 60.85,
+      "percentOfManagement2026IbmGuidance": 53.07,
+      "isDurableRecurringRevenueBound": false,
+      "isActualContractedAnnualRevenue": false,
+      "class": "HISTORICAL_FULL_ACTIVITY_RUN_RATE_STRESS_ONLY"
+    },
+    {
+      "anchorFiscalYear": 2025,
+      "historicalIbmTotalRevenueEURm": 8193,
+      "percentOfLtm2026Ibm": 76.77,
+      "percentOfManagement2026IbmGuidance": 66.95,
+      "isDurableRecurringRevenueBound": false,
+      "isActualContractedAnnualRevenue": false,
+      "class": "HISTORICAL_FULL_ACTIVITY_RUN_RATE_STRESS_ONLY"
+    }
+  ],
+  "asmlFy2025ContractAccounting": {
+    "totalContractLiabilitiesDec2024EURm": 18196.2,
+    "totalContractLiabilitiesDec2025EURm": 19372.6,
+    "revenueRecognizedFromOpeningLiabilitiesDuring2025EURm": 11516.6,
+    "newPerformanceObligationsReceivedOrUnconditionalConsiderationEURm": 14013.3,
+    "fy2025RemainingPerformanceObligationsEURm": 46500,
+    "mostlyNewSystemOrders": true,
+    "recognizedRevenueFromOpeningLiabilitiesDoesNotEqualIbmRecurringRevenue": true,
+    "liabilitiesNotCashReceiptsOnly": true
+  },
+  "q32026": {
+    "netServiceAndFieldOptionsEURm": 3288.8,
+    "noncurrentContractLiabilitiesEURm": 9300.6,
+    "onlyNoncurrentDisclosedInSummary": true,
+    "serviceGrossProfitSplitAvailable": false,
+    "managementIbmAboveGuideApproxEURm": 400,
+    "primarilyProductivityUpgrades": true,
+    "upgradeSalesEqualGuideBeat": false,
+    "contractMaintenanceRevenueDisclosed": false
+  },
+  "groupCash": {
+    "actualLtmThroughQ32026": {
+      "cfoEURm": 22725.3,
+      "capexPpeAndIntangiblesEURm": 1725.9,
+      "simpleFcfEURm": 20999.4,
+      "netCfoAssetsAndLiabilitiesChangeEURm": 7876.9,
+      "simpleFcfExSingleNetWorkingCapitalLineSensitivityEURm": 13122.5,
+      "fy2026Q3CfoEURm": 11797.6,
+      "fy2026FirstNineMonthsCfoEURm": 11315
+    },
+    "historical2023to2025SimpleFcfMedianEURm": 9083.1,
+    "historical2023to2025SimpleFcfMeanEURm": 7785.9,
+    "historical2024to2025SimpleFcfMeanEURm": 10055.2,
+    "noneOfTheseIsDurableOwnerEarnings": true,
+    "serviceCashFlowNotSeparatelyAttributed": true
+  },
+  "researchDecision": {
+    "canModelScenarioRevenue": true,
+    "canCompareIbmMargins": true,
+    "canStateExactContractualRevenueFraction": false,
+    "canAllocateGroupFreeCashFlowToIbm": false,
+    "canConcludeIbmRecessionProof": false,
+    "requiresReturnOfMaintenanceCostAndCapex": false
+  },
+  "integrityChecks": {
+    "serviceMarginsValid": true,
+    "fy2025IbmGrossProfitIs4167_7": true,
+    "ltmIbmIs10672_2": true,
+    "fy2026ProjectedIbmIs12238_1": true,
+    "fy2025HistoricalFcfIs11027_3": true,
+    "sourceDocumentsNotLedgerAdmitted": true,
+    "deepDiveNotAuthorized": true
+  }
+}
