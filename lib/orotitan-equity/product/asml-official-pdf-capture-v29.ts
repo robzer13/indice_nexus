@@ -27,8 +27,8 @@ export const ASML_V29_SOURCES = Object.freeze({
   ASML_2026_Q3_US_GAAP: Object.freeze({
     id:'ASML_2026_Q3_US_GAAP',
     title:'ASML Financial statements US GAAP Q3 2026',
-    url:'https://www.investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0',
-    originHost:'www.investor.asml.com',
+    url:'https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0',
+    originHost:'investor.asml.com',
     redirectPathPrefix:'/static-files/',
     publicationDate:'2026-10-14',
     accountingBasis:'US_GAAP_UNAUDITED',
