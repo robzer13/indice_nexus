@@ -610,7 +610,7 @@
       "id": "GAP-004",
       "priority": "CRITICAL",
       "block": "FCF_OWNER_EARNINGS",
-      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings. PDF supports quarterly 2026 CFO bridge Q1 -2185.6, Q2 +1703.0, Q3 +11797.6, and 9M +11315.0 EURm; Q3 contract-liability balance delta +5730.3 and changes assets/liabilities +7009.0, no normalized owner earnings."
+      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings. PDF supports quarterly 2026 CFO bridge Q1 -2185.6, Q2 +1703.0, Q3 +11797.6, and 9M +11315.0 EURm; Q3 NONCURRENT contract-liability balance delta +5730.3 (not total advances or cash collected) and changes assets/liabilities +7009.0, no normalized owner earnings."
     },
     {
       "id": "GAP-005",
@@ -831,10 +831,12 @@
           "simpleFcf": 11350.4,
           "changeInAssetsAndLiabilities": 7009,
           "changePctCfo": 59.41,
-          "contractLiabilities": 9300.6,
-          "previousQuarterContractLiabilities": 3570.3,
-          "contractLiabilitiesBalanceChange": 5730.3,
-          "equityInvestmentGain": 509.7
+          "equityInvestmentGain": 509.7,
+          "noncurrentContractLiabilities": 9300.6,
+          "previousQuarterNoncurrentContractLiabilities": 3570.3,
+          "noncurrentContractLiabilitiesBalanceChange": 5730.3,
+          "totalContractLiabilitiesNotDerivedFromSummary": true,
+          "cashReceivedFromCustomerDepositsNotEqualToBalanceDelta": true
         },
         "nineMonths_2026": {
           "cfo": 11315,
@@ -899,5 +901,23 @@
       "formalEvidenceLedgerAuthority": "NONE",
       "linkedClaims": 19
     }
-  ]
+  ],
+  "cashQualityAndValuationV02": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_OWNER_EARNINGS_ROIC_VALUATION_SENSITIVITY_V0_2.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_ROIC_CASH_MULTIPLES_MODEL_V0_2.json",
+    "ltmReportedCfoEURMillion": 22725.3,
+    "ltmCfoAssetsLiabilitiesChangeEURMillion": 7876.9,
+    "ltmSimpleFcfEURMillion": 20999.4,
+    "ltmSimpleFcfExReportedWcChangeSensitivityEURMillion": 13122.5,
+    "ltmEbitEURMillion": 15217.9,
+    "ltmNopatMechanicalEURMillion": 12630.2,
+    "sourcePriceSupport": "OFFICIAL_EURONEXT_XAMS_2026_10_29_TRADING_AT_LAST_17_39_46_AT_1504_80_EUR",
+    "officialUnadjustedEodSealed": false,
+    "valuationIndicativeOnly": true,
+    "certifiedRoic": null,
+    "certifiedOwnerEarnings": null,
+    "accountingCorrection": "US GAAP contract liabilities 9300.6m Sep27 and 3570.3m Jun28 are NONCURRENT only; cannot equate to total customer advances or operating cash collections",
+    "historicalPublicationCutoff": "2026-10-30",
+    "runRegistryAdmitted": false
+  }
 }
