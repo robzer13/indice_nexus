@@ -181,6 +181,8 @@ corroboration, not proof of independent economic information.
 `GAP-001 = EVIDENCE_OF_SOURCE_IDENTITY_PROGRESS / OPEN`.
 `READY_FOR_DEEP_DIVE = NOT_EVALUATED`; NO Registry mutation.
 
+**Reconciliation companion (2026-10-30):** [PDF source qualification / issued-share vs treasury / working capital / market close / control gates](./ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md).
+
 ## IX. Next authorized Research actions
 
 1. Review and approve the now-confirmed SHA match to the separately uploaded Euronext-labeled PDF; establish admissible source provenance, file custody, issuer/filing context and authority requirements independently. Only then consider Registry admission (not automatic).
