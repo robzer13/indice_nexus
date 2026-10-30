@@ -13,7 +13,7 @@ function fixture(opts:{public?:boolean;readbackMismatch?:boolean}={}) {
  let writes=0,downloads=0;
  const client={storage:{
   async getBucket(id:string){return {data:{id,public:opts.public??false},error:null};},
-  from(_id:string){return {
+  from(id:string){assert.equal(id,'orotitan-source-files-v1');return {
    async upload(path:string,data:Buffer,options:Record<string,unknown>){
     assert.equal(options.upsert,false);writes++;
     if(objects.has(path))return {error:{statusCode:'409',code:'KeyAlreadyExists'}};
