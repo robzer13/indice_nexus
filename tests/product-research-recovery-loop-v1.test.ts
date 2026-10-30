@@ -55,10 +55,18 @@ test('fresh repeat uses persisted attempts and avoids duplicate investigations',
   assert.equal(second.status,'NO_NEW_AUTOMATED_STEPS');
   assert.equal(f.calls.length,4);
 });
-test('bounded cycles resume at next unattempted blocker',async()=>{
+test('bounded cycles distinguish budget reached from exhausted local strategies',async()=>{
   const f=fixture();
-  assert.equal((await runRecoveryCycle(input,f.port,2)).attempted.length,2);
-  assert.equal((await runRecoveryCycle(input,f.port,2)).attempted.length,2);
+  const first=await runRecoveryCycle(input,f.port,2);
+  assert.equal(first.attempted.length,2);
+  assert.equal(first.status,'PROGRESSED');
+  const second=await runRecoveryCycle(input,f.port,1);
+  assert.equal(second.attempted.length,1);
+  assert.equal(second.status,'BUDGET_REACHED');
+  assert.match(second.nextAction,/unattempted tasks remain/);
+  const third=await runRecoveryCycle(input,f.port,2);
+  assert.equal(third.attempted.length,1);
+  assert.equal(third.status,'NO_NEW_AUTOMATED_STEPS');
   assert.equal((await runRecoveryCycle(input,f.port,2)).attempted.length,0);
   assert.equal(f.calls.length,4);
 });
