@@ -6,7 +6,7 @@ import {isAdminAuthenticated} from '@/lib/auth/admin-session';
 import {researchInboxPilotMode} from '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {isHostedShadowResearchEnabled} from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {getRecoverySnapshot,listRecoveryJournal} from '@/lib/orotitan-equity/product/research-recovery-shadow-server';
-import {ASML_Q2_2026_PUBLIC_RELEASE} from '@/lib/orotitan-equity/product/research-recovery-official-source-v1';
+import {ASML_Q2_2026_PUBLIC_RELEASE,ASML_Q2_2026_OFFICIAL_PRESENTATION} from '@/lib/orotitan-equity/product/research-recovery-official-source-v1';
 import {runResearchRecoveryAction} from './actions';
 export const dynamic='force-dynamic';
 export const metadata:Metadata={title:'Research Recovery Loop V1 — SHADOW'};
@@ -106,8 +106,10 @@ export default async function RecoveryPage({searchParams}:{searchParams:Params})
                     <span>Candidats non admis : </span>
                     {a.evidenceRefs.map((ref,i)=><span key={ref}>
                       {i>0?' · ':''}
-                      {ref===ASML_Q2_2026_PUBLIC_RELEASE.url
-                        ? <a className="text-cyan-300 underline" href={ref} target="_blank" rel="noopener noreferrer">Communiqué officiel ASML Q2 2026</a>
+                      {ref===ASML_Q2_2026_PUBLIC_RELEASE.url || ref===ASML_Q2_2026_OFFICIAL_PRESENTATION.url
+                        ? <a className="text-cyan-300 underline" href={ref} target="_blank" rel="noopener noreferrer">
+                          {ref===ASML_Q2_2026_PUBLIC_RELEASE.url?'Communiqué officiel ASML Q2 2026':'Présentation investisseurs ASML Q2 2026 (PDF)'}
+                        </a>
                         : ref}
                     </span>)}
                   </div>}
