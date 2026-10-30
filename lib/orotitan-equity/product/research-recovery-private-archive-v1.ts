@@ -51,8 +51,19 @@ export async function archiveAsmlCandidate(
   const {error:uploadError}=await handler.upload(path,bytes,{
     contentType:'text/html',upsert:false,cacheControl:'0',
   });
-  if (uploadError && String(uploadError.statusCode) !== '409') {
-    throw new Error('RECOVERY_ARCHIVE_CREATE_FAILED');
+  if (uploadError) {
+    // Supabase Storage has returned both HTTP 409 and legacy HTTP 400
+    // for the precise 'already exists' case. Never treat arbitrary 400/409
+    // failures (authorization, bad MIME, malformed upload) as valid reuse.
+    const err=uploadError as unknown as Record<string,unknown>;
+    const code=String(err.code??err.error??'');
+    const message=String(err.message??'');
+    const isDuplicate=['KeyAlreadyExists','ResourceAlreadyExists','already_exists']
+      .includes(code) ||
+      /^(?:The resource already exists|Asset Already Exists|Duplicate)$/i.test(message.trim());
+    if (!isDuplicate || !['400','409'].includes(String(uploadError.statusCode))) {
+      throw new Error('RECOVERY_ARCHIVE_CREATE_FAILED');
+    }
   }
   // Readback check is mandatory on both new writes and 409 collisions.
   // A collision is not proof of byte equality, only matching bytes are.
