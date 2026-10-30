@@ -1,6 +1,7 @@
 import 'server-only';
 import {retrieveAsmlQ2OfficialRelease} from './research-recovery-official-source-v1';
 import {archiveAsmlCandidate} from './research-recovery-private-archive-v1';
+import {reviewEconomicShareLedger,reviewHistoricalXamsClose} from './research-recovery-financial-evidence-v1';
 import { getHostedShadowRecoveryClient } from './research-inbox-pilot-server';
 import {
   runRecoveryCycle, type RecoveryInput, type RecoveryAttempt,
@@ -120,9 +121,13 @@ export async function executeShadowRecoveryCycle(key: string) {
       }
       return {outcome:'REQUIRES_AUTHORITY' as const,
         detail:strategy==='RECONCILE_SHARE_COUNT'
-          ? 'Brancher la réconciliation datée des mouvements de capital ; aucune valeur économique inventée.'
+          ? reviewEconomicShareLedger(undefined).state==='BLOCKED'
+            ? 'G001 : impossible sans nombre de titres émis et autodétenus sourcés, mouvements réglés jusqu’au 21/09/2026 et preuve de couverture exhaustive. Aucun calcul certifié.'
+            : 'G001: review required.'
           : strategy==='RECONCILE_HISTORICAL_PRICE'
-          ? 'Brancher la source historique XAMS et son contrôle de date/devise/corporate actions.'
+          ? reviewHistoricalXamsClose(undefined).state==='BLOCKED'
+            ? 'G006 : cours de clôture non ajusté du 21/09/2026, ISIN NL0010273215, place XAMS, EUR/action et provenance Euronext à vérifier. Aucune valeur improvisée.'
+            : 'G006: review required.'
           : 'Dépend des faits financiers et du capital investi vérifiés ; aucun ROIC/Owner Earnings improvisé.',
         evidenceRefs:[]};
     },
