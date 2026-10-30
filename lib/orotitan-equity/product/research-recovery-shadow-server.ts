@@ -1,4 +1,5 @@
 import 'server-only';
+import {probeAsmlQ2OfficialRelease} from './research-recovery-official-source-v1';
 import { getHostedShadowRecoveryClient } from './research-inbox-pilot-server';
 import {
   runRecoveryCycle, type RecoveryInput, type RecoveryAttempt,
@@ -92,9 +93,22 @@ export async function executeShadowRecoveryCycle(key: string) {
         const sources=data.filter(r=>/SOURCE|PRIMARY|ORIGINAL/i.test(r.artifact_type??'') &&
           typeof r.content_sha256==='string' && /^[a-f0-9]{64}$/i.test(r.content_sha256) &&
           typeof r.size_bytes==='number' && r.size_bytes>0);
-        if (!sources.length) return {outcome:'NO_PROGRESS' as const,
-          detail:'Aucune pièce primaire existante admissible comme candidate dans le SHADOW. Recherche documentaire/ingestion non encore branchée.',
-          evidenceRefs:[]};
+        if (!sources.length) {
+          // An ASML-only, public, dated candidate is allowed for the frozen
+          // production OBSERVATION mirror. Never infer an issuer from a SHADOW
+          // run UUID, and never use post-valuation Q3 material.
+          if (snapshot.origin==='ASML_READ_ONLY_MIRROR') {
+            const source=await probeAsmlQ2OfficialRelease();
+            return {
+              outcome:'CANDIDATE_RECORDED' as const,
+              detail:`Source publique primaire ${source.documentId}, publiée le ${source.publicationDate}, observée le ${source.retrievedAt}; ${source.byteSize} octets HTML, SHA-256 ${source.sha256}. Hash des octets actuels seulement : aucun archivage daté, aucune admission Registry, aucun G001/G006 ni ROIC résolu.`,
+              evidenceRefs:[source.url,'sha256:'+source.sha256],
+            };
+          }
+          return {outcome:'NO_PROGRESS' as const,
+            detail:'Aucune pièce primaire scellée trouvée sur ce run SHADOW. Le connecteur officiel est volontairement limité à observation ASML datée; aucune recherche arbitraire.',
+            evidenceRefs:[]};
+        }
         return {outcome:'CANDIDATE_RECORDED' as const,
           detail:`${sources.length} candidats binaires identifiés (hash/tailles présents). Provenance et contenu NON admis ; validation distincte obligatoire.`,
           evidenceRefs:sources.slice(0,15).map(r=>String(r.artifact_id))};
