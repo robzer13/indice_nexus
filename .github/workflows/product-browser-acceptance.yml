@@ -7,12 +7,13 @@ on:
       - 'tests/e2e/**'
       - 'app/admin/research-requests/**'
       - 'lib/orotitan-equity/product/**'
+      - 'tests/e2e/recovery-official-source-live.ts'
       - 'docs/orotitan-equity/proposals/PRODUCT_SHARED_RESEARCH_INBOX_PG17_REVIEW_ONLY.sql'
 
 jobs:
   shared-inbox-real-browser:
     # This is a disposable CI-only acceptance test for the draft product PR.
-    if: startsWith(github.head_ref, 'review/orotitan-product-mvp-two-browser-') || startsWith(github.head_ref, 'review/orotitan-product-hosted-shadow-preview-') || startsWith(github.head_ref, 'review/orotitan-product-pilotage-preflight-mobile-') || startsWith(github.head_ref, 'review/orotitan-product-pre-run-card-shadow-')
+    if: startsWith(github.head_ref, 'review/orotitan-product-mvp-two-browser-') || startsWith(github.head_ref, 'review/orotitan-product-hosted-shadow-preview-') || startsWith(github.head_ref, 'review/orotitan-product-pilotage-preflight-mobile-') || startsWith(github.head_ref, 'review/orotitan-product-pre-run-card-shadow-') || startsWith(github.head_ref, 'feat/orotitan-product-recovery-loop-shadow-')
     runs-on: ubuntu-latest
     timeout-minutes: 25
     services:
@@ -44,3 +45,23 @@ jobs:
           PGPORT: 5432
           PGUSER: postgres
           PGPASSWORD: postgres
+
+  recovery-official-issuer-live:
+    # A public-network probe. Never handles Vercel or Supabase credentials.
+    if: startsWith(github.head_ref, 'feat/orotitan-product-recovery-loop-shadow-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Verify the real issuer release and byte hash (read-only)
+        run: npx tsx tests/e2e/recovery-official-source-live.ts
+        env:
+          CI: 'true'
+          NODE_ENV: test
