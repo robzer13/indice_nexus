@@ -689,7 +689,7 @@
   },
   "inputSufficiency": {
     "readyForDeepDive": false,
-    "reason": "Working-source acquisition progressed for order monetization, 2026 Q4 IBM guidance and cash normalization stress; exact 2026 quarterly bookings/backlog are not disclosed; no source authority admission, G001/G006 certified inputs, normalized Owner Earnings, required Research ledgers/manifests yet.",
+    "reason": "New issuer SEC FY2025 US GAAP XBRL provides 2023-25 IBM revenue and service costs, ASC606 contract types, contract-liability bridge and three-year cash-flow history. Contract maintenance versus upgrade mix and IBM cash profitability are undisclosed, so specific sustainable IBM revenue/cash estimates remain uncertified. Independent Research analysis continues.",
     "missingCritical": [
       "GAP-001",
       "GAP-002",
@@ -1200,5 +1200,71 @@
     "readyForDeepDive": false,
     "stageContractChanges": false,
     "status": "RESEARCH_WORKING_NON_FINAL_NON_ADMITTED"
+  },
+  "ibmDurabilityV03": {
+    "review": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_REVENUE_DURABILITY_AND_CASH_QUALITY_RESEARCH_V0_3.md",
+    "workingModel": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_IBM_DURABILITY_WORKING_MODEL_V0_3.json",
+    "classification": "RESEARCH_WORKING_NOT_ADMITTED",
+    "usGaapAnnualIbmGrossProfitEURm": [
+      {
+        "year": 2023,
+        "revenue": 5619.9,
+        "cost": 3271.4,
+        "grossProfit": 2348.5,
+        "grossMarginPct": 41.79
+      },
+      {
+        "year": 2024,
+        "revenue": 6494.2,
+        "cost": 3364,
+        "grossProfit": 3130.2,
+        "grossMarginPct": 48.2
+      },
+      {
+        "year": 2025,
+        "revenue": 8193,
+        "cost": 4025.3,
+        "grossProfit": 4167.7,
+        "grossMarginPct": 50.87
+      }
+    ],
+    "revenueRecognitionTypes": [
+      "CONTRACT_TERM_FIXED_PRICE_SERVICE",
+      "EXTENDED_WARRANTIES",
+      "USAGE_LINKED_ONPULSE",
+      "SPARES_AND_LABOR",
+      "EPISODIC_FIELD_UPGRADES",
+      "RELOCATION_PROJECTS"
+    ],
+    "actualIbmLtmThroughQ32026EURm": 10672.2,
+    "fy2026IbmForecastApproxEURm": 12238.1,
+    "contractualRecurringSplit": {
+      "exactEURm": null,
+      "exactPct": null,
+      "publishedInReviewed2025USGAAPNotes": false,
+      "historicalRunRatesAreNotGuaranteedFloors": true
+    },
+    "liabilityFY2025": {
+      "totalContractLiabilitiesEURm": 19372.6,
+      "revenueRecognizedFromOpeningContractLiabilitiesEURm": 11516.6,
+      "notIbmOnly": true
+    },
+    "groupFcfEURm": {
+      "fy2023": 3247.2,
+      "fy2024": 9083.1,
+      "fy2025": 11027.3,
+      "ltmQ32026": 20999.4,
+      "ltmExNetWCLineSensitivity": 13122.5,
+      "doesNotDetermineIBMOwnerEarnings": true
+    },
+    "certified2026IBMGrossProfit": null,
+    "certifiedDurableIBMOwnerEarnings": null,
+    "sourceAdmissionApproved": false,
+    "keyUnknowns": [
+      "IBM_CONTRACTED_SERVICE_VS_UPGRADE_REVENUE",
+      "IBM_SEPARATE_CASH_CONVERSION",
+      "MAINTENANCE_CAPEX",
+      "2026_FULL_CUSTOMER_ADVANCES_BRIDGE"
+    ]
   }
 }
