@@ -80,6 +80,16 @@ Calculated, **FY2026 guided revenue growth versus FY2025 is 34.7% to 37.8%**, co
 - `H-B4`: High-NA improves customer cost per good wafer relative to multipatterning; test capital cost, cycle times, yield and source/optics reliability, rather than relying on projected productivity.
 - `H-B5`: Capacity growth (+30% or more target) can be executed across Zeiss optics, advanced components, ASML cleanrooms, qualified staff and logistics without quality or working-capital deterioration.
 
+### 4.1 Independent equipment-industry check (SEMI) and changing 2026 guidance
+
+**Independent industry body — SEMI**, 2026-09-03: [Worldwide equipment billings for 2026 Q2](https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-billings-increased-23-percent-year-over-year-in-q2-2026-semi-reports) increased **23% y/y** to **US$40.53bn**, up **11% quarter on quarter**. This is an equipment-wide industry observation, not solely ASML, not exclusively wafer lithography, and is a distinct data origin from TSMC/Samsung/ASML.
+
+**SEMI 2026-07-14 equipment market projection**: [industry OEM equipment forecast](https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-sales-forecast-to-reach-a-record-229-billion-dollars-in-2028-semi-reports) anticipates **US$165.9bn in total global equipment OEM sales for 2026 (+23.2% y/y)**, with **wafer fab equipment US$143.9bn (+23.1% y/y)**. This is a forecast based on SEMI models, **not yet realized equipment sales**, and its categories do not equal ASML's addressable EUV/DUV revenue.
+
+**Issuer 2026 management forecast revisions:** [Jan 28, 2026 Q4 2025 release](https://www.asml.com/en/news/press-releases/2026/q4-2025-financial-results) estimated 2026 ASML net sales **EUR 34–39bn** at 51–53% gross margin; [July 15 Q2 2026 results](https://investor.asml.com/news-releases/news-release-details/q2-2026-financial-results) revised this to **EUR 43–45bn** and 54–56%; [Oct 14 Q3 results](https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026) updated to **EUR 44–45bn** at around 56%. This is a large **positive guidance revision**, not three realized outcomes or a certified 2027–2030 earnings trajectory.
+
+**Counter-thesis check:** strong upstream industry billings and producer capex can reflect a cyclical peak as well as a sustained higher equipment spending base. Require historical comparisons, backlog **quality** and end-demand economics before translating such signals into permanent ASML fair value.
+
 ## 5. Research risk/forensic matrix (working priorities)
 
 | Risk | Known evidence | Leading indicator / test | Financial consequence |
