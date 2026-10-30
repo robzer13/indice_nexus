@@ -97,6 +97,30 @@
       "issuer": "Samsung and ASML",
       "class": "JOINT_CO_MARKETING_COMPANY",
       "bytesHashVerified": false
+    },
+    {
+      "id": "SEMI-Q2-BILLINGS",
+      "date": "2026-09-03",
+      "url": "https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-billings-increased-23-percent-year-over-year-in-q2-2026-semi-reports",
+      "issuer": "SEMI",
+      "class": "INDEPENDENT_EQUIPMENT_INDUSTRY_DATA_AGGREGATION",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "SEMI-JUL-OUTLOOK",
+      "date": "2026-07-14",
+      "url": "https://www.semi.org/en/semi-press-release/global-semiconductor-equipment-sales-forecast-to-reach-a-record-229-billion-dollars-in-2028-semi-reports",
+      "issuer": "SEMI",
+      "class": "INDEPENDENT_EQUIPMENT_INDUSTRY_FORECAST",
+      "bytesHashVerified": false
+    },
+    {
+      "id": "ASML-Q2-2026",
+      "date": "2026-07-15",
+      "url": "https://investor.asml.com/news-releases/news-release-details/q2-2026-financial-results",
+      "issuer": "ASML",
+      "class": "PRIMARY_ISSUER_Q2_FORWARD_LOOKING",
+      "bytesHashVerified": false
     }
   ],
   "reported": [
@@ -288,6 +312,77 @@
       "unit": "KRW_TRILLIONS",
       "period": "Q3_2026",
       "source": "SAMSUNG-Q3"
+    },
+    {
+      "id": "B024",
+      "claim": "SEMI worldwide semiconductor equipment billings 2026 Q2",
+      "value": 40.53,
+      "unit": "USD_BILLIONS",
+      "period": "Q2_2026",
+      "source": "SEMI-Q2-BILLINGS",
+      "assumption": false
+    },
+    {
+      "id": "B025",
+      "claim": "SEMI worldwide semiconductor equipment billings Q2 2026 YoY increase",
+      "value": 23,
+      "unit": "PERCENT_ROUNDED",
+      "period": "Q2_2026",
+      "source": "SEMI-Q2-BILLINGS"
+    },
+    {
+      "id": "B026",
+      "claim": "SEMI forecast of total OEM semiconductor equipment 2026",
+      "value": 165.9,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_FORECAST_AS_OF_JUL14",
+      "source": "SEMI-JUL-OUTLOOK",
+      "forwardLooking": true
+    },
+    {
+      "id": "B027",
+      "claim": "SEMI WFE equipment forecast 2026",
+      "value": 143.9,
+      "unit": "USD_BILLIONS",
+      "period": "FY2026_FORECAST_AS_OF_JUL14",
+      "source": "SEMI-JUL-OUTLOOK",
+      "forwardLooking": true
+    },
+    {
+      "id": "B028",
+      "claim": "ASML FY2026 January guidance lower",
+      "value": 34000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JAN28",
+      "source": "ASML-FY25",
+      "forwardLooking": true
+    },
+    {
+      "id": "B029",
+      "claim": "ASML FY2026 January guidance upper",
+      "value": 39000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JAN28",
+      "source": "ASML-FY25",
+      "forwardLooking": true
+    },
+    {
+      "id": "B030",
+      "claim": "ASML FY2026 July guidance lower",
+      "value": 43000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JUL15",
+      "source": "ASML-Q2-2026",
+      "forwardLooking": true
+    },
+    {
+      "id": "B031",
+      "claim": "ASML FY2026 July guidance upper",
+      "value": 45000,
+      "unit": "EUR_MILLIONS",
+      "period": "FY2026_GUIDE_AS_OF_JUL15",
+      "source": "ASML-Q2-2026",
+      "forwardLooking": true
     }
   ],
   "derivedWorking": [
@@ -409,5 +504,35 @@
     "Management forecast is not realized forward revenue and 2024 2030 opportunity range is stale relative to October 2026 FY guide.",
     "Future orders interest is not booked sales.",
     "No moat/runway/business quality verdict, DCF, share price target, investment score, or final investment thesis."
+  ],
+  "independentIndustryEvidence": {
+    "source": "SEMI",
+    "reportedQ22026EquipmentBillingsUSDBillion": 40.53,
+    "yoyPct": 23,
+    "forecastFY26EquipmentOemSalesUSDBillion": 165.9,
+    "forecastFY26WfeSalesUSDBillion": 143.9,
+    "supports": "GENERAL_EQUIPMENT_UPCYCLE",
+    "doesNotProve": [
+      "ASML_ACTUAL_ORDER_VOLUME",
+      "ASML_LITHOGRAPHY_TAM_AS_REVENUE",
+      "PERMANENT_SEMICAP_CYCLE_DYNAMICS"
+    ]
+  },
+  "issuer2026RevenueGuidanceHistory": [
+    {
+      "announcementDate": "2026-01-28",
+      "lowerEURMillion": 34000,
+      "upperEURMillion": 39000
+    },
+    {
+      "announcementDate": "2026-07-15",
+      "lowerEURMillion": 43000,
+      "upperEURMillion": 45000
+    },
+    {
+      "announcementDate": "2026-10-14",
+      "lowerEURMillion": 44000,
+      "upperEURMillion": 45000
+    }
   ]
 }
