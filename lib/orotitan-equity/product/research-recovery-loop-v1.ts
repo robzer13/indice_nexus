@@ -29,7 +29,7 @@ export type RecoveryAttempt = Readonly<{
   evidenceRefs: readonly string[];
 }>;
 export type RecoveryReport = Readonly<{
-  status: 'PROGRESSED' | 'EXHAUSTED' | 'PAUSED' | 'NO_BLOCKERS' | 'ERROR';
+  status: 'PROGRESSED' | 'NO_NEW_AUTOMATED_STEPS' | 'PAUSED' | 'NO_BLOCKERS' | 'ERROR';
   attempted: readonly RecoveryAttempt[];
   remaining: readonly RecoveryBlocker[];
   publicationAuthorized: false;
@@ -133,7 +133,7 @@ export async function runRecoveryCycle(
   const progressed = attempted.some(a => a.outcome === 'CANDIDATE_RECORDED');
   const remaining = input.blockers; // Only the authoritative Registry may clear blockers.
   return {
-    status: progressed ? 'PROGRESSED' : 'EXHAUSTED',
+    status: progressed ? 'PROGRESSED' : 'NO_NEW_AUTOMATED_STEPS',
     attempted, remaining,
     publicationAuthorized:false,registryChanged:false,
     nextAction: progressed
