@@ -139,6 +139,37 @@ The administrator submitted a 12-page **Financial statements US GAAP PDF** throu
 
 `GAP-001 = PARTIALLY_PROGRESSSED_NOT_CLOSED`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED`; no source acceptance, stage finalization, data certification or Registry write.
 
+## VIII quater. Official publication linkage and independent cross-source status (2026-10-30)
+
+**Verified documentary linkage — not binary equivalence:**
+
+1. The [ASML official Q3 2026 quarterly downloads page](https://www.investor.asml.com/quarterly-results)
+   lists **Financial statements US GAAP PDF** in the October 14, 2026 Q3 package.
+   Its download link resolves to the exact static-file URL already pinned
+   in the SHADOW upload interface:
+   `https://www.investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0`.
+   Automated opening of that download returns **HTTP 403**.
+2. Euronext's [regulated issuer PDF attachment dated 2026-10-14](https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf)
+   is indexed under *Financial statements US GAAP Q3 2026* and contains the
+   Q3 ended 2026-09-27 gross margin **57.5%** and operating-income/net-sales
+   **44.4%**, aligned with the [ASML official quarterly press release](https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026).
+   Euronext is a second distribution venue of the *issuer's same source*, not
+   an economically independent corroboration.
+3. A direct unauthenticated download of the Euronext PDF from the research
+   execution environment **failed**. No Euronext PDF SHA-256 or authoritative
+   byte size was obtained. The 12-page, 1,369,295-byte browser upload remains
+   **unmatched at the binary level**. Size and title consistency alone do
+   not prove authenticity.
+
+**Decision:** `OFFICIAL_PUBLICATION_LINK_CONFIRMED`,
+`EXTERNAL_PDF_BINARY_MATCH_UNVERIFIED`,
+`SHADOW_STORAGE_READBACK_REPORTED_VERIFIED`,
+`PRODUCTION_REGISTRY_ADMISSION = NO`.
+Do not set `originAuthenticated=true`, resolve GAP-001, or mark Research
+complete on this basis. The next decisive check is SHA-256 comparison of a
+separate file downloaded directly from ASML or Euronext with
+`562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9`.
+
 ## IX. Next authorized Research actions
 
 1. Independently authenticate the browser-supplied Q3 PDF by byte-for-byte hash comparison against a trusted issuer/Euronext source or equivalent documented provenance; keep SHADOW receipt non-admitted until evidence requirements pass.
