@@ -1,5 +1,5 @@
 import 'server-only';
-import {retrieveAsmlQ2OfficialRelease} from './research-recovery-official-source-v1';
+import {retrievePreferredAsmlQ2OfficialSource} from './research-recovery-official-source-v1';
 import {archiveAsmlCandidate} from './research-recovery-private-archive-v1';
 import {reviewEconomicShareLedger,reviewHistoricalXamsClose} from './research-recovery-financial-evidence-v1';
 import { getHostedShadowRecoveryClient } from './research-inbox-pilot-server';
@@ -100,13 +100,13 @@ export async function executeShadowRecoveryCycle(key: string) {
           // production OBSERVATION mirror. Never infer an issuer from a SHADOW
           // run UUID, and never use post-valuation Q3 material.
           if (snapshot.origin==='ASML_READ_ONLY_MIRROR') {
-            const {candidate:source,bytes}=await retrieveAsmlQ2OfficialRelease();
+            const {candidate:source,bytes}=await retrievePreferredAsmlQ2OfficialSource();
             // Durable private capture, not a canonical artifact or a proof that
             // the exact same bytes existed at the historical valuation cut-off.
             const receipt=await archiveAsmlCandidate(client,source,bytes);
             return {
               outcome:'CANDIDATE_RECORDED' as const,
-              detail:`Source primaire ${source.documentId}, publiée ${source.publicationDate}, récupérée ${source.retrievedAt}, ${receipt.byteSize} octets, SHA-256 ${receipt.sha256}, archive privée SHADOW create-only et relecture SHA-256 conforme. Octets capturés aujourd'hui, PAS certifiés à la date d'évaluation, aucune admission Registry, ni G001/G006/ROIC résolu.`,
+              detail:`Source primaire ${source.documentId}, publiée ${source.publicationDate}, récupérée ${source.retrievedAt}, ${receipt.byteSize} octets ${source.contentType}, SHA-256 ${receipt.sha256}, archive privée SHADOW create-only et relecture SHA-256 conforme. Octets capturés aujourd'hui, PAS certifiés à la date d'évaluation, aucune admission Registry, ni G001/G006/ROIC résolu.`,
               evidenceRefs:[source.url,'sha256:'+receipt.sha256,
                 'storage://'+receipt.bucket+'/'+receipt.path],
             };
