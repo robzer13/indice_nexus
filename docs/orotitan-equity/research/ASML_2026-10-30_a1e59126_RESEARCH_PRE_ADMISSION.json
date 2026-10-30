@@ -1,0 +1,515 @@
+{
+  "schema": "OROTITAN_RESEARCH_PRE_ADMISSION_CANDIDATE_V0_1",
+  "classification": "NON_AUTHORITATIVE_REVIEW_ONLY",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "issuer": "ASML Holding N.V.",
+  "isin": "NL0010273215",
+  "exchange": "Euronext Amsterdam",
+  "cutoff": "2026-10-30",
+  "runContract": "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0",
+  "recordedOn": "2026-10-30",
+  "authority": {
+    "registryAdmitted": false,
+    "stageFinalized": false,
+    "published": false,
+    "doNotInheritOldRunBlockers": true,
+    "bytesSealed": false,
+    "sourceSnapshotsAreNotHistoricallyCertified": true
+  },
+  "sources": [
+    {
+      "id": "SRC-SEC6K-20261014",
+      "authority": "PRIMARY_REGULATORY_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/0001628280-26-065813-index.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "Form 6-K, SEC accession 0001628280-26-065813",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX991",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/pressreleasefinancialresul.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.1 Press Release Financial Results Q3 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX992",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/a2026_10x14xpresentation.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.2 Investor Relations Presentation Q3 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-SEC-EX993",
+      "authority": "PRIMARY_ISSUER_FILING",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/financial_statementsxusx.htm",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "EX-99.3 Unaudited US GAAP Q3 2026 Financial Statements",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-ASML-RELEASE",
+      "authority": "PRIMARY_ISSUER_WEBSITE",
+      "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
+      "sourceDate": "2026-10-14",
+      "dataAsOf": "2026-09-27",
+      "label": "ASML Q3 2026 earnings press release",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-ASML-SBB-OCT26",
+      "authority": "PRIMARY_ISSUER_WEBSITE",
+      "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-6",
+      "sourceDate": "2026-10-26",
+      "dataAsOf": "2026-10-23",
+      "label": "Official share-buyback transactions 19-23 October 2026",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-FT-20261029",
+      "authority": "SECONDARY_MARKET_VENDOR",
+      "url": "https://markets.ft.markitdigital.com/data/equities/tearsheet/historical?s=ASML%3AAEX",
+      "sourceDate": null,
+      "dataAsOf": "2026-10-29",
+      "label": "Financial Times Amsterdam historical prices, not exchange primary",
+      "rawBytesSealed": false
+    },
+    {
+      "id": "SRC-INVESTING-20261029",
+      "authority": "SECONDARY_MARKET_VENDOR",
+      "url": "https://www.investing.com/equities/asml-holding-historical-data",
+      "sourceDate": null,
+      "dataAsOf": "2026-10-29",
+      "label": "Investing.com Amsterdam historical price corroboration",
+      "rawBytesSealed": false
+    }
+  ],
+  "facts": [
+    {
+      "id": "E001",
+      "claim": "Q3 sales",
+      "value": 11662,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E002",
+      "claim": "Q3 net system sales",
+      "value": 8373.2,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E003",
+      "claim": "Q3 Installed Base Management sales",
+      "value": 3288.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E004",
+      "claim": "Q3 gross profit",
+      "value": 6699.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E005",
+      "claim": "Q3 operating income",
+      "value": 5172.8,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E006",
+      "claim": "Q3 net income",
+      "value": 4960.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E007",
+      "claim": "Q3 income gain on equity investments",
+      "value": 509.7,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E008",
+      "claim": "Q3 net cash from operations",
+      "value": 11797.6,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E009",
+      "claim": "Q3 changes in assets and liabilities in operating cash flow",
+      "value": 7009,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E010",
+      "claim": "Q3 purchases of property plant equipment",
+      "value": 413.3,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E011",
+      "claim": "Q3 purchases of intangible assets",
+      "value": 33.9,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E012",
+      "claim": "Nine months net cash from operations",
+      "value": 11315,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E013",
+      "claim": "Nine months purchases property plant equipment",
+      "value": 1115.1,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E014",
+      "claim": "Nine months purchases intangible assets",
+      "value": 140.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E015",
+      "claim": "Q3 basic weighted average shares",
+      "value": 383.1,
+      "unit": "MILLION_SHARES_ROUNDED",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_NOT_SPOT_SHARE_COUNT",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E016",
+      "claim": "Q3 net cash and short-term investments",
+      "value": 12735.1,
+      "unit": "EUR_MILLION",
+      "period": "2026-09-27",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "ARITHMETIC_SUM_8030_9_PLUS_4704_2",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E017",
+      "claim": "FY2026 guidance lower sales",
+      "value": 44000,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E018",
+      "claim": "FY2026 guidance upper sales",
+      "value": 45000,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E019",
+      "claim": "Q4 2026 sales guidance lower",
+      "value": 14200,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E020",
+      "claim": "Q4 2026 sales guidance upper",
+      "value": 15200,
+      "unit": "EUR_MILLION",
+      "period": "GUIDANCE_AS_OF_2026-10-14",
+      "sourceId": "SRC-SEC-EX991",
+      "kind": "FORWARD_LOOKING",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E021",
+      "claim": "Q3 treasury shares repurchase cash outflow",
+      "value": 4071,
+      "unit": "EUR_MILLION",
+      "period": "2026-Q3",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED_OUTFLOW_ABS",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E022",
+      "claim": "Latest published weekly shares repurchased",
+      "value": 343310,
+      "unit": "SHARES",
+      "period": "2026-10-19_TO_2026-10-23",
+      "sourceId": "SRC-ASML-SBB-OCT26",
+      "kind": "SUM_OF_5_DAILY_TRADES",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E023",
+      "claim": "XAMS market close October 29 vendor candidate",
+      "value": 1504.8,
+      "unit": "EUR_PER_SHARE",
+      "period": "2026-10-29",
+      "sourceId": "SRC-FT-20261029",
+      "kind": "VENDOR_CLOSE_NOT_EXCHANGE_VERIFIED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E024",
+      "claim": "Nine months net sales",
+      "value": 29755.4,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    },
+    {
+      "id": "E025",
+      "claim": "Nine months net income",
+      "value": 10634.7,
+      "unit": "EUR_MILLION",
+      "period": "2026-9M",
+      "sourceId": "SRC-SEC-EX993",
+      "kind": "REPORTED",
+      "evidenceStatus": "RESEARCH_CANDIDATE_NON_ADMITTED",
+      "sourceBytesVerified": false
+    }
+  ],
+  "calculationCandidates": [
+    {
+      "id": "C001",
+      "formula": "Q3 operating cash flow minus purchases of PP&E and intangible assets",
+      "expression": "11797.6 - 413.3 - 33.9",
+      "value": 11350.4,
+      "unit": "EUR_MILLION",
+      "status": "ARITHMETIC_ONLY_NOT_OWNER_EARNINGS",
+      "inputs": [
+        "E008",
+        "E010",
+        "E011"
+      ]
+    },
+    {
+      "id": "C002",
+      "formula": "2026 9M operating cash flow minus purchases of PP&E and intangible assets",
+      "expression": "11315.0 - 1115.1 - 140.4",
+      "value": 10059.5,
+      "unit": "EUR_MILLION",
+      "status": "ARITHMETIC_ONLY_NOT_OWNER_EARNINGS",
+      "inputs": [
+        "E012",
+        "E013",
+        "E014"
+      ]
+    },
+    {
+      "id": "C003",
+      "formula": "Q3 cash flow less total change in assets/liabilities",
+      "expression": "11797.6 - 7009.0",
+      "value": 4788.6,
+      "unit": "EUR_MILLION",
+      "status": "SENSITIVITY_ONLY_NOT_NORMALIZED_CFO",
+      "inputs": [
+        "E008",
+        "E009"
+      ]
+    }
+  ],
+  "gaps": [
+    {
+      "id": "GAP-001",
+      "priority": "CRITICAL",
+      "block": "SOURCE_BYTES",
+      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN."
+    },
+    {
+      "id": "GAP-002",
+      "priority": "CRITICAL",
+      "block": "ECONOMIC_SHARE_COUNT",
+      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count."
+    },
+    {
+      "id": "GAP-003",
+      "priority": "CRITICAL",
+      "block": "MARKET_PRICE",
+      "description": "Source official Euronext XAMS price with precisely stated as-of timestamp: Oct 30 official close only after completed session, otherwise Oct 29 close with date alignment; check unadjusted convention and corporate actions."
+    },
+    {
+      "id": "GAP-004",
+      "priority": "CRITICAL",
+      "block": "FCF_OWNER_EARNINGS",
+      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings."
+    },
+    {
+      "id": "GAP-005",
+      "priority": "HIGH",
+      "block": "ROIC",
+      "description": "Reconcile invested capital beginning and ending, NOPAT tax rate, operating/non-operating assets, lease and working capital. Do not use Q3 operating margin as ROIC."
+    },
+    {
+      "id": "GAP-006",
+      "priority": "HIGH",
+      "block": "OUTSIDE_VIEW",
+      "description": "Independent source diversification on EUV/DUV demand, TSMC/Samsung/Intel capex and High-NA economics, China export restrictions, supplier constraints and order-conversion risks."
+    },
+    {
+      "id": "GAP-007",
+      "priority": "HIGH",
+      "block": "BUSINESS_GOVERNANCE",
+      "description": "Review 2025 20-F primary disclosures on business model, competitive position, customer concentration, governance and sector risk; validate latest changes as of 2026-10-30."
+    },
+    {
+      "id": "GAP-008",
+      "priority": "HIGH",
+      "block": "RESEARCH_COMPLETION",
+      "description": "Prepare actual Evidence Ledger, Conflict Ledger, hypothesis register, gap register, classification input record, source manifest, sufficiency assessment, sealed research Stage Manifest; pass the immutable Research contract gateway before Deep Dive."
+    }
+  ],
+  "conflictCandidates": [
+    {
+      "id": "CON-001",
+      "issue": "Period share denominator",
+      "details": "383.1m Q3 basic weighted-average shares must not be substituted for shares outstanding at exact cutoff",
+      "status": "METHODOLOGY_RISK"
+    },
+    {
+      "id": "CON-002",
+      "issue": "Cash flow period/capital requirements",
+      "details": "2026 Q3 EUR 11,797.6m reported CFO contains EUR 7,009.0m positive assets/liabilities change; cannot extrapolate to normalized annual owner earnings",
+      "status": "NONRECURRING_RISK"
+    },
+    {
+      "id": "CON-003",
+      "issue": "Valuation market data",
+      "details": "Vendor EUR 1,504.80 October 29 close is not Oct 30 close, not official exchange-sealed unadjusted XAMS close",
+      "status": "SOURCE_AND_DATE_GAP"
+    }
+  ],
+  "hypothesisCandidates": [
+    {
+      "id": "H-001",
+      "question": "Do AI-related capacity plans convert to economically profitable orders after customer acceptance and export controls?",
+      "status": "UNTESTED"
+    },
+    {
+      "id": "H-002",
+      "question": "How much of Q3 cash generation is timing-dependent customer prepayment/contract-liability flows rather than sustainable operating economics?",
+      "status": "UNTESTED"
+    },
+    {
+      "id": "H-003",
+      "question": "Does High-NA EUV capacity ramp preserve operating return on invested capital when suppliers and customers scale simultaneously?",
+      "status": "UNTESTED"
+    }
+  ],
+  "classificationInputRecord": {
+    "country": "NL",
+    "listingCountry": "NL",
+    "isin": "NL0010273215",
+    "taxonomyCodes": "NOT_PROPOSED_UNTIL_FROZEN_TAXONOMY_CHECK",
+    "peaEligibility": "NOT_ASSESSED"
+  },
+  "inputSufficiency": {
+    "readyForDeepDive": false,
+    "reason": "Mandatory original private source capture and exact financial/valuation/sector evidence insufficient.",
+    "missingCritical": [
+      "GAP-001",
+      "GAP-002",
+      "GAP-003",
+      "GAP-004"
+    ]
+  },
+  "provenanceNote": "Sources linked and read via public retrieval; source bytes are NOT locally sealed or uploaded to private object store by this review. No hash claimed. Sources hosted at SEC and issuer mirror reflect same underlying issuer, not independent economic corroboration."
+}
