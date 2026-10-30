@@ -1,0 +1,184 @@
+{
+  "schema": "OROTITAN_ASML_WORKING_SENSITIVITY_V0_2",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "runCutoff": "2026-10-30",
+  "currency": "EUR",
+  "cashInputUnits": "EUR_MILLIONS",
+  "priceInputUnits": "EUR_PER_SHARE",
+  "sharesInputUnits": "MILLION_SHARES",
+  "status": "WORKING_RESEARCH_ONLY_NON_ADMITTED_NOT_AUTHORIZED_FOR_VALUATION_OR_STAGE_GATE",
+  "gaapPdf": {
+    "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "byteSize": 1369295,
+    "pages": [
+      3,
+      5,
+      6,
+      7,
+      9,
+      10
+    ],
+    "sourceOriginCryptographicallyAttested": false,
+    "registryAdmitted": false
+  },
+  "sourceReportedInputs": {
+    "q42025": {
+      "EBIT": 3431.1,
+      "CFO": 11410.3,
+      "workingCapitalChange": 7640.7,
+      "capexPpe": 447.9,
+      "capexIntangibles": 22.5,
+      "netIncome": 2839.6,
+      "pretaxIncome": 3442.3,
+      "taxExpense": 618.7
+    },
+    "nineMonths2026": {
+      "EBIT": 11786.8,
+      "CFO": 11315,
+      "workingCapitalChange": 236.2,
+      "capexPpe": 1115.1,
+      "capexIntangibles": 140.4,
+      "netIncome": 10634.7,
+      "pretaxIncome": 12435.5,
+      "taxExpense": 2081.2
+    },
+    "q32026": {
+      "EBIT": 5172.8,
+      "CFO": 11797.6,
+      "workingCapitalChange": 7009,
+      "capexPpe": 413.3,
+      "capexIntangibles": 33.9,
+      "netIncome": 4960.4
+    }
+  },
+  "computedLtm": {
+    "EBIT": 15217.9,
+    "CFO": 22725.3,
+    "workingCapitalChange": 7876.9,
+    "capexPpe": 1563,
+    "capexIntangibles": 162.9,
+    "netIncome": 13474.3,
+    "pretaxIncome": 15877.8,
+    "taxExpense": 2699.9,
+    "capexCombined": 1725.9,
+    "simpleFcf": 20999.4,
+    "cfoExSingleWcLine": 14848.4,
+    "simpleFcfExSingleWcLine": 13122.5,
+    "fcfShareFromWcLinePct": 37.51,
+    "groupEtRatePct": 17.00424,
+    "operatingNopatTaxRateProxy": 12630.2
+  },
+  "market": {
+    "venue": "XAMS",
+    "issuerIsin": "NL0010273215",
+    "priceCloseDate": "2026-10-29",
+    "priceEUR": 1504.8,
+    "priceSource": "CROSS_VENDOR_AND_OFFICIAL_EURONEXT_TRADING_AT_LAST_17_39_46_PRINT",
+    "officialUnadjustedEodSealed": false,
+    "shareDenominator": {
+      "valueMillion": 382.91,
+      "classification": "VENDOR_PLACEHOLDER_NOT_ISSUER_APPROVED",
+      "asOfExact": null
+    },
+    "illustrativeCapitalizationEURBillion": 576.203,
+    "scenarios": [
+      {
+        "shareMillions": 380,
+        "marketCapEURBillion": 571.824
+      },
+      {
+        "shareMillions": 381,
+        "marketCapEURBillion": 573.3288
+      },
+      {
+        "shareMillions": 382.91,
+        "marketCapEURBillion": 576.203
+      },
+      {
+        "shareMillions": 384.05,
+        "marketCapEURBillion": 577.9184
+      },
+      {
+        "shareMillions": 385,
+        "marketCapEURBillion": 579.348
+      }
+    ],
+    "multiples": {
+      "reportedGaapNetEarnings": 42.76,
+      "simpleFcf": 27.44,
+      "simpleFcfExSingleWcLine": 43.91
+    },
+    "priceDateIsNotCutoffClose": true,
+    "valuationCertified": false
+  },
+  "operatingReturn": {
+    "ltmEbitEURMillion": 15217.9,
+    "ltmGroupEffectiveTaxRatePct": 17.00424,
+    "ltmNopatPureArithEURMillion": 12630.2,
+    "assumedOperatingTaxRateSensitivity": [
+      {
+        "taxRatePct": 15,
+        "nopatEURMillion": 12935.2
+      },
+      {
+        "taxRatePct": 20,
+        "nopatEURMillion": 12174.3
+      },
+      {
+        "taxRatePct": 25,
+        "nopatEURMillion": 11413.4
+      }
+    ],
+    "investedCapitalNaiveDiagnostic": [
+      {
+        "date": "2025-12-31",
+        "shareholderEquity": 19612.2,
+        "longTermDebt": 2709,
+        "cash": 12916,
+        "shortTermInvestments": 405.9,
+        "crudeIncompleteCapital": 8999.3
+      },
+      {
+        "date": "2026-09-27",
+        "shareholderEquity": 22063.9,
+        "longTermDebt": 1963,
+        "cash": 8030.9,
+        "shortTermInvestments": 4704.2,
+        "crudeIncompleteCapital": 11291.8
+      }
+    ],
+    "naiveAverageEURMillion": 10145.55,
+    "invalidNaiveRoicPct": 124.5,
+    "invalidNaiveRoicShouldBePublished": false,
+    "reason": "The naive capital proxy excludes current borrowing maturities and lease obligations; subtracts cash without operating/excess distinction; ignores operating vs nonoperating assets and customer finance; numerator is 12m while denominator is Dec/Sep 9m and quarter seasonality. This is a method rejection, not ASML ROIC."
+  },
+  "noncurrentContractLiabilityCorrection": {
+    "gaapBalanceSheetLine": "NONCURRENT_CONTRACT_LIABILITIES",
+    "dec2025": 3366.3,
+    "june2026": 3570.3,
+    "sep2026": 9300.6,
+    "juneToSepChange": 5730.3,
+    "totalCurrentPlusNoncurrentKnownFromThisPdf": false,
+    "changeEqualsCustomerDepositsCashReceived": false,
+    "changeEqualsCfoWorkingCapitalLine": false
+  },
+  "missingGates": [
+    "G001_EXACT_ISSUED_TREASURY_CUTOFF",
+    "G006_XAMS_NONADJUSTED_EOD_CERTIFICATE",
+    "GAAP_FULL_CURRENT_LIABILITY_AND_WORKING_CAPITAL_NOTE",
+    "OWNER_EARNINGS_NORM_MAINTENANCE_CAPEX",
+    "ROIC_QUARTERLY_AVG_INVESTED_CAPITAL_AND_NOPAT_TAX",
+    "SOURCE_ORIGIN_FULL_AUTHORITY_AND_EVIDENCE_LEDGER"
+  ],
+  "noWrites": {
+    "registry": true,
+    "sourceStore": true,
+    "production": true
+  },
+  "mathematicalChecks": {
+    "ltmCfoEqualsQ4Plus9M": true,
+    "ltmFcfEquals20999_4": true,
+    "simpleFcfExWcEquals13122_5": true,
+    "gaapBalanceQ3Equals": true
+  }
+}
