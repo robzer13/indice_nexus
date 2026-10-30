@@ -79,7 +79,7 @@ const pdfBytes=Buffer.concat([
   Buffer.alloc(15000,0x20),
   Buffer.from('\n%%EOF\n'),
 ]);
-function pdfResponse(body:Buffer=pdfBytes,url=ASML_Q2_2026_OFFICIAL_PRESENTATION.url){
+function pdfResponse(body:Buffer=pdfBytes,url:string=ASML_Q2_2026_OFFICIAL_PRESENTATION.url){
   const r=new Response(new Uint8Array(body),{status:200,headers:{'content-type':'application/pdf'}});
   Object.defineProperty(r,'url',{value:url});
   return r;
