@@ -12,7 +12,23 @@ if (process.env.CI !== 'true' || process.env.NODE_ENV === 'production') {
   throw new Error('RECOVERY_LIVE_PROBE_CI_ONLY');
 }
 async function main() {
-const {candidate,bytes}=await retrieveAsmlQ2OfficialRelease();
+const tracedFetcher=(async (input:string|URL|Request,options?:RequestInit)=>{
+  const response=await fetch(input,options);
+  const location=response.headers.get('location');
+  let redirectHost:string|null=null;
+  if (location) {
+    try {redirectHost=new URL(location,String(input)).hostname;} catch {redirectHost='malformed';}
+  }
+  console.log(JSON.stringify({
+    httpStatus:response.status,
+    effectiveHost:new URL(response.url||String(input)).hostname,
+    redirected:response.redirected,
+    redirectionHost:redirectHost,
+    contentType:response.headers.get('content-type'),
+  }));
+  return response;
+}) as typeof fetch;
+const {candidate,bytes}=await retrieveAsmlQ2OfficialRelease(tracedFetcher);
 assert.equal(candidate.url,ASML_Q2_2026_PUBLIC_RELEASE.url);
 assert.equal(candidate.publicationDate,'2026-07-15');
 assert.equal(candidate.admitted,false);
