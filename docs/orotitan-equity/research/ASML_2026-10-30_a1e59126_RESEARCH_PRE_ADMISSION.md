@@ -105,6 +105,26 @@ Arithmetic only (values €m):
 
 **Output state:** `RESEARCH IN_PROGRESS`; `READY_FOR_DEEP_DIVE = NOT_EVALUATED` in Registry. This review itself cannot change that gate.
 
+## VIII bis. Q3 acquisition transport blocker (CI observed 2026-10-30)
+
+Automated read-only acquisition test against SEC exhibits 99.1–99.3 on GitHub Actions:
+**EX-99.1 returned HTTP 403** directly from `www.sec.gov`, without redirect.
+Other exhibits were not considered verified by the aborted strict probe.
+ASML investor download URLs for the Q3 PDFs have also returned HTTP 403
+to automated web access. Do not circumvent origin restrictions, and do not
+convert a rendered webpage into invented original source bytes.
+
+A strictly gated SHADOW Preview offers a **browser-supplied PDF** fallback:
+`/admin/research-q3-sources`. It accepts only a size-bounded PDF, stores
+SHA-addressed bytes and an immutable receipt in the PRIVATE SHADOW bucket,
+with mandatory readback. A browser upload is not proof that bytes originated
+from ASML/SEC. Its receipt explicitly records
+`sourceOriginAuthenticated:false`,
+`sourceDocumentAuthenticityVerified:false`, `registryAdmitted:false`.
+Such a receipt cannot satisfy Research Evidence Ledger admission or unfreeze
+`READY_FOR_DEEP_DIVE` without independent source authentication.
+No Q3 file has been uploaded by this research review.
+
 ## IX. Next authorized Research actions
 
 1. Capture Q3 source bytes from a trusted issuer/SEC origin **into private source storage**, no uploads to public GitHub; hash, timestamp and verify custody.
