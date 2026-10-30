@@ -69,6 +69,16 @@ Q3 2026 management presentation guides FY2026 **EUR 44–45bn**, Q4 revenue **EU
 
 Q4 guidance itself is **EUR 14.2–15.2bn**; the 0.0446bn difference in implied FY bridge is a **normal result of rounded annual/quarterly guide endpoints**, not a discrepancy to fix by changing historical actuals. **Do not backfill IBM FY2026 as realized**.
 
+### B3. Management Q3 call cross-check — revenue product mix and Q4 guide
+
+[ASML's October 14 prepared remarks, reproduced in a secondary transcript](https://stockanalysis.com/quote/ams/ASML/transcripts/651248-q3-2026-investor-call/) (primary *speaker* CFO Roger Dassen, secondary *text source*) provide independent **narrative reconciliation** of the public financial PDF but **not an independent issuer or a sealed official transcript**:
+
+- Q3 net systems **~EUR 8.4bn**, including **~EUR 4.1bn EUV** (one High-NA system) and **~EUR 4.3bn non-EUV**, with systems sold by end-use **54% logic / 46% memory**; rounded sums must not replace PDF's **EUR 8,373.2m** exact system sales.
+- **Q3 IBM was ~EUR 0.4bn above management guidance**, primarily due to demand for **EUV/DUV productivity upgrades**; CFO cites high-margin service components as a key gross margin driver. Thus IBM's **EUR 3.289bn** is neither uniformly maintenance service nor proof of recurring contract cash economics.
+- CFO explicitly forecast **~50% IBM year-on-year growth FY2026**, **EUV above 45%**, non-EUV systems **~20%**, memory system sales **~75%** and logic system sales **~10%**. Our **~49.37%** IBM arithmetic from Q4 management guidance is therefore directionally consistent; all these forecasts remain **not realized**.
+- CFO expects FY2026 China at **~20% of ASML revenue**; do not mislabel this as **realized** 2026 geographic exposure or extrapolate last year's FY2025 China **29.1%** as Q3 2026. For 2027 and beyond a normalized exposure mix remains unverified.
+- During Q&A management confirmed 2029–2030 **requested orders are not accepted yet**, because ASML is planning fair allocation among existing customers. This makes the separation between a request and a contracted backlog **particularly important**.
+
 ## C. Quality of cash generation — separate 3 measures
 
 **Input (Q4 2025 + 2026 9M US GAAP, physical financial statement pp6,10; EUR millions):**
