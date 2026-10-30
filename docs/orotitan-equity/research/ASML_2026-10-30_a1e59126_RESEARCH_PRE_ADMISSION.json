@@ -689,7 +689,7 @@
   },
   "inputSufficiency": {
     "readyForDeepDive": false,
-    "reason": "New issuer SEC FY2025 US GAAP XBRL provides 2023-25 IBM revenue and service costs, ASC606 contract types, contract-liability bridge and three-year cash-flow history. Contract maintenance versus upgrade mix and IBM cash profitability are undisclosed, so specific sustainable IBM revenue/cash estimates remain uncertified. Independent Research analysis continues.",
+    "reason": "Provisional 2027-2029 systems/IBM sales, gross-margin, EBIT and working-capital cash-stress scenarios are reproducibly documented. Each driver is distinguished from historic reported US GAAP and FY2026 issuer guidance. IBM recurring share unknown; owner cash proxy not certified. Research still requires formal source authority, gap resolution and stage artifacts.",
     "missingCritical": [
       "GAP-001",
       "GAP-002",
@@ -1266,5 +1266,58 @@
       "MAINTENANCE_CAPEX",
       "2026_FULL_CUSTOMER_ADVANCES_BRIDGE"
     ]
+  },
+  "financialGrowthCashScenariosV04": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_RESEARCH_REPORT_V0_4.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_SCENARIOS_V0_4.json",
+    "class": "NON_ADMITTED_RESEARCH_WORKING_STRESS_CASES",
+    "cutoff": "2026-10-30",
+    "years": [
+      2027,
+      2028,
+      2029
+    ],
+    "fy2026GuideDerivedAnchor": {
+      "salesEURm": 44500,
+      "ibmEURm": 12238.1,
+      "systemsEURm": 32261.9,
+      "groupGrossMarginPct": 56,
+      "carriedForwardFY2025IbmGmAsHypothesisPct": 50.87,
+      "systemGrossMarginAlgebraicResidualPct": 57.945994
+    },
+    "assumptionsProjectionsNotIssuerForecasts": true,
+    "hypotheticalScenarioOutputs2029": [
+      {
+        "scenario": "DOWNSIDE",
+        "systemAndIbmSalesEURm": 40773.869,
+        "operatingMarginPct": 33.676,
+        "cashStressProxyEURm": 9965.446,
+        "ibmContractualShareMeasured": false
+      },
+      {
+        "scenario": "CENTRAL",
+        "systemAndIbmSalesEURm": 56111.76,
+        "operatingMarginPct": 40.975,
+        "cashStressProxyEURm": 17226.222,
+        "ibmContractualShareMeasured": false
+      },
+      {
+        "scenario": "UPSIDE",
+        "systemAndIbmSalesEURm": 64582.236,
+        "operatingMarginPct": 44.171,
+        "cashStressProxyEURm": 19788.447,
+        "ibmContractualShareMeasured": false
+      }
+    ],
+    "normalization": {
+      "ownerEarningsCertifiable": false,
+      "IBMContractualRecurringAmount": null,
+      "workingCapitalCashTimingHypothesisNotCustomerDepositsProof": true,
+      "capexGrowthMaintenanceSplitNotConfirmed": true
+    },
+    "officialPriceAndSharesStillUncertified": true,
+    "preAdmission": true,
+    "registryWrites": false,
+    "researchComplete": false
   }
 }
