@@ -59,7 +59,7 @@ jobs:
         with:
           node-version: '22'
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
       - name: Verify the real issuer release and byte hash (read-only)
         run: npx tsx tests/e2e/recovery-official-source-live.ts
         env:
