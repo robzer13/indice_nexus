@@ -66,7 +66,7 @@ Arithmetic only (values €m):
 | 9M CFO minus PP&E and intangible purchases | 11,315.0 − 1,115.1 − 140.4 | **10,059.5** | *Raw simplified cash-flow bridge, not normalized FCF/Owner Earnings* |
 | Q3 CFO excluding recorded net asset/liability changes | 11,797.6 − 7,009.0 | **4,788.6** | *Sensitivity only: not normalized/sustainable CFO* |
 
-**Period check:** Q1 2026 CFO **−€2,185.6m**, Q2 **+€1,703.0m**, Q3 **+€11,797.6m** sum to the reported nine-month **+€11,315.0m**. Cash conversion is exceptionally sensitive to the third-quarter working-capital movement.\n\n**Red flag for methodology:** about **59.4%** of Q3 operating CF comes from reported changes in assets/liabilities. The financial statements also show very large contract-liability movements. Distinguish customer prepayments, deferred revenue and working-capital timing before any cash-conversion, ROIC, owner-earnings or DCF judgments. Q3's nonoperating gain must be isolated from operating return quality.
+**Period check:** Q1 2026 CFO **−€2,185.6m**, Q2 **+€1,703.0m**, Q3 **+€11,797.6m** sum to the reported nine-month **+€11,315.0m**. Cash conversion is exceptionally sensitive to the third-quarter working-capital movement.\n\n**Red flag for methodology:** about **59.4%** of Q3 operating CF comes from reported changes in assets/liabilities. The financial statements also show very large **noncurrent** contract-liability movements (p5 and p9). This is not a direct measure of the total cash advances received. Distinguish customer prepayments, deferred revenue and working-capital timing before any cash-conversion, ROIC, owner-earnings or DCF judgments. Q3's nonoperating gain must be isolated from operating return quality.
 
 ## V. Valuation-date alignment and market data
 
@@ -180,6 +180,8 @@ corroboration, not proof of independent economic information.
 `REGISTRY_ADMISSION = NO`.
 `GAP-001 = EVIDENCE_OF_SOURCE_IDENTITY_PROGRESS / OPEN`.
 `READY_FOR_DEEP_DIVE = NOT_EVALUATED`; NO Registry mutation.
+
+**Further cash/ROIC/multiple scenarios (v0.2):** [Full working-capital and noncurrent contract-liability correction, LTM FCF sensitivity, NOPAT and rejected naive ROIC](./ASML_2026-10-30_a1e59126_OWNER_EARNINGS_ROIC_VALUATION_SENSITIVITY_V0_2.md); [machine-recomputable scenario data](./ASML_2026-10-30_a1e59126_ROIC_CASH_MULTIPLES_MODEL_V0_2.json). These are non-admitted research diagnostics, **not** Owner Earnings, ROIC, market capitalization or official close certification.
 
 **Reconciliation companion (2026-10-30):** [PDF source qualification / issued-share vs treasury / working capital / market close / control gates](./ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md).
 
