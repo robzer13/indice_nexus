@@ -29,7 +29,7 @@ export type RecoveryAttempt = Readonly<{
   evidenceRefs: readonly string[];
 }>;
 export type RecoveryReport = Readonly<{
-  status: 'PROGRESSED' | 'NO_NEW_AUTOMATED_STEPS' | 'PAUSED' | 'NO_BLOCKERS' | 'ERROR';
+  status: 'PROGRESSED' | 'BUDGET_REACHED' | 'NO_NEW_AUTOMATED_STEPS' | 'PAUSED' | 'NO_BLOCKERS' | 'ERROR';
   attempted: readonly RecoveryAttempt[];
   remaining: readonly RecoveryBlocker[];
   publicationAuthorized: false;
@@ -131,13 +131,19 @@ export async function runRecoveryCycle(
     attempted.push(attempt);
   }
   const progressed = attempted.some(a => a.outcome === 'CANDIDATE_RECORDED');
+  const pendingCount = queue.filter(blocker =>
+    !attemptedKeys.has(blocker.code + ':' + strategyFor(blocker.code))).length;
   const remaining = input.blockers; // Only the authoritative Registry may clear blockers.
   return {
-    status: progressed ? 'PROGRESSED' : 'NO_NEW_AUTOMATED_STEPS',
+    status: progressed ? 'PROGRESSED' : pendingCount > 0 ? 'BUDGET_REACHED' : 'NO_NEW_AUTOMATED_STEPS',
     attempted, remaining,
     publicationAuthorized:false,registryChanged:false,
     nextAction: progressed
-      ? 'Candidate evidence recorded. Validate provenance and Registry gate separately; blockers remain open.'
-      : 'No new safe strategy in this cycle. Review recorded attempts; ask for one precise missing input if critical.',
+      ? pendingCount > 0
+        ? 'Candidate evidence recorded. Additional unattempted tasks remain; resume the bounded cycle. Registry blockers stay open.'
+        : 'Candidate evidence recorded. Validate provenance and Registry gate separately; blockers remain open.'
+      : pendingCount > 0
+        ? 'Bounded cycle budget reached; unattempted tasks remain. Resume without declaring source exhaustion.'
+        : 'No new safe strategy in this cycle. Review recorded attempts; ask for one precise missing input if critical.',
   };
 }
