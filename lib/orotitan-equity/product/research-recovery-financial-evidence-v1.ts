@@ -28,10 +28,12 @@ export type ShareLedger=Readonly<{
   valuationDate:string; openingDate:string;
   issuedAtOpening:number; treasuryAtOpening:number;
   openingEvidence:DatedPrimaryEvidence;
+  movementsCoverageVerified:boolean;
+  movementsCoverageEvidence:DatedPrimaryEvidence;
   movements:readonly ShareMovement[];
 }>;
 export type HistoricalClosingQuote=Readonly<{
-  valuationDate:string; tradingDate:string; securityId:string; exchange:string;
+  valuationDate:string; tradingDate:string; securityId:string; isin:string; exchange:string;
   currency:string; quoteUnit:string; close:number; priceBasis:string;
   corporateActionsChecked:boolean; evidence:DatedPrimaryEvidence;
 }>;
@@ -40,11 +42,18 @@ type Candidate<T>=Readonly<{state:'CANDIDATE_FOR_INDEPENDENT_REVIEW';value:T;cer
 function safeShares(x:number):boolean {
   return Number.isSafeInteger(x) && x>=0;
 }
-function evidenceOk(x:DatedPrimaryEvidence|undefined,cutoff:string):boolean {
-  return !!x && typeof x.sourceId==='string' && x.sourceId.length>5 &&
-    typeof x.sourceUrl==='string' && x.sourceUrl.startsWith('https://') &&
-    SHA.test(x.sha256) && validDay(x.publicationDate) &&
-    x.publicationDate<=cutoff;
+function evidenceOk(x:DatedPrimaryEvidence|undefined,cutoff:string,
+  authority:'ISSUER'|'EXCHANGE'):boolean {
+  if (!x || typeof x.sourceId!=='string' || x.sourceId.length<=5 ||
+      typeof x.sourceUrl!=='string' || !SHA.test(x.sha256) ||
+      !validDay(x.publicationDate) || x.publicationDate>cutoff) return false;
+  let url:URL;
+  try {url=new URL(x.sourceUrl);}catch{return false;}
+  const allowed=authority==='ISSUER'
+    ? ['investor.asml.com','www.investor.asml.com','www.asml.com']
+    : ['live.euronext.com','www.euronext.com'];
+  return url.protocol==='https:' && allowed.includes(url.hostname) &&
+    !url.username && !url.password && !url.searchParams.has('redirect');
 }
 const fail=(reason:string):Blocked=>({state:'BLOCKED',reason,certified:false});
 export function reviewEconomicShareLedger(
@@ -53,7 +62,9 @@ export function reviewEconomicShareLedger(
   if(!ledger)return fail('G001: source-dated opening issued/treasury shares and corporate-action ledger missing');
   const cutoff=ASML_RECOVERY_CUTOFF;
   if(ledger.valuationDate!==cutoff || !validDay(ledger.openingDate) ||
-     ledger.openingDate>cutoff || !evidenceOk(ledger.openingEvidence,cutoff) ||
+     ledger.openingDate>cutoff || !evidenceOk(ledger.openingEvidence,cutoff,'ISSUER') ||
+     ledger.movementsCoverageVerified !== true ||
+     !evidenceOk(ledger.movementsCoverageEvidence,cutoff,'ISSUER') ||
      !safeShares(ledger.issuedAtOpening) || !safeShares(ledger.treasuryAtOpening) ||
      ledger.treasuryAtOpening>ledger.issuedAtOpening ||
      !Array.isArray(ledger.movements) || ledger.movements.length>1000) {
@@ -66,7 +77,7 @@ export function reviewEconomicShareLedger(
   for(const m of movements) {
     if(!m.eventId || seen.has(m.eventId) || !validDay(m.effectiveDate) ||
        m.effectiveDate<=ledger.openingDate || m.effectiveDate>cutoff ||
-       !safeShares(m.shares) || m.shares===0 || !evidenceOk(m.evidence,cutoff) ||
+       !safeShares(m.shares) || m.shares===0 || !evidenceOk(m.evidence,cutoff,'ISSUER') ||
        m.evidence.publicationDate<m.effectiveDate) {
       return fail('G001: untraceable, post-cutoff or duplicated share movement');
     }
@@ -95,9 +106,10 @@ export function reviewHistoricalXamsClose(
   if(quote.valuationDate!==cutoff || quote.tradingDate!==cutoff ||
      quote.exchange!=='XAMS' || quote.currency!=='EUR' ||
      quote.quoteUnit!=='EUR_PER_SHARE' || quote.priceBasis!=='UNADJUSTED_CLOSE' ||
+     quote.isin!=='NL0010273215' ||
      !quote.corporateActionsChecked || !quote.securityId ||
      !Number.isFinite(quote.close) || quote.close<=0 ||
-     !evidenceOk(quote.evidence,cutoff)) {
+     !evidenceOk(quote.evidence,cutoff,'EXCHANGE')) {
     return fail('G006: date, identity, exchange, EUR unit, adjustment or source provenance invalid');
   }
   return {state:'CANDIDATE_FOR_INDEPENDENT_REVIEW',
