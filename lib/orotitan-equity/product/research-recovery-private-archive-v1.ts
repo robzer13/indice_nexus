@@ -9,7 +9,7 @@
 import {createHash} from 'node:crypto';
 import type {SupabaseClient} from '@supabase/supabase-js';
 import type {OfficialSourceCandidate} from './research-recovery-official-source-v1';
-import {ASML_Q2_2026_PUBLIC_RELEASE} from './research-recovery-official-source-v1';
+import {ASML_Q2_2026_PUBLIC_RELEASE,ASML_Q2_2026_OFFICIAL_PRESENTATION} from './research-recovery-official-source-v1';
 
 export const RECOVERY_PRIVATE_BUCKET='orotitan-source-files-v1';
 const SHA=/^[a-f0-9]{64}$/;
@@ -29,10 +29,15 @@ export async function archiveAsmlCandidate(
   candidate:OfficialSourceCandidate,
   bytes:Buffer,
 ):Promise<PrivateSourceReceipt> {
-  if (candidate.documentId !== ASML_Q2_2026_PUBLIC_RELEASE.documentId ||
-      candidate.url !== ASML_Q2_2026_PUBLIC_RELEASE.url ||
-      candidate.publicationDate !== ASML_Q2_2026_PUBLIC_RELEASE.publicationDate ||
-      candidate.contentType !== 'text/html' ||
+  const trusted=candidate.documentId===ASML_Q2_2026_PUBLIC_RELEASE.documentId
+    ? {source:ASML_Q2_2026_PUBLIC_RELEASE,mime:'text/html',extension:'html'}
+    : candidate.documentId===ASML_Q2_2026_OFFICIAL_PRESENTATION.documentId
+      ? {source:ASML_Q2_2026_OFFICIAL_PRESENTATION,mime:'application/pdf',extension:'pdf'}
+      : null;
+  if (!trusted ||
+      candidate.url !== trusted.source.url ||
+      candidate.publicationDate !== trusted.source.publicationDate ||
+      candidate.contentType !== trusted.mime ||
       candidate.admitted !== false ||
       candidate.historicalBytesCertified !== false ||
       !Buffer.isBuffer(bytes) ||
@@ -46,10 +51,10 @@ export async function archiveAsmlCandidate(
   if (bucketError || !bucket || bucket.id !== RECOVERY_PRIVATE_BUCKET || bucket.public !== false) {
     throw new Error('RECOVERY_ARCHIVE_BUCKET_NOT_PRIVATE');
   }
-  const path='research-recovery-v1/asml-observation/q2-2026/'+candidate.sha256+'.html';
+  const path='research-recovery-v1/asml-observation/q2-2026/'+candidate.sha256+'.'+trusted.extension;
   const handler=client.storage.from(RECOVERY_PRIVATE_BUCKET);
   const {error:uploadError}=await handler.upload(path,bytes,{
-    contentType:'text/html',upsert:false,cacheControl:'0',
+    contentType:trusted.mime,upsert:false,cacheControl:'0',
   });
   if (uploadError) {
     // Supabase Storage has returned both HTTP 409 and legacy HTTP 400
