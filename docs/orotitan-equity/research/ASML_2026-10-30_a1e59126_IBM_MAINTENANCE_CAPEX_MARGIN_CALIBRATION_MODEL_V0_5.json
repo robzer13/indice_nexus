@@ -1,0 +1,283 @@
+{
+  "schema": "ASML_IBM_MARGINS_AND_GROUP_SUSTAINING_CAPEX_TRIAGE_V0_5",
+  "runId": "a1e59126-1ca9-4e55-8764-54a1e3d4dc24",
+  "cutoff": "2026-10-30",
+  "gaap": "US_GAAP",
+  "units": "EUR_MILLIONS",
+  "sourceLedgerCandidateOnly": true,
+  "registryAdmission": false,
+  "stageGateChanged": false,
+  "sources": [
+    {
+      "id": "ASML-US-GAAP-IS",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R3.htm",
+      "filingDate": "2026-02-25",
+      "supports": "2023-25 service revenue/cost, 2025 R&D expense"
+    },
+    {
+      "id": "ASML-US-GAAP-PPE",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R93.htm",
+      "filingDate": "2026-02-25",
+      "supports": "PPE 2024/25 additions by class and yearly physical depreciation"
+    },
+    {
+      "id": "ASML-US-GAAP-DEPRECIATION",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R95.htm",
+      "filingDate": "2026-02-25",
+      "supports": "Depreciation by cost of sales, R&D, SG&A; no IBM allocation"
+    },
+    {
+      "id": "ASML-US-GAAP-PPE-NOTE",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011378/R24.htm",
+      "filingDate": "2026-02-25",
+      "supports": "Factory and research expansion, production tooling and new prototypes"
+    },
+    {
+      "id": "ASML-2025-GAAP-ANNUAL",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026011377/asml-2025xannualxreportx.htm",
+      "filingDate": "2026-02-25",
+      "supports": "Annual capex 2025 1573.6 PPE + 57.6 intangibles; EU-IFRS vs US GAAP reconciliation"
+    },
+    {
+      "id": "WORKING-V04",
+      "repoPath": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_GROWTH_MARGIN_CASH_CONVERSION_SCENARIOS_V0_4.json",
+      "sourceType": "NON_ADMITTED_PRIOR_WORKING_SCENARIO",
+      "supports": "2029 central case cash proxy and revenue inputs"
+    }
+  ],
+  "annualServiceFinancials": [
+    {
+      "year": 2023,
+      "serviceRevenueEURm": 5619.9,
+      "serviceCostEURm": 3271.4,
+      "ppeDepreciationEURm": 605.6,
+      "groupCashCapexEURm": 2196.2,
+      "grossProfitEURm": 2348.5,
+      "grossMarginPct": 41.789,
+      "cashCapexOverPpeDepreciation": 3.6265
+    },
+    {
+      "year": 2024,
+      "serviceRevenueEURm": 6494.2,
+      "serviceCostEURm": 3364,
+      "ppeDepreciationEURm": 787.3,
+      "groupCashCapexEURm": 2083.1,
+      "grossProfitEURm": 3130.2,
+      "grossMarginPct": 48.1999,
+      "cashCapexOverPpeDepreciation": 2.6459
+    },
+    {
+      "year": 2025,
+      "serviceRevenueEURm": 8193,
+      "serviceCostEURm": 4025.3,
+      "ppeDepreciationEURm": 916,
+      "groupCashCapexEURm": 1631.2,
+      "grossProfitEURm": 4167.7,
+      "grossMarginPct": 50.869,
+      "cashCapexOverPpeDepreciation": 1.7808
+    }
+  ],
+  "ppeCorporateFY2025": {
+    "landBuildingsAdditionsEURm": 1029.4,
+    "machineryEquipmentAdditionsEURm": 474.2,
+    "leaseholdAdditionsEURm": 43.3,
+    "otherAdditionsEURm": 49.3,
+    "allPpeAccountingAdditionsEURm": 1596.2,
+    "ppeDepreciationEURm": 916,
+    "costSalesDepreciationEURm": 532.1,
+    "researchDepreciationEURm": 353.2,
+    "sgaDepreciationEURm": 30.7,
+    "cashPpePurchasesEURm": 1573.6,
+    "cashIntangiblePurchasesEURm": 57.6,
+    "totalCashPpeAndIntangiblePurchasesEURm": 1631.2,
+    "rdCashRelevantExpenseUsGaapEURm": 4698.8,
+    "serviceCostOfSalesAlreadyIncludesServiceOperations": true
+  },
+  "ppaAllocationLimitations": {
+    "reportedPpeDepreciationIsNotMaintenanceCapex": true,
+    "actualCashCapexIsNotAllMaintenanceCapex": true,
+    "physicalDepreciationByExpenseFunctionIsNotServiceSegmentDepreciation": true,
+    "directServicePartsAndLaborAlreadyInServiceCostOfSales": true,
+    "doNotDeductServiceCostOfSalesAgainAsMaintenanceCapex": true,
+    "groupUpkeepCapexNotDisclosedByIbmSegment": true,
+    "investmentsInBuildingsMachineryPrimarilyForExpansionButExactShareUnknown": true,
+    "researchExpenseEssentialToTechnologyMaintenanceYetNotIbmSpecific": true,
+    "rdCostsUSGaap2025EURm": 4698.8,
+    "contrastIFRSDevelopmentCapitalizationRequiresSeparateLedger": true
+  },
+  "groupPpeCashUpkeepAllocationDiagnostic": [
+    {
+      "hypotheticalSustainingPpeCapexAsMultipleOfPpeDepreciation": 0.75,
+      "groupUpkeepProxyEURm": 687,
+      "cashCapexRemainingAfterThisHypotheticalSplitEURm": 944.2,
+      "maintenanceCapexCertified": false,
+      "corporateCapexOnly": true,
+      "notIbmOnly": true,
+      "notStatisticalBound": true
+    },
+    {
+      "hypotheticalSustainingPpeCapexAsMultipleOfPpeDepreciation": 1,
+      "groupUpkeepProxyEURm": 916,
+      "cashCapexRemainingAfterThisHypotheticalSplitEURm": 715.2,
+      "maintenanceCapexCertified": false,
+      "corporateCapexOnly": true,
+      "notIbmOnly": true,
+      "notStatisticalBound": true
+    },
+    {
+      "hypotheticalSustainingPpeCapexAsMultipleOfPpeDepreciation": 1.25,
+      "groupUpkeepProxyEURm": 1145,
+      "cashCapexRemainingAfterThisHypotheticalSplitEURm": 486.2,
+      "maintenanceCapexCertified": false,
+      "corporateCapexOnly": true,
+      "notIbmOnly": true,
+      "notStatisticalBound": true
+    }
+  ],
+  "previousV04CentralYear2029": {
+    "ibmMixedRevenueEURm": 15847.36,
+    "groupRevenueEURm": 56111.76,
+    "ibmAssumedGrossMarginPct": 51.5,
+    "groupCashCapexEURm": 3086.147,
+    "groupCashStressProxyEURm": 17226.222,
+    "taxScenarioPct": 18,
+    "notCertifiedFCF": true
+  },
+  "ibm2029MarginOverlay": [
+    {
+      "ibmGmPct": 41.789,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 6622.453,
+      "groupEbitEffectVsV04CentralEURm": -1538.937,
+      "groupCashStressEffectVsV04CentralEURm": -1261.928,
+      "groupCashStressProxyEURm": 15964.294,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    },
+    {
+      "ibmGmPct": 48.1999,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 7638.412,
+      "groupEbitEffectVsV04CentralEURm": -522.979,
+      "groupCashStressEffectVsV04CentralEURm": -428.843,
+      "groupCashStressProxyEURm": 16797.379,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    },
+    {
+      "ibmGmPct": 50.869,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 8061.394,
+      "groupEbitEffectVsV04CentralEURm": -99.997,
+      "groupCashStressEffectVsV04CentralEURm": -81.997,
+      "groupCashStressProxyEURm": 17144.225,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    },
+    {
+      "ibmGmPct": 51.5,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 8161.39,
+      "groupEbitEffectVsV04CentralEURm": 0,
+      "groupCashStressEffectVsV04CentralEURm": 0,
+      "groupCashStressProxyEURm": 17226.222,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    },
+    {
+      "ibmGmPct": 54,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 8557.574,
+      "groupEbitEffectVsV04CentralEURm": 396.184,
+      "groupCashStressEffectVsV04CentralEURm": 324.871,
+      "groupCashStressProxyEURm": 17551.093,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    },
+    {
+      "ibmGmPct": 56.5,
+      "ibmRevenueFixedEURm": 15847.36,
+      "ibmGrossProfitScenarioEURm": 8953.758,
+      "groupEbitEffectVsV04CentralEURm": 792.368,
+      "groupCashStressEffectVsV04CentralEURm": 649.742,
+      "groupCashStressProxyEURm": 17875.964,
+      "notActualIbmSegmentOperatingProfit": true,
+      "notActualIbmOwnerEarnings": true
+    }
+  ],
+  "groupCapexIntensityOverlay": [
+    {
+      "additionalGroupCapexPctRevenue": -1,
+      "groupCashStressProxyEffectEURm": 561.118,
+      "totalGroupCapexStressEURm": 2525.029,
+      "notMaintenanceCapexEstimate": true
+    },
+    {
+      "additionalGroupCapexPctRevenue": 0,
+      "groupCashStressProxyEffectEURm": 0,
+      "totalGroupCapexStressEURm": 3086.147,
+      "notMaintenanceCapexEstimate": true
+    },
+    {
+      "additionalGroupCapexPctRevenue": 1,
+      "groupCashStressProxyEffectEURm": -561.118,
+      "totalGroupCapexStressEURm": 3647.265,
+      "notMaintenanceCapexEstimate": true
+    }
+  ],
+  "cashTimingOverlay": [
+    {
+      "additionalOperatingCashTimingPctRevenue": -2,
+      "groupCashStressProxyEffectEURm": -1122.235,
+      "notExactFutureCustomerAdvanceMovement": true
+    },
+    {
+      "additionalOperatingCashTimingPctRevenue": 0,
+      "groupCashStressProxyEffectEURm": 0,
+      "notExactFutureCustomerAdvanceMovement": true
+    },
+    {
+      "additionalOperatingCashTimingPctRevenue": 2,
+      "groupCashStressProxyEffectEURm": 1122.235,
+      "notExactFutureCustomerAdvanceMovement": true
+    }
+  ],
+  "combinedStress": {
+    "ibmMarginPlusMinus5ppAfterTaxEURm": 649.742,
+    "groupCapexPlusMinus1PctRevenueEURm": 561.118,
+    "groupWcPlusMinus2PctRevenueEURm": 1122.235,
+    "combinedNegativeEURm": 14893.127,
+    "combinedPositiveEURm": 19559.317
+  },
+  "methodology": {
+    "formulaIbmGrossProfitEURm": "IBM_REVENUE * IBM_GROSS_MARGIN / 100",
+    "formula2029EbitDelta": "(IBM_SCENARIO_GM - IBM_V04_GM) * IBM_2029_REVENUE / 100",
+    "formulaAfterTaxCashProxyDelta": "EBIT_DELTA * (1 - V04_HYPOTHETICAL_OPERATING_TAX_RATE)",
+    "formulaCashProxySensitivity": "V04_CASH_PROXY + AFTER_TAX_IBM_GM_DELTA - GROUP_CAPEX_DELTA + GROUP_CASH_TIMING_DELTA",
+    "noAdditionalCfoAddBackForServicePartsOrLabor": true,
+    "noShareCountRequiredToTest": true,
+    "future2029CashFlowHypotheticalNotOwnerEarnings": true,
+    "depreciationMaintenanceRatioOnlyStressNotEstimate": true
+  },
+  "status": {
+    "ibmTrueContractRecurringRevenueEURm": null,
+    "ibmDirectCashCostAllocations": null,
+    "ibmStandaloneCapitalAssetSchedule": null,
+    "actualMaintenanceCapexEURm": null,
+    "group2025EbitMarginSourceBased": true,
+    "fcfNormalized": null,
+    "readyForDeepDive": false,
+    "registryWriteCount": 0,
+    "hasCertifiedValuation": false
+  },
+  "validation": {
+    "serviceGP2025Equals4167_7": true,
+    "PPEAdditionsFY2025Sum": true,
+    "ppeDepByFunctionEquals916": true,
+    "cashCapexSumEquals1631_2": true,
+    "allHistoricMarginsInRange": true,
+    "allMarginOverlaysNotOwnerEarnings": true,
+    "allCapexAllocationStressesUncertified": true,
+    "originalV04Unmodified": true
+  }
+}
