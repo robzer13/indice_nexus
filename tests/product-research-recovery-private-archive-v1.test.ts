@@ -16,7 +16,7 @@ const candidate:OfficialSourceCandidate={
   admitted:false,historicalBytesCertified:false,
 };
 
-function fixture(opts:{public?:boolean;uploadCode?:string;stored?:Buffer;downloadFailure?:boolean}={}) {
+function fixture(opts:{public?:boolean;uploadCode?:string;uploadErrorCode?:string;stored?:Buffer;downloadFailure?:boolean}={}) {
   const log:{uploadPath?:string;uploadOptions?:Record<string,unknown>;downloads:number;uploads:number}={
     downloads:0,uploads:0,
   };
@@ -34,7 +34,7 @@ function fixture(opts:{public?:boolean;uploadCode?:string;stored?:Buffer;downloa
             log.uploadPath=path;
             log.uploadOptions=options;
             assert.deepEqual(data,body);
-            return {error:opts.uploadCode?{statusCode:opts.uploadCode}:null};
+            return {error:opts.uploadCode?{statusCode:opts.uploadCode,code:opts.uploadErrorCode}:null};
           },
           async download(path:string){
             log.downloads++;
@@ -64,11 +64,24 @@ test('private content-addressed object is create-only and READBACK hash verified
   assert.equal(f.log.downloads,1);
 });
 test('existing SHA-addressed object is verified, never overwritten',async()=>{
-  const f=fixture({uploadCode:'409'});
+  const f=fixture({uploadCode:'409',uploadErrorCode:'KeyAlreadyExists'});
   const receipt=await archiveAsmlCandidate(f.client,candidate,body);
   assert.equal(receipt.verifiedReadback,true);
   assert.equal(f.log.uploadOptions?.upsert,false);
   assert.equal(f.log.downloads,1);
+});
+test('legacy 400 exact duplicate is accepted only after readback',async()=>{
+  const f=fixture({uploadCode:'400',uploadErrorCode:'already_exists'});
+  const receipt=await archiveAsmlCandidate(f.client,candidate,body);
+  assert.equal(receipt.verifiedReadback,true);
+  assert.equal(f.log.downloads,1);
+});
+test('unrelated 400 and 409 responses fail closed, never triggering a download',async()=>{
+  for(const code of ['400','409']) {
+    const f=fixture({uploadCode:code,uploadErrorCode:'AccessDenied'});
+    await assert.rejects(archiveAsmlCandidate(f.client,candidate,body),/CREATE_FAILED/);
+    assert.equal(f.log.downloads,0);
+  }
 });
 test('public bucket forbidden before any write',async()=>{
   const f=fixture({public:true});
