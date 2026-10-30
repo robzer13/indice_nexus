@@ -25,6 +25,15 @@
       "date": "2026-10-14",
       "url": "https://www.investor.asml.com/news-releases/news-release-details/asml-reports-eu11.7-billion-total-net-sales-and-eu5.0-billion-net-income-q3-2026",
       "fact": "FY 2026 revenue 44-45bn GM ~56%, Q4 guidance revenue, R&D and SG&A"
+    },
+    {
+      "id": "2026-Q3-PRESENTATION",
+      "date": "2026-10-14",
+      "url": "https://www.sec.gov/Archives/edgar/data/937966/000162828026065813/a2026_10x14xpresentation.htm",
+      "page": 13,
+      "fact": "Q4 2026 IBM ~€3.7bn, R&D ~€1.2bn, SG&A ~€0.4bn; FY2026 gross margin ~56%",
+      "kind": "PRIMARY_ISSUER_INVESTOR_PRESENTATION",
+      "originBytesSealed": false
     }
   ],
   "guideBased2026Anchor": {
@@ -37,7 +46,8 @@
     "ibmGmHypothesis": 50.87,
     "rd": 4835.9,
     "sga": 1357.6,
-    "systemGmImplied": 57.945994
+    "systemGmImplied": 57.945994,
+    "sourceForQ4IBMAndCosts": "SEC Ex99.2 presentation 2026-10-14, page 13"
   },
   "anchorInterpretation": "44.5bn issuer revenue-guide midpoint, IBM 8538.1m 9M realized + 3.7bn approx Q4 outlook, IBM GM 50.87% is carried-forward 2025 actual as a hypothetical calibration input, systems GM is an algebraic residual not reported, 9M R&D/SG&A plus approximate Q4 budgets.",
   "scenarioInputs": [
