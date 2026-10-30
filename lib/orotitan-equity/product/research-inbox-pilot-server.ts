@@ -272,3 +272,12 @@ export async function getPilotResearchRegistryRoutingSnapshot(
     return unavailable;
   }
 }
+
+/** Service-role server-only SHADOW client for non-authoritative recovery journal. */
+export function getHostedShadowRecoveryClient(): SupabaseClient {
+  if (!isHostedShadowResearchEnabled(process.env) ||
+      researchInboxPilotMode() !== 'shared-test') {
+    throw new Error('PRODUCT_RECOVERY_NOT_HOSTED_SHADOW');
+  }
+  return sharedTestClient();
+}
