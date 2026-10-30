@@ -1,5 +1,6 @@
 import 'server-only';
 import {retrievePreferredAsmlQ2OfficialSource} from './research-recovery-official-source-v1';
+import {isRecoveryCiBrowserFixture,recoverySyntheticFetch} from './research-recovery-ci-fixture';
 import {archiveAsmlCandidate} from './research-recovery-private-archive-v1';
 import {reviewEconomicShareLedger,reviewHistoricalXamsClose} from './research-recovery-financial-evidence-v1';
 import { getHostedShadowRecoveryClient } from './research-inbox-pilot-server';
@@ -100,7 +101,8 @@ export async function executeShadowRecoveryCycle(key: string) {
           // production OBSERVATION mirror. Never infer an issuer from a SHADOW
           // run UUID, and never use post-valuation Q3 material.
           if (snapshot.origin==='ASML_READ_ONLY_MIRROR') {
-            const {candidate:source,bytes}=await retrievePreferredAsmlQ2OfficialSource();
+            const {candidate:source,bytes}=await retrievePreferredAsmlQ2OfficialSource(
+              isRecoveryCiBrowserFixture(process.env) ? recoverySyntheticFetch : fetch);
             // Durable private capture, not a canonical artifact or a proof that
             // the exact same bytes existed at the historical valuation cut-off.
             const receipt=await archiveAsmlCandidate(client,source,bytes);
