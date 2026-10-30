@@ -5,7 +5,7 @@
  * This fetches an official issuer release, validates transport/content/date,
  * and calculates the hash of the bytes observed TODAY. It does not claim that
  * those bytes existed unchanged on the valuation date, admit evidence, compute
- * shares, update the Registry, or archive the original document.
+ * shares or update the Registry. Raw bytes can be passed to the private archive.
  *
  * No user-selected URLs and no redirects (SSRF/host substitution fail-closed).
  */
@@ -32,11 +32,11 @@ export type OfficialSourceCandidate = Readonly<{
   historicalBytesCertified:false;
 }>;
 
-export async function probeAsmlQ2OfficialRelease(
+export async function retrieveAsmlQ2OfficialRelease(
   fetcher: typeof fetch=fetch,
   evaluationDate:string=ASML_Q2_2026_PUBLIC_RELEASE.evaluationCutoff,
   now:()=>Date=()=>new Date(),
-): Promise<OfficialSourceCandidate> {
+): Promise<Readonly<{candidate:OfficialSourceCandidate; bytes:Buffer}>> {
   const source=ASML_Q2_2026_PUBLIC_RELEASE;
   if (!DATE.test(evaluationDate) ||
       source.publicationDate > evaluationDate ||
@@ -88,12 +88,21 @@ export async function probeAsmlQ2OfficialRelease(
       !(/\bQ2\s+2026\b/i.test(page) || /2026\s+second-quarter\s+results/i.test(page))) {
     throw new Error('RECOVERY_SOURCE_IDENTITY_OR_DATE_UNVERIFIED');
   }
-  return {
+  return {candidate:{
     documentId:source.documentId,url:source.url,
     publicationDate:source.publicationDate,
     retrievedAt:now().toISOString(),byteSize:size,
     sha256:createHash('sha256').update(bytes).digest('hex'),
     contentType:'text/html',
     admitted:false,historicalBytesCertified:false,
-  };
+  },bytes};
+}
+
+/** Metadata-only helper for read-only probes; never exposes source bytes to UI. */
+export async function probeAsmlQ2OfficialRelease(
+  fetcher: typeof fetch=fetch,
+  evaluationDate:string=ASML_Q2_2026_PUBLIC_RELEASE.evaluationCutoff,
+  now:()=>Date=()=>new Date(),
+): Promise<OfficialSourceCandidate> {
+  return (await retrieveAsmlQ2OfficialRelease(fetcher,evaluationDate,now)).candidate;
 }
