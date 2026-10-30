@@ -1354,5 +1354,38 @@
     "preservesExisting2027to2029BaseScenario": true,
     "registryWritesPerformed": false,
     "researchComplete": false
+  },
+  "cycleDownturnWorkingV07": {
+    "note": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_CYCLE_DOWNTURN_HISTORICAL_REPLAY_REPORT_V0_7.md",
+    "model": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_CYCLE_DOWNTURN_HISTORICAL_REPLAY_MODEL_V0_7.json",
+    "status": "WORKING_RESEARCH_ONLY",
+    "historical": {
+      "bookingsFY2022EURm": 30674,
+      "bookingsFY2023EURm": 20040,
+      "bookingsFY2024EURm": 18899,
+      "bookingsFY2025EURm": 28035,
+      "bookingsDrop2023Pct": -34.67,
+      "systemsRevenueChange2024Pct": -0.77,
+      "ibmRevenueChange2023Pct": -2.15,
+      "ebitChange2024Pct": -0.22,
+      "groupFcfGrowth2024Pct": 179.72
+    },
+    "outsideView": [
+      "SEMI_2023_WORLD_AND_REGION_EQUIPMENT_DATA",
+      "TSMC_2023_ANNUAL_REPORT",
+      "SAMSUNG_2023_DS_CAPEX"
+    ],
+    "illustrative2028": {
+      "centralCashProxyEURm": 16301.67,
+      "limitedCashProxyEURm": 14260.34,
+      "stylizedCashProxyEURm": 11094.54,
+      "severeCashProxyEURm": 6356.58,
+      "certifiedNormalizedFreeCashFlow": false
+    },
+    "lagTransmissionCoefficientMeasured": false,
+    "hypotheticalScenariosAreStatisticalBounds": false,
+    "statusG001": "INDEPENDENT_NONBLOCKING",
+    "registryWritesPerformed": false,
+    "readyForDeepDive": false
   }
 }
