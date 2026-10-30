@@ -185,6 +185,8 @@ corroboration, not proof of independent economic information.
 
 **Reconciliation companion (2026-10-30):** [PDF source qualification / issued-share vs treasury / working capital / market close / control gates](./ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md).
 
+**G001/G006 authority conflict review (v0.3):** [dated issuer share ledger, four mutually inconsistent vendor share-counts, employee treasury delivery mechanics and exact issuer-authority request (NOT SENT)](./ASML_2026-10-30_a1e59126_G001_G006_AUTHORITY_CONFLICT_V0_3.md). **Conclusion:** exact 2026-10-30 economic shares UNKNOWN; 2026-10-29 XAMS EUR 1,504.80 vendor close is corroborated, but original official unadjusted EOD custody remains missing. Do not average vendors or calculate certified market cap.
+
 ## IX. Next authorized Research actions
 
 1. Review and approve the now-confirmed SHA match to the separately uploaded Euronext-labeled PDF; establish admissible source provenance, file custody, issuer/filing context and authority requirements independently. Only then consider Registry admission (not automatic).
