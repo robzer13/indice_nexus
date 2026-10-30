@@ -427,19 +427,19 @@
       "id": "GAP-002",
       "priority": "CRITICAL",
       "block": "ECONOMIC_SHARE_COUNT",
-      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count."
+      "description": "Exact issued less treasury shares as of valuation cutoff; reconcile settle-date repurchases, new issuances, stock plan deliveries, cancellations; Q3 383.1m weighted-average shares is not a closing share count. Primary AGM count on 2026-03-25 validated; 1,299,377 gross repurchases disclosed Sep21-Oct23 confirmed; issuer net share count still unavailable because of employee deliveries, cancellations, issuance, trade/settlement dates and later undisclosed trades."
     },
     {
       "id": "GAP-003",
       "priority": "CRITICAL",
       "block": "MARKET_PRICE",
-      "description": "Source official Euronext XAMS price with precisely stated as-of timestamp: Oct 30 official close only after completed session, otherwise Oct 29 close with date alignment; check unadjusted convention and corporate actions."
+      "description": "Source official Euronext XAMS price with precisely stated as-of timestamp: Oct 30 official close only after completed session, otherwise Oct 29 close with date alignment; check unadjusted convention and corporate actions. Cross-vendor Oct29 XAMS displayed close EUR 1504.80 and volume 660425; Euronext official EOD bytes absent. Oct30 is still intraday at research time."
     },
     {
       "id": "GAP-004",
       "priority": "CRITICAL",
       "block": "FCF_OWNER_EARNINGS",
-      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings."
+      "description": "Q3 CFO includes EUR 7,009m changes in operating assets/liabilities; build working-capital, deposits/deferred revenue, capex maintenance/growth, share-based compensation, nonoperating investment gain bridges. No annualized Q3 CFO, no certified Owner Earnings. PDF supports quarterly 2026 CFO bridge Q1 -2185.6, Q2 +1703.0, Q3 +11797.6, and 9M +11315.0 EURm; Q3 contract-liability balance delta +5730.3 and changes assets/liabilities +7009.0, no normalized owner earnings."
     },
     {
       "id": "GAP-005",
@@ -512,7 +512,7 @@
   },
   "inputSufficiency": {
     "readyForDeepDive": false,
-    "reason": "Mandatory original private source capture and exact financial/valuation/sector evidence insufficient.",
+    "reason": "PDF privately captured and independently SHA-matched to a second supplied copy; source authority/admission plus exact economic share count, official XAMS EOD, owner-earnings normalization and further Research coverage still incomplete.",
     "missingCritical": [
       "GAP-001",
       "GAP-002",
@@ -561,5 +561,151 @@
     "officialEuronextUrl": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
     "serverToServerEuronextBytesVerified": false,
     "sourceOriginAuthorityReviewPending": true
+  },
+  "reconciliationV01": {
+    "status": "PRE_ADMISSION_FINANCIAL_RECONCILIATION_ONLY",
+    "sourceReport": {
+      "sourceKind": "USER_SUPPLIED_EURONEXT_LABELED_ASML_US_GAAP_Q3_2026",
+      "pdfPages": 12,
+      "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+      "byteSize": 1369295,
+      "fileReadAndHashedIndependent": true,
+      "privateStorageReadbackVerifiedByApplication": true,
+      "provenanceChainAttested": false,
+      "registryAdmitted": false
+    },
+    "asOf": {
+      "cutoff": "2026-10-30",
+      "quarterEnd": "2026-09-27",
+      "issuerPublishDate": "2026-10-14",
+      "marketReferenceDate": "2026-10-29",
+      "oct30OfficialEodAvailableAtResearchTime": false
+    },
+    "g001": {
+      "status": "BLOCKED",
+      "issuedAGMDate": "2026-03-25",
+      "issuedAtAGM": 388147674,
+      "treasuryAtAGM": 3224029,
+      "outstandingAtAGM": 384923645,
+      "basicSharesQ3WeightedAverageMillions": 383.1,
+      "exactOutstandingAsOfCutoff": null,
+      "buybackWeeks": [
+        {
+          "published": "2026-09-28",
+          "from": "2026-09-21",
+          "to": "2026-09-25",
+          "grossPurchased": 165200,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-2"
+        },
+        {
+          "published": "2026-10-05",
+          "from": "2026-09-28",
+          "to": "2026-10-02",
+          "grossPurchased": 277000,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-3"
+        },
+        {
+          "published": "2026-10-12",
+          "from": "2026-10-05",
+          "to": "2026-10-09",
+          "grossPurchased": 280000,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-4"
+        },
+        {
+          "published": "2026-10-19",
+          "from": "2026-10-12",
+          "to": "2026-10-16",
+          "grossPurchased": 233867,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-5"
+        },
+        {
+          "published": "2026-10-26",
+          "from": "2026-10-19",
+          "to": "2026-10-23",
+          "grossPurchased": 343310,
+          "url": "https://investor.asml.com/news-releases/news-release-details/asml-reports-transactions-under-its-current-share-buyback-program-6"
+        }
+      ],
+      "reportedGrossRepurchasesSep21ToOct23": 1299377,
+      "reportedGrossRepurchasesJun29ToSep18FromPriorNote": 2607008,
+      "conditionalReportedGrossRepurchasesJun29ToOct23": 3906385,
+      "notNetSharesOutstandingChange": true,
+      "possibleEmployeePlanUse": true,
+      "missing": [
+        "issued_and_treasury_exact_at_Q3_end",
+        "post_Q3_employee_delivery_and_issuance",
+        "cancellations_and_settlement_trade_date_effects",
+        "buybacks_2026-10-26_through_cutoff_not_yet_published"
+      ]
+    },
+    "cash": {
+      "unit": "EUR_MILLION",
+      "periods": {
+        "q1_2026": {
+          "cfo": -2185.6,
+          "ppe": 402.4,
+          "intangibles": 19.9,
+          "simpleFcf": -2607.9
+        },
+        "q2_2026": {
+          "cfo": 1703,
+          "ppe": 299.4,
+          "intangibles": 86.6,
+          "simpleFcf": 1317
+        },
+        "q3_2026": {
+          "cfo": 11797.6,
+          "ppe": 413.3,
+          "intangibles": 33.9,
+          "simpleFcf": 11350.4,
+          "changeInAssetsAndLiabilities": 7009,
+          "changePctCfo": 59.41,
+          "contractLiabilities": 9300.6,
+          "previousQuarterContractLiabilities": 3570.3,
+          "contractLiabilitiesBalanceChange": 5730.3,
+          "equityInvestmentGain": 509.7
+        },
+        "nineMonths_2026": {
+          "cfo": 11315,
+          "ppe": 1115.1,
+          "intangibles": 140.4,
+          "simpleFcf": 10059.5
+        },
+        "ltm_through_2026_09_27": {
+          "cfo": 22725.3,
+          "ppeAndIntangibleCombined": 1725.9,
+          "simpleFcf": 20999.4
+        }
+      },
+      "classification": "CFO_AND_SIMPLE_FCF_ARITHMETIC_NOT_OWNER_EARNINGS",
+      "ownerEarningsCertified": false,
+      "roicCertified": false
+    },
+    "market": {
+      "venue": "XAMS",
+      "isin": "NL0010273215",
+      "reference": "2026-10-29_17_30_AMSTERDAM",
+      "vendorCrossCheckedCloseEUR": 1504.8,
+      "vendorVolume": 660425,
+      "officialXamsEndOfDayBytesSealed": false,
+      "oct30PriceStatus": "INTRADAY_NOT_A_CLOSE",
+      "vendorShareCountMillions": 382.91,
+      "illustrativeVendorEquityValueEURBillion": 576.203,
+      "certifiedMarketCap": null,
+      "certifiedEnterpriseValue": null,
+      "dividendExDateXams": "2026-10-26",
+      "dividendEUR": 1.88
+    },
+    "statusGates": {
+      "pdfBinaryIdentity": "MATCH",
+      "sourceAuthority": "NEEDS_FORMAL_ADMISSION_REVIEW",
+      "g001": "BLOCKED",
+      "g006": "BLOCKED_PRIMARY_XAMS_EOD",
+      "ownerEarnings": "BLOCKED",
+      "roic": "BLOCKED",
+      "researchReadyForDeepDive": false,
+      "registryWritesPerformed": false
+    },
+    "complementaryResearchNote": "docs/orotitan-equity/research/ASML_2026-10-30_a1e59126_SOURCE_CAPITAL_CASH_PRICE_RECONCILIATION_V0_1.md"
   }
 }
