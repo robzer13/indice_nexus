@@ -421,7 +421,7 @@
       "id": "GAP-001",
       "priority": "CRITICAL",
       "block": "SOURCE_BYTES",
-      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN. SEC EX-99.3 HTML references separately hosted slide images; capture the linked assets or equivalent full issuer official PDF as a complete source set, not only the HTML wrapper. Browser PDF copy now stored in SHADOW with create-only private object and application SHA readback; source origin / official byte-for-byte match NOT yet verified, so full original-source admissibility still blocked."
+      "description": "Collect original SEC/ASML Q3 documents as immutable private bytes with MIME, size, SHA256, source_date and retrieved_at; verify read-back. Existing SHADOW Q2 source is not an admitted artifact of this production RUN. SEC EX-99.3 HTML references separately hosted slide images; capture the linked assets or equivalent full issuer official PDF as a complete source set, not only the HTML wrapper. Browser PDF copy now stored in SHADOW with create-only private object and application SHA readback; source origin / official byte-for-byte match NOT yet verified, so full original-source admissibility still blocked. Independent SHA256 computation of a second, user-provided Euronext-labeled PDF (1,369,295 bytes) matches the SHADOW content-addressed captured file exactly. This establishes identity of the two supplied copies; separately verified origin/custody authority and formal Evidence Ledger admission remain pending."
     },
     {
       "id": "GAP-002",
@@ -522,7 +522,7 @@
   },
   "provenanceNote": "Sources linked and read via public retrieval; source bytes are NOT locally sealed or uploaded to private object store by this review. No hash claimed. Sources hosted at SEC and issuer mirror reflect same underlying issuer, not independent economic corroboration. SEC EX-99.3 financial statements reference multiple slide images, which must be included in any immutable byte capture.",
   "privateSourceCapture": {
-    "state": "BROWSER_SUPPLIED_SHADOW_STORED_NON_ADMITTED",
+    "state": "BROWSER_SUPPLIED_SHADOW_STORED_BINARY_MATCH_TO_USER_EURONEXT_COPY_NON_ADMITTED",
     "observedInDatabaseAt": "2026-10-30",
     "bucket": "orotitan-source-files-v1",
     "privateBucketVerified": true,
@@ -540,6 +540,26 @@
     "documentAuthenticityVerified": false,
     "registryAdmitted": false,
     "independentComparisonSource": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
-    "independentSourceBytesCompared": false
+    "independentSourceBytesCompared": true,
+    "independentSourceByteCount": 1369295,
+    "independentSourceSha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "independentSourceBinaryMatch": true,
+    "independentComparisonMethod": "sha256sum of full user-attached Euronext-labeled PDF, exact byte length checked against SHADOW receipt",
+    "independentComparisonEvidenceDate": "2026-10-30",
+    "independentFilePageCount": 12,
+    "independentFilePdfTitle": "Financial statements US GAAP Q3 2026",
+    "independentFileProducer": "Wdesk Fidelity Content Translations Version 017.002.008",
+    "externalDownloadChainCryptographicallyAttested": false
+  },
+  "externalPdfHashComparison": {
+    "result": "EXACT_MATCH",
+    "asOf": "2026-10-30",
+    "source": "USER_ATTACHED_EURONEXT_LABELED_COPY",
+    "sha256": "562ba8423b4cdb74f48c0d033f9c1571c314f525f252cffce245ad532b03e2a9",
+    "bytes": 1369295,
+    "pdfPages": 12,
+    "officialEuronextUrl": "https://live.euronext.com/sites/default/files/company_press_releases/attachments/2026/10/14/cpr01_notified_Financial%20statements%20US%20GAAP%20Q3%202026.pdf",
+    "serverToServerEuronextBytesVerified": false,
+    "sourceOriginAuthorityReviewPending": true
   }
 }
