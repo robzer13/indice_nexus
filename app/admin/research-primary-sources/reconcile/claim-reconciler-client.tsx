@@ -119,7 +119,11 @@ export function ClaimReconcilerClient({sources}:{sources:V35Source[]}){
   a.download='ASML_2026-10-30_a1e59126_RESEARCH_PRIVATE_PDF_RECONCILIATION_V3_5.json';
   document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
  }
- const nextSource=sources[cursorRef.current.sourceIndex];
+ const last=chunks.length?chunks[chunks.length-1]:undefined;
+ const lastIndex=last?sources.findIndex(s=>s.id===last.sourceId):-1;
+ const nextIndex=last?lastIndex+(last.endPage===last.pdfPageCount?1:0):0;
+ const nextStartPage=last&&last.endPage<last.pdfPageCount?last.endPage+1:1;
+ const nextSource=sources[nextIndex];
  return <div className="space-y-6">
   <section className="space-y-3 rounded-lg border border-cyan-700 p-5">
    <h2 className="text-xl font-semibold text-white">Réconciliateur documentaire v3.5</h2>
@@ -151,7 +155,7 @@ export function ClaimReconcilerClient({sources}:{sources:V35Source[]}){
    </div>
    <p role="status" aria-live="polite" className="text-sm text-cyan-100">{status}</p>
    {nextSource&&<p className="text-xs text-slate-400">
-    Prochaine position : {nextSource.id} — page PDF {cursorRef.current.startPage}
+    Prochaine position : {nextSource.id} — page PDF {nextStartPage}
    </p>}
    {error&&<p role="alert" className="text-sm text-rose-300">{error}</p>}
   </section>
