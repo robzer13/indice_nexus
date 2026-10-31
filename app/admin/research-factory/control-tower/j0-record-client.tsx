@@ -12,7 +12,10 @@ const types:{value:EventType;label:string}[]=[
  {value:'BLOCKER_RESOLVED',label:'Résoudre un blocage'},
  {value:'GATE_REVIEW_REQUESTED',label:'Demander la revue du gate'},
 ];
-export function J0RecordClient({runIds}:{runIds:readonly string[]}){
+export function J0RecordClient({runIds,criteria}:{
+ runIds:readonly string[];
+ criteria:Readonly<Record<string,readonly string[]>>;
+}){
  const router=useRouter();
  const [milestone,setMilestone]=useState('J0');
  const [type,setType]=useState<EventType>('EVIDENCE_RECORDED');
@@ -20,11 +23,16 @@ export function J0RecordClient({runIds}:{runIds:readonly string[]}){
  const [reference,setReference]=useState('');
  const [runId,setRunId]=useState('');
  const [details,setDetails]=useState('');
+ const [criterionIndex,setCriterionIndex]=useState('');
  const [busy,setBusy]=useState(false);
  const [receipt,setReceipt]=useState<Receipt|null>(null);
  const [error,setError]=useState('');
  async function record(){
   if(busy)return;
+  if(type==='EVIDENCE_RECORDED'&&!criterionIndex){
+   setError('Sélectionne un critère de passage pour rattacher la preuve.');
+   return;
+  }
   setBusy(true);setError('');setReceipt(null);
   try{
    const eventKey='orotitan:j0:ui-'+crypto.randomUUID();
@@ -35,7 +43,8 @@ export function J0RecordClient({runIds}:{runIds:readonly string[]}){
      eventKey,milestoneCode:milestone,eventType:type,
      title:title.trim(),evidenceRef:reference.trim(),
      runId:runId||null,details:{comment:details.trim(),
-       provenance:'ADMIN_MANUAL_REPORT_ONLY'},
+       provenance:'ADMIN_MANUAL_REPORT_ONLY',
+     ...(type==='EVIDENCE_RECORDED'?{criterionIndex:Number(criterionIndex)}:{})},
     }),
    });
    const json:unknown=await res.json();
@@ -62,7 +71,7 @@ export function J0RecordClient({runIds}:{runIds:readonly string[]}){
    <label className="space-y-1 text-sm">
     <span>Jalon</span>
     <select value={milestone} disabled={busy}
-     onChange={e=>setMilestone(e.target.value)}
+     onChange={e=>{setMilestone(e.target.value);setCriterionIndex('');}}
      className="w-full rounded border border-slate-600 bg-slate-900 p-2">
      {Array.from({length:9},(_,i)=><option key={i} value={'J'+i}>J{i}</option>)}
     </select>
@@ -100,6 +109,16 @@ export function J0RecordClient({runIds}:{runIds:readonly string[]}){
      {runIds.map(id=><option key={id} value={id}>{id}</option>)}
     </select>
    </label>
+   {type==='EVIDENCE_RECORDED'&&<label className="space-y-1 text-sm">
+    <span>Critère de passage lié à cette preuve (obligatoire)</span>
+    <select value={criterionIndex} disabled={busy}
+     onChange={e=>setCriterionIndex(e.target.value)}
+     className="w-full rounded border border-slate-600 bg-slate-900 p-2">
+     <option value="">Sélectionne un critère…</option>
+     {(criteria[milestone]??[]).map((text,i)=><option
+       key={i} value={String(i+1)}>C{i+1} — {text}</option>)}
+    </select>
+   </label>}
    <label className="space-y-1 text-sm">
     <span>Commentaire / limitation</span>
     <input value={details} disabled={busy} maxLength={1000}
@@ -109,7 +128,7 @@ export function J0RecordClient({runIds}:{runIds:readonly string[]}){
    </label>
   </div>
   <button type="button" disabled={busy||title.trim().length<5||
-     reference.trim().length<8} onClick={()=>void record()}
+     reference.trim().length<8||(type==='EVIDENCE_RECORDED'&&!criterionIndex)} onClick={()=>void record()}
    className="rounded bg-cyan-400 px-4 py-2 font-semibold text-slate-950 disabled:opacity-50">
    {busy?'Écriture et relecture en cours…':'Consigner et relire le reçu'}
   </button>
