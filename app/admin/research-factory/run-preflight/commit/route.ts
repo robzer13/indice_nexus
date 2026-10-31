@@ -73,8 +73,10 @@ export async function POST(req:NextRequest){
     .select('run_id,creation_idempotency_key,contract_set_sha256,run_status')
     .eq('issuer_id',issuerId).eq('data_cutoff',dataCutoff).limit(20),
   ]);
-  if(issuerQ.error||securityQ.error||dossierQ.error||runsQ.error||
-     !Array.isArray(runsQ.data)||runsQ.data.length>=20)
+  if(issuerQ.error||securityQ.error||dossierQ.error||runsQ.error)
+   fail('P0E_SHADOW_IDENTITY_READ_FAILED');
+  const rawRuns=runsQ.data;
+  if(!Array.isArray(rawRuns)||rawRuns.length>=20)
    fail('P0E_SHADOW_IDENTITY_READ_FAILED');
   const issuer=obj(issuerQ.data),security=obj(securityQ.data),
    dossier=obj(dossierQ.data);
@@ -92,7 +94,7 @@ export async function POST(req:NextRequest){
    issuerId,securityId,dossierId,isin,exchange,dataCutoff,
    currentSnapshotId:null,
   });
-  const nonCancelled=runsQ.data.filter(r=>r.run_status!=='CANCELLED');
+  const nonCancelled=rawRuns.filter(r=>r.run_status!=='CANCELLED');
   if(nonCancelled.length>1||
     nonCancelled.some(r=>r.creation_idempotency_key!==plan.creationIdempotencyKey||
      r.contract_set_sha256!==plan.contractSetSha256))
@@ -135,11 +137,12 @@ export async function POST(req:NextRequest){
     .eq('dossier_id',dossierId).limit(1),
   ]);
   if(runQ.error||auditQ.error||eventsQ.error||stagesQ.error||
-     snapshotsQ.error||!Array.isArray(eventsQ.data)||
-     !Array.isArray(stagesQ.data)||!Array.isArray(snapshotsQ.data))
-   fail('P0E_POSTCOMMIT_READBACK_FAILED');
+     snapshotsQ.error)fail('P0E_POSTCOMMIT_READBACK_FAILED');
+  const events=eventsQ.data,stages=stagesQ.data,snapshots=snapshotsQ.data;
+  if(!Array.isArray(events)||!Array.isArray(stages)||
+     !Array.isArray(snapshots))fail('P0E_POSTCOMMIT_READBACK_FAILED');
   const run=obj(runQ.data),audit=obj(auditQ.data);
-  const eventTypes=eventsQ.data.map(r=>r.event_type);
+  const eventTypes=events.map(r=>r.event_type);
   if(run.run_id!==runId||run.issuer_id!==issuerId||
      run.security_id!==securityId||run.dossier_id!==dossierId||
      run.run_type!=='INITIAL'||run.run_status!=='CREATED'||
@@ -153,7 +156,7 @@ export async function POST(req:NextRequest){
      audit.profile_id!=='OROTITAN_V3_1'||audit.publication_authorized!==false||
      eventTypes.length!==2||!eventTypes.includes('RUN_CREATED')||
      !eventTypes.includes('RUN_IDENTITY_BOUND')||
-     stagesQ.data.length!==0||snapshotsQ.data.length!==0)
+     stages.length!==0||snapshots.length!==0)
    fail('P0E_POSTCOMMIT_STATE_MISMATCH');
   return NextResponse.json({
    ok:true,status:result.status,runId,
