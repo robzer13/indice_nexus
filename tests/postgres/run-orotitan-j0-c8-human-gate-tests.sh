@@ -35,6 +35,15 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfa
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_gate_event_serialization_shadow.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql" >/dev/null
+# Disposable, deliberately unbound Registry run. This is not SHADOW and
+# never creates a canonical issuer or runs a research stage.
+psql -X -v ON_ERROR_STOP=1 -d "$db" -c "
+ INSERT INTO public.orotitan_runs(
+  creation_idempotency_key,entry_path,canonical_mode,run_type,
+  data_cutoff,process_version,pilotage_contract_version,
+  contract_pins,contract_set_sha256)
+ VALUES('c8-disposable-only-run','IMPOSED_COMPANY','ANALYZE','INITIAL',
+  '2026-10-30','3.1','3.1','{}'::jsonb,repeat('a',64))" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
 set role service_role;
 do $matrix$
@@ -42,9 +51,10 @@ declare
  i integer; ids uuid[]:='{}'::uuid[];
  x jsonb; prepared jsonb; replay jsonb; rc jsonb;
  v_hash text:=repeat('b',64);
- v_ref text:='https://github.com/robzer13/indice_nexus/blob/'||repeat('a',40)||'/docs/audits/J1_SANDBOX_TEST.md';
- v_review_key text:='orotitan:c8:review:local-j1-matrix-20261031';
+ v_ref text:='https://github.com/robzer13/indice_nexus/blob/'||repeat('a',40)||'/docs/audits/J0_SANDBOX_TEST.md';
+ v_review_key text:='orotitan:c8:review:local-j0-matrix-20261031';
  v_id uuid;
+ v_local_run uuid;
 begin
  if (SELECT count(*) FROM pg_trigger
      WHERE tgrelid='public.orotitan_j0_events_v1'::regclass
@@ -79,42 +89,46 @@ begin
  exception when others then
    if sqlerrm<>'J0_C8_GATE_NOT_READY' then raise;end if;
  end;
- -- Make a fictional J1 with seven local evidence events; no other issuer or
+ SELECT run_id INTO STRICT v_local_run FROM public.orotitan_runs
+ WHERE creation_idempotency_key='c8-disposable-only-run';
+ -- Make a fictional J0 with seven local evidence events; no other issuer or
  -- production run is ever started.
  for i in 1..7 loop
    x:=public.orotitan_j0_record_event_v1(
-    'orotitan:j0:c8-local-j1-proof-'||i::text,
-    'J1','EVIDENCE_RECORDED','Disposable isolated proof C'||i::text,
-    'test:j1-sandbox-c8-proof-'||i::text,NULL,
+    'orotitan:j0:c8-local-j0-proof-'||i::text,
+    'J0','EVIDENCE_RECORDED','Disposable isolated proof C'||i::text,
+    CASE WHEN i IN (1,6,7) THEN 'registry:run:'||v_local_run::text
+     ELSE 'test:j0-sandbox-c8-proof-'||i::text END,
+    CASE WHEN i IN (1,6,7) THEN v_local_run ELSE NULL END,
     jsonb_build_object('criterionIndex',i,'source','LOCAL_ONLY'));
    if x->>'status'<>'CREATED' then raise exception 'J0_C8_FIXTURE_WRITE_FAILED';end if;
    ids:=array_append(ids,(x->>'event_id')::uuid);
  end loop;
- x:=public.orotitan_j0_c8_gate_check_v1('J1');
+ x:=public.orotitan_j0_c8_gate_check_v1('J0');
  if x->>'eligibleForReview'<>'true' OR x->>'openBlockers'<>'0' then
   raise exception 'J0_C8_SEVEN_PROOFS_NOT_READY %',x;end if;
  prepared:=public.orotitan_j0_c8_prepare_review_v1(
-  v_review_key,'J1',v_ref,v_hash,'Reviewer Local',ids);
+  v_review_key,'J0',v_ref,v_hash,'Reviewer Local',ids);
  if prepared->>'status'<>'PREPARED' OR prepared->>'accepted'<>'false'
  or (select count(*) from public.orotitan_j0_c8_reviews_v1)<>1
  or (select count(*) from public.orotitan_j0_c8_decisions_v1)<>0
  then raise exception 'J0_C8_PREPARE_RECEIPT_FAILED %',prepared;end if;
  replay:=public.orotitan_j0_c8_prepare_review_v1(
-  v_review_key,'J1',v_ref,v_hash,'Reviewer Local',ids);
+  v_review_key,'J0',v_ref,v_hash,'Reviewer Local',ids);
  if replay->>'status'<>'REPLAYED' or replay->>'reviewId'<>prepared->>'reviewId'
  then raise exception 'J0_C8_REVIEW_REPLAY_FAILED';end if;
  begin
   perform public.orotitan_j0_c8_prepare_review_v1(
-   v_review_key,'J1',v_ref,repeat('c',64),'Reviewer Local',ids);
+   v_review_key,'J0',v_ref,repeat('c',64),'Reviewer Local',ids);
   raise exception 'J0_C8_REVIEW_CONFLICT_NOT_DETECTED';
  exception when others then
   if sqlerrm<>'J0_C8_REVIEW_IDEMPOTENCY_CONFLICT' then raise;end if;
  end;
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
-   'orotitan:c8:decision:local-j1-20261031',(prepared->>'reviewId')::uuid,
+   'orotitan:c8:decision:local-j0-20261031',(prepared->>'reviewId')::uuid,
    prepared->>'reviewSha256','Approver Local',
-   'ACCEPTER J1 SHADOW','GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+   'ACCEPTER J0 SHADOW','GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_ACCEPTANCE_DISABLED_BYPASS';
  exception when others then
   if sqlerrm<>'J0_C8_ACCEPTANCE_LOCKED' then raise;end if;
@@ -127,15 +141,15 @@ end $matrix$;
 reset role;
 -- Only the disposable PG owner can activate the lock for testing.
 update public.orotitan_j0_c8_acceptance_control_v1
-set enabled=true,activation_authority_ref='GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST'
+set enabled=true,activation_authority_ref='GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST'
 where lock_name='GLOBAL_SHADOW';
 UPDATE public.orotitan_j0_c8_milestone_activation_v1
-SET enabled=true,authority_ref='GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST'
-WHERE milestone_code='J1';
+SET enabled=true,authority_ref='GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST'
+WHERE milestone_code='J0';
 DO $guard$
 BEGIN
  IF (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled)<>1
- OR (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled AND milestone_code='J0')<>0
+ OR (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled AND milestone_code='J1')<>0
  THEN RAISE EXCEPTION 'J0_C8_CROSS_MILESTONE_GO_LEAK';END IF;
 END $guard$;
 set role service_role;
@@ -145,20 +159,20 @@ declare
  old_hash text:=current_setting('orotitan.c8_fixture_hash');
  ids uuid[]:=string_to_array(current_setting('orotitan.c8_fixture_proofs'),',')::uuid[];
  newer jsonb; v jsonb; replay jsonb; x jsonb;
- v_ref text:='https://github.com/robzer13/indice_nexus/blob/'||repeat('a',40)||'/docs/audits/J1_SANDBOX_TEST.md';
- v_decision_key text:='orotitan:c8:decision:local-j1-test-20261031';
+ v_ref text:='https://github.com/robzer13/indice_nexus/blob/'||repeat('a',40)||'/docs/audits/J0_SANDBOX_TEST.md';
+ v_decision_key text:='orotitan:c8:decision:local-j0-test-20261031';
 begin
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
    v_decision_key,old_id,old_hash,'Approver Local','WRONG',
-   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_CONFIRMATION_BYPASS';
  exception when others then
   if sqlerrm<>'J0_C8_EXPLICIT_CONFIRMATION_REQUIRED' then raise;end if;
  end;
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
-   v_decision_key,old_id,old_hash,'Approver Local','ACCEPTER J1 SHADOW',
+   v_decision_key,old_id,old_hash,'Approver Local','ACCEPTER J0 SHADOW',
    'GO_ACCEPT_J0_WRONG_AUTHORITY');
   raise exception 'J0_C8_AUTHORITY_BYPASS';
  exception when others then
@@ -166,27 +180,27 @@ begin
  end;
  -- New event makes the earlier review stale.
  v:=public.orotitan_j0_record_event_v1(
-  'orotitan:j0:c8-new-j1-proof-for-staleness',
-  'J1','EVIDENCE_RECORDED',
+  'orotitan:j0:c8-new-j0-proof-for-staleness',
+  'J0','EVIDENCE_RECORDED',
   'New evidence invalidates previous review',
-  'test:j1-sandbox-c8-staleness',NULL,
+  'test:j0-sandbox-c8-staleness',NULL,
   '{"criterionIndex":4}'::jsonb);
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
-   v_decision_key,old_id,old_hash,'Approver Local','ACCEPTER J1 SHADOW',
-   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+   v_decision_key,old_id,old_hash,'Approver Local','ACCEPTER J0 SHADOW',
+   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_STALE_REVIEW_ACCEPTED';
  exception when others then
   if sqlerrm<>'J0_C8_REVIEW_STALE' then raise;end if;
  end;
  -- New sealed review under the new watermark.
  newer:=public.orotitan_j0_c8_prepare_review_v1(
-  'orotitan:c8:review:local-j1-after-staleness-20261031',
-  'J1',v_ref,repeat('b',64),'Reviewer Local',ids);
+  'orotitan:c8:review:local-j0-after-staleness-20261031',
+  'J0',v_ref,repeat('b',64),'Reviewer Local',ids);
  v:=public.orotitan_j0_c8_accept_review_v1(
   v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
-  'Approver Local','ACCEPTER J1 SHADOW',
-  'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+  'Approver Local','ACCEPTER J0 SHADOW',
+  'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
  if v->>'status'<>'ACCEPTED' or v->>'accepted'<>'true'
   or v->>'stageStarted'<>'false' or v->>'published'<>'false'
   or (select count(*) from public.orotitan_j0_c8_decisions_v1)<>1
@@ -194,15 +208,15 @@ begin
  then raise exception 'J0_C8_SIMULATED_ACCEPT_FAILED %',v;end if;
  replay:=public.orotitan_j0_c8_accept_review_v1(
   v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
-  'Approver Local','ACCEPTER J1 SHADOW',
-  'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+  'Approver Local','ACCEPTER J0 SHADOW',
+  'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
  if replay->>'status'<>'REPLAYED' or replay->>'decisionId'<>v->>'decisionId'
  then raise exception 'J0_C8_DECISION_REPLAY_FAILED';end if;
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
    v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
-   'Approver Forged','ACCEPTER J1 SHADOW',
-   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
+   'Approver Forged','ACCEPTER J0 SHADOW',
+   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_DECISION_CONFLICT_NOT_DENIED';
  exception when others then
   if sqlerrm<>'J0_C8_DECISION_IDEMPOTENCY_CONFLICT' then raise;end if;
@@ -213,11 +227,11 @@ begin
   raise exception 'J0_C8_DECISION_UPDATE_ALLOWED';
  exception when insufficient_privilege then null;
  end;
- x:=public.orotitan_j0_c8_read_gate_v1('J1');
+ x:=public.orotitan_j0_c8_read_gate_v1('J0');
  if x->>'accepted'<>'true' or x->>'acceptanceAllowedNow'<>'false' then
   raise exception 'J0_C8_ACCEPTED_PROJECTION_INVALID %',x;end if;
  if (select count(*) from public.orotitan_j0_c8_decisions_v1
-     where milestone_code='J0')<>0 then raise exception 'J0_REAL_ACCEPTANCE_IN_LOCAL_TEST';end if;
+     where milestone_code='J1')<>0 then raise exception 'J1_UNAUTHORIZED_IN_LOCAL_TEST';end if;
  raise notice 'J0_C8_TESTS_STALE_WRONG_GO_ACCEPT_REPLAY_IMMUTABLE_PASS';
 end $accept$;
 reset role;
@@ -226,5 +240,5 @@ SQL
 # nor does it enable any new real-world environment.
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
 test "$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_j0_c8_decisions_v1')" = "1"
-test "$(psql -XAt -d "$db" -c "select count(*) from public.orotitan_j0_c8_decisions_v1 where milestone_code='J0'")" = "0"
-echo "J0 C8 LOCAL PG PASS: locked-by-default, 7-proof review, replay/conflict, stale, explicit GO, simulated J1 approval, immutable decision and migration idempotence"
+test "$(psql -XAt -d "$db" -c "select count(*) from public.orotitan_j0_c8_decisions_v1 where milestone_code='J1'")" = "0"
+echo "J0 C8 LOCAL PG PASS: locked-by-default, 7-proof review, replay/conflict, stale, explicit GO, simulated LOCAL J0-only approval, immutable decision and migration idempotence"
