@@ -16,7 +16,7 @@ export const dynamic='force-dynamic';
 
 type Milestone={milestone_code:string;ordinal:number;title:string;
  objective:string;initial_status:string;gate_criteria:unknown;};
-type Event={event_id:string;milestone_code:string;event_type:string;
+type Event={event_id:string;event_seq:number;milestone_code:string;event_type:string;
  title:string;evidence_ref:string|null;run_id:string|null;
  verification_state:string;created_at:string;};
 type Run={run_id:string;issuer_id:string|null;security_id:string|null;
@@ -39,8 +39,8 @@ export default async function J0ControlTowerPage(){
    .select('milestone_code,ordinal,title,objective,initial_status,gate_criteria')
    .order('ordinal',{ascending:true}).limit(10),
   client.from('orotitan_j0_events_v1')
-   .select('event_id,milestone_code,event_type,title,evidence_ref,run_id,verification_state,created_at')
-   .order('created_at',{ascending:false}).limit(250),
+   .select('event_id,event_seq,milestone_code,event_type,title,evidence_ref,run_id,verification_state,created_at')
+   .order('event_seq',{ascending:false}).limit(250),
   client.from('orotitan_runs')
    .select('run_id,issuer_id,security_id,dossier_id,run_status,current_stage,run_type,state_version,data_cutoff,contract_set_sha256,created_at')
    .order('created_at',{ascending:false}).limit(200),
