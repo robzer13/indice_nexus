@@ -117,7 +117,7 @@ export function planCanonicalIdentityOnboarding(
  const issuer=exact?observed.issuers.filter(i=>i.issuerId===exact.issuerId):[];
  const activeDossiers=exact?observed.dossiers.filter(d=>d.issuerId===exact.issuerId&&d.active):[];
  const verifiedExisting=exact&&issuer.length===1&&activeDossiers.length===1;
- const mappingConflicts=legacyMaps.length>1||Boolean(exact&&legacyMaps.length===1&&
+ const mappingConflicts=legacyMaps.length>1||Boolean(!exact&&legacyMaps.length>0)||Boolean(exact&&legacyMaps.length===1&&
   (legacyMaps[0].securityId!==exact.securityId||
    legacyMaps[0].issuerId!==exact.issuerId||
    (activeDossiers.length===1&&legacyMaps[0].dossierId!==activeDossiers[0].dossierId)));
