@@ -18,7 +18,7 @@ type Milestone={milestone_code:string;ordinal:number;title:string;
  objective:string;initial_status:string;gate_criteria:unknown;};
 type Event={event_id:string;event_seq:number;milestone_code:string;event_type:string;
  title:string;evidence_ref:string|null;run_id:string|null;
- verification_state:string;created_at:string;};
+ verification_state:string;operator_details:Record<string,unknown>;created_at:string;};
 type Run={run_id:string;issuer_id:string|null;security_id:string|null;
  dossier_id:string|null;run_status:string;current_stage:string|null;
  run_type:string|null;state_version:number;data_cutoff:string;
@@ -39,7 +39,7 @@ export default async function J0ControlTowerPage(){
    .select('milestone_code,ordinal,title,objective,initial_status,gate_criteria')
    .order('ordinal',{ascending:true}).limit(10),
   client.from('orotitan_j0_events_v1')
-   .select('event_id,event_seq,milestone_code,event_type,title,evidence_ref,run_id,verification_state,created_at')
+   .select('event_id,event_seq,milestone_code,event_type,title,evidence_ref,run_id,verification_state,operator_details,created_at')
    .order('event_seq',{ascending:false}).limit(250),
   client.from('orotitan_runs')
    .select('run_id,issuer_id,security_id,dossier_id,run_status,current_stage,run_type,state_version,data_cutoff,contract_set_sha256,created_at')
@@ -127,8 +127,21 @@ export default async function J0ControlTowerPage(){
       </p>
       <details className="text-sm text-slate-300">
        <summary className="cursor-pointer text-cyan-300">Critères d’acceptation ({criteria.length})</summary>
-       <ol className="mt-2 list-decimal space-y-1 pl-5">
-        {criteria.map((item,i)=><li key={i}>{item}</li>)}
+       <ol className="mt-2 list-decimal space-y-2 pl-5">
+        {criteria.map((item,i)=>{
+         const proofs=observations.filter(e=>
+          e.event_type==='EVIDENCE_RECORDED'&&
+          e.operator_details?.criterionIndex===i+1);
+         const direct=proofs.filter(e=>
+          e.verification_state==='VERIFIED_DIRECT_REGISTRY_READBACK').length;
+         return <li key={i}>
+          <span>{item}</span>
+          <span className="ml-2 text-xs text-slate-400">
+           {proofs.length===0?'Aucune preuve rattachée':
+            proofs.length+' preuves, '+direct+' relectures directes'}
+          </span>
+         </li>;
+        })}
        </ol>
       </details>
       {blockers.map(issue=><p key={issue.event_id}
@@ -182,7 +195,11 @@ export default async function J0ControlTowerPage(){
     </table>
    </div>
   </section>
-  <J0RecordClient runIds={runs.map(r=>r.run_id)}/>
+  <J0RecordClient runIds={runs.map(r=>r.run_id)}
+   criteria={Object.fromEntries(milestones.map(m=>[
+    m.milestone_code,Array.isArray(m.gate_criteria)?
+     m.gate_criteria.filter((x):x is string=>typeof x==='string'):[],
+   ]))}/>
   <p className="text-sm text-slate-400">
    Portée : SHADOW uniquement. Le champ « initial_status » est la position
    d’ouverture du programme, non une certification d’avancement calculée.
