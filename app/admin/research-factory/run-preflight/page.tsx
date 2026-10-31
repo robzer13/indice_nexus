@@ -39,6 +39,10 @@ export default async function RunFactoryIdentityPage(){
   </section>
   <RunFactoryDryRunClient profiles={profiles}/>
   <div className="flex flex-wrap gap-6">
+   <Link href="/admin/research-factory/onboarding"
+    className="text-sm text-cyan-300 underline">
+    P0-C : onboarding canonique (lecture seule)
+   </Link>
    <Link href="/admin/research-factory/contracts"
     className="text-sm text-cyan-300 underline">
     Vérifier les contrats (P0-A)
