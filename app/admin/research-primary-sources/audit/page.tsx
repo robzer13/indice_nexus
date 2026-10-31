@@ -37,8 +37,14 @@ export default async function PrivatePdfAuditPage(){
      <p role="alert" className="text-rose-300">
        Audit désactivé hors de la Preview SHADOW isolée.
      </p>}
-   <Link href="/admin/research-primary-sources" className="text-sm text-cyan-300 underline">
-     Revenir à la capture primaire
-   </Link>
+   <div className="flex flex-wrap gap-5">
+    <Link href="/admin/research-primary-sources/reconcile"
+      className="text-sm text-cyan-300 underline">
+      Automatiser la réconciliation documentaire v3.5
+    </Link>
+    <Link href="/admin/research-primary-sources" className="text-sm text-cyan-300 underline">
+      Revenir à la capture primaire
+    </Link>
+   </div>
  </main>;
 }
