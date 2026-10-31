@@ -13,6 +13,8 @@ const draft={
  issuerSourceUrl:'https://www.loreal-finance.com/fr/laction',
  listingSourceUrl:'https://live.euronext.com/fr/product/equities/fr0000120321-xpar/overview',
 };
+const query=Object.fromEntries(new URLSearchParams(buildUntrustedReviewDraftQuery(draft)));
+
 test('review draft transports issuer metadata without code/Registry writes',()=>{
  const params=new URLSearchParams(buildUntrustedReviewDraftQuery(draft));
  const result=parseUntrustedOnboardingDraft(Object.fromEntries(params));
@@ -23,10 +25,10 @@ test('review draft transports issuer metadata without code/Registry writes',()=>
  assert.equal('rpcExecuted' in result!,false);
 });
 test('ISIN and exchange are validated; cannot inject dangerous URLs',()=>{
- assert.equal(parseUntrustedOnboardingDraft({...draft,isin:'FR0000120322'}),null);
- assert.equal(parseUntrustedOnboardingDraft({...draft,exchange:'XPAR;DELETE'}),null);
+ assert.equal(parseUntrustedOnboardingDraft({...query,isin:'FR0000120322'}),null);
+ assert.equal(parseUntrustedOnboardingDraft({...query,exchange:'XPAR;DELETE'}),null);
  const result=parseUntrustedOnboardingDraft({
-  ...draft,issuerSourceUrl:'javascript:alert(1)',
+  ...query,issuerSourceUrl:'javascript:alert(1)',
   listingSourceUrl:'https://127.0.0.1/private',
  });
  assert.equal(result?.issuerSourceUrl,'');
@@ -46,7 +48,7 @@ test('invalid or absent review draft is ignored without authorizing writes',()=>
  assert.equal(parseUntrustedOnboardingDraft({isin:['FR0000120321'],
   ticker:'OR',exchange:'XPAR'}),null);
  const p=parseUntrustedOnboardingDraft({
-  ...draft,primaryListing:'false',quoteUnit:'MINOR',priceDecimals:'6',
+  ...query,primaryListing:'false',quoteUnit:'MINOR',priceDecimals:'6',
  });
  assert.equal(p?.primaryListing,false);
  assert.equal(p?.quoteUnit,'MINOR');
