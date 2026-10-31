@@ -26,7 +26,8 @@ function source(v:Param):string{
   const u=new URL(raw);
   if(u.protocol!=='https:'||u.username||u.password||u.port||
    !/^[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i.test(u.hostname)||
-   u.hostname.endsWith('.local')||u.hash||u.pathname==='/')
+   u.hostname.endsWith('.local')||
+   /^\\d+(?:\\.\\d+){3}$/.test(u.hostname)||u.hash||u.pathname==='/')
    return '';
   return u.toString();
  }catch{return '';}
