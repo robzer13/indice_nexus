@@ -10,7 +10,7 @@ import {asmlCaptureErrorLabel}
  from '@/lib/orotitan-equity/product/asml-capture-error-diagnostics-v291';
 export const metadata:Metadata={title:'ASML / TSMC · Capture primaire v2.9.1 · SHADOW'};
 export const dynamic='force-dynamic';
-type Params=Promise<{result?:string;error?:string;source?:string}>;
+type Params=Promise<{result?:string;error?:string;source?:string;tsmc_sha?:string;tsmc_error?:string}>;
 
 export default async function PrimarySourcesPage({searchParams}:{searchParams:Params}){
   if(!await isAdminAuthenticated())redirect('/admin');
@@ -35,6 +35,47 @@ export default async function PrimarySourcesPage({searchParams}:{searchParams:Pa
       <strong> Aucun Registry, aucune transition de stage, aucune publication.</strong>
     </section>
     {!enabled?<p role="alert" className="text-rose-300">Fonction désactivée hors Preview SHADOW isolée.</p>:<>
+      <section className="rounded-lg border border-cyan-800 p-5 space-y-4">
+        <h2 className="text-lg font-semibold text-white">TSMC T3 2026 — Import manuel sécurisé</h2>
+        <p className="text-sm text-slate-300">
+          Les téléchargements automatiques du PDF TSMC et du PDF ASML T3 renvoient HTTP 403
+          depuis un runner CI. Utilise ce mode navigateur plutôt que de relancer la capture automatique.
+        </p>
+        <p className="text-sm">
+          <a href={ASML_V29_SOURCES.TSMC_2026_Q3_CALL.url}
+            target="_blank" rel="noopener noreferrer" className="text-cyan-300 underline">
+            1. Télécharger la transcription PDF sur le site investisseurs TSMC
+          </a>
+        </p>
+        <form method="post" action="/admin/research-primary-sources/upload-tsmc"
+          encType="multipart/form-data" className="space-y-3">
+          <input type="hidden" name="documentId" value="TSMC_2026_Q3_CALL"/>
+          <label htmlFor="tsmcPdf" className="block text-sm text-slate-200">
+            2. Sélectionner le PDF téléchargé (maximum 15 Mo)
+          </label>
+          <input id="tsmcPdf" name="document" type="file"
+            accept=".pdf,application/pdf" required
+            className="block w-full text-sm text-slate-200"/>
+          <button type="submit" className="rounded-md bg-cyan-400 px-4 py-3 font-semibold text-slate-950">
+            3. Archiver le PDF TSMC en privé et vérifier SHA-256
+          </button>
+        </form>
+        {q.tsmc_sha&&/^[a-f0-9]{64}$/.test(q.tsmc_sha)&&
+          <p role="status" className="break-all font-mono text-xs text-emerald-200">
+            Reçu TSMC, SHA-256 : {q.tsmc_sha} — candidat non admis.
+          </p>}
+        {q.tsmc_error&&<p role="alert" className="text-sm text-rose-300">
+          Import TSMC non confirmé : {q.tsmc_error==='invalid_pdf'?
+          'fichier PDF invalide ou taille incorrecte':q.tsmc_error==='storage_failure'?
+          'échec du stockage privé ou de la vérification SHA-256':q.tsmc_error==='source_invalid'?
+          'document non autorisé':'erreur de capture à examiner'}.
+        </p>}
+        <p className="text-xs text-amber-200">
+          Les octets transmis sont archivés avec relecture et empreinte SHA-256.
+          La provenance et l&apos;authenticité externe du PDF ne sont pas certifiées.
+          Aucun Registry, aucune publication, aucun changement de stage.
+        </p>
+      </section>
       <section className="rounded-lg border border-slate-700 p-5 space-y-4">
         <h2 className="text-lg font-semibold text-white">Sources sur liste blanche</h2>
         <form action="/admin/research-primary-sources/capture" method="post" className="space-y-4">
