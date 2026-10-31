@@ -34,6 +34,7 @@ psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfa
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_j0_control_tower_shadow.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_gate_event_serialization_shadow.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
 set role service_role;
 do $matrix$
@@ -63,6 +64,8 @@ begin
  -- Actual SHADOW J0 blocker evidence is simulated ONLY with no proof here;
  -- check J0 cannot prepare without 7 real criteria proofs.
  x:=public.orotitan_j0_c8_read_gate_v1('J0');
+ IF (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled)<>0
+ THEN RAISE EXCEPTION 'J0_C8_MILESTONE_LOCKS_NOT_DISABLED';END IF;
  if x->>'eligibleForReview'<>'false' OR x->>'acceptanceEnabled'<>'false' then
    raise exception 'J0_C8_PREMATURE_J0_READY';end if;
  begin
@@ -111,7 +114,7 @@ begin
   perform public.orotitan_j0_c8_accept_review_v1(
    'orotitan:c8:decision:local-j1-20261031',(prepared->>'reviewId')::uuid,
    prepared->>'reviewSha256','Approver Local',
-   'ACCEPTER J1 SHADOW','GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+   'ACCEPTER J1 SHADOW','GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_ACCEPTANCE_DISABLED_BYPASS';
  exception when others then
   if sqlerrm<>'J0_C8_ACCEPTANCE_LOCKED' then raise;end if;
@@ -124,8 +127,17 @@ end $matrix$;
 reset role;
 -- Only the disposable PG owner can activate the lock for testing.
 update public.orotitan_j0_c8_acceptance_control_v1
-set enabled=true,activation_authority_ref='GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST'
+set enabled=true,activation_authority_ref='GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST'
 where lock_name='GLOBAL_SHADOW';
+UPDATE public.orotitan_j0_c8_milestone_activation_v1
+SET enabled=true,authority_ref='GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST'
+WHERE milestone_code='J1';
+DO $guard$
+BEGIN
+ IF (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled)<>1
+ OR (SELECT COUNT(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled AND milestone_code='J0')<>0
+ THEN RAISE EXCEPTION 'J0_C8_CROSS_MILESTONE_GO_LEAK';END IF;
+END $guard$;
 set role service_role;
 do $accept$
 declare
@@ -139,7 +151,7 @@ begin
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
    v_decision_key,old_id,old_hash,'Approver Local','WRONG',
-   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_CONFIRMATION_BYPASS';
  exception when others then
   if sqlerrm<>'J0_C8_EXPLICIT_CONFIRMATION_REQUIRED' then raise;end if;
@@ -162,7 +174,7 @@ begin
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
    v_decision_key,old_id,old_hash,'Approver Local','ACCEPTER J1 SHADOW',
-   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_STALE_REVIEW_ACCEPTED';
  exception when others then
   if sqlerrm<>'J0_C8_REVIEW_STALE' then raise;end if;
@@ -174,7 +186,7 @@ begin
  v:=public.orotitan_j0_c8_accept_review_v1(
   v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
   'Approver Local','ACCEPTER J1 SHADOW',
-  'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+  'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
  if v->>'status'<>'ACCEPTED' or v->>'accepted'<>'true'
   or v->>'stageStarted'<>'false' or v->>'published'<>'false'
   or (select count(*) from public.orotitan_j0_c8_decisions_v1)<>1
@@ -183,14 +195,14 @@ begin
  replay:=public.orotitan_j0_c8_accept_review_v1(
   v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
   'Approver Local','ACCEPTER J1 SHADOW',
-  'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+  'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
  if replay->>'status'<>'REPLAYED' or replay->>'decisionId'<>v->>'decisionId'
  then raise exception 'J0_C8_DECISION_REPLAY_FAILED';end if;
  begin
   perform public.orotitan_j0_c8_accept_review_v1(
    v_decision_key,(newer->>'reviewId')::uuid,newer->>'reviewSha256',
    'Approver Forged','ACCEPTER J1 SHADOW',
-   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+   'GO_ACCEPT_J1_SANDBOX_ISOLATED_TEST');
   raise exception 'J0_C8_DECISION_CONFLICT_NOT_DENIED';
  exception when others then
   if sqlerrm<>'J0_C8_DECISION_IDEMPOTENCY_CONFLICT' then raise;end if;
