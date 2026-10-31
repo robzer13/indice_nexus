@@ -5,6 +5,8 @@ import type {P0CDecision} from
  '@/lib/orotitan-equity/product/runfactory-canonical-onboarding-candidate-v1';
 import type {P0DInput} from
  '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-command-v1';
+import type {P0DReviewDraft} from
+ '@/lib/orotitan-equity/product/runfactory-onboarding-review-draft-v1';
 
 type InspectResponse={ok:true;result:P0CDecision};
 type CommitResponse={ok:true;environment:'SHADOW_ONLY';outcome:string;
@@ -25,8 +27,10 @@ const EMPTY:FormState={
  primaryListing:true,quoteUnit:'MAJOR',priceDecimals:2,
  issuerSourceUrl:'',listingSourceUrl:'',
 };
-export function AtomicOnboardingClient(){
- const [values,setValues]=useState<FormState>(EMPTY);
+export function AtomicOnboardingClient({
+ initialValues,
+}:{initialValues:P0DReviewDraft|null}){
+ const [values,setValues]=useState<FormState>(initialValues??EMPTY);
  const [checked,setChecked]=useState(false);
  const [reviewedAt,setReviewedAt]=useState('');
  const [confirmation,setConfirmation]=useState('');
