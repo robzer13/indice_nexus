@@ -81,7 +81,7 @@ export async function POST(req:NextRequest){
   const record=await verifyPinnedContractBytes(
    profileId,parsed.logicalName,fetchPinnedGithubBlob,
   );
-  return NextResponse.json({ok:true,profileId,contractSetSha256:summary.contractSetSha256,
+  return NextResponse.json({ok:true,contractSetSha256:summary.contractSetSha256,
    ...record,issuerResearchAuthorized:false,registryAdmitted:false,
    evidenceAdmitted:false,checkedAt:new Date().toISOString()},
    {headers});
