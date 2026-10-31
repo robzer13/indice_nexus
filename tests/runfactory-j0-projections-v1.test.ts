@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import {unresolvedJ0Issues,j0DisplayedStatus}
+import {unresolvedJ0Issues,j0DisplayedStatus,validateJ0EvidenceCriterion}
  from '../lib/orotitan-equity/product/runfactory-j0-projections-v1';
 
 const events=[
@@ -32,4 +32,17 @@ test('J0 blocker overrides any initial status; never auto-accept',()=>{
 test('J0 rejects invalid state or invalid incident count',()=>{
  assert.throws(()=>j0DisplayedStatus({initialStatus:'ACCEPTED',unresolvedBlockerCount:0}),/J0_UNKNOWN/);
  assert.throws(()=>j0DisplayedStatus({initialStatus:'TESTE',unresolvedBlockerCount:-1}),/J0_BLOCKER/);
+});
+
+test('J0 evidence can be linked to a valid existing acceptance criterion',()=>{
+ assert.equal(validateJ0EvidenceCriterion(1,['One criterion','Second criterion']),1);
+ assert.equal(validateJ0EvidenceCriterion(2,['One criterion','Second criterion']),2);
+});
+test('J0 rejects forged, missing, out-of-bounds and malformed criterion links',()=>{
+ for(const bad of [undefined,null,'1',0,-1,3,1.2,NaN]){
+  assert.throws(()=>validateJ0EvidenceCriterion(bad,['One criterion','Second criterion']),
+   /J0_EVIDENCE_CRITERION_INVALID/);
+ }
+ assert.throws(()=>validateJ0EvidenceCriterion(1,[]),/J0_GATE_CRITERIA_INVALID/);
+ assert.throws(()=>validateJ0EvidenceCriterion(1,[{}]),/J0_GATE_CRITERIA_INVALID/);
 });
