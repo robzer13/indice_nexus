@@ -45,11 +45,16 @@ async function readRunInvariants():Promise<Readonly<{
   client.from('research_snapshots')
    .select('snapshot_id',{count:'exact',head:true}).eq('dossier_id',DOSSIER_ID),
  ]);
- if(run.error||!run.data||stages.error||artifacts.error||
-    snapshots.error||run.data.run_status!=='CREATED'||
-    run.data.current_stage!==null||
-    stages.count!==0||artifacts.count!==0||snapshots.count!==0||
-    run.data.state_version!==2)throw Error('J0_C5_RUN_INVARIANT_FAILED');
+ // Keep query/schema failures distinct from genuine run-state mismatch.
+ // Never identify a broken projection as corruption of the canonical run.
+ if(run.error)throw Error('J0_C5_RUN_READ_FAILED');
+ if(stages.error)throw Error('J0_C5_STAGE_READ_FAILED');
+ if(artifacts.error)throw Error('J0_C5_ARTIFACT_READ_FAILED');
+ if(snapshots.error)throw Error('J0_C5_SNAPSHOT_READ_FAILED');
+ if(!run.data||run.data.run_status!=='CREATED'||
+    run.data.current_stage!==null||run.data.state_version!==2||
+    stages.count!==0||artifacts.count!==0||snapshots.count!==0)
+   throw Error('J0_C5_RUN_STATE_MISMATCH');
  return {stateVersion:run.data.state_version,status:run.data.run_status,
   stageCount:stages.count,artifactCount:artifacts.count,
   snapshotCount:snapshots.count};
