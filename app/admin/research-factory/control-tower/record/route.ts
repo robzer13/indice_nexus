@@ -51,6 +51,18 @@ export async function POST(req:NextRequest){
   return bad('J0_INPUT_INVALID',400);
  try{
   const client=getHostedShadowRecoveryClient();
+  if(v.eventType==='EVIDENCE_RECORDED'){
+   const idx=(v.details as Record<string,unknown>).criterionIndex;
+   const {data:milestone,error:gateError}=await client
+    .from('orotitan_j0_milestones_v1')
+    .select('gate_criteria')
+    .eq('milestone_code',v.milestoneCode).single();
+   if(gateError||!milestone||!Array.isArray(milestone.gate_criteria))
+    return bad('J0_GATE_CRITERIA_UNAVAILABLE',503);
+   if(typeof idx!=='number'||!Number.isSafeInteger(idx)||
+      idx<1||idx>milestone.gate_criteria.length)
+    return bad('J0_EVIDENCE_CRITERION_INVALID',400);
+  }
   const {data:reply,error}=await client.rpc('orotitan_j0_record_event_v1',{
    p_event_key:v.eventKey,p_milestone_code:v.milestoneCode,
    p_event_type:v.eventType,p_title:v.title.trim(),
