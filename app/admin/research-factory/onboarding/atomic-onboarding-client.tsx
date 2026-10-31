@@ -7,6 +7,8 @@ import type {P0DInput} from
  '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-command-v1';
 import type {P0DReviewDraft} from
  '@/lib/orotitan-equity/product/runfactory-onboarding-review-draft-v1';
+import {buildUntrustedRunPreflightHandoff} from
+ '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
 
 type InspectResponse={ok:true;result:P0CDecision};
 type CommitResponse={ok:true;environment:'SHADOW_ONLY';outcome:string;
@@ -252,9 +254,11 @@ export function AtomicOnboardingClient({
     <p>SECURITY_ID = {commitResult.securityId}</p>
     <p>DOSSIER_ID = {commitResult.dossierId}</p>
    </div>
-   <a href="/admin/research-factory/run-preflight"
+   <a href={buildUntrustedRunPreflightHandoff({
+     isin:values.isin,exchange:values.exchange,
+    })}
     className="text-sm text-cyan-300 underline">
-    Continuer vers P0-B : préparation du run
+    Continuer vers P0-B : identité transmise, méthodologie à sélectionner
    </a>
   </section>}
  </div>;
