@@ -12,7 +12,7 @@ export type NumericCandidate = Readonly<{
 }>;
 
 export function findNumericCandidates(
- rawPageText:string,probes:readonly NumericProbe[],limit=12,
+ rawPageText:string,probes:readonly NumericProbe[],limit=100,
 ):NumericCandidate[]{
  if(typeof rawPageText!=='string'||rawPageText.length>1_000_000||
     !Number.isSafeInteger(limit)||limit<1||limit>100)
