@@ -12,6 +12,8 @@ trap 'dropdb --if-exists --force "$db" >/dev/null 2>&1 || true' EXIT
 createdb "$db"
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/i1-fixture.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create schema if not exists extensions; alter extension pgcrypto set schema extensions' >/dev/null
+# Supabase grants service_role USAGE on the extensions namespace.
+psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'grant usage on schema extensions to service_role' >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20260909_orotitan_equity_i1_identity.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20260911_orotitan_equity_i3_snapshot_persistence.sql" >/dev/null
 for file in \
