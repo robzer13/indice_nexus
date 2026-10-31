@@ -38,6 +38,10 @@ export default async function PrivatePdfAuditPage(){
        Audit désactivé hors de la Preview SHADOW isolée.
      </p>}
    <div className="flex flex-wrap gap-5">
+    <Link href="/admin/research-portability/loreal"
+      className="text-sm text-cyan-300 underline">
+      Pilote L’Oréal : portabilité Research (SHADOW)
+    </Link>
     <Link href="/admin/research-primary-sources/reconcile"
       className="text-sm text-cyan-300 underline">
       Automatiser la réconciliation documentaire v3.5
