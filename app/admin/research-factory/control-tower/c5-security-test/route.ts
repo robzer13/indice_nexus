@@ -39,7 +39,7 @@ async function readRunInvariants():Promise<Readonly<{
    'run_id,run_status,current_stage,state_version'
   ).eq('run_id',RUN_ID).single(),
   client.from('orotitan_run_stages')
-   .select('stage_id',{count:'exact',head:true}).eq('run_id',RUN_ID),
+   .select('run_id',{count:'exact',head:true}).eq('run_id',RUN_ID),
   client.from('orotitan_artifacts')
    .select('artifact_id',{count:'exact',head:true}).eq('run_id',RUN_ID),
   client.from('research_snapshots')
