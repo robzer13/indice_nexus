@@ -51,3 +51,27 @@ test('C8 records both reviews and decisions immutably with service-only RPC',()=
  assert.match(migration,/GRANT EXECUTE ON FUNCTION public\.orotitan_j0_c8_accept_review_v1/);
  assert.match(migration,/J0_C8_DECISION_IDEMPOTENCY_CONFLICT/);
 });
+
+test('C8 audit report SHA256 is verified against immutable official GitHub bytes',()=>{
+ assert.match(prepareRoute,/raw\.githubusercontent\.com\/robzer13\/indice_nexus/);
+ assert.match(prepareRoute,/createHash\('sha256'\)/);
+ assert.match(prepareRoute,/J0_C8_AUDIT_HASH_MISMATCH/);
+ assert.match(prepareRoute,/redirect:'error'/);
+ assert.match(prepareRoute,/bytes\.length>262144/);
+});
+test('C8 client idempotency keys persist across retries and UI keeps activation double-locked',()=>{
+ const ui=readFileSync(join(root,
+ 'app/admin/research-factory/control-tower/j0-c8-gate-panel.tsx'),'utf8');
+ assert.match(ui,/reviewKeyRef=useRef/);
+ assert.match(ui,/decisionKeyRef=useRef/);
+ assert.match(ui,/gate\?\.gate\.acceptanceAllowedNow/);
+ assert.match(checkRoute,/runtimeGoEnabled/);
+});
+test('C8 serializes every journal insert with gate decision transaction lock',()=>{
+ const guard=readFileSync(join(root,
+ 'migrations/20261031_orotitan_j0_c8_gate_event_serialization_shadow.sql'),'utf8');
+ assert.match(guard,/BEFORE INSERT ON public\.orotitan_j0_events_v1/);
+ assert.match(guard,/pg_advisory_xact_lock/);
+ assert.match(guard,/orotitan:j0:gate:/);
+ assert.match(migration,/orotitan:j0:gate:/);
+});
