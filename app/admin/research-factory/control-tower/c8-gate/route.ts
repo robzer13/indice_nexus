@@ -36,11 +36,13 @@ export async function GET(req:NextRequest){
      check.data.accepted!==(decisions.count>0)||
      check.data.acceptanceEnabled!==control.data.enabled)
    return fail('J0_C8_READBACK_MISMATCH',503);
+  const runtimeGoEnabled=process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED==='1';
   const lockActive=control.data.enabled===true;
   return NextResponse.json({
    ok:true,scope:'SHADOW_ONLY',milestone,
-   gate:check.data,
-   activationLocked:!lockActive,
+   gate:{...check.data,
+    acceptanceAllowedNow:check.data.acceptanceAllowedNow===true&&runtimeGoEnabled},
+   activationLocked:!lockActive||!runtimeGoEnabled,
    preparedReviews:reviews.count,
    persistedDecisions:decisions.count,
    accepted:decisions.count>0,
