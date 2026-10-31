@@ -57,6 +57,23 @@ export async function POST(req:NextRequest){
   if(control.error||!control.data||control.data.enabled!==true||
      control.data.activation_authority_ref!==p.authorityRef)
    return fail('J0_C8_ACCEPTANCE_LOCKED',423);
+  // A future GO must explicitly unlock THIS milestone, not all J0..J8.
+  const review=await client.from('orotitan_j0_c8_reviews_v1')
+   .select('milestone_code,review_sha256')
+   .eq('review_id',p.reviewId).single();
+  if(review.error||!review.data||
+     review.data.review_sha256!==p.reviewSha256)
+   return fail('J0_C8_REVIEW_NOT_FOUND_OR_HASH_MISMATCH',409);
+  const milestoneControl=await client
+   .from('orotitan_j0_c8_milestone_activation_v1')
+   .select('enabled,authority_ref')
+   .eq('milestone_code',review.data.milestone_code).single();
+  if(milestoneControl.error||!milestoneControl.data||
+     milestoneControl.data.enabled!==true||
+     milestoneControl.data.authority_ref!==p.authorityRef)
+   return fail('J0_C8_MILESTONE_ACCEPTANCE_LOCKED',423);
+  if(p.consentPhrase!=='ACCEPTER '+review.data.milestone_code+' SHADOW')
+   return fail('J0_C8_EXPLICIT_CONFIRMATION_REQUIRED',400);
   const rpc=await client.rpc('orotitan_j0_c8_accept_review_v1',{
    p_decision_key:p.decisionKey,
    p_review_id:p.reviewId,p_review_sha256:p.reviewSha256,
