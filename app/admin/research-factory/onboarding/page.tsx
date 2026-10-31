@@ -39,6 +39,10 @@ export default async function CanonicalOnboardingPage(){
   </section>
   <CanonicalOnboardingClient/>
   <div className="flex flex-wrap gap-6">
+   <Link href="/admin/research-factory/onboarding/execute"
+    className="text-sm text-cyan-300 underline">
+    P0-D : onboarding transactionnel SHADOW
+   </Link>
    <Link href="/admin/research-factory/run-preflight"
     className="text-sm text-cyan-300 underline">
     P0-B : préflight du run
