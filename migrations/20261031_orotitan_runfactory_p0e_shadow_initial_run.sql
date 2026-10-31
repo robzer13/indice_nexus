@@ -75,7 +75,7 @@ begin
  if p_contract_set_sha256 is distinct from
    '3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2'
   or p_contract_pins is null or jsonb_typeof(p_contract_pins)<>'object'
-  or jsonb_object_length(p_contract_pins)<>15
+  or (select count(*) from jsonb_object_keys(p_contract_pins))<>15
   or p_contract_pins#>>'{process,version}'<>'3.1'
   or p_contract_pins#>>'{pilotage,version}'<>'3.1'
   or p_contract_pins#>>'{deep_dive_stage,version}'<>'3.1'
