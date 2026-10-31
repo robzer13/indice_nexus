@@ -182,14 +182,18 @@ begin
      where request_key='orotitan:p0d:test:legacy:rollback') then
    raise exception 'T14 transaction rollback failure';
  end if;
- -- T15: one correct legacy crosswalk persisted atomically.
+ -- T15: add a genuinely new legacy-only candidate after the I1 backfill.
+ insert into public.companies
+  (id,slug,ticker,name,exchange,currency,quote_unit,price_decimals,market_data_multiplier,country)
+ values('00000000-0000-4000-8000-000000000003','new-fixture','NFW',
+  'New Fixture','XPAR','EUR','MAJOR',2,1,'FR');
  perform public.orotitan_onboard_identity_shadow_v1(
-  'orotitan:p0d:test:legacy:correct','NL0010273215','BET','XPAR',
-  'Beta Display','Beta Display SA','FR','EUR','EUR',true,'MAJOR',2,
-  '00000000-0000-4000-8000-000000000002',null,e,
+  'orotitan:p0d:test:legacy:correct','NL0010273215','NFW','XPAR',
+  'New Fixture','New Fixture SA','FR','EUR','EUR',true,'MAJOR',2,
+  '00000000-0000-4000-8000-000000000003',null,e,
   'APPROVE_SHADOW_CANONICAL_IDENTITY_V1');
  if (select count(*) from public.legacy_company_identity_map where
-  legacy_company_id='00000000-0000-4000-8000-000000000002')<>1 then
+  legacy_company_id='00000000-0000-4000-8000-000000000003')<>1 then
   raise exception 'T15 crosswalk not created';
  end if;
  raise notice 'P0D T14-T15 PASS: atomic rollback and legacy crosswalk';
