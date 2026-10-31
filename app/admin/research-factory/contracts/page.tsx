@@ -41,6 +41,10 @@ export default async function ContractPreflightPage(){
    Il n’autorise pas de sélection automatique de la méthodologie.
   </section>
   <ContractPreflightClient profiles={profiles}/>
+  <Link href="/admin/research-factory/run-preflight"
+   className="mr-6 text-sm text-cyan-300 underline">
+   P0-B : identité et runs existants
+  </Link>
   <Link href="/admin/research-portability/loreal"
    className="text-sm text-cyan-300 underline">
    Retour au pilote L’Oréal
