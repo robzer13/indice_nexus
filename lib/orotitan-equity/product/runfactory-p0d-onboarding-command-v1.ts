@@ -33,18 +33,18 @@ const invalid=(code:string):never=>{throw Error(code);};
 const UUID=/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i;
 function id(v:unknown):string|null{
  if(v===null)return null;
- if(typeof v!=='string'||!UUID.test(v))invalid('P0D_ID_INVALID');
+ if(typeof v!=='string'||!UUID.test(v))throw Error('P0D_ID_INVALID');
  return v.toLowerCase();
 }
 function txt(v:unknown,max:number):string{
  if(typeof v!=='string'||!v.trim()||v.length>max||/[\u0000-\u001F\u007F]/.test(v))
-  invalid('P0D_TEXT_INVALID');
+  throw Error('P0D_TEXT_INVALID');
  return v.trim();
 }
 function sourceUrl(v:unknown):string{
- if(typeof v!=='string'||v.length>2048)invalid('P0D_SOURCE_INVALID');
+ if(typeof v!=='string'||v.length>2048)throw Error('P0D_SOURCE_INVALID');
  let url:URL;
- try{url=new URL(v);}catch{return invalid('P0D_SOURCE_INVALID');}
+ try{url=new URL(v);}catch{throw Error('P0D_SOURCE_INVALID');}
  if(url.protocol!=='https:'||url.username||url.password||url.port||
     !/^[a-z0-9-]+(?:\.[a-z0-9-]+)+$/i.test(url.hostname)||
     url.hostname.endsWith('.local')||
