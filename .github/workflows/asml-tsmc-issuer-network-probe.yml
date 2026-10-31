@@ -1,0 +1,65 @@
+name: SHADOW ASML-TSMC issuer network probe (read-only)
+on:
+  push:
+    branches:
+      - feat/asml-primary-source-capture-shadow-v29-20261030
+    paths:
+      - .github/workflows/asml-tsmc-issuer-network-probe.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Set up Node 22
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: '22'
+      - name: Read-only issuer HTTPS probe (no credentials, no archive, no Registry)
+        shell: bash
+        run: |
+          node --input-type=module <<'NODE'
+          const sources=[
+            {id:'TSMC_2026_Q3_CALL',host:'investor.tsmc.com',
+             prefix:'/english/encrypt/files/encrypt_file/reports/2026-10/',
+             url:'https://investor.tsmc.com/english/encrypt/files/encrypt_file/reports/2026-10/eba4fac72873bf546b669bd2b5d973df5c93215d/TSMC%203Q26%20Transcript.pdf'},
+            {id:'ASML_2026_Q3_US_GAAP',host:'investor.asml.com',prefix:'/static-files/',
+             url:'https://investor.asml.com/static-files/d310262b-d037-485d-83b5-92c93cc462f0'}
+          ];
+          for(const src of sources){
+            let url=src.url;
+            for(let hop=0;hop<4;hop++){
+              try{
+                const res=await fetch(url,{redirect:'manual',cache:'no-store',
+                  headers:{accept:'application/pdf'},signal:AbortSignal.timeout(17000)});
+                const mime=res.headers.get('content-type')?.split(';')[0].toLowerCase()||'unspecified';
+                const bytes=res.headers.get('content-length')||'unspecified';
+                console.log(src.id+' status='+res.status+' mime='+mime+' length='+bytes+' hop='+hop);
+                if([301,302,303,307,308].includes(res.status)){
+                  const location=res.headers.get('location');
+                  if(!location){console.log(src.id+' redirect_without_location');break;}
+                  const next=new URL(location,url);
+                  if(next.protocol!=='https:'||next.host!==src.host||!next.pathname.startsWith(src.prefix)){
+                    console.log(src.id+' redirect_outside_allowlist host='+next.host);break;
+                  }
+                  url=next.href;continue;
+                }
+                if(res.ok&&res.body){
+                  const reader=res.body.getReader();
+                  const x=await reader.read();
+                  const prefix=x.value?Buffer.from(x.value).subarray(0,5).toString('ascii'):'';
+                  await reader.cancel();
+                  console.log(src.id+' initial_pdf_magic='+String(prefix==='%PDF-'));
+                }
+                break;
+              }catch(e){
+                const kind=['AbortError','TimeoutError'].includes(e?.name)?'timeout':'network_or_tls';
+                console.log(src.id+' probe_failure='+kind);break;
+              }
+            }
+          }
+          NODE
