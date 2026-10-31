@@ -18,6 +18,7 @@ export type V35Page=Readonly<{
 }>;
 export type V35Chunk=Readonly<{
  sourceId:string;sourceSha256:string;receiptSha256:string;checkedAt:string;
+ sourceDate:string;captureTimestamp:string;
  pdfPageCount:number;startPage:number;endPage:number;
  pages:readonly V35Page[];
 }>;
@@ -59,10 +60,16 @@ function fail():never{throw Error('V35_SCAN_RESPONSE_INVALID');}
 export function validateV35Chunk(input:unknown,expected:V35Source,expectedStart:number):V35Chunk{
  if(!record(input)||input.ok!==true||input.mode!=='scan_pages'||
     input.registryAdmitted!==false||input.issuerOriginAuthenticated!==false||
+    input.numericMatchesDoNotValidateClaims!==true||
+    input.visualPageReviewStillRequired!==true||
     !record(input.source)||!record(input.scan))fail();
  const source=input.source,scan=input.scan;
  if(source.id!==expected.id||source.sourceOriginalHash!==expected.sourceSha256||
     source.integrity!=='STORED_BYTES_SHA256_MATCH'||!sha(source.receiptHash)||
+    source.registryAdmitted!==false||source.historicalBytesAtCutoffCertified!==false||
+    source.independentlyAuthenticatedPublisher!==false||
+    typeof source.sourceDate!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(source.sourceDate)||
+    typeof source.captureTimestamp!=='string'||!Number.isFinite(Date.parse(source.captureTimestamp))||
     scan.id!==expected.id||!integer(scan.pdfPageCount)||scan.pdfPageCount<1||
     scan.pdfPageCount>2000||scan.startPage!==expectedStart||
     !integer(scan.endPage)||scan.endPage<expectedStart||
@@ -89,6 +96,7 @@ export function validateV35Chunk(input:unknown,expected:V35Source,expectedStart:
  }
  return {sourceId:expected.id,sourceSha256:expected.sourceSha256,
    receiptSha256:source.receiptHash,checkedAt:input.checkedAt,
+   sourceDate:source.sourceDate,captureTimestamp:source.captureTimestamp,
    pdfPageCount:scan.pdfPageCount,startPage:expectedStart,
    endPage:scan.endPage,pages};
 }
