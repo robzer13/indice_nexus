@@ -105,6 +105,10 @@ export default async function LorealPortabilityPreflightPage(){
    <p className="text-sm text-slate-300">La capture PDF, les reçus privés,
     les preuves visuelles, les calculs IFRS de cash-flow
     et le run formel restent à développer ou à admettre.</p>
+   <Link href="/admin/research-factory/contracts"
+    className="mr-6 text-sm text-cyan-300 underline">
+    Préflight des contrats Run Factory P0-A
+   </Link>
    <Link href="/admin/research-primary-sources/reconcile"
     className="text-sm text-cyan-300 underline">
     Consulter le réconciliateur ASML v3.5
