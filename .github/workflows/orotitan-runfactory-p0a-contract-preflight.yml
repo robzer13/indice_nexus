@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '22'
       - name: Dependencies
-        run: npm ci --no-audit --no-fund
+        run: npm install --no-audit --no-fund
       - name: Typecheck
         run: npm run typecheck
       - name: ESLint
