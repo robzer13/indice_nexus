@@ -31,10 +31,12 @@ for file in \
  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/$file" >/dev/null
 done
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_initial_run.sql" >/dev/null
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_helper_grants.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -c "update public.securities set isin='FR0000120321',primary_listing=true where ticker='BET' and exchange='XPAR'" >/dev/null
 pins="$(node -e "process.stdout.write(JSON.stringify(require('$root/contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json').contract_pins))")"
 psql -X -v ON_ERROR_STOP=1 -v pins="$pins" -d "$db" <<'SQL'
 select set_config('orotitan.p0e_test_pins', :'pins',false);
+set role service_role;
 do $matrix$
 declare
  v_issuer uuid;
@@ -128,8 +130,10 @@ begin
  then raise exception 'P0E_T7_ACCESS_CONTROL_FAILED';end if;
  raise notice 'P0E_T1_TO_T7_PASSED';
 end $matrix$;
+reset role;
 SQL
 before="$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_p0e_run_admission_receipts_v1')"
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_initial_run.sql" >/dev/null
 test "$before" = "$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_p0e_run_admission_receipts_v1')"
+psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_helper_grants.sql" >/dev/null
 echo "P0E POSTGRES PASS: atomic initial run + bind + events + readback + receipt + no stage + replay + conflict + denied GO + denied bytes + privileges + idempotent migration"
