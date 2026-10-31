@@ -208,5 +208,5 @@ SQL
 # nor does it enable any new real-world environment.
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
 test "$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_j0_c8_decisions_v1')" = "1"
-test "$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_j0_c8_decisions_v1 where milestone_code='''J0'''')" = "0"
+test "$(psql -XAt -d "$db" -c "select count(*) from public.orotitan_j0_c8_decisions_v1 where milestone_code='J0'")" = "0"
 echo "J0 C8 LOCAL PG PASS: locked-by-default, 7-proof review, replay/conflict, stale, explicit GO, simulated J1 approval, immutable decision and migration idempotence"
