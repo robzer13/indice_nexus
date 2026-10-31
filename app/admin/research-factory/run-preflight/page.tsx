@@ -8,15 +8,20 @@ import {isHostedShadowResearchEnabled} from
 import {listContractProfileSummaries} from
  '@/lib/orotitan-equity/product/runfactory-contract-profile-v1';
 import {RunFactoryDryRunClient} from './run-factory-dry-run-client';
+import {parseUntrustedRunPreflightQuery,type RunPreflightQuery} from
+ '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
 
 export const metadata:Metadata={title:'OroTitan · Run Factory P0-B · Identity SHADOW dry-run'};
 export const dynamic='force-dynamic';
 
-export default async function RunFactoryIdentityPage(){
+export default async function RunFactoryIdentityPage({
+ searchParams,
+}:{searchParams:Promise<RunPreflightQuery>}){
  if(!await isAdminAuthenticated())redirect('/admin');
  if(!isHostedShadowResearchEnabled(process.env))
   return <main className="p-6 text-rose-300">SHADOW_ONLY</main>;
  const profiles=listContractProfileSummaries();
+ const seed=parseUntrustedRunPreflightQuery(await searchParams);
  return <main className="space-y-6">
   <header className="space-y-2">
    <p className="text-xs uppercase tracking-widest text-cyan-300">
@@ -37,7 +42,12 @@ export default async function RunFactoryIdentityPage(){
    L’exactitude de l’identité, la résolution des contrats et l’autorisation
    GO doivent être établies avant l’appel contrôlé aux RPC existantes.
   </section>
-  <RunFactoryDryRunClient profiles={profiles}/>
+  {seed.isin&&<section className="rounded-lg border border-cyan-700 p-4 text-sm text-slate-200">
+    Identité transmise depuis l’onboarding P0-D. Les valeurs sont des
+    suggestions ; elles seront revérifiées directement dans le Registry
+    SHADOW après sélection explicite du profil contractuel.
+   </section>}
+  <RunFactoryDryRunClient profiles={profiles} initialValues={seed}/>
   <div className="flex flex-wrap gap-6">
    <Link href="/admin/research-factory/onboarding"
     className="text-sm text-cyan-300 underline">
