@@ -2,6 +2,9 @@
 -- Does not change historical Registry contracts, their V1/V2 schema generation
 -- label, versioned runtime, and never creates stages/snapshots or publishes.
 -- Install on SHADOW only. Requires Registry V1.12 RPCs.
+-- The service_role has no direct UPDATE privilege on orotitan_runs:
+-- the existing controlled SECURITY DEFINER RPCs perform all writes. The
+-- P0-E advisory lock serializes same issuer/cutoff admissions.
 begin;
 
 create table if not exists public.orotitan_p0e_run_admission_receipts_v1 (
@@ -158,7 +161,7 @@ begin
  if v_existing_count=1 then
   select * into v_existing from public.orotitan_runs
    where issuer_id=p_issuer_id and data_cutoff=p_data_cutoff
-    and run_status<>'CANCELLED' for update;
+    and run_status<>'CANCELLED';
   if v_existing.creation_idempotency_key<>p_creation_idempotency_key or
      v_existing.contract_set_sha256<>p_contract_set_sha256 or
      v_existing.security_id is distinct from p_security_id or
@@ -172,7 +175,7 @@ begin
   'INITIAL',p_data_cutoff,null,null,'3.1','3.1',
   p_contract_pins,p_contract_set_sha256,p_request_fingerprint_sha256);
  v_run_id:=(v_result->>'run_id')::uuid;
- select * into v_run from public.orotitan_runs where run_id=v_run_id for update;
+ select * into v_run from public.orotitan_runs where run_id=v_run_id;
  if not found then raise exception 'P0E_RUN_CREATION_READBACK_MISSING';end if;
  if v_run.security_id is null and v_run.dossier_id is null then
   v_binding_descriptor:='{"dossier_id":'||to_json(p_dossier_id)::text||
@@ -188,7 +191,7 @@ begin
    v_run.dossier_id is distinct from p_dossier_id then
   raise exception 'P0E_PARTIAL_OR_WRONG_RUN_BINDING';
  end if;
- select * into v_run from public.orotitan_runs where run_id=v_run_id for update;
+ select * into v_run from public.orotitan_runs where run_id=v_run_id;
  if v_run.issuer_id<>p_issuer_id or
    v_run.security_id is distinct from p_security_id or
    v_run.dossier_id is distinct from p_dossier_id or
