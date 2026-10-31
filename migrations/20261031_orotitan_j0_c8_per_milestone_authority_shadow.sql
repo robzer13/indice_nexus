@@ -2,13 +2,7 @@
 -- A global kill-switch alone must not activate future J1-J8 approvals.
 -- No gate is enabled, no milestone accepted, no run/stage/publish mutation.
 BEGIN;
-ALTER TABLE public.orotitan_j0_c8_acceptance_control_v1
- DROP CONSTRAINT IF EXISTS j0_c8_disabled_without_authority;
-ALTER TABLE public.orotitan_j0_c8_acceptance_control_v1
- ADD CONSTRAINT j0_c8_disabled_without_authority CHECK(
- (enabled=false AND activation_authority_ref IS NULL) OR
- (enabled=true AND activation_authority_ref ~ '^GO_ACCEPT_J[0-8]_[A-Z0-9_]{8,120}$')
- );
+-- Retain the existing, stricter global kill switch unchanged.
 CREATE TABLE IF NOT EXISTS public.orotitan_j0_c8_milestone_activation_v1(
  milestone_code text PRIMARY KEY REFERENCES
   public.orotitan_j0_milestones_v1(milestone_code) ON DELETE RESTRICT,
