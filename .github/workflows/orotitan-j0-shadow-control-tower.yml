@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/orotitan-runfactory-j0-control-tower-20261031
+      - feat/orotitan-j0-c5-hosted-http-proof-20261031
   workflow_dispatch:
 
 permissions:
