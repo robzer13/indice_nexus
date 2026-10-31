@@ -1,7 +1,7 @@
 'use client';
 
 import {useState} from 'react';
-import type {ContractProfileId,ContractProfileSummary} from
+import type {ContractProfileSummary} from
  '@/lib/orotitan-equity/product/runfactory-contract-profile-v1';
 import type {RunFactoryDecision} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
