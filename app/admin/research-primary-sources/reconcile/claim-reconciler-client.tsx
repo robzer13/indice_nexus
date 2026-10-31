@@ -16,6 +16,7 @@ function createExport(sources:readonly V35Source[],chunks:readonly V35Chunk[]){
   provenance:'Private SHADOW stored bytes, v3.4 rehash + bounded PDF text extraction',
   validation:'PRE_ADMISSION_OBSERVATION_ONLY',
   sourcePublisherCryptographicallyAuthenticated:false,
+  noteOnPostCutoffCapture:'A PDF captured after 2026-10-30 is not automatically an authenticated historical byte record.',
   historicalBytesAtCutoffCertified:false,
   pdfPagesVisuallyReviewed:false,
   evidenceClaimsValidated:0,registryAdmitted:false,
@@ -26,7 +27,10 @@ function createExport(sources:readonly V35Source[],chunks:readonly V35Chunk[]){
   matrix:buildV35Matrix(sources,chunks),
   scanReceipts:chunks.map(c=>({
    id:c.sourceId,sourceSha256:c.sourceSha256,receiptSha256:c.receiptSha256,
-   checkedAt:c.checkedAt,startPage:c.startPage,endPage:c.endPage,
+   checkedAt:c.checkedAt,sourcePublicationDate:c.sourceDate,
+   storageCaptureTimestamp:c.captureTimestamp,
+   capturedAfterCutoff:c.captureTimestamp.slice(0,10)>CUTOFF,
+   startPage:c.startPage,endPage:c.endPage,
    pdfPageCount:c.pdfPageCount,pageTextHashes:c.pages.map(p=>({
     pdfPage:p.pdfPage,textSha256:p.textSha256,textLength:p.textLength,
    })),
