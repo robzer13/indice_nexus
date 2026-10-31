@@ -230,5 +230,5 @@ export async function extractBoundedPages(
   return {id,pdfPageCount:pdf.numPages,startPage,endPage,
     textExtraction:'PDFJS_PAGE_TEXT_NONAUTHORITATIVE',
     pageObservations:pages,pagesNotScanned:pdf.numPages-pages.length};
- }finally{await pdf.destroy();}
+ }finally{const dispose=(pdf as unknown as {destroy?:()=>Promise<void>}).destroy; if(typeof dispose==='function')await dispose.call(pdf);}
 }
