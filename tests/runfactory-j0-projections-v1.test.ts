@@ -4,13 +4,13 @@ import {unresolvedJ0Issues,j0DisplayedStatus}
  from '../lib/orotitan-equity/product/runfactory-j0-projections-v1';
 
 const events=[
- {event_id:'a',milestone_code:'J0',event_type:'BLOCKER_OPENED',
+ {event_id:'a',event_seq:1,milestone_code:'J0',event_type:'BLOCKER_OPENED',
   evidence_ref:'issue:j0-ui',created_at:'2026-10-31T12:00:00Z'},
- {event_id:'b',milestone_code:'J0',event_type:'BLOCKER_RESOLVED',
+ {event_id:'b',event_seq:2,milestone_code:'J0',event_type:'BLOCKER_RESOLVED',
   evidence_ref:'issue:j0-ui',created_at:'2026-10-31T12:03:00Z'},
- {event_id:'c',milestone_code:'J1',event_type:'BLOCKER_OPENED',
+ {event_id:'c',event_seq:3,milestone_code:'J1',event_type:'BLOCKER_OPENED',
   evidence_ref:'issue:j1-http',created_at:'2026-10-31T12:04:00Z'},
- {event_id:'d',milestone_code:'J0',event_type:'BLOCKER_OPENED',
+ {event_id:'d',event_seq:4,milestone_code:'J0',event_type:'BLOCKER_OPENED',
   evidence_ref:'issue:j0-registry',created_at:'2026-10-31T12:05:00Z'},
 ] as const;
 test('J0 issues: open/close sequences are deterministic and milestone-scoped',()=>{
@@ -20,7 +20,7 @@ test('J0 issues: open/close sequences are deterministic and milestone-scoped',()
   .map(x=>x.evidence_ref),['issue:j1-http']);
 });
 test('J0 issue resolution remains closed on duplicate/out-of-order display',()=>{
- const extra=[...events,{...events[1],event_id:'e',
+ const extra=[...events,{...events[1],event_id:'e',event_seq:5,
   created_at:'2026-10-31T12:06:00Z'}];
  assert.equal(unresolvedJ0Issues(extra,'J0').length,1);
 });
