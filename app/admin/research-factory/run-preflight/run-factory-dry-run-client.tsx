@@ -19,7 +19,7 @@ export function RunFactoryDryRunClient({
  const [isin,setIsin]=useState(initialValues.isin);
  const [exchange,setExchange]=useState(initialValues.exchange);
  const [cutoff,setCutoff]=useState(initialValues.dataCutoff);
- const [profile,setProfile]=useState(initialValues.profileId);
+ const [profile,setProfile]=useState<string>(initialValues.profileId);
  const [running,setRunning]=useState(false);
  const [error,setError]=useState('');
  const [answer,setAnswer]=useState<PreflightReply|null>(null);
