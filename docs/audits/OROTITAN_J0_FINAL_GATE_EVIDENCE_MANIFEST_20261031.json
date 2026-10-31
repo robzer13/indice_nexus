@@ -1,0 +1,114 @@
+{
+  "schema": "OROTITAN_J0_FINAL_GATE_EVIDENCE_MANIFEST_V1",
+  "auditDate": "2026-10-31",
+  "scope": "SHADOW_ONLY",
+  "shadowSupabaseProjectRef": "awgsurdyvsyolcgpnygh",
+  "productionProjectRef": "cugpgtzygqqlxetyeven",
+  "productionAccessed": false,
+  "targetRunId": "204390a1-5cba-4b9c-9821-ca0c7df43eca",
+  "contractSetSha256": "3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2",
+  "previewDeploymentId": "dpl_A5txzp53Wfy3hkZ6WjSWdwGb75ps",
+  "previewCommit": "b1749b75cfa13ea75a0660401d8837f95fc1afd8",
+  "verdict": "BLOCKED_FOR_FORMAL_ACCEPTANCE",
+  "technicalGatesSupported": 7,
+  "totalGates": 8,
+  "accepted": false,
+  "j1ExecutionAuthorized": false,
+  "researchExecutionAuthorized": false,
+  "publishAuthorized": false,
+  "gateResults": [
+    {
+      "criterion": "C1",
+      "label": "Etats relus du Registry SHADOW",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "20de0d7d-87f3-4bc0-b126-92bb5f8a1733"
+      ]
+    },
+    {
+      "criterion": "C2",
+      "label": "Registre J0-J8 persistant",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "d49bb260-0684-4768-809b-0ed9da34e779"
+      ],
+      "verificationNote": "REPORTED in Registry; audited independently via SQL"
+    },
+    {
+      "criterion": "C3",
+      "label": "Preuves et décisions immuables",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "1683abb9-0d4d-47ed-bcd0-2805f9b93a5c"
+      ],
+      "verificationNote": "REPORTED in Registry; independently verified via SQL and 7 BEGIN/ROLLBACK negatives"
+    },
+    {
+      "criterion": "C4",
+      "label": "Exceptions traçables",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "16570f12-a702-4906-a8ec-72ff8414dc6e",
+        "35180c8a-96e6-4717-99e9-a869ca3bdb8e",
+        "18bc62c1-33ac-4a4f-8825-593f4e066a60",
+        "d931770c-5247-4734-8d32-86e90911a04e",
+        "1fe8d1d4-fe9e-4d77-a44e-936a0b919469"
+      ]
+    },
+    {
+      "criterion": "C5",
+      "label": "Contrôles d’accès et négatifs",
+      "result": "PASS_WITH_LIMITATION",
+      "evidenceEventIds": [
+        "5cec3e1c-588a-4ae6-bbae-da3c9632446c"
+      ],
+      "limitation": "No hosted application-level 401 was demonstrated behind Vercel SSO; local 401 and SQL role denials were verified"
+    },
+    {
+      "criterion": "C6",
+      "label": "Démonstration interface authentifiée",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "6df500a8-fd01-479d-84c5-0a84e77b530d"
+      ]
+    },
+    {
+      "criterion": "C7",
+      "label": "Relecture indépendante du reçu J0",
+      "result": "PASS",
+      "evidenceEventIds": [
+        "130ae28f-3054-431f-9d37-f33898fb6dfd"
+      ]
+    },
+    {
+      "criterion": "C8",
+      "label": "Acceptation explicite distincte",
+      "result": "BLOCKED",
+      "evidenceEventIds": [
+        "445c4f47-fb26-4445-bc3d-72fa02f798eb"
+      ],
+      "blockerKey": "issue:j0-c8-human-acceptance-transition-not-implemented-20261031"
+    }
+  ],
+  "stateReadback": {
+    "milestones": 9,
+    "j0JournalEvents": 19,
+    "criterionLinkedEvents": 13,
+    "directRunVerifiedReceipts": 4,
+    "openJ0Blockers": 1,
+    "acceptedMilestones": 0,
+    "runStatus": "CREATED",
+    "runStateVersion": 2,
+    "runEvents": 2,
+    "p0eAdmissionReceipts": 1,
+    "runStages": 0,
+    "runArtifacts": 0,
+    "dossierSnapshots": 0,
+    "published": false
+  },
+  "riskNotes": [
+    "J1 initial_status EN_COURS is seed status for partial preexisting code, not a GO J1",
+    "Historical milestone status field cannot transition to ACCEPTED with existing append-only guards"
+  ],
+  "requiredNextAuthorization": "GO C8 SHADOW acceptance-decision gate implementation and tests; distinct later GO to actually accept J0"
+}
