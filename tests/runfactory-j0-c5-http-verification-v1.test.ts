@@ -36,7 +36,7 @@ test('C5 denies wrong response types, flags or absent no-store',()=>{
 test('C5 rejects missing, extra, duplicated and unknown cases',()=>{
  assert.throws(()=>verifyHostedJ0C5HttpMatrix(valid.slice(0,3)),
   /J0_C5_HTTP_CASE_COUNT/);
- assert.throws(()=>verifyHostedJ0C5HttpMatrix([...valid,...valid[0]]),
+ assert.throws(()=>verifyHostedJ0C5HttpMatrix([...valid,valid[0]]),
   /J0_C5_HTTP_CASE_COUNT/);
  assert.throws(()=>verifyHostedJ0C5HttpMatrix([...valid.slice(0,3),valid[1]]),
   /J0_C5_HTTP_DUPLICATE_OR_UNKNOWN/);
