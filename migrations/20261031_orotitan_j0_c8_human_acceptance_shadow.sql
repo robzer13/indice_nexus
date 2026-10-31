@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.orotitan_j0_c8_reviews_v1 (
   review_id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   review_key text NOT NULL UNIQUE CHECK(review_key ~ '^orotitan:c8:review:[a-zA-Z0-9:_-]{8,124}$'),
   milestone_code text NOT NULL REFERENCES public.orotitan_j0_milestones_v1(milestone_code) ON DELETE RESTRICT,
-  audit_ref text NOT NULL CHECK(audit_ref ~ '^https://github.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+/blob/[a-f0-9]{40}/docs/audits/[a-zA-Z0-9_.-]+\\.md$'),
+  audit_ref text NOT NULL CHECK(audit_ref ~ '^https://github.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+/blob/[a-f0-9]{40}/docs/audits/[a-zA-Z0-9_.-]+[.]md$'),
   audit_sha256 text NOT NULL CHECK(audit_sha256 ~ '^[a-f0-9]{64}$'),
   reviewer_label text NOT NULL CHECK(length(btrim(reviewer_label)) BETWEEN 4 AND 100),
   evidence_event_ids uuid[] NOT NULL CHECK(array_length(evidence_event_ids,1)=7),
@@ -150,7 +150,7 @@ BEGIN
  IF p_review_key IS NULL OR
  p_review_key !~ '^orotitan:c8:review:[a-zA-Z0-9:_-]{8,124}$' OR
  p_milestone !~ '^J[0-8]$' OR
- p_audit_ref !~ '^https://github.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+/blob/[a-f0-9]{40}/docs/audits/[a-zA-Z0-9_.-]+\\.md$' OR
+ p_audit_ref !~ '^https://github.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+/blob/[a-f0-9]{40}/docs/audits/[a-zA-Z0-9_.-]+[.]md$' OR
  p_audit_sha256 !~ '^[a-f0-9]{64}$' OR
  p_reviewer_label IS NULL OR length(btrim(p_reviewer_label)) NOT BETWEEN 4 AND 100
  THEN RAISE EXCEPTION 'J0_C8_REVIEW_INPUT_INVALID';END IF;
