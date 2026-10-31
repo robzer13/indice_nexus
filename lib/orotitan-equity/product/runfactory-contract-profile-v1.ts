@@ -82,7 +82,7 @@ function validatedPack(id:ContractProfileId):
     raw.repository!=='robzer13/indice_nexus'||
     !HEX40.test(String(raw.source_commit_sha))||
     raw.contract_set_sha256!==config.setHash||
-    !isRecord(raw.contract_pins))invalid();
+    !isRecord(raw.contract_pins))throw Error('CONTRACT_PROFILE_INVALID');
  const rawPins=raw.contract_pins;
  const actual=Object.keys(rawPins).sort();
  const expected=[...config.required].sort();
@@ -98,7 +98,7 @@ function validatedPack(id:ContractProfileId):
      candidate.version.trim()===''||
      typeof candidate.content_sha256!=='string'||
      !HEX64.test(candidate.content_sha256)||
-     !isRecord(candidate.locator))invalid();
+     !isRecord(candidate.locator))throw Error('CONTRACT_PROFILE_INVALID');
   const locator=candidate.locator;
   if(locator.backend!=='GITHUB_IMMUTABLE'||
      locator.repository!=='robzer13/indice_nexus'||
@@ -108,7 +108,7 @@ function validatedPack(id:ContractProfileId):
      typeof locator.blob_sha!=='string'||!HEX40.test(locator.blob_sha)||
      ![undefined,'RAW_CANONICAL_V1','OROTITAN_GZIP_V1',
        'OROTITAN_MULTIPART_GZIP_V1'].includes(
-        locator.locator_format as string|undefined))invalid();
+        locator.locator_format as string|undefined))throw Error('CONTRACT_PROFILE_INVALID');
   const pin=candidate as unknown as ContractPin;
   pins[key]=pin;
   descriptions.push({
