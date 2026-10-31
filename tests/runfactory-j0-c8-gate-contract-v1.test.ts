@@ -75,3 +75,15 @@ test('C8 serializes every journal insert with gate decision transaction lock',()
  assert.match(guard,/orotitan:j0:gate:/);
  assert.match(migration,/orotitan:j0:gate:/);
 });
+
+test('C8 requires an additional distinct exact-milestone activation before acceptance',()=>{
+ const extra=readFileSync(join(root,
+ 'migrations/20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql'),'utf8');
+ assert.match(extra,/orotitan_j0_c8_milestone_activation_v1/);
+ assert.match(extra,/J0_C8_MILESTONE_ACCEPTANCE_LOCKED/);
+ assert.match(extra,/COALESCE\(v_mlock,false\)/);
+ assert.match(extra,/p_authority_ref<>v_lock\.activation_authority_ref/);
+ assert.doesNotMatch(extra,/DROP CONSTRAINT/i);
+ assert.match(acceptRoute,/J0_C8_MILESTONE_ACCEPTANCE_LOCKED/);
+ assert.match(checkRoute,/milestoneControl/);
+});
