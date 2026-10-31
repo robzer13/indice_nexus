@@ -19,6 +19,10 @@ export function AdminNav() {
         Demandes Research · pilote
       </Link> : null}
     {isHostedShadowResearchEnabled(process.env) ?
+      <Link href="/admin/research-factory/control-tower" className="rounded-lg px-3 py-2 text-sm font-semibold text-amber-200 hover:bg-slate-800 hover:text-white">
+        Control Tower J0 · SHADOW
+      </Link> : null}
+    {isHostedShadowResearchEnabled(process.env) ?
       <Link href="/admin/research-recovery" className="rounded-lg px-3 py-2 text-sm text-cyan-200 hover:bg-slate-800 hover:text-white">
         Research Recovery Loop · SHADOW
       </Link> : null}
