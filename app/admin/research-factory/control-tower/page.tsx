@@ -9,6 +9,7 @@ import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {J0RecordClient} from './j0-record-client';
 import {J0C5SecurityTestClient} from './j0-c5-security-test-client';
+import {J0C8GatePanel} from './j0-c8-gate-panel';
 import {unresolvedJ0Issues,j0DisplayedStatus} from
  '@/lib/orotitan-equity/product/runfactory-j0-projections-v1';
 
@@ -202,6 +203,13 @@ export default async function J0ControlTowerPage(){
      m.gate_criteria.filter((x):x is string=>typeof x==='string'):[],
    ]))}/>
   <J0C5SecurityTestClient/>
+  <J0C8GatePanel proofs={events.filter(e=>e.milestone_code==='J0'&&
+   e.event_type==='EVIDENCE_RECORDED'&&
+   typeof e.operator_details?.criterionIndex==='number').map(e=>({
+    eventId:e.event_id,title:e.title,
+    criterionIndex:e.operator_details.criterionIndex as number,
+    verified:e.verification_state==='VERIFIED_DIRECT_REGISTRY_READBACK',
+   }))}/>
   <p className="text-sm text-slate-400">
    Portée : SHADOW uniquement. Le champ « initial_status » est la position
    d’ouverture du programme, non une certification d’avancement calculée.
