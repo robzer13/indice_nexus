@@ -1,4 +1,5 @@
 import {NextRequest,NextResponse} from 'next/server';
+import {createHash} from 'node:crypto';
 import {requireAdminSession} from '@/lib/auth/admin-session';
 import {isHostedShadowResearchEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
@@ -32,7 +33,7 @@ export async function POST(req:NextRequest){
  if(typeof v.reviewKey!=='string'||
     !/^orotitan:c8:review:[a-zA-Z0-9:_-]{8,124}$/.test(v.reviewKey)||
     typeof v.milestone!=='string'||!/^J[0-8]$/.test(v.milestone)||
-    typeof v.auditRef!=='string'||!/^https:\/\/github\.com\/[\w-]+\/[\w.-]+\/blob\/[a-f0-9]{40}\/docs\/audits\/[\w.-]+\.md$/.test(v.auditRef)||
+    typeof v.auditRef!=='string'||!/^https:\/\/github\.com\/robzer13\/indice_nexus\/blob\/[a-f0-9]{40}\/docs\/audits\/[\w.-]+\.md$/.test(v.auditRef)||
     typeof v.auditSha256!=='string'||!/^[a-f0-9]{64}$/.test(v.auditSha256)||
     typeof v.reviewerLabel!=='string'||v.reviewerLabel.trim().length<4||
     v.reviewerLabel.length>100||
@@ -41,6 +42,30 @@ export async function POST(req:NextRequest){
      !/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i.test(id)))
    return fail('J0_C8_PREPARE_INVALID',400);
  try{
+  // Audit bytes are fetched from a FIXED official repository at an
+  // immutable commit. No caller-controlled hostname, redirects or URL query.
+  const match=(v.auditRef as string).match(
+   /^https:\/\/github\.com\/robzer13\/indice_nexus\/blob\/([a-f0-9]{40})\/docs\/audits\/([\w.-]+\.md)$/);
+  if(!match)return fail('J0_C8_AUDIT_REFERENCE_INVALID',400);
+  const rawUrl='https://raw.githubusercontent.com/robzer13/indice_nexus/'+
+   match[1]+'/docs/audits/'+match[2];
+  let source:Response;
+  try{
+   source=await fetch(rawUrl,{
+    cache:'no-store',redirect:'error',
+    headers:{Accept:'text/plain'},
+    signal:AbortSignal.timeout(15000),
+   });
+  }catch{return fail('J0_C8_AUDIT_SOURCE_UNAVAILABLE',503);}
+  if(!source.ok)return fail('J0_C8_AUDIT_SOURCE_UNAVAILABLE',503);
+  const expectedLength=Number(source.headers.get('content-length')??'0');
+  if(expectedLength>262144)return fail('J0_C8_AUDIT_TOO_LARGE',413);
+  const bytes=Buffer.from(await source.arrayBuffer());
+  if(bytes.length===0||bytes.length>262144)
+   return fail('J0_C8_AUDIT_TOO_LARGE',413);
+  const observedHash=createHash('sha256').update(bytes).digest('hex');
+  if(observedHash!==v.auditSha256)
+   return fail('J0_C8_AUDIT_HASH_MISMATCH',409);
   const client=getHostedShadowRecoveryClient();
   const rpc=await client.rpc('orotitan_j0_c8_prepare_review_v1',{
    p_review_key:v.reviewKey,p_milestone:v.milestone,
