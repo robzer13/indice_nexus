@@ -19,7 +19,7 @@ const fail=():never=>{throw Error('RESEARCH_ARITHMETIC_INPUT_INVALID');};
 function parse(x:string,places:number):bigint{
  if(typeof x!=='string'||x.length>32)fail();
  const match=/^(-?)(0|[1-9]\d*)(?:\.(\d+))?$/.exec(x);
- if(!match)fail();
+ if(match===null)throw Error('RESEARCH_ARITHMETIC_INPUT_INVALID');
  const fraction=match[3]??'';
  if(fraction.length>places)fail();
  const scale=10n**BigInt(places);
