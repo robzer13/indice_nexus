@@ -45,6 +45,11 @@ declare
  v_review_key text:='orotitan:c8:review:local-j1-matrix-20261031';
  v_id uuid;
 begin
+ if (SELECT count(*) FROM pg_trigger
+     WHERE tgrelid='public.orotitan_j0_events_v1'::regclass
+       AND tgname='orotitan_j0_c8_serialize_event_insert'
+       AND tgenabled='O')<>1
+ then raise exception 'J0_C8_SERIALIZATION_TRIGGER_REQUIRED';end if;
  if (select count(*) from public.orotitan_j0_c8_acceptance_control_v1 where enabled)<>0
   or (select count(*) from public.orotitan_j0_c8_reviews_v1)<>0
   or (select count(*) from public.orotitan_j0_c8_decisions_v1)<>0
