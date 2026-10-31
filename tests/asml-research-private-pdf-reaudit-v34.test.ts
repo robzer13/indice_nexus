@@ -21,7 +21,8 @@ function minimalPdf(text:string):Buffer{
   '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>',
   '<< /Length '+Buffer.byteLength(stream)+' >>\nstream\n'+stream+'endstream',
  ];
- let pdf='%PDF-1.4\n',offsets=[0];
+ let pdf='%PDF-1.4\n';
+ const offsets=[0];
  for(let i=0;i<objects.length;i++){
   offsets.push(Buffer.byteLength(pdf));
   pdf+=(i+1)+' 0 obj\n'+objects[i]+'\nendobj\n';
