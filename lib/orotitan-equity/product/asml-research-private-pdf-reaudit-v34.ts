@@ -89,15 +89,18 @@ export function assertValidSourceId(id:unknown):asserts id is V34SourceId{
  if(typeof id!=='string'||!Object.prototype.hasOwnProperty.call(V34_SOURCES,id))
   throw Error('V34_SOURCE_DENIED');
 }
-export function verifyStoredPdfBytes(id:V34SourceId,bytes:Buffer):string {
- const source=V34_SOURCES[id];
- if(bytes.length!==source.size)throw Error('V34_SIZE_MISMATCH');
+export function verifyExpectedPdfFingerprint(bytes:Buffer,expectedHash:string,expectedSize:number):string{
+ if(bytes.length!==expectedSize)throw Error('V34_SIZE_MISMATCH');
  const sha=hash(bytes);
- if(sha!==source.sha256)throw Error('V34_SHA_MISMATCH');
+ if(sha!==expectedHash)throw Error('V34_SHA_MISMATCH');
  if(bytes.toString('latin1',0,5)!=='%PDF-'||
     !bytes.toString('latin1',Math.max(0,bytes.length-4096)).includes('%%EOF'))
   throw Error('V34_PDF_STRUCTURE_INVALID');
  return sha;
+}
+export function verifyStoredPdfBytes(id:V34SourceId,bytes:Buffer):string{
+ const source=V34_SOURCES[id];
+ return verifyExpectedPdfFingerprint(bytes,source.sha256,source.size);
 }
 export function validatePrivateReceipt(id:V34SourceId,body:Buffer):{receiptHash:string;uploadedAt:string} {
  const source=V34_SOURCES[id];
