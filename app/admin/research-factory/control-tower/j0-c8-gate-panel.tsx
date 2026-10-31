@@ -1,5 +1,5 @@
 'use client';
-import {useState} from 'react';
+import {useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 type Proof=Readonly<{eventId:string;title:string;criterionIndex:number;
@@ -19,6 +19,8 @@ type ReviewReceipt=Readonly<{ok:true;status:string;reviewId:string;
  reviewSha256:string;persistedReadbackVerified:true;accepted:false}>;
 export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
  const router=useRouter();
+ const reviewKeyRef=useRef<string|null>(null);
+ const decisionKeyRef=useRef<string|null>(null);
  const [loading,setLoading]=useState(false);
  const [gate,setGate]=useState<GateResponse|null>(null);
  const [error,setError]=useState('');
@@ -48,13 +50,15 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
  }
  async function prepare(){
   if(loading||!gate?.gate.eligibleForReview)return;
+  if(!reviewKeyRef.current)reviewKeyRef.current=
+    'orotitan:c8:review:'+crypto.randomUUID();
   setLoading(true);setError('');setReceipt(null);
   try{
    const r=await fetch('/admin/research-factory/control-tower/c8-gate/prepare',{
     method:'POST',credentials:'same-origin',cache:'no-store',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-     reviewKey:'orotitan:c8:review:'+crypto.randomUUID(),
+     reviewKey:reviewKeyRef.current,
      milestone:'J0',auditRef:auditRef.trim(),auditSha256:auditSha.trim(),
      reviewerLabel:reviewer.trim(),evidenceEventIds:evidenceIds,
     }),
@@ -74,13 +78,15 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
   // This button is absent unless the live database gate reports activation.
   if(!receipt||!gate?.gate.acceptanceAllowedNow||
      approvalPhrase!=='ACCEPTER J0 SHADOW'||loading)return;
+  if(!decisionKeyRef.current)decisionKeyRef.current=
+    'orotitan:c8:decision:'+crypto.randomUUID();
   setLoading(true);setError('');setDecisionResult('');
   try{
    const r=await fetch('/admin/research-factory/control-tower/c8-gate/accept',{
     method:'POST',credentials:'same-origin',cache:'no-store',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
-     decisionKey:'orotitan:c8:decision:'+crypto.randomUUID(),
+     decisionKey:decisionKeyRef.current,
      reviewId:receipt.reviewId,reviewSha256:receipt.reviewSha256,
      approverLabel:approver.trim(),consentPhrase:approvalPhrase,
      authorityRef:approvalRef.trim(),
