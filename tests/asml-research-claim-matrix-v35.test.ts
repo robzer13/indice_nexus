@@ -18,8 +18,11 @@ function reply(pages:Array<{pdfPage:number;textLength:number;textSha256:string;
  start=1,total=pages.length,hash=HASH){
  return {ok:true,mode:'scan_pages',checkedAt:'2026-10-31T06:47:00.277Z',
   registryAdmitted:false,issuerOriginAuthenticated:false,
+  numericMatchesDoNotValidateClaims:true,visualPageReviewStillRequired:true,
   source:{id:src.id,sourceOriginalHash:hash,integrity:'STORED_BYTES_SHA256_MATCH',
-    receiptHash:RECEIPT},
+    receiptHash:RECEIPT,sourceDate:'2026-02-25',
+    captureTimestamp:'2026-10-30T22:32:26.275Z',registryAdmitted:false,
+    historicalBytesAtCutoffCertified:false,independentlyAuthenticatedPublisher:false},
   scan:{id:src.id,pdfPageCount:total,startPage:start,
     endPage:start+pages.length-1,pageObservations:pages}};
 }
