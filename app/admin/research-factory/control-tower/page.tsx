@@ -8,6 +8,8 @@ import {isHostedShadowResearchEnabled} from
 import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {J0RecordClient} from './j0-record-client';
+import {unresolvedJ0Issues,j0DisplayedStatus} from
+ '@/lib/orotitan-equity/product/runfactory-j0-projections-v1';
 
 export const metadata:Metadata={title:'OroTitan · J0 · Control Tower SHADOW'};
 export const dynamic='force-dynamic';
@@ -27,18 +29,6 @@ const label:Record<string,string>={
  NON_DEMARRE:'NON DÉMARRÉ',EN_COURS:'EN COURS',
  BLOQUE:'BLOQUÉ',TESTE:'TESTÉ',ACCEPTE:'ACCEPTÉ',
 };
-function activeBlockers(events:Event[],milestone:string){
- const seen=new Set<string>();
- const opened:Event[]=[];
- for(const item of events){
-  if(item.milestone_code!==milestone||!item.evidence_ref||
-     !['BLOCKER_OPENED','BLOCKER_RESOLVED'].includes(item.event_type)||
-     seen.has(item.evidence_ref))continue;
-  seen.add(item.evidence_ref);
-  if(item.event_type==='BLOCKER_OPENED')opened.push(item);
- }
- return opened;
-}
 export default async function J0ControlTowerPage(){
  if(!await isAdminAuthenticated())redirect('/admin');
  if(!isHostedShadowResearchEnabled(process.env))
@@ -77,7 +67,7 @@ export default async function J0ControlTowerPage(){
   .map(i=>[i.issuer_id,i.display_name]));
  const verified=events.filter(e=>
   e.verification_state==='VERIFIED_DIRECT_REGISTRY_READBACK').length;
- const unresolved=milestones.flatMap(m=>activeBlockers(events,m.milestone_code));
+ const unresolved=milestones.flatMap(m=>unresolvedJ0Issues(events,m.milestone_code));
  const accepted=milestones.filter(m=>m.initial_status==='ACCEPTE').length;
  return <main className="mx-auto max-w-7xl space-y-6 p-5 text-slate-100">
   <header className="space-y-2">
@@ -117,9 +107,9 @@ export default async function J0ControlTowerPage(){
    <h2 className="text-xl font-bold">Registre des jalons et critères de passage</h2>
    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
     {milestones.map(m=>{
-     const blockers=activeBlockers(events,m.milestone_code);
+     const blockers=unresolvedJ0Issues(events,m.milestone_code);
      const observations=events.filter(e=>e.milestone_code===m.milestone_code);
-     const status=blockers.length?'BLOQUE':m.initial_status;
+     const status=j0DisplayedStatus({initialStatus:m.initial_status,unresolvedBlockerCount:blockers.length});
      const criteria=Array.isArray(m.gate_criteria)?
       m.gate_criteria.filter((x):x is string=>typeof x==='string'):[];
      return <article key={m.milestone_code}
