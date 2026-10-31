@@ -34,3 +34,16 @@ export function j0DisplayedStatus(input:{
  // A documented blocker must never be masked by the initial plan status.
  return input.unresolvedBlockerCount>0?'BLOQUE':input.initialStatus;
 }
+
+export function validateJ0EvidenceCriterion(
+ criterionIndex:unknown,criteria:unknown,
+):number{
+ if(!Array.isArray(criteria)||criteria.length<1||criteria.length>30||
+    criteria.some(x=>typeof x!=='string'||x.trim().length<3))
+  throw Error('J0_GATE_CRITERIA_INVALID');
+ if(typeof criterionIndex!=='number'||
+    !Number.isSafeInteger(criterionIndex)||
+    criterionIndex<1||criterionIndex>criteria.length)
+  throw Error('J0_EVIDENCE_CRITERION_INVALID');
+ return criterionIndex;
+}
