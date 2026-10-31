@@ -75,9 +75,9 @@ export async function POST(req:NextRequest){
   ]);
   if(issuerQ.error||securityQ.error||dossierQ.error||runsQ.error)
    fail('P0E_SHADOW_IDENTITY_READ_FAILED');
-  const rawRuns=runsQ.data;
-  if(!Array.isArray(rawRuns)||rawRuns.length>=20)
-   fail('P0E_SHADOW_IDENTITY_READ_FAILED');
+  const rawRuns=Array.isArray(runsQ.data)?
+   runsQ.data:fail('P0E_SHADOW_IDENTITY_READ_FAILED');
+  if(rawRuns.length>=20)fail('P0E_SHADOW_IDENTITY_READ_FAILED');
   const issuer=obj(issuerQ.data),security=obj(securityQ.data),
    dossier=obj(dossierQ.data);
   if(issuer.issuer_id!==issuerId||!str(issuer.display_name).trim()||
@@ -138,9 +138,12 @@ export async function POST(req:NextRequest){
   ]);
   if(runQ.error||auditQ.error||eventsQ.error||stagesQ.error||
      snapshotsQ.error)fail('P0E_POSTCOMMIT_READBACK_FAILED');
-  const events=eventsQ.data,stages=stagesQ.data,snapshots=snapshotsQ.data;
-  if(!Array.isArray(events)||!Array.isArray(stages)||
-     !Array.isArray(snapshots))fail('P0E_POSTCOMMIT_READBACK_FAILED');
+  const events=Array.isArray(eventsQ.data)?
+   eventsQ.data:fail('P0E_POSTCOMMIT_READBACK_FAILED');
+  const stages=Array.isArray(stagesQ.data)?
+   stagesQ.data:fail('P0E_POSTCOMMIT_READBACK_FAILED');
+  const snapshots=Array.isArray(snapshotsQ.data)?
+   snapshotsQ.data:fail('P0E_POSTCOMMIT_READBACK_FAILED');
   const run=obj(runQ.data),audit=obj(auditQ.data);
   const eventTypes=events.map(r=>r.event_type);
   if(run.run_id!==runId||run.issuer_id!==issuerId||
