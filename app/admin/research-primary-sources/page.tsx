@@ -103,6 +103,9 @@ export default async function PrimarySourcesPage({searchParams}:{searchParams:Pa
         Si un émetteur redirige vers une autre origine, la capture est bloquée et l&apos;origine doit être examinée.
       </p>
     </>}
+    <Link href="/admin/research-primary-sources/audit" className="block text-sm text-cyan-300 underline">
+      Audit v3.4 : recalcul indépendant des SHA-256 des trois PDF privés
+    </Link>
     <Link href="/admin/research-q3-sources" className="text-sm text-cyan-300 underline">
       Capture manuelle existante du PDF ASML T3 2026
     </Link>
