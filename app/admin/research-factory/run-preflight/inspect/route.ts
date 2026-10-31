@@ -21,9 +21,12 @@ const nullableUuid=(x:unknown):string|null=>x===null?null:uuid(x);
 function checkedRows(
  result:{data:unknown;error:unknown},limit:number,
 ):Record<string,unknown>[]{
- if(result.error||!Array.isArray(result.data)||result.data.length>=limit)invalid();
+ if(result.error||!Array.isArray(result.data))
+  throw Error('REGISTRY_INVENTORY_INVALID');
+ if(result.data.length>=limit)
+  throw Error('REGISTRY_INVENTORY_INVALID');
  if(result.data.some((x:unknown)=>!x||typeof x!=='object'||Array.isArray(x)))
-  invalid();
+  throw Error('REGISTRY_INVENTORY_INVALID');
  return result.data as Record<string,unknown>[];
 }
 
@@ -47,8 +50,9 @@ export async function POST(req:NextRequest){
   const profileId=requireExplicitProfile(obj.profileId);
   if(obj.exchange!==null&&typeof obj.exchange!=='string')invalid();
   const exchange=(obj.exchange as string|null)?.trim().toUpperCase()||null;
-  if(typeof obj.dataCutoff!=='string')invalid();
-  const dataCutoff=obj.dataCutoff;
+  if(typeof obj.dataCutoff!=='string')
+   throw Error('INVALID_DATA_CUTOFF');
+  const dataCutoff:string=obj.dataCutoff;
   // No writes, no RPC. Every SELECT has a hard cap and fails closed.
   const client=getHostedShadowRecoveryClient();
   const securities=checkedRows(await client.from('securities')
