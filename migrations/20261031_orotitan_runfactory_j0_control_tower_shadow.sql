@@ -16,6 +16,7 @@ create table if not exists public.orotitan_j0_milestones_v1 (
 );
 create table if not exists public.orotitan_j0_events_v1 (
   event_id uuid primary key default gen_random_uuid(),
+  event_seq bigint generated always as identity unique,
   event_key text not null unique check (length(event_key) between 14 and 160),
   milestone_code text not null references public.orotitan_j0_milestones_v1(milestone_code) on delete restrict,
   event_type text not null check (event_type in (
@@ -139,7 +140,7 @@ begin
    select event_type into v_issue_state from public.orotitan_j0_events_v1
     where evidence_ref=p_evidence_ref and milestone_code=p_milestone_code
       and event_type in ('BLOCKER_OPENED','BLOCKER_RESOLVED')
-    order by created_at desc,event_id desc limit 1;
+    order by event_seq desc limit 1;
    if (p_event_type='BLOCKER_OPENED' and v_issue_state='BLOCKER_OPENED')
     or (p_event_type='BLOCKER_RESOLVED'
         and v_issue_state is distinct from 'BLOCKER_OPENED') then
