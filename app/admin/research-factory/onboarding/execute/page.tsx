@@ -47,7 +47,7 @@ export default async function AtomicOnboardingPage({
   {initialValues&&<p className="rounded-lg border border-slate-700 p-3 text-sm text-slate-300">
     Dossier candidat prérempli. Les champs et liens sont des propositions
     non vérifiées par cette page. Confirmez leur exactitude avant
-    toute autorisation. Aucun consentement n'est précoché.
+    toute autorisation. Aucun consentement n’est précoché.
    </p>}
   <AtomicOnboardingClient initialValues={initialValues}/>
   <div className="flex flex-wrap gap-5">
