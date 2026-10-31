@@ -86,9 +86,10 @@ export async function POST(req:NextRequest){
    dossier=object(dossierResult.data),audit=object(auditResult.data);
   if(issuer.issuer_id!==issuerId||
      issuer.display_name!==args.p_display_name||
-     issuer.legal_name!==args.p_legal_name||
-     issuer.country!==args.p_issuer_country||
-     issuer.reporting_currency!==args.p_reporting_currency||
+     (issuer.legal_name!==null&&issuer.legal_name!==args.p_legal_name)||
+     (issuer.country!==null&&issuer.country!==args.p_issuer_country)||
+     (issuer.reporting_currency!==null&&
+      issuer.reporting_currency!==args.p_reporting_currency)||
      security.security_id!==securityId||
      security.issuer_id!==issuerId||
      security.isin!==args.p_isin||security.ticker!==args.p_ticker||
