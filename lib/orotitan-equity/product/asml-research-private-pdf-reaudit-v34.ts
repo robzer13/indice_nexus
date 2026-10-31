@@ -8,6 +8,7 @@
  * No writes to SHADOW or production and NO Registry access or admission.
  */
 import {createHash} from 'node:crypto';
+import {findNumericCandidates} from './research-pdf-numeric-core-v1';
 import type {SupabaseClient} from '@supabase/supabase-js';
 
 export const V34_RUN_ID='a1e59126-1ca9-4e55-8764-54a1e3d4dc24';
@@ -175,21 +176,9 @@ export async function independentAuditAll(client:SupabaseClient):Promise<V34Rece
  return result;
 }
 export function numericCandidatesFromPage(id:V34SourceId,pageText:string):
- Array<{claimId:string;excerpt:string;match:'NUMERIC_TOKEN_ONLY'}> {
- const clean=pageText.replace(/\s+/g,' ');
- const noThousands=clean.replace(/(\d)[, ](?=\d{3}(?:\D|$))/g,'$1');
- const matches:Array<{claimId:string;excerpt:string;match:'NUMERIC_TOKEN_ONLY'}>=[];
- for(const probe of V34_PROBES[id]){
-  if(probe.derived)continue;
-  const needle=probe.numeric;
-  const re=new RegExp('(?<!\\d)'+needle.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'(?!\\d)');
-  const found=re.exec(noThousands);
-  if(!found)continue;
-  // Context is informational, NOT a claim-fitness certification.
-  const excerpt=noThousands.slice(Math.max(0,found.index-95),Math.min(noThousands.length,found.index+needle.length+150));
-  matches.push({claimId:probe.claimId,excerpt:excerpt.slice(0,270),match:'NUMERIC_TOKEN_ONLY'});
- }
- return matches;
+ Array<{claimId:string;excerpt:string;match:'NUMERIC_TOKEN_ONLY'}>{
+ // The shared engine preserves v3.4 first-match-per-probe semantics.
+ return findNumericCandidates(pageText,V34_PROBES[id]);
 }
 export type V34PageObservation=Readonly<{
  pdfPage:number;textLength:number;textSha256:string;
