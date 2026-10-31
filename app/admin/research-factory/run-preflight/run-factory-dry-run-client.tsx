@@ -5,6 +5,8 @@ import type {ContractProfileSummary} from
  '@/lib/orotitan-equity/product/runfactory-contract-profile-v1';
 import type {RunFactoryDecision} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
+import type {RunPreflightSeed} from
+ '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
 
 type PreflightReply={ok:true;checkedAt:string;result:RunFactoryDecision;
  mode:'DRY_RUN_ONLY';rpcExecuted:false;registryAdmitted:false;
@@ -12,12 +14,12 @@ type PreflightReply={ok:true;checkedAt:string;result:RunFactoryDecision;
  authoritativeProductionEnvironmentVerified:false;};
 
 export function RunFactoryDryRunClient({
- profiles,
-}:{profiles:readonly ContractProfileSummary[]}){
- const [isin,setIsin]=useState('');
- const [exchange,setExchange]=useState('');
- const [cutoff,setCutoff]=useState('');
- const [profile,setProfile]=useState('');
+ profiles,initialValues,
+}:{profiles:readonly ContractProfileSummary[];initialValues:RunPreflightSeed}){
+ const [isin,setIsin]=useState(initialValues.isin);
+ const [exchange,setExchange]=useState(initialValues.exchange);
+ const [cutoff,setCutoff]=useState(initialValues.dataCutoff);
+ const [profile,setProfile]=useState(initialValues.profileId);
  const [running,setRunning]=useState(false);
  const [error,setError]=useState('');
  const [answer,setAnswer]=useState<PreflightReply|null>(null);
