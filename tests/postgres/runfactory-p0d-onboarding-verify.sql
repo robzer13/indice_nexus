@@ -146,7 +146,7 @@ begin
   'public.orotitan_onboard_identity_shadow_v1(text,text,text,text,text,text,text,text,text,boolean,text,integer,uuid,uuid,jsonb,text)',
   'EXECUTE') or not
     pg_catalog.has_function_privilege('service_role',
-  'public.orotitan_onboard_identity_shadow_v1(text,text,text,text,text,text,text,text,text,text,boolean,text,integer,uuid,uuid,jsonb,text)',
+  'public.orotitan_onboard_identity_shadow_v1(text,text,text,text,text,text,text,text,text,boolean,text,integer,uuid,uuid,jsonb,text)',
   'EXECUTE') or not
     (select relrowsecurity from pg_class where oid=
      'public.orotitan_identity_onboarding_receipts_v1'::regclass) then
