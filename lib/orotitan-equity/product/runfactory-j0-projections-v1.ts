@@ -3,7 +3,7 @@
  * never a substitute for independent milestone-gate acceptance.
  */
 export type J0IssueEvent=Readonly<{
- event_id:string;milestone_code:string;event_type:string;
+ event_id:string;event_seq:number;milestone_code:string;event_type:string;
  evidence_ref:string|null;created_at:string;
 }>;
 export function unresolvedJ0Issues<T extends J0IssueEvent>(
@@ -15,14 +15,13 @@ export function unresolvedJ0Issues<T extends J0IssueEvent>(
   e.milestone_code===milestone &&
   ['BLOCKER_OPENED','BLOCKER_RESOLVED'].includes(e.event_type)&&
   !!e.evidence_ref).sort((a,b)=>
-  a.created_at.localeCompare(b.created_at)||
-  a.event_id.localeCompare(b.event_id));
+  a.event_seq-b.event_seq);
  for(const e of ordered){
   if(!e.evidence_ref)continue;
   if(e.event_type==='BLOCKER_OPENED')issues.set(e.evidence_ref,e);
   else issues.delete(e.evidence_ref);
  }
- return [...issues.values()].sort((a,b)=>a.created_at.localeCompare(b.created_at));
+ return [...issues.values()].sort((a,b)=>a.event_seq-b.event_seq);
 }
 export function j0DisplayedStatus(input:{
  initialStatus:string;unresolvedBlockerCount:number;
