@@ -26,7 +26,7 @@ export function PdfAuditClient({sources}:{sources:SourceOption[]}){
   try{
    const payload=mode==='rehash_all'?{mode}:
      {mode,sourceId:selected,startPage:Number(startPage),pageCount:Number(pages)};
-   const response=await fetch('/admin/research-primary-sources/audit',{
+   const response=await fetch('/admin/research-primary-sources/audit/run',{
     method:'POST',credentials:'same-origin',
     headers:{'Content-Type':'application/json'},body:JSON.stringify(payload),cache:'no-store',
    });
