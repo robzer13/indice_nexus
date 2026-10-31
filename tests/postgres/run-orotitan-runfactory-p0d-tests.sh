@@ -15,15 +15,14 @@ cleanup(){
 }
 trap cleanup EXIT
 new_db(){
- local db="${prefix}$1"
+ db="${prefix}$1"
  createdb "$db"; dbs+=("$db")
  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/i1-fixture.sql" >/dev/null
  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20260909_orotitan_equity_i1_identity.sql" >/dev/null
  psql -X -v ON_ERROR_STOP=1 -d "$db" -c 'create schema if not exists extensions; alter extension pgcrypto set schema extensions' >/dev/null
  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0d_atomic_identity_onboarding.sql" >/dev/null
- printf '%s' "$db"
 }
-main="$(new_db main)"
+new_db main; main="$db"
 psql -X -v ON_ERROR_STOP=1 -d "$main" -f "$root/tests/postgres/runfactory-p0d-onboarding-verify.sql" >/dev/null
 before="$(psql -XAt -d "$main" -c 'select count(*) from public.orotitan_identity_onboarding_receipts_v1')"
 psql -X -v ON_ERROR_STOP=1 -d "$main" -f "$root/migrations/20261031_orotitan_runfactory_p0d_atomic_identity_onboarding.sql" >/dev/null
@@ -32,7 +31,7 @@ test "$before" = "$after"
 
 # Two simultaneous requests with different idempotency keys for the SAME
 # ISIN/listing must converge to one issuer, one security and one dossier.
-race="$(new_db race)"
+new_db race; race="$db"
 call(){
  local db="$1" key="$2" isin="$3"
  psql -XAt -v ON_ERROR_STOP=1 -d "$db" -c "
@@ -59,7 +58,7 @@ test "$(psql -XAt -d "$race" -c "select count(*) from public.research_dossiers")
 test "$(psql -XAt -d "$race" -c "select count(*) from public.orotitan_identity_onboarding_receipts_v1")" = "2"
 
 # Same listing but conflicting ISIN must never both succeed.
-conflict="$(new_db conflict)"
+new_db conflict; conflict="$db"
 set +e
 call "$conflict" 'orotitan:p0d:race:conflict:one' 'FR0000120321' >"/tmp/p0d-conflict1-$$.log" 2>&1 &
 pid1=$!
