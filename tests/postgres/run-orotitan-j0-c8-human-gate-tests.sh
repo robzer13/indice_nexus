@@ -43,12 +43,22 @@ c8_chain=(
   20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql
   20261031211508_orotitan_j0_c8_shadow_independent_reviewer_generic_authority_v1_1.sql
 )
-for pass in install replay; do
+apply_c8_chain() {
+ local pass="$1"
+ if [[ "$pass" = replay ]]; then
+  # Reuse v1.1's exact preflight BEFORE any predecessor can replace a function.
+  # In conditional calls, bash disables errexit: explicitly propagate failures.
+  sed -n '/^DO \$preflight\$/,/^END \$preflight\$;/p' "$root/migrations/${c8_chain[3]}" |
+   psql -X -v ON_ERROR_STOP=1 -d "$db" >/dev/null || return 1
+ fi
  for file in "${c8_chain[@]}"; do
   echo "C8 $pass: $file"
-  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/$file" >/dev/null
+  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/$file" >/dev/null || return 1
  done
- fingerprint="$(psql -XAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")"
+}
+for pass in install replay; do
+ apply_c8_chain "$pass"
+ fingerprint="$(psql -XqAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")"
  if [[ "$pass" = install ]]; then installed_fingerprint="$fingerprint";
  else test "$fingerprint" = "$installed_fingerprint"; fi
 done
@@ -319,6 +329,13 @@ begin
 end $accept$;
 reset role;
 SQL
+# Full-chain replay must refuse BEFORE replacing any predecessor definition.
+if reapply_output="$(apply_c8_chain replay 2>&1)"; then
+ echo "C8 chain unexpectedly replayed with an active local decision" >&2; exit 1
+fi
+[[ "$reapply_output" == *C8_SHADOW_HARDENING_REQUIRES_ALL_GATES_DISABLED* ]]
+[[ "$reapply_output" != *"C8 replay:"* ]]
+echo "J0_C8_ACTIVE_CHAIN_REPLAY_REFUSED_BEFORE_PREDECESSORS_PASS"
 # An active/accepted database must reject v1.1 at preflight, before mutation.
 if reapply_output="$(psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/${c8_chain[3]}" 2>&1)"; then
  echo "C8 v1.1 unexpectedly reapplied with an active local decision" >&2; exit 1
@@ -327,7 +344,7 @@ fi
 echo "J0_C8_ACTIVE_V1_1_REAPPLY_REFUSED_WITHOUT_MUTATION_PASS"
 # Verify actual final constraints, function bodies, ACLs/RLS and triggers, not
 # merely the decision count. No obsolete predecessor is reapplied after v1.1.
-test "$(psql -XAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")" = "$installed_fingerprint"
+test "$(psql -XqAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")" = "$installed_fingerprint"
 psql -X -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
 DO $final$
 BEGIN
