@@ -135,7 +135,12 @@ export default async function J0ControlTowerPage(){
     {milestones.map(m=>{
      const blockers=unresolvedJ0Issues(events,m.milestone_code);
      const observations=events.filter(e=>e.milestone_code===m.milestone_code);
-     const status=j0DisplayedStatus({initialStatus:m.initial_status,unresolvedBlockerCount:blockers.length});
+     const observedStatus=j0DisplayedStatus({
+      initialStatus:m.initial_status,unresolvedBlockerCount:blockers.length});
+     // Historical initial_status cannot certify acceptance without persisted C8.
+     const status=blockers.length>0?'BLOQUE':
+      acceptedMilestones.has(m.milestone_code)?'ACCEPTE':
+      observedStatus==='ACCEPTE'?'EN_COURS':observedStatus;
      const criteria=Array.isArray(m.gate_criteria)?
       m.gate_criteria.filter((x):x is string=>typeof x==='string'):[];
      return <article key={m.milestone_code}
