@@ -10,6 +10,9 @@ import {getHostedShadowRecoveryClient} from
 import {J0RecordClient} from './j0-record-client';
 import {J0C5SecurityTestClient} from './j0-c5-security-test-client';
 import {J0C8GatePanel} from './j0-c8-gate-panel';
+import {PreJalonPanel} from './pre-jalon-panel';
+import {evaluatePreJalonReadinessV1} from
+ '@/lib/orotitan-equity/product/pre-jalon-readiness-v1';
 import {unresolvedJ0Issues,j0DisplayedStatus} from
  '@/lib/orotitan-equity/product/runfactory-j0-projections-v1';
 
@@ -36,7 +39,7 @@ export default async function J0ControlTowerPage(){
  if(!isHostedShadowResearchEnabled(process.env))
   return <main className="p-6 text-rose-300">SHADOW_ONLY</main>;
  const client=getHostedShadowRecoveryClient();
- const [milestonesQ,eventsQ,runsQ,issuersQ]=await Promise.all([
+ const [milestonesQ,eventsQ,runsQ,issuersQ,decisionsQ]=await Promise.all([
   client.from('orotitan_j0_milestones_v1')
    .select('milestone_code,ordinal,title,objective,initial_status,gate_criteria')
    .order('ordinal',{ascending:true}).limit(10),
@@ -47,13 +50,17 @@ export default async function J0ControlTowerPage(){
    .select('run_id,issuer_id,security_id,dossier_id,run_status,current_stage,run_type,state_version,data_cutoff,contract_set_sha256,created_at')
    .order('created_at',{ascending:false}).limit(200),
   client.from('issuers').select('issuer_id,display_name').limit(200),
+  client.from('orotitan_j0_c8_decisions_v1')
+   .select('milestone_code,decision_status,scope')
+   .eq('decision_status','ACCEPTED').limit(20),
  ]);
- if(milestonesQ.error||eventsQ.error||runsQ.error||issuersQ.error||
+ if(milestonesQ.error||eventsQ.error||runsQ.error||issuersQ.error||decisionsQ.error||
     !Array.isArray(milestonesQ.data)||!Array.isArray(eventsQ.data)||
     !Array.isArray(runsQ.data)||!Array.isArray(issuersQ.data)||
+    !Array.isArray(decisionsQ.data)||
     milestonesQ.data.length!==9||
     eventsQ.data.length>=250||runsQ.data.length>=200||
-    issuersQ.data.length>=200)
+    issuersQ.data.length>=200||decisionsQ.data.length>=20)
   return <main className="p-6 space-y-4">
    <h1 className="text-2xl text-white">J0 Control Tower — accès incomplet</h1>
    <p className="text-rose-300">
@@ -70,7 +77,24 @@ export default async function J0ControlTowerPage(){
  const verified=events.filter(e=>
   e.verification_state==='VERIFIED_DIRECT_REGISTRY_READBACK').length;
  const unresolved=milestones.flatMap(m=>unresolvedJ0Issues(events,m.milestone_code));
- const accepted=milestones.filter(m=>m.initial_status==='ACCEPTE').length;
+ // Formal C8 decisions are authoritative; initial_status is only history.
+ const acceptedMilestones=new Set(
+  (decisionsQ.data as {milestone_code:string;decision_status:string;scope:string}[])
+   .filter(d=>d.decision_status==='ACCEPTED'&&d.scope==='SHADOW_ONLY')
+   .map(d=>d.milestone_code));
+ const accepted=acceptedMilestones.size;
+ const preJalonEntries=milestones.filter(m=>m.ordinal>=1).map(m=>{
+  const predecessor='J'+(m.ordinal-1);
+  return {title:m.title,readiness:evaluatePreJalonReadinessV1({
+   milestoneCode:m.milestone_code,
+   criteria:Array.isArray(m.gate_criteria)?m.gate_criteria.filter(
+    (x):x is string=>typeof x==='string'):[],
+   predecessorC8Accepted:acceptedMilestones.has(predecessor),
+   predecessorOpenBlockers:unresolvedJ0Issues(events,predecessor).length,
+   // No plan/review/GO write path exists yet. Never infer authorization.
+   plan:null,buildGo:null,
+  })};
+ });
  return <main className="mx-auto max-w-7xl space-y-6 p-5 text-slate-100">
   <header className="space-y-2">
    <p className="text-xs uppercase tracking-widest text-cyan-300">
@@ -111,7 +135,12 @@ export default async function J0ControlTowerPage(){
     {milestones.map(m=>{
      const blockers=unresolvedJ0Issues(events,m.milestone_code);
      const observations=events.filter(e=>e.milestone_code===m.milestone_code);
-     const status=j0DisplayedStatus({initialStatus:m.initial_status,unresolvedBlockerCount:blockers.length});
+     const observedStatus=j0DisplayedStatus({
+      initialStatus:m.initial_status,unresolvedBlockerCount:blockers.length});
+     // Historical initial_status cannot certify acceptance without persisted C8.
+     const status=blockers.length>0?'BLOQUE':
+      acceptedMilestones.has(m.milestone_code)?'ACCEPTE':
+      observedStatus==='ACCEPTE'?'EN_COURS':observedStatus;
      const criteria=Array.isArray(m.gate_criteria)?
       m.gate_criteria.filter((x):x is string=>typeof x==='string'):[];
      return <article key={m.milestone_code}
@@ -197,6 +226,7 @@ export default async function J0ControlTowerPage(){
     </table>
    </div>
   </section>
+  <PreJalonPanel entries={preJalonEntries}/>
   <J0RecordClient runIds={runs.map(r=>r.run_id)}
    criteria={Object.fromEntries(milestones.map(m=>[
     m.milestone_code,Array.isArray(m.gate_criteria)?
