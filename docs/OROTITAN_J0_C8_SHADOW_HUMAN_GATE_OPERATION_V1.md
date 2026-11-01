@@ -1,6 +1,8 @@
 # OroTitan — J0/C8 HUMAN GATE — SHADOW v1
 
 Date: 2026-10-31.
+Source reconciliation: 2026-11-01, CODEX 01. The local qualification below
+does not authorize a Preview deployment or any remote mutation.
 Authority: **GO REMÉDIATION C8 SHADOW**; authorizes implementation,
 installation and tests. **No authority to accept J0**, initiate J1/Research,
 write an analytical artifact, publish or modify production.
@@ -38,6 +40,13 @@ or existing methodical/contract pin is changed by this infrastructure.
   event. Review and approval RPCs take the **same per-milestone advisory
   lock**, preventing a new incident from interleaving with decision
   eligibility/watermark validation.
+- `migrations/20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql`
+  requires a separate exact-milestone lock and matching authority.
+- `migrations/20261031211508_orotitan_j0_c8_shadow_independent_reviewer_generic_authority_v1_1.sql`
+  reconciles the already-installed SHADOW migration with its original bytes.
+  The global authority accepts `GO_ACCEPT_J[0-8]_...`; each milestone still
+  requires its exact authority. Reviewer and approver declared labels must
+  differ after `lower(btrim(...))`. Do not reapply this migration to SHADOW.
 - `app/admin/research-factory/control-tower/c8-gate/route.ts`:
   authenticated, read-only preflight and cross-table receipt recheck.
 - `.../c8-gate/prepare/route.ts`: authenticated + same-origin POST,
@@ -84,7 +93,7 @@ A later explicit GO is required, separately from the C8 remediation GO.
 The acceptance function requires all of:
 - Both activation gates enabled; `service_role` cannot update the
   DB activation control directly.
-- Matching `GO_ACCEPT_J0_...` authority reference **already set**
+- Matching `GO_ACCEPT_Jn_...` authority reference **already set**
   in the DB by a separate privileged, reviewed migration.
 - An immutable previously prepared review ID plus exact review SHA-256.
 - Explicit typed phrase `ACCEPTER Jx SHADOW` and a declared approver label,
@@ -121,12 +130,27 @@ an implicit permission to start J1, Research, or to publish.
 
 ## Verification required for C8 remediation closeout
 
+CODEX 01 qualification is reproducible with
+`bash tests/postgres/run-orotitan-j0-c8-human-gate-tests.sh` against a disposable
+local PostgreSQL instance (CI uses PostgreSQL 17). The script installs Registry
+dependencies, then the four C8 migrations in the order listed above, ending in
+v1.1. It replays all four while locks are closed and no decisions exist, compares
+installed function/constraint/ACL/RLS/trigger fingerprints, then runs the local
+matrix using the existing thirteen-pin V1 contract pack. The acceptance
+simulation is **J0 only**; J1 evidence/review fixtures test denial and do not
+start J1. No analytical stage or publication is created. The database is dropped
+on exit. v1.1 reapplication with active locks/decisions must fail at preflight
+without mutation. Never replay an obsolete predecessor alone after hardening.
+
+The following historical hosted closeout steps are outside CODEX 01 and require
+their own authorization; they are not prerequisites to run the local matrix.
+
 1. Local disposable PostgreSQL: simulate evidence C1..C7, deny preparation
    without evidence, prepare, replay, conflict, deny acceptance by default.
 2. In the disposable DB ONLY, activate control by the local database owner;
    deny wrong authority, wrong confirmation, stale review; create exactly one
-   fictional **J1** decision with readback, replay, no stage, and no J0
-   decision. Check all RLS/GRANTs.
+   fictional **J0** decision with readback, replay, no stage, and no J1
+   decision. Check all RLS/GRANTs and the normalized reviewer/approver guard.
 3. Verify transaction serialization migration by a real SHADOW
    `BEGIN; ...; ROLLBACK` event insert; it must persist **zero** test events.
 4. SHADOW post-migration readback:
