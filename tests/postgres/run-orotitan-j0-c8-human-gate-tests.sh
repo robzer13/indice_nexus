@@ -3,6 +3,8 @@
 set -euo pipefail
 : "${PGHOST:=127.0.0.1}" "${PGPORT:=5432}" "${PGUSER:=postgres}" "${PGPASSWORD:=postgres}"
 export PGHOST PGPORT PGUSER PGPASSWORD
+# Prevent libpq service/hostaddr overrides from redirecting this local test.
+unset PGSERVICE PGSERVICEFILE PGHOSTADDR
 case "$PGHOST" in 127.0.0.1|localhost|::1|/var/run/postgresql) ;;
  *) echo "J0 REFUSED NON-LOCAL POSTGRES" >&2; exit 2;; esac
 root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -32,18 +34,65 @@ done
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_initial_run.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_p0e_shadow_helper_grants.sql" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_runfactory_j0_control_tower_shadow.sql" >/dev/null
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_gate_event_serialization_shadow.sql" >/dev/null
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql" >/dev/null
-# Disposable, deliberately unbound Registry run. This is not SHADOW and
-# never creates a canonical issuer or runs a research stage.
-psql -X -v ON_ERROR_STOP=1 -d "$db" -c "
+# Preserve historic migrations; apply and replay the complete C8 chain in order.
+# v1.1 intentionally requires all gates closed and no decisions. Replaying a
+# predecessor alone is not a valid idempotence test of the installed frontier.
+c8_chain=(
+  20261031_orotitan_j0_c8_human_acceptance_shadow.sql
+  20261031_orotitan_j0_c8_gate_event_serialization_shadow.sql
+  20261031_orotitan_j0_c8_per_milestone_authority_shadow.sql
+  20261031211508_orotitan_j0_c8_shadow_independent_reviewer_generic_authority_v1_1.sql
+)
+for pass in install replay; do
+ for file in "${c8_chain[@]}"; do
+  echo "C8 $pass: $file"
+  psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/$file" >/dev/null
+ done
+ fingerprint="$(psql -XAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")"
+ if [[ "$pass" = install ]]; then installed_fingerprint="$fingerprint";
+ else test "$fingerprint" = "$installed_fingerprint"; fi
+done
+echo "J0_C8_FULL_CHAIN_REPLAY_PROTECTIONS_PASS $installed_fingerprint"
+# Reuse the existing frozen thirteen-pin pack, including its real fingerprint.
+# This deliberately unbound local run never starts an analytical stage.
+pack="$(cat "$root/contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json")"
+psql -X -v ON_ERROR_STOP=1 -v pack="$pack" -d "$db" <<'SQL'
  INSERT INTO public.orotitan_runs(
   creation_idempotency_key,entry_path,canonical_mode,run_type,
   data_cutoff,process_version,pilotage_contract_version,
   contract_pins,contract_set_sha256)
- VALUES('c8-disposable-only-run','IMPOSED_COMPANY','ANALYZE','INITIAL',
-  '2026-10-30','3.1','3.1','{}'::jsonb,repeat('a',64))" >/dev/null
+ SELECT 'c8-disposable-only-run','IMPOSED_COMPANY','ANALYZE','INITIAL',
+  '2026-10-30',p->'contract_pins'->'process'->>'version',
+  p->'contract_pins'->'pilotage'->>'version',
+  p->'contract_pins',p->>'contract_set_sha256'
+ FROM (SELECT :'pack'::jsonb AS p) pack;
+ DO $pins$
+ DECLARE r public.orotitan_runs%ROWTYPE; computed text; rejected_constraint text;
+ BEGIN
+  SELECT * INTO STRICT r FROM public.orotitan_runs
+  WHERE creation_idempotency_key='c8-disposable-only-run';
+  SELECT encode(extensions.digest(string_agg(
+    key||'|'||(value->>'version')||'|'||(value->>'content_sha256'),
+    E'\n' ORDER BY key COLLATE "C")||E'\n','sha256'),'hex') INTO computed
+  FROM jsonb_each(r.contract_pins);
+  IF (SELECT count(*) FROM jsonb_object_keys(r.contract_pins))<>13
+     OR NOT public.orotitan_contract_pins_complete(r.contract_pins)
+     OR computed<>r.contract_set_sha256
+  THEN RAISE EXCEPTION 'J0_C8_CONTRACT_PIN_FIXTURE_INVALID';END IF;
+  BEGIN
+   INSERT INTO public.orotitan_runs(
+    creation_idempotency_key,entry_path,canonical_mode,run_type,data_cutoff,
+    process_version,pilotage_contract_version,contract_pins,contract_set_sha256)
+   VALUES('c8-invalid-pins-local-only','IMPOSED_COMPANY','ANALYZE','INITIAL',
+    '2026-10-30','1.0','1.0.1','{}'::jsonb,repeat('a',64));
+   RAISE EXCEPTION 'J0_C8_EMPTY_PINS_ACCEPTED';
+  EXCEPTION WHEN check_violation THEN
+   GET STACKED DIAGNOSTICS rejected_constraint=CONSTRAINT_NAME;
+   IF rejected_constraint<>'orotitan_runs_contract_pins_complete_check' THEN RAISE;END IF;
+  END;
+  RAISE NOTICE 'J0_C8_THIRTEEN_REAL_PINS_AND_EMPTY_PINS_REJECTED_PASS';
+ END $pins$;
+SQL
 psql -X -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
 set role service_role;
 do $matrix$
@@ -55,6 +104,7 @@ declare
  v_review_key text:='orotitan:c8:review:local-j0-matrix-20261031';
  v_id uuid;
  v_local_run uuid;
+ other_ids uuid[]:='{}'::uuid[]; other_review jsonb;
 begin
  if (SELECT count(*) FROM pg_trigger
      WHERE tgrelid='public.orotitan_j0_events_v1'::regclass
@@ -133,6 +183,19 @@ begin
  exception when others then
   if sqlerrm<>'J0_C8_ACCEPTANCE_LOCKED' then raise;end if;
  end;
+ -- Prepare a local J1 review without starting J1. It must remain unaccepted
+ -- even when J0 is explicitly enabled later by the disposable database owner.
+ for i in 1..7 loop
+  x:=public.orotitan_j0_record_event_v1(
+   'orotitan:j0:c8-local-j1-proof-'||i::text,'J1','EVIDENCE_RECORDED',
+   'Disposable other-milestone proof C'||i::text,'test:local-j1-proof-'||i::text,
+   NULL,jsonb_build_object('criterionIndex',i,'source','LOCAL_ONLY'));
+  other_ids:=array_append(other_ids,(x->>'event_id')::uuid);
+ end loop;
+ other_review:=public.orotitan_j0_c8_prepare_review_v1(
+  'orotitan:c8:review:local-j1-locked-only','J1',v_ref,v_hash,'Reviewer Local',other_ids);
+ perform set_config('orotitan.c8_other_review',other_review->>'reviewId',false);
+ perform set_config('orotitan.c8_other_hash',other_review->>'reviewSha256',false);
  perform set_config('orotitan.c8_fixture_review',prepared->>'reviewId',false);
  perform set_config('orotitan.c8_fixture_hash',prepared->>'reviewSha256',false);
  perform set_config('orotitan.c8_fixture_proofs',array_to_string(ids,','),false);
@@ -178,6 +241,26 @@ begin
  exception when others then
   if sqlerrm<>'J0_C8_AUTHORITY_REF_INVALID' then raise;end if;
  end;
+ -- v1.1 compares declared labels after lower(btrim(...)).
+ begin
+  perform public.orotitan_j0_c8_accept_review_v1(
+   v_decision_key,old_id,old_hash,'  rEvIeWeR lOcAl  ','ACCEPTER J0 SHADOW',
+   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+  raise exception 'J0_C8_IDENTICAL_NORMALIZED_LABELS_ACCEPTED';
+ exception when others then
+  if sqlerrm<>'J0_C8_REVIEWER_APPROVER_NOT_DISTINCT' then raise;end if;
+ end;
+ begin
+  perform public.orotitan_j0_c8_accept_review_v1(
+   'orotitan:c8:decision:local-j1-denied-only',
+   current_setting('orotitan.c8_other_review')::uuid,
+   current_setting('orotitan.c8_other_hash'),'Approver Local','ACCEPTER J1 SHADOW',
+   'GO_ACCEPT_J0_SANDBOX_ISOLATED_TEST');
+  raise exception 'J0_C8_OTHER_MILESTONE_ACCEPTED_WITH_J0_GO';
+ exception when others then
+  if sqlerrm<>'J0_C8_MILESTONE_ACCEPTANCE_LOCKED' then raise;end if;
+ end;
+ raise notice 'J0_C8_NORMALIZED_LABEL_AND_OTHER_MILESTONE_DENIAL_PASS';
  -- New event makes the earlier review stale.
  v:=public.orotitan_j0_record_event_v1(
   'orotitan:j0:c8-new-j0-proof-for-staleness',
@@ -236,9 +319,29 @@ begin
 end $accept$;
 reset role;
 SQL
-# Re-entrant migration does not clear the isolated fixture decision,
-# nor does it enable any new real-world environment.
-psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/20261031_orotitan_j0_c8_human_acceptance_shadow.sql" >/dev/null
-test "$(psql -XAt -d "$db" -c 'select count(*) from public.orotitan_j0_c8_decisions_v1')" = "1"
-test "$(psql -XAt -d "$db" -c "select count(*) from public.orotitan_j0_c8_decisions_v1 where milestone_code='J1'")" = "0"
-echo "J0 C8 LOCAL PG PASS: locked-by-default, 7-proof review, replay/conflict, stale, explicit GO, simulated LOCAL J0-only approval, immutable decision and migration idempotence"
+# An active/accepted database must reject v1.1 at preflight, before mutation.
+if reapply_output="$(psql -X -v ON_ERROR_STOP=1 -d "$db" -f "$root/migrations/${c8_chain[3]}" 2>&1)"; then
+ echo "C8 v1.1 unexpectedly reapplied with an active local decision" >&2; exit 1
+fi
+[[ "$reapply_output" == *C8_SHADOW_HARDENING_REQUIRES_ALL_GATES_DISABLED* ]]
+echo "J0_C8_ACTIVE_V1_1_REAPPLY_REFUSED_WITHOUT_MUTATION_PASS"
+# Verify actual final constraints, function bodies, ACLs/RLS and triggers, not
+# merely the decision count. No obsolete predecessor is reapplied after v1.1.
+test "$(psql -XAt -v ON_ERROR_STOP=1 -d "$db" -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")" = "$installed_fingerprint"
+psql -X -v ON_ERROR_STOP=1 -d "$db" <<'SQL'
+DO $final$
+BEGIN
+ IF (SELECT count(*) FROM public.orotitan_j0_c8_decisions_v1)<>1
+ OR (SELECT count(*) FROM public.orotitan_j0_c8_decisions_v1 WHERE milestone_code<>'J0')<>0
+ OR (SELECT count(*) FROM public.orotitan_run_stages)<>0
+ OR (SELECT count(*) FROM public.orotitan_artifacts)<>0
+ OR (SELECT count(*) FROM public.orotitan_run_events)<>0
+ OR (SELECT count(*) FROM public.snapshots)<>(SELECT snapshots FROM public.fixture_legacy_before)
+ OR EXISTS (SELECT 1 FROM public.orotitan_runs
+            WHERE run_status<>'CREATED' OR current_stage IS NOT NULL)
+ OR (SELECT count(*) FROM public.orotitan_j0_c8_milestone_activation_v1 WHERE enabled)<>1
+ THEN RAISE EXCEPTION 'J0_C8_FINAL_STATE_REGRESSION';END IF;
+ RAISE NOTICE 'J0_C8_FINAL_V1_1_NO_STAGE_NO_PUBLICATION_PASS';
+END $final$;
+SQL
+echo "J0 C8 LOCAL PG PASS: full chain install/replay, 13 pins, closed lock, review replay/conflict, normalized labels, wrong GO, stale review, other-milestone denial, LOCAL J0-only approval/replay, immutable decision, unchanged v1.1 protections, no stage or publication"
