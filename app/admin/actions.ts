@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedC8ReadOnlyEnabled } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { revalidatePath } from 'next/cache';
 import {
   createAdminSession,
@@ -127,11 +128,17 @@ async function insertValidatedSnapshot(candidate: unknown, errorPath: string): P
 }
 
 export async function loginAction(formData: FormData): Promise<void> {
+  if (isC8ReadOnlyRequested(process.env) && !isHostedC8ReadOnlyEnabled(process.env)) {
+    throw new Error('C8_READ_ONLY_CONFIG_DENIED');
+  }
   const password = formData.get('password');
   if (typeof password !== 'string' || !verifyAdminPassword(password)) {
     redirect(errorUrl('/admin', 'Mot de passe incorrect.'));
   }
   await createAdminSession();
+  if (isHostedC8ReadOnlyEnabled(process.env)) {
+    redirect('/admin/research-factory/control-tower/c8-gate');
+  }
   redirect('/admin');
 }
 
@@ -141,6 +148,7 @@ export async function logoutAction(): Promise<void> {
 }
 
 export async function createCompanyAction(formData: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await requireAdmin('/admin/companies/new');
   const parsed = companyInputSchema.safeParse(companyCandidateFromForm(formData));
   if (!parsed.success) redirect(errorUrl('/admin/companies/new', issuesMessage(parsed.error)));
@@ -158,6 +166,7 @@ export async function createCompanyAction(formData: FormData): Promise<void> {
 }
 
 export async function updateCompanyAction(formData: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   const slug = textOrNull(formData, 'current_slug') ?? '';
   const path = `/admin/companies/${slug}`;
   await requireAdmin(path);
@@ -181,6 +190,7 @@ export async function updateCompanyAction(formData: FormData): Promise<void> {
 }
 
 export async function createSnapshotAction(formData: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   const path = '/admin/snapshots/new';
   await requireAdmin(path);
   let candidate: unknown;
@@ -193,6 +203,7 @@ export async function createSnapshotAction(formData: FormData): Promise<void> {
 }
 
 export async function createSnapshotJsonAction(formData: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   const path = '/admin/snapshots/new';
   await requireAdmin(path);
   const companyId = textOrNull(formData, 'json_company_id');
@@ -238,6 +249,7 @@ export async function createSnapshotJsonAction(formData: FormData): Promise<void
 }
 
 export async function refreshPricesAction(): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   const path = '/admin/prices';
   await requireAdmin(path);
 

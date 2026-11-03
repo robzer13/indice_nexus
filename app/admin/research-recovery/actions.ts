@@ -1,9 +1,11 @@
 'use server';
 import { redirect } from 'next/navigation';
+import { assertOutsideC8ReadOnly } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { requireAdminSession } from '@/lib/auth/admin-session';
 import { executeShadowRecoveryCycle } from '@/lib/orotitan-equity/product/research-recovery-shadow-server';
 
 export async function runResearchRecoveryAction(form: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await requireAdminSession();
   const key=form.get('source');
   if (typeof key !== 'string' ||

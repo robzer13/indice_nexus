@@ -11,7 +11,16 @@ export const SHADOW_RESEARCH_PROJECT_REF = 'awgsurdyvsyolcgpnygh';
 export const SHADOW_RESEARCH_ORIGIN =
   'https://awgsurdyvsyolcgpnygh.supabase.co';
 
-export function isHostedShadowResearchEnabled(env: HostedShadowEnv): boolean {
+/** Presence reserves the deployment for C8; malformed values never fall back to Research. */
+export function isC8ReadOnlyRequested(env: HostedShadowEnv): boolean {
+  return env.OROTITAN_C8_READ_ONLY_ENABLED !== undefined;
+}
+
+export function assertOutsideC8ReadOnly(env: HostedShadowEnv): void {
+  if (isC8ReadOnlyRequested(env)) throw new Error('C8_READ_ONLY_MUTATION_DENIED');
+}
+
+function isHostedShadowConfigurationValid(env: HostedShadowEnv): boolean {
   const secret = env.OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY;
   const appSecret = env.SUPABASE_SERVICE_ROLE_KEY;
   const appUrl = env.NEXT_PUBLIC_SUPABASE_URL;
@@ -19,8 +28,6 @@ export function isHostedShadowResearchEnabled(env: HostedShadowEnv): boolean {
 
   return env.NODE_ENV === 'production' &&
     env.VERCEL_ENV === 'preview' &&
-    env.OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED === '1' &&
-    env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '1' &&
     env.OROTITAN_SHARED_INBOX_TEST_PROJECT_REF === SHADOW_RESEARCH_PROJECT_REF &&
     env.OROTITAN_EXPECTED_SUPABASE_PROJECT_REF === SHADOW_RESEARCH_PROJECT_REF &&
     // Require BOTH the ordinary Screener client and Research intake client
@@ -34,4 +41,16 @@ export function isHostedShadowResearchEnabled(env: HostedShadowEnv): boolean {
     typeof env.ADMIN_PASSWORD === 'string' && env.ADMIN_PASSWORD.length >= 16 &&
     typeof env.ADMIN_SESSION_SECRET === 'string' &&
     env.ADMIN_SESSION_SECRET.length >= 32;
+}
+
+export function isHostedC8ReadOnlyEnabled(env: HostedShadowEnv): boolean {
+  return env.OROTITAN_C8_READ_ONLY_ENABLED === '1' &&
+    isHostedShadowConfigurationValid(env);
+}
+
+export function isHostedShadowResearchEnabled(env: HostedShadowEnv): boolean {
+  return !isC8ReadOnlyRequested(env) &&
+    env.OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED === '1' &&
+    env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '1' &&
+    isHostedShadowConfigurationValid(env);
 }

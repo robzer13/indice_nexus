@@ -1,6 +1,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { refreshMarketPrices } from '@/lib/market/refresh-prices';
+import { isC8ReadOnlyRequested } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 
 export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
@@ -34,6 +35,10 @@ function isAuthorized(request: NextRequest): boolean {
 }
 
 export async function GET(request: NextRequest) {
+  if (isC8ReadOnlyRequested(process.env)) {
+    return NextResponse.json({ok:false,error:'C8_READ_ONLY_MUTATION_DENIED'},
+      {status:403,headers:{'Cache-Control':'private, no-store'}});
+  }
   if (!isAuthorized(request)) {
     return NextResponse.json({ ok: false, error: 'Unauthorized' }, { status: 401 });
   }

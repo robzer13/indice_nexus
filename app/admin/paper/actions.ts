@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { assertOutsideC8ReadOnly } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { revalidatePath } from 'next/cache';
 import { requireAdminSession } from '@/lib/auth/admin-session';
 import { createServerSupabaseClient } from '@/lib/supabase/server';
@@ -34,6 +35,7 @@ function enums<T extends string>(candidate: string, values: readonly T[]): T {
 }
 
 export async function createPaperPortfolioAction(): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await adminOnly();
   try {
     const { error } = await createServerSupabaseClient().from('paper_portfolios').insert({ code: 'default' });
@@ -46,6 +48,7 @@ export async function createPaperPortfolioAction(): Promise<void> {
 }
 
 export async function createPaperPolicyAction(form: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await adminOnly();
   try {
     const view = await loadPaperDashboard();
@@ -88,6 +91,7 @@ export async function createPaperPolicyAction(form: FormData): Promise<void> {
 }
 
 export async function evaluatePaperSignalAction(form: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await adminOnly();
   try {
     const view = await loadPaperDashboard();
@@ -139,6 +143,7 @@ export async function evaluatePaperSignalAction(form: FormData): Promise<void> {
 }
 
 export async function executeVirtualFillAction(form: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await adminOnly();
   try {
     const view = await loadPaperDashboard();

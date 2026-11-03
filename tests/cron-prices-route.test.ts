@@ -33,7 +33,8 @@ register('./module-mock-hooks.mjs', import.meta.url, {
   data: {
     resolutions: [['@/lib/market/refresh-prices', 'mock:market-refresh']],
     sources: [...mockSources],
-    modulePrefixes: [new URL('../app/', import.meta.url).href],
+    modulePrefixes: [new URL('../app/', import.meta.url).href,
+      new URL('../lib/', import.meta.url).href],
   },
 });
 

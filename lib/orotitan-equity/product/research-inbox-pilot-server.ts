@@ -1,5 +1,5 @@
 import 'server-only';
-import { isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
+import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedShadowResearchEnabled } from './hosted-shadow-research-gate';
 import {isRecoveryCiBrowserFixture} from './research-recovery-ci-fixture';
 import type { ResearchIdentitySnapshot } from './research-intake-preflight-v1';
 import type { ResearchRegistryRoutingSnapshot } from './research-pre-run-card-v1';
@@ -25,6 +25,7 @@ const PROD_REF = 'cugpgtzygqqlxetyeven';
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function researchInboxPilotMode(): ResearchInboxPilotMode {
+  if (isC8ReadOnlyRequested(process.env)) return 'disabled';
   // On Vercel, both Preview and Production MUST obey the single strict
   // SHADOW-only hosted gate, even if someone overrides NODE_ENV.
   if (process.env.VERCEL_ENV) {
@@ -103,6 +104,7 @@ export async function loadPilotResearchInbox() {
 }
 
 export async function requestPilotResearch(companyId: string) {
+  assertOutsideC8ReadOnly(process.env);
   const mode = researchInboxPilotMode();
   if (mode === 'local') {
     const companies = await getAllCompanies();
@@ -276,6 +278,7 @@ export async function getPilotResearchRegistryRoutingSnapshot(
 
 /** Service-role server-only SHADOW client for non-authoritative recovery journal. */
 export function getHostedShadowRecoveryClient(): SupabaseClient {
+  assertOutsideC8ReadOnly(process.env);
   // CI-only loopback disposable PG17 fixture is NOT a hosted project.
   // The normal hosted production safety gate remains unchanged.
   if (!(isHostedShadowResearchEnabled(process.env) ||

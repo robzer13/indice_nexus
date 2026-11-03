@@ -1,9 +1,9 @@
 import {NextRequest,NextResponse} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowResearchEnabled,isHostedC8ReadOnlyEnabled,isC8ReadOnlyRequested} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
-import {getHostedShadowRecoveryClient} from
- '@/lib/orotitan-equity/product/research-inbox-pilot-server';
+import {getC8GateReadClient} from
+ '@/lib/orotitan-equity/product/c8-gate-read-server';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -13,14 +13,16 @@ const fail=(error:string,status=409)=>NextResponse.json({
 },{status,headers});
 
 export async function GET(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))return fail('SHADOW_ONLY',404);
+ if(!(isHostedC8ReadOnlyEnabled(process.env)||
+      isHostedShadowResearchEnabled(process.env)))return fail('SHADOW_ONLY',404);
  try{await requireAdminSession();}catch{return fail('UNAUTHORIZED',401);}
  const milestone=new URL(req.url).searchParams.get('milestone')??'J0';
  if(!/^J[0-8]$/.test(milestone))return fail('J0_C8_MILESTONE_INVALID',400);
  try{
-  const client=getHostedShadowRecoveryClient();
+  const client=getC8GateReadClient();
   const [check,control,milestoneControl,reviews,decisions]=await Promise.all([
-   client.rpc('orotitan_j0_c8_read_gate_v1',{p_milestone:milestone}),
+   client.rpc('orotitan_j0_c8_read_gate_v1',{p_milestone:milestone},
+    {get:isC8ReadOnlyRequested(process.env)}),
    client.from('orotitan_j0_c8_acceptance_control_v1')
     .select('enabled,activation_authority_ref').eq('lock_name','GLOBAL_SHADOW').single(),
    client.from('orotitan_j0_c8_milestone_activation_v1')
@@ -40,7 +42,8 @@ export async function GET(req:NextRequest){
      check.data.acceptanceEnabled!==(
       control.data.enabled===true&&milestoneControl.data.enabled===true))
    return fail('J0_C8_READBACK_MISMATCH',503);
-  const runtimeGoEnabled=process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED==='1';
+  const runtimeGoEnabled=!isC8ReadOnlyRequested(process.env)&&
+   process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED==='1';
   const lockActive=control.data.enabled===true&&milestoneControl.data.enabled===true;
   return NextResponse.json({
    ok:true,scope:'SHADOW_ONLY',milestone,

@@ -1,6 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+import { assertOutsideC8ReadOnly } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { requireAdminSession } from '@/lib/auth/admin-session';
 import {
   researchInboxPilotMode, requestPilotResearch,
@@ -8,6 +9,7 @@ import {
 
 /** A LOCAL intake receipt only; no Research runner or Registry mutation. */
 export async function requestResearchPilotAction(form: FormData): Promise<void> {
+  assertOutsideC8ReadOnly(process.env);
   await requireAdminSession();
   if (researchInboxPilotMode() === 'disabled') redirect('/admin');
 
