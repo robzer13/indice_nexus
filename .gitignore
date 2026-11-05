@@ -35,3 +35,6 @@ next-env.d.ts
 
 # Logs
 nexus.log
+
+# Local-only Research intake pilot (never commit requests)
+.orotitan-local/
