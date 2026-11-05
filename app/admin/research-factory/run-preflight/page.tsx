@@ -3,7 +3,7 @@ import {redirect} from 'next/navigation';
 import type {Metadata} from 'next';
 import {AdminNav} from '@/components/admin/admin-nav';
 import {isAdminAuthenticated} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowResearchEnabled,isHostedJ1RunFactoryEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {listContractProfileSummaries} from
  '@/lib/orotitan-equity/product/runfactory-contract-profile-v1';
@@ -18,7 +18,8 @@ export default async function RunFactoryIdentityPage({
  searchParams,
 }:{searchParams:Promise<RunPreflightQuery>}){
  if(!await isAdminAuthenticated())redirect('/admin');
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowResearchEnabled(process.env)&&
+    !isHostedJ1RunFactoryEnabled(process.env))
   return <main className="p-6 text-rose-300">SHADOW_ONLY</main>;
  const profiles=listContractProfileSummaries();
  const seed=parseUntrustedRunPreflightQuery(await searchParams);
