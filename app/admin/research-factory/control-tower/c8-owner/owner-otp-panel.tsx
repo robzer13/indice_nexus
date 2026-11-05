@@ -13,6 +13,42 @@ export function C8OwnerOtpPanel(){
   const [error,setError]=useState('');
 
   useEffect(()=>{
+    // Supabase's default magic link returns an access JWT in the URL fragment.
+    // Remove ALL fragment parameters (including refresh_token) before any network I/O.
+    const fragment=window.location.hash;
+    if(fragment.length>1){
+      const params=new URLSearchParams(fragment.slice(1));
+      window.history.replaceState(window.history.state,'',window.location.pathname+window.location.search);
+      const accessToken=params.get('access_token');
+      if(accessToken){
+        if(params.get('token_type')!=='bearer'||params.has('error')){
+          setError('Lien de connexion invalide. Demande un nouveau lien.');
+          return;
+        }
+        setLoading(true);
+        void (async()=>{
+          try{
+            const response=await fetch(endpoint+'/link',{
+              method:'POST',credentials:'same-origin',cache:'no-store',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({accessToken}),
+            });
+            const result=await response.json() as AuthStatus;
+            if(!response.ok||result.ok!==true)
+              throw Error(result.error??'OWNER_LINK_INVALID');
+            setAuthenticated(true);
+            setNotice('Compte propriétaire attesté avec le lien Supabase.');
+          }catch(reason){
+            setError(reason instanceof Error?reason.message:'OWNER_LINK_INVALID');
+          }finally{setLoading(false);}
+        })();
+        return;
+      }
+      if(params.has('error')){
+        setError('Lien expiré ou refusé par Supabase. Demande un nouveau lien.');
+        return;
+      }
+    }
     let active=true;
     void fetch(endpoint,{cache:'no-store',credentials:'same-origin'})
       .then(async response=>{
@@ -34,7 +70,7 @@ export function C8OwnerOtpPanel(){
       });
       const result=await response.json() as AuthStatus;
       if(!response.ok||result.ok!==true)throw Error(result.error??'OWNER_AUTH_UNAVAILABLE');
-      if(kind==='request')setNotice('Demande de code envoyée. Consulte la messagerie du compte propriétaire.');
+      if(kind==='request')setNotice('Demande envoyée. Ouvre le lien reçu dans ta messagerie : il reviendra sur cette page.');
       if(kind==='verify'){
         setAuthenticated(true);setOtp('');setNotice('Compte propriétaire attesté pour cette session.');
       }
@@ -53,8 +89,8 @@ export function C8OwnerOtpPanel(){
         className="mt-1 w-full rounded border border-slate-600 bg-slate-900 p-2"/>
     </label>
     <button type="button" disabled={loading||!email.trim()} onClick={()=>void action('request')}
-      className="rounded border border-cyan-500 px-3 py-2 disabled:opacity-50">Envoyer l’OTP</button>
-    <label className="block text-sm">Code reçu par email
+      className="rounded border border-cyan-500 px-3 py-2 disabled:opacity-50">Envoyer le lien de connexion</button>
+    <label className="block text-sm">Code OTP (seulement si Supabase en fournit un)
       <input inputMode="numeric" autoComplete="one-time-code" value={otp}
         onChange={event=>setOtp(event.target.value)}
         className="mt-1 w-full rounded border border-slate-600 bg-slate-900 p-2"/>
