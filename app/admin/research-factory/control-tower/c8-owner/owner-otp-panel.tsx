@@ -22,10 +22,10 @@ export function C8OwnerOtpPanel(){
       const accessToken=params.get('access_token');
       if(accessToken){
         if(params.get('token_type')!=='bearer'||params.has('error')){
-          setError('Lien de connexion invalide. Demande un nouveau lien.');
+          queueMicrotask(()=>setError('Lien de connexion invalide. Demande un nouveau lien.'));
           return;
         }
-        setLoading(true);
+        queueMicrotask(()=>setLoading(true));
         void (async()=>{
           try{
             const response=await fetch(endpoint+'/link',{
@@ -46,7 +46,7 @@ export function C8OwnerOtpPanel(){
         return;
       }
       if(params.has('error')){
-        setError('Lien expiré ou refusé par Supabase. Demande un nouveau lien.');
+        queueMicrotask(()=>setError('Lien expiré ou refusé par Supabase. Demande un nouveau lien.'));
         return;
       }
     }
