@@ -51,6 +51,15 @@ def test_streamlit_main_runs(monkeypatch) -> None:
         "prices": prices,
         "fundamentals": {"eps": 2.5, "pe_ratio": 18.0, "net_margin_pct": 12.0, "dividend_yield_pct": 2.0},
         "quality": {"duplicates": {"count": 0}},
+        "score": {
+            "score": 60.0,
+            "trend": 25.0,
+            "momentum": 15.0,
+            "quality": 12.0,
+            "risk": 8.0,
+            "weights": {"trend": 0.35, "momentum": 0.3, "quality": 0.2, "risk": 0.15},
+            "regime": "Expansion",
+        },
         "score": {"score": 60.0, "trend": 25.0, "momentum": 15.0, "quality": 12.0, "risk": 8.0},
     }
 

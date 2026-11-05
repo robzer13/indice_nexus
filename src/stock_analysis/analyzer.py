@@ -26,6 +26,7 @@ def analyze_tickers(
     use_cache: bool = True,
     cache_ttl_seconds: int | None = None,
     score_weights: Mapping[str, float] | None = None,
+    regime: str | None = None,
 ) -> Dict[str, Dict[str, object]]:
     """Run the complete analysis pipeline for the provided tickers."""
 
@@ -106,6 +107,7 @@ def analyze_tickers(
                 fundamentals,
                 price_column=price_column,
                 weights=score_weights,
+                regime=regime,
             )
             score_duration = (perf_counter() - score_start) * 1000.0
             LOGGER.info(
@@ -131,6 +133,7 @@ def analyze_tickers(
                 "interval": interval,
                 "price_column": price_column,
                 "gap_threshold_pct": gap_threshold_pct,
+                "regime": regime,
             },
         }
 
