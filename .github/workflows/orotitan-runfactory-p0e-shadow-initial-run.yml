@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feat/orotitan-p0e-shadow-run-creation-20261031
+      - feat/orotitan-j1-p0-runfactory-isolated-shadow-20261105
   workflow_dispatch:
 
 permissions:
