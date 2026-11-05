@@ -50,6 +50,7 @@ register('./module-mock-hooks.mjs', import.meta.url, {data:{
 
 const synthetic = {
   NODE_ENV:'production', VERCEL_ENV:'preview', OROTITAN_C8_READ_ONLY_ENABLED:'1',
+  OROTITAN_C8_OWNER_AUTH_ENABLED:'1',
   // Intentionally also enable Research: C8 must override it.
   OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED:'1', OROTITAN_SHARED_INBOX_TEST_ENABLED:'1',
   OROTITAN_SHARED_INBOX_TEST_PROJECT_REF:SHADOW_RESEARCH_PROJECT_REF,
@@ -242,6 +243,32 @@ test('GET C8 with a signed session rereads persisted state using five read calls
   assert.equal(response.headers.get('cache-control'),'private, no-store');
   assert.equal(calls.length,5);
   assert.deepEqual(calls.map(c=>c.method).sort(),['GET','GET','GET','HEAD','HEAD']);
+});
+
+test('C8 SOLO acceptance gate stays locked without explicit GO, owner config and both DB locks',async()=>{
+  await session();dbEnabled=true;
+  process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED='1';
+  const {GET}=await import('../app/admin/research-factory/control-tower/c8-gate/route');
+  let response=await GET(request());
+  assert.equal(response.status,200);
+  let data=await response.json();
+  assert.equal(data.activationLocked,false);
+  assert.equal(data.gate.acceptanceAllowedNow,true);
+  process.env.OROTITAN_C8_OWNER_AUTH_ENABLED='0';
+  calls.length=0;
+  response=await GET(request());
+  assert.equal(response.status,200);
+  data=await response.json();
+  assert.equal(data.activationLocked,true);
+  assert.equal(data.gate.acceptanceAllowedNow,false);
+  process.env.OROTITAN_C8_OWNER_AUTH_ENABLED='1';
+  dbEnabled=false;
+  calls.length=0;
+  response=await GET(request());
+  assert.equal(response.status,200);
+  data=await response.json();
+  assert.equal(data.activationLocked,true);
+  assert.equal(data.gate.acceptanceAllowedNow,false);
 });
 
 test('GET C8 without session or with a forged cookie refuses before any client request',async()=>{
