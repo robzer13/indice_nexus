@@ -50,7 +50,7 @@ export async function GET(req:NextRequest){
   return NextResponse.json({
    ok:true,scope:'SHADOW_ONLY',milestone,
    gate:{...check.data,
-    acceptanceAllowedNow:check.data.acceptanceAllowedNow===true&&runtimeGoEnabled},
+    acceptanceAllowedNow:check.data.acceptanceAllowedNow===true&&runtimeGoEnabled&&lockActive},
    activationLocked:!lockActive||!runtimeGoEnabled,
    preparedReviews:reviews.count,
    persistedDecisions:decisions.count,
