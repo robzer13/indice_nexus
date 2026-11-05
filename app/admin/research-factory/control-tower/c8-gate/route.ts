@@ -42,8 +42,10 @@ export async function GET(req:NextRequest){
      check.data.acceptanceEnabled!==(
       control.data.enabled===true&&milestoneControl.data.enabled===true))
    return fail('J0_C8_READBACK_MISMATCH',503);
-  const runtimeGoEnabled=!isC8ReadOnlyRequested(process.env)&&
-   process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED==='1';
+  const runtimeGoEnabled=process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED==='1'&&
+   (!isC8ReadOnlyRequested(process.env)||
+    (isHostedC8ReadOnlyEnabled(process.env)&&
+     process.env.OROTITAN_C8_OWNER_AUTH_ENABLED==='1'));
   const lockActive=control.data.enabled===true&&milestoneControl.data.enabled===true;
   return NextResponse.json({
    ok:true,scope:'SHADOW_ONLY',milestone,
