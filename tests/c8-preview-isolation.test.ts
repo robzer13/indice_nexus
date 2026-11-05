@@ -313,11 +313,16 @@ for(const path of postRoutes) test(`direct POST ${path} never reaches Research/R
     process.env.OROTITAN_C8_READ_ONLY_ENABLED=value;
     const response=await mod.POST(request('POST','/admin/'+path));
     const isC8Owner=ownerOnlyPosts.has(path)&&value==='1';
-    const expected=isC8Owner?(path.endsWith('/logout')?200:400):404;
+    const isolatedC8Review=value==='1'&&path.endsWith('/c8-gate/prepare');
+    const isolatedC8Accept=value==='1'&&path.endsWith('/c8-gate/accept');
+    const expected=isC8Owner?(path.endsWith('/logout')?200:400):
+      isolatedC8Review?400:isolatedC8Accept?423:404;
     assert.equal(response.status,expected);
     const payload=await response.json() as {error?:string;status?:string};
     if(expected===404)assert.equal(payload.error,'SHADOW_ONLY');
-    if(expected===400)assert.equal(payload.error,'REQUEST_INVALID');
+    if(isC8Owner&&expected===400)assert.equal(payload.error,'REQUEST_INVALID');
+    if(isolatedC8Review)assert.equal(payload.error,'J0_C8_PREPARE_INVALID');
+    if(isolatedC8Accept)assert.equal(payload.error,'J0_C8_ACCEPTANCE_LOCKED');
     if(expected===200)assert.equal(payload.status,'SIGNED_OUT');
   }
   assert.equal(calls.length,0);
@@ -481,4 +486,64 @@ test('C8 magic-link exchange uses only verified SHADOW owner and HttpOnly cookie
   assert.match(page,/endpoint\+'\/link'/);
   assert.doesNotMatch(page,/get\('refresh_token'\)/);
   assert.doesNotMatch(link,/service_role|SUPABASE_SERVICE_ROLE_KEY/);
+});
+
+
+test('C8 SOLO review transport permits no Research, stage, Storage or generic C8 writes',async()=>{
+  process.env.OROTITAN_C8_OWNER_AUTH_ENABLED='1';
+  const {getC8GateReviewClient}=await import('../lib/orotitan-equity/product/c8-gate-read-server');
+  const client=getC8GateReviewClient();
+  for(const attempt of [
+    ()=>client.from('orotitan_runs').select('*'),
+    ()=>client.from('orotitan_j0_c8_reviews_v1').insert({}),
+    ()=>client.from('orotitan_j0_c8_decisions_v1').update({}).eq('decision_id','fake'),
+    ()=>client.rpc('orotitan_j0_record_event_v1',{}),
+    ()=>client.rpc('orotitan_j0_c8_accept_review_v1',{}),
+    ()=>client.storage.from('private').upload('blocked',Buffer.from('synthetic')),
+  ]) {
+    const result=await attempt();
+    assert.ok(result.error,'must deny before transport');
+  }
+  assert.equal(calls.length,0);
+  process.env.VERCEL_ENV='production';
+  assert.throws(()=>getC8GateReviewClient(),/C8_SOLO_REVIEW_CONFIG_DENIED/);
+  assert.equal(calls.length,0);
+});
+
+test('C8 SOLO review and acceptance require attested owner even when read-only C8 is valid',async()=>{
+  await session();
+  process.env.OROTITAN_C8_OWNER_AUTH_ENABLED='1';
+  const prepare=await import('../app/admin/research-factory/control-tower/c8-gate/prepare/route');
+  const accept=await import('../app/admin/research-factory/control-tower/c8-gate/accept/route');
+  const reviewRequest=new Request('https://qualification.invalid/admin/research-factory/control-tower/c8-gate/prepare',{
+    method:'POST',headers:{origin:'https://qualification.invalid','content-type':'application/json'},
+    body:JSON.stringify({
+      reviewKey:'orotitan:c8:review:missing-owner-12345678',milestone:'J0',
+      auditRef:'https://github.com/robzer13/indice_nexus/blob/'+
+        'a'.repeat(40)+'/docs/audits/immutable.md',
+      auditSha256:'b'.repeat(64),reviewerLabel:'owner',
+      evidenceEventIds:Array.from({length:7},(_,i)=>
+        '00000000-0000-4000-8000-'+String(i+1).padStart(12,'0')),
+      governanceMode:'SOLO_OWNER',
+    }),
+  }) as NextRequest;
+  const prepared=await prepare.POST(reviewRequest);
+  assert.equal(prepared.status,401);
+  assert.equal((await prepared.json()).error,'OWNER_ATTESTATION_REQUIRED');
+  process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED='1';
+  const decisionRequest=new Request('https://qualification.invalid/admin/research-factory/control-tower/c8-gate/accept',{
+    method:'POST',headers:{origin:'https://qualification.invalid','content-type':'application/json'},
+    body:JSON.stringify({
+      decisionKey:'orotitan:c8:decision:missing-owner-12345678',
+      reviewId:'11111111-1111-4111-8111-111111111111',
+      reviewSha256:'b'.repeat(64),approverLabel:'owner',
+      consentPhrase:'ACCEPTER J0 SHADOW EN MODE SOLO',
+      authorityRef:'GO_ACCEPT_J0_SOLO_TEST_20261105',
+      governanceMode:'SOLO_OWNER',
+    }),
+  }) as NextRequest;
+  const accepted=await accept.POST(decisionRequest);
+  assert.equal(accepted.status,401);
+  assert.equal((await accepted.json()).error,'OWNER_ATTESTATION_REQUIRED');
+  assert.equal(calls.length,0);
 });
