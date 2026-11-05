@@ -298,8 +298,10 @@ const postRoutes=[
   'research-factory/control-tower/c8-gate/owner-session/request',
   'research-factory/control-tower/c8-gate/owner-session/verify',
   'research-factory/control-tower/c8-gate/owner-session/logout',
+  'research-factory/control-tower/c8-gate/owner-session/link',
 ];
 const ownerOnlyPosts=new Set([
+  'research-factory/control-tower/c8-gate/owner-session/link',
   'research-factory/control-tower/c8-gate/owner-session/request',
   'research-factory/control-tower/c8-gate/owner-session/verify',
   'research-factory/control-tower/c8-gate/owner-session/logout',
@@ -462,4 +464,21 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
     ...Object.entries(actionModules).flatMap(([p,names])=>names.map(n=>`admin/${p}.ts:${n}`)),
     'admin/actions.ts:loginAction','admin/actions.ts:logoutAction',
   ].sort());
+});
+
+test('C8 magic-link exchange uses only verified SHADOW owner and HttpOnly cookie',()=>{
+  const link=readFileSync(join(process.cwd(),'app/admin/research-factory/control-tower/c8-gate/owner-session/link/route.ts'),'utf8');
+  const request=readFileSync(join(process.cwd(),'app/admin/research-factory/control-tower/c8-gate/owner-session/request/route.ts'),'utf8');
+  const page=readFileSync(join(process.cwd(),'app/admin/research-factory/control-tower/c8-owner/owner-otp-panel.tsx'),'utf8');
+  assert.match(link,/requireAdminSession\(\)/);
+  assert.match(link,/client[.]auth[.]getUser\(accessToken\)/);
+  assert.match(link,/assertSoloOwnerUser\(data[.]user,config\)/);
+  assert.match(link,/httpOnly:true,secure:true,sameSite:'strict'/);
+  assert.match(link,/OWNER_LINK_INVALID/);
+  assert.match(request,/emailRedirectTo/);
+  assert.match(request,/orotitan-research-shadow-preview-/);
+  assert.match(page,/history[.]replaceState/);
+  assert.match(page,/endpoint\+'\/link'/);
+  assert.doesNotMatch(page,/get\('refresh_token'\)/);
+  assert.doesNotMatch(link,/service_role|SUPABASE_SERVICE_ROLE_KEY/);
 });
