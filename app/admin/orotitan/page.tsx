@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { isAdminAuthenticated } from "@/lib/auth/admin-session";
 import { loadAdminPilotageCockpit } from "@/lib/orotitan-equity/v3/pilotage-operator-cockpit-server";
+import { buildRecoveryWorklist } from "@/lib/orotitan-equity/v3/pilotage-blocker-recovery-v3-1";
 import { filterOperatorRuns, operatorTriageTotals, type OperatorFilter } from "@/lib/orotitan-equity/v3/pilotage-operator-view-v3-1";
 
 export const metadata: Metadata = { title: "Pilotage OroTitan V3.1 — diagnostic" };
@@ -47,6 +48,7 @@ export default async function OroTitanPilotagePage({
   const totals = data ? operatorTriageTotals(data.runs) : null;
   const displayed = data ? filterOperatorRuns(data.runs, view) : [];
   const currentObservation = selected ? data?.runs.find(row => row.runId === selected) : null;
+  const recovery = currentObservation?.supportsV31Verifier ? buildRecoveryWorklist(currentObservation) : null;
 
   return <main className="space-y-6">
     <header className="space-y-2">
@@ -127,6 +129,35 @@ export default async function OroTitanPilotagePage({
           Aucun blocage détaillé dans ce champ du Registry. Cela ne prouve pas l’admissibilité du run.
         </p>}
       </section>}
+
+      {recovery && recovery.tasks.length > 0 ? <section aria-label="Plan de résolution des blocages" className="space-y-4 rounded-xl border border-cyan-900/70 bg-slate-900/70 p-5">
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400">P0 · Reprise du travail</p>
+          <h2 className="mt-1 text-lg font-semibold text-white">Plan de résolution ({recovery.tasks.length})</h2>
+          <p className="mt-2 text-sm text-slate-400">
+            Diagnostic déterministe fondé sur des observations non vérifiées du Registry.
+            Chaque tâche propose une recherche ciblée puis une vérification indépendante.
+            Aucune recherche n’est exécutée et aucun blocage n’est clos automatiquement.
+          </p>
+        </div>
+        <ol className="space-y-3">
+          {recovery.tasks.map(item => <li key={item.key} className="rounded-lg border border-slate-700 p-4">
+            <p className="font-mono text-xs text-amber-300">{item.key} · {item.kind} · OPEN_UNVERIFIED</p>
+            <p className="mt-2 break-words text-sm text-slate-200">{item.observedBlocker}</p>
+            <ul className="mt-3 list-disc space-y-1 pl-5 text-sm text-slate-300">
+              {item.workInstructions.map(instruction => <li key={instruction}>{instruction}</li>)}
+            </ul>
+            <p className="mt-3 text-sm text-cyan-200">Preuve de clôture requise : {item.acceptanceEvidence}</p>
+            <details className="mt-2 text-xs text-slate-400"><summary className="cursor-pointer">En cas d’épuisement des sources</summary>
+              <p className="mt-1">{item.humanEscalation}</p>
+            </details>
+          </li>)}
+        </ol>
+        <p className="text-xs text-amber-200">
+          Un plan de recherche n’est ni une autorisation d’avancement, ni une validation d’artefact.
+          Reprise uniquement après vérification des octets immuables et des gates du contrat.
+        </p>
+      </section> : null}
 
       {data.previewState === "BLOCKED" ? <section role="status" className="rounded-xl border border-amber-800 bg-amber-950/20 p-5">
         <h2 className="font-semibold text-amber-100">Vérification bloquée — aucune admission</h2>
