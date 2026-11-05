@@ -5,6 +5,7 @@ import {isHostedC8ReadOnlyEnabled} from '@/lib/orotitan-equity/product/hosted-sh
 import {C8OwnerOtpPanel} from './owner-otp-panel';
 import {J0C8GatePanel} from '../j0-c8-gate-panel';
 import {getC8GateReviewClient} from '@/lib/orotitan-equity/product/c8-gate-read-server';
+import {getSoloOwnerConfig} from '@/lib/auth/c8-solo-owner-core';
 
 export const metadata:Metadata={title:'OroTitan · J0 C8 · Attestation propriétaire SHADOW'};
 export const dynamic='force-dynamic';
@@ -16,9 +17,14 @@ export default async function C8OwnerAttestationPage(){
   const adminAuthenticated=await isAdminAuthenticated();
   let proofs: {eventId:string;title:string;criterionIndex:number;verified:boolean}[]=[];
   let evidenceReady=false;
+  let existingReview:{
+    ok:true;status:string;reviewId:string;reviewSha256:string;
+    persistedReadbackVerified:true;accepted:false;governanceMode:'SOLO_OWNER'
+  }|null=null;
   if(adminAuthenticated){
     try{
-      const result=await getC8GateReviewClient()
+      const client=getC8GateReviewClient();
+      const result=await client
         .from('orotitan_j0_events_v1')
         .select('event_id,event_seq,milestone_code,event_type,title,verification_state,operator_details')
         .eq('milestone_code','J0').order('event_seq',{ascending:false}).limit(100);
@@ -37,6 +43,39 @@ export default async function C8OwnerAttestationPage(){
         evidenceReady=[1,2,3,4,5,6,7].every(index=>
           proofs.some(p=>p.criterionIndex===index&&
             (![1,6,7].includes(index)||p.verified)));
+        if(evidenceReady){
+          const owner=getSoloOwnerConfig(process.env);
+          const reviews=await client.from('orotitan_j0_c8_reviews_v1')
+            .select('review_id,review_sha256,milestone_code,governance_mode,auth_provider,owner_user_id,amendment_ref,amendment_sha256,evidence_event_ids,journal_watermark')
+            .eq('milestone_code','J0').eq('governance_mode','SOLO_OWNER')
+            .eq('owner_user_id',owner.ownerUserId).limit(2);
+          if(!reviews.error&&reviews.data?.length===1){
+            const review=reviews.data[0];
+            const ids=review.evidence_event_ids;
+            const lastEvent=result.data[0]?.event_seq;
+            const validIds=Array.isArray(ids)&&ids.length===7&&
+              ids.every((eventId:unknown,i:number)=>typeof eventId==='string'&&
+                proofs.some(p=>p.eventId===eventId&&p.criterionIndex===i+1&&
+                  (![1,6,7].includes(i+1)||p.verified)));
+            if(validIds&&
+               review.auth_provider==='SUPABASE_AUTH'&&
+               review.owner_user_id===owner.ownerUserId&&
+               review.amendment_ref===owner.amendmentRef&&
+               review.amendment_sha256===owner.amendmentSha256&&
+               review.journal_watermark===lastEvent&&
+               typeof review.review_id==='string'&&
+               typeof review.review_sha256==='string'&&
+               /^[a-f0-9]{64}$/.test(review.review_sha256)){
+              existingReview={
+                ok:true,status:'PREPARED',
+                reviewId:review.review_id,
+                reviewSha256:review.review_sha256,
+                persistedReadbackVerified:true,accepted:false,
+                governanceMode:'SOLO_OWNER',
+              };
+            }
+          }
+        }
       }
     }catch{/* Fail closed: no evidence form when Registry readback fails. */}
   }
@@ -55,7 +94,7 @@ export default async function C8OwnerAttestationPage(){
       <div className="space-y-6">
         <C8OwnerOtpPanel/>
         {evidenceReady?
-          <J0C8GatePanel proofs={proofs} soloOnly/>:
+          <J0C8GatePanel proofs={proofs} soloOnly existingReview={existingReview}/>:
           <p className="rounded border border-rose-800 p-3 text-rose-300">
             Preuves J0 indisponibles ou incomplètes : revue bloquée.
           </p>}
