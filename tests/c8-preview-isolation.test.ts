@@ -219,10 +219,10 @@ test('C8 strict gate is independent of Research flags and absent mode adds no gr
   assert.equal(isHostedShadowResearchEnabled(env),false);
 });
 
-test('login creates a real signed admin cookie and redirects to the read gate only',async()=>{
+test('login creates a real signed admin cookie and redirects to owner verification only',async()=>{
   const {loginAction,logoutAction}=await import('../app/admin/actions');
   const form=new FormData();form.set('password',synthetic.ADMIN_PASSWORD);
-  await assert.rejects(loginAction(form),/REDIRECT:\/admin\/research-factory\/control-tower\/c8-gate$/);
+  await assert.rejects(loginAction(form),/REDIRECT:\/admin\/research-factory\/control-tower\/c8-owner$/);
   assert.equal(await (await import('../lib/auth/admin-session')).isAdminAuthenticated(),true);
   await assert.rejects(logoutAction(),/REDIRECT:\/admin$/);
   assert.equal(state.cookie,'');
@@ -299,14 +299,37 @@ const postRoutes=[
   'research-factory/control-tower/c8-gate/owner-session/verify',
   'research-factory/control-tower/c8-gate/owner-session/logout',
 ];
-for(const path of postRoutes) test(`direct POST ${path} refuses before all RPC/Storage/fetch calls`,async()=>{
+const ownerOnlyPosts=new Set([
+  'research-factory/control-tower/c8-gate/owner-session/request',
+  'research-factory/control-tower/c8-gate/owner-session/verify',
+  'research-factory/control-tower/c8-gate/owner-session/logout',
+]);
+for(const path of postRoutes) test(`direct POST ${path} never reaches Research/Registry mutation`,async()=>{
   await session();
   const mod=await import(`../app/admin/${path}/route.ts`) as {POST:(req:NextRequest)=>Promise<Response>};
   for(const value of ['1','0','invalid','']) {
     process.env.OROTITAN_C8_READ_ONLY_ENABLED=value;
     const response=await mod.POST(request('POST','/admin/'+path));
-    assert.equal(response.status,404);
-    assert.equal((await response.json()).error,'SHADOW_ONLY');
+    const isC8Owner=ownerOnlyPosts.has(path)&&value==='1';
+    const expected=isC8Owner?(path.endsWith('/logout')?200:400):404;
+    assert.equal(response.status,expected);
+    const payload=await response.json() as {error?:string;status?:string};
+    if(expected===404)assert.equal(payload.error,'SHADOW_ONLY');
+    if(expected===400)assert.equal(payload.error,'REQUEST_INVALID');
+    if(expected===200)assert.equal(payload.status,'SIGNED_OUT');
+  }
+  assert.equal(calls.length,0);
+});
+
+test('C8 owner status route is reachable in read-only but does not attest a missing owner session',async()=>{
+  await session();
+  const {GET}=await import('../app/admin/research-factory/control-tower/c8-gate/owner-session/route');
+  const response=await GET();
+  assert.equal(response.status,200);
+  assert.deepEqual(await response.json(),{ok:true,authenticated:false});
+  for(const value of ['0','invalid','']) {
+    process.env.OROTITAN_C8_READ_ONLY_ENABLED=value;
+    assert.equal((await GET()).status,404);
   }
   assert.equal(calls.length,0);
 });
