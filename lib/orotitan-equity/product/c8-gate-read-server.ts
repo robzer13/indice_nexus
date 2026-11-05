@@ -36,3 +36,42 @@ export function getC8GateReadClient() {
       }},
     });
 }
+
+
+/**
+ * Strictly-scoped C8 J0 SOLO human-review transport for the isolated SHADOW
+ * Preview. No generic Research, stage, run, Storage, or publication writes.
+ * Acceptance separately requires the runtime GO and BOTH database locks.
+ */
+export function getC8GateReviewClient() {
+  if (!isHostedC8ReadOnlyEnabled(process.env) ||
+      process.env.OROTITAN_C8_OWNER_AUTH_ENABLED !== '1') {
+    throw Error('C8_SOLO_REVIEW_CONFIG_DENIED');
+  }
+  return createClient(SHADOW_RESEARCH_ORIGIN,
+    process.env.OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY!, {
+      auth: {persistSession:false,autoRefreshToken:false,detectSessionInUrl:false},
+      global: {fetch: async (input, init) => {
+        const url = new URL(typeof input === 'string' ? input :
+          input instanceof URL ? input.href : input.url);
+        const method = (init?.method ??
+          (input instanceof Request ? input.method : 'GET')).toUpperCase();
+        const allowedRead = (readPaths.has(url.pathname) ||
+          url.pathname === '/rest/v1/orotitan_j0_events_v1') &&
+          (method === 'GET' || method === 'HEAD');
+        const prepareRpc = method === 'POST' && url.search === '' &&
+          url.pathname === '/rest/v1/rpc/orotitan_j0_c8_prepare_review_v1';
+        const acceptRpc = method === 'POST' && url.search === '' &&
+          url.pathname === '/rest/v1/rpc/orotitan_j0_c8_accept_review_v1' &&
+          process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED === '1';
+        if (!isHostedC8ReadOnlyEnabled(process.env) ||
+            process.env.OROTITAN_C8_OWNER_AUTH_ENABLED !== '1' ||
+            url.origin !== SHADOW_RESEARCH_ORIGIN ||
+            url.username || url.password || url.hash ||
+            !(allowedRead || prepareRpc || acceptRpc)) {
+          throw Error('C8_SOLO_REVIEW_TRANSPORT_DENIED');
+        }
+        return fetch(input, {...init, redirect:'error'});
+      }},
+    });
+}
