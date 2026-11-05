@@ -128,6 +128,29 @@ an implicit permission to start J1, Research, or to publish.
 - No production verification was performed, since production was
   excluded from the user GO.
 
+## Local SOLO_OWNER candidate (2026-11-05, not activated)
+
+The additive candidate `20261105_orotitan_j0_c8_solo_owner_attestation_shadow.sql`
+adds a J0-only `SOLO_OWNER` mode without replacing `STANDARD_TWO_PERSON`.
+It reuses Supabase Auth on the exact SHADOW project and requires, on both
+`PREPARE_REVIEW` and acceptance, the existing admin session plus a server-side
+`auth.getUser()` validation of an email-confirmed, non-anonymous user whose UUID
+exactly matches the server allowlist. Neither email, UUID, provider nor owner
+role is accepted from the request body. A publishable/legacy `anon` key is
+accepted for Auth; `service_role` and secret keys are rejected.
+
+The receipt seals `SUPABASE_AUTH`, the Auth UUID, `SOLO_OWNER`, and the immutable
+amendment reference/SHA-256. No personal email is persisted. The amendment
+ratification flag and database columns remain false/null by default, in
+addition to the existing runtime, global and J0 locks. Consequently this local
+candidate cannot prepare or accept a SOLO review until separate ratification
+and activation work is explicitly authorized.
+
+This attestation proves control of the configured Auth account and mailbox. It
+is not civil-identity verification, an independent human review, qualified
+electronic signature, or non-repudiation. Whether that assurance is sufficient
+for SHADOW remains an explicit governance decision outside this candidate.
+
 ## Verification required for C8 remediation closeout
 
 CODEX 01 qualification is reproducible with

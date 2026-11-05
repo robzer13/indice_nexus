@@ -295,6 +295,9 @@ const postRoutes=[
   'research-factory/contracts/verify','research-factory/control-tower/record',
   'research-factory/control-tower/c5-security-test',
   'research-factory/control-tower/c8-gate/prepare','research-factory/control-tower/c8-gate/accept',
+  'research-factory/control-tower/c8-gate/owner-session/request',
+  'research-factory/control-tower/c8-gate/owner-session/verify',
+  'research-factory/control-tower/c8-gate/owner-session/logout',
 ];
 for(const path of postRoutes) test(`direct POST ${path} refuses before all RPC/Storage/fetch calls`,async()=>{
   await session();
@@ -381,6 +384,30 @@ test('outside C8 explicitly enabled Research retains its prior gate and client b
   assert.equal(calls.length,0);
 });
 
+test('accept HTTP refuses STANDARD, including its default, under a SOLO GO before any client call',async()=>{
+  delete process.env.OROTITAN_C8_READ_ONLY_ENABLED;
+  process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED='1';
+  await session();
+  const {POST}=await import('../app/admin/research-factory/control-tower/c8-gate/accept/route');
+  const base={
+    decisionKey:'orotitan:c8:decision:standard-under-solo-go',
+    reviewId:'11111111-1111-4111-8111-111111111111',reviewSha256:'a'.repeat(64),
+    approverLabel:'Independent Standard Approver',consentPhrase:'ACCEPTER J0 SHADOW',
+    authorityRef:'GO_ACCEPT_J0_SOLO_LOCAL_TEST_20261105',
+  };
+  for(const governanceMode of [undefined,'STANDARD_TWO_PERSON'] as const) {
+    const body=governanceMode===undefined?base:{...base,governanceMode};
+    const req=new Request('https://qualification.invalid/admin/research-factory/control-tower/c8-gate/accept',{
+      method:'POST',headers:{origin:'https://qualification.invalid','content-type':'application/json'},
+      body:JSON.stringify(body),
+    }) as NextRequest;
+    const response=await POST(req);
+    assert.equal(response.status,409);
+    assert.equal((await response.json()).error,'J0_C8_GOVERNANCE_MODE_MISMATCH');
+  }
+  assert.equal(calls.length,0);
+});
+
 test('inventory covers every HTTP handler and exported Server Action in app',()=>{
   function files(dir:string):string[] {
     return readdirSync(dir,{withFileTypes:true}).flatMap(e=>
@@ -405,6 +432,7 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
   assert.deepEqual(routes.sort(),[
     ...postRoutes.map(p=>`POST admin/${p}/route.ts`),
     'GET admin/research-factory/control-tower/c8-gate/route.ts',
+    'GET admin/research-factory/control-tower/c8-gate/owner-session/route.ts',
     'GET api/cron/prices/route.ts','GET api/orotitan/runtime/route.ts',
   ].sort());
   assert.deepEqual(actions.sort(),[

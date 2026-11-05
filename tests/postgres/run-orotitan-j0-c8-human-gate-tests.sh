@@ -63,6 +63,11 @@ for pass in install replay; do
  else test "$fingerprint" = "$installed_fingerprint"; fi
 done
 echo "J0_C8_FULL_CHAIN_REPLAY_PROTECTIONS_PASS $installed_fingerprint"
+psql -X -v ON_ERROR_STOP=1 -d "$db" \
+ -f "$root/migrations/20261105_orotitan_j0_c8_solo_owner_attestation_shadow.sql" >/dev/null
+installed_fingerprint="$(psql -XqAt -v ON_ERROR_STOP=1 -d "$db" \
+ -f "$root/tests/postgres/orotitan-j0-c8-protections-verify.sql")"
+echo "J0_C8_SOLO_CANDIDATE_STANDARD_COMPATIBILITY_INSTALLED $installed_fingerprint"
 # Reuse the existing frozen thirteen-pin pack, including its real fingerprint.
 # This deliberately unbound local run never starts an analytical stage.
 pack="$(cat "$root/contracts/orotitan-equity/v1/contract-pin-pack-v1/OROTITAN_CONTRACT_PIN_PACK_V1.json")"

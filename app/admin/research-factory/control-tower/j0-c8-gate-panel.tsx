@@ -16,7 +16,8 @@ type GateResponse=Readonly<{
  persistedDecisions:number;accepted:boolean;humanGoRequired:true;
 }>;
 type ReviewReceipt=Readonly<{ok:true;status:string;reviewId:string;
- reviewSha256:string;persistedReadbackVerified:true;accepted:false}>;
+ reviewSha256:string;persistedReadbackVerified:true;accepted:false;
+ governanceMode:'STANDARD_TWO_PERSON'|'SOLO_OWNER'}>;
 export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
  const router=useRouter();
  const reviewKeyRef=useRef<string|null>(null);
@@ -33,6 +34,24 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
  const [approvalRef,setApprovalRef]=useState('');
  const [approver,setApprover]=useState('');
  const [decisionResult,setDecisionResult]=useState('');
+ const [governanceMode,setGovernanceMode]=useState<'STANDARD_TWO_PERSON'|'SOLO_OWNER'>('STANDARD_TWO_PERSON');
+ const [ownerEmail,setOwnerEmail]=useState('');
+ const [ownerOtp,setOwnerOtp]=useState('');
+ const [ownerAuthenticated,setOwnerAuthenticated]=useState(false);
+ async function ownerAction(action:'request'|'verify'|'logout'){
+  setLoading(true);setError('');
+  try{const body=action==='request'?{email:ownerEmail.trim()}:
+    action==='verify'?{email:ownerEmail.trim(),token:ownerOtp.trim()}:undefined;
+   const r=await fetch('/admin/research-factory/control-tower/c8-gate/owner-session/'+action,{
+    method:'POST',credentials:'same-origin',cache:'no-store',
+    headers:body?{'Content-Type':'application/json'}:undefined,
+    body:body?JSON.stringify(body):undefined});
+   const v=await r.json() as {ok?:boolean;error?:string};
+   if(!r.ok||v.ok!==true)throw Error(v.error??'Session owner refusée');
+   setOwnerAuthenticated(action==='verify');
+  }catch(e){setError(e instanceof Error?e.message:'Session owner indisponible');}
+  finally{setLoading(false);}
+ }
  async function inspect(){
   setLoading(true);setError('');
   try{
@@ -60,7 +79,8 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
     body:JSON.stringify({
      reviewKey:reviewKeyRef.current,
      milestone:'J0',auditRef:auditRef.trim(),auditSha256:auditSha.trim(),
-     reviewerLabel:reviewer.trim(),evidenceEventIds:evidenceIds,
+     reviewerLabel:governanceMode==='SOLO_OWNER'?'owner':reviewer.trim(),
+     evidenceEventIds:evidenceIds,governanceMode,
     }),
    });
    const v:unknown=await r.json();
@@ -77,7 +97,8 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
  async function accept(){
   // This button is absent unless the live database gate reports activation.
   if(!receipt||!gate?.gate.acceptanceAllowedNow||
-     approvalPhrase!=='ACCEPTER J0 SHADOW'||loading)return;
+     approvalPhrase!==(governanceMode==='SOLO_OWNER'?
+      'ACCEPTER J0 SHADOW EN MODE SOLO':'ACCEPTER J0 SHADOW')||loading)return;
   if(!decisionKeyRef.current)decisionKeyRef.current=
     'orotitan:c8:decision:'+crypto.randomUUID();
   setLoading(true);setError('');setDecisionResult('');
@@ -88,8 +109,8 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
     body:JSON.stringify({
      decisionKey:decisionKeyRef.current,
      reviewId:receipt.reviewId,reviewSha256:receipt.reviewSha256,
-     approverLabel:approver.trim(),consentPhrase:approvalPhrase,
-     authorityRef:approvalRef.trim(),
+     approverLabel:governanceMode==='SOLO_OWNER'?'owner':approver.trim(),
+     consentPhrase:approvalPhrase,authorityRef:approvalRef.trim(),governanceMode,
     }),
    });
    const v:unknown=await r.json();
@@ -113,6 +134,33 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
    Le code d’acceptation est délibérément désactivé en l’absence
    d’une nouvelle autorisation explicite. Aucun stage n’est démarré.
   </p>
+  <label className="space-y-1 text-sm">
+   <span>Mode de gouvernance</span>
+   <select value={governanceMode} disabled={loading||receipt!==null}
+    onChange={e=>{setGovernanceMode(e.target.value as typeof governanceMode);
+     setApprovalPhrase('');setOwnerAuthenticated(false);}}
+    className="w-full rounded border border-slate-600 bg-slate-900 p-2">
+    <option value="STANDARD_TWO_PERSON">STANDARD_TWO_PERSON (défaut)</option>
+    <option value="SOLO_OWNER">SOLO_OWNER — J0 SHADOW uniquement</option>
+   </select>
+  </label>
+  {governanceMode==='SOLO_OWNER'&&<div className="space-y-2 rounded border border-amber-700 p-3">
+   <p className="text-xs text-amber-100">Attestation Supabase Auth requise à chaque acte. L’email confirmé prouve le contrôle du compte, pas l’identité civile.</p>
+   <input type="email" autoComplete="email" placeholder="Email du compte owner SHADOW"
+    value={ownerEmail} onChange={e=>setOwnerEmail(e.target.value)}
+    className="w-full rounded border border-slate-600 bg-slate-900 p-2"/>
+   <div className="flex gap-2">
+    <button type="button" disabled={loading||!ownerEmail.trim()} onClick={()=>void ownerAction('request')}
+     className="rounded border border-cyan-500 px-3 py-2 disabled:opacity-50">Envoyer l’OTP</button>
+    <input inputMode="numeric" autoComplete="one-time-code" placeholder="Code OTP"
+     value={ownerOtp} onChange={e=>setOwnerOtp(e.target.value)}
+     className="min-w-0 flex-1 rounded border border-slate-600 bg-slate-900 p-2"/>
+    <button type="button" disabled={loading||!/^\d{6,10}$/.test(ownerOtp)} onClick={()=>void ownerAction('verify')}
+     className="rounded border border-emerald-500 px-3 py-2 disabled:opacity-50">Attester</button>
+   </div>
+   <p className="text-xs">Session owner : {ownerAuthenticated?'ATTESTÉE':'NON ATTESTÉE'}</p>
+   {ownerAuthenticated&&<button type="button" onClick={()=>void ownerAction('logout')} className="text-xs underline">Déconnecter le compte owner</button>}
+  </div>}
   <button type="button" onClick={()=>void inspect()} disabled={loading}
    className="rounded border border-cyan-500 px-4 py-2 text-cyan-200 disabled:opacity-50">
    {loading?'Contrôle en cours…':'Vérifier les 8 critères et le verrou'}
@@ -165,7 +213,7 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
    </div>
    <button type="button" onClick={()=>void prepare()} disabled={loading||
     evidenceIds.some(x=>!x)||!auditRef.trim()||!/^[a-f0-9]{64}$/.test(auditSha)||
-    reviewer.trim().length<4}
+    (governanceMode==='STANDARD_TWO_PERSON'?reviewer.trim().length<4:!ownerAuthenticated)}
     className="rounded bg-cyan-300 px-4 py-2 font-semibold text-slate-950 disabled:opacity-50">
     Sceller et relire le dossier de revue
    </button>
@@ -180,17 +228,20 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
     Actif uniquement après GO distinct, activation serveur ET DB.
     Le libellé saisi est une déclaration, pas une signature personnelle forte.
    </p>
-   <input placeholder="Identifiant déclaré de l’approbateur" value={approver}
+   {governanceMode==='STANDARD_TWO_PERSON'&&<input placeholder="Identifiant déclaré de l’approbateur" value={approver}
     onChange={e=>setApprover(e.target.value)}
-    className="w-full rounded border border-slate-600 bg-slate-900 p-2"/>
+    className="w-full rounded border border-slate-600 bg-slate-900 p-2"/>}
    <input placeholder="Référence du GO d’activation" value={approvalRef}
     onChange={e=>setApprovalRef(e.target.value)}
     className="w-full rounded border border-slate-600 bg-slate-900 p-2"/>
-   <input placeholder="Recopier : ACCEPTER J0 SHADOW" value={approvalPhrase}
+   <input placeholder={governanceMode==='SOLO_OWNER'?
+    'Recopier : ACCEPTER J0 SHADOW EN MODE SOLO':'Recopier : ACCEPTER J0 SHADOW'} value={approvalPhrase}
     onChange={e=>setApprovalPhrase(e.target.value)}
     className="w-full rounded border border-slate-600 bg-slate-900 p-2"/>
    <button type="button" onClick={()=>void accept()} disabled={loading||
-    approver.trim().length<4||approvalPhrase!=='ACCEPTER J0 SHADOW'}
+    (governanceMode==='STANDARD_TWO_PERSON'&&approver.trim().length<4)||
+    (governanceMode==='SOLO_OWNER'&&!ownerAuthenticated)||
+    approvalPhrase!==(governanceMode==='SOLO_OWNER'?'ACCEPTER J0 SHADOW EN MODE SOLO':'ACCEPTER J0 SHADOW')}
     className="rounded bg-rose-300 px-4 py-2 font-bold text-slate-950 disabled:opacity-50">
     Accepter explicitement J0 (uniquement après GO distinct)
    </button>
