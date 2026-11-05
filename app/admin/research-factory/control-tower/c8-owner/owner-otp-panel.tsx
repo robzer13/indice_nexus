@@ -37,6 +37,7 @@ export function C8OwnerOtpPanel(){
             if(!response.ok||result.ok!==true)
               throw Error(result.error??'OWNER_LINK_INVALID');
             setAuthenticated(true);
+            window.dispatchEvent(new Event('orotitan:c8-owner-session-changed'));
             setNotice('Compte propriétaire attesté avec le lien Supabase.');
           }catch(reason){
             setError(reason instanceof Error?reason.message:'OWNER_LINK_INVALID');
@@ -72,10 +73,14 @@ export function C8OwnerOtpPanel(){
       if(!response.ok||result.ok!==true)throw Error(result.error??'OWNER_AUTH_UNAVAILABLE');
       if(kind==='request')setNotice('Demande envoyée. Ouvre le lien reçu dans ta messagerie : il reviendra sur cette page.');
       if(kind==='verify'){
-        setAuthenticated(true);setOtp('');setNotice('Compte propriétaire attesté pour cette session.');
+        setAuthenticated(true);setOtp('');
+        window.dispatchEvent(new Event('orotitan:c8-owner-session-changed'));
+        setNotice('Compte propriétaire attesté pour cette session.');
       }
       if(kind==='logout'){
-        setAuthenticated(false);setOtp('');setNotice('Session propriétaire déconnectée.');
+        setAuthenticated(false);setOtp('');
+        window.dispatchEvent(new Event('orotitan:c8-owner-session-changed'));
+        setNotice('Session propriétaire déconnectée.');
       }
     }catch(reason){setError(reason instanceof Error?reason.message:'OWNER_AUTH_UNAVAILABLE');}
     finally{setLoading(false);}
