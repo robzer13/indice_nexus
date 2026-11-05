@@ -18,7 +18,7 @@ type GateResponse=Readonly<{
 type ReviewReceipt=Readonly<{ok:true;status:string;reviewId:string;
  reviewSha256:string;persistedReadbackVerified:true;accepted:false;
  governanceMode:'STANDARD_TWO_PERSON'|'SOLO_OWNER'}>;
-export function J0C8GatePanel({proofs,soloOnly=false}:{proofs:readonly Proof[];soloOnly?:boolean}){
+export function J0C8GatePanel({proofs,soloOnly=false,existingReview=null}:{proofs:readonly Proof[];soloOnly?:boolean;existingReview?:ReviewReceipt|null}){
  const router=useRouter();
  const reviewKeyRef=useRef<string|null>(null);
  const decisionKeyRef=useRef<string|null>(null);
@@ -32,7 +32,7 @@ export function J0C8GatePanel({proofs,soloOnly=false}:{proofs:readonly Proof[];s
  const [auditRef,setAuditRef]=useState(soloOnly?'https://github.com/robzer13/indice_nexus/blob/2021d5b2ec0f5ca48ea18a88a86e937f8d17a721/docs/audits/OROTITAN_J0_C8_REVIEW_DOSSIER_20261104.md':'');
  const [auditSha,setAuditSha]=useState(soloOnly?'676b447124343dbbb24aa9c62a13ff31beb82ecbe523eaa569b899ba42eaa4ce':'');
  const [reviewer,setReviewer]=useState('');
- const [receipt,setReceipt]=useState<ReviewReceipt|null>(null);
+ const [receipt,setReceipt]=useState<ReviewReceipt|null>(existingReview);
  const [approvalPhrase,setApprovalPhrase]=useState('');
  const [approvalRef,setApprovalRef]=useState('');
  const [approver,setApprover]=useState('');
@@ -193,7 +193,7 @@ export function J0C8GatePanel({proofs,soloOnly=false}:{proofs:readonly Proof[];s
    <p>Revues persistées : {gate.preparedReviews} · Décisions acceptées : {gate.persistedDecisions}</p>
    <p>Dernier événement journal : #{gate.gate.journalWatermark}</p>
   </div>}
-  {gate?.gate.eligibleForReview&&!gate.accepted&&<div className="space-y-3">
+  {gate?.gate.eligibleForReview&&!gate.accepted&&!receipt&&<div className="space-y-3">
    <h3 className="font-bold">Préparer un dossier de revue (aucune acceptation)</h3>
    <p className="text-xs text-slate-400">
     Sélectionne une preuve par critère C1–C7. Les preuves C1/C6/C7 de J0
