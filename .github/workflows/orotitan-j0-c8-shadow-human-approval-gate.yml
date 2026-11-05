@@ -5,6 +5,7 @@ on:
     branches:
       - feat/orotitan-j0-c8-human-gate-shadow-20261031
       - fix/orotitan-c8-local-reconciliation-20261101
+      - fix/orotitan-c8-j0-solo-closure-20261105
   workflow_dispatch:
 
 permissions:
@@ -54,3 +55,4 @@ jobs:
           persist-credentials: false
       - run: sudo apt-get update -qq && sudo apt-get install -y postgresql-client
       - run: bash tests/postgres/run-orotitan-j0-c8-human-gate-tests.sh
+      - run: bash tests/postgres/run-orotitan-j0-c8-solo-owner-tests.sh
