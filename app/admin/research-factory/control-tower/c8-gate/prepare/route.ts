@@ -3,8 +3,10 @@ import {createHash} from 'node:crypto';
 import {requireAdminSession} from '@/lib/auth/admin-session';
 import {requireSoloOwnerAttestation,type SoloOwnerAttestation} from
  '@/lib/auth/c8-solo-owner';
-import {isHostedShadowResearchEnabled} from
+import {isHostedC8ReadOnlyEnabled,isHostedShadowResearchEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import {getC8GateReviewClient} from
+ '@/lib/orotitan-equity/product/c8-gate-read-server';
 import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 
@@ -15,7 +17,9 @@ const fail=(error:string,status=409)=>NextResponse.json(
  {ok:false,error,accepted:false,stageStarted:false,published:false},
  {status,headers});
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))return fail('SHADOW_ONLY',404);
+ const isolatedC8=isHostedC8ReadOnlyEnabled(process.env);
+ if(!(isolatedC8||isHostedShadowResearchEnabled(process.env)))
+  return fail('SHADOW_ONLY',404);
  try{await requireAdminSession();}catch{return fail('UNAUTHORIZED',401);}
  if(req.headers.get('origin')!==new URL(req.url).origin)
   return fail('ORIGIN_MISMATCH',403);
@@ -46,6 +50,7 @@ export async function POST(req:NextRequest){
     v.evidenceEventIds.some(id=>typeof id!=='string'||
      !/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i.test(id)))
    return fail('J0_C8_PREPARE_INVALID',400);
+ if(isolatedC8&&mode!=='SOLO_OWNER')return fail('J0_C8_SOLO_ONLY',403);
  if(mode==='SOLO_OWNER'&&v.milestone!=='J0')return fail('J0_C8_SOLO_J0_ONLY',403);
  let owner:SoloOwnerAttestation|null=null;
  if(mode==='SOLO_OWNER'){
@@ -77,7 +82,7 @@ export async function POST(req:NextRequest){
   const observedHash=createHash('sha256').update(bytes).digest('hex');
   if(observedHash!==v.auditSha256)
    return fail('J0_C8_AUDIT_HASH_MISMATCH',409);
-  const client=getHostedShadowRecoveryClient();
+  const client=isolatedC8?getC8GateReviewClient():getHostedShadowRecoveryClient();
   const reviewerLabel=owner?'supabase-auth:'+owner.ownerUserId:
    (v.reviewerLabel as string).trim();
   const rpcArgs:Record<string,unknown>={
