@@ -60,6 +60,6 @@ export default async function C8OwnerAttestationPage(){
             Preuves J0 indisponibles ou incomplètes : revue bloquée.
           </p>}
       </div>}
-    <p className="text-xs text-slate-400">Lecture seule C8 maintenue. Aucune décision de jalon n'est autorisée depuis cette page.</p>
+    <p className="text-xs text-slate-400">Lecture seule C8 maintenue. Aucune décision de jalon n&apos;est autorisée depuis cette page.</p>
   </main>;
 }
