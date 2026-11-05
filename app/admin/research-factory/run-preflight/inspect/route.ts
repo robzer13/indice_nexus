@@ -1,7 +1,9 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowResearchEnabled,isHostedJ1RunFactoryEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import {getJ1RunFactoryShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-j1-shadow-server';
 import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 import {inspectRunFactoryIdentity,assertIsin,type RunFactoryInventory} from
@@ -31,7 +33,8 @@ function checkedRows(
 }
 
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))
+ const isolatedJ1=isHostedJ1RunFactoryEnabled(process.env);
+ if(!isolatedJ1&&!isHostedShadowResearchEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -54,7 +57,8 @@ export async function POST(req:NextRequest){
    throw Error('INVALID_DATA_CUTOFF');
   const dataCutoff:string=obj.dataCutoff;
   // No writes, no RPC. Every SELECT has a hard cap and fails closed.
-  const client=getHostedShadowRecoveryClient();
+  const client=isolatedJ1?getJ1RunFactoryShadowClient():
+    getHostedShadowRecoveryClient();
   const securities=checkedRows(await client.from('securities')
    .select('security_id,issuer_id,isin,exchange,primary_listing')
    .eq('isin',isin).limit(100),100).map(row=>({
