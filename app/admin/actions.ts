@@ -137,7 +137,7 @@ export async function loginAction(formData: FormData): Promise<void> {
   }
   await createAdminSession();
   if (isHostedC8ReadOnlyEnabled(process.env)) {
-    redirect('/admin/research-factory/control-tower/c8-gate');
+    redirect('/admin/research-factory/control-tower/c8-owner');
   }
   redirect('/admin');
 }
