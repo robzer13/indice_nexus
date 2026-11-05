@@ -54,3 +54,15 @@ export function isHostedShadowResearchEnabled(env: HostedShadowEnv): boolean {
     env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '1' &&
     isHostedShadowConfigurationValid(env);
 }
+
+
+/**
+ * J1-only exception inside a C8-isolated SHADOW Preview.
+ * This does not enable Research, stages, artifact writes, or publication.
+ * The transport-level allowlist is enforced separately by the J1 client.
+ */
+export function isHostedJ1RunFactoryEnabled(env: HostedShadowEnv): boolean {
+  return env.OROTITAN_J1_RUN_FACTORY_ENABLED === '1' &&
+    env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED === '0' &&
+    isHostedC8ReadOnlyEnabled(env);
+}
