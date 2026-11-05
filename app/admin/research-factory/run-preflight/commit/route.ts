@@ -1,9 +1,13 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowResearchEnabled,isHostedJ1RunFactoryEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import {getJ1RunFactoryShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-j1-shadow-server';
 import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
+import {getC8GateReadClient} from
+ '@/lib/orotitan-equity/product/c8-gate-read-server';
 import {verifyAllRunFactoryPinnedBytes} from
  '@/lib/orotitan-equity/product/runfactory-p0e-byte-gate';
 import {buildP0EShadowInitialPlan,buildP0EShadowRpcArgs} from
@@ -30,7 +34,8 @@ function checkedUuid(x:unknown):string{
  return v;
 }
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))
+ const isolatedJ1=isHostedJ1RunFactoryEnabled(process.env);
+ if(!isolatedJ1&&!isHostedShadowResearchEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -59,7 +64,14 @@ export async function POST(req:NextRequest){
   const confirmation=str(p.confirmation);
   if(confirmation!=='GO P0-E SHADOW '+isin.toUpperCase()+' '+dataCutoff)
    fail('P0E_EXPLICIT_GO_REQUIRED');
-  const client=getHostedShadowRecoveryClient();
+  if(isolatedJ1){
+    const result=await getC8GateReadClient().rpc(
+      'orotitan_j0_c8_read_gate_v1',{p_milestone:'J0'},{get:true});
+    if(result.error||result.data?.accepted!==true)
+      fail('J1_J0_ACCEPTANCE_REQUIRED');
+  }
+  const client=isolatedJ1?getJ1RunFactoryShadowClient():
+    getHostedShadowRecoveryClient();
   // Do not trust previous P0-B readings: identity and lineage are re-read.
   const [issuerQ,securityQ,dossierQ,runsQ]=await Promise.all([
    client.from('issuers').select('issuer_id,display_name').eq('issuer_id',issuerId).single(),
