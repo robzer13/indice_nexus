@@ -1,5 +1,5 @@
 'use client';
-import {useRef,useState} from 'react';
+import {useEffect,useRef,useState} from 'react';
 import {useRouter} from 'next/navigation';
 
 type Proof=Readonly<{eventId:string;title:string;criterionIndex:number;
@@ -18,26 +18,44 @@ type GateResponse=Readonly<{
 type ReviewReceipt=Readonly<{ok:true;status:string;reviewId:string;
  reviewSha256:string;persistedReadbackVerified:true;accepted:false;
  governanceMode:'STANDARD_TWO_PERSON'|'SOLO_OWNER'}>;
-export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
+export function J0C8GatePanel({proofs,soloOnly=false}:{proofs:readonly Proof[];soloOnly?:boolean}){
  const router=useRouter();
  const reviewKeyRef=useRef<string|null>(null);
  const decisionKeyRef=useRef<string|null>(null);
  const [loading,setLoading]=useState(false);
  const [gate,setGate]=useState<GateResponse|null>(null);
  const [error,setError]=useState('');
- const [evidenceIds,setEvidenceIds]=useState<string[]>(Array(7).fill(''));
- const [auditRef,setAuditRef]=useState('');
- const [auditSha,setAuditSha]=useState('');
+ const [evidenceIds,setEvidenceIds]=useState<string[]>(()=>
+   soloOnly?Array.from({length:7},(_,i)=>
+     proofs.find(p=>p.criterionIndex===i+1 &&
+       (![1,6,7].includes(i+1)||p.verified))?.eventId??''):Array(7).fill(''));
+ const [auditRef,setAuditRef]=useState(soloOnly?'https://github.com/robzer13/indice_nexus/blob/2021d5b2ec0f5ca48ea18a88a86e937f8d17a721/docs/audits/OROTITAN_J0_C8_REVIEW_DOSSIER_20261104.md':'');
+ const [auditSha,setAuditSha]=useState(soloOnly?'676b447124343dbbb24aa9c62a13ff31beb82ecbe523eaa569b899ba42eaa4ce':'');
  const [reviewer,setReviewer]=useState('');
  const [receipt,setReceipt]=useState<ReviewReceipt|null>(null);
  const [approvalPhrase,setApprovalPhrase]=useState('');
  const [approvalRef,setApprovalRef]=useState('');
  const [approver,setApprover]=useState('');
  const [decisionResult,setDecisionResult]=useState('');
- const [governanceMode,setGovernanceMode]=useState<'STANDARD_TWO_PERSON'|'SOLO_OWNER'>('STANDARD_TWO_PERSON');
+ const [governanceMode,setGovernanceMode]=useState<'STANDARD_TWO_PERSON'|'SOLO_OWNER'>(soloOnly?'SOLO_OWNER':'STANDARD_TWO_PERSON');
  const [ownerEmail,setOwnerEmail]=useState('');
  const [ownerOtp,setOwnerOtp]=useState('');
  const [ownerAuthenticated,setOwnerAuthenticated]=useState(false);
+ useEffect(()=>{
+  if(!soloOnly)return;
+  let active=true;
+  const checkOwner=()=>{
+   void fetch('/admin/research-factory/control-tower/c8-gate/owner-session',{
+    cache:'no-store',credentials:'same-origin',
+   }).then(async response=>{
+    const result=await response.json() as {ok?:boolean;authenticated?:boolean};
+    if(active)setOwnerAuthenticated(response.ok&&result.ok===true&&result.authenticated===true);
+   }).catch(()=>{if(active)setOwnerAuthenticated(false);});
+  };
+  window.addEventListener('orotitan:c8-owner-session-changed',checkOwner);
+  checkOwner();
+  return ()=>{active=false;window.removeEventListener('orotitan:c8-owner-session-changed',checkOwner);};
+ },[soloOnly]);
  async function ownerAction(action:'request'|'verify'|'logout'){
   setLoading(true);setError('');
   try{const body=action==='request'?{email:ownerEmail.trim()}:
@@ -140,11 +158,12 @@ export function J0C8GatePanel({proofs}:{proofs:readonly Proof[]}){
     onChange={e=>{setGovernanceMode(e.target.value as typeof governanceMode);
      setApprovalPhrase('');setOwnerAuthenticated(false);}}
     className="w-full rounded border border-slate-600 bg-slate-900 p-2">
-    <option value="STANDARD_TWO_PERSON">STANDARD_TWO_PERSON (défaut)</option>
+    {!soloOnly&&<option value="STANDARD_TWO_PERSON">STANDARD_TWO_PERSON (défaut)</option>}
     <option value="SOLO_OWNER">SOLO_OWNER — J0 SHADOW uniquement</option>
    </select>
   </label>
-  {governanceMode==='SOLO_OWNER'&&<div className="space-y-2 rounded border border-amber-700 p-3">
+  {soloOnly&&<p className="text-sm text-cyan-200">Compte propriétaire : {ownerAuthenticated?'ATTESTÉ':'NON ATTESTÉ'}. L’attestation se fait dans le formulaire ci-dessus.</p>}
+  {governanceMode==='SOLO_OWNER'&&!soloOnly&&<div className="space-y-2 rounded border border-amber-700 p-3">
    <p className="text-xs text-amber-100">Attestation Supabase Auth requise à chaque acte. L’email confirmé prouve le contrôle du compte, pas l’identité civile.</p>
    <input type="email" autoComplete="email" placeholder="Email du compte owner SHADOW"
     value={ownerEmail} onChange={e=>setOwnerEmail(e.target.value)}
