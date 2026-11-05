@@ -2,8 +2,10 @@ import {NextRequest,NextResponse} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
 import {requireSoloOwnerAttestation,type SoloOwnerAttestation} from
  '@/lib/auth/c8-solo-owner';
-import {isHostedShadowResearchEnabled} from
+import {isHostedC8ReadOnlyEnabled,isHostedShadowResearchEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import {getC8GateReviewClient} from
+ '@/lib/orotitan-equity/product/c8-gate-read-server';
 import {getHostedShadowRecoveryClient} from
  '@/lib/orotitan-equity/product/research-inbox-pilot-server';
 
@@ -19,7 +21,9 @@ const fail=(error:string,status=409)=>NextResponse.json({
  * privileged DB activation. Neither is set by the C8 remediation GO.
  */
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))return fail('SHADOW_ONLY',404);
+ const isolatedC8=isHostedC8ReadOnlyEnabled(process.env);
+ if(!(isolatedC8||isHostedShadowResearchEnabled(process.env)))
+  return fail('SHADOW_ONLY',404);
  try{await requireAdminSession();}catch{return fail('UNAUTHORIZED',401);}
  if(req.headers.get('origin')!==new URL(req.url).origin)
   return fail('ORIGIN_MISMATCH',403);
@@ -53,6 +57,7 @@ export async function POST(req:NextRequest){
     typeof p.authorityRef!=='string'||
     !/^GO_ACCEPT_J0_[A-Z0-9_]{8,120}$/.test(p.authorityRef))
    return fail('J0_C8_DECISION_INVALID',400);
+ if(isolatedC8&&mode!=='SOLO_OWNER')return fail('J0_C8_SOLO_ONLY',403);
  if(mode==='STANDARD_TWO_PERSON'&&
     /^GO_ACCEPT_J0_SOLO_/.test(p.authorityRef as string))
   return fail('J0_C8_GOVERNANCE_MODE_MISMATCH',409);
@@ -64,7 +69,7 @@ export async function POST(req:NextRequest){
    return fail('J0_C8_SOLO_AUTHORITY_INVALID',400);
  }
  try{
-  const client=getHostedShadowRecoveryClient();
+  const client=isolatedC8?getC8GateReviewClient():getHostedShadowRecoveryClient();
   // Fail closed on the actual DB activation gate as a separate safeguard.
   const control=await client.from('orotitan_j0_c8_acceptance_control_v1')
     .select('enabled,activation_authority_ref,solo_owner_enabled,solo_amendment_ref,solo_amendment_sha256')
