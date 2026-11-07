@@ -3,7 +3,7 @@ import {redirect} from 'next/navigation';
 import type {Metadata} from 'next';
 import {AdminNav} from '@/components/admin/admin-nav';
 import {isAdminAuthenticated} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowOnboardingOnlyEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {AtomicOnboardingClient} from '../atomic-onboarding-client';
 import {parseUntrustedOnboardingDraft,type DraftQuery} from
@@ -19,7 +19,7 @@ export default async function AtomicOnboardingPage({
 }:{searchParams:Promise<DraftQuery>}){
 
  if(!await isAdminAuthenticated())redirect('/admin');
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowOnboardingOnlyEnabled(process.env))
   return <main className="p-6 text-rose-300">SHADOW_ONLY</main>;
  const initialValues=parseUntrustedOnboardingDraft(await searchParams);
  return <main className="space-y-6">
