@@ -40,6 +40,8 @@ test('J1 no company guessing: absent, competing listings and competing issuer na
 });
 const verified:J1VerifiedRun={
  runId:'db00ce77-04eb-492b-a76b-164ecbe9ccfe',
+ issuerId:schneider.issuerId,securityId:schneider.securityId,
+ dossierId:'09815f6c-d1dd-47a0-82f3-f69c0e32860a',
  issuerName:'Schneider Electric SE',isin:'FR0000121972',exchange:'XPAR',
  dataCutoff:'2026-10-30',profileId:'OROTITAN_V3_1',
  contractSetSha256:'3644e501909326af04d66730fa30b1ac3da0d82fb6b717202af6d948f3211fe2',
@@ -50,6 +52,8 @@ const verified:J1VerifiedRun={
 test('J1 Research handoff is deterministic and never asserts Research admission',()=>{
  const text=buildJ1ResearchHandoff(verified);
  assert.match(text,/RUN_ID = db00ce77-04eb-492b-a76b-164ecbe9ccfe/);
+ assert.match(text,/ISSUER_ID = 81736c80-9d6a-4f4e-bbc1-1b418912d94a/);
+ assert.match(text,/BASELINE_SNAPSHOT_ID = NONE/);
  assert.match(text,/EXPECTED_STAGE_CONTRACT = OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0/);
  assert.match(text,/RESEARCH_STAGE_ADMISSION = NOT_YET_EXECUTED/);
  assert.match(text,/RESEARCH_STAGE_STARTED = NO/);
