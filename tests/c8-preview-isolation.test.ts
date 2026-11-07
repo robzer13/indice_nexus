@@ -63,7 +63,7 @@ const synthetic = {
   ADMIN_SESSION_SECRET:'synthetic-session-secret-for-shadow-only-32characters',
   CRON_SECRET:'synthetic-cron',
 };
-const originals = new Map(Object.keys(synthetic).map(key=>[key,process.env[key]]));
+const originals = new Map([...Object.keys(synthetic),'OROTITAN_J1_RUN_FACTORY_ENABLED'].map(key=>[key,process.env[key]]));
 const originalFetch = globalThis.fetch;
 const calls: {method:string;path:string}[] = [];
 let prepared = 0, accepted = false, dbEnabled = false, mismatch = false;
@@ -95,6 +95,7 @@ const fetchMock:typeof fetch = async (input, init) => {
 test.beforeEach(()=>{
   Object.assign(process.env,synthetic);
   delete process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED;
+  delete process.env.OROTITAN_J1_RUN_FACTORY_ENABLED;
   state.cookie=''; state.effects.length=0; calls.length=0;
   prepared=0; accepted=false; dbEnabled=false; mismatch=false;
   globalThis.fetch=fetchMock;
@@ -227,6 +228,17 @@ test('login creates a real signed admin cookie and redirects to owner verificati
   assert.equal(await (await import('../lib/auth/admin-session')).isAdminAuthenticated(),true);
   await assert.rejects(logoutAction(),/REDIRECT:\/admin$/);
   assert.equal(state.cookie,'');
+  assert.equal(calls.length,0);
+});
+
+test('J1 admin login redirects into Run Factory while ordinary C8 owner login is unchanged',async()=>{
+  const {loginAction}=await import('../app/admin/actions');
+  process.env.OROTITAN_J1_RUN_FACTORY_ENABLED='1';
+  process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED='0';
+  const form=new FormData();form.set('password',synthetic.ADMIN_PASSWORD);
+  await assert.rejects(loginAction(form),
+    /REDIRECT:\/admin\/research-factory\/run-preflight$/);
+  assert.equal(await (await import('../lib/auth/admin-session')).isAdminAuthenticated(),true);
   assert.equal(calls.length,0);
 });
 
