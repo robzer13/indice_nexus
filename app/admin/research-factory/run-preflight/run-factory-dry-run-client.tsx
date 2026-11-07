@@ -312,6 +312,12 @@ export function RunFactoryDryRunClient({
     15/15 contrats vérifiés. Reçu persisté. Aucun stage, snapshot ni publication.
    </p>
    <h3 className="font-semibold text-white">Liaison Pilotage → Research</h3>
+   <a href={'/admin/research-factory/j2-research/preflight?runId='+
+     encodeURIComponent(commitAnswer.runId)}
+    target="_blank" rel="noopener noreferrer"
+    className="block text-sm text-cyan-300 underline">
+    Contrôler l’admission technique J2 (lecture seule)
+   </a>
    {routingVerified?<p className="text-sm text-emerald-200">
     Liaison vérifiée automatiquement depuis le Registry SHADOW.
     Research pourra récupérer ce Run par son identifiant, sans copier ce texte.
