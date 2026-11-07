@@ -148,7 +148,7 @@ export async function POST(req:NextRequest){
       'P0E_REPLAY_ONLY_RESULT_MISMATCH');
   const [runQ,auditQ,eventsQ,stagesQ,snapshotsQ]=await Promise.all([
    client.from('orotitan_runs').select(
-    'run_id,issuer_id,security_id,dossier_id,run_type,run_status,current_stage,state_version,data_cutoff,contract_set_sha256,process_version,pilotage_contract_version,baseline_snapshot_id,published_at'
+    'run_id,issuer_id,security_id,dossier_id,entry_path,canonical_mode,run_type,run_status,current_stage,state_version,data_cutoff,contract_set_sha256,contract_pins,process_version,pilotage_contract_version,baseline_snapshot_id,published_at'
    ).eq('run_id',runId).single(),
    client.from('orotitan_p0e_run_admission_receipts_v1').select(
     'run_id,creation_idempotency_key,profile_id,contract_set_sha256,publication_authorized'
@@ -169,9 +169,23 @@ export async function POST(req:NextRequest){
   const snapshots=Array.isArray(snapshotsQ.data)?
    snapshotsQ.data:fail('P0E_POSTCOMMIT_READBACK_FAILED');
   const run=obj(runQ.data),audit=obj(auditQ.data);
+  // A successful Run is not a valid Research handoff unless exact V3.1
+  // process/pilotage and V2.0 Research stage pins are actually persisted.
+  const pins=obj(run.contract_pins);
+  const processPin=obj(pins.process);
+  const pilotagePin=obj(pins.pilotage);
+  const researchPin=obj(pins.research_stage);
   const eventTypes=events.map(r=>r.event_type);
   if(run.run_id!==runId||run.issuer_id!==issuerId||
      run.security_id!==securityId||run.dossier_id!==dossierId||
+     run.entry_path!=='IMPOSED_COMPANY'||
+     run.canonical_mode!=='ANALYZE'||
+     processPin.name!=='OROTITAN_EXECUTION_PROCESS_V3_1_FREEZE_V3.1'||
+     processPin.version!=='3.1'||
+     pilotagePin.name!=='OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_1_FREEZE_V3.1'||
+     pilotagePin.version!=='3.1'||
+     researchPin.name!=='OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0'||
+     researchPin.version!=='2.0'||
      run.run_type!=='INITIAL'||run.run_status!=='CREATED'||
      run.current_stage!==null||Number(run.state_version)<2||
      run.data_cutoff!==dataCutoff||
