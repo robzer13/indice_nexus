@@ -102,3 +102,20 @@ export function isP0DOnboardingTransportAllowed(url:URL, method:string):boolean{
   return method==='POST'&&url.search===''&&
     url.pathname==='/rest/v1/rpc/orotitan_onboard_identity_shadow_v1';
 }
+
+
+/** Presence is a reservation; malformed onboarding configuration fails closed. */
+export function isHostedShadowOnboardingIsolationRequested(env:HostedShadowEnv):boolean{
+  return env.OROTITAN_HOSTED_SHADOW_ONBOARDING_ONLY_ENABLED!==undefined;
+}
+
+export function isP0DOnboardingHttpPathAllowed(pathname:string):boolean{
+  return pathname==='/admin'||
+    pathname==='/admin/research-factory/onboarding'||
+    pathname.startsWith('/admin/research-factory/onboarding/');
+}
+
+export function assertOutsideOnboardingOnly(env:HostedShadowEnv):void{
+  if(isHostedShadowOnboardingIsolationRequested(env))
+    throw Error('P0D_GENERIC_SUPABASE_CLIENT_DENIED');
+}
