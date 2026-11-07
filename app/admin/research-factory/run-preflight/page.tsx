@@ -35,7 +35,7 @@ export default async function RunFactoryIdentityPage({
     Une seule demande : résolution d’identité, plan INITIAL ou réutilisation, GO explicite, transaction et handoff Research.
    </p>
   </header>
-  <AdminNav/>
+  {!isHostedJ1RunFactoryEnabled(process.env)&&<AdminNav/>}
   <section className="rounded-lg border border-amber-700 p-4 text-sm text-amber-100">
    <strong>SHADOW uniquement :</strong> la résolution et le préflight
    sont en lecture seule. Une seule autorisation GO explicite est exigée
