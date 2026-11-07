@@ -3,6 +3,10 @@ import {GET as readVerifiedJ1Handoff} from
  '@/app/admin/research-factory/run-preflight/handoff/route';
 import {getJ1RunFactoryShadowClient} from
  '@/lib/orotitan-equity/product/runfactory-j1-shadow-server';
+import {getJ2ResearchStageStartShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-j2-stage-start-shadow-server';
+import {isHostedJ1RunFactoryEnabled} from
+ '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {assessJ2ResearchStart} from
  '@/lib/orotitan-equity/product/runfactory-j2-research-admission-v1';
 
@@ -40,7 +44,9 @@ export async function GET(req:NextRequest){
      trusted.snapshotCreated!==false||trusted.published!==false||
      trusted.environment!=='SHADOW_ONLY'||trusted.productionTouched!==false)
     throw Error('J2_J1_HANDOFF_INVARIANTS');
-  const runId=str(trusted.runId),client=getJ1RunFactoryShadowClient();
+  const runId=str(trusted.runId);
+  const client=isHostedJ1RunFactoryEnabled(process.env)?
+   getJ1RunFactoryShadowClient():getJ2ResearchStageStartShadowClient();
   // Fresh post-handoff read. Every later stage-start RPC must still perform
   // its own transactional state-version compare-and-swap.
   const [runQ,stageQ,snapshotQ]=await Promise.all([
