@@ -76,6 +76,9 @@ export function RunFactoryDryRunClient({
  const [commitAnswer,setCommitAnswer]=useState<CommitReply|null>(null);
  const [handoff,setHandoff]=useState('');
  const [copied,setCopied]=useState(false);
+ const [routingVerified,setRoutingVerified]=useState(false);
+ const [routingError,setRoutingError]=useState('');
+ const [routingChecking,setRoutingChecking]=useState(false);
  const selected=profiles.find(p=>p.profileId===profile);
  const decision=preflight?.result??null;
  const canCommit=!!decision&&isJ1InitialAdmissionCandidate(decision);
@@ -83,6 +86,7 @@ export function RunFactoryDryRunClient({
   setError('');setResolution(null);setIdentity(null);setPreflight(null);
   setApproved(false);setCommitAttempted(false);setCommitAnswer(null);
   setHandoff('');setCopied(false);
+  setRoutingVerified(false);setRoutingError('');
  }
  async function prepare(){
   if(busy||!company.trim()||!cutoff)return;
@@ -123,6 +127,41 @@ export function RunFactoryDryRunClient({
    setIdentity(found);setPreflight(p);
   }catch(e){setError(e instanceof Error?e.message:'J1_PREPARE_FAILED');}
   finally{setBusy(null);}
+ }
+ async function verifyRouting(report:CommitReply,expectedHandoff:string){
+  if(routingChecking)return;
+  setRoutingChecking(true);setRoutingError('');setRoutingVerified(false);
+  try{
+   // This GET independently reads the persisted Registry, not the UI receipt.
+   // No stage starts and no additional transaction is issued.
+   const res=await fetch(
+    '/admin/research-factory/run-preflight/handoff?runId='+
+    encodeURIComponent(report.runId),{
+     method:'GET',cache:'no-store',credentials:'same-origin',
+    });
+   const raw:unknown=await res.json();
+   if(!res.ok||!raw||typeof raw!=='object')
+    throw Error('J1_ROUTING_READ_FAILED');
+   const p=raw as Record<string,unknown>;
+   if(p.ok!==true||p.schema!=='OROTITAN_J1_READ_ONLY_ROUTING_HANDOFF_V1'||
+      p.routingStatus!=='RUN_READY_FOR_RESEARCH_PREFLIGHT'||
+      p.runId!==report.runId||
+      p.issuerId!==report.issuerId||
+      p.securityId!==report.securityId||
+      p.dossierId!==report.dossierId||
+      p.contractSetSha256!==report.contractSetSha256||
+      p.handoff!==expectedHandoff||
+      p.registryReadbackVerified!==true||
+      p.contractReceiptVerified!==true||
+      p.researchStageAdmission!==false||
+      p.researchStageStarted!==false||p.snapshotCreated!==false||
+      p.published!==false||p.environment!=='SHADOW_ONLY'||
+      p.productionTouched!==false)
+    throw Error('J1_ROUTING_READBACK_MISMATCH');
+   setRoutingVerified(true);
+  }catch(e){
+   setRoutingError(e instanceof Error?e.message:'J1_ROUTING_READ_FAILED');
+  }finally{setRoutingChecking(false);}
  }
  async function go(){
   if(!canCommit||!approved||busy||commitAttempted||!decision||!identity)return;
@@ -165,6 +204,7 @@ export function RunFactoryDryRunClient({
     environment:report.environment,productionTouched:report.productionTouched,
    });
    setCommitAnswer(report);setHandoff(packet);
+   await verifyRouting(report,packet);
   }catch(e){
    setError((e instanceof Error?e.message:'J1_COMMIT_FAILED')+
     ' — Ne réessayez pas la transaction. Relancez uniquement le contrôle en lecture.');
@@ -271,7 +311,28 @@ export function RunFactoryDryRunClient({
    <p className="text-sm text-slate-300">
     15/15 contrats vérifiés. Reçu persisté. Aucun stage, snapshot ni publication.
    </p>
-   <h3 className="font-semibold text-white">Handoff vers Research</h3>
+   <h3 className="font-semibold text-white">Liaison Pilotage → Research</h3>
+   {routingVerified?<p className="text-sm text-emerald-200">
+    Liaison vérifiée automatiquement depuis le Registry SHADOW.
+    Research pourra récupérer ce Run par son identifiant, sans copier ce texte.
+    Aucune admission Research n'a été lancée.
+   </p>:<div className="space-y-2">
+    <p role="status" className="text-sm text-amber-100">
+     {routingChecking?'Vérification de la liaison en lecture seule…':
+      'Liaison Research non encore vérifiée : '+(routingError||'lecture à reprendre')}
+    </p>
+    {!routingChecking&&<button type="button"
+     onClick={()=>void verifyRouting(commitAnswer,handoff)}
+     className="rounded border border-cyan-400 px-3 py-2 text-sm text-cyan-200">
+     Recontrôler la liaison (lecture seule)
+    </button>}
+   </div>}
+   <a href={'/admin/research-factory/run-preflight/handoff?runId='+
+     encodeURIComponent(commitAnswer.runId)}
+    target="_blank" rel="noopener noreferrer"
+    className="block text-sm text-cyan-300 underline">
+    Ouvrir le contexte Research récupérable automatiquement
+   </a>
    <p className="text-xs text-amber-100">Paquet d’orientation, pas admission
     automatique du stage Research. Le stage devra revérifier le Registry et
     les contrats avant exécution.</p>
