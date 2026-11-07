@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import {redirect} from 'next/navigation';
+import {isHostedShadowOnboardingOnlyEnabled} from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { AdminNav } from '@/components/admin/admin-nav';
 import { MetricCard } from '@/components/metric-card';
 import { loginAction, logoutAction } from '@/app/admin/actions';
@@ -21,6 +23,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
   const query = await searchParams;
   const error = messageValue(query.error);
   const authenticated = await isAdminAuthenticated();
+  if(authenticated&&isHostedShadowOnboardingOnlyEnabled(process.env))
+    redirect('/admin/research-factory/onboarding');
 
   if (!authenticated) {
     return <div className="mx-auto max-w-md rounded-xl border border-slate-800 bg-slate-900/70 p-6 shadow-panel">
