@@ -3,7 +3,7 @@ import {redirect} from 'next/navigation';
 import type {Metadata} from 'next';
 import {AdminNav} from '@/components/admin/admin-nav';
 import {isAdminAuthenticated} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowOnboardingOnlyEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {CanonicalOnboardingClient} from './canonical-onboarding-client';
 
@@ -13,7 +13,7 @@ export const metadata:Metadata={
 export const dynamic='force-dynamic';
 export default async function CanonicalOnboardingPage(){
  if(!await isAdminAuthenticated())redirect('/admin');
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowOnboardingOnlyEnabled(process.env))
   return <main className="p-6 text-rose-300">SHADOW_ONLY</main>;
  return <main className="space-y-6">
   <header className="space-y-2">
