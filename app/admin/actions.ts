@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedC8ReadOnlyEnabled } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedC8ReadOnlyEnabled, isHostedJ1RunFactoryEnabled } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { revalidatePath } from 'next/cache';
 import {
   createAdminSession,
@@ -136,6 +136,11 @@ export async function loginAction(formData: FormData): Promise<void> {
     redirect(errorUrl('/admin', 'Mot de passe incorrect.'));
   }
   await createAdminSession();
+  // J1 is intentionally C8-isolated, but its authenticated entry is Run Factory.
+  // Preserve the existing C8 owner route for ordinary C8-only deployments.
+  if (isHostedJ1RunFactoryEnabled(process.env)) {
+    redirect('/admin/research-factory/run-preflight');
+  }
   if (isHostedC8ReadOnlyEnabled(process.env)) {
     redirect('/admin/research-factory/control-tower/c8-owner');
   }
