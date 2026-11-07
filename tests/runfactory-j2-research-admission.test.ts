@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import pack from '../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json';
+import {isHostedJ2ResearchStageStartEnabled,SHADOW_RESEARCH_ORIGIN,SHADOW_RESEARCH_PROJECT_REF} from
+ '../lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {buildJ2ResearchStartRpcPlan} from
  '../lib/orotitan-equity/product/runfactory-j2-research-start-plan-v1';
 import {assessJ2ResearchStart,type J2ResearchStartInputs} from
@@ -119,5 +121,45 @@ test('J2 RPC plan refuses any ineligible or tampered admission decision',()=>{
  ]){
   assert.throws(()=>buildJ2ResearchStartRpcPlan(
    tampered as typeof accepted),/J2_STAGE_START_PLAN_NOT_ADMITTED/);
+ }
+});
+
+test('J2 isolated SHADOW stage-start configuration cannot inherit J1/C8 access',()=>{
+ const dummy='synthetic-only-not-a-key-aaaaaaaaaaaaaaaaaaaaaaaaaaaa';
+ const isolatedProject='prj_111111111111111111111111';
+ const valid={
+  NODE_ENV:'production',VERCEL_ENV:'preview',
+  VERCEL_PROJECT_ID:isolatedProject,
+  OROTITAN_J2_STAGE_START_PROJECT_ID:isolatedProject,
+  OROTITAN_J2_RESEARCH_STAGE_START_ENABLED:'1',
+  OROTITAN_J2_STAGE_START_RUNTIME_GO:'1',
+  OROTITAN_SHARED_INBOX_TEST_PROJECT_REF:SHADOW_RESEARCH_PROJECT_REF,
+  OROTITAN_EXPECTED_SUPABASE_PROJECT_REF:SHADOW_RESEARCH_PROJECT_REF,
+  NEXT_PUBLIC_SUPABASE_URL:SHADOW_RESEARCH_ORIGIN,
+  OROTITAN_SHARED_INBOX_TEST_URL:SHADOW_RESEARCH_ORIGIN,
+  OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY:dummy,
+  SUPABASE_SERVICE_ROLE_KEY:dummy,
+  ADMIN_PASSWORD:'synthetic-password-for-tests',
+  ADMIN_SESSION_SECRET:'synthetic-session-secret-at-least-32-character',
+ };
+ assert.equal(isHostedJ2ResearchStageStartEnabled(valid),true);
+ for(const patch of [
+  {OROTITAN_C8_READ_ONLY_ENABLED:'1'},
+  {OROTITAN_C8_READ_ONLY_ENABLED:'0'},
+  {OROTITAN_J1_RUN_FACTORY_ENABLED:'1'},
+  {OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED:'1'},
+  {OROTITAN_SHARED_INBOX_TEST_ENABLED:'1'},
+  {OROTITAN_J2_RESEARCH_STAGE_START_ENABLED:'0'},
+  {OROTITAN_J2_STAGE_START_RUNTIME_GO:'0'},
+  {VERCEL_ENV:'production'},
+  {VERCEL_PROJECT_ID:'prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE'},
+  {OROTITAN_J2_STAGE_START_PROJECT_ID:'prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE'},
+  {OROTITAN_J2_STAGE_START_PROJECT_ID:'prj_fake'},
+  {NEXT_PUBLIC_SUPABASE_URL:'https://cugpgtzygqqlxetyeven.supabase.co'},
+  {OROTITAN_SHARED_INBOX_TEST_URL:'https://cugpgtzygqqlxetyeven.supabase.co'},
+  {SUPABASE_SERVICE_ROLE_KEY:'different-from-safe-test-key'},
+ ]){
+  assert.equal(isHostedJ2ResearchStageStartEnabled({...valid,...patch}),false,
+   JSON.stringify(patch));
  }
 });
