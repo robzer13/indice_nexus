@@ -466,6 +466,21 @@ test('accept HTTP refuses STANDARD, including its default, under a SOLO GO befor
   assert.equal(calls.length,0);
 });
 
+test('C8 context refuses J1 Research handoff GET before any Registry read',async()=>{
+  const {GET}=await import('../app/admin/research-factory/run-preflight/handoff/route');
+  for(const v of ['1','0','invalid','']){
+    process.env.OROTITAN_C8_READ_ONLY_ENABLED=v;
+    const req=new Request(
+      'https://qualification.invalid/admin/research-factory/run-preflight/handoff?runId=db00ce77-04eb-492b-a76b-164ecbe9ccfe',
+      {method:'GET'},
+    ) as NextRequest;
+    const res=await GET(req);
+    assert.equal(res.status,404);
+    assert.equal((await res.json()).error,'SHADOW_ONLY');
+  }
+  assert.equal(calls.length,0);
+});
+
 test('inventory covers every HTTP handler and exported Server Action in app',()=>{
   function files(dir:string):string[] {
     return readdirSync(dir,{withFileTypes:true}).flatMap(e=>
@@ -491,6 +506,7 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
     ...postRoutes.map(p=>`POST admin/${p}/route.ts`),
     'GET admin/research-factory/control-tower/c8-gate/route.ts',
     'GET admin/research-factory/control-tower/c8-gate/owner-session/route.ts',
+    'GET admin/research-factory/run-preflight/handoff/route.ts',
     'GET api/cron/prices/route.ts','GET api/orotitan/runtime/route.ts',
   ].sort());
   assert.deepEqual(actions.sort(),[
