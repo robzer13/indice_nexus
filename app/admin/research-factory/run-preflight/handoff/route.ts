@@ -23,15 +23,18 @@ function record(x:unknown):Record<string,unknown>{
  return x as Record<string,unknown>;
 }
 function text(x:unknown):string{
- if(typeof x!=='string'||!x.trim())fail();
+ if(typeof x!=='string')return fail();
+ if(!x.trim())return fail();
  return x;
 }
 function uuid(x:unknown):string{
  const v=text(x);if(!UUID.test(v))fail();return v;
 }
 function list(x:unknown):Record<string,unknown>[]{
- if(!Array.isArray(x)||x.length>=20)fail();
- return x.map(record);
+ if(!Array.isArray(x))return fail();
+ const values=x as unknown[];
+ if(values.length>=20)return fail();
+ return values.map(record);
 }
 function value<T>(data:{data:T|null;error:unknown}):T{
  if(data.error||data.data===null)fail();
