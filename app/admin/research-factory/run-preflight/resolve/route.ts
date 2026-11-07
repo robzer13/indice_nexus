@@ -63,11 +63,14 @@ export async function POST(req:NextRequest){
    securityRows=rows(result);
   }
   if(!isIsin){
+   // PostgREST ILIKE matches one Unicode character for each SQL underscore.
+   // Treat ASCII and typographic apostrophe equivalently; collisions still fail closed.
+   const namePattern=normalized.replace(/['’‘]/g,'_')+'%';
    const [names,legal]=await Promise.all([
     client.from('issuers').select('issuer_id,display_name')
-      .ilike('display_name',normalized+'%').limit(LIMIT),
+      .ilike('display_name',namePattern).limit(LIMIT),
     client.from('issuers').select('issuer_id,display_name')
-      .ilike('legal_name',normalized+'%').limit(LIMIT),
+      .ilike('legal_name',namePattern).limit(LIMIT),
    ]);
    const map=new Map<string,Row>();
    for(const issuer of [...rows(names),...rows(legal)])
