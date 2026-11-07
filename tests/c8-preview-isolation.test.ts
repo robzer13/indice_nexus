@@ -332,6 +332,7 @@ const postRoutes=[
   'research-factory/onboarding/inspect','research-factory/onboarding/commit',
   'research-factory/run-preflight/resolve','research-factory/run-preflight/inspect',
   'research-factory/run-preflight/commit',
+  'research-factory/j2-research/start',
   'research-factory/contracts/verify','research-factory/control-tower/record',
   'research-factory/control-tower/c5-security-test',
   'research-factory/control-tower/c8-gate/prepare','research-factory/control-tower/c8-gate/accept',
