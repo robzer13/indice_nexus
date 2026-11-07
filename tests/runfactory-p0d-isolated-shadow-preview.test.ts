@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {pgrstClockSkewRetryFetch} from '../lib/supabase/pgrst-clock-retry';
 import {
   SHADOW_RESEARCH_ORIGIN,SHADOW_RESEARCH_PROJECT_REF,
   isHostedShadowOnboardingOnlyEnabled,isHostedShadowResearchEnabled,
@@ -85,4 +86,30 @@ test('onboarding-only reservation blocks ordinary application APIs and DB client
   '/admin/research-factory/onboarding-malicious',
   '/admin/research-factory/onboarding2',
  ])assert.equal(isP0DOnboardingHttpPathAllowed(path),false,path);
+});
+
+test('P0-C clock-skew retry recovers only SHADOW identity GETs',async()=>{
+ const url=SHADOW_RESEARCH_ORIGIN+'/rest/v1/securities?select=isin&ticker=ilike.SU';
+ const clockError=()=>Response.json(
+  {code:'PGRST303',message:'JWT issued at future'}, {status:401},
+ );
+ let attempts=0;
+ const guarded=pgrstClockSkewRetryFetch(async()=>{
+  attempts++;
+  return attempts===1?clockError():Response.json([],{status:200});
+ },SHADOW_RESEARCH_ORIGIN,async()=>{});
+ assert.equal(isP0DOnboardingTransportAllowed(new URL(url),'GET'),true);
+ const response=await guarded(url,{method:'GET'});
+ assert.equal(response.status,200);
+ assert.equal(attempts,2);
+ // The same retry wrapper must never retry a failed POST, even if its
+ // response happens to carry the otherwise retryable clock-skew code.
+ attempts=0;
+ const notRetried=pgrstClockSkewRetryFetch(async()=>{
+  attempts++;return clockError();
+ },SHADOW_RESEARCH_ORIGIN,async()=>{});
+ const commitPath=SHADOW_RESEARCH_ORIGIN+'/rest/v1/rpc/orotitan_onboard_identity_shadow_v1';
+ assert.equal(isP0DOnboardingTransportAllowed(new URL(commitPath),'POST'),true);
+ assert.equal((await notRetried(commitPath,{method:'POST'})).status,401);
+ assert.equal(attempts,1);
 });
