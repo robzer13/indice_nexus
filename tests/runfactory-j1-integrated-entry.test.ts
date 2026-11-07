@@ -26,6 +26,14 @@ test('J1 single request resolves exact ISIN, ticker and issuer name prefix',()=>
   assert.deepEqual(result.identity,schneider);
  }
 });
+test('J1 accepts ordinary apostrophe spelling for the same issuer',()=>{
+ const accented={...loreal,issuerName:'L’Oréal'};
+ for(const name of ["L'Oréal",'L’Oréal']){
+  const decision=resolveJ1CompanyIdentity(name,[accented]);
+  assert.equal(decision.status,'RESOLVED');
+  assert.deepEqual(decision.identity,accented);
+ }
+});
 test('J1 no company guessing: absent, competing listings and competing issuer names',()=>{
  assert.deepEqual(resolveJ1CompanyIdentity('Unknown Company',[schneider]),
   {status:'NOT_FOUND',identity:null});
