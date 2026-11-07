@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import pack from '../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json';
+import {buildJ2ResearchStartRpcPlan} from
+ '../lib/orotitan-equity/product/runfactory-j2-research-start-plan-v1';
 import {assessJ2ResearchStart,type J2ResearchStartInputs} from
  '../lib/orotitan-equity/product/runfactory-j2-research-admission-v1';
 
@@ -80,5 +82,42 @@ test('J2 requires real persisted V3.1 pins and J1 readback, not handoff prose',(
   assert.equal(p.eligible,false);
   assert.equal(p.stageStartAuthorized,false);
   assert.equal(p.rpcExecuted,false);
+ }
+});
+
+test('J2 stage-start plan pins canonical RPC and deterministic CAS fingerprint without effects',()=>{
+ const result=assessJ2ResearchStart(source);
+ const p=buildJ2ResearchStartRpcPlan(result);
+ assert.equal(p.rpc,'start_orotitan_stage');
+ assert.equal(p.args.p_run_id,source.runId);
+ assert.equal(p.args.p_stage_code,'RESEARCH');
+ assert.equal(p.args.p_expected_run_state_version,2);
+ assert.equal(p.args.p_stage_contract_name,pack.contract_pins.research_stage.name);
+ assert.equal(p.args.p_stage_contract_version,'2.0');
+ assert.equal(p.args.p_stage_contract_sha256,pack.contract_pins.research_stage.content_sha256);
+ assert.match(p.args.p_request_fingerprint_sha256,/^[a-f0-9]{64}$/);
+ assert.match(p.args.p_idempotency_key,/orotitan:j2:research:start:v1:/);
+ assert.equal(p.args.p_actor_type,'PILOTAGE');
+ assert.equal(p.confirmation,'GO J2 RESEARCH SHADOW '+source.runId);
+ assert.equal(p.authorized,false);
+ assert.equal(p.executed,false);
+ assert.deepEqual(buildJ2ResearchStartRpcPlan(result),p);
+});
+test('J2 RPC plan refuses any ineligible or tampered admission decision',()=>{
+ const accepted=assessJ2ResearchStart(source);
+ for(const tampered of [
+  {...accepted,eligible:false},
+  {...accepted,reasonCode:'OTHER'},
+  {...accepted,stageStartAuthorized:true},
+  {...accepted,rpcExecuted:true},
+  {...accepted,researchExecuted:true},
+  {...accepted,publicationAuthorized:true},
+  {...accepted,expectedRunStateVersion:null},
+  {...accepted,expectedRunStateVersion:1},
+  {...accepted,stageContractSha256:'0'.repeat(64)},
+  {...accepted,contractSetSha256:'0'.repeat(64)},
+ ]){
+  assert.throws(()=>buildJ2ResearchStartRpcPlan(
+   tampered as typeof accepted),/J2_STAGE_START_PLAN_NOT_ADMITTED/);
  }
 });
