@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import pack from '../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json';
-import {isHostedJ2ResearchStageStartEnabled,SHADOW_RESEARCH_ORIGIN,SHADOW_RESEARCH_PROJECT_REF} from
+import {isHostedJ2ResearchStageStartEnabled,isHostedJ2ResearchPreviewEnabled,SHADOW_RESEARCH_ORIGIN,SHADOW_RESEARCH_PROJECT_REF} from
  '../lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {buildJ2ResearchStartRpcPlan} from
  '../lib/orotitan-equity/product/runfactory-j2-research-start-plan-v1';
@@ -143,6 +143,7 @@ test('J2 isolated SHADOW stage-start configuration cannot inherit J1/C8 access',
   ADMIN_SESSION_SECRET:'synthetic-session-secret-at-least-32-character',
  };
  assert.equal(isHostedJ2ResearchStageStartEnabled(valid),true);
+ assert.equal(isHostedJ2ResearchPreviewEnabled({...valid,OROTITAN_J2_STAGE_START_RUNTIME_GO:'0'}),true);
  for(const patch of [
   {OROTITAN_C8_READ_ONLY_ENABLED:'1'},
   {OROTITAN_C8_READ_ONLY_ENABLED:'0'},
