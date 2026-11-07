@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import pinPack from '../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json';
 import test from 'node:test';
 import {resolveJ1CompanyIdentity,type J1CompanyIdentity} from
  '../lib/orotitan-equity/product/runfactory-j1-request-resolution-v1';
@@ -49,7 +50,7 @@ const verified:J1VerifiedRun={
 test('J1 Research handoff is deterministic and never asserts Research admission',()=>{
  const text=buildJ1ResearchHandoff(verified);
  assert.match(text,/RUN_ID = db00ce77-04eb-492b-a76b-164ecbe9ccfe/);
- assert.match(text,/EXPECTED_STAGE_CONTRACT = OROTITAN_RESEARCH_STAGE_CONTRACT_V1_FREEZE_V1.0/);
+ assert.match(text,/EXPECTED_STAGE_CONTRACT = OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0/);
  assert.match(text,/RESEARCH_STAGE_ADMISSION = NOT_YET_EXECUTED/);
  assert.match(text,/RESEARCH_STAGE_STARTED = NO/);
  assert.match(text,/PUBLICATION_AUTHORIZED = NO/);
@@ -68,4 +69,16 @@ test('J1 handoff fails closed if server receipt is not a verified SHADOW Run',()
   assert.throws(()=>buildJ1ResearchHandoff(invalid as J1VerifiedRun),
    /J1_HANDOFF_INVARIANT_FAILED/);
  }
+});
+
+test('J1 Research handoff exact names match the immutable V3.1 contract pack',()=>{
+ const h=buildJ1ResearchHandoff(verified);
+ for(const [field,key] of [
+  ['HIGHER_AUTHORITY_PROCESS','process'],
+  ['PILOTAGE_CONTRACT','pilotage'],
+  ['EXPECTED_STAGE_CONTRACT','research_stage'],
+ ] as const){
+  assert.match(h,new RegExp(field+' = '+pinPack.contract_pins[key].name));
+ }
+ assert.equal(pinPack.contract_set_sha256,verified.contractSetSha256);
 });
