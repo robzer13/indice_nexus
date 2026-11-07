@@ -17,7 +17,8 @@ type PreflightReply={ok:true;checkedAt:string;result:RunFactoryDecision;
 type Identity={isin:string;exchange:string;issuerId:string;
  issuerName:string;securityId:string;ticker:string};
 type ResolveReply={ok:true;status:'RESOLVED'|'AMBIGUOUS'|'NOT_FOUND';
- identity:Identity|null;readOnly:true;environment:'SHADOW_ONLY'};
+ identity:Identity|null;readOnly:true;environment:'SHADOW_ONLY';
+ existingRunCutoff:string|null;multipleOpenRuns:boolean};
 type CommitReply={ok:true;status:'CREATED'|'REPLAYED';runId:string;
  issuerId:string;securityId:string;dossierId:string;
  dataCutoff:string;runType:'INITIAL';runStatus:'CREATED';
@@ -63,6 +64,7 @@ export function RunFactoryDryRunClient({
 }:{profiles:readonly ContractProfileSummary[];initialValues:RunPreflightSeed}){
  const [company,setCompany]=useState(initialValues.isin);
  const [cutoff,setCutoff]=useState(initialValues.dataCutoff||todayLocal());
+ const [cutoffExplicit,setCutoffExplicit]=useState(Boolean(initialValues.dataCutoff));
  const [profile,setProfile]=useState('OROTITAN_V3_1');
  const [busy,setBusy]=useState<'prepare'|'commit'|null>(null);
  const [error,setError]=useState('');
@@ -97,11 +99,14 @@ export function RunFactoryDryRunClient({
     setResolution(raw.status==='AMBIGUOUS'?'AMBIGUOUS':'NOT_FOUND');
     return;
    }
+   if(raw.multipleOpenRuns)throw Error('J1_MULTIPLE_OPEN_RUNS_REVIEW_REQUIRED');
    const found=raw.identity;
+   const effectiveCutoff=cutoffExplicit?cutoff:raw.existingRunCutoff||cutoff;
+   setCutoff(effectiveCutoff);
    const p=await postJSON(
     '/admin/research-factory/run-preflight/inspect',{
      isin:found.isin,exchange:found.exchange,
-     dataCutoff:cutoff,profileId:profile,
+     dataCutoff:effectiveCutoff,profileId:profile,
     },
    ) as PreflightReply;
    if(p.mode!=='DRY_RUN_ONLY'||p.rpcExecuted!==false||
@@ -192,7 +197,7 @@ export function RunFactoryDryRunClient({
      <label className="space-y-1"><span>Data cutoff</span>
       <input type="date" value={cutoff}
        disabled={busy!==null||commitAnswer!==null}
-       onChange={e=>{setCutoff(e.target.value);reset();}}
+       onChange={e=>{setCutoff(e.target.value);setCutoffExplicit(true);reset();}}
        className="w-full rounded bg-slate-900 p-2"/></label>
      <label className="space-y-1"><span>Profil figé</span>
       <select value={profile} disabled={busy!==null||commitAnswer!==null}
