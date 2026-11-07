@@ -45,7 +45,7 @@ const blocked=(code:string,status=409,maybeMutated=false)=>NextResponse.json({
 
 export async function POST(req:NextRequest){
  if(!isHostedJ2ResearchStageStartEnabled(process.env))
-  return blocked('J2_STAGE_START_NOT_ENABLED',404);
+  return blocked('SHADOW_ONLY',404);
  try{await requireAdminSession();}
  catch{return blocked('UNAUTHORIZED',401);}
  if(req.headers.get('origin')!==new URL(req.url).origin)
