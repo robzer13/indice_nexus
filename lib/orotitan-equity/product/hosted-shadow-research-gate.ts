@@ -72,10 +72,9 @@ export function isHostedJ1RunFactoryEnabled(env: HostedShadowEnv): boolean {
  * and must not be the existing J1/C8 project.
  * A successful preflight alone cannot satisfy this configuration gate.
  */
-export function isHostedJ2ResearchStageStartEnabled(env:HostedShadowEnv):boolean{
+export function isHostedJ2ResearchPreviewEnabled(env:HostedShadowEnv):boolean{
  const isolatedProjectId=env.OROTITAN_J2_STAGE_START_PROJECT_ID;
  return env.OROTITAN_J2_RESEARCH_STAGE_START_ENABLED==='1' &&
-  env.OROTITAN_J2_STAGE_START_RUNTIME_GO==='1' &&
   env.OROTITAN_C8_READ_ONLY_ENABLED===undefined &&
   env.OROTITAN_J1_RUN_FACTORY_ENABLED===undefined &&
   env.OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED===undefined &&
@@ -85,4 +84,11 @@ export function isHostedJ2ResearchStageStartEnabled(env:HostedShadowEnv):boolean
   isolatedProjectId!=='prj_RBi6Sw0XcL0AbxSHVfoTwDkyQAHE' &&
   env.VERCEL_PROJECT_ID===isolatedProjectId &&
   isHostedShadowConfigurationValid(env);
+}
+
+/** The separate write lock is explicit; a read-only J2 Preview
+ * cannot execute the stage-start RPC unless BOTH gates are present. */
+export function isHostedJ2ResearchStageStartEnabled(env:HostedShadowEnv):boolean{
+ return isHostedJ2ResearchPreviewEnabled(env) &&
+  env.OROTITAN_J2_STAGE_START_RUNTIME_GO==='1';
 }
