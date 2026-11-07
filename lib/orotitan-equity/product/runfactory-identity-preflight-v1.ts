@@ -60,6 +60,23 @@ export type RunFactoryDecision=Readonly<{
  planExecutableInShadow:false;
 }>;
 
+/**
+ * J1 admission is permitted only for a genuinely new INITIAL candidate or
+ * replay of an unchanged, CREATED INITIAL run. This only enables the UI
+ * command; the server re-reads identity, checks pins and enforces idempotence.
+ */
+export function isJ1InitialAdmissionCandidate(d:RunFactoryDecision):boolean{
+ if(d.profileId!=='OROTITAN_V3_1'||
+    !d.issuerId||!d.securityId||!d.dossierId||
+    d.proposedRunType!=='INITIAL'||d.baselineSnapshotId!==null||
+    d.runCreated!==false||d.rpcExecuted!==false||
+    d.registryAdmitted!==false)return false;
+ if(d.status==='NEW_RUN_PLAN_CANDIDATE')
+   return d.existingRunId===null;
+ return d.status==='EXISTING_RUN_REUSE_CANDIDATE'&&
+   d.existingRunStatus==='CREATED'&&!!d.existingRunId;
+}
+
 function validDate(s:string):boolean{
  if(!/^\d{4}-\d{2}-\d{2}$/.test(s))return false;
  const d=new Date(s+'T00:00:00.000Z');
