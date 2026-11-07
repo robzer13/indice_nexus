@@ -63,7 +63,7 @@ const synthetic = {
   ADMIN_SESSION_SECRET:'synthetic-session-secret-for-shadow-only-32characters',
   CRON_SECRET:'synthetic-cron',
 };
-const originals = new Map(Object.keys(synthetic).map(key=>[key,process.env[key]]));
+const originals = new Map([...Object.keys(synthetic),'OROTITAN_J1_RUN_FACTORY_ENABLED'].map(key=>[key,process.env[key]]));
 const originalFetch = globalThis.fetch;
 const calls: {method:string;path:string}[] = [];
 let prepared = 0, accepted = false, dbEnabled = false, mismatch = false;
@@ -95,6 +95,7 @@ const fetchMock:typeof fetch = async (input, init) => {
 test.beforeEach(()=>{
   Object.assign(process.env,synthetic);
   delete process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED;
+  delete process.env.OROTITAN_J1_RUN_FACTORY_ENABLED;
   state.cookie=''; state.effects.length=0; calls.length=0;
   prepared=0; accepted=false; dbEnabled=false; mismatch=false;
   globalThis.fetch=fetchMock;
@@ -230,6 +231,17 @@ test('login creates a real signed admin cookie and redirects to owner verificati
   assert.equal(calls.length,0);
 });
 
+test('J1 admin login redirects into Run Factory while ordinary C8 owner login is unchanged',async()=>{
+  const {loginAction}=await import('../app/admin/actions');
+  process.env.OROTITAN_J1_RUN_FACTORY_ENABLED='1';
+  process.env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED='0';
+  const form=new FormData();form.set('password',synthetic.ADMIN_PASSWORD);
+  await assert.rejects(loginAction(form),
+    /REDIRECT:\/admin\/research-factory\/run-preflight$/);
+  assert.equal(await (await import('../lib/auth/admin-session')).isAdminAuthenticated(),true);
+  assert.equal(calls.length,0);
+});
+
 test('GET C8 with a signed session rereads persisted state using five read calls',async()=>{
   await session(); prepared=2; accepted=true; dbEnabled=true;
   const {GET}=await import('../app/admin/research-factory/control-tower/c8-gate/route');
@@ -318,7 +330,8 @@ const postRoutes=[
   'research-q3-sources/upload','research-primary-sources/upload-tsmc',
   'research-primary-sources/capture','research-primary-sources/audit/run',
   'research-factory/onboarding/inspect','research-factory/onboarding/commit',
-  'research-factory/run-preflight/inspect','research-factory/run-preflight/commit',
+  'research-factory/run-preflight/resolve','research-factory/run-preflight/inspect',
+  'research-factory/run-preflight/commit',
   'research-factory/contracts/verify','research-factory/control-tower/record',
   'research-factory/control-tower/c5-security-test',
   'research-factory/control-tower/c8-gate/prepare','research-factory/control-tower/c8-gate/accept',
@@ -465,6 +478,21 @@ test('accept HTTP refuses STANDARD, including its default, under a SOLO GO befor
   assert.equal(calls.length,0);
 });
 
+test('C8 context refuses J1 Research handoff GET before any Registry read',async()=>{
+  const {GET}=await import('../app/admin/research-factory/run-preflight/handoff/route');
+  for(const v of ['1','0','invalid','']){
+    process.env.OROTITAN_C8_READ_ONLY_ENABLED=v;
+    const req=new Request(
+      'https://qualification.invalid/admin/research-factory/run-preflight/handoff?runId=db00ce77-04eb-492b-a76b-164ecbe9ccfe',
+      {method:'GET'},
+    ) as NextRequest;
+    const res=await GET(req);
+    assert.equal(res.status,404);
+    assert.equal((await res.json()).error,'SHADOW_ONLY');
+  }
+  assert.equal(calls.length,0);
+});
+
 test('inventory covers every HTTP handler and exported Server Action in app',()=>{
   function files(dir:string):string[] {
     return readdirSync(dir,{withFileTypes:true}).flatMap(e=>
@@ -490,6 +518,7 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
     ...postRoutes.map(p=>`POST admin/${p}/route.ts`),
     'GET admin/research-factory/control-tower/c8-gate/route.ts',
     'GET admin/research-factory/control-tower/c8-gate/owner-session/route.ts',
+    'GET admin/research-factory/run-preflight/handoff/route.ts',
     'GET api/cron/prices/route.ts','GET api/orotitan/runtime/route.ts',
   ].sort());
   assert.deepEqual(actions.sort(),[

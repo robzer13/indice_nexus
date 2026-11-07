@@ -7,208 +7,346 @@ import {isJ1InitialAdmissionCandidate,type RunFactoryDecision} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 import type {RunPreflightSeed} from
  '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
+import {buildJ1ResearchHandoff} from
+ '@/lib/orotitan-equity/product/runfactory-j1-research-handoff-v1';
 
 type PreflightReply={ok:true;checkedAt:string;result:RunFactoryDecision;
  mode:'DRY_RUN_ONLY';rpcExecuted:false;registryAdmitted:false;
  humanGOAttached:false;contractOriginalBytesVerifiedForThisSession:false;
  authoritativeProductionEnvironmentVerified:false;};
-
+type Identity={isin:string;exchange:string;issuerId:string;
+ issuerName:string;securityId:string;ticker:string};
+type ResolveReply={ok:true;status:'RESOLVED'|'AMBIGUOUS'|'NOT_FOUND';
+ identity:Identity|null;readOnly:true;environment:'SHADOW_ONLY';
+ existingRunCutoff:string|null;multipleOpenRuns:boolean};
 type CommitReply={ok:true;status:'CREATED'|'REPLAYED';runId:string;
- profileId:'OROTITAN_V3_1';persistedReadbackVerified:true;
- receiptPersisted:true;stageStarted:false;snapshotCreated:false;
+ issuerId:string;securityId:string;dossierId:string;
+ dataCutoff:string;runType:'INITIAL';runStatus:'CREATED';
+ profileId:'OROTITAN_V3_1';contractSetSha256:string;
+ all15OriginalContractBytesVerified:true;persistedReadbackVerified:true;
+ receiptPersisted:true;runIdentityBound:true;
+ stageStarted:false;snapshotCreated:false;
  published:false;environment:'SHADOW_ONLY';productionTouched:false;};
+const ONBOARDING_SHADOW_URL=
+ 'https://orotitan-j1-identity-shadow-preview-e6xopn7xc-orotitan.vercel.app/admin/research-factory/onboarding/execute';
 
+function todayLocal():string{
+ const now=new Date();
+ const p=(x:number)=>String(x).padStart(2,'0');
+ return now.getFullYear()+'-'+p(now.getMonth()+1)+'-'+p(now.getDate());
+}
+function downloadJSON(filename:string,value:unknown):void{
+ const blob=new Blob([JSON.stringify(value,null,2)],{type:'application/json'});
+ const url=URL.createObjectURL(blob);
+ const link=document.createElement('a');link.href=url;link.download=filename;
+ document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+}
+async function postJSON(path:string,body:unknown):Promise<unknown>{
+ const response=await fetch(path,{
+  method:'POST',cache:'no-store',credentials:'same-origin',
+  headers:{'Content-Type':'application/json'},body:JSON.stringify(body),
+ });
+ const parsed:unknown=await response.json();
+ if(!response.ok||!parsed||typeof parsed!=='object'||
+    !('ok' in parsed)||parsed.ok!==true)
+  throw Error(parsed&&typeof parsed==='object'&&'error' in parsed?
+   String(parsed.error):'Requête SHADOW indisponible.');
+ return parsed;
+}
+
+/**
+ * J1: one user request -> unique canonical identity -> read-only preflight ->
+ * one explicit GO -> existing atomic RPC -> verified Research routing packet.
+ * The initial GO is mandatory. Neither stages nor publication are triggered.
+ */
 export function RunFactoryDryRunClient({
  profiles,initialValues,
 }:{profiles:readonly ContractProfileSummary[];initialValues:RunPreflightSeed}){
- const [isin,setIsin]=useState(initialValues.isin);
- const [exchange,setExchange]=useState(initialValues.exchange);
- const [cutoff,setCutoff]=useState(initialValues.dataCutoff);
- const [profile,setProfile]=useState<string>(initialValues.profileId);
- const [running,setRunning]=useState(false);
+ const [company,setCompany]=useState(initialValues.isin);
+ const [cutoff,setCutoff]=useState(initialValues.dataCutoff||todayLocal());
+ const [cutoffExplicit,setCutoffExplicit]=useState(Boolean(initialValues.dataCutoff));
+ const [profile,setProfile]=useState('OROTITAN_V3_1');
+ const [busy,setBusy]=useState<'prepare'|'commit'|null>(null);
  const [error,setError]=useState('');
- const [answer,setAnswer]=useState<PreflightReply|null>(null);
- const [approval,setApproval]=useState('');
- const [committing,setCommitting]=useState(false);
+ const [resolution,setResolution]=useState<'NOT_FOUND'|'AMBIGUOUS'|null>(null);
+ const [identity,setIdentity]=useState<Identity|null>(null);
+ const [preflight,setPreflight]=useState<PreflightReply|null>(null);
+ const [approved,setApproved]=useState(false);
+ const [commitAttempted,setCommitAttempted]=useState(false);
  const [commitAnswer,setCommitAnswer]=useState<CommitReply|null>(null);
-
- async function inspect(){
-  if(running||!profile||!isin.trim()||!cutoff)return;
-  setRunning(true);setError('');setAnswer(null);setApproval('');setCommitAnswer(null);
-  try{
-   const response=await fetch('/admin/research-factory/run-preflight/inspect',{
-    method:'POST',cache:'no-store',credentials:'same-origin',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({isin,exchange:exchange.trim()||null,
-     dataCutoff:cutoff,profileId:profile}),
-   });
-   const v:unknown=await response.json();
-   if(!response.ok||!v||typeof v!=='object'||!('ok' in v)||v.ok!==true)
-    throw Error(v&&typeof v==='object'&&'error' in v?
-     String(v.error):'Échec du préflight de lecture.');
-   const parsed=v as PreflightReply;
-   if(parsed.mode!=='DRY_RUN_ONLY'||parsed.rpcExecuted!==false||
-      parsed.registryAdmitted!==false||parsed.humanGOAttached!==false||
-      parsed.result.registryAdmitted!==false||
-      parsed.result.rpcExecuted!==false||
-      parsed.result.goAuthorized!==false||
-      parsed.result.profileId!==profile)
-    throw Error('Réponse incohérente ou non conforme au mode préflight.');
-   setAnswer(parsed);
-  }catch(e){setError(e instanceof Error?e.message:'Échec de lecture.');}
-  finally{setRunning(false);}
- }
- async function createRun(){
-  if(!answer||committing||running||
-     !isJ1InitialAdmissionCandidate(answer.result)||
-     approval!=='GO P0-E SHADOW '+answer.result.isin+' '+answer.result.dataCutoff)
-   return;
-  setCommitting(true);setError('');setCommitAnswer(null);
-  try{
-   const r=await fetch('/admin/research-factory/run-preflight/commit',{
-    method:'POST',credentials:'same-origin',cache:'no-store',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-     profileId:'OROTITAN_V3_1',intent:'INITIAL_RUN_SHADOW_ONLY',
-     issuerId:answer.result.issuerId,
-     securityId:answer.result.securityId,
-     dossierId:answer.result.dossierId,
-     isin:answer.result.isin,
-     exchange:answer.result.exchange,
-     dataCutoff:answer.result.dataCutoff,
-     expectedExistingRunId:answer.result.existingRunId,
-     confirmation:approval,
-    }),
-   });
-   const raw:unknown=await r.json();
-   if(!r.ok||!raw||typeof raw!=='object'||!('ok' in raw)||raw.ok!==true)
-    throw Error(raw&&typeof raw==='object'&&'error' in raw?
-     String(raw.error):'P0-E : création non confirmée.');
-   const report=raw as CommitReply;
-   if(report.profileId!=='OROTITAN_V3_1'||
-      report.persistedReadbackVerified!==true||
-      report.receiptPersisted!==true||report.stageStarted!==false||
-      report.snapshotCreated!==false||report.published!==false||
-      report.environment!=='SHADOW_ONLY'||report.productionTouched!==false)
-    throw Error('P0-E : reçu incomplet ; contrôle manuel du Registry requis.');
-   setCommitAnswer(report);
-  }catch(e){
-   setError(e instanceof Error?e.message:'P0-E : erreur de transaction.');
-  }finally{setCommitting(false);}
- }
- function download(){
-  if(!answer)return;
-  const bytes=JSON.stringify({
-   schema:'OROTITAN_RUN_FACTORY_IDENTITY_DRYRUN_V1',
-   ...answer,
-  },null,2);
-  const blob=new Blob([bytes],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');link.href=url;
-  link.download='OROTITAN_RUN_FACTORY_IDENTITY_PREFLIGHT.json';
-  document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
- }
+ const [handoff,setHandoff]=useState('');
+ const [copied,setCopied]=useState(false);
+ const [routingVerified,setRoutingVerified]=useState(false);
+ const [routingError,setRoutingError]=useState('');
+ const [routingChecking,setRoutingChecking]=useState(false);
  const selected=profiles.find(p=>p.profileId===profile);
+ const decision=preflight?.result??null;
+ const canCommit=!!decision&&isJ1InitialAdmissionCandidate(decision);
+ function reset(){
+  setError('');setResolution(null);setIdentity(null);setPreflight(null);
+  setApproved(false);setCommitAttempted(false);setCommitAnswer(null);
+  setHandoff('');setCopied(false);
+  setRoutingVerified(false);setRoutingError('');
+ }
+ async function prepare(){
+  if(busy||!company.trim()||!cutoff)return;
+  setBusy('prepare');reset();
+  try{
+   if(profile!=='OROTITAN_V3_1'||!selected)
+    throw Error('J1_PROFILE_NOT_SUPPORTED');
+   const raw=await postJSON(
+    '/admin/research-factory/run-preflight/resolve',{query:company.trim()},
+   ) as ResolveReply;
+   if(raw.readOnly!==true||raw.environment!=='SHADOW_ONLY')
+    throw Error('J1_RESOLUTION_NOT_TRUSTED');
+   if(raw.status!=='RESOLVED'||!raw.identity){
+    setResolution(raw.status==='AMBIGUOUS'?'AMBIGUOUS':'NOT_FOUND');
+    return;
+   }
+   if(raw.multipleOpenRuns)throw Error('J1_MULTIPLE_OPEN_RUNS_REVIEW_REQUIRED');
+   const found=raw.identity;
+   const effectiveCutoff=cutoffExplicit?cutoff:raw.existingRunCutoff||cutoff;
+   setCutoff(effectiveCutoff);
+   const p=await postJSON(
+    '/admin/research-factory/run-preflight/inspect',{
+     isin:found.isin,exchange:found.exchange,
+     dataCutoff:effectiveCutoff,profileId:profile,
+    },
+   ) as PreflightReply;
+   if(p.mode!=='DRY_RUN_ONLY'||p.rpcExecuted!==false||
+      p.registryAdmitted!==false||p.humanGOAttached!==false||
+      p.result.registryAdmitted!==false||p.result.rpcExecuted!==false||
+      p.result.goAuthorized!==false||
+      p.result.profileId!==profile||
+      p.result.isin!==found.isin||
+      p.result.exchange!==found.exchange||
+      p.result.issuerId!==found.issuerId||
+      p.result.securityId!==found.securityId||
+      p.result.contractSetSha256!==selected.contractSetSha256)
+    throw Error('J1_IDENTITY_PREFLIGHT_MISMATCH');
+   setIdentity(found);setPreflight(p);
+  }catch(e){setError(e instanceof Error?e.message:'J1_PREPARE_FAILED');}
+  finally{setBusy(null);}
+ }
+ async function verifyRouting(report:CommitReply,expectedHandoff:string){
+  if(routingChecking)return;
+  setRoutingChecking(true);setRoutingError('');setRoutingVerified(false);
+  try{
+   // This GET independently reads the persisted Registry, not the UI receipt.
+   // No stage starts and no additional transaction is issued.
+   const res=await fetch(
+    '/admin/research-factory/run-preflight/handoff?runId='+
+    encodeURIComponent(report.runId),{
+     method:'GET',cache:'no-store',credentials:'same-origin',
+    });
+   const raw:unknown=await res.json();
+   if(!res.ok||!raw||typeof raw!=='object')
+    throw Error('J1_ROUTING_READ_FAILED');
+   const p=raw as Record<string,unknown>;
+   if(p.ok!==true||p.schema!=='OROTITAN_J1_READ_ONLY_ROUTING_HANDOFF_V1'||
+      p.routingStatus!=='RUN_READY_FOR_RESEARCH_PREFLIGHT'||
+      p.runId!==report.runId||
+      p.issuerId!==report.issuerId||
+      p.securityId!==report.securityId||
+      p.dossierId!==report.dossierId||
+      p.contractSetSha256!==report.contractSetSha256||
+      p.handoff!==expectedHandoff||
+      p.registryReadbackVerified!==true||
+      p.contractReceiptVerified!==true||
+      p.researchStageAdmission!==false||
+      p.researchStageStarted!==false||p.snapshotCreated!==false||
+      p.published!==false||p.environment!=='SHADOW_ONLY'||
+      p.productionTouched!==false)
+    throw Error('J1_ROUTING_READBACK_MISMATCH');
+   setRoutingVerified(true);
+  }catch(e){
+   setRoutingError(e instanceof Error?e.message:'J1_ROUTING_READ_FAILED');
+  }finally{setRoutingChecking(false);}
+ }
+ async function go(){
+  if(!canCommit||!approved||busy||commitAttempted||!decision||!identity)return;
+  // One HTTP write attempt per human GO. A transport failure requires a
+  // new read-only preflight, never a blind second POST.
+  setCommitAttempted(true);setBusy('commit');setError('');
+  try{
+   const report=await postJSON(
+    '/admin/research-factory/run-preflight/commit',{
+     profileId:'OROTITAN_V3_1',intent:'INITIAL_RUN_SHADOW_ONLY',
+     issuerId:decision.issuerId,securityId:decision.securityId,
+     dossierId:decision.dossierId,isin:decision.isin,
+     exchange:decision.exchange,dataCutoff:decision.dataCutoff,
+     expectedExistingRunId:decision.existingRunId,
+     confirmation:'GO P0-E SHADOW '+decision.isin+' '+decision.dataCutoff,
+    },
+   ) as CommitReply;
+   if(report.profileId!=='OROTITAN_V3_1'||
+      report.runType!=='INITIAL'||report.runStatus!=='CREATED'||
+      report.issuerId!==decision.issuerId||
+      report.securityId!==decision.securityId||
+      report.dossierId!==decision.dossierId||
+      report.dataCutoff!==decision.dataCutoff||
+      report.contractSetSha256!==decision.contractSetSha256||
+      (decision.existingRunId===null?report.status!=='CREATED':
+       report.status!=='REPLAYED'||report.runId!==decision.existingRunId)||
+      report.all15OriginalContractBytesVerified!==true||
+      report.runIdentityBound!==true)
+    throw Error('J1_COMMIT_RECEIPT_MISMATCH');
+   const packet=buildJ1ResearchHandoff({
+    runId:report.runId,issuerId:report.issuerId,
+    securityId:report.securityId,dossierId:report.dossierId,
+    issuerName:identity.issuerName,
+    isin:identity.isin,exchange:identity.exchange,
+    dataCutoff:decision.dataCutoff,profileId:report.profileId,
+    contractSetSha256:report.contractSetSha256,status:report.status,
+    persistedReadbackVerified:report.persistedReadbackVerified,
+    receiptPersisted:report.receiptPersisted,stageStarted:report.stageStarted,
+    snapshotCreated:report.snapshotCreated,published:report.published,
+    environment:report.environment,productionTouched:report.productionTouched,
+   });
+   setCommitAnswer(report);setHandoff(packet);
+   await verifyRouting(report,packet);
+  }catch(e){
+   setError((e instanceof Error?e.message:'J1_COMMIT_FAILED')+
+    ' — Ne réessayez pas la transaction. Relancez uniquement le contrôle en lecture.');
+  }finally{setBusy(null);}
+ }
+ async function copyHandoff(){
+  if(!handoff)return;
+  try{await navigator.clipboard.writeText(handoff);setCopied(true);}
+  catch{setError('Copie indisponible : sélectionnez le texte du handoff.');}
+ }
  return <div className="space-y-5">
   <section className="rounded-lg border border-cyan-700 p-5 space-y-4">
-   <h2 className="text-xl font-semibold text-white">Contrôle d’identité et de doublon</h2>
+   <h2 className="text-xl font-semibold text-white">Demander une analyse — J1 SHADOW</h2>
    <p className="text-sm text-slate-300">
-    Un titre est identifié par son ISIN, puis son marché si nécessaire.
-    L’identité doit déjà exister dans le Registry.
-    La génération reste explicitement sélectionnée ; aucun GO n’est envoyé.
+    Saisissez le nom, le ticker ou l’ISIN. OroTitan résout l’identité et
+    détermine automatiquement s’il faut créer ou réutiliser le Run.
+    Aucune transaction avant votre GO explicite.
    </p>
-   <div className="grid gap-3 md:grid-cols-2">
-    <label className="space-y-1 text-sm text-slate-200">
-     <span>ISIN (obligatoire)</span>
-     <input value={isin} onChange={e=>setIsin(e.target.value)}
-      placeholder="FR0000120321" maxLength={16} disabled={running}
-      className="w-full rounded-md border border-slate-600 bg-slate-900 p-3 text-white"/>
-    </label>
-    <label className="space-y-1 text-sm text-slate-200">
-     <span>Marché (facultatif)</span>
-     <input value={exchange} onChange={e=>setExchange(e.target.value)}
-      placeholder="XPAR" maxLength={30} disabled={running}
-      className="w-full rounded-md border border-slate-600 bg-slate-900 p-3 text-white"/>
-    </label>
-    <label className="space-y-1 text-sm text-slate-200">
-     <span>Data cutoff</span>
-     <input type="date" value={cutoff} onChange={e=>setCutoff(e.target.value)}
-      disabled={running}
-      className="w-full rounded-md border border-slate-600 bg-slate-900 p-3 text-white"/>
-    </label>
-    <label className="space-y-1 text-sm text-slate-200">
-     <span>Profil contractuel approuvé</span>
-     <select value={profile} disabled={running}
-      onChange={e=>setProfile(e.target.value)}
-      className="w-full rounded-md border border-slate-600 bg-slate-900 p-3 text-white">
-      <option value="">— Choix explicite requis —</option>
-      {profiles.map(p=><option value={p.profileId} key={p.profileId}>
-       {p.label}
-      </option>)}
-     </select>
-    </label>
-   </div>
-   {selected&&<p className="break-all text-xs text-slate-400">
-    Contract Set SHA-256 : {selected.contractSetSha256}
-   </p>}
-   <button type="button" onClick={()=>void inspect()}
-    disabled={running||!profile||!isin.trim()||!cutoff}
+   <label className="block space-y-1 text-sm text-slate-200">
+    <span>Entreprise, ticker ou ISIN</span>
+    <input value={company} disabled={busy!==null||commitAnswer!==null}
+     onChange={e=>{setCompany(e.target.value);reset();}}
+     placeholder="Schneider Electric, SU ou FR0000121972"
+     maxLength={100}
+     className="w-full rounded-md border border-slate-600 bg-slate-900 p-3 text-white"/>
+   </label>
+   <details className="rounded border border-slate-700 p-3 text-sm text-slate-300">
+    <summary className="cursor-pointer font-semibold">Paramètres d’exécution</summary>
+    <div className="mt-3 grid gap-3 md:grid-cols-2">
+     <label className="space-y-1"><span>Data cutoff</span>
+      <input type="date" value={cutoff}
+       disabled={busy!==null||commitAnswer!==null}
+       onChange={e=>{setCutoff(e.target.value);setCutoffExplicit(true);reset();}}
+       className="w-full rounded bg-slate-900 p-2"/></label>
+     <label className="space-y-1"><span>Profil figé</span>
+      <select value={profile} disabled={busy!==null||commitAnswer!==null}
+       onChange={e=>{setProfile(e.target.value);reset();}}
+       className="w-full rounded bg-slate-900 p-2">
+       <option value="OROTITAN_V3_1">OROTITAN V3.1</option>
+      </select></label>
+    </div>
+    {selected&&<p className="mt-2 break-all text-xs">
+     Contract Set SHA-256 : {selected.contractSetSha256}</p>}
+   </details>
+   <button type="button" onClick={()=>void prepare()}
+    disabled={busy!==null||!company.trim()||!cutoff||commitAnswer!==null}
     className="rounded-md bg-cyan-400 px-4 py-3 font-semibold text-slate-950 disabled:opacity-50">
-    {running?'Lecture du Registry SHADOW…':'Exécuter le préflight (lecture seule)'}
+    {busy==='prepare'?'Résolution et préflight…':'Préparer l’analyse (lecture seule)'}
    </button>
+   {resolution==='NOT_FOUND'&&<div className="space-y-2 text-sm text-amber-100">
+    <p>Identité canonique absente. Onboarding avec revue humaine des sources
+     officielles requis avant création d’un Run.</p>
+    <a href={ONBOARDING_SHADOW_URL} target="_blank" rel="noopener noreferrer"
+     className="text-cyan-300 underline">Ouvrir l’onboarding SHADOW contrôlé</a>
+    <p>Après admission, revenez ici et relancez « Préparer l’analyse ».</p>
+   </div>}
+   {resolution==='AMBIGUOUS'&&<p className="text-sm text-amber-100">
+    Plusieurs titres correspondent. Utilisez l’ISIN exact. Aucun titre n’a été
+    choisi automatiquement.</p>}
    {error&&<p role="alert" className="text-sm text-rose-300">{error}</p>}
   </section>
-  {answer&&<section className="rounded-lg border border-slate-700 p-5 space-y-3">
-   <h2 className="text-xl font-semibold text-white">Décision de préflight</h2>
-   <p className="font-mono text-amber-200">{answer.result.status}</p>
-   <p className="text-sm text-slate-200">{answer.result.nextAction}</p>
-   <dl className="grid grid-cols-1 gap-2 text-sm text-slate-300 md:grid-cols-2">
-    <div><dt>Émetteur</dt><dd className="font-semibold">
-     {answer.result.issuerName??'NON RÉSOLU'}</dd></div>
-    <div><dt>Type de run candidat</dt><dd>
-     {answer.result.proposedRunType??'NON DÉTERMINÉ'}</dd></div>
-    <div><dt>Run existant</dt><dd className="break-all">
-     {answer.result.existingRunId??'AUCUN CONFIRMÉ'}</dd></div>
-    <div><dt>Snapshot de référence</dt><dd className="break-all">
-     {answer.result.baselineSnapshotId??'AUCUN'}</dd></div>
-   </dl>
-   <p className="text-xs text-amber-100">
-    Pas d’autorisation GO, pas de validation des octets contractuels dans
-    cette session, pas de vérification de la base de production.
-    Aucune RPC exécutée, aucun run créé, aucune admission.
+  {decision&&identity&&<section className="rounded-lg border border-slate-700 p-5 space-y-3">
+   <h2 className="text-xl font-semibold text-white">Plan automatiquement déterminé</h2>
+   <p className="font-mono text-sm text-amber-200">{decision.status}</p>
+   <p className="text-sm text-slate-200">{identity.issuerName} · {decision.isin} ·
+    {decision.exchange} · Cutoff {decision.dataCutoff}</p>
+   <p className="text-sm text-slate-300">Type : {decision.proposedRunType??'Non déterminé'} ·
+    Run existant : {decision.existingRunId??'aucun'}</p>
+   {!canCommit&&<p className="text-sm text-amber-100">
+    Ce cas n’est pas admissible à J1 INITIAL. Aucun GO ni RPC disponible.
+    {decision.nextAction}
+   </p>}
+   {canCommit&&!commitAnswer&&<div className="space-y-3 rounded-md border border-amber-600 p-4">
+    <label className="flex items-start gap-3 text-sm text-amber-100">
+     <input type="checkbox" checked={approved}
+      disabled={busy!==null||commitAttempted}
+      onChange={e=>setApproved(e.target.checked)}/>
+     <span>Je donne le GO d’admission J1 SHADOW pour ce Run
+      {decision.existingRunId?' (réutilisation)':' (création INITIAL)'}.
+      Les 15 contrats seront revérifiés avant la transaction.
+      Aucun stage, snapshot ni publication n’est autorisé.</span>
+    </label>
+    <button type="button" disabled={!approved||busy!==null||commitAttempted}
+     onClick={()=>void go()}
+     className="rounded bg-amber-400 px-4 py-3 font-bold text-slate-950 disabled:opacity-50">
+     {busy==='commit'?'Admission et relecture persistante…':
+      decision.existingRunId?'GO — Réutiliser le Run existant':
+      'GO — Créer le Run INITIAL'}
+    </button>
+    {commitAttempted&&!commitAnswer&&<p className="text-sm text-amber-100">
+     Aucune répétition automatique de RPC. Pour connaître l’état réel,
+     utilisez « Préparer l’analyse » (lecture seule).</p>}
+   </div>}
+   <button type="button" onClick={()=>downloadJSON(
+    'OROTITAN_J1_PREFLIGHT.json',preflight)}
+    className="rounded-md border border-cyan-400 px-3 py-2 text-sm text-cyan-300">
+    Exporter le préflight</button>
+  </section>}
+  {commitAnswer&&<section className="space-y-3 rounded-lg border border-emerald-700 p-5">
+   <h2 className="text-xl font-semibold text-emerald-200">
+    RUN {commitAnswer.status} — J1 persisté et relu</h2>
+   <p className="break-all font-mono text-xs text-slate-200">
+    RUN_ID = {commitAnswer.runId}</p>
+   <p className="text-sm text-slate-300">
+    15/15 contrats vérifiés. Reçu persisté. Aucun stage, snapshot ni publication.
    </p>
-   {isJ1InitialAdmissionCandidate(answer.result)&&
-    <div className="rounded-lg border border-amber-600 p-4 space-y-3">
-     <h3 className="font-bold uppercase text-amber-200">
-      ACTION ADMINISTRATEUR REQUISE — GO P0-E SHADOW
-     </h3>
-     <p className="text-sm text-slate-200">
-      {answer.result.status==='EXISTING_RUN_REUSE_CANDIDATE'?
-       'Réutilise le run INITIAL existant sans doublon, après relecture serveur de son identité et des 15 contrats d’origine. Aucun stage, snapshot ni publication.':
-       'Crée un run INITIAL et rattache son identité dans une transaction, après vérification des 15 contrats d’origine. Aucun stage, snapshot ni publication.'}
-     </p>
-     <label className="block space-y-1 text-sm text-slate-200">
-      <span>Recopier exactement : GO P0-E SHADOW {answer.result.isin} {answer.result.dataCutoff}</span>
-      <input value={approval} disabled={committing||commitAnswer!==null}
-       onChange={e=>setApproval(e.target.value)}
-       className="w-full rounded border border-amber-500 bg-slate-900 p-3 text-white"/>
-     </label>
-     <button type="button" onClick={()=>void createRun()}
-      disabled={committing||commitAnswer!==null||
-       approval!=='GO P0-E SHADOW '+answer.result.isin+' '+answer.result.dataCutoff}
-      className="rounded bg-amber-400 px-4 py-3 font-bold text-slate-950 disabled:opacity-50">
-      {committing?'Admission et contrôle d’intégrité…':answer.result.status==='EXISTING_RUN_REUSE_CANDIDATE'?'Rejouer le run INITIAL SHADOW — V3.1':'Créer le run INITIAL SHADOW — V3.1'}
-     </button>
-     {commitAnswer&&<div className="space-y-1 rounded border border-emerald-700 p-3 text-sm text-emerald-200">
-      <p className="font-bold">RUN {commitAnswer.status} — LECTURE PERSISTANTE VÉRIFIÉE</p>
-      <p className="break-all font-mono">RUN_ID : {commitAnswer.runId}</p>
-      <p>Aucun stage, snapshot ou publication.</p>
-     </div>}
-    </div>}
-   <button type="button" onClick={download}
-    className="rounded-md border border-cyan-400 px-4 py-2 text-cyan-300">
-    Exporter la décision JSON
-   </button>
+   <h3 className="font-semibold text-white">Liaison Pilotage → Research</h3>
+   {routingVerified?<p className="text-sm text-emerald-200">
+    Liaison vérifiée automatiquement depuis le Registry SHADOW.
+    Research pourra récupérer ce Run par son identifiant, sans copier ce texte.
+    Aucune admission Research n’a été lancée.
+   </p>:<div className="space-y-2">
+    <p role="status" className="text-sm text-amber-100">
+     {routingChecking?'Vérification de la liaison en lecture seule…':
+      'Liaison Research non encore vérifiée : '+(routingError||'lecture à reprendre')}
+    </p>
+    {!routingChecking&&<button type="button"
+     onClick={()=>void verifyRouting(commitAnswer,handoff)}
+     className="rounded border border-cyan-400 px-3 py-2 text-sm text-cyan-200">
+     Recontrôler la liaison (lecture seule)
+    </button>}
+   </div>}
+   <a href={'/admin/research-factory/run-preflight/handoff?runId='+
+     encodeURIComponent(commitAnswer.runId)}
+    target="_blank" rel="noopener noreferrer"
+    className="block text-sm text-cyan-300 underline">
+    Ouvrir le contexte Research récupérable automatiquement
+   </a>
+   <p className="text-xs text-amber-100">Paquet d’orientation, pas admission
+    automatique du stage Research. Le stage devra revérifier le Registry et
+    les contrats avant exécution.</p>
+   <textarea aria-label="Handoff Research" readOnly rows={17}
+    value={handoff} className="w-full rounded bg-slate-900 p-3 font-mono text-xs text-slate-200"/>
+   <div className="flex flex-wrap gap-3">
+    <button type="button" onClick={()=>void copyHandoff()}
+     className="rounded bg-cyan-400 px-4 py-2 font-semibold text-slate-950">
+     {copied?'Handoff copié':'Copier pour Research'}</button>
+    <button type="button" onClick={()=>downloadJSON('OROTITAN_J1_RUN_RECEIPT.json',{
+      ...commitAnswer,handoff})}
+     className="rounded border border-cyan-500 px-4 py-2 text-cyan-200">
+     Exporter reçu + handoff</button>
+   </div>
   </section>}
  </div>;
 }
