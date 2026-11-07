@@ -102,8 +102,23 @@ export async function POST(req:NextRequest){
     issuerName:str(issuerName),isin:str(r.isin),ticker:str(r.ticker),exchange:str(r.exchange)};
   });
   const result=resolveJ1CompanyIdentity(normalized,observed);
-  return NextResponse.json({ok:true,...result,readOnly:true,environment:'SHADOW_ONLY'},
-   {headers});
+  if(result.status!=='RESOLVED')
+   return NextResponse.json({ok:true,...result,readOnly:true,
+    environment:'SHADOW_ONLY',existingRunCutoff:null,multipleOpenRuns:false},
+    {headers});
+  // Read-only recommendation for the normal "analyse X" path. Never
+  // silently create another INITIAL with today's cutoff while a single
+  // unstarted INITIAL already exists. The user's explicit cutoff wins.
+  const unfinished=rows(await client.from('orotitan_runs')
+   .select('run_id,run_type,run_status,current_stage,data_cutoff')
+   .eq('issuer_id',result.identity.issuerId)
+   .eq('run_type','INITIAL').eq('run_status','CREATED')
+   .is('current_stage',null).limit(LIMIT));
+  const existingRunCutoff=unfinished.length===1?
+   str(unfinished[0].data_cutoff):null;
+  return NextResponse.json({ok:true,...result,readOnly:true,
+   environment:'SHADOW_ONLY',existingRunCutoff,
+   multipleOpenRuns:unfinished.length>1},{headers});
  }catch(e){
   const code=e instanceof Error?e.message:'';
   return NextResponse.json({ok:false,
