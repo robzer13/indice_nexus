@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import pinPack from '../contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json';
 import test from 'node:test';
+import {parseJ1HandoffRunId} from
+ '../lib/orotitan-equity/product/runfactory-j1-handoff-url-v1';
 import {resolveJ1CompanyIdentity,type J1CompanyIdentity} from
  '../lib/orotitan-equity/product/runfactory-j1-request-resolution-v1';
 import {buildJ1ResearchHandoff,type J1VerifiedRun} from
@@ -93,4 +95,27 @@ test('J1 Research handoff exact names match the immutable V3.1 contract pack',()
   assert.match(h,new RegExp(field+' = '+pinPack.contract_pins[key].name));
  }
  assert.equal(pinPack.contract_set_sha256,verified.contractSetSha256);
+});
+
+test('J1 handoff accepts a single valid Run ID with extra preview link metadata',()=>{
+ const base='https://preview.vercel.app/admin/research-factory/run-preflight/handoff';
+ const id='db00ce77-04eb-492b-a76b-164ecbe9ccfe';
+ assert.equal(parseJ1HandoffRunId(base+'?runId='+id),id);
+ assert.equal(parseJ1HandoffRunId(base+'?runId='+id+'&utm_source=chatgpt'),id);
+ assert.equal(parseJ1HandoffRunId(base+'?session=review&runId='+id+'&_vercel_share=synthetic'),id);
+ assert.equal(parseJ1HandoffRunId(base+'?runId='+id.toUpperCase()),id);
+});
+test('J1 handoff fails closed on missing, malformed or ambiguous Run ID',()=>{
+ const base='https://preview.vercel.app/admin/research-factory/run-preflight/handoff';
+ const id='db00ce77-04eb-492b-a76b-164ecbe9ccfe';
+ for(const url of [
+  base,base+'?utm_source=chatgpt',
+  base+'?runId=not-a-uuid',
+  base+'?runId='+id+'&runId='+id,
+  base+'?runId='+id+'&runId=not-a-uuid',
+  base+'?runId='+id.slice(0,-1),
+  'not a url',
+ ]){
+  assert.equal(parseJ1HandoffRunId(url),null,url);
+ }
 });
