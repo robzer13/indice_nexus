@@ -2,7 +2,8 @@
  * stage execution. Every receiving stage MUST validate persisted run/contract pins.
  */
 export type J1VerifiedRun=Readonly<{
- runId:string;issuerName:string;isin:string;exchange:string;
+ runId:string;issuerId:string;securityId:string;dossierId:string;
+ issuerName:string;isin:string;exchange:string;
  dataCutoff:string;profileId:'OROTITAN_V3_1';
  contractSetSha256:string;status:'CREATED'|'REPLAYED';
  persistedReadbackVerified:true;receiptPersisted:true;
@@ -14,19 +15,24 @@ export function buildJ1ResearchHandoff(v:J1VerifiedRun):string{
     v.receiptPersisted!==true||v.stageStarted!==false||
     v.snapshotCreated!==false||v.published!==false||
     v.environment!=='SHADOW_ONLY'||v.productionTouched!==false||
-    !/^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(v.runId)||
+    ![v.runId,v.issuerId,v.securityId,v.dossierId].every(id=>
+     /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i.test(id))||
     !/^[a-f0-9]{64}$/i.test(v.contractSetSha256))
   throw Error('J1_HANDOFF_INVARIANT_FAILED');
  return [
   'OROTITAN — PILOTAGE → RESEARCH — ROUTING HANDOFF',
   'COMPANY = '+v.issuerName,
   'RUN_ID = '+v.runId,
+  'ISSUER_ID = '+v.issuerId,
+  'SECURITY_ID = '+v.securityId,
+  'DOSSIER_ID = '+v.dossierId,
   'ISIN = '+v.isin,
   'EXCHANGE = '+v.exchange,
   'ENTRY_PATH = IMPOSED_COMPANY',
   'CANONICAL_MODE = ANALYZE',
   'RUN_TYPE = INITIAL',
   'RUN_STATUS = CREATED',
+  'BASELINE_SNAPSHOT_ID = NONE',
   'DATA_CUTOFF = '+v.dataCutoff,
   'STAGE = RESEARCH',
   'PROFILE_ID = OROTITAN_V3_1',
