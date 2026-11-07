@@ -1,7 +1,7 @@
 import 'server-only';
 import {createClient} from '@supabase/supabase-js';
 import {pgrstClockSkewRetryFetch} from '@/lib/supabase/pgrst-clock-retry';
-import {isHostedJ2ResearchStageStartEnabled,SHADOW_RESEARCH_ORIGIN} from
+import {isHostedJ2ResearchStageStartEnabled,isHostedJ2ResearchPreviewEnabled,SHADOW_RESEARCH_ORIGIN} from
  './hosted-shadow-research-gate';
 
 const readOnlyPaths=new Set([
@@ -17,8 +17,8 @@ const readOnlyPaths=new Set([
  * NEVER mount this transport on J1/C8 or a non-isolated Vercel project.
  */
 export function getJ2ResearchStageStartShadowClient(){
- if(!isHostedJ2ResearchStageStartEnabled(process.env))
-  throw Error('J2_STAGE_START_SHADOW_CONFIG_DENIED');
+ if(!isHostedJ2ResearchPreviewEnabled(process.env))
+  throw Error('J2_RESEARCH_PREVIEW_CONFIG_DENIED');
  const safeRead=pgrstClockSkewRetryFetch(fetch,SHADOW_RESEARCH_ORIGIN);
  return createClient(SHADOW_RESEARCH_ORIGIN,
   process.env.OROTITAN_SHARED_INBOX_TEST_SERVICE_KEY!,{
@@ -30,9 +30,10 @@ export function getJ2ResearchStageStartShadowClient(){
      (input instanceof Request?input.method:'GET')).toUpperCase();
     const read=(method==='GET'||method==='HEAD')&&
      readOnlyPaths.has(url.pathname);
-    const stageStart=method==='POST'&&url.search===''&&
+    const stageStart=isHostedJ2ResearchStageStartEnabled(process.env)&&
+     method==='POST'&&url.search===''&&
      url.pathname==='/rest/v1/rpc/start_orotitan_stage';
-    if(!isHostedJ2ResearchStageStartEnabled(process.env)||
+    if(!isHostedJ2ResearchPreviewEnabled(process.env)||
        url.origin!==SHADOW_RESEARCH_ORIGIN||
        url.username||url.password||url.hash||
        !(read||stageStart))
