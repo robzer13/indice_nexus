@@ -1,7 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
- isJ1InitialAdmissionCandidate,type RunFactoryDecision,
+ isJ1InitialAdmissionCandidate,matchesJ1ExpectedPersistedRun,
+ matchesJ1RunOutcome,type RunFactoryDecision,
 } from '../lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 
 const validExisting:RunFactoryDecision={
@@ -48,4 +49,24 @@ test('J1 rejects stale, changed, ambiguous and non-INITIAL replay candidates',()
   ];
   for(const decision of denials)
     assert.equal(isJ1InitialAdmissionCandidate(decision),false,decision.status);
+});
+
+test('J1 CREATE and REPLAY expectations fail closed before RPC on changed registry',()=>{
+ const id='204390a1-5cba-4b9c-9821-ca0c7df43eca';
+ const existing=[{run_id:id,run_status:'CREATED'}];
+ assert.equal(matchesJ1ExpectedPersistedRun(id,existing),true);
+ assert.equal(matchesJ1ExpectedPersistedRun(id,[]),false);
+ assert.equal(matchesJ1ExpectedPersistedRun(id,[{...existing[0],run_id:'other'}]),false);
+ assert.equal(matchesJ1ExpectedPersistedRun(id,[{...existing[0],run_status:'ACTIVE'}]),false);
+ assert.equal(matchesJ1ExpectedPersistedRun(id,[...existing,...existing]),false);
+ assert.equal(matchesJ1ExpectedPersistedRun(null,[]),true);
+ assert.equal(matchesJ1ExpectedPersistedRun(null,existing),false);
+});
+test('J1 reply must match explicit replayed ID, not a newly created Run',()=>{
+ const id='204390a1-5cba-4b9c-9821-ca0c7df43eca';
+ assert.equal(matchesJ1RunOutcome(id,id,'REPLAYED'),true);
+ assert.equal(matchesJ1RunOutcome(id,id,'CREATED'),false);
+ assert.equal(matchesJ1RunOutcome(id,'different','REPLAYED'),false);
+ assert.equal(matchesJ1RunOutcome(null,id,'CREATED'),true);
+ assert.equal(matchesJ1RunOutcome(null,id,'REPLAYED'),false);
 });
