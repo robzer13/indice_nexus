@@ -3,7 +3,7 @@
 import {useState} from 'react';
 import type {ContractProfileSummary} from
  '@/lib/orotitan-equity/product/runfactory-contract-profile-v1';
-import type {RunFactoryDecision} from
+import {isJ1InitialAdmissionCandidate,type RunFactoryDecision} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 import type {RunPreflightSeed} from
  '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
@@ -60,10 +60,7 @@ export function RunFactoryDryRunClient({
  }
  async function createRun(){
   if(!answer||committing||running||
-     answer.result.status!=='NEW_RUN_PLAN_CANDIDATE'||
-     answer.result.profileId!=='OROTITAN_V3_1'||
-     !answer.result.issuerId||!answer.result.securityId||
-     !answer.result.dossierId||
+     !isJ1InitialAdmissionCandidate(answer.result)||
      approval!=='GO P0-E SHADOW '+answer.result.isin+' '+answer.result.dataCutoff)
    return;
   setCommitting(true);setError('');setCommitAnswer(null);
@@ -179,17 +176,15 @@ export function RunFactoryDryRunClient({
     cette session, pas de vérification de la base de production.
     Aucune RPC exécutée, aucun run créé, aucune admission.
    </p>
-   {answer.result.status==='NEW_RUN_PLAN_CANDIDATE'&&
-    answer.result.profileId==='OROTITAN_V3_1'&&
-    answer.result.issuerId&&answer.result.securityId&&answer.result.dossierId&&
+   {isJ1InitialAdmissionCandidate(answer.result)&&
     <div className="rounded-lg border border-amber-600 p-4 space-y-3">
      <h3 className="font-bold uppercase text-amber-200">
       ACTION ADMINISTRATEUR REQUISE — GO P0-E SHADOW
      </h3>
      <p className="text-sm text-slate-200">
-      Crée un run INITIAL et rattache son identité dans UNE transaction.
-      Vérifie à nouveau les 15 contrats d’origine. Aucun stage, analyse,
-      snapshot ni publication ne sera lancé.
+      {answer.result.status==='EXISTING_RUN_REUSE_CANDIDATE'?
+       'Réutilise le run INITIAL existant sans doublon, après relecture serveur de son identité et des 15 contrats d’origine. Aucun stage, snapshot ni publication.':
+       'Crée un run INITIAL et rattache son identité dans une transaction, après vérification des 15 contrats d’origine. Aucun stage, snapshot ni publication.'}
      </p>
      <label className="block space-y-1 text-sm text-slate-200">
       <span>Recopier exactement : GO P0-E SHADOW {answer.result.isin} {answer.result.dataCutoff}</span>
@@ -201,7 +196,7 @@ export function RunFactoryDryRunClient({
       disabled={committing||commitAnswer!==null||
        approval!=='GO P0-E SHADOW '+answer.result.isin+' '+answer.result.dataCutoff}
       className="rounded bg-amber-400 px-4 py-3 font-bold text-slate-950 disabled:opacity-50">
-      {committing?'Création et contrôle d’intégrité…':'Créer le run INITIAL SHADOW — V3.1'}
+      {committing?'Admission et contrôle d’intégrité…':answer.result.status==='EXISTING_RUN_REUSE_CANDIDATE'?'Rejouer le run INITIAL SHADOW — V3.1':'Créer le run INITIAL SHADOW — V3.1'}
      </button>
      {commitAnswer&&<div className="space-y-1 rounded border border-emerald-700 p-3 text-sm text-emerald-200">
       <p className="font-bold">RUN {commitAnswer.status} — LECTURE PERSISTANTE VÉRIFIÉE</p>
