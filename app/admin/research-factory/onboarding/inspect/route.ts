@@ -1,9 +1,9 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowOnboardingOnlyEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
-import {getHostedShadowRecoveryClient} from
- '@/lib/orotitan-equity/product/research-inbox-pilot-server';
+import {getP0DOnboardingShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-shadow-server';
 import {assertIsin} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 import {
@@ -43,7 +43,7 @@ function uniqueBy<T>(values:T[],key:(v:T)=>string):T[]{
  return [...map.values()];
 }
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowOnboardingOnlyEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -74,7 +74,7 @@ export async function POST(req:NextRequest){
   if(input.evidenceUrl!==null&&input.evidenceUrl!==undefined&&
      typeof input.evidenceUrl!=='string')throw Error('INVALID_EVIDENCE_URL');
   const started=Date.now();
-  const client=getHostedShadowRecoveryClient();
+  const client=getP0DOnboardingShadowClient();
   // Two distinct predicates discover existing identities even when ISIN
   // conflicts with exchange/ticker. Legacy is ONLY a candidate source.
   const [isinResult,listingResult,legacyResult]=await Promise.all([
