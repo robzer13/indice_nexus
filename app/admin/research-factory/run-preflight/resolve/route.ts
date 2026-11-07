@@ -82,7 +82,7 @@ export async function POST(req:NextRequest){
    }
   }
   const ids=[...new Set(securityRows.map(s=>uuid(s.issuer_id)))];
-  if(ids.length&&issuerRows.length!==ids.length){
+  if(ids.length){
    // Re-read complete issuer identities. Never infer a legal entity by ticker.
    issuerRows=rows(await client.from('issuers').select('issuer_id,display_name')
     .in('issuer_id',ids).limit(LIMIT));
