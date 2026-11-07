@@ -6,6 +6,8 @@ import {getJ1RunFactoryShadowClient} from
  '@/lib/orotitan-equity/product/runfactory-j1-shadow-server';
 import {buildJ1ResearchHandoff} from
  '@/lib/orotitan-equity/product/runfactory-j1-research-handoff-v1';
+import {parseJ1HandoffRunId} from
+ '@/lib/orotitan-equity/product/runfactory-j1-handoff-url-v1';
 
 /** Read-only Registry handoff: Research can retrieve a Run by canonical ID.
  * Never writes a handoff record, starts a stage or grants Research admission.
@@ -45,10 +47,8 @@ export async function GET(req:NextRequest){
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
- const params=new URL(req.url).searchParams;
- const runId=params.get('runId');
- if(!runId||!UUID.test(runId)||[...params.keys()].some(k=>k!=='runId')||
-    params.getAll('runId').length!==1)
+ const runId=parseJ1HandoffRunId(req.url);
+ if(!runId)
   return NextResponse.json({ok:false,error:'J1_HANDOFF_RUN_ID_INVALID'},
    {status:422,headers});
  try{
