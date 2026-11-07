@@ -1,7 +1,7 @@
 'use server';
 
 import { redirect } from 'next/navigation';
-import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedC8ReadOnlyEnabled, isHostedJ1RunFactoryEnabled } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
+import { assertOutsideC8ReadOnly, isC8ReadOnlyRequested, isHostedC8ReadOnlyEnabled, isHostedJ1RunFactoryEnabled, isHostedJ2ResearchPreviewEnabled } from '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { revalidatePath } from 'next/cache';
 import {
   createAdminSession,
@@ -140,6 +140,9 @@ export async function loginAction(formData: FormData): Promise<void> {
   // Preserve the existing C8 owner route for ordinary C8-only deployments.
   if (isHostedJ1RunFactoryEnabled(process.env)) {
     redirect('/admin/research-factory/run-preflight');
+  }
+  if (isHostedJ2ResearchPreviewEnabled(process.env)) {
+    redirect('/admin/research-factory/j2-research/control');
   }
   if (isHostedC8ReadOnlyEnabled(process.env)) {
     redirect('/admin/research-factory/control-tower/c8-owner');
