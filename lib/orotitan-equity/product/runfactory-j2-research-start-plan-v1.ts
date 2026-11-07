@@ -30,6 +30,7 @@ export function buildJ2ResearchStartRpcPlan(
     d.stageStartAuthorized!==false||d.rpcExecuted!==false||
     d.researchExecuted!==false||d.publicationAuthorized!==false||
     d.stage!=='RESEARCH'||!UUID.test(d.runId)||
+    typeof d.expectedRunStateVersion!=='number'||
     !Number.isSafeInteger(d.expectedRunStateVersion)||
     (d.expectedRunStateVersion??0)<2||
     d.stageContractName!==pin.name||
