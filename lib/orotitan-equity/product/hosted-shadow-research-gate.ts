@@ -82,3 +82,23 @@ export function isHostedShadowOnboardingOnlyEnabled(env:HostedShadowEnv):boolean
     env.OROTITAN_J1_RUN_FACTORY_ENABLED === undefined &&
     isHostedShadowConfigurationValid(env);
 }
+
+
+const P0D_IDENTITY_READ_PATHS=new Set([
+  '/rest/v1/issuers',
+  '/rest/v1/securities',
+  '/rest/v1/research_dossiers',
+  '/rest/v1/companies',
+  '/rest/v1/legacy_company_identity_map',
+  '/rest/v1/orotitan_identity_onboarding_receipts_v1',
+]);
+
+/** Pure policy also used in tests. No generic PostgREST writes or Run RPCs. */
+export function isP0DOnboardingTransportAllowed(url:URL, method:string):boolean{
+  if(url.origin!==SHADOW_RESEARCH_ORIGIN||url.username||url.password||
+     url.hash)return false;
+  if((method==='GET'||method==='HEAD')&&P0D_IDENTITY_READ_PATHS.has(url.pathname))
+    return true;
+  return method==='POST'&&url.search===''&&
+    url.pathname==='/rest/v1/rpc/orotitan_onboard_identity_shadow_v1';
+}
