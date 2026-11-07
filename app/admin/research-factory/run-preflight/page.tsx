@@ -11,7 +11,7 @@ import {RunFactoryDryRunClient} from './run-factory-dry-run-client';
 import {parseUntrustedRunPreflightQuery,type RunPreflightQuery} from
  '@/lib/orotitan-equity/product/runfactory-run-preflight-handoff-v1';
 
-export const metadata:Metadata={title:'OroTitan · Run Factory P0-B · Identity SHADOW dry-run'};
+export const metadata:Metadata={title:'OroTitan · J1 SHADOW · Demander une analyse'};
 export const dynamic='force-dynamic';
 
 export default async function RunFactoryIdentityPage({
@@ -29,19 +29,18 @@ export default async function RunFactoryIdentityPage({
     OroTitan · Run Factory P0-B · SHADOW
    </p>
    <h1 className="text-3xl font-semibold text-white">
-    Préflight d’identité, de cutoff et de run existant
+    Demander une analyse — Run Factory J1
    </h1>
    <p className="text-sm text-slate-400">
-    Préparation sans écriture. Réutilise le Registry et les packs existants.
+    Une seule demande : résolution d’identité, plan INITIAL ou réutilisation, GO explicite, transaction et handoff Research.
    </p>
   </header>
   <AdminNav/>
   <section className="rounded-lg border border-amber-700 p-4 text-sm text-amber-100">
-   <strong>Limite de sécurité :</strong> cette page ne crée jamais de run.
-   Le bootstrap officiel V3.0.3 requiert une vérification de production ;
-   il n’est pas exécuté ni simulé comme « production valide » depuis SHADOW.
-   L’exactitude de l’identité, la résolution des contrats et l’autorisation
-   GO doivent être établies avant l’appel contrôlé aux RPC existantes.
+   <strong>SHADOW uniquement :</strong> la résolution et le préflight
+   sont en lecture seule. Une seule autorisation GO explicite est exigée
+   avant la RPC atomique INITIAL. Aucun stage Research ni publication
+   ne démarre automatiquement. PRODUCTION reste hors périmètre.
   </section>
   {seed.isin&&<section className="rounded-lg border border-cyan-700 p-4 text-sm text-slate-200">
     Identité transmise depuis l’onboarding P0-D. Les valeurs sont des
@@ -52,11 +51,11 @@ export default async function RunFactoryIdentityPage({
   <div className="flex flex-wrap gap-6">
    <Link href="/admin/research-factory/onboarding"
     className="text-sm text-cyan-300 underline">
-    P0-C : onboarding canonique (lecture seule)
+    Cas d’exception : revue d’identité P0-C
    </Link>
    <Link href="/admin/research-factory/contracts"
     className="text-sm text-cyan-300 underline">
-    Vérifier les contrats (P0-A)
+    Consulter les contrats épinglés (P0-A)
    </Link>
    <Link href="/admin/research-portability/loreal"
     className="text-sm text-cyan-300 underline">
