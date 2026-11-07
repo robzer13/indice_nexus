@@ -148,7 +148,9 @@ export function RunFactoryDryRunClient({
       report.runIdentityBound!==true)
     throw Error('J1_COMMIT_RECEIPT_MISMATCH');
    const packet=buildJ1ResearchHandoff({
-    runId:report.runId,issuerName:identity.issuerName,
+    runId:report.runId,issuerId:report.issuerId,
+    securityId:report.securityId,dossierId:report.dossierId,
+    issuerName:identity.issuerName,
     isin:identity.isin,exchange:identity.exchange,
     dataCutoff:decision.dataCutoff,profileId:report.profileId,
     contractSetSha256:report.contractSetSha256,status:report.status,
