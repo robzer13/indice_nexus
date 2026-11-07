@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import {redirect} from 'next/navigation';
-import {isHostedJ1RunFactoryEnabled} from
+import {isHostedJ1RunFactoryEnabled,isHostedJ2ResearchPreviewEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import { AdminNav } from '@/components/admin/admin-nav';
 import { MetricCard } from '@/components/metric-card';
@@ -42,6 +42,8 @@ export default async function AdminPage({ searchParams }: { searchParams: Search
   // An authenticated administrator lands directly on the integrated Run entry.
   if(isHostedJ1RunFactoryEnabled(process.env))
     redirect('/admin/research-factory/run-preflight');
+  if(isHostedJ2ResearchPreviewEnabled(process.env))
+    redirect('/admin/research-factory/j2-research/control');
 
   const [companies, syncRuns] = await Promise.all([getCompanyStates(), getRecentMarketSyncRuns(1)]);
   const health = summarizeDataHealth(companies);
