@@ -315,7 +315,7 @@ export function RunFactoryDryRunClient({
    {routingVerified?<p className="text-sm text-emerald-200">
     Liaison vérifiée automatiquement depuis le Registry SHADOW.
     Research pourra récupérer ce Run par son identifiant, sans copier ce texte.
-    Aucune admission Research n'a été lancée.
+    Aucune admission Research n’a été lancée.
    </p>:<div className="space-y-2">
     <p role="status" className="text-sm text-amber-100">
      {routingChecking?'Vérification de la liaison en lecture seule…':
