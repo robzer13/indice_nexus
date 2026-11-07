@@ -12,6 +12,8 @@ import {verifyAllRunFactoryPinnedBytes} from
  '@/lib/orotitan-equity/product/runfactory-p0e-byte-gate';
 import {buildP0EShadowInitialPlan,buildP0EShadowRpcArgs} from
  '@/lib/orotitan-equity/product/runfactory-p0e-shadow-plan-v1';
+import {matchesJ1ExpectedPersistedRun,matchesJ1RunOutcome} from
+ '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -115,14 +117,9 @@ export async function POST(req:NextRequest){
      r.contract_set_sha256!==plan.contractSetSha256))
    fail('P0E_EXISTING_RUN_CONFLICT');
   // The UI must never silently switch between CREATE and REPLAY.
-  if(expectedExistingRunId!==null){
-    if(nonCancelled.length!==1||
-       nonCancelled[0].run_id!==expectedExistingRunId||
-       nonCancelled[0].run_status!=='CREATED')
-      fail('P0E_REPLAY_ONLY_EXPECTED_RUN_CHANGED');
-  }else if(nonCancelled.length!==0){
-    fail('P0E_CREATE_EXPECTED_EMPTY_REGISTRY');
-  }
+  if(!matchesJ1ExpectedPersistedRun(expectedExistingRunId,nonCancelled))
+    fail(expectedExistingRunId===null?'P0E_CREATE_EXPECTED_EMPTY_REGISTRY':
+      'P0E_REPLAY_ONLY_EXPECTED_RUN_CHANGED');
   // Mandatory original content bytes and Git blob hashes. No cached
   // structural-only check is accepted as sufficient admission proof.
   const verified=await verifyAllRunFactoryPinnedBytes('OROTITAN_V3_1');
@@ -146,12 +143,9 @@ export async function POST(req:NextRequest){
      result.snapshot_created!==false||
      result.publication_authorized!==false)
     fail('P0E_RPC_RESULT_INVARIANT_MISMATCH');
-  if(expectedExistingRunId!==null){
-    if(runId!==expectedExistingRunId||result.status!=='REPLAYED')
-      fail('P0E_REPLAY_ONLY_RESULT_MISMATCH');
-  }else if(result.status!=='CREATED'){
-    fail('P0E_CREATE_RESULT_MISMATCH');
-  }
+  if(!matchesJ1RunOutcome(expectedExistingRunId,runId,str(result.status)))
+    fail(expectedExistingRunId===null?'P0E_CREATE_RESULT_MISMATCH':
+      'P0E_REPLAY_ONLY_RESULT_MISMATCH');
   const [runQ,auditQ,eventsQ,stagesQ,snapshotsQ]=await Promise.all([
    client.from('orotitan_runs').select(
     'run_id,issuer_id,security_id,dossier_id,run_type,run_status,current_stage,state_version,data_cutoff,contract_set_sha256,process_version,pilotage_contract_version,baseline_snapshot_id,published_at'
