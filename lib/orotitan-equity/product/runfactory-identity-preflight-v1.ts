@@ -61,6 +61,27 @@ export type RunFactoryDecision=Readonly<{
 }>;
 
 /**
+ * The HTTP command must preserve the user's explicit CREATE versus REPLAY
+ * expectation. A missing or changed existing run is not permission to create.
+ */
+export function matchesJ1ExpectedPersistedRun(
+ expectedExistingRunId:string|null,
+ nonCancelled:readonly Readonly<{run_id:string;run_status:string}>[],
+):boolean{
+ if(expectedExistingRunId===null)return nonCancelled.length===0;
+ return nonCancelled.length===1 &&
+  nonCancelled[0].run_id===expectedExistingRunId &&
+  nonCancelled[0].run_status==='CREATED';
+}
+
+export function matchesJ1RunOutcome(
+ expectedExistingRunId:string|null,runId:string,status:string,
+):boolean{
+ return expectedExistingRunId===null?status==='CREATED':
+   runId===expectedExistingRunId&&status==='REPLAYED';
+}
+
+/**
  * J1 admission is permitted only for a genuinely new INITIAL candidate or
  * replay of an unchanged, CREATED INITIAL run. This only enables the UI
  * command; the server re-reads identity, checks pins and enforces idempotence.

@@ -76,6 +76,7 @@ export function RunFactoryDryRunClient({
      isin:answer.result.isin,
      exchange:answer.result.exchange,
      dataCutoff:answer.result.dataCutoff,
+     expectedExistingRunId:answer.result.existingRunId,
      confirmation:approval,
     }),
    });

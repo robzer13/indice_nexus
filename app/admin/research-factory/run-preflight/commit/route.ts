@@ -12,6 +12,8 @@ import {verifyAllRunFactoryPinnedBytes} from
  '@/lib/orotitan-equity/product/runfactory-p0e-byte-gate';
 import {buildP0EShadowInitialPlan,buildP0EShadowRpcArgs} from
  '@/lib/orotitan-equity/product/runfactory-p0e-shadow-plan-v1';
+import {matchesJ1ExpectedPersistedRun,matchesJ1RunOutcome} from
+ '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 
 export const runtime='nodejs';
 export const dynamic='force-dynamic';
@@ -62,6 +64,9 @@ export async function POST(req:NextRequest){
   const isin=str(p.isin),exchange=str(p.exchange),
    dataCutoff=str(p.dataCutoff);
   const confirmation=str(p.confirmation);
+  // Explicit expectation makes an existing-run replay fail closed on stale identity.
+  const expectedExistingRunId=p.expectedExistingRunId===null?null:
+    checkedUuid(p.expectedExistingRunId);
   if(confirmation!=='GO P0-E SHADOW '+isin.toUpperCase()+' '+dataCutoff)
    fail('P0E_EXPLICIT_GO_REQUIRED');
   if(isolatedJ1){
@@ -111,6 +116,10 @@ export async function POST(req:NextRequest){
     nonCancelled.some(r=>r.creation_idempotency_key!==plan.creationIdempotencyKey||
      r.contract_set_sha256!==plan.contractSetSha256))
    fail('P0E_EXISTING_RUN_CONFLICT');
+  // The UI must never silently switch between CREATE and REPLAY.
+  if(!matchesJ1ExpectedPersistedRun(expectedExistingRunId,nonCancelled))
+    fail(expectedExistingRunId===null?'P0E_CREATE_EXPECTED_EMPTY_REGISTRY':
+      'P0E_REPLAY_ONLY_EXPECTED_RUN_CHANGED');
   // Mandatory original content bytes and Git blob hashes. No cached
   // structural-only check is accepted as sufficient admission proof.
   const verified=await verifyAllRunFactoryPinnedBytes('OROTITAN_V3_1');
@@ -134,6 +143,9 @@ export async function POST(req:NextRequest){
      result.snapshot_created!==false||
      result.publication_authorized!==false)
     fail('P0E_RPC_RESULT_INVARIANT_MISMATCH');
+  if(!matchesJ1RunOutcome(expectedExistingRunId,runId,str(result.status)))
+    fail(expectedExistingRunId===null?'P0E_CREATE_RESULT_MISMATCH':
+      'P0E_REPLAY_ONLY_RESULT_MISMATCH');
   const [runQ,auditQ,eventsQ,stagesQ,snapshotsQ]=await Promise.all([
    client.from('orotitan_runs').select(
     'run_id,issuer_id,security_id,dossier_id,run_type,run_status,current_stage,state_version,data_cutoff,contract_set_sha256,process_version,pilotage_contract_version,baseline_snapshot_id,published_at'
@@ -143,7 +155,7 @@ export async function POST(req:NextRequest){
    ).eq('run_id',runId).single(),
    client.from('orotitan_run_events').select('event_type')
     .eq('run_id',runId).limit(20),
-   client.from('orotitan_run_stages').select('stage_id')
+   client.from('orotitan_run_stages').select('stage_code')
     .eq('run_id',runId).limit(1),
    client.from('research_snapshots').select('snapshot_id')
     .eq('dossier_id',dossierId).limit(1),
