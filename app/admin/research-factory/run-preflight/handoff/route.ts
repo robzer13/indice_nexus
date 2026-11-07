@@ -73,10 +73,10 @@ export async function GET(req:NextRequest){
   if(!SHA.test(hash)||!/^\d{4}-\d{2}-\d{2}$/.test(dataCutoff))fail();
   const pins=record(run.contract_pins);
   if(Object.keys(pins).length!==15)fail();
-  const process=record(pins.process),pilotage=record(pins.pilotage),
+  const processPin=record(pins.process),pilotage=record(pins.pilotage),
     research=record(pins.research_stage);
-  if(process.name!=='OROTITAN_EXECUTION_PROCESS_V3_1_FREEZE_V3.1'||
-     process.version!=='3.1'||
+  if(processPin.name!=='OROTITAN_EXECUTION_PROCESS_V3_1_FREEZE_V3.1'||
+     processPin.version!=='3.1'||
      pilotage.name!=='OROTITAN_PILOTAGE_ORCHESTRATION_CONTRACT_V3_1_FREEZE_V3.1'||
      pilotage.version!=='3.1'||
      research.name!=='OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0'||
