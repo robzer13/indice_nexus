@@ -16,9 +16,12 @@ const UUID=/^[a-f0-9]{8}-(?:[a-f0-9]{4}-){3}[a-f0-9]{12}$/i;
 const fail=():never=>{throw Error('J1_RESOLVE_READ_FAILED');};
 type Row=Record<string,unknown>;
 function rows(result:{data:unknown;error:unknown}):Row[]{
- if(result.error||!Array.isArray(result.data)||result.data.length>=LIMIT)fail();
- if(result.data.some(v=>!v||typeof v!=='object'||Array.isArray(v)))fail();
- return result.data as Row[];
+ const data:unknown=result.data;
+ if(result.error||!Array.isArray(data))fail();
+ const list=data as unknown[];
+ if(list.length>=LIMIT)fail();
+ if(list.some((v:unknown)=>!v||typeof v!=='object'||Array.isArray(v)))fail();
+ return list as Row[];
 }
 function str(x:unknown):string{
  if(typeof x!=='string'||!x)return fail();return x;
@@ -93,7 +96,7 @@ export async function POST(req:NextRequest){
    const issuerName=issuers.get(issuerId);
    if(!issuerName)fail();
    return {securityId:uuid(r.security_id),issuerId,
-    issuerName,isin:str(r.isin),ticker:str(r.ticker),exchange:str(r.exchange)};
+    issuerName:str(issuerName),isin:str(r.isin),ticker:str(r.ticker),exchange:str(r.exchange)};
   });
   const result=resolveJ1CompanyIdentity(normalized,observed);
   return NextResponse.json({ok:true,...result,readOnly:true,environment:'SHADOW_ONLY'},
