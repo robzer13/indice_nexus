@@ -1,9 +1,11 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedJ1RunFactoryEnabled} from
+import {isHostedJ1RunFactoryEnabled,isHostedJ2ResearchPreviewEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
 import {getJ1RunFactoryShadowClient} from
  '@/lib/orotitan-equity/product/runfactory-j1-shadow-server';
+import {getJ2ResearchStageStartShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-j2-stage-start-shadow-server';
 import {buildJ1ResearchHandoff} from
  '@/lib/orotitan-equity/product/runfactory-j1-research-handoff-v1';
 import {parseJ1HandoffRunId} from
@@ -43,7 +45,8 @@ function value<T>(data:{data:T|null;error:unknown}):T{
  return data.data as T;
 }
 export async function GET(req:NextRequest){
- if(!isHostedJ1RunFactoryEnabled(process.env))
+ if(!isHostedJ1RunFactoryEnabled(process.env)&&
+    !isHostedJ2ResearchPreviewEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -52,7 +55,8 @@ export async function GET(req:NextRequest){
   return NextResponse.json({ok:false,error:'J1_HANDOFF_RUN_ID_INVALID'},
    {status:422,headers});
  try{
-  const client=getJ1RunFactoryShadowClient();
+  const client=isHostedJ1RunFactoryEnabled(process.env)?
+   getJ1RunFactoryShadowClient():getJ2ResearchStageStartShadowClient();
   const run=record(value(await client.from('orotitan_runs').select(
    'run_id,issuer_id,security_id,dossier_id,entry_path,canonical_mode,run_type,run_status,current_stage,state_version,data_cutoff,baseline_snapshot_id,contract_pins,contract_set_sha256,creation_idempotency_key,process_version,pilotage_contract_version,published_at'
   ).eq('run_id',runId).single()));
