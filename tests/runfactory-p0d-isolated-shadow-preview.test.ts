@@ -4,6 +4,8 @@ import {
   SHADOW_RESEARCH_ORIGIN,SHADOW_RESEARCH_PROJECT_REF,
   isHostedShadowOnboardingOnlyEnabled,isHostedShadowResearchEnabled,
   isHostedJ1RunFactoryEnabled,isP0DOnboardingTransportAllowed,
+  isHostedShadowOnboardingIsolationRequested,isP0DOnboardingHttpPathAllowed,
+  assertOutsideOnboardingOnly,
 } from '../lib/orotitan-equity/product/hosted-shadow-research-gate';
 
 const configuration={
@@ -64,4 +66,23 @@ test('P0-D transport allows identity reads and only the governed onboarding RPC'
   ])assert.equal(allows(path,method),false,path);
   assert.equal(allows('/rest/v1/securities','GET','https://cugpgtzygqqlxetyeven.supabase.co'),false);
   assert.equal(allows('/rest/v1/securities#x','GET'),false);
+});
+
+test('onboarding-only reservation blocks ordinary application APIs and DB clients',()=>{
+ assert.equal(isHostedShadowOnboardingIsolationRequested(configuration),true);
+ assert.equal(isHostedShadowOnboardingIsolationRequested({}),false);
+ assert.throws(()=>assertOutsideOnboardingOnly(configuration),/P0D_GENERIC_SUPABASE_CLIENT_DENIED/);
+ assert.doesNotThrow(()=>assertOutsideOnboardingOnly({}));
+ for(const path of [
+  '/admin','/admin/research-factory/onboarding',
+  '/admin/research-factory/onboarding/inspect',
+  '/admin/research-factory/onboarding/execute',
+  '/admin/research-factory/onboarding/commit',
+ ])assert.equal(isP0DOnboardingHttpPathAllowed(path),true,path);
+ for(const path of [
+  '/', '/api/sync','/api/health','/admin/companies/new',
+  '/admin/snapshots/new','/admin/research-factory/run-preflight',
+  '/admin/research-factory/onboarding-malicious',
+  '/admin/research-factory/onboarding2',
+ ])assert.equal(isP0DOnboardingHttpPathAllowed(path),false,path);
 });
