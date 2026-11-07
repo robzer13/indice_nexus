@@ -13,10 +13,10 @@ export type J1Resolution=
 export function resolveJ1CompanyIdentity(
   query:string,observed:readonly J1CompanyIdentity[],
 ):J1Resolution{
-  const normalized=query.trim().normalize('NFKC').toLocaleUpperCase('en-US');
+  const normalized=query.trim().normalize('NFKC').replace(/[’‘]/g,"'").toLocaleUpperCase('en-US');
   const isinQuery=/^[A-Z]{2}[A-Z0-9]{9}[0-9]$/.test(normalized);
   const matches=observed.filter(x=>{
-    const name=x.issuerName.trim().normalize('NFKC').toLocaleUpperCase('en-US');
+    const name=x.issuerName.trim().normalize('NFKC').replace(/[’‘]/g,"'").toLocaleUpperCase('en-US');
     return (isinQuery?x.isin.toUpperCase()===normalized:
       x.ticker.toUpperCase()===normalized||
       name===normalized||name.startsWith(normalized+' '));
