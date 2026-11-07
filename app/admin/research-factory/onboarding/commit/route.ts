@@ -1,9 +1,9 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowOnboardingOnlyEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
-import {getHostedShadowRecoveryClient} from
- '@/lib/orotitan-equity/product/research-inbox-pilot-server';
+import {getP0DOnboardingShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-shadow-server';
 import {buildP0DOnboardingCommand,type P0DInput} from
  '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-command-v1';
 
@@ -25,7 +25,7 @@ function uuid(x:unknown):string{
  const y=str(x);if(!UUID.test(y))return fail();return y;
 }
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowOnboardingOnlyEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -42,7 +42,7 @@ export async function POST(req:NextRequest){
  }catch{return NextResponse.json({ok:false,error:'REQUEST_INVALID'},{status:400,headers});}
  try{
   const args=buildP0DOnboardingCommand(body as P0DInput);
-  const client=getHostedShadowRecoveryClient();
+  const client=getP0DOnboardingShadowClient();
   // A single PostgREST RPC invocation is a single PostgreSQL transaction.
   // SQL independently validates checksum, source attestation and all
   // identity collisions under two ordered transaction advisory locks.

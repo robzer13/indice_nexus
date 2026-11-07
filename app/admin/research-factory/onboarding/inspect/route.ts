@@ -1,9 +1,9 @@
 import {NextResponse,type NextRequest} from 'next/server';
 import {requireAdminSession} from '@/lib/auth/admin-session';
-import {isHostedShadowResearchEnabled} from
+import {isHostedShadowOnboardingOnlyEnabled} from
  '@/lib/orotitan-equity/product/hosted-shadow-research-gate';
-import {getHostedShadowRecoveryClient} from
- '@/lib/orotitan-equity/product/research-inbox-pilot-server';
+import {getP0DOnboardingShadowClient} from
+ '@/lib/orotitan-equity/product/runfactory-p0d-onboarding-shadow-server';
 import {assertIsin} from
  '@/lib/orotitan-equity/product/runfactory-identity-preflight-v1';
 import {
@@ -24,8 +24,20 @@ function asString(v:unknown):string{
 function asUuid(v:unknown):string{
  const s=asString(v);if(!UUID.test(s))fail();return s;
 }
-function rows(result:{data:unknown,error:unknown}):Record<string,unknown>[]{
- if(result.error||!Array.isArray(result.data)||result.data.length>=MAX_ROWS)
+function rows(
+ result:{data:unknown,error:unknown,status?:number},source:string,
+):Record<string,unknown>[]{
+ if(result.error){
+  // Only a static source label, HTTP status and PostgREST code are logged.
+  // Never include source credentials, request headers or untrusted error text.
+  const e=result.error as Record<string,unknown>;
+  const rawCode=typeof e.code==='string'?e.code:'';
+  const code=/^[A-Z0-9_]{3,24}$/.test(rawCode)?rawCode:'UNCLASSIFIED';
+  const status=Number.isInteger(result.status)?result.status:null;
+  console.warn('P0C_IDENTITY_READ_FAILED',{source,status,code});
+  throw Error('IDENTITY_REGISTRY_READ_FAILED');
+ }
+ if(!Array.isArray(result.data)||result.data.length>=MAX_ROWS)
   throw Error('IDENTITY_REGISTRY_READ_FAILED');
  if(result.data.some((v:unknown)=>v===null||typeof v!=='object'||Array.isArray(v)))
   throw Error('IDENTITY_REGISTRY_READ_FAILED');
@@ -43,7 +55,7 @@ function uniqueBy<T>(values:T[],key:(v:T)=>string):T[]{
  return [...map.values()];
 }
 export async function POST(req:NextRequest){
- if(!isHostedShadowResearchEnabled(process.env))
+ if(!isHostedShadowOnboardingOnlyEnabled(process.env))
   return NextResponse.json({ok:false,error:'SHADOW_ONLY'},{status:404,headers});
  try{await requireAdminSession();}
  catch{return NextResponse.json({ok:false,error:'UNAUTHORIZED'},{status:401,headers});}
@@ -74,7 +86,7 @@ export async function POST(req:NextRequest){
   if(input.evidenceUrl!==null&&input.evidenceUrl!==undefined&&
      typeof input.evidenceUrl!=='string')throw Error('INVALID_EVIDENCE_URL');
   const started=Date.now();
-  const client=getHostedShadowRecoveryClient();
+  const client=getP0DOnboardingShadowClient();
   // Two distinct predicates discover existing identities even when ISIN
   // conflicts with exchange/ticker. Legacy is ONLY a candidate source.
   const [isinResult,listingResult,legacyResult]=await Promise.all([
@@ -89,13 +101,13 @@ export async function POST(req:NextRequest){
     .ilike('ticker',ticker).ilike('exchange',exchange).limit(MAX_ROWS),
   ]);
   const securities:P0CSecurity[]=uniqueBy(
-   [...rows(isinResult),...rows(listingResult)].map(r=>({
+   [...rows(isinResult,'SECURITY_ISIN'),...rows(listingResult,'SECURITY_LISTING')].map(r=>({
     securityId:asUuid(r.security_id),issuerId:asUuid(r.issuer_id),
     isin:asString(r.isin),ticker:asString(r.ticker),
     exchange:asString(r.exchange),tradingCurrency:asString(r.trading_currency),
     primaryListing:r.primary_listing===null?null:r.primary_listing===true,
    })),r=>r.securityId);
-  const companies=rows(legacyResult).map(r=>({
+  const companies=rows(legacyResult,'LEGACY_COMPANY').map(r=>({
    id:asUuid(r.id),name:asString(r.name),ticker:asString(r.ticker),
    exchange:asString(r.exchange),currency:asString(r.currency),
    active:r.active===true,
@@ -119,7 +131,7 @@ export async function POST(req:NextRequest){
   ];
   const issuerResults=await Promise.all(issuerQueries);
   const issuers:P0CIssuer[]=uniqueBy(
-   issuerResults.flatMap(rows).map(r=>({
+   issuerResults.flatMap(r=>rows(r,'ISSUER')).map(r=>({
     issuerId:asUuid(r.issuer_id),
     displayName:asString(r.display_name),
     legalName:r.legal_name===null?null:asString(r.legal_name),
@@ -138,11 +150,11 @@ export async function POST(req:NextRequest){
   ]);
   const inventory:P0CInventory={
    companies,issuers,securities,
-   dossiers:rows(dossierResult).map(r=>({
+   dossiers:rows(dossierResult,'DOSSIER').map(r=>({
     dossierId:asUuid(r.dossier_id),issuerId:asUuid(r.issuer_id),
     active:r.active===true,
    })),
-   maps:rows(mapResult).map(r=>({
+   maps:rows(mapResult,'LEGACY_MAP').map(r=>({
     legacyCompanyId:asUuid(r.legacy_company_id),
     issuerId:asUuid(r.issuer_id),
     securityId:asUuid(r.security_id),

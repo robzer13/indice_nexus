@@ -66,3 +66,56 @@ export function isHostedJ1RunFactoryEnabled(env: HostedShadowEnv): boolean {
     env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED === '0' &&
     isHostedC8ReadOnlyEnabled(env);
 }
+
+
+/**
+ * Dedicated P0-C/P0-D identity onboarding Preview. No J0/C8 overrides,
+ * no J1 Run creation, and no general hosted Research capability.
+ * The associated Supabase transport grants read-only identity lookup and
+ * precisely one governed onboarding RPC.
+ */
+export function isHostedShadowOnboardingOnlyEnabled(env:HostedShadowEnv):boolean{
+  return !isC8ReadOnlyRequested(env) &&
+    env.OROTITAN_HOSTED_SHADOW_ONBOARDING_ONLY_ENABLED === '1' &&
+    env.OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED === '0' &&
+    env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '0' &&
+    env.OROTITAN_J1_RUN_FACTORY_ENABLED === undefined &&
+    isHostedShadowConfigurationValid(env);
+}
+
+
+const P0D_IDENTITY_READ_PATHS=new Set([
+  '/rest/v1/issuers',
+  '/rest/v1/securities',
+  '/rest/v1/research_dossiers',
+  '/rest/v1/companies',
+  '/rest/v1/legacy_company_identity_map',
+  '/rest/v1/orotitan_identity_onboarding_receipts_v1',
+]);
+
+/** Pure policy also used in tests. No generic PostgREST writes or Run RPCs. */
+export function isP0DOnboardingTransportAllowed(url:URL, method:string):boolean{
+  if(url.origin!==SHADOW_RESEARCH_ORIGIN||url.username||url.password||
+     url.hash)return false;
+  if((method==='GET'||method==='HEAD')&&P0D_IDENTITY_READ_PATHS.has(url.pathname))
+    return true;
+  return method==='POST'&&url.search===''&&
+    url.pathname==='/rest/v1/rpc/orotitan_onboard_identity_shadow_v1';
+}
+
+
+/** Presence is a reservation; malformed onboarding configuration fails closed. */
+export function isHostedShadowOnboardingIsolationRequested(env:HostedShadowEnv):boolean{
+  return env.OROTITAN_HOSTED_SHADOW_ONBOARDING_ONLY_ENABLED!==undefined;
+}
+
+export function isP0DOnboardingHttpPathAllowed(pathname:string):boolean{
+  return pathname==='/admin'||
+    pathname==='/admin/research-factory/onboarding'||
+    pathname.startsWith('/admin/research-factory/onboarding/');
+}
+
+export function assertOutsideOnboardingOnly(env:HostedShadowEnv):void{
+  if(isHostedShadowOnboardingIsolationRequested(env))
+    throw Error('P0D_GENERIC_SUPABASE_CLIENT_DENIED');
+}
