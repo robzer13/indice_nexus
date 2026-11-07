@@ -66,3 +66,19 @@ export function isHostedJ1RunFactoryEnabled(env: HostedShadowEnv): boolean {
     env.OROTITAN_C8_ACCEPTANCE_GO_ENABLED === '0' &&
     isHostedC8ReadOnlyEnabled(env);
 }
+
+
+/**
+ * Dedicated P0-C/P0-D identity onboarding Preview. No J0/C8 overrides,
+ * no J1 Run creation, and no general hosted Research capability.
+ * The associated Supabase transport grants read-only identity lookup and
+ * precisely one governed onboarding RPC.
+ */
+export function isHostedShadowOnboardingOnlyEnabled(env:HostedShadowEnv):boolean{
+  return !isC8ReadOnlyRequested(env) &&
+    env.OROTITAN_HOSTED_SHADOW_ONBOARDING_ONLY_ENABLED === '1' &&
+    env.OROTITAN_HOSTED_SHADOW_RESEARCH_ENABLED === '0' &&
+    env.OROTITAN_SHARED_INBOX_TEST_ENABLED === '0' &&
+    env.OROTITAN_J1_RUN_FACTORY_ENABLED === undefined &&
+    isHostedShadowConfigurationValid(env);
+}
