@@ -519,6 +519,7 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
     'GET admin/research-factory/control-tower/c8-gate/route.ts',
     'GET admin/research-factory/control-tower/c8-gate/owner-session/route.ts',
     'GET admin/research-factory/run-preflight/handoff/route.ts',
+    'GET admin/research-factory/j2-research/preflight/route.ts',
     'GET api/cron/prices/route.ts','GET api/orotitan/runtime/route.ts',
   ].sort());
   assert.deepEqual(actions.sort(),[
