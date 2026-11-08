@@ -30,6 +30,7 @@ bundle_receipt_verify="$root/tests/postgres/registry-v1-bundle-persistence-integ
 successor_cas_verify="$root/tests/postgres/registry-v1-methodology-successor-cas-verify.sql"
 attestation_authority_verify="$root/tests/postgres/registry-v1-persistence-attestation-authority-verify.sql"
 valuation_date_successor_verify="$root/tests/postgres/registry-v1-valuation-date-successor-verify.sql"
+j2_stage_start_verify="$root/tests/postgres/registry-j2-stage-start-verify.sql"
 database="orotitan_registry_v1_$$"
 cleanup() { dropdb --if-exists --force "$database" >/dev/null 2>&1 || true; }
 trap cleanup EXIT
@@ -89,6 +90,8 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_cas_verify"
 # active successor authority forward-only to the V3.1 valuation-date repair.
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry13" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_successor_verify"
+j2_pins="$(python3 -c 'import json; print(json.dumps(json.load(open("'"$root"'/contracts/orotitan-equity/v3/contract-pin-pack-v3/OROTITAN_CONTRACT_PIN_PACK_V3_0_2.json"))["contract_pins"],separators=(",",":")))')"
+psql -X -v ON_ERROR_STOP=1 -v j2_pins="$j2_pins" -d "$database" -f "$j2_stage_start_verify"
 
 # The operational matrix is registry-only and must still leave legacy and
 # canonical identity rows byte-equivalent at the row-json level.

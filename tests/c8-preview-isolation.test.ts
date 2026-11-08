@@ -332,6 +332,7 @@ const postRoutes=[
   'research-factory/onboarding/inspect','research-factory/onboarding/commit',
   'research-factory/run-preflight/resolve','research-factory/run-preflight/inspect',
   'research-factory/run-preflight/commit',
+  'research-factory/j2-research/start',
   'research-factory/contracts/verify','research-factory/control-tower/record',
   'research-factory/control-tower/c5-security-test',
   'research-factory/control-tower/c8-gate/prepare','research-factory/control-tower/c8-gate/accept',
@@ -519,6 +520,7 @@ test('inventory covers every HTTP handler and exported Server Action in app',()=
     'GET admin/research-factory/control-tower/c8-gate/route.ts',
     'GET admin/research-factory/control-tower/c8-gate/owner-session/route.ts',
     'GET admin/research-factory/run-preflight/handoff/route.ts',
+    'GET admin/research-factory/j2-research/preflight/route.ts',
     'GET api/cron/prices/route.ts','GET api/orotitan/runtime/route.ts',
   ].sort());
   assert.deepEqual(actions.sort(),[
