@@ -13,7 +13,7 @@ The validator follows the frozen V2 Deep Dive runtime, V2 Deep Dive Stage Contra
 ### Fundamentals checkpoint
 
 - Require exactly one byte-verified JSON FUNDAMENTALS_LOCK in the active checkpoint/final bundle.
-- Require exact run ID, data cutoff, stage revision, lock self-reference (UUID, version, SHA-256), and current FINAL Research manifest reference.
+- Require exact run ID, data cutoff, stage revision, self-reference (UUID and version only), and current FINAL Research manifest reference. The lock's SHA-256 is bound **externally** by its byte-verified Registry artifact proof; it cannot be embedded in the hashed lock bytes without creating a circular hash dependency. All non-self evidence, taxonomy, description, scoring and Research manifest references still require exact SHA-256.
 - Independently resolve all required taxonomy, business description, scoring-input and evidence-lineage references to uniquely verified artifact registrations.
 - Require exact frozen V2 lock structure; Red Team status COMPLETE, a separately byte-verified FUNDAMENTAL_RED_TEAM_RECORD, and ready_for_valuation=YES.
 - Expose only READY_FOR_VALUATION and FUNDAMENTAL_RED_TEAM_COMPLETE as *formal lock-gate attestations*. The qualitative merits of Red Team conclusions still require professional analytical certification.
