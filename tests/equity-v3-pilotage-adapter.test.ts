@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { LEGACY_RESEARCH_FINAL_OUTPUTS, RESEARCH_V2_FINAL_OUTPUTS } from "../lib/orotitan-equity/v1/research-required-outputs";
 import {
   planPilotageV31,
   type ArtifactProof,
@@ -41,11 +42,7 @@ function stage(code: StageCode, lifecycle: StageState["lifecycle"], previous: nu
     consumedPredecessorRevision: previous, manifest: null, artifacts: [], gates: {} };
 }
 
-const RESEARCH = [
-  "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-  "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-  "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
-];
+const RESEARCH = [...RESEARCH_V2_FINAL_OUTPUTS];
 const DEEP_DIVE = [
   "DEEP_DIVE_REPORT", "EVIDENCE_LEDGER", "CONFLICT_LEDGER", "CALCULATION_LEDGER",
   "MATERIAL_ASSUMPTION_REGISTER", "ANALYTICAL_BLOCK_OUTPUTS", "CROSS_BLOCK_RECONCILIATION_RECORD",
@@ -108,6 +105,19 @@ test("Research FINAL admits Fundamentals but no Valuation shortcut", () => {
   assert.match(value.exactPrompt ?? "", /RESEARCH_SOURCE_MANIFEST/);
   assert.match(value.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST_FINAL/);
 });
+test("Research V2 rejects historical output names instead of treating them as aliases", () => {
+  const s = snapshot("DEEP_DIVE");
+  s.stages.RESEARCH!.artifacts = LEGACY_RESEARCH_FINAL_OUTPUTS.map((type, i) =>
+    artifact("RESEARCH", type, i));
+  blocked(s, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_INPUT_SUFFICIENCY_ASSESSMENT");
+});
+test("Research V2 missing CLASSIFICATION_INPUT_RECORD is a hard stop", () => {
+  const s = snapshot("DEEP_DIVE");
+  s.stages.RESEARCH!.artifacts = s.stages.RESEARCH!.artifacts.filter(a =>
+    a.artifactType !== "CLASSIFICATION_INPUT_RECORD");
+  blocked(s, "ARTIFACT_MISSING_UNVERIFIED_OR_AMBIGUOUS_CLASSIFICATION_INPUT_RECORD");
+});
+
 test("wrong environment is a hard stop", () => {
   const s = snapshot();
   s.environment.projectRef = "awgsurdyvsyolcgpnygh";
