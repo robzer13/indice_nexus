@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { RESEARCH_V2_FINAL_OUTPUTS } from "../lib/orotitan-equity/v1/research-required-outputs";
 import {
   computeContractSetSha256,
   validateStageManifest,
@@ -231,4 +232,50 @@ test("M12 FINAL Research manifest missing required output is rejected", () => {
   const result = validateStageManifest(manifest, context);
   assert.equal(result.ok, false);
   if (!result.ok) assert.match(result.errors.join("\n"), /missing required authoritative output EVIDENCE_LEDGER/);
+});
+
+function v2Final(): { manifest: Record<string, unknown>; ctx: StageManifestValidationContext } {
+  const manifest = validFinal();
+  const pins = manifest.contract_pins as typeof contractPins;
+  pins.research_stage.name = "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0";
+  pins.research_stage.version = "2.0";
+  pins.research_stage.locator.path =
+    "contracts/orotitan-equity/v2/OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0.md";
+  manifest.stage_contract = pins.research_stage;
+  manifest.contract_set_sha256 = computeContractSetSha256(pins);
+  manifest.output_artifacts = RESEARCH_V2_FINAL_OUTPUTS.map((type, index) =>
+    outputArtifact(type, index + 1));
+  return {
+    manifest,
+    ctx: {
+      ...context,
+      contractSetSha256: manifest.contract_set_sha256 as string,
+      stageContractName: pins.research_stage.name,
+      stageContractVersion: pins.research_stage.version,
+    },
+  };
+}
+
+test("M13 Research V2 FINAL with exact seven contractual outputs is admitted", () => {
+  const { manifest, ctx } = v2Final();
+  const result = validateStageManifest(manifest, ctx);
+  assert.equal(result.ok, true, !result.ok ? result.errors.join("\n") : "");
+  if (result.ok) assert.equal(result.downstreamAdmission, true);
+});
+
+test("M14 Research V2 FINAL rejects legacy names even if outputs are authoritative", () => {
+  const { manifest, ctx } = v2Final();
+  manifest.output_artifacts = (validFinal().output_artifacts as Array<Record<string, unknown>>);
+  const result = validateStageManifest(manifest, ctx);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /missing required authoritative output INPUT_SUFFICIENCY_ASSESSMENT/);
+});
+
+test("M15 Research V2 FINAL rejects missing classification input", () => {
+  const { manifest, ctx } = v2Final();
+  const outputs = manifest.output_artifacts as Array<Record<string, unknown>>;
+  manifest.output_artifacts = outputs.filter(x => x.artifact_type !== "CLASSIFICATION_INPUT_RECORD");
+  const result = validateStageManifest(manifest, ctx);
+  assert.equal(result.ok, false);
+  if (!result.ok) assert.match(result.errors.join("\n"), /missing required authoritative output CLASSIFICATION_INPUT_RECORD/);
 });
