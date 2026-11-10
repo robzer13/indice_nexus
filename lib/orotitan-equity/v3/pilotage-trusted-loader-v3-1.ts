@@ -431,15 +431,36 @@ function extractCompany(issuer: IdentityRow): string {
  * Authenticated caller only; port may NOT be supplied by a user-controlled client.
  * Throws on any incomplete/non-authoritative evidence. No SQL writes occur.
  */
-export async function loadTrustedPilotageSnapshot(input: {
+export const SCHNEIDER_SHADOW_RUN_ID = "db00ce77-04eb-492b-a76b-164ecbe9ccfe" as const;
+
+export type TrustedPilotageSnapshotInput = {
   port: TrustedPilotagePort;
   environment: RuntimeEnvironmentObservation;
   runId: string;
   expectedRunStateVersion: number;
   expectedCurrentStageStateVersion: number;
-}): Promise<PilotageSnapshot> {
+};
+
+function assertSchneiderShadowEnvironment(environment: RuntimeEnvironmentObservation): void {
+  check(environment.projectRef === "awgsurdyvsyolcgpnygh" &&
+    environment.projectName === "orotitan-vnext-shadow" &&
+    environment.region === "eu-west-3" &&
+    environment.status === "ACTIVE_HEALTHY", "WRONG_SHADOW_ENVIRONMENT");
+}
+
+async function loadTrustedPilotageSnapshotCore(
+  input: TrustedPilotageSnapshotInput,
+  target: "PRODUCTION" | "SCHNEIDER_SHADOW_READ_ONLY",
+): Promise<PilotageSnapshot> {
   assertRuntimeBootstrapIntegrity();
-  assertProductionEnvironment(input.environment);
+  if (target === "PRODUCTION") {
+    assertProductionEnvironment(input.environment);
+  } else {
+    // Only the exact Schneider Research run is eligible for this isolated
+    // read-only preflight. Never expand the production runtime allowlist.
+    assertSchneiderShadowEnvironment(input.environment);
+    check(input.runId === SCHNEIDER_SHADOW_RUN_ID, "SHADOW_RUN_NOT_ALLOWLISTED");
+  }
   check(UUID.test(input.runId), "RUN_ID_INVALID");
   const [run, stages, artifacts] = await Promise.all([
     input.port.getRun(input.runId), input.port.getStages(input.runId),
@@ -617,6 +638,20 @@ export async function loadTrustedPilotageSnapshot(input: {
     expectedRunStateVersion: input.expectedRunStateVersion,
     expectedCurrentStageStateVersion: input.expectedCurrentStageStateVersion,
   };
+}
+
+/** Unchanged production-only entry point; SHADOW is always refused here. */
+export async function loadTrustedPilotageSnapshot(
+  input: TrustedPilotageSnapshotInput,
+): Promise<PilotageSnapshot> {
+  return loadTrustedPilotageSnapshotCore(input, "PRODUCTION");
+}
+
+/** Narrow read-only Schneider SHADOW entry point; never calls the production planner. */
+export async function loadTrustedSchneiderShadowSnapshot(
+  input: TrustedPilotageSnapshotInput,
+): Promise<PilotageSnapshot> {
+  return loadTrustedPilotageSnapshotCore(input, "SCHNEIDER_SHADOW_READ_ONLY");
 }
 
 export async function loadTrustedPilotageDecision(
