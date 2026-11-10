@@ -7,6 +7,7 @@
  */
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
+import { requiredResearchFinalOutputs } from "../v1/research-required-outputs";
 import {
   type ArtifactProof, type ManifestProof, type PilotageSnapshot,
   type StageCode, type StageState, planPilotageV31,
@@ -76,10 +77,7 @@ const GATE: Record<StageCode, string> = {
   DEEP_DIVE: "READY_FOR_INTEGRATION",
   INTEGRATION: "READY_TO_PUBLISH",
 };
-const REQUIRED: Record<StageCode, readonly string[]> = {
-  RESEARCH: ["RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-    "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK"],
+const REQUIRED: Record<Exclude<StageCode, "RESEARCH">, readonly string[]> = {
   DEEP_DIVE: ["DEEP_DIVE_REPORT", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
     "CALCULATION_LEDGER", "MATERIAL_ASSUMPTION_REGISTER", "ANALYTICAL_BLOCK_OUTPUTS",
     "CROSS_BLOCK_RECONCILIATION_RECORD", "RED_TEAM_PREMORTEM_RECORD",
@@ -336,9 +334,12 @@ async function verifyStage(
   };
   state.manifest = m;
   state.artifacts = verified;
+  const requiredOutputs = row.stage_code === "RESEARCH"
+    ? requiredResearchFinalOutputs(row.stage_contract_name, row.stage_contract_version)
+    : REQUIRED[row.stage_code];
   if (kind === "FINAL" && row.lifecycle_status === "COMPLETE" &&
     row.handoff_gate_state === "YES" && json.critical_blockers.length === 0 &&
-    REQUIRED[row.stage_code].every(type => verified.some(a => a.artifactType === type))) {
+    requiredOutputs.every(type => verified.some(a => a.artifactType === type))) {
     state.gates.FINAL_OUTPUTS_VERIFIED = true;
     if (row.stage_code === "RESEARCH") state.gates.READY_FOR_DEEP_DIVE = true;
     if (row.stage_code === "DEEP_DIVE") state.gates.READY_FOR_INTEGRATION = true;
