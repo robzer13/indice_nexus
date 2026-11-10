@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import { LEGACY_RESEARCH_FINAL_OUTPUTS, RESEARCH_V2_FINAL_OUTPUTS } from "../lib/orotitan-equity/v1/research-required-outputs";
 import {
   loadTrustedPilotageDecision, TrustedLoaderError,
   type ArtifactRow, type IdentityRow, type RunRow, type StageRow, type TrustedPilotagePort,
@@ -17,11 +18,7 @@ const COMMIT = "b".repeat(40);
 const REPOSITORY = "example/immutable-private-store";
 const ENV = { projectRef: "cugpgtzygqqlxetyeven", projectName: "orotitan-screener",
   region: "eu-west-3", status: "ACTIVE_HEALTHY" };
-const RESEARCH_OUTPUTS = [
-  "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-  "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-  "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
-];
+const RESEARCH_OUTPUTS = [...RESEARCH_V2_FINAL_OUTPUTS];
 
 function digest(bytes: Uint8Array, kind: "sha256" | "sha1"): string {
   if (kind === "sha256") return createHash(kind).update(bytes).digest("hex");
@@ -67,7 +64,7 @@ type Fixture = {
   mutateOnSecondRead: boolean;
 };
 
-function fixture(deepDive = false): Fixture {
+function fixture(deepDive = false, researchOutputs: readonly string[] = RESEARCH_OUTPUTS): Fixture {
   const run: RunRow = {
     run_id: IDS.run, issuer_id: IDS.issuer, security_id: IDS.security,
     dossier_id: IDS.dossier, baseline_snapshot_id: null, canonical_mode: "ANALYZE", run_type: "INITIAL",
@@ -82,7 +79,7 @@ function fixture(deepDive = false): Fixture {
   const bytes = new Map<string, Uint8Array>();
   if (deepDive) {
     const manifestId = "77777777-7777-4777-8777-00000000008f";
-    RESEARCH_OUTPUTS.forEach((name, i) => {
+    researchOutputs.forEach((name, i) => {
       const buffer = Buffer.from("Fixture Research " + name, "utf8");
       const row = artifact("RESEARCH", name, 80 + i, buffer, manifestId);
       artifacts.push(row);
@@ -144,6 +141,20 @@ function fixture(deepDive = false): Fixture {
   return output;
 }
 
+function rewriteSealedManifest(f: Fixture, mutate: (manifest: Record<string, unknown>) => void): void {
+  const row = f.artifacts.find(a => a.artifact_type === "RESEARCH_STAGE_MANIFEST");
+  assert.ok(row);
+  const original = f.bytes.get(row.artifact_id);
+  assert.ok(original);
+  const manifest = JSON.parse(Buffer.from(original).toString("utf8")) as Record<string, unknown>;
+  mutate(manifest);
+  const bytes = Buffer.from(JSON.stringify(manifest), "utf8");
+  row.size_bytes = bytes.byteLength;
+  row.content_sha256 = digest(bytes, "sha256");
+  row.github_blob_sha = digest(bytes, "sha1");
+  f.bytes.set(row.artifact_id, bytes);
+}
+
 async function load(f: Fixture) {
   return loadTrustedPilotageDecision({
     port: f.port, environment: ENV, runId: IDS.run,
@@ -165,9 +176,61 @@ test("byte-verified FINAL manifest and canonical outputs admit Fundamentals", as
   assert.equal(decision.outcome, "HANDOFF");
   assert.equal(decision.phase, "FUNDAMENTALS");
   assert.match(decision.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST/);
-  assert.match(decision.exactPrompt ?? "", /ANALYSIS_INPUT_LOCK/);
+  assert.match(decision.exactPrompt ?? "", /CLASSIFICATION_INPUT_RECORD/);
   assert.equal(decision.publicationAuthorized, false);
 });
+test("trusted loader rejects legacy Research names under the exact V2 pin", async () => {
+  await fails(fixture(true, LEGACY_RESEARCH_FINAL_OUTPUTS), "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
+});
+
+test("verified Research V2 FINAL admits known closeout annotation and parent kind hint", async () => {
+  const f = fixture(true);
+  rewriteSealedManifest(f, manifest => {
+    manifest.parent_manifests = [{
+      manifest_id: "77777777-7777-4777-8777-00000000008e",
+      version: 1, content_sha256: "a".repeat(64), manifest_kind: "CHECKPOINT",
+    }];
+    manifest.research_finalization_basis = {
+      condition: "PERSISTED_PRIVATE_GITHUB_EXACT_BYTES_AND_ATOMIC_SHADOW_REGISTRY_FINALIZATION",
+      evidence_history: { baseline_unchanged: 48, excluded_candidates: 53, new_research_inputs: 32 },
+      no_deep_dive_or_valuation_or_scoring: true,
+      official_2025_urd_residual_risk_hierarchy: "UNKNOWN",
+      pre_stage_finalization_admission: "LOCALLY_CORROBORATED",
+      ptc_equity_and_financing_final_actuals: "UNKNOWN",
+      research_input_coverage: "SUFFICIENT_WITH_LIMITATIONS",
+      source: "ISOLATED_TEST_FIXTURE",
+    };
+  });
+  const decision = await load(f);
+  assert.equal(decision.outcome, "HANDOFF");
+  assert.equal(decision.phase, "FUNDAMENTALS");
+});
+
+test("unknown FINAL schema extensions remain rejected", async () => {
+  const f = fixture(true);
+  rewriteSealedManifest(f, manifest => { manifest.unrecognized_extension = { x: 1 }; });
+  await fails(f, "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
+});
+
+test("malformed Research V2 closeout annotation fails closed", async () => {
+  const f = fixture(true);
+  rewriteSealedManifest(f, manifest => {
+    manifest.research_finalization_basis = { unexpected_field: "no" };
+  });
+  await fails(f, "RESEARCH_V2_FINALIZATION_METADATA_INVALID");
+});
+
+test("unrecognized parent kind fails closed", async () => {
+  const f = fixture(true);
+  rewriteSealedManifest(f, manifest => {
+    manifest.parent_manifests = [{
+      manifest_id: "77777777-7777-4777-8777-00000000008e",
+      version: 1, content_sha256: "a".repeat(64), manifest_kind: "UNAUTHORIZED",
+    }];
+  });
+  await fails(f, "RESEARCH_V2_PARENT_KIND_INVALID");
+});
+
 test("tampered output bytes fail SHA-256", async () => {
   const f = fixture(true);
   f.bytes.set(f.artifacts[0].artifact_id, Buffer.from("tampered output"));

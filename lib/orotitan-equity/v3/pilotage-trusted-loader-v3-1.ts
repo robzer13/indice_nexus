@@ -7,6 +7,7 @@
  */
 import { createHash } from "node:crypto";
 import { isDeepStrictEqual } from "node:util";
+import { requiredResearchFinalOutputs } from "../v1/research-required-outputs";
 import {
   type ArtifactProof, type ManifestProof, type PilotageSnapshot,
   type StageCode, type StageState, planPilotageV31,
@@ -76,10 +77,7 @@ const GATE: Record<StageCode, string> = {
   DEEP_DIVE: "READY_FOR_INTEGRATION",
   INTEGRATION: "READY_TO_PUBLISH",
 };
-const REQUIRED: Record<StageCode, readonly string[]> = {
-  RESEARCH: ["RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-    "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK"],
+const REQUIRED: Record<Exclude<StageCode, "RESEARCH">, readonly string[]> = {
   DEEP_DIVE: ["DEEP_DIVE_REPORT", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
     "CALCULATION_LEDGER", "MATERIAL_ASSUMPTION_REGISTER", "ANALYTICAL_BLOCK_OUTPUTS",
     "CROSS_BLOCK_RECONCILIATION_RECORD", "RED_TEAM_PREMORTEM_RECORD",
@@ -181,7 +179,52 @@ function schemaCompatibleManifest(json: Record<string, unknown>): Record<string,
     }
     projected[name] = { ...pin, locator };
   }
-  return { ...json, contract_pins: projected };
+  const view: Record<string, unknown> = { ...json, contract_pins: projected };
+  const stageContract = json.stage_contract;
+  const isResearchV2Final = json.stage === "RESEARCH" && json.manifest_kind === "FINAL" &&
+    isObject(stageContract) &&
+    stageContract.name === "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0" &&
+    stageContract.version === "2.0";
+
+  // A completed Research V2 may carry an informational closeout annotation.
+  // Validate its exact known shape and strip it ONLY from the schema view:
+  // immutable bytes and the original JSON remain untouched and verified.
+  if (Object.prototype.hasOwnProperty.call(json, "research_finalization_basis")) {
+    const basis = json.research_finalization_basis;
+    const fields = [
+      "condition", "official_2025_urd_residual_risk_hierarchy",
+      "pre_stage_finalization_admission", "ptc_equity_and_financing_final_actuals",
+      "research_input_coverage", "source",
+    ];
+    const counters = isObject(basis) ? basis.evidence_history : null;
+    check(isResearchV2Final && isObject(basis) &&
+      Object.keys(basis).length === fields.length + 2 &&
+      fields.every(field => typeof basis[field] === "string" && basis[field].length > 0) &&
+      basis.no_deep_dive_or_valuation_or_scoring === true &&
+      isObject(counters) && Object.keys(counters).length === 3 &&
+      ["baseline_unchanged", "excluded_candidates", "new_research_inputs"]
+        .every(field => Number.isSafeInteger(counters[field]) && Number(counters[field]) >= 0),
+      "RESEARCH_V2_FINALIZATION_METADATA_INVALID");
+    delete view.research_finalization_basis;
+  }
+
+  // The sealed Research V2 FINAL can label a predecessor manifest's kind.
+  // The V1 JSON schema describes the same reference without that hint.
+  // Do not accept extra parent fields, and never rewrite persisted lineage.
+  if (Array.isArray(json.parent_manifests) &&
+      json.parent_manifests.some(parent => isObject(parent) && "manifest_kind" in parent)) {
+    check(isResearchV2Final, "RESEARCH_V2_PARENT_KIND_NOT_ADMITTED");
+    view.parent_manifests = json.parent_manifests.map(parent => {
+      if (!isObject(parent) || !("manifest_kind" in parent)) return parent;
+      check(Object.keys(parent).length === 4 &&
+        (parent.manifest_kind === "CHECKPOINT" || parent.manifest_kind === "FINAL"),
+        "RESEARCH_V2_PARENT_KIND_INVALID");
+      const { manifest_kind: ignoredKind, ...schemaReference } = parent;
+      void ignoredKind;
+      return schemaReference;
+    });
+  }
+  return view;
 }
 
 function expectedStageContext(run: RunRow, st: StageRow): StageManifestValidationContext {
@@ -336,9 +379,12 @@ async function verifyStage(
   };
   state.manifest = m;
   state.artifacts = verified;
+  const requiredOutputs = row.stage_code === "RESEARCH"
+    ? requiredResearchFinalOutputs(row.stage_contract_name, row.stage_contract_version)
+    : REQUIRED[row.stage_code];
   if (kind === "FINAL" && row.lifecycle_status === "COMPLETE" &&
     row.handoff_gate_state === "YES" && json.critical_blockers.length === 0 &&
-    REQUIRED[row.stage_code].every(type => verified.some(a => a.artifactType === type))) {
+    requiredOutputs.every(type => verified.some(a => a.artifactType === type))) {
     state.gates.FINAL_OUTPUTS_VERIFIED = true;
     if (row.stage_code === "RESEARCH") state.gates.READY_FOR_DEEP_DIVE = true;
     if (row.stage_code === "DEEP_DIVE") state.gates.READY_FOR_INTEGRATION = true;
@@ -385,15 +431,36 @@ function extractCompany(issuer: IdentityRow): string {
  * Authenticated caller only; port may NOT be supplied by a user-controlled client.
  * Throws on any incomplete/non-authoritative evidence. No SQL writes occur.
  */
-export async function loadTrustedPilotageSnapshot(input: {
+export const SCHNEIDER_SHADOW_RUN_ID = "db00ce77-04eb-492b-a76b-164ecbe9ccfe" as const;
+
+export type TrustedPilotageSnapshotInput = {
   port: TrustedPilotagePort;
   environment: RuntimeEnvironmentObservation;
   runId: string;
   expectedRunStateVersion: number;
   expectedCurrentStageStateVersion: number;
-}): Promise<PilotageSnapshot> {
+};
+
+function assertSchneiderShadowEnvironment(environment: RuntimeEnvironmentObservation): void {
+  check(environment.projectRef === "awgsurdyvsyolcgpnygh" &&
+    environment.projectName === "orotitan-vnext-shadow" &&
+    environment.region === "eu-west-3" &&
+    environment.status === "ACTIVE_HEALTHY", "WRONG_SHADOW_ENVIRONMENT");
+}
+
+async function loadTrustedPilotageSnapshotCore(
+  input: TrustedPilotageSnapshotInput,
+  target: "PRODUCTION" | "SCHNEIDER_SHADOW_READ_ONLY",
+): Promise<PilotageSnapshot> {
   assertRuntimeBootstrapIntegrity();
-  assertProductionEnvironment(input.environment);
+  if (target === "PRODUCTION") {
+    assertProductionEnvironment(input.environment);
+  } else {
+    // Only the exact Schneider Research run is eligible for this isolated
+    // read-only preflight. Never expand the production runtime allowlist.
+    assertSchneiderShadowEnvironment(input.environment);
+    check(input.runId === SCHNEIDER_SHADOW_RUN_ID, "SHADOW_RUN_NOT_ALLOWLISTED");
+  }
   check(UUID.test(input.runId), "RUN_ID_INVALID");
   const [run, stages, artifacts] = await Promise.all([
     input.port.getRun(input.runId), input.port.getStages(input.runId),
@@ -571,6 +638,20 @@ export async function loadTrustedPilotageSnapshot(input: {
     expectedRunStateVersion: input.expectedRunStateVersion,
     expectedCurrentStageStateVersion: input.expectedCurrentStageStateVersion,
   };
+}
+
+/** Unchanged production-only entry point; SHADOW is always refused here. */
+export async function loadTrustedPilotageSnapshot(
+  input: TrustedPilotageSnapshotInput,
+): Promise<PilotageSnapshot> {
+  return loadTrustedPilotageSnapshotCore(input, "PRODUCTION");
+}
+
+/** Narrow read-only Schneider SHADOW entry point; never calls the production planner. */
+export async function loadTrustedSchneiderShadowSnapshot(
+  input: TrustedPilotageSnapshotInput,
+): Promise<PilotageSnapshot> {
+  return loadTrustedPilotageSnapshotCore(input, "SCHNEIDER_SHADOW_READ_ONLY");
 }
 
 export async function loadTrustedPilotageDecision(

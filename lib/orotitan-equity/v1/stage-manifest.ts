@@ -1,6 +1,7 @@
 import Ajv2020, { type ErrorObject } from "ajv/dist/2020";
 import addFormats from "ajv-formats";
 import { createHash } from "node:crypto";
+import { requiredResearchFinalOutputs } from "./research-required-outputs";
 import schemaJson from "../../../contracts/orotitan-equity/v1/OROTITAN_STAGE_MANIFEST_SCHEMA_V1.json";
 
 type JsonObject = Record<string, unknown>;
@@ -77,16 +78,7 @@ export function computeContractSetSha256(contractPins: unknown): string {
   return sha256Hex(Buffer.from(`${lines.join("\n")}\n`, "utf8"));
 }
 
-const requiredFinalOutputs: Record<StageCode, readonly string[]> = {
-  RESEARCH: [
-    "RESEARCH_SOURCE_MANIFEST",
-    "EVIDENCE_LEDGER",
-    "CONFLICT_LEDGER",
-    "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER",
-    "RESEARCH_GAP_REGISTER",
-    "DD_INPUT_SUFFICIENCY_RECORD",
-    "ANALYSIS_INPUT_LOCK",
-  ],
+const requiredFinalOutputs: Record<Exclude<StageCode, "RESEARCH">, readonly string[]> = {
   DEEP_DIVE: [
     "DEEP_DIVE_REPORT",
     "EVIDENCE_LEDGER",
@@ -204,7 +196,10 @@ function contractErrors(manifest: JsonObject, context: StageManifestValidationCo
         .map((output) => output.artifact_type)
         .filter((value): value is string => typeof value === "string"),
     );
-    for (const requiredType of requiredFinalOutputs[context.stage]) {
+    const requiredTypes = context.stage === "RESEARCH"
+      ? requiredResearchFinalOutputs(context.stageContractName, context.stageContractVersion)
+      : requiredFinalOutputs[context.stage];
+    for (const requiredType of requiredTypes) {
       if (!authoritativeTypes.has(requiredType)) {
         errors.push(`FINAL ${context.stage} manifest missing required authoritative output ${requiredType}`);
       }
