@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
+import { LEGACY_RESEARCH_FINAL_OUTPUTS, RESEARCH_V2_FINAL_OUTPUTS } from "../lib/orotitan-equity/v1/research-required-outputs";
 import {
   loadTrustedPilotageDecision, TrustedLoaderError,
   type ArtifactRow, type IdentityRow, type RunRow, type StageRow, type TrustedPilotagePort,
@@ -17,11 +18,7 @@ const COMMIT = "b".repeat(40);
 const REPOSITORY = "example/immutable-private-store";
 const ENV = { projectRef: "cugpgtzygqqlxetyeven", projectName: "orotitan-screener",
   region: "eu-west-3", status: "ACTIVE_HEALTHY" };
-const RESEARCH_OUTPUTS = [
-  "RESEARCH_SOURCE_MANIFEST", "EVIDENCE_LEDGER", "CONFLICT_LEDGER",
-  "MATERIAL_RESEARCH_HYPOTHESIS_REGISTER", "RESEARCH_GAP_REGISTER",
-  "DD_INPUT_SUFFICIENCY_RECORD", "ANALYSIS_INPUT_LOCK",
-];
+const RESEARCH_OUTPUTS = [...RESEARCH_V2_FINAL_OUTPUTS];
 
 function digest(bytes: Uint8Array, kind: "sha256" | "sha1"): string {
   if (kind === "sha256") return createHash(kind).update(bytes).digest("hex");
@@ -67,7 +64,7 @@ type Fixture = {
   mutateOnSecondRead: boolean;
 };
 
-function fixture(deepDive = false): Fixture {
+function fixture(deepDive = false, researchOutputs: readonly string[] = RESEARCH_OUTPUTS): Fixture {
   const run: RunRow = {
     run_id: IDS.run, issuer_id: IDS.issuer, security_id: IDS.security,
     dossier_id: IDS.dossier, baseline_snapshot_id: null, canonical_mode: "ANALYZE", run_type: "INITIAL",
@@ -82,7 +79,7 @@ function fixture(deepDive = false): Fixture {
   const bytes = new Map<string, Uint8Array>();
   if (deepDive) {
     const manifestId = "77777777-7777-4777-8777-00000000008f";
-    RESEARCH_OUTPUTS.forEach((name, i) => {
+    researchOutputs.forEach((name, i) => {
       const buffer = Buffer.from("Fixture Research " + name, "utf8");
       const row = artifact("RESEARCH", name, 80 + i, buffer, manifestId);
       artifacts.push(row);
@@ -165,9 +162,13 @@ test("byte-verified FINAL manifest and canonical outputs admit Fundamentals", as
   assert.equal(decision.outcome, "HANDOFF");
   assert.equal(decision.phase, "FUNDAMENTALS");
   assert.match(decision.exactPrompt ?? "", /RESEARCH_STAGE_MANIFEST/);
-  assert.match(decision.exactPrompt ?? "", /ANALYSIS_INPUT_LOCK/);
+  assert.match(decision.exactPrompt ?? "", /CLASSIFICATION_INPUT_RECORD/);
   assert.equal(decision.publicationAuthorized, false);
 });
+test("trusted loader rejects legacy Research names under the exact V2 pin", async () => {
+  await fails(fixture(true, LEGACY_RESEARCH_FINAL_OUTPUTS), "MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
+});
+
 test("tampered output bytes fail SHA-256", async () => {
   const f = fixture(true);
   f.bytes.set(f.artifacts[0].artifact_id, Buffer.from("tampered output"));
