@@ -179,7 +179,52 @@ function schemaCompatibleManifest(json: Record<string, unknown>): Record<string,
     }
     projected[name] = { ...pin, locator };
   }
-  return { ...json, contract_pins: projected };
+  const view: Record<string, unknown> = { ...json, contract_pins: projected };
+  const stageContract = json.stage_contract;
+  const isResearchV2Final = json.stage === "RESEARCH" && json.manifest_kind === "FINAL" &&
+    isObject(stageContract) &&
+    stageContract.name === "OROTITAN_RESEARCH_STAGE_CONTRACT_V2_FREEZE_V2.0" &&
+    stageContract.version === "2.0";
+
+  // A completed Research V2 may carry an informational closeout annotation.
+  // Validate its exact known shape and strip it ONLY from the schema view:
+  // immutable bytes and the original JSON remain untouched and verified.
+  if (Object.prototype.hasOwnProperty.call(json, "research_finalization_basis")) {
+    const basis = json.research_finalization_basis;
+    const fields = [
+      "condition", "official_2025_urd_residual_risk_hierarchy",
+      "pre_stage_finalization_admission", "ptc_equity_and_financing_final_actuals",
+      "research_input_coverage", "source",
+    ];
+    const counters = isObject(basis) ? basis.evidence_history : null;
+    check(isResearchV2Final && isObject(basis) &&
+      Object.keys(basis).length === fields.length + 2 &&
+      fields.every(field => typeof basis[field] === "string" && basis[field].length > 0) &&
+      basis.no_deep_dive_or_valuation_or_scoring === true &&
+      isObject(counters) && Object.keys(counters).length === 3 &&
+      ["baseline_unchanged", "excluded_candidates", "new_research_inputs"]
+        .every(field => Number.isSafeInteger(counters[field]) && Number(counters[field]) >= 0),
+      "RESEARCH_V2_FINALIZATION_METADATA_INVALID");
+    delete view.research_finalization_basis;
+  }
+
+  // The sealed Research V2 FINAL can label a predecessor manifest's kind.
+  // The V1 JSON schema describes the same reference without that hint.
+  // Do not accept extra parent fields, and never rewrite persisted lineage.
+  if (Array.isArray(json.parent_manifests) &&
+      json.parent_manifests.some(parent => isObject(parent) && "manifest_kind" in parent)) {
+    check(isResearchV2Final, "RESEARCH_V2_PARENT_KIND_NOT_ADMITTED");
+    view.parent_manifests = json.parent_manifests.map(parent => {
+      if (!isObject(parent) || !("manifest_kind" in parent)) return parent;
+      check(Object.keys(parent).length === 4 &&
+        (parent.manifest_kind === "CHECKPOINT" || parent.manifest_kind === "FINAL"),
+        "RESEARCH_V2_PARENT_KIND_INVALID");
+      const { manifest_kind: ignoredKind, ...schemaReference } = parent;
+      void ignoredKind;
+      return schemaReference;
+    });
+  }
+  return view;
 }
 
 function expectedStageContext(run: RunRow, st: StageRow): StageManifestValidationContext {
