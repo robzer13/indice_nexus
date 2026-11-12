@@ -123,6 +123,7 @@ export function projectV31CheckpointForSchema(input: {
       ["artifact_id", "version", "relation_type"]) &&
       parent.relation_type === "SUPERSEDES_PRIOR_CHECKPOINT" &&
       typeof parent.artifact_id === "string" &&
+      (!isDeepDiveCheckpoint || parent.artifact_id === activeManifest.artifact_id) &&
       Number.isSafeInteger(parent.version) && Number(parent.version) > 0 &&
       parent.version === activeManifest.version - 1,
       "CHECKPOINT_PARENT_SHAPE_INVALID");

@@ -252,3 +252,44 @@ test("wrong Research manifest kind rejected",async()=>{
   rehash(f,f.currentManifest,f.current);
   await fails(f,"DEEP_DIVE_PARENT_KIND_INVALID");
 });
+
+test("same-version unrelated checkpoint ID cannot impersonate the preceding logical manifest", async () => {
+  const f = fixture(2);
+  const oldKey = key(f.checkpointV1);
+  const oldBody = JSON.parse(f.data.get(oldKey)!.toString("utf8"));
+  const unrelatedId = id(251);
+  assert.notEqual(f.checkpointV1.artifact_id, unrelatedId);
+  f.data.delete(oldKey);
+  f.checkpointV1.artifact_id = unrelatedId;
+  oldBody.manifest_id = unrelatedId;
+  rehash(f, f.checkpointV1, oldBody);
+  (f.current.parent_manifests as Record<string, unknown>[])[0].artifact_id = unrelatedId;
+  rehash(f, f.currentManifest, f.current);
+  await fails(f, "CHECKPOINT_PARENT_SHAPE_INVALID");
+});
+
+test("previous checkpoint with NON_AUTHORITATIVE authority state is rejected", async () => {
+  const f = fixture(2);
+  f.checkpointV1.authority_state = "NON_AUTHORITATIVE";
+  await fails(f, "CHECKPOINT_PARENT_AUTHORITY_INVALID");
+});
+
+test("previous checkpoint with AUTHORITATIVE authority state is rejected", async () => {
+  const f = fixture(2);
+  f.checkpointV1.authority_state = "AUTHORITATIVE";
+  await fails(f, "CHECKPOINT_PARENT_AUTHORITY_INVALID");
+});
+
+test("superseded previous checkpoint is admissible after V2 is active", async () => {
+  const f = fixture(2);
+  assert.equal(f.checkpointV1.authority_state, "SUPERSEDED");
+  const verified = await load(f);
+  assert.equal(verified.stages.DEEP_DIVE?.manifest?.version, 2);
+});
+
+test("temporarily CHECKPOINT-authoritative prior V1 still requires exact cryptographic lineage", async () => {
+  const f = fixture(2);
+  f.checkpointV1.authority_state = "CHECKPOINT";
+  const verified = await load(f);
+  assert.equal(verified.stages.DEEP_DIVE?.manifest?.version, 2);
+});

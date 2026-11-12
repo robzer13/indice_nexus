@@ -358,6 +358,7 @@ async function verifyStage(
         check(manifestRow.version > 1 &&
           Object.keys(parent).length === 3 &&
           parent.artifact_id === parentId &&
+          parentId === manifestRow.artifact_id &&
           parent.relation_type === "SUPERSEDES_PRIOR_CHECKPOINT" &&
           version === manifestRow.version - 1,
           "CHECKPOINT_PARENT_SHAPE_INVALID");
@@ -368,6 +369,11 @@ async function verifyStage(
         a.artifact_status === "SEALED");
       check(matches.length === 1, "CHECKPOINT_PARENT_REFERENCE_UNVERIFIED");
       const previous = matches[0];
+      if (isDeepDiveCheckpoint) {
+        check(previous.authority_state === "CHECKPOINT" ||
+          previous.authority_state === "SUPERSEDED",
+          "CHECKPOINT_PARENT_AUTHORITY_INVALID");
+      }
       const previousBytes = await port.readImmutableBytes(previous);
       const previousProof = bytesProof(previous, previousBytes);
       const previousJson = readJson(previousBytes);
