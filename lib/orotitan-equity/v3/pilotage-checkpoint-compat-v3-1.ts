@@ -84,11 +84,35 @@ export function projectV31CheckpointForSchema(input: {
   }
 
   const rawParents = manifest.parent_manifests;
-  guard(Array.isArray(rawParents) && rawParents.length <= 1,
+  const isDeepDiveCheckpoint = stage.stage_code === "DEEP_DIVE";
+  const expectedDeepDiveParents = activeManifest.version === 1 ? 1 : 2;
+  guard(Array.isArray(rawParents) && (isDeepDiveCheckpoint
+    ? rawParents.length === expectedDeepDiveParents : rawParents.length <= 1),
     "CHECKPOINT_PARENT_SHAPE_INVALID");
+  let researchFinalCount = 0;
+  let previousCheckpointCount = 0;
   const projectedParents = rawParents.map(parent => {
+    if (isDeepDiveCheckpoint && object(parent) &&
+        Object.prototype.hasOwnProperty.call(parent, "manifest_id")) {
+      // schemaCompatibleManifest has stripped only the independently checked
+      // Research FINAL kind hint from the validation view, not raw bytes.
+      guard(Object.keys(parent).length === 3 &&
+        exactKeys(parent, ["manifest_id", "version", "content_sha256"]),
+        "CHECKPOINT_PARENT_SHAPE_INVALID");
+      const exact = verifiedParents.filter(p => p.artifactId === parent.manifest_id &&
+        p.version === parent.version && p.sha256 === parent.content_sha256 &&
+        p.runId === run.run_id && p.stageCode === "RESEARCH");
+      guard(exact.length === 1, "CHECKPOINT_RESEARCH_FINAL_UNVERIFIED");
+      researchFinalCount++;
+      return {
+        manifest_id: exact[0].artifactId,
+        version: exact[0].version,
+        content_sha256: exact[0].sha256,
+      };
+    }
     if (object(parent) && Object.prototype.hasOwnProperty.call(parent, "manifest_id")) {
-      guard(exactKeys(parent, ["manifest_id", "version", "content_sha256"]) &&
+      guard(!isDeepDiveCheckpoint &&
+        exactKeys(parent, ["manifest_id", "version", "content_sha256"]) &&
         verifiedParents.some(p => p.artifactId === parent.manifest_id &&
           p.version === parent.version && p.sha256 === parent.content_sha256 &&
           p.runId === run.run_id && p.stageCode === stage.stage_code),
@@ -102,11 +126,15 @@ export function projectV31CheckpointForSchema(input: {
       Number.isSafeInteger(parent.version) && Number(parent.version) > 0 &&
       parent.version === activeManifest.version - 1,
       "CHECKPOINT_PARENT_SHAPE_INVALID");
+    if (isDeepDiveCheckpoint) {
+      guard(activeManifest.version > 1, "CHECKPOINT_PARENT_SHAPE_INVALID");
+    }
     const exact = verifiedParents.filter(p =>
       p.artifactId === parent.artifact_id &&
       p.version === parent.version &&
       p.runId === run.run_id && p.stageCode === stage.stage_code);
     guard(exact.length === 1, "CHECKPOINT_PARENT_REFERENCE_UNVERIFIED");
+    previousCheckpointCount++;
     return {
       manifest_id: exact[0].artifactId,
       version: exact[0].version,
@@ -115,6 +143,11 @@ export function projectV31CheckpointForSchema(input: {
   });
   guard(verifiedParents.length === rawParents.length,
     "CHECKPOINT_PARENT_PROOF_COUNT_MISMATCH");
+  if (isDeepDiveCheckpoint) {
+    guard(researchFinalCount === 1 &&
+      previousCheckpointCount === (activeManifest.version === 1 ? 0 : 1),
+      "CHECKPOINT_PARENT_LINEAGES_INCOMPLETE");
+  }
 
   return {
     ...manifest,

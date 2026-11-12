@@ -208,17 +208,26 @@ function schemaCompatibleManifest(json: Record<string, unknown>): Record<string,
     delete view.research_finalization_basis;
   }
 
-  // The sealed Research V2 FINAL can label a predecessor manifest's kind.
-  // The V1 JSON schema describes the same reference without that hint.
-  // Do not accept extra parent fields, and never rewrite persisted lineage.
+  // Research V2 FINAL and Deep Dive V3.1 CHECKPOINT may carry a checked
+  // parent-kind hint that the frozen V1 JSON schema does not model.
+  // Only the schema projection drops that hint; raw immutable bytes and
+  // both Deep Dive parent chains are checked separately, never rewritten.
+  const isDeepDiveV31Checkpoint = json.stage === "DEEP_DIVE" &&
+    json.manifest_kind === "CHECKPOINT" &&
+    json.process_version === "3.1" && json.pilotage_contract_version === "3.1";
   if (Array.isArray(json.parent_manifests) &&
       json.parent_manifests.some(parent => isObject(parent) && "manifest_kind" in parent)) {
-    check(isResearchV2Final, "RESEARCH_V2_PARENT_KIND_NOT_ADMITTED");
+    check(isResearchV2Final || isDeepDiveV31Checkpoint,
+      "RESEARCH_V2_PARENT_KIND_NOT_ADMITTED");
     view.parent_manifests = json.parent_manifests.map(parent => {
       if (!isObject(parent) || !("manifest_kind" in parent)) return parent;
       check(Object.keys(parent).length === 4 &&
-        (parent.manifest_kind === "CHECKPOINT" || parent.manifest_kind === "FINAL"),
-        "RESEARCH_V2_PARENT_KIND_INVALID");
+        (isDeepDiveV31Checkpoint
+          ? parent.manifest_kind === "FINAL"
+          : parent.manifest_kind === "CHECKPOINT" || parent.manifest_kind === "FINAL"),
+        isDeepDiveV31Checkpoint
+          ? "DEEP_DIVE_PARENT_KIND_INVALID"
+          : "RESEARCH_V2_PARENT_KIND_INVALID");
       const { manifest_kind: ignoredKind, ...schemaReference } = parent;
       void ignoredKind;
       return schemaReference;
@@ -298,11 +307,46 @@ async function verifyStage(
   if (kind === "CHECKPOINT" && run.process_version === "3.1" &&
       run.pilotage_contract_version === "3.1") {
     const parentRefs = json.parent_manifests;
-    check(Array.isArray(parentRefs) && parentRefs.length <= 1,
-      "CHECKPOINT_PARENT_SHAPE_INVALID");
+    const isDeepDiveCheckpoint = row.stage_code === "DEEP_DIVE";
+    // Deep Dive V1 consumes Research FINAL; V2+ must ALSO prove its exact
+    // preceding same-stage checkpoint. No other stage's parent rules change.
+    const requiredDeepDiveParents = manifestRow.version === 1 ? 1 : 2;
+    check(Array.isArray(parentRefs) && (isDeepDiveCheckpoint
+      ? parentRefs.length === requiredDeepDiveParents : parentRefs.length <= 1),
+    "CHECKPOINT_PARENT_SHAPE_INVALID");
     const parents: VerifiedCheckpointParent[] = [];
+    let researchFinalParents = 0;
+    let previousCheckpointParents = 0;
     for (const parent of parentRefs) {
       check(isObject(parent), "CHECKPOINT_PARENT_SHAPE_INVALID");
+      if (isDeepDiveCheckpoint && parent.manifest_kind === "FINAL") {
+        check(Object.keys(parent).length === 4 &&
+          ["manifest_id", "version", "content_sha256", "manifest_kind"]
+            .every(k => Object.prototype.hasOwnProperty.call(parent, k)) &&
+          typeof parent.manifest_id === "string" && UUID.test(parent.manifest_id) &&
+          Number.isSafeInteger(parent.version) && Number(parent.version) > 0 &&
+          typeof parent.content_sha256 === "string" && SHA256.test(parent.content_sha256),
+        "CHECKPOINT_PARENT_SHAPE_INVALID");
+        const matches = artifacts.filter(a => a.run_id === run.run_id &&
+          a.stage_code === "RESEARCH" && a.artifact_type === "RESEARCH_STAGE_MANIFEST" &&
+          a.artifact_id === parent.manifest_id && a.version === parent.version &&
+          a.authority_class === "AUTHORITATIVE_STAGE_OUTPUT" &&
+          a.authority_state === "AUTHORITATIVE" && a.artifact_status === "SEALED");
+        check(matches.length === 1, "CHECKPOINT_RESEARCH_FINAL_UNVERIFIED");
+        const parentBytes = await port.readImmutableBytes(matches[0]);
+        const proof = bytesProof(matches[0], parentBytes);
+        check(proof.sha256 === parent.content_sha256,
+          "CHECKPOINT_RESEARCH_FINAL_HASH_MISMATCH");
+        const source = readJson(parentBytes);
+        check(source.manifest_id === parent.manifest_id &&
+          source.manifest_kind === "FINAL" && source.stage === "RESEARCH" &&
+          source.run_id === run.run_id && source.stage_revision === row.stage_revision,
+          "CHECKPOINT_RESEARCH_FINAL_IDENTITY_INVALID");
+        parents.push({artifactId: proof.artifactId, version: proof.version,
+          sha256: proof.sha256, runId: proof.runId, stageCode: proof.stageCode});
+        researchFinalParents++;
+        continue;
+      }
       const parentId = typeof parent.artifact_id === "string" ? parent.artifact_id :
         typeof parent.manifest_id === "string" ? parent.manifest_id : null;
       const version = parent.version;
@@ -310,6 +354,14 @@ async function verifyStage(
         Number.isSafeInteger(version) && Number(version) > 0 &&
         Number(version) < manifestRow.version,
         "CHECKPOINT_PARENT_SHAPE_INVALID");
+      if (isDeepDiveCheckpoint) {
+        check(manifestRow.version > 1 &&
+          Object.keys(parent).length === 3 &&
+          parent.artifact_id === parentId &&
+          parent.relation_type === "SUPERSEDES_PRIOR_CHECKPOINT" &&
+          version === manifestRow.version - 1,
+          "CHECKPOINT_PARENT_SHAPE_INVALID");
+      }
       const matches = matching.filter(a => a.artifact_id === parentId &&
         a.version === version && a.artifact_type === row.stage_code + "_STAGE_MANIFEST" &&
         a.authority_class === "CHECKPOINT_STAGE_OUTPUT" &&
@@ -330,6 +382,12 @@ async function verifyStage(
         sha256: previousProof.sha256,
         runId: previousProof.runId, stageCode: previousProof.stageCode,
       });
+      previousCheckpointParents++;
+    }
+    if (isDeepDiveCheckpoint) {
+      check(researchFinalParents === 1 &&
+        previousCheckpointParents === (manifestRow.version === 1 ? 0 : 1),
+        "CHECKPOINT_PARENT_LINEAGES_INCOMPLETE");
     }
     try {
       validationView = projectV31CheckpointForSchema({
