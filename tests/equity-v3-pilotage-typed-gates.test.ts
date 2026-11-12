@@ -43,7 +43,7 @@ function fixture(includeValuation = false) {
   const fundamentalsProof = proof("DEEP_DIVE", "FUNDAMENTALS_LOCK", 10);
   const lock = {
     lock_type: "FUNDAMENTALS_LOCK",
-    artifact: ref(fundamentalsProof), run_id: RUN, data_cutoff: DATE,
+    artifact: { artifact_id: fundamentalsProof.artifactId, version: fundamentalsProof.version }, run_id: RUN, data_cutoff: DATE,
     stage_revision: 1, research_final_manifest: ref(researchFinal),
     evidence_lineage: [ref(research[0].proof)], red_team_status: "COMPLETE",
     taxonomy_record: ref(taxonomy.proof),

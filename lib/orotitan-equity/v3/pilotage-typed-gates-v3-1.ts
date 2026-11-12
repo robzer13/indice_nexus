@@ -65,14 +65,25 @@ function requireRef(ref: unknown, verified: readonly VerifiedContent[], code: st
 function requireSelf(ref: unknown, p: ArtifactProof, code: string): void {
   need(validRef(ref) && same(ref, p), code);
 }
+function requireFundamentalsSelf(ref: unknown, p: ArtifactProof, code: string): void {
+  // Only the Fundamentals lock's *own* JSON reference omits the self-hash.
+  // The trusted loader independently hashes the persisted bytes and binds their
+  // SHA-256 to the Registry proof. All cross-artifact refs remain hash-exact.
+  need(p.available && p.bytesVerified && SHA.test(p.sha256) &&
+    obj(ref) && Object.keys(ref).length === 2 &&
+    typeof ref.artifact_id === "string" && UUID.test(ref.artifact_id) &&
+    ref.artifact_id === p.artifactId &&
+    Number.isSafeInteger(ref.version) && ref.version === p.version, code);
+}
 function one(verified: readonly VerifiedContent[], artifactType: string): VerifiedContent | null {
   const a = verified.filter(x => x.proof.artifactType === artifactType);
   need(a.length <= 1, "DUPLICATE_VERIFIED_" + artifactType);
   return a[0] ?? null;
 }
 function verifyLineage(v: Record<string, unknown>, self: ArtifactProof,
-  verified: readonly VerifiedContent[], fields: readonly string[], code: string): void {
-  requireSelf(v.artifact, self, code + "_SELF_REF_INVALID");
+  verified: readonly VerifiedContent[], fields: readonly string[], code: string,
+  selfCheck: typeof requireSelf = requireSelf): void {
+  selfCheck(v.artifact, self, code + "_SELF_REF_INVALID");
   for (const f of fields) requireRef(v[f], verified, code + "_" + f + "_REF_INVALID");
   need(Array.isArray(v.evidence_lineage) && v.evidence_lineage.length > 0,
     code + "_EVIDENCE_LINEAGE_MISSING");
@@ -102,7 +113,8 @@ export function verifyDeepDiveTypedLocks(input: {
   requireSelf(f.research_final_manifest, input.researchFinalManifest,
     "FUNDAMENTALS_RESEARCH_MANIFEST_NOT_CURRENT");
   verifyLineage(f, fund.proof, all,
-    ["taxonomy_record", "business_description_artifact", "scoring_inputs_artifact"], "FUNDAMENTALS");
+    ["taxonomy_record", "business_description_artifact", "scoring_inputs_artifact"],
+    "FUNDAMENTALS", requireFundamentalsSelf);
   need(f.red_team_status === "COMPLETE", "FUNDAMENTALS_RED_TEAM_NOT_COMPLETE");
   need(Array.isArray(f.limitations) && Array.isArray(f.invalidation_triggers),
     "FUNDAMENTALS_LOCK_LIMITATIONS_INVALID");

@@ -7,7 +7,8 @@
   ],
   "git": {
     "deploymentEnabled": {
-      "main": false
+      "main": false,
+      "fix/orotitan-fundamentals-lock-selfref-sha-20261110": false
     }
   }
 }
