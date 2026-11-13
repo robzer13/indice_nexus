@@ -385,24 +385,6 @@ class Series:
 
     def subtract(self, other: Any) -> "Series":
         return self._binary_op(other, lambda a, b: a - b)
-    def pct_change(self) -> "Series":
-        changes: List[float] = []
-        previous = None
-        for value in self._data:
-            if value is None or (isinstance(value, float) and math.isnan(value)) or previous is None:
-                changes.append(math.nan)
-            else:
-                try:
-                    changes.append((value - previous) / previous)
-                except ZeroDivisionError:
-                    changes.append(math.nan)
-            if value is not None and not (isinstance(value, float) and math.isnan(value)):
-                previous = value
-        return Series(changes, self.index, self.dtype)
-
-    def rolling(self, window: int) -> "_RollingSeries":
-        return _RollingSeries(self, window)
-
     def __len__(self) -> int:
         return len(self._data)
 
