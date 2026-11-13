@@ -1,0 +1,38 @@
+name: OroTitan Schneider C07 public offline safety checks
+
+# Independent gate for PR #451. No secrets, private artifacts, Supabase, or network.
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/orotitan-schneider-c07-private-preflight.yml"
+      - ".github/workflows/orotitan-schneider-c07-public-offline-check.yml"
+      - "scripts/orotitan-equity/schneider-c07-readonly-collect.py"
+      - "scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql"
+      - "tests/orotitan-equity/test_schneider_c07_preflight.py"
+      - "docs/orotitan-equity/SCHNEIDER_C07_PHASE_B_PROTECTED_SETUP.md"
+
+permissions:
+  contents: read
+
+jobs:
+  c07-offline-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout without saved credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Python compile checks
+        run: |
+          python3 -m py_compile scripts/orotitan-equity/schneider-c07-readonly-collect.py
+          python3 -m py_compile tests/orotitan-equity/test_schneider_c07_preflight.py
+      - name: C07 offline fail-closed invariants (no secrets, no Supabase)
+        run: |
+          python3 -m unittest discover -s tests/orotitan-equity -p 'test_schneider_c07_preflight.py' -v
+      - name: Scope declaration
+        run: |
+          echo 'C07_PUBLIC_OFFLINE_SAFETY_ONLY=PASS'
+          echo 'C07_PRIVATE_ATTESTATION=NOT_EXECUTED'
+          echo 'SCHNEIDER_PG17_RPC_REPLAY=NOT_EXECUTED'
+          echo 'FUNDAMENTALS_V2=NO_GO'

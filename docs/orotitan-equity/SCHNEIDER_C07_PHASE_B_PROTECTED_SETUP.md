@@ -10,6 +10,10 @@
 - This manual workflow only checks the 19 historical objects, 3 local candidate objects, and collects a read-only Registry snapshot. It **does not** replay the Schneider checkpoint, commit CAS 7/2 to 8/3, run the V3.1 trusted loader after local COMMIT, merge, deploy, or grant authority to V2.
 - The existing C07 public CI already tests three synthetic PostgreSQL CAS rejection cases; it does not access Schneider's private bytes.
 
+## Independent public, no-secret qualification
+
+The separate `.github/workflows/orotitan-schneider-c07-public-offline-check.yml` runs on PR modifications to the C07 collector/workflow/SQL. It checks deterministic fail-closed cases, SHA-256/Git blob proof logic, pinned GitHub GET behavior, and read-only workflow/SQL constraints **without loading any private artifact or secret**. This is distinct from the unrelated Windows Python regression CI, which remains visible and **FAIL** until [issue #453](https://github.com/robzer13/indice_nexus/issues/453) is resolved. An offline PASS is not private attestation, not a PostgreSQL Schneider replay, and not a V2 authorization.
+
 ## Important GitHub workflow activation limitation
 
 GitHub exposes `workflow_dispatch` only for workflows present on the repository default branch.
@@ -20,7 +24,7 @@ The YAML in the standalone Phase B PR **cannot be manually triggered yet**. It m
 In `robzer13/indice_nexus` → Settings → Environments, create
 `orotitan-schneider-c07-readonly`. Configure:
 
-1. **Required reviewers**: at least one trusted reviewer, and disable self-review where available.
+1. **Solo-owner mode**: if no independent reviewer exists, leave **Required reviewers** off; this is a weaker safeguard than dual approval. Keep manual dispatch, `main`-only branch policy, environment-scoped secrets, and strict read-only permissions. Disable administrator bypass where supported. Never present this as an independent human review.
 2. **Deployment branches/tags**: selected branch **`main` only**. Do not allow PR branches, arbitrary branches or tags.
 3. Environment secrets (all three stored in GitHub UI, never pasted in code/chat):
    - `C07_PRIVATE_READ_TOKEN`: fine-grained token with repository access **only** to the private `robzer13/real-orotitan` and `Contents: Read`. No `Contents: Write`, administration or actions write permission.
