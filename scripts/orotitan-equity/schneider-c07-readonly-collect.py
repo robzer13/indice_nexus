@@ -34,8 +34,15 @@ CANDIDATES = (
 SHA40 = re.compile(r"[0-9a-f]{40}\Z")
 SHA64 = re.compile(r"[0-9a-f]{64}\Z")
 NAME = re.compile(r"[A-Z0-9_]+\Z")
+APPROVED_C03_SHA256 = "8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928"
 MAX_ZIP = 400_000
 MAX_OBJECT = 300_000
+MAX_TOTAL_UNCOMPRESSED = 900_000
+EXPECTED_MEMBERS = frozenset((
+    SOURCE_PROOF,
+    SIMULATED,
+    *(f"c03_local_simulation/candidate_exports/{name}" for name in CANDIDATES),
+))
 
 def fail(message: str) -> None:
     raise RuntimeError("BLOCKED_C07: " + message)
@@ -77,6 +84,34 @@ def github_get(token: str, path: str, commit: str) -> bytes:
         pass
     return payload
 
+def read_c03_members(bundle: bytes) -> dict[str, bytes]:
+    """Require exact ZIP membership and cap expansion before parsing any JSON."""
+    try:
+        with zipfile.ZipFile(io.BytesIO(bundle)) as archive:
+            infos = archive.infolist()
+            names = [info.filename for info in infos]
+            if len(names) != len(EXPECTED_MEMBERS) or set(names) != EXPECTED_MEMBERS:
+                fail("unexpected C03 ZIP members or duplicates")
+            if (any(info.is_dir() or info.file_size > MAX_OBJECT
+                    or info.flag_bits & 0x01 for info in infos)
+                    or sum(info.file_size for info in infos) > MAX_TOTAL_UNCOMPRESSED):
+                fail("C03 ZIP uncompressed size / encryption policy violation")
+            output: dict[str, bytes] = {}
+            for info in infos:
+                with archive.open(info, "r") as reader:
+                    raw = reader.read(MAX_OBJECT + 1)
+                    if (len(raw) != info.file_size or len(raw) > MAX_OBJECT
+                            or reader.read(1)):
+                        fail("C03 ZIP member exceeded bounded read")
+                    output[info.filename] = raw
+            return output
+    except (zipfile.BadZipFile, zipfile.LargeZipFile, EOFError,
+            OSError, RuntimeError, ValueError, NotImplementedError) as error:
+        if isinstance(error, RuntimeError) and str(error).startswith("BLOCKED_C07:"):
+            raise
+        fail("invalid or unsupported C03 ZIP")
+
+
 def main() -> None:
     if (os.getenv("GITHUB_EVENT_NAME") != "workflow_dispatch"
             or os.getenv("GITHUB_REF") != "refs/heads/main"
@@ -87,36 +122,36 @@ def main() -> None:
     bundle_sha = os.getenv("C07_BUNDLE_SHA256", "")
     if not token or not encoded or not SHA64.fullmatch(bundle_sha):
         fail("required protected credentials / bundle pin missing")
+    if bundle_sha != APPROVED_C03_SHA256:
+        fail("unapproved C03 bundle fingerprint")
     try:
         bundle = base64.b64decode(encoded, validate=True)
     except ValueError:
         fail("invalid protected bundle encoding")
-    if len(bundle) > MAX_ZIP or sha256(bundle).hexdigest() != bundle_sha:
+    if len(bundle) > MAX_ZIP or sha256(bundle).hexdigest() != APPROVED_C03_SHA256:
         fail("protected bundle SHA-256 mismatch")
     temp = Path(os.environ["RUNNER_TEMP"]) / "orotitan-schneider-c07-private"
     temp.mkdir(mode=0o700, parents=True, exist_ok=False)
-    with zipfile.ZipFile(io.BytesIO(bundle)) as z:
-        if len(z.namelist()) != 5:
-            fail("expected minimal five-member C03 bundle")
-        evidence = json.loads(z.read(SOURCE_PROOF))
-        simulation = json.loads(z.read(SIMULATED))
-        originals = evidence.get("original_bytes_verified", [])
-        if (evidence.get("run_id") != RUN or simulation.get("run_id") != RUN
-                or simulation.get("status") != "SIMULATION_ONLY_NOT_PERSISTED"
-                or len(originals) != 19
-                or Counter(x.get("stage") for x in originals)
-                   != {"RESEARCH": 8, "DEEP_DIVE": 11}):
-            fail("historical fixture set or simulation state is inconsistent")
-        ids = {(x["artifact_id"], x["version"]) for x in originals}
-        if len(ids) != 19:
-            fail("duplicate historical identity/version")
-        candidate_proofs = []
-        for name in CANDIDATES:
-            raw = z.read("c03_local_simulation/candidate_exports/" + name)
-            expected = simulation["artifacts"][name]
-            data = prove(raw, expected, "candidate")
-            (temp / name).write_bytes(raw)
-            candidate_proofs.append({"artifact_type": name, **data, "authority": "LOCAL_SIMULATION_ONLY"})
+    members = read_c03_members(bundle)
+    evidence = json.loads(members[SOURCE_PROOF])
+    simulation = json.loads(members[SIMULATED])
+    originals = evidence.get("original_bytes_verified", [])
+    if (evidence.get("run_id") != RUN or simulation.get("run_id") != RUN
+            or simulation.get("status") != "SIMULATION_ONLY_NOT_PERSISTED"
+            or len(originals) != 19
+            or Counter(x.get("stage") for x in originals)
+               != {"RESEARCH": 8, "DEEP_DIVE": 11}):
+        fail("historical fixture set or simulation state is inconsistent")
+    ids = {(x["artifact_id"], x["version"]) for x in originals}
+    if len(ids) != 19:
+        fail("duplicate historical identity/version")
+    candidate_proofs = []
+    for name in CANDIDATES:
+        raw = members["c03_local_simulation/candidate_exports/" + name]
+        expected = simulation["artifacts"][name]
+        data = prove(raw, expected, "candidate")
+        (temp / name).write_bytes(raw)
+        candidate_proofs.append({"artifact_type": name, **data, "authority": "LOCAL_SIMULATION_ONLY"})
     historical_dir = temp / "historical"
     historical_dir.mkdir(mode=0o700)
     historical_proofs = []

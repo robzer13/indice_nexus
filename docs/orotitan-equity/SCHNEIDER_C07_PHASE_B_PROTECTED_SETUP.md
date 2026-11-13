@@ -40,9 +40,15 @@ The workflow fixes the server to `db.awgsurdyvsyolcgpnygh.supabase.co:5432`, dat
 GitHub → Actions → **OroTitan Schneider C07 protected private preflight** → Run workflow:
 - Branch: `main`
 - `confirm`: `C07_READONLY`
-- `bundle_sha256`: `8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928`
+- `bundle_sha256`: `8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928` (must match the exact reviewed constant in both the workflow and collector; a self-supplied matching hash of a different bundle is refused)
 
 Approve the environment only after checking that the workflow code on `main` is the reviewed version and required protection remains enabled.
+
+## Fail-closed baseline and bounded input policy
+
+- The C03 ZIP must have the exact five reviewed filenames and the approved SHA-256. Each decompressed file is capped at 300,000 bytes and the combined uncompressed payload at 900,000 bytes; unexpected or duplicate members, unsupported/encrypted ZIP files, or mismatched byte lengths fail.
+- Before exporting, the PostgreSQL read-only transaction checks the **actual RLS-visible** Schneider run `ACTIVE` CAS 7, Deep Dive `IN_PROGRESS` CAS 2 with CHECKPOINT V1, 2 stages, 28 artifacts, 8 artifact edges, 35 run events and no `FUNDAMENTALS_LOCK` V2. A missing run, empty RLS visibility, unexpected CAS or count mismatch raises a SQL error and the workflow prints `BLOCKED_C07`, never snapshot PASS. These pinned counts describe the independently verified preflight baseline; legitimate subsequent changes require a separately reviewed rebaseline.
+- Output files remain local on the ephemeral runner and are deleted. The public logs do **not** constitute a reusable private snapshot/evidence package.
 
 ## Expected evidence and interpretation
 

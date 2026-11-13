@@ -48,6 +48,7 @@ jobs:
           test "$GITHUB_REF" = refs/heads/main
           test "$GITHUB_REPOSITORY" = robzer13/indice_nexus
           test "$C07_CONFIRM" = C07_READONLY
+          test "$C07_BUNDLE_SHA256" = 8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928
           test -n "$C07_C03_BUNDLE_BASE64"
           test -n "$C07_PRIVATE_READ_TOKEN"
           test -n "$PGUSER"

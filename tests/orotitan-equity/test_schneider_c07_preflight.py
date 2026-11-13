@@ -4,6 +4,8 @@ from __future__ import annotations
 import base64
 from hashlib import sha256
 import importlib.util
+import io
+import zipfile
 import os
 from pathlib import Path
 import re
@@ -115,13 +117,81 @@ class OfflineC07Contract(unittest.TestCase):
             "GITHUB_REPOSITORY": "robzer13/indice_nexus",
             "C07_PRIVATE_READ_TOKEN": "DUMMY_TEST_TOKEN_NEVER_REAL",
             "C07_C03_BUNDLE_BASE64": base64.b64encode(b"synthetic-not-a-zip").decode("ascii"),
-            "C07_BUNDLE_SHA256": "0" * 64,
+            "C07_BUNDLE_SHA256": collector.APPROVED_C03_SHA256,
         }
         with patch.dict(os.environ, env, clear=True), patch.object(
             collector.urllib.request, "urlopen", side_effect=AssertionError("NETWORK FORBIDDEN")
         ):
             with self.assertRaisesRegex(RuntimeError, "SHA-256 mismatch"):
                 collector.main()
+
+    def test_unapproved_self_signed_bundle_rejected(self):
+        data = b"synthetic-not-the-approved-bundle"
+        env = {
+            "GITHUB_EVENT_NAME": "workflow_dispatch",
+            "GITHUB_REF": "refs/heads/main",
+            "GITHUB_REPOSITORY": "robzer13/indice_nexus",
+            "C07_PRIVATE_READ_TOKEN": "DUMMY_TEST_TOKEN_NEVER_REAL",
+            "C07_C03_BUNDLE_BASE64": base64.b64encode(data).decode("ascii"),
+            "C07_BUNDLE_SHA256": sha256(data).hexdigest(),
+        }
+        with patch.dict(os.environ, env, clear=True), patch.object(
+            collector.urllib.request, "urlopen", side_effect=AssertionError("NETWORK FORBIDDEN")
+        ):
+            with self.assertRaisesRegex(RuntimeError, "unapproved C03 bundle fingerprint"):
+                collector.main()
+
+    @staticmethod
+    def _synthetic_zip(payloads: dict[str, bytes]) -> bytes:
+        buffer = io.BytesIO()
+        with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as z:
+            for name, raw in payloads.items():
+                z.writestr(name, raw)
+        return buffer.getvalue()
+
+    def test_exact_five_members_allowed_for_bounded_read(self):
+        entries = {name: b"{}" for name in collector.EXPECTED_MEMBERS}
+        self.assertEqual(collector.read_c03_members(self._synthetic_zip(entries)), entries)
+
+    def test_zip_member_over_expansion_cap_rejected(self):
+        entries = {name: b"{}" for name in collector.EXPECTED_MEMBERS}
+        entries[collector.SOURCE_PROOF] = b"x" * (collector.MAX_OBJECT + 1)
+        with self.assertRaisesRegex(RuntimeError, "uncompressed size"):
+            collector.read_c03_members(self._synthetic_zip(entries))
+
+    def test_zip_total_expansion_cap_rejected(self):
+        entries = {name: b"x" * 200_000 for name in collector.EXPECTED_MEMBERS}
+        self.assertTrue(all(len(x) < collector.MAX_OBJECT for x in entries.values()))
+        with self.assertRaisesRegex(RuntimeError, "uncompressed size"):
+            collector.read_c03_members(self._synthetic_zip(entries))
+
+    def test_zip_unexpected_members_and_duplicates_rejected(self):
+        entries = {name: b"{}" for name in collector.EXPECTED_MEMBERS}
+        entries["unexpected.txt"] = b"bad"
+        with self.assertRaisesRegex(RuntimeError, "unexpected C03 ZIP members"):
+            collector.read_c03_members(self._synthetic_zip(entries))
+        buffer = io.BytesIO()
+        names = list(collector.EXPECTED_MEMBERS)
+        with zipfile.ZipFile(buffer, "w", compression=zipfile.ZIP_DEFLATED) as z:
+            for name in names[:-1]:
+                z.writestr(name, b"{}")
+            z.writestr(names[0], b"duplicate")
+        with self.assertRaisesRegex(RuntimeError, "unexpected C03 ZIP members"):
+            collector.read_c03_members(buffer.getvalue())
+
+    def test_sql_snapshot_guard_has_pinned_nonempty_cas_and_counts(self):
+        text = SNAPSHOT_PATH.read_text(encoding="utf-8")
+        self.assertIn("SELECT 1 / CASE WHEN", text)
+        self.assertLess(text.index("AS c07_registry_baseline_guard"), text.index("\\o orotitan_runs.jsonl"))
+        for invariant in (
+            "run_status = 'ACTIVE' AND state_version = 7",
+            "stage_code = 'DEEP_DIVE' AND lifecycle_status = 'IN_PROGRESS'",
+            "state_version = 2 AND active_manifest_kind = 'CHECKPOINT'",
+            "active_manifest_version = 1",
+            ") = 2", ") = 28", ") = 8", ") = 35",
+            "artifact_type = 'FUNDAMENTALS_LOCK' AND version = 2) = 0",
+        ):
+            self.assertIn(invariant, text)
 
     def test_protected_workflow_is_manual_main_only_and_does_not_upload(self):
         text = WORKFLOW_PATH.read_text(encoding="utf-8")
@@ -130,6 +200,7 @@ class OfflineC07Contract(unittest.TestCase):
         self.assertIn("permissions:\n  contents: read", text)
         self.assertIn("environment: orotitan-schneider-c07-readonly", text)
         self.assertIn("refs/heads/main", text)
+        self.assertIn(collector.APPROVED_C03_SHA256, text)
         self.assertIn("persist-credentials: false", text)
         self.assertIn("PGHOST: db.awgsurdyvsyolcgpnygh.supabase.co", text)
         self.assertIn("default_transaction_read_only=on", text)
@@ -144,7 +215,7 @@ class OfflineC07Contract(unittest.TestCase):
         self.assertIn("ROLLBACK;", text)
         self.assertEqual(text.count("SELECT row_to_json(t)::text"), 5)
         self.assertEqual(text.count("SELECT * FROM"), 5)
-        self.assertEqual(text.count(collector.RUN), 6)
+        self.assertGreaterEqual(text.count(collector.RUN), 14)
         sql = "\n".join(x for x in text.splitlines() if not x.lstrip().startswith("--"))
         self.assertIsNone(re.search(
             r"(?im)^\s*(?:INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TRUNCATE|CALL|EXECUTE|COPY|DO)\b",
