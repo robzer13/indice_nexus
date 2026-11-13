@@ -572,6 +572,24 @@ class DataFrame:
         index_copy = DatetimeIndex(list(self._index)) if isinstance(self._index, DatetimeIndex) else list(self._index)
         return DataFrame(data_copy, index=index_copy, columns=self._columns)
 
+    def reset_index(self) -> "DataFrame":
+        """Expose the existing index as a named column for offline chart tests."""
+        values = {"index": list(self._index)}
+        values.update({column: list(self._data[column]) for column in self._columns})
+        return DataFrame(values)
+
+    def rename(
+        self, columns: Dict[str, str] | None = None, inplace: bool = False
+    ) -> "DataFrame" | None:
+        """Rename columns without touching values or the row order."""
+        mapping = columns or {}
+        renamed = {mapping.get(column, column): list(self._data[column]) for column in self._columns}
+        if inplace:
+            self._data = renamed
+            self._columns = list(renamed)
+            return None
+        return DataFrame(renamed, index=self._index)
+
     @property
     def index(self) -> DatetimeIndex:
         return self._index
