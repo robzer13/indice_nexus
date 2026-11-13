@@ -1,0 +1,101 @@
+name: OroTitan Schneider C07 protected private preflight
+
+# Manual only. Must be independently reviewed and merged to the default branch
+# before GitHub makes a workflow_dispatch entry available.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type C07_READONLY (no deployment, no Registry write)'
+        type: string
+        required: true
+      bundle_sha256:
+        description: 'SHA-256 of the private minimal C03 input bundle'
+        type: string
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orotitan-schneider-c07-private-readonly
+  cancel-in-progress: false
+
+jobs:
+  private-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: orotitan-schneider-c07-readonly
+    env:
+      C07_CONFIRM: ${{ inputs.confirm }}
+      C07_BUNDLE_SHA256: ${{ inputs.bundle_sha256 }}
+      C07_C03_BUNDLE_BASE64: ${{ secrets.C07_C03_BUNDLE_BASE64 }}
+      C07_PRIVATE_READ_TOKEN: ${{ secrets.C07_PRIVATE_READ_TOKEN }}
+      PGHOST: db.awgsurdyvsyolcgpnygh.supabase.co
+      PGPORT: '5432'
+      PGDATABASE: postgres
+      PGSSLMODE: verify-full
+      PGCONNECT_TIMEOUT: '10'
+      PGOPTIONS: '-c default_transaction_read_only=on -c statement_timeout=30000'
+      PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}
+      PGPASSWORD: ${{ secrets.C07_SHADOW_RO_PGPASSWORD }}
+    steps:
+      - name: Verify manual main-only dispatch and protected inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = workflow_dispatch
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_REPOSITORY" = robzer13/indice_nexus
+          test "$C07_CONFIRM" = C07_READONLY
+          test -n "$C07_C03_BUNDLE_BASE64"
+          test -n "$C07_PRIVATE_READ_TOKEN"
+          test -n "$PGUSER"
+          test -n "$PGPASSWORD"
+          echo 'C07 main-only protected read-only gate: PASS'
+
+      - name: Checkout reviewed default-branch code, without persisted credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Verify all sealed historical objects and local-only candidate bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          python3 scripts/orotitan-equity/schneider-c07-readonly-collect.py
+
+      - name: Export SHADOW Registry snapshot in read-only transaction
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$PGHOST" = db.awgsurdyvsyolcgpnygh.supabase.co
+          command -v psql >/dev/null
+          cd "$RUNNER_TEMP/orotitan-schneider-c07-private"
+          # All SQL results and error details remain in the ephemeral runner.
+          if ! psql -X -w -v ON_ERROR_STOP=1 \
+              -f "$GITHUB_WORKSPACE/scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql" \
+              > "$RUNNER_TEMP/c07-private-psql.log" 2>&1; then
+            echo 'BLOCKED_C07: SHADOW SELECT-only snapshot unavailable; no data printed'
+            exit 1
+          fi
+          echo 'C07 SHADOW SELECT-only snapshot: PASS (private runner only)'
+
+      - name: Explicit unqualified status
+        if: success()
+        shell: bash
+        run: |
+          echo 'C07 PROVENANCE_AND_SNAPSHOT_ONLY=PASS'
+          echo 'SCHNEIDER_PG17_RPC_REPLAY=NOT_EXECUTED'
+          echo 'TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED'
+          echo 'FUNDAMENTALS_V2=NO_GO'
+          echo 'NO_ARTIFACT_UPLOAD_NO_REMOTE_MUTATION'
+
+      - name: Remove private local working copies
+        if: always()
+        shell: bash
+        run: |
+          rm -rf -- "$RUNNER_TEMP/orotitan-schneider-c07-private" \
+                    "$RUNNER_TEMP/c07-private-psql.log"
