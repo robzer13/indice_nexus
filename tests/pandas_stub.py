@@ -135,15 +135,6 @@ class Series:
         self.iloc = _SeriesILoc(self)
         self.loc = _SeriesLoc(self)
         self.name: str | None = None
-        self._data = list(data or [])
-        if isinstance(index, DatetimeIndex):
-            self.index: Sequence[Any] = index
-        elif index is None:
-            self.index = []
-        else:
-            self.index = list(index)
-        self.dtype = dtype
-        self.iloc = _SeriesILoc(self)
 
     def dropna(self) -> "Series":
         filtered_data = []
