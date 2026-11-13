@@ -93,6 +93,10 @@ psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$successor_cas_verify"
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$registry13" >/dev/null
 psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$valuation_date_successor_verify"
 
+# C07: public synthetic Schneider-pattern CAS checks only (no private fixtures).
+# This executes solely against the disposable local PG17 Registry database.
+psql -X -v ON_ERROR_STOP=1 -d "$database" -f "$root/tests/postgres/schneider-c07-cas-guards-verify.sql"
+
 # The Pilotage-attempts table is provisioned externally to the frozen
 # Registry V1.12 migration chain (observed live). The cancellation migration must
 # FAIL CLOSED when that dependency is absent.
