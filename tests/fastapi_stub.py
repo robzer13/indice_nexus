@@ -75,6 +75,7 @@ class _Response:
 
 
 class TestClient:
+    __test__ = False  # pytest must not collect this client as a test class
     def __init__(self, app: FastAPI) -> None:
         self.app = app
 
@@ -124,6 +125,30 @@ class TestClient:
         except Exception as exc:  # pragma: no cover - defensive stub fallback
             return _Response(500, {"detail": str(exc)})
 
+        return _Response(200, result)
+
+    def post(self, url: str, json: Optional[Dict[str, Any]] = None) -> _Response:
+        """Exercise the currently supported POST handlers using typed request models."""
+        from typing import get_type_hints
+        from urllib.parse import urlparse
+
+        try:
+            handler, path_params = self.app.resolve("POST", urlparse(url).path)
+        except HTTPException as exc:
+            return _Response(exc.status_code, {"detail": exc.detail})
+        try:
+            request_class = get_type_hints(handler).get("request")
+            if request_class is None:
+                raise TypeError("POST handler has no typed request model")
+            result = handler(request_class(**(json or {})), **path_params)
+        except HTTPException as exc:
+            return _Response(exc.status_code, {"detail": exc.detail})
+        except Exception as exc:  # pragma: no cover - local unit-test stub only
+            return _Response(500, {"detail": str(exc)})
+        if hasattr(result, "model_dump"):
+            result = result.model_dump(mode="json")
+        elif hasattr(result, "dict"):
+            result = result.dict()
         return _Response(200, result)
 
 
