@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import base64
 from hashlib import sha256
+import ssl
 import importlib.util
 import io
 import zipfile
@@ -17,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[2]
 COLLECTOR_PATH = ROOT / "scripts/orotitan-equity/schneider-c07-readonly-collect.py"
 WORKFLOW_PATH = ROOT / ".github/workflows/orotitan-schneider-c07-private-preflight.yml"
 SNAPSHOT_PATH = ROOT / "scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql"
+CERT_PATH = ROOT / ".github/certificates/supabase-root-2021-ca.crt"
+CERT_SHA256 = "700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7"
 spec = importlib.util.spec_from_file_location("c07_private_collector_offline", COLLECTOR_PATH)
 assert spec is not None and spec.loader is not None
 collector = importlib.util.module_from_spec(spec)
@@ -192,6 +195,32 @@ class OfflineC07Contract(unittest.TestCase):
             "artifact_type = 'FUNDAMENTALS_LOCK' AND version = 2) = 0",
         ):
             self.assertIn(invariant, text)
+
+    def test_public_ca_file_is_byte_pinned_and_parseable(self):
+        raw = CERT_PATH.read_bytes()
+        self.assertEqual(sha256(raw).hexdigest(), CERT_SHA256)
+        pem = raw.decode("ascii")
+        self.assertIn("-----BEGIN CERTIFICATE-----", pem)
+        self.assertIn("-----END CERTIFICATE-----", pem)
+        self.assertTrue(ssl.PEM_cert_to_DER_cert(pem))
+
+    def test_modified_ca_cannot_satisfy_sha256_pin(self):
+        raw = CERT_PATH.read_bytes()
+        modified = raw.replace(b"Supabase", b"Supab4se")
+        if modified == raw:
+            modified = raw.replace(b"MIIDxD", b"MIIDxE", 1)
+        self.assertNotEqual(sha256(modified).hexdigest(), CERT_SHA256)
+
+    def test_ca_is_configured_before_private_db_connection(self):
+        text = WORKFLOW_PATH.read_text(encoding="utf-8")
+        self.assertIn("PGSSLMODE: verify-full", text)
+        self.assertIn("PGSSLROOTCERT: ${{ github.workspace }}/.github/certificates/supabase-root-2021-ca.crt", text)
+        self.assertIn(CERT_SHA256, text)
+        self.assertIn("sha256sum -c --status", text)
+        self.assertIn('openssl verify -CAfile "$PGSSLROOTCERT"', text)
+        self.assertLess(text.index("Verify pinned Supabase CA before contacting the database"),
+                        text.index("Export SHADOW Registry snapshot"))
+        self.assertNotIn("PGSSLMODE: require", text)
 
     def test_protected_workflow_is_manual_main_only_and_does_not_upload(self):
         text = WORKFLOW_PATH.read_text(encoding="utf-8")
