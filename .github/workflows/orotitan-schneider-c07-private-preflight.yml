@@ -37,7 +37,6 @@ jobs:
       PGSSLMODE: verify-full
       PGSSLROOTCERT: ${{ github.workspace }}/.github/certificates/supabase-root-2021-ca.crt
       PGCONNECT_TIMEOUT: '10'
-      PGOPTIONS: '-c default_transaction_read_only=on -c statement_timeout=30000'
       PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}.awgsurdyvsyolcgpnygh
       PGPASSWORD: ${{ secrets.C07_SHADOW_RO_PGPASSWORD }}
     steps:
