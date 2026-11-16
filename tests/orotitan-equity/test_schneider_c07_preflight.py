@@ -250,7 +250,7 @@ class OfflineC07Contract(unittest.TestCase):
 
     def test_pooler_change_preserves_fail_closed_manual_guards(self):
         text = WORKFLOW_PATH.read_text(encoding="utf-8")
-        self.assertIn("on:\\n  workflow_dispatch:", text)
+        self.assertIn("on:\n  workflow_dispatch:", text)
         self.assertIn("environment: orotitan-schneider-c07-readonly", text)
         self.assertIn("PGOPTIONS: '-c default_transaction_read_only=on -c statement_timeout=30000'", text)
         self.assertIn("PGSSLROOTCERT:", text)
