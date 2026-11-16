@@ -222,6 +222,46 @@ class OfflineC07Contract(unittest.TestCase):
                         text.index("Export SHADOW Registry snapshot"))
         self.assertNotIn("PGSSLMODE: require", text)
 
+    def test_session_pooler_is_pinned_to_shadow_and_readonly_custom_role(self):
+        text = WORKFLOW_PATH.read_text(encoding="utf-8")
+        self.assertIn("PGHOST: aws-1-eu-west-3.pooler.supabase.com", text)
+        self.assertIn("PGPORT: '5432'", text)
+        self.assertIn("PGDATABASE: postgres", text)
+        self.assertIn("PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}.awgsurdyvsyolcgpnygh", text)
+        self.assertIn('test "$PGUSER" = orotitan_c07_reader.awgsurdyvsyolcgpnygh', text)
+        self.assertIn("PGSSLMODE: verify-full", text)
+        self.assertNotIn("PGHOST: db.awgsurdyvsyolcgpnygh.supabase.co", text)
+        self.assertNotIn("cugpgtzygqqlxetyeven", text)
+        self.assertNotIn("PGUSER: postgres", text)
+
+    def test_diagnostic_is_static_no_secret_or_sql_output(self):
+        text = WORKFLOW_PATH.read_text(encoding="utf-8")
+        self.assertIn("SHADOW_SNAPSHOT_${error_class}", text)
+        for error_class in (
+            "DNS", "NETWORK", "TLS", "POOLER_USER", "AUTH",
+            "POOLER_PROTOCOL", "PERMISSION", "BASELINE", "DATABASE_ERROR",
+        ):
+            self.assertIn(f"error_class={error_class}", text)
+        self.assertIn("> \"$RUNNER_TEMP/c07-private-psql.log\" 2>&1", text)
+        self.assertIn('rm -rf -- "$RUNNER_TEMP/orotitan-schneider-c07-private"', text)
+        self.assertNotIn('cat "$RUNNER_TEMP/c07-private-psql.log"', text)
+        self.assertNotIn('tail "$RUNNER_TEMP/c07-private-psql.log"', text)
+        self.assertNotIn("set -x", text)
+
+    def test_pooler_change_preserves_fail_closed_manual_guards(self):
+        text = WORKFLOW_PATH.read_text(encoding="utf-8")
+        self.assertIn("on:\n  workflow_dispatch:", text)
+        self.assertIn("environment: orotitan-schneider-c07-readonly", text)
+        self.assertNotIn("PGOPTIONS:", text)
+        sql = SNAPSHOT_PATH.read_text(encoding="utf-8")
+        self.assertIn("BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;", sql)
+        self.assertIn("SET LOCAL statement_timeout = '30s';", sql)
+        self.assertIn("ROLLBACK;", sql)
+        self.assertIn("PGSSLROOTCERT:", text)
+        self.assertIn("TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED", text)
+        self.assertIn("FUNDAMENTALS_V2=NO_GO", text)
+        self.assertNotIn("upload-artifact", text)
+
     def test_protected_workflow_is_manual_main_only_and_does_not_upload(self):
         text = WORKFLOW_PATH.read_text(encoding="utf-8")
         self.assertIn("on:\n  workflow_dispatch:", text)
@@ -231,8 +271,8 @@ class OfflineC07Contract(unittest.TestCase):
         self.assertIn("refs/heads/main", text)
         self.assertIn(collector.APPROVED_C03_SHA256, text)
         self.assertIn("persist-credentials: false", text)
-        self.assertIn("PGHOST: db.awgsurdyvsyolcgpnygh.supabase.co", text)
-        self.assertIn("default_transaction_read_only=on", text)
+        self.assertIn("PGHOST: aws-1-eu-west-3.pooler.supabase.com", text)
+        self.assertNotIn("PGOPTIONS:", text)
         self.assertIn("if: always()", text)
         self.assertIn("TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED", text)
         self.assertIn("FUNDAMENTALS_V2=NO_GO", text)
