@@ -8,7 +8,8 @@
   "git": {
     "deploymentEnabled": {
       "main": false,
-      "fix/orotitan-fundamentals-lock-selfref-sha-20261110": false
+      "fix/orotitan-fundamentals-lock-selfref-sha-20261110": false,
+      "fix/orotitan-schneider-c07-private-preflight-20261113": false
     }
   }
 }
