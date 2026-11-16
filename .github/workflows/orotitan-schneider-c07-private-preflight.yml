@@ -31,14 +31,14 @@ jobs:
       C07_BUNDLE_SHA256: ${{ inputs.bundle_sha256 }}
       C07_C03_BUNDLE_BASE64: ${{ secrets.C07_C03_BUNDLE_BASE64 }}
       C07_PRIVATE_READ_TOKEN: ${{ secrets.C07_PRIVATE_READ_TOKEN }}
-      PGHOST: db.awgsurdyvsyolcgpnygh.supabase.co
+      PGHOST: aws-1-eu-west-3.pooler.supabase.com
       PGPORT: '5432'
       PGDATABASE: postgres
       PGSSLMODE: verify-full
       PGSSLROOTCERT: ${{ github.workspace }}/.github/certificates/supabase-root-2021-ca.crt
       PGCONNECT_TIMEOUT: '10'
       PGOPTIONS: '-c default_transaction_read_only=on -c statement_timeout=30000'
-      PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}
+      PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}.awgsurdyvsyolcgpnygh
       PGPASSWORD: ${{ secrets.C07_SHADOW_RO_PGPASSWORD }}
     steps:
       - name: Verify manual main-only dispatch and protected inputs
@@ -52,6 +52,10 @@ jobs:
           test "$C07_BUNDLE_SHA256" = 8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928
           test -n "$C07_C03_BUNDLE_BASE64"
           test -n "$C07_PRIVATE_READ_TOKEN"
+          test "$PGHOST" = aws-1-eu-west-3.pooler.supabase.com
+          test "$PGPORT" = 5432
+          test "$PGDATABASE" = postgres
+          test "$PGUSER" = orotitan_c07_reader.awgsurdyvsyolcgpnygh
           test -n "$PGUSER"
           test -n "$PGPASSWORD"
           echo 'C07 main-only protected read-only gate: PASS'
@@ -85,14 +89,38 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          test "$PGHOST" = db.awgsurdyvsyolcgpnygh.supabase.co
+          test "$PGHOST" = aws-1-eu-west-3.pooler.supabase.com
+          test "$PGPORT" = 5432
+          test "$PGUSER" = orotitan_c07_reader.awgsurdyvsyolcgpnygh
           command -v psql >/dev/null
           cd "$RUNNER_TEMP/orotitan-schneider-c07-private"
           # All SQL results and error details remain in the ephemeral runner.
           if ! psql -X -w -v ON_ERROR_STOP=1 \
               -f "$GITHUB_WORKSPACE/scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql" \
               > "$RUNNER_TEMP/c07-private-psql.log" 2>&1; then
-            echo 'BLOCKED_C07: SHADOW SELECT-only snapshot unavailable; no data printed'
+            # Emit only a fixed error category; never print psql stderr or SQL rows.
+            # The raw details stay in the ephemeral, private runner log until cleanup.
+            error_class=UNCLASSIFIED
+            if grep -Eqi 'could not translate host name|Name or service not known|Temporary failure in name resolution' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=DNS
+            elif grep -Eqi 'Network is unreachable|No route to host|Connection refused|timeout expired|could not connect to server' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=NETWORK
+            elif grep -Eqi 'certificate verify failed|certificate validation failed|root certificate|server certificate|SSL error|does not match host' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=TLS
+            elif grep -Eqi 'Tenant or user not found|tenant/user.*not found' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=POOLER_USER
+            elif grep -Eqi 'password authentication failed|SQLSTATE 28P01' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=AUTH
+            elif grep -Eqi 'unsupported startup parameter|unsupported option|options not allowed' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=POOLER_PROTOCOL
+            elif grep -Eqi 'permission denied|insufficient privilege|SQLSTATE 42501' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=PERMISSION
+            elif grep -Eqi 'division by zero|SQLSTATE 22012' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=BASELINE
+            elif grep -Eqi 'FATAL|ERROR:' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=DATABASE_ERROR
+            fi
+            echo "BLOCKED_C07: SHADOW_SNAPSHOT_${error_class}; no SQL or connection details printed"
             exit 1
           fi
           echo 'C07 SHADOW SELECT-only snapshot: PASS (private runner only)'
