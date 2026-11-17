@@ -437,9 +437,9 @@ class _SeriesLoc:
             lookup = {label: bool(value) for label, value in zip(list(key.index), key._data)}
             return [bool(lookup.get(label, False)) for label in labels]
         if isinstance(key, list):
-            if len(key) != len(labels):
-                raise ValueError("Boolean index length mismatch in stub")
-            return [bool(value) for value in key]
+            if len(key) == len(labels) and all(isinstance(value, bool) for value in key):
+                return list(key)
+            return [label in key for label in labels]
         raise TypeError("Unsupported key type for Series.loc in stub")
 
     def __getitem__(self, key: Any):
@@ -586,7 +586,21 @@ class DataFrame:
         if isinstance(key, str):
             return Series(self._data.get(key, []), self._index)
         if isinstance(key, list):
-            filtered_data = {col: [value for value, flag in zip(values, key) if flag] for col, values in self._data.items()}
+            if all(isinstance(column, str) for column in key):
+                missing = [column for column in key if column not in self._columns]
+                if missing:
+                    raise KeyError(f"Unknown columns: {missing}")
+                return DataFrame(
+                    {column: list(self._data[column]) for column in key},
+                    index=self._index,
+                    columns=key,
+                )
+            if len(key) != len(self._index) or not all(isinstance(flag, bool) for flag in key):
+                raise ValueError("Boolean row mask must match DataFrame length")
+            filtered_data = {
+                column: [value for value, flag in zip(values, key) if flag]
+                for column, values in self._data.items()
+            }
             filtered_index = [label for label, flag in zip(self._index, key) if flag]
             return DataFrame(filtered_data, index=filtered_index, columns=self._columns)
         raise KeyError("Unsupported key type for DataFrame in stub")
@@ -614,6 +628,19 @@ class DataFrame:
         self._index = DatetimeIndex(sorted_index)
         self._data = sorted_data
 
+    def replace(self, to_replace: Sequence[Any], value: Any) -> "DataFrame":
+        """Minimal scalar replacement preserving columns and index, for offline ML tests."""
+        if not isinstance(to_replace, (list, tuple)):
+            raise TypeError("Stub supports sequence replacements only")
+        updated = {
+            column: [
+                value if any(cell == old for old in to_replace) else cell
+                for cell in values
+            ]
+            for column, values in self._data.items()
+        }
+        return DataFrame(updated, index=self._index, columns=self._columns)
+
     def dropna(self, axis: int = 0, how: str = "any", subset: Sequence[str] | None = None, inplace: bool = False):
         subset = list(subset or self._columns)
         keep_mask = []
@@ -621,7 +648,7 @@ class DataFrame:
             if how == "all":
                 keep = not all(value is None or (isinstance(value, float) and math.isnan(value)) for value in row_values)
             else:
-                keep = any(value is not None and not (isinstance(value, float) and math.isnan(value)) for value in row_values)
+                keep = all(value is not None and not (isinstance(value, float) and math.isnan(value)) for value in row_values)
             keep_mask.append(keep)
         filtered = self[keep_mask]
         if inplace:
