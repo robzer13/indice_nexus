@@ -1,13 +1,17 @@
 -- C08 read-only smoke probe — run ONLY on SHADOW after separately approved grants.
 -- No credentials, private rows, identifiers or payloads are printed.
--- Execute with a SHADOW admin connection; SET LOCAL ROLE impersonates the
--- C07 reader for an RLS/privilege test (not proof of actual pooler login).
+-- Execute ONLY through the pinned SHADOW Session Pooler, authenticated as
+-- the dedicated orotitan_c07_reader LOGIN using the protected credential.
+-- Do not run this script as postgres: that admin cannot SET ROLE to the
+-- reader (membership has set_option=false). No secrets in command-line args.
+-- This verifies actual reader RLS visibility, not an admin impersonation.
 \set ON_ERROR_STOP on
 BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;
-SET LOCAL ROLE orotitan_c07_reader;
-
 SELECT 1 / CASE WHEN
-  (SELECT count(*) FROM public.orotitan_runs r
+  current_user = 'orotitan_c07_reader'
+  AND session_user = 'orotitan_c07_reader'
+  AND current_database() = 'postgres'
+  AND (SELECT count(*) FROM public.orotitan_runs r
    WHERE r.run_id='db00ce77-04eb-492b-a76b-164ecbe9ccfe'::uuid) = 1
   AND (SELECT count(*) FROM public.issuers) = 1
   AND (SELECT count(*) FROM public.securities) = 1

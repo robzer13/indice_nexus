@@ -1,7 +1,10 @@
 -- OROTITAN C08 SECURITY CHANGE PROPOSAL — REVIEW ONLY, NEVER AUTO-APPLY
 -- PROJECT: Supabase SHADOW awgsurdyvsyolcgpnygh (not PRODUCTION).
--- OPERATOR GATE: verify project URL/ref, approved independent review, and
--- exact Git commit before executing manually as a SHADOW database administrator.
+-- OPERATOR GATE: independently verify the SHADOW cluster identity via
+-- pg_control_system() SHA-256 plus project ref AND check the dashboard target.
+-- Only execute following independent review of this exact Git commit.
+-- The cluster identity fingerprint was obtained from SHADOW using read-only SQL.
+-- Fail-closed if the cluster has been reinitialized or replatformed.
 -- Narrow scope: four SELECT grants plus four row-scoped RLS policies.
 -- No DML, DDL rights for the reader, no schema changes, no secrets.
 BEGIN;
@@ -12,14 +15,39 @@ DO $c08_preflight$
 DECLARE
   reader_oid oid;
   target_count integer;
+  incoming_admin_count integer;
+  incoming_total_count integer;
 BEGIN
+  -- Stronger than a UI name check: fail closed on a different PostgreSQL
+  -- cluster. An actual SHADOW rebootstrap requires a fresh independent review
+  -- and an updated verified fingerprint, never an automatic fallback.
+  IF current_database() <> 'postgres'
+     OR current_user <> 'postgres' OR session_user <> 'postgres'
+     OR encode(extensions.digest(
+       convert_to((pg_catalog.pg_control_system()).system_identifier::text ||
+                  ':awgsurdyvsyolcgpnygh','UTF8'),'sha256'),'hex')
+        <> '902ab5e7b9a35b605ecf649f8e861c90a7c6b4ff10d71ccc579a454fe4cd2672'
+  THEN RAISE EXCEPTION 'BLOCKED_C08_WRONG_DATABASE'; END IF;
+
   SELECT oid INTO reader_oid FROM pg_roles
     WHERE rolname = 'orotitan_c07_reader'
       AND rolcanlogin AND NOT rolsuper AND NOT rolbypassrls
-      AND NOT rolcreatedb AND NOT rolcreaterole;
+      AND NOT rolcreatedb AND NOT rolcreaterole AND NOT rolinherit;
   IF reader_oid IS NULL
      OR EXISTS (SELECT 1 FROM pg_auth_members WHERE member = reader_oid)
   THEN RAISE EXCEPTION 'BLOCKED_C08_ROLE_PRECONDITION'; END IF;
+
+  -- Incoming role grants are the reverse direction from memberships of the
+  -- reader. Supabase SHADOW currently has exactly ONE: postgres (admin=true,
+  -- inherit=false, set=false). No other role may inherit or assume the reader.
+  SELECT count(*) INTO incoming_total_count FROM pg_auth_members
+    WHERE roleid = reader_oid;
+  SELECT count(*) INTO incoming_admin_count
+  FROM pg_auth_members m JOIN pg_roles administrator ON administrator.oid=m.member
+  WHERE m.roleid = reader_oid AND administrator.rolname = 'postgres'
+    AND m.admin_option AND NOT m.inherit_option AND NOT m.set_option;
+  IF incoming_total_count <> 1 OR incoming_admin_count <> 1
+  THEN RAISE EXCEPTION 'BLOCKED_C08_READER_INCOMING_MEMBERSHIP'; END IF;
 
   IF NOT has_schema_privilege('orotitan_c07_reader','public','USAGE')
      OR NOT has_table_privilege('orotitan_c07_reader','public.orotitan_runs','SELECT')

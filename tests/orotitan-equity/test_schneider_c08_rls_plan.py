@@ -51,15 +51,31 @@ class C08ReaderGrantPlan(unittest.TestCase):
         self.assertIn("state_version=7", sql)
         self.assertIn("BEGIN;", sql)
 
-    def test_verification_uses_impersonated_readonly_role_without_rows(self):
+    def test_verification_requires_real_reader_login_without_rows(self):
         verify = VERIFY.read_text()
         self.assertIn("BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;", verify)
-        self.assertIn("SET LOCAL ROLE orotitan_c07_reader;", verify)
+        self.assertIn("current_user = 'orotitan_c07_reader'", verify)
+        self.assertIn("session_user = 'orotitan_c07_reader'", verify)
+        self.assertNotIn("SET LOCAL ROLE", verify)
         self.assertIn("AS c08_schneider_read_scope_guard;", verify)
         self.assertIn("ROLLBACK;", verify)
         for table in TABLES:
             self.assertIn("FROM public." + table, verify)
         self.assertNotRegex(verify, r"(?im)^\s*(?:INSERT|UPDATE|DELETE|CREATE|ALTER|DROP|TRUNCATE)\b")
+
+    def test_shadow_fingerprint_and_incoming_membership_fail_closed(self):
+        sql = SQL.read_text()
+        self.assertIn("BLOCKED_C08_WRONG_DATABASE", sql)
+        self.assertIn("pg_catalog.pg_control_system()", sql)
+        self.assertIn("902ab5e7b9a35b605ecf649f8e861c90a7c6b4ff10d71ccc579a454fe4cd2672", sql)
+        self.assertIn("current_user <> 'postgres'", sql)
+        self.assertIn("session_user <> 'postgres'", sql)
+        self.assertIn("current_database() <> 'postgres'", sql)
+        self.assertIn("BLOCKED_C08_READER_INCOMING_MEMBERSHIP", sql)
+        self.assertIn("m.roleid = reader_oid", sql)
+        self.assertIn("administrator.rolname = 'postgres'", sql)
+        self.assertIn("NOT m.inherit_option AND NOT m.set_option", sql)
+        self.assertIn("incoming_total_count <> 1 OR incoming_admin_count <> 1", sql)
 
     def test_review_only_no_auto_execution(self):
         text = DOC.read_text()
