@@ -197,6 +197,57 @@ test("V2 Deep Dive checkpoint cryptographically verifies both independent parent
   assert.equal(s.stages.DEEP_DIVE?.consumedPredecessorRevision,1);
   assert.equal(f.currentManifest.content_sha256,sha(f.data.get(key(f.currentManifest))!));
 });
+test("V2 admits byte-verified historical V1 as ancestor without fabricating roles",async()=>{
+  const f=fixture(2);
+  // Historical V1 has source locators but no role; only V2 is the current
+  // schema-validated checkpoint. The historical parent's raw bytes remain sealed.
+  const sourceRows=[
+    ...f.rows.filter(a=>a.stage_code==="RESEARCH" &&
+      a.artifact_type!=="RESEARCH_STAGE_MANIFEST").slice(0,7),f.researchManifest,
+  ];
+  assert.equal(sourceRows.length,8);
+  const historical=JSON.parse(f.data.get(key(f.checkpointV1))!.toString("utf8"));
+  historical.phase_checkpoint={phase:"FUNDAMENTALS",status:"SEALED_CANDIDATE_READY_FOR_ATOMIC_CHECKPOINT"};
+  historical.no_valuation_no_certification=true;
+  historical.input_artifacts=sourceRows.map(a=>({
+    artifact_id:a.artifact_id,version:a.version,artifact_type:a.artifact_type,
+    content_sha256:a.content_sha256,authority_class:a.authority_class,
+    media_type:a.media_type,size_bytes:a.size_bytes,storage_ref:{
+      backend:a.storage_backend,repository:a.github_repository,path:a.github_path,
+      commit_sha:a.github_commit_sha,blob_sha:a.github_blob_sha,storage_uri:a.storage_uri,
+    },
+  }));
+  assert.ok(historical.input_artifacts.every((a:{role?:string})=>!a.role));
+  rehash(f,f.checkpointV1,historical);
+  const roleFor=(type:string):string =>
+    type==="RESEARCH_STAGE_MANIFEST" || type==="INPUT_SUFFICIENCY_ASSESSMENT"
+      ? "ROUTING_INPUT" : type==="RESEARCH_SOURCE_MANIFEST"
+        ? "PROVENANCE_INPUT" : "ANALYTICAL_INPUT";
+  f.current.input_artifacts=sourceRows.map(a=>({
+    artifact_id:a.artifact_id,version:a.version,artifact_type:a.artifact_type,
+    content_sha256:a.content_sha256,role:roleFor(a.artifact_type),
+  }));
+  rehash(f,f.currentManifest,f.current);
+  const verified=await load(f);
+  assert.equal(verified.stages.DEEP_DIVE?.manifest?.version,2);
+  assert.equal(verified.stages.DEEP_DIVE?.gates.READY_FOR_VALUATION,true);
+  assert.equal(verified.stages.DEEP_DIVE?.gates.READY_FOR_INTEGRATION,undefined);
+  assert.equal(verified.run.stateVersion,7);
+});
+test("legacy-shaped V1 is not admitted as current CHECKPOINT",async()=>{
+  const f=fixture(1);
+  const historical=JSON.parse(f.data.get(key(f.checkpointV1))!.toString("utf8"));
+  historical.phase_checkpoint={phase:"FUNDAMENTALS"};
+  historical.no_valuation_no_certification=true;
+  historical.input_artifacts=[{
+    artifact_id:f.researchManifest.artifact_id,version:f.researchManifest.version,
+    artifact_type:f.researchManifest.artifact_type,
+    content_sha256:f.researchManifest.content_sha256,
+    authority_class:f.researchManifest.authority_class,
+  }];
+  rehash(f,f.checkpointV1,historical);
+  await fails(f,"MANIFEST_SCHEMA_OR_CONTRACT_INVALID");
+});
 test("tampering the prior CHECKPOINT bytes fails closed",async()=>{
   const f=fixture(2);
   const b=Buffer.from(f.data.get(key(f.checkpointV1))!);b[12]^=1;

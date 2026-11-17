@@ -1,0 +1,210 @@
+name: OroTitan Schneider C07 protected private preflight
+
+# Manual only. Must be independently reviewed and merged to the default branch
+# before GitHub makes a workflow_dispatch entry available.
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type C07_READONLY (no deployment, no Registry write)'
+        type: string
+        required: true
+      bundle_sha256:
+        description: 'SHA-256 of the private minimal C03 input bundle'
+        type: string
+        required: true
+      c08_local_replay:
+        description: 'Opt-in LOCAL PG17 replay. Confirm C08_LOCAL_ONLY'
+        type: boolean
+        default: false
+        required: true
+
+permissions:
+  contents: read
+
+concurrency:
+  group: orotitan-schneider-c07-private-readonly
+  cancel-in-progress: false
+
+jobs:
+  private-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    environment: orotitan-schneider-c07-readonly
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      C07_CONFIRM: ${{ inputs.confirm }}
+      C07_BUNDLE_SHA256: ${{ inputs.bundle_sha256 }}
+      PGHOST: aws-1-eu-west-3.pooler.supabase.com
+      PGPORT: '5432'
+      PGDATABASE: postgres
+      PGSSLMODE: verify-full
+      PGSSLROOTCERT: ${{ github.workspace }}/.github/certificates/supabase-root-2021-ca.crt
+      PGCONNECT_TIMEOUT: '10'
+      PGUSER: ${{ vars.C07_SHADOW_RO_PGUSER }}.awgsurdyvsyolcgpnygh
+    steps:
+      - name: Verify manual main-only dispatch and protected inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_EVENT_NAME" = workflow_dispatch
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_REPOSITORY" = robzer13/indice_nexus
+          if [[ "${{ inputs.c08_local_replay }}" = "true" ]]; then
+            test "$C07_CONFIRM" = C08_LOCAL_ONLY
+          else
+            test "$C07_CONFIRM" = C07_READONLY
+          fi
+          test "$C07_BUNDLE_SHA256" = 8e1f7b87965e8f737ae285fcb1734afe553541af4288abf9d10bda632c396928
+          test "$PGHOST" = aws-1-eu-west-3.pooler.supabase.com
+          test "$PGPORT" = 5432
+          test "$PGDATABASE" = postgres
+          test "$PGUSER" = orotitan_c07_reader.awgsurdyvsyolcgpnygh
+          test -n "$PGUSER"
+          echo 'C07 main-only protected read-only gate: PASS'
+
+      - name: Checkout reviewed default-branch code, without persisted credentials
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+
+      - name: Verify pinned Supabase CA before contacting the database
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$PGSSLMODE" = verify-full
+          test "$PGSSLROOTCERT" = "$GITHUB_WORKSPACE/.github/certificates/supabase-root-2021-ca.crt"
+          test -f "$PGSSLROOTCERT"
+          echo '700723581420dd1ac98fd7e9ac529f0ef210eadcaf87fc868a3ad7d114c2f3b7  .github/certificates/supabase-root-2021-ca.crt' | sha256sum -c --status
+          openssl x509 -in "$PGSSLROOTCERT" -noout -checkend 0
+          openssl verify -CAfile "$PGSSLROOTCERT" "$PGSSLROOTCERT" >/dev/null
+          echo 'C07 SUPABASE_TRUSTED_CA_PIN=PASS'
+
+      - name: Checkout pinned V3.1 typed-loader candidate without saved credentials
+        if: ${{ inputs.c08_local_replay }}
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: b5162a7e5b49500ed8d4e727a30fed928082516c
+          path: c08-candidate-v31
+          persist-credentials: false
+
+      - name: Prepare pinned TypeScript tooling before private collection
+        if: ${{ inputs.c08_local_replay }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd c08-candidate-v31
+          npm install --package-lock=false --ignore-scripts --no-audit --no-fund >/dev/null 2>&1
+          test -x node_modules/.bin/tsx
+      - name: Verify all sealed historical objects and local-only candidate bytes
+        shell: bash
+        env:
+          C07_C03_BUNDLE_BASE64: ${{ secrets.C07_C03_BUNDLE_BASE64 }}
+          C07_PRIVATE_READ_TOKEN: ${{ secrets.C07_PRIVATE_READ_TOKEN }}
+        run: |
+          set -euo pipefail
+          umask 077
+          test -n "$C07_PRIVATE_READ_TOKEN" && test -n "$C07_C03_BUNDLE_BASE64"
+          python3 scripts/orotitan-equity/schneider-c07-readonly-collect.py
+
+      - name: Export SHADOW Registry snapshot in read-only transaction
+        shell: bash
+        env:
+          PGPASSWORD: ${{ secrets.C07_SHADOW_RO_PGPASSWORD }}
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$PGHOST" = aws-1-eu-west-3.pooler.supabase.com
+          test "$PGPORT" = 5432
+          test "$PGUSER" = orotitan_c07_reader.awgsurdyvsyolcgpnygh
+          test -n "$PGPASSWORD"
+          command -v psql >/dev/null
+          cd "$RUNNER_TEMP/orotitan-schneider-c07-private"
+          # All SQL results and error details remain in the ephemeral runner.
+          if ! psql -X -w -v ON_ERROR_STOP=1 \
+              -f "$GITHUB_WORKSPACE/scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql" \
+              > "$RUNNER_TEMP/c07-private-psql.log" 2>&1; then
+            # Emit only a fixed error category; never print psql stderr or SQL rows.
+            # The raw details stay in the ephemeral, private runner log until cleanup.
+            error_class=UNCLASSIFIED
+            if grep -Eqi 'could not translate host name|Name or service not known|Temporary failure in name resolution' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=DNS
+            elif grep -Eqi 'Network is unreachable|No route to host|Connection refused|timeout expired|could not connect to server' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=NETWORK
+            elif grep -Eqi 'certificate verify failed|certificate validation failed|root certificate|server certificate|SSL error|does not match host' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=TLS
+            elif grep -Eqi 'Tenant or user not found|tenant/user.*not found' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=POOLER_USER
+            elif grep -Eqi 'password authentication failed|SQLSTATE 28P01' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=AUTH
+            elif grep -Eqi 'unsupported startup parameter|unsupported option|options not allowed' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=POOLER_PROTOCOL
+            elif grep -Eqi 'permission denied|insufficient privilege|SQLSTATE 42501' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=PERMISSION
+            elif grep -Eqi 'division by zero|SQLSTATE 22012' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=BASELINE
+            elif grep -Eqi 'FATAL|ERROR:' "$RUNNER_TEMP/c07-private-psql.log"; then
+              error_class=DATABASE_ERROR
+            fi
+            echo "BLOCKED_C07: SHADOW_SNAPSHOT_${error_class}; no SQL or connection details printed"
+            exit 1
+          fi
+          echo 'C07 SHADOW SELECT-only snapshot: PASS (private runner only)'
+
+      - name: C08 actual Schneider RPC against disposable local PostgreSQL 17
+        if: ${{ inputs.c08_local_replay }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          umask 077
+          test "$GITHUB_REF" = refs/heads/main
+          test "$C07_CONFIRM" = C08_LOCAL_ONLY
+          test -z "${C07_PRIVATE_READ_TOKEN:-}" && test -z "${C07_C03_BUNDLE_BASE64:-}"
+          test -z "${PGPASSWORD:-}" || { echo 'BLOCKED_C08_SECRET_ENV_LEAK'; exit 1; }
+          export PGHOST=127.0.0.1 PGPORT=5432 PGUSER=postgres PGPASSWORD=postgres
+          export PGDATABASE=postgres PGSSLMODE=disable
+          export OROTITAN_C08_LOCAL_REPLAY=1
+          export OROTITAN_C08_INPUT_DIR="$RUNNER_TEMP/orotitan-schneider-c07-private"
+          if ! bash tests/postgres/run-registry-v1-migration-tests.sh \
+              > "$RUNNER_TEMP/c08-local-pg17-private.log" 2>&1; then
+            grep -E '^BLOCKED_C08_[A-Z0-9_]+$' \
+              "$RUNNER_TEMP/c08-local-pg17-private.log" | tail -1 || true
+            echo 'BLOCKED_C08_LOCAL_PG17_REPLAY; private log suppressed'
+            exit 1
+          fi
+          grep -E '^C08 LOCAL_[A-Z0-9_]+=([A-Z0-9_]+)$' \
+            "$RUNNER_TEMP/c08-local-pg17-private.log" || true
+          grep -Fxq 'C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS' \
+            "$RUNNER_TEMP/c08-local-pg17-private.log"
+          echo 'C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS_LOCAL_ONLY'
+          echo 'C08 NO_REMOTE_REGISTRY_MUTATION_NO_ARTIFACT_UPLOAD'
+          echo 'FUNDAMENTALS_V2=NO_GO'
+
+      - name: Explicit unqualified status
+        if: ${{ success() && !inputs.c08_local_replay }}
+        shell: bash
+        run: |
+          echo 'C07 PROVENANCE_AND_SNAPSHOT_ONLY=PASS'
+          echo 'SCHNEIDER_PG17_RPC_REPLAY=NOT_EXECUTED'
+          echo 'TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED'
+          echo 'FUNDAMENTALS_V2=NO_GO'
+          echo 'NO_ARTIFACT_UPLOAD_NO_REMOTE_MUTATION'
+
+      - name: Remove private local working copies
+        if: always()
+        shell: bash
+        run: |
+          rm -rf -- "$RUNNER_TEMP/orotitan-schneider-c07-private" \
+                    "$RUNNER_TEMP/c07-private-psql.log" \
+                    "$RUNNER_TEMP/c08-local-pg17-private.log"

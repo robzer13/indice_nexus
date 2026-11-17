@@ -519,7 +519,8 @@ def run_from_args(args: Any) -> int:
         result_payload["report"] = report_paths
 
     if json_enabled:
-        print(json.dumps(result_payload, indent=2))
+        # One complete JSON document on the final output line for shell consumers.
+        print(json.dumps(result_payload, separators=(",", ":"), ensure_ascii=False))
 
     LOGGER.info(
         "OroTitan run completed",

@@ -27,7 +27,8 @@ class FeatureEngineeringTests(unittest.TestCase):
         self.assertTrue(set(["ret_1d", "vol_20", "sma200_gap", "rsi_14", "mom_21"]).issubset(features.columns))
         self.assertEqual(len(features), len(self.frame))
         self.assertTrue(features["ret_1d"].isna().iloc[0])
-        self.assertTrue(features["mom_21"].tail(5).isna().all())
+        self.assertTrue(features["mom_21"].head(21).isna().all())
+        self.assertTrue(features["mom_21"].tail(5).notna().all())
 
     def test_make_label_future_ret_alignment(self) -> None:
         labels = make_label_future_ret(self.frame, horizon=5, thr=0.01)
