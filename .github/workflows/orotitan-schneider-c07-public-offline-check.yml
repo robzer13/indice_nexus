@@ -11,6 +11,8 @@ on:
       - "scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql"
       - "tests/orotitan-equity/test_schneider_c07_preflight.py"
       - "docs/orotitan-equity/SCHNEIDER_C07_PHASE_B_PROTECTED_SETUP.md"
+      - "docs/orotitan-equity/c08/**"
+      - "tests/orotitan-equity/test_schneider_c08_rls_plan.py"
 
 permissions:
   contents: read
@@ -35,9 +37,13 @@ jobs:
         run: |
           python3 -m py_compile scripts/orotitan-equity/schneider-c07-readonly-collect.py
           python3 -m py_compile tests/orotitan-equity/test_schneider_c07_preflight.py
+          python3 -m py_compile tests/orotitan-equity/test_schneider_c08_rls_plan.py
       - name: C07 offline fail-closed invariants (no secrets, no Supabase)
         run: |
           python3 -m unittest discover -s tests/orotitan-equity -p 'test_schneider_c07_preflight.py' -v
+      - name: C08 SQL grant plan review-only static tests (no secrets, no DB)
+        run: |
+          python3 -m unittest discover -s tests/orotitan-equity -p 'test_schneider_c08_rls_plan.py' -v
       - name: Scope declaration
         run: |
           echo 'C07_PUBLIC_OFFLINE_SAFETY_ONLY=PASS'
