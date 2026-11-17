@@ -34,7 +34,7 @@ jobs:
 
       - name: Test API/Dashboard
         run: |
-          pytest -q tests/test_api.py tests/test_streamlit.py
+          python -m pytest -q tests/test_api.py tests/test_streamlit.py
       - name: Run tests
         run: |
-          pytest -q --cov=stock_analysis --cov-report=xml
+          python -m pytest -q --cov=stock_analysis --cov-report=xml
