@@ -1,0 +1,25 @@
+name: OroTitan Repository Boundary R0 (public)
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  repo-boundary:
+    name: repo-boundary
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Offline boundary regression tests
+        run: python3 -m unittest discover -s tests/orotitan-equity -p test_repo_boundary_r0.py -v
+      - name: Reject private artifacts and secrets in public changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python3 scripts/orotitan-equity/check_repo_boundary_r0.py --base "$BASE_SHA" --head "$HEAD_SHA"
