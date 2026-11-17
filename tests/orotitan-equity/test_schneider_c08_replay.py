@@ -85,6 +85,25 @@ class C08OfflineReplay(unittest.TestCase):
         self.assertIn("SIMULATED_CANONICAL_LOCATOR_EVIDENCE.json", COL.read_text())
         self.assertIn("FUNDAMENTALS_V2=NO_GO", WF.read_text())
 
+    def test_no_duplicate_workflow_blocks_or_unconditional_loader_pass(self):
+        flow = WF.read_text()
+        step_names = re.findall(r'(?m)^      - name: (.+)$', flow)
+        self.assertEqual(len(step_names), len(set(step_names)))
+        self.assertEqual(step_names.count('Remove private local working copies'), 1)
+        self.assertEqual(step_names.count('Explicit unqualified status'), 1)
+        self.assertEqual(step_names.count('C08 actual Schneider RPC against disposable local PostgreSQL 17'), 1)
+        self.assertLess(len(flow), 18000)
+        self.assertEqual(flow.count('C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS_LOCAL_ONLY'), 1)
+        self.assertIn("grep -Fxq 'C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS'", flow)
+        cleanup = flow.split('      - name: Remove private local working copies', 1)[1]
+        self.assertNotIn('PASS_LOCAL_ONLY', cleanup)
+        self.assertNotIn('secrets.', cleanup)
+
+    def test_fk_baseline_guard_does_not_corrupt_jsonl(self):
+        sql = SQL.read_text()
+        self.assertIn('\\o\n-- C08: four FK-parent', sql)
+        self.assertLess(sql.index('\\o\n-- C08:'), sql.index('AS c08_fk_closure_guard;'))
+        self.assertLess(sql.index('AS c08_fk_closure_guard;'), sql.index('\\o issuers.jsonl'))
     def test_existing_pg17_test_runner_is_only_opt_in(self):
         runner = RUNNER.read_text()
         self.assertIn("OROTITAN_C08_LOCAL_REPLAY", runner)
