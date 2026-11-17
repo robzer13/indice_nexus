@@ -133,6 +133,9 @@ def main() -> None:
     temp = Path(os.environ["RUNNER_TEMP"]) / "orotitan-schneider-c07-private"
     temp.mkdir(mode=0o700, parents=True, exist_ok=False)
     members = read_c03_members(bundle)
+    # C08: retain exact simulation metadata privately in the SAME ephemeral
+    # directory, to pin local-only candidate Git locators without fake commits.
+    (temp / "SIMULATED_CANONICAL_LOCATOR_EVIDENCE.json").write_bytes(members[SIMULATED])
     evidence = json.loads(members[SOURCE_PROOF])
     simulation = json.loads(members[SIMULATED])
     originals = evidence.get("original_bytes_verified", [])

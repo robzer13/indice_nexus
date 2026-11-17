@@ -106,8 +106,12 @@ class Replay:
                   "CANDIDATE_BYTES_MISSING")
             self.raw_candidate[key] = path.read_bytes()
         self.manifest = decode(self.raw_candidate[("DEEP_DIVE_STAGE_MANIFEST", 2)])
-        self.local_simulation = decode((root / "LOCAL_C08_SIMULATION.json").read_bytes()) \
-            if (root / "LOCAL_C08_SIMULATION.json").is_file() else None
+        simulation_file = root / "SIMULATED_CANONICAL_LOCATOR_EVIDENCE.json"
+        guard(simulation_file.is_file(), "LOCAL_C03_SIMULATION_PROOF_MISSING")
+        self.local_simulation = decode(simulation_file.read_bytes())
+        guard(self.local_simulation.get("run_id") == RUN
+              and self.local_simulation.get("status") == "SIMULATION_ONLY_NOT_PERSISTED",
+              "LOCAL_C03_SIMULATION_STATUS")
         self.historical = {(x["artifact_id"], int(x["version"])): x
                            for x in self.rows["orotitan_artifacts"]}
         self.events = self.rows["orotitan_run_events"]
@@ -343,7 +347,7 @@ CREATE TABLE public.orotitan_p0e_run_admission_receipts_v1 (
         guard(proof.get("historical_verified") == 19 and proof.get("candidate_verified") == 3,
               "PROVENANCE_COUNTS_MISMATCH")
         # Project-local Git locator is intentionally simulated and never promoted.
-        commit = os.environ.get("C08_SIMULATED_MANIFEST_COMMIT", "")
+        commit = self.local_simulation.get("git_commit_local_manifest", "")
         guard(SHA40.fullmatch(commit) is not None, "SIMULATED_COMMIT_NOT_PINNED")
         path = "artifacts/" + RUN + "/deep_dive/DEEP_DIVE_STAGE_MANIFEST__v002.json"
         return {
