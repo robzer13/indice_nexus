@@ -90,6 +90,12 @@ def expander(label: str, expanded: bool = False):
 
 
 class _Sidebar:
+    def __enter__(self) -> "_Sidebar":
+        return self
+
+    def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> bool:
+        return False
+
     def multiselect(self, label: str, options: Iterable[str], default: Iterable[str] | None = None, **kwargs: Any) -> List[str]:
         return multiselect(label, options, default=default, **kwargs)
 
