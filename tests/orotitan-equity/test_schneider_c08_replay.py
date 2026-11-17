@@ -115,7 +115,7 @@ class C08OfflineReplay(unittest.TestCase):
         flow = WF.read_text()
         self.assertIn("ref: b5162a7e5b49500ed8d4e727a30fed928082516c", flow)
         self.assertIn("npm ci --ignore-scripts", flow)
-        self.assertLess(flow.index("Install pinned TypeScript tooling before any secret-bearing step"),
+        self.assertLess(flow.index("Prepare pinned TypeScript tooling before private collection"),
                         flow.index("Verify all sealed historical objects"))
         source = (ROOT / "scripts/orotitan-equity/schneider-c08-postcommit-loader.ts").read_text()
         self.assertIn("loadTrustedSchneiderShadowSnapshot", source)
