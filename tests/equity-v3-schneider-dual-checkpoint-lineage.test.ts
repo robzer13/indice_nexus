@@ -234,6 +234,56 @@ test("V2 admits byte-verified historical V1 as ancestor without fabricating role
   assert.equal(verified.stages.DEEP_DIVE?.gates.READY_FOR_INTEGRATION,undefined);
   assert.equal(verified.run.stateVersion,7);
 });
+// A reopened Deep Dive increments only its own stage revision. Research FINAL
+// and the byte-verified predecessor checkpoint remain immutable at revision 1.
+function reopenedDeepDiveFixture():Fixture {
+  const f=fixture(2);
+  f.deepDive.stage_revision=2;
+  f.current.stage_revision=2;
+  const lock=f.rows.find(a=>a.artifact_type==="FUNDAMENTALS_LOCK" && a.version===2);
+  assert.ok(lock);
+  const lockBody=JSON.parse(f.data.get(key(lock))!.toString("utf8"));
+  lockBody.stage_revision=2;
+  rehash(f,lock,lockBody);
+  const currentOutputs=f.current.output_artifacts as Record<string,unknown>[];
+  const currentLockRef=currentOutputs.find(a=>a.artifact_id===lock.artifact_id);
+  assert.ok(currentLockRef);
+  Object.assign(currentLockRef,manifestOutput(lock));
+  rehash(f,f.currentManifest,f.current);
+  return f;
+}
+test("reopened Deep Dive revision 2 accepts Research FINAL revision 1 and immutable checkpoint revision 1",async()=>{
+  const f=reopenedDeepDiveFixture();
+  assert.equal(f.research.stage_revision,1);
+  assert.equal(f.deepDive.stage_revision,2);
+  const verified=await load(f);
+  assert.equal(verified.stages.RESEARCH?.revision,1);
+  assert.equal(verified.stages.DEEP_DIVE?.revision,2);
+  assert.equal(verified.stages.DEEP_DIVE?.manifest?.version,2);
+  assert.equal(verified.stages.DEEP_DIVE?.gates.READY_FOR_VALUATION,true);
+  assert.equal(verified.stages.DEEP_DIVE?.gates.READY_FOR_INTEGRATION,undefined);
+});
+test("reopened Deep Dive rejects an immutable predecessor from a future stage revision",async()=>{
+  const f=reopenedDeepDiveFixture();
+  const prior=JSON.parse(f.data.get(key(f.checkpointV1))!.toString("utf8"));
+  prior.stage_revision=3;
+  rehash(f,f.checkpointV1,prior);
+  await fails(f,"CHECKPOINT_PARENT_IDENTITY_INVALID");
+});
+test("Research FINAL revision mismatch with its own Registry stage fails closed",async()=>{
+  const f=reopenedDeepDiveFixture();
+  const invalid=JSON.parse(f.data.get(key(f.researchManifest))!.toString("utf8"));
+  invalid.stage_revision=2;
+  rehash(f,f.researchManifest,invalid);
+  (f.current.parent_manifests as Record<string,unknown>[])[1].content_sha256=
+    f.researchManifest.content_sha256;
+  rehash(f,f.currentManifest,f.current);
+  await assert.rejects(load(f),(err:unknown) =>
+    err instanceof TrustedLoaderError &&
+      ["MANIFEST_SCHEMA_OR_CONTRACT_INVALID",
+       "CHECKPOINT_RESEARCH_FINAL_IDENTITY_INVALID"].includes(err.code));
+});
+
 test("legacy-shaped V1 is not admitted as current CHECKPOINT",async()=>{
   const f=fixture(1);
   const historical=JSON.parse(f.data.get(key(f.checkpointV1))!.toString("utf8"));
