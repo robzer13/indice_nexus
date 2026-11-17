@@ -10,7 +10,8 @@
       "main": false,
       "fix/orotitan-fundamentals-lock-selfref-sha-20261110": false,
       "fix/orotitan-schneider-c07-private-preflight-20261113": false,
-      "fix/orotitan-ci-macro-contract-20261117": false
+      "fix/orotitan-ci-macro-contract-20261117": false,
+      "fix/orotitan-v31-checkpoint-dual-lineage-20261112": false
     }
   }
 }
