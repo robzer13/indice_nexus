@@ -10,6 +10,10 @@ on:
       - "scripts/orotitan-equity/schneider-c07-readonly-collect.py"
       - "scripts/orotitan-equity/schneider-c07-shadow-readonly-snapshot.sql"
       - "tests/orotitan-equity/test_schneider_c07_preflight.py"
+      - "tests/orotitan-equity/test_schneider_c08_replay.py"
+      - "scripts/orotitan-equity/schneider-c08-local-pg17-replay.py"
+      - "scripts/orotitan-equity/schneider-c08-postcommit-loader.ts"
+      - "tests/postgres/run-registry-v1-migration-tests.sh"
       - "docs/orotitan-equity/SCHNEIDER_C07_PHASE_B_PROTECTED_SETUP.md"
 
 permissions:
@@ -35,9 +39,14 @@ jobs:
         run: |
           python3 -m py_compile scripts/orotitan-equity/schneider-c07-readonly-collect.py
           python3 -m py_compile tests/orotitan-equity/test_schneider_c07_preflight.py
+          python3 -m py_compile scripts/orotitan-equity/schneider-c08-local-pg17-replay.py
+          python3 -m py_compile tests/orotitan-equity/test_schneider_c08_replay.py
       - name: C07 offline fail-closed invariants (no secrets, no Supabase)
         run: |
           python3 -m unittest discover -s tests/orotitan-equity -p 'test_schneider_c07_preflight.py' -v
+      - name: C08 offline replay safety checks
+        run: |
+          python3 -m unittest discover -s tests/orotitan-equity -p 'test_schneider_c08_replay.py' -v
       - name: Scope declaration
         run: |
           echo 'C07_PUBLIC_OFFLINE_SAFETY_ONLY=PASS'
