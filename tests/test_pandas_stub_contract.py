@@ -32,3 +32,18 @@ def test_pct_change_looks_backward_and_never_erases_valid_tail() -> None:
     assert all(math.isnan(x) for x in change.tolist()[:21])
     assert not any(math.isnan(x) for x in change.tolist()[21:])
     assert change.tolist()[-1] == (30 - 9) / 9
+
+
+def test_series_reindex_keeps_missing_as_nan() -> None:
+    series = pd.Series([10.0, 20.0], index=[1, 2])
+    aligned = series.reindex([2, 3, 1])
+    assert aligned.tolist()[0] == 20.0
+    assert math.isnan(aligned.tolist()[1])
+    assert aligned.tolist()[2] == 10.0
+
+
+def test_dataframe_loc_label_selection_does_not_shift_rows() -> None:
+    frame = pd.DataFrame({"price": [10.0, 20.0, 30.0]}, index=[1, 2, 3])
+    selected = frame.loc[[3, 1]]
+    assert selected["price"].tolist() == [30.0, 10.0]
+    assert list(selected.index) == [3, 1]

@@ -148,6 +148,13 @@ class Series:
             filtered_index.append(label)
         return Series(filtered_data, DatetimeIndex(filtered_index), self.dtype)
 
+    def reindex(self, index: Sequence[Any]) -> "Series":
+        """Align by existing labels; unobserved labels remain missing."""
+        wanted = list(index)
+        lookup = {key: value for key, value in zip(self.index, self._data)}
+        converted = DatetimeIndex(wanted) if isinstance(index, DatetimeIndex) else wanted
+        return Series([lookup.get(key, math.nan) for key in wanted], converted, self.dtype)
+
     def tolist(self) -> List[Any]:
         return list(self._data)
 
@@ -503,7 +510,25 @@ class _LocAccessor:
     def __init__(self, frame: DataFrame) -> None:
         self._frame = frame
 
-    def __getitem__(self, label: Any) -> Series:
+    def __getitem__(self, label: Any) -> Series | DataFrame:
+        if isinstance(label, list):
+            if label and all(isinstance(item, bool) for item in label):
+                if len(label) != len(self._frame._index):
+                    raise ValueError("Boolean index must match row count")
+                positions = [i for i, included in enumerate(label) if included]
+            else:
+                positions = []
+                for item in label:
+                    try:
+                        positions.append(self._frame._index.index(item))
+                    except ValueError as exc:
+                        raise KeyError(item) from exc
+            return DataFrame(
+                {col: [self._frame._data[col][i] for i in positions]
+                 for col in self._frame._columns},
+                index=[self._frame._index[i] for i in positions],
+                columns=self._frame._columns,
+            )
         try:
             position = self._frame._index.index(label)
         except ValueError as exc:
