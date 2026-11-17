@@ -98,7 +98,9 @@ class TestClient:
             return _Response(exc.status_code, {"detail": exc.detail})
 
         call_kwargs = {**path_params, **query_params}
-        annotations = getattr(handler, "__annotations__", {})
+        from typing import get_type_hints
+
+        annotations = get_type_hints(handler)
         for key, value in list(call_kwargs.items()):
             annotation = annotations.get(key)
             if annotation is int and isinstance(value, str):
