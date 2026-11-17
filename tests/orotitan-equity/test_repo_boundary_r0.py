@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import subprocess
+import tempfile
+from unittest.mock import patch
 from pathlib import Path
 import sys
 import unittest
@@ -51,6 +54,75 @@ class PublicBoundaryTests(unittest.TestCase):
         raw = b"export GH_TOKEN=ghp_" + b"A" * 36
         self.assertIn("CREDENTIAL_PATTERN_IN_PUBLIC_REPO",
                       mod.inspect_path_and_content("scripts/new.sh", raw))
+
+
+    @staticmethod
+    def _git(cwd: str, *args: str) -> bytes:
+        return subprocess.check_output(
+            ["git", *args], cwd=cwd, stderr=subprocess.DEVNULL
+        )
+
+    def test_secret_then_cleanup_cannot_hide_prior_commit(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            def git(*args: str) -> bytes:
+                return self._git(tmp, *args)
+
+            git("init", "-q")
+            git("config", "user.name", "Offline Security Test")
+            git("config", "user.email", "ci@example.invalid")
+            readme = Path(tmp) / "README.md"
+            readme.write_text("public baseline\n", encoding="utf-8")
+            git("add", "README.md")
+            git("commit", "-qm", "baseline")
+            baseline = git("rev-parse", "HEAD").decode().strip()
+
+            # Both disallowed blobs will remain in Git history even when
+            # removed from the final tree. No actual credential is used.
+            archive = Path(tmp) / "artifacts" / "private.json"
+            archive.parent.mkdir(parents=True)
+            archive.write_text("{}\n", encoding="utf-8")
+            git("add", "artifacts/private.json")
+            git("commit", "-qm", "transient private artifact")
+            git("rm", "-q", "artifacts/private.json")
+            git("commit", "-qm", "cleanup artifact")
+
+            note = Path(tmp) / "notes.txt"
+            note.write_bytes(b"token=ghp_" + b"A" * 36 + b"\n")
+            git("add", "notes.txt")
+            git("commit", "-qm", "transient credential")
+            note.write_text("safe text\n", encoding="utf-8")
+            git("add", "notes.txt")
+            git("commit", "-qm", "sanitize current tree")
+            final = git("rev-parse", "HEAD").decode().strip()
+
+            with patch.object(mod, "git", side_effect=git):
+                findings = mod.scan_commit_range(baseline, final)
+            codes = {code for _, code in findings}
+            self.assertIn("PRIVATE_DATA_DIRECTORY_IN_PUBLIC_REPO", codes)
+            self.assertIn("CREDENTIAL_PATTERN_IN_PUBLIC_REPO", codes)
+
+    def test_clean_history_with_intermediate_deletion_is_allowed(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            def git(*args: str) -> bytes:
+                return self._git(tmp, *args)
+
+            git("init", "-q")
+            git("config", "user.name", "Offline Security Test")
+            git("config", "user.email", "ci@example.invalid")
+            file = Path(tmp) / "README.md"
+            file.write_text("public baseline\n", encoding="utf-8")
+            git("add", "README.md")
+            git("commit", "-qm", "baseline")
+            baseline = git("rev-parse", "HEAD").decode().strip()
+
+            file.write_text("public update\n", encoding="utf-8")
+            git("add", "README.md")
+            git("commit", "-qm", "public change")
+            git("rm", "-q", "README.md")
+            git("commit", "-qm", "delete public file")
+            final = git("rev-parse", "HEAD").decode().strip()
+            with patch.object(mod, "git", side_effect=git):
+                self.assertEqual(mod.scan_commit_range(baseline, final), [])
 
     def test_pull_request_target_workflow_is_rejected(self):
         raw = b"name: unsafe\non:\n  pull_request_target:\n"

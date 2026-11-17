@@ -6,6 +6,7 @@ Only Git metadata and added/modified file bytes are read. Never print content or
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import PurePosixPath
@@ -79,23 +80,83 @@ def git(*args: str) -> bytes:
     return subprocess.check_output(["git", *args], stderr=subprocess.DEVNULL)
 
 
-def changed_files(base: str, head: str) -> list[tuple[str, str]]:
-    for name in (base, head):
-        if not re.fullmatch(r"[0-9a-f]{40}", name):
+MAX_HISTORY_COMMITS = 2000
+MAX_CHANGED_BLOBS = 5000
+
+
+def introduced_changes(base: str, head: str):
+    """Yield each added/changed blob in every commit, not only the final diff.
+
+    This includes merged histories and blobs later overwritten or deleted.
+    """
+    for ref in (base, head):
+        if not re.fullmatch(r"[0-9a-f]{40}", ref):
             raise ValueError("INVALID_DIFF_PIN")
-    parts = git("diff", "--name-status", "-z", "--find-renames", base, head).split(b"\0")
-    changes = []
-    i = 0
-    while i < len(parts) and parts[i]:
-        status = parts[i].decode("ascii")
-        i += 1
-        path = parts[i].decode("utf-8")
-        i += 1
-        if status.startswith(("R", "C")):
-            path = parts[i].decode("utf-8")
-            i += 1
-        changes.append((status, path))
-    return changes
+    try:
+        git("merge-base", "--is-ancestor", base, head)
+        commits = git("rev-list", "--reverse", f"{base}..{head}").decode("ascii").splitlines()
+    except (subprocess.CalledProcessError, UnicodeDecodeError):
+        raise ValueError("UNVERIFIED_GIT_HISTORY") from None
+    if len(commits) > MAX_HISTORY_COMMITS:
+        raise ValueError("HISTORY_TOO_LARGE_FOR_AUTOMATIC_ATTESTATION")
+
+    observed: set[tuple[str, str, str | None]] = set()
+    for commit in commits:
+        parents = git("rev-list", "--parents", "-n", "1", commit).decode("ascii").split()
+        if not parents or parents[0] != commit or len(parents) < 2:
+            raise ValueError("UNEXPECTED_ROOT_OR_GIT_HISTORY")
+        for parent in parents[1:]:
+            fields = git(
+                "diff", "--name-status", "-z", "--find-renames", parent, commit
+            ).split(b"\0")
+            index = 0
+            while index < len(fields) and fields[index]:
+                status = fields[index].decode("ascii")
+                index += 1
+                if index >= len(fields) or not fields[index]:
+                    raise ValueError("INVALID_GIT_CHANGE_RECORD")
+                old_path = fields[index].decode("utf-8")
+                index += 1
+                if status.startswith(("R", "C")):
+                    if index >= len(fields) or not fields[index]:
+                        raise ValueError("INVALID_GIT_RENAME_RECORD")
+                    path = fields[index].decode("utf-8")
+                    index += 1
+                    source_path = old_path
+                else:
+                    path = old_path
+                    source_path = None
+                if status == "D":
+                    continue
+                entry = (commit, path, source_path)
+                if entry not in observed:
+                    observed.add(entry)
+                    if len(observed) > MAX_CHANGED_BLOBS:
+                        raise ValueError("TOO_MANY_CHANGED_BLOBS")
+                    yield entry
+
+
+def scan_commit_range(base: str, head: str) -> list[tuple[str, str]]:
+    """Fail closed if any intermediate commit introduced non-public bytes."""
+    violations: list[tuple[str, str]] = []
+    for commit, path, old_path in introduced_changes(base, head):
+        obj = f"{commit}:{path}"
+        try:
+            if git("cat-file", "-t", obj).strip() != b"blob":
+                violations.append((path, "NON_BLOB_GIT_OBJECT"))
+                continue
+            size = int(git("cat-file", "-s", obj))
+            if size > MAX_SCAN_BYTES:
+                violations.append((path, "UNBOUNDED_CHANGED_FILE"))
+                continue
+            data = git("show", obj)
+        except (subprocess.CalledProcessError, ValueError):
+            violations.append((path, "GIT_BLOB_CANNOT_BE_VERIFIED"))
+            continue
+        for candidate_path in (path, old_path) if old_path else (path,):
+            for code in inspect_path_and_content(candidate_path, data):
+                violations.append((candidate_path, code))
+    return violations
 
 
 def main() -> int:
@@ -106,19 +167,15 @@ def main() -> int:
     if os.getenv("GITHUB_REPOSITORY", REPO) != REPO:
         print("BLOCKED_R0_WRONG_REPOSITORY", file=sys.stderr)
         return 1
-    violations = []
-    for status, path in changed_files(args.base, args.head):
-        if status == "D":
-            continue
-        try:
-            data = git("show", args.head + ":" + path)
-        except subprocess.CalledProcessError:
-            violations.append((path, "MISSING_CHANGED_FILE"))
-            continue
-        for code in inspect_path_and_content(path, data):
-            violations.append((path, code))
+    try:
+        violations = scan_commit_range(args.base, args.head)
+    except (ValueError, subprocess.CalledProcessError, UnicodeDecodeError):
+        print("BLOCKED_R0_UNVERIFIED_HISTORY", file=sys.stderr)
+        return 1
     for path, code in violations:
-        print("BLOCKED_R0 " + code + " " + path, file=sys.stderr)
+        # A file path may itself contain private information; never log it.
+        safe_id = hashlib.sha256(path.encode("utf-8")).hexdigest()[:12]
+        print(f"BLOCKED_R0 {code} path_sha256={safe_id}", file=sys.stderr)
     if violations:
         return 1
     print("OROTITAN_REPOSITORY_BOUNDARY_R0=PASS")
