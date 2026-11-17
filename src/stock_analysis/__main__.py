@@ -1030,6 +1030,25 @@ def build_parser() -> argparse.ArgumentParser:
         api_host=None,
         api_port=None,
     )
+    # Explicit AI entrypoint: do not route AI-only requests through price downloads.
+    parser.add_argument("--orotitan-ai", action="store_true", help="Exécute le pipeline OroTitan AI")
+    parser.add_argument("--ai-task", choices=["decide", "embed", "report", "full"], default="full")
+    parser.add_argument("--json", action="store_true", help="Émet le résultat structuré en JSON")
+    parser.add_argument("--behavior", action="store_true", help="Active les diagnostics comportementaux")
+    parser.add_argument("--behavior-json", action="store_true", help="Émet les diagnostics comportementaux JSON")
+    parser.add_argument("--behavior-threshold", type=float, default=30.0)
+    parser.add_argument("--behavior-persist", choices=["none", "jsonl", "sqlite"], default="jsonl")
+    parser.add_argument("--risk-budget", type=float, default=0.1)
+    parser.add_argument("--temperature", type=float, default=0.0)
+    parser.add_argument("--regime", help="Régime macro explicitement fourni, sans inférence implicite")
+    parser.add_argument("--regime-weights", help="Mapping JSON de pondérations régimes")
+    parser.add_argument("--regime-file", help="Fichier JSON des pondérations régimes")
+    parser.add_argument("--tickers-file", help="Liste de tickers depuis un fichier")
+    parser.add_argument("--feedback-file", help="Fichier JSON d'événements de feedback")
+    parser.add_argument("--report-dir", default="reports", help="Répertoire rapports AI")
+    parser.add_argument("--report-out", help="Sortie Markdown explicite")
+    parser.add_argument("--save-state", action="store_true", help="Autorise persistance état AI")
+    parser.add_argument("--dry-run", action="store_true", help="Ne persiste pas les rapports ou l'état AI")
     parser.add_argument("--tickers", help="Liste de tickers séparés par des virgules")
     parser.add_argument("--period", help="Fenêtre de téléchargement (ex: 2y)")
     parser.add_argument("--interval", help="Granularité des données (ex: 1d)")
@@ -1108,6 +1127,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(list(argv) if argv is not None else None)
+    if args.orotitan_ai:
+        # AI dispatch must not launch the legacy stock-analysis side effects.
+        from .cli.orotitan_ai import run_from_args
+        return run_from_args(args)
+
     settings = _resolve_settings(args)
 
     setup_logging(settings["log_level"])
