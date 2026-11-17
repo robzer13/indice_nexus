@@ -131,3 +131,11 @@ test "$legacy_before" = "$(psql -XAt -d "$database" -c "select md5((select strin
 test "$identity_before" = "$(psql -XAt -d "$database" -c "select md5((select string_agg(row_to_json(i)::text, ',' order by i.issuer_id) from issuers i)||(select string_agg(row_to_json(s)::text, ',' order by s.security_id) from securities s)||(select string_agg(row_to_json(d)::text, ',' order by d.dossier_id) from research_dossiers d)||(select string_agg(row_to_json(m)::text, ',' order by m.legacy_company_id) from legacy_company_identity_map m))")"
 
 echo 'Registry V1.6–V1.12 + controlled run cancellation PostgreSQL 17 regression: PASS ALL'
+# C08 opt-in: only the protected manual workflow sets this flag and an
+# ephemeral PRIVATE input directory. The same disposable PG17 DB is used.
+if [[ "${OROTITAN_C08_LOCAL_REPLAY:-0}" == "1" ]]; then
+  test "${PGHOST}" = "127.0.0.1" || exit 88
+  test "${OROTITAN_C08_INPUT_DIR:-}" != "" || exit 88
+  python3 "$root/scripts/orotitan-equity/schneider-c08-local-pg17-replay.py" \
+    --database "$database" --input-dir "$OROTITAN_C08_INPUT_DIR"
+fi
