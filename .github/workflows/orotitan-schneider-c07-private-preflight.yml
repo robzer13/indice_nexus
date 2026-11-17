@@ -14,7 +14,7 @@ on:
         type: string
         required: true
       c08_local_replay:
-        description: 'Opt-in local PostgreSQL 17 replay, confirm C08_LOCAL_ONLY'
+        description: 'Opt-in LOCAL PG17 replay. Confirm C08_LOCAL_ONLY'
         type: boolean
         default: false
         required: true
@@ -91,7 +91,7 @@ jobs:
           openssl verify -CAfile "$PGSSLROOTCERT" "$PGSSLROOTCERT" >/dev/null
           echo 'C07 SUPABASE_TRUSTED_CA_PIN=PASS'
 
-      - name: Checkout pinned V3.1 trusted loader candidate WITHOUT private credentials
+      - name: Checkout pinned V3.1 typed-loader candidate without saved credentials
         if: ${{ inputs.c08_local_replay }}
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
@@ -99,7 +99,7 @@ jobs:
           path: c08-candidate-v31
           persist-credentials: false
 
-      - name: Install pinned TypeScript tooling before any secret-bearing step
+      - name: Prepare pinned TypeScript tooling before private collection
         if: ${{ inputs.c08_local_replay }}
         shell: bash
         run: |
@@ -178,44 +178,16 @@ jobs:
           export OROTITAN_C08_INPUT_DIR="$RUNNER_TEMP/orotitan-schneider-c07-private"
           if ! bash tests/postgres/run-registry-v1-migration-tests.sh \
               > "$RUNNER_TEMP/c08-local-pg17-private.log" 2>&1; then
-            grep -E '^BLOCKED_C08_[A-Z0-9_]+
-        shell: bash
-        run: |
-          echo 'C07 PROVENANCE_AND_SNAPSHOT_ONLY=PASS'
-          echo 'SCHNEIDER_PG17_RPC_REPLAY=NOT_EXECUTED'
-          echo 'TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED'
-          echo 'FUNDAMENTALS_V2=NO_GO'
-          echo 'NO_ARTIFACT_UPLOAD_NO_REMOTE_MUTATION'
-
-      - name: Remove private local working copies
-        if: always()
-        shell: bash
-        run: |
-          rm -rf -- "$RUNNER_TEMP/orotitan-schneider-c07-private" \
-                    "$RUNNER_TEMP/c07-private-psql.log"
- \
+            grep -E '^BLOCKED_C08_[A-Z0-9_]+$' \
               "$RUNNER_TEMP/c08-local-pg17-private.log" | tail -1 || true
             echo 'BLOCKED_C08_LOCAL_PG17_REPLAY; private log suppressed'
             exit 1
           fi
-          grep -E '^C08 LOCAL_[A-Z0-9_]+=([A-Z0-9_]+)
-        shell: bash
-        run: |
-          echo 'C07 PROVENANCE_AND_SNAPSHOT_ONLY=PASS'
-          echo 'SCHNEIDER_PG17_RPC_REPLAY=NOT_EXECUTED'
-          echo 'TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED'
-          echo 'FUNDAMENTALS_V2=NO_GO'
-          echo 'NO_ARTIFACT_UPLOAD_NO_REMOTE_MUTATION'
-
-      - name: Remove private local working copies
-        if: always()
-        shell: bash
-        run: |
-          rm -rf -- "$RUNNER_TEMP/orotitan-schneider-c07-private" \
-                    "$RUNNER_TEMP/c07-private-psql.log"
- \
+          grep -E '^C08 LOCAL_[A-Z0-9_]+=([A-Z0-9_]+)$' \
             "$RUNNER_TEMP/c08-local-pg17-private.log" || true
-          echo 'C08 TRUSTED_LOADER_POSTCOMMIT=PASS_LOCAL_ONLY'
+          grep -Fxq 'C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS' \
+            "$RUNNER_TEMP/c08-local-pg17-private.log"
+          echo 'C08 LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS_LOCAL_ONLY'
           echo 'C08 NO_REMOTE_REGISTRY_MUTATION_NO_ARTIFACT_UPLOAD'
           echo 'FUNDAMENTALS_V2=NO_GO'
 

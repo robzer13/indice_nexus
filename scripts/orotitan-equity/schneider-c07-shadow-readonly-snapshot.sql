@@ -65,6 +65,7 @@ SELECT row_to_json(t)::text FROM (
   WHERE run_id = 'db00ce77-04eb-492b-a76b-164ecbe9ccfe'
 ) t;
 
+\o
 -- C08: four FK-parent and receipt rows in THIS SAME private READ ONLY snapshot.
 -- Policies were granted in SHADOW separately; no extra connection or mutation.
 SELECT 1 / CASE WHEN
