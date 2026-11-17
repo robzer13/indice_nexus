@@ -153,7 +153,7 @@ def _build_run_payload(started: datetime) -> Dict[str, Any]:
 
 @app.get("/health")
 def health() -> Dict[str, Any]:
-    return {"status": "ok", "time": datetime.utcnow().isoformat() + "Z"}
+    return {"status": "ok", "version": __version__, "time": datetime.utcnow().isoformat() + "Z"}
 
 
 @app.post("/ai/behavior/analyze", response_model=BehaviorResponse)

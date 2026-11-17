@@ -13,7 +13,9 @@ class MLPipelineTests(unittest.TestCase):
     def setUp(self) -> None:
         index = pd.date_range("2022-01-01", periods=300, freq="D", tz="Europe/Paris")
         span = len(index)
-        ret = [(-0.4 + (0.8 * idx) / (span - 1)) for idx in range(span)]
+        # Each chronological fold must contain both classes. A monotonic
+        # ramp crossing zero once cannot support a valid out-of-sample ROC-AUC.
+        ret = [0.3 if idx % 4 < 2 else -0.3 for idx in range(span)]
         data = {
             "ret_1d": ret,
             "vol_20": [0.1 + (0.1 * idx) / (span - 1) for idx in range(span)],

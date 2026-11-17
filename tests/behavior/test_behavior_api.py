@@ -1,6 +1,8 @@
 from fastapi.testclient import TestClient
 
-from stock_analysis.api import app as api_module
+from importlib import import_module
+
+api_module = import_module("stock_analysis.api.app")
 
 
 def test_behavior_analyze_endpoint() -> None:

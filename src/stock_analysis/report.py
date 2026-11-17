@@ -276,7 +276,7 @@ def render_markdown(
             report_meta = payload.get("report", {}) if isinstance(payload, dict) else {}
             if isinstance(report_meta, dict):
                 if charts_dir and report_meta.get("chart_filename"):
-                    chart_path = os.path.join(charts_dir, str(report_meta["chart_filename"]))
+                    chart_path = os.path.join(charts_dir, str(report_meta["chart_filename"])).replace("\\", "/")
                     lines.append(f"![{ticker} chart]({chart_path})")
                     lines.append("")
                 else:

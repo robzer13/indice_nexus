@@ -11,8 +11,16 @@ from scripts import nexus_daily
 def test_build_cli_arguments_includes_nexus_flags(monkeypatch) -> None:
     monkeypatch.setenv("NEXUS_TICKERS", "AAA")
     args = scheduler._build_cli_arguments()
-    assert "--nexus-report" in args
-    assert "--regime" in args
+    # The live CLI accepts --score/--report, not the abandoned Nexus-only flags.
+    # Verify the scheduler's complete subprocess args parse without network calls.
+    from stock_analysis.__main__ import build_parser
+    assert "--score" in args
+    assert "--report" in args
+    assert "--save" in args
+    assert "--nexus-report" not in args
+    assert "--regime" not in args
+    parsed = build_parser().parse_args(args[3:])
+    assert parsed.report and parsed.score and parsed.save
 
 
 def test_nexus_daily_run_once(monkeypatch) -> None:

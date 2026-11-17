@@ -1,0 +1,7 @@
+# OroTitan R0 — code owners; enforcement requires GitHub ruleset.
+/.github/workflows/ @robzer13
+/scripts/orotitan-equity/check_repo_boundary_r0.py @robzer13
+/docs/orotitan-equity/OROTITAN_REPOSITORY_BOUNDARY_R0.md @robzer13
+/tests/orotitan-equity/test_repo_boundary_r0.py @robzer13
+/.github/CODEOWNERS @robzer13
+/AGENTS.md @robzer13
