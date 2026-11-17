@@ -143,12 +143,18 @@ def get_ml_summary(
         .replace([float("inf"), float("-inf")], float("nan"))
         .dropna()
     )
-    label_series = label_series.loc[features.index].dropna()
-    if len(features) == 0 or len(label_series) == 0:
+    # Only observations with matured future labels can be evaluated or trained.
+    # The final horizon rows may still produce predictions, but never a fabricated
+    # confusion matrix from labels that cannot yet be known.
+    label_series = label_series.reindex(features.index)
+    mature_labels = label_series.dropna()
+    if len(features) == 0 or len(mature_labels) == 0:
         raise HTTPException(status_code=404, detail="Insufficient data for ML evaluation")
 
     try:
-        auc_mean, auc_std = time_cv(features, label_series, model_kind=model, splits=5)
+        auc_mean, auc_std = time_cv(
+            features.loc[mature_labels.index], mature_labels, model_kind=model, splits=5
+        )
         warmup = max(10, min(len(features), 200))
         proba_series, signal_series = walk_forward_signals(
             features,
@@ -161,10 +167,16 @@ def get_ml_summary(
         price_series = frame["Adj Close"] if "Adj Close" in frame.columns else frame[price_column]
         aligned_prices = price_series.loc[signal_series.index]
         sharpe = sharpe_sim(aligned_prices, signal_series)
-        cm = confusion(
-            label_series.loc[proba_series.dropna().index],
-            proba_series.dropna(),
-            thr=0.5,
+        scored_predictions = proba_series.dropna()
+        verified_index = [key for key in scored_predictions.index if key in mature_labels.index]
+        cm = (
+            confusion(
+                mature_labels.loc[verified_index],
+                scored_predictions.loc[verified_index],
+                thr=0.5,
+            )
+            if verified_index
+            else None
         )
     except HTTPException:
         raise
@@ -183,6 +195,7 @@ def get_ml_summary(
         "auc_std": auc_std,
         "sharpe": sharpe,
         "confusion": cm,
+        "evaluation_observations": len(verified_index),
         "probabilities": _series_to_records(proba_series.dropna(), "proba"),
         "signals": _series_to_records(signal_series.dropna(), "signal"),
     }

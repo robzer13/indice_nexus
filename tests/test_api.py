@@ -67,7 +67,7 @@ def test_ml_endpoint(monkeypatch) -> None:
     monkeypatch.setattr(api_module, "time_cv", lambda X, y, model_kind, splits=5: (0.62, 0.03))
 
     def fake_walk_forward(X, y, retrain_every, warmup, model_kind, proba_threshold):
-        effective_index = list(X.index)[-5:]
+        effective_index = list(X.index)[-10:-5]
         proba = pd.Series([0.6] * len(effective_index), index=effective_index)
         signal = pd.Series([1.0] * len(effective_index), index=effective_index)
         return proba, signal
@@ -88,7 +88,25 @@ def test_ml_endpoint(monkeypatch) -> None:
     assert payload["ticker"] == "MC.PA"
     assert payload["auc_mean"] == 0.62
     assert payload["confusion"]["tp"] == 7
+    assert payload["evaluation_observations"] == 5
     assert len(payload["signals"]) > 0
+
+
+def test_ml_unmatured_predictions_have_no_fabricated_confusion(monkeypatch) -> None:
+    frame = _build_frame()
+    monkeypatch.setattr(api_module, "fetch_price_history", lambda *a, **k: frame)
+    monkeypatch.setattr(api_module, "time_cv", lambda *a, **k: (0.62, 0.03))
+    def fake_predict(X, y, **kwargs):
+        future = list(X.index)[-5:]
+        return pd.Series([0.6] * len(future), index=future), pd.Series([1.0] * len(future), index=future)
+    monkeypatch.setattr(api_module, "walk_forward_signals", fake_predict)
+    monkeypatch.setattr(api_module, "sharpe_sim", lambda *a: 0.42)
+    response = TestClient(api_module.app).get("/ml/MC.PA?model=rf&horizon=5&threshold=0.0")
+    payload = response.json()
+    assert response.status_code == 200, payload
+    assert payload["confusion"] is None
+    assert payload["evaluation_observations"] == 0
+    assert len(payload["probabilities"]) == 5
 
 
 def test_report_endpoint(monkeypatch) -> None:
