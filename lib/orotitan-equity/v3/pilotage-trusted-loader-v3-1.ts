@@ -271,6 +271,7 @@ type VerifiedStage = {
 
 async function verifyStage(
   port: TrustedPilotagePort, run: RunRow, row: StageRow, artifacts: ArtifactRow[],
+  stages: StageRow[],
 ): Promise<VerifiedStage> {
   check(row.run_id === run.run_id && STAGES.includes(row.stage_code),
     "STAGE_RUN_ID_MISMATCH");
@@ -340,7 +341,11 @@ async function verifyStage(
         const source = readJson(parentBytes);
         check(source.manifest_id === parent.manifest_id &&
           source.manifest_kind === "FINAL" && source.stage === "RESEARCH" &&
-          source.run_id === run.run_id && source.stage_revision === row.stage_revision,
+          source.run_id === run.run_id, "CHECKPOINT_RESEARCH_FINAL_IDENTITY_INVALID");
+        const researchStage = stages.find(stage =>
+          stage.run_id === run.run_id && stage.stage_code === "RESEARCH");
+        check(researchStage !== undefined &&
+          source.stage_revision === researchStage.stage_revision,
           "CHECKPOINT_RESEARCH_FINAL_IDENTITY_INVALID");
         parents.push({artifactId: proof.artifactId, version: proof.version,
           sha256: proof.sha256, runId: proof.runId, stageCode: proof.stageCode});
@@ -381,7 +386,9 @@ async function verifyStage(
         previousJson.manifest_kind === "CHECKPOINT" &&
         previousJson.stage === row.stage_code &&
         previousJson.run_id === run.run_id &&
-        previousJson.stage_revision === row.stage_revision,
+        Number.isSafeInteger(previousJson.stage_revision) &&
+        Number(previousJson.stage_revision) > 0 &&
+        Number(previousJson.stage_revision) <= row.stage_revision,
         "CHECKPOINT_PARENT_IDENTITY_INVALID");
       parents.push({
         artifactId: previousProof.artifactId, version: previousProof.version,
@@ -544,7 +551,7 @@ async function loadTrustedPilotageSnapshotCore(
   check(current.state_version === input.expectedCurrentStageStateVersion, "STALE_STAGE_STATE");
   const issuer = await input.port.getIssuer(run.issuer_id!);
   check(issuer !== null && issuer.issuer_id === run.issuer_id, "ISSUER_IDENTITY_NOT_FOUND");
-  const verified = await Promise.all(stages.map(st => verifyStage(input.port, run, st, artifacts)));
+  const verified = await Promise.all(stages.map(st => verifyStage(input.port, run, st, artifacts, stages)));
   const index = new Map(verified.map(v => [v.state.code, v]));
   const dd = index.get("DEEP_DIVE");
   if (dd?.manifest && dd.state.manifest) {
