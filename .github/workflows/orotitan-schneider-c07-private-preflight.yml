@@ -91,6 +91,22 @@ jobs:
           openssl verify -CAfile "$PGSSLROOTCERT" "$PGSSLROOTCERT" >/dev/null
           echo 'C07 SUPABASE_TRUSTED_CA_PIN=PASS'
 
+      - name: Checkout pinned V3.1 trusted loader candidate WITHOUT private credentials
+        if: ${{ inputs.c08_local_replay }}
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: b5162a7e5b49500ed8d4e727a30fed928082516c
+          path: c08-candidate-v31
+          persist-credentials: false
+
+      - name: Install pinned TypeScript tooling before any secret-bearing step
+        if: ${{ inputs.c08_local_replay }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd c08-candidate-v31
+          npm ci --ignore-scripts --no-audit --no-fund >/dev/null 2>&1
+          test -x node_modules/.bin/tsx
       - name: Verify all sealed historical objects and local-only candidate bytes
         shell: bash
         env:
@@ -199,7 +215,7 @@ jobs:
                     "$RUNNER_TEMP/c07-private-psql.log"
  \
             "$RUNNER_TEMP/c08-local-pg17-private.log" || true
-          echo 'C08 TRUSTED_LOADER_POSTCOMMIT=NOT_EXECUTED'
+          echo 'C08 TRUSTED_LOADER_POSTCOMMIT=PASS_LOCAL_ONLY'
           echo 'C08 NO_REMOTE_REGISTRY_MUTATION_NO_ARTIFACT_UPLOAD'
           echo 'FUNDAMENTALS_V2=NO_GO'
 

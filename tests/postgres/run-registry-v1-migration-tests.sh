@@ -138,4 +138,10 @@ if [[ "${OROTITAN_C08_LOCAL_REPLAY:-0}" == "1" ]]; then
   test "${OROTITAN_C08_INPUT_DIR:-}" != "" || exit 88
   python3 "$root/scripts/orotitan-equity/schneider-c08-local-pg17-replay.py" \
     --database "$database" --input-dir "$OROTITAN_C08_INPUT_DIR"
+  # Post-COMMIT: typed V3.1 at the separately pinned, reviewed PR #449 commit.
+  # This is the same LOCAL DB, before disposable-database cleanup.
+  test -x "$root/c08-candidate-v31/node_modules/.bin/tsx"
+  "$root/c08-candidate-v31/node_modules/.bin/tsx" \
+    "$root/scripts/orotitan-equity/schneider-c08-postcommit-loader.ts" \
+    "$database" "$OROTITAN_C08_INPUT_DIR"
 fi

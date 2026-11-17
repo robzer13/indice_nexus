@@ -90,6 +90,21 @@ class C08OfflineReplay(unittest.TestCase):
         self.assertIn("OROTITAN_C08_LOCAL_REPLAY", runner)
         self.assertIn("127.0.0.1", runner)
         self.assertIn("schneider-c08-local-pg17-replay.py", runner)
+        self.assertIn("schneider-c08-postcommit-loader.ts", runner)
+
+    def test_postcommit_loader_is_pinned_and_prepared_before_private_collection(self):
+        flow = WF.read_text()
+        self.assertIn("ref: b5162a7e5b49500ed8d4e727a30fed928082516c", flow)
+        self.assertIn("npm ci --ignore-scripts", flow)
+        self.assertLess(flow.index("Install pinned TypeScript tooling before any secret-bearing step"),
+                        flow.index("Verify all sealed historical objects"))
+        source = (ROOT / "scripts/orotitan-equity/schneider-c08-postcommit-loader.ts").read_text()
+        self.assertIn("loadTrustedSchneiderShadowSnapshot", source)
+        self.assertIn("expectedRunStateVersion: 8", source)
+        self.assertIn("expectedCurrentStageStateVersion: 3", source)
+        self.assertIn("LOCAL_POSTCOMMIT_TRUSTED_LOADER=PASS", source)
+        self.assertIn("PGHOST", source)
+        self.assertNotIn("https://", source)
 
 
 if __name__ == "__main__":
