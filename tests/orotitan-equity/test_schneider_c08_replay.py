@@ -45,8 +45,8 @@ class C08OfflineReplay(unittest.TestCase):
         self.assertNotIn("C07_PRIVATE_READ_TOKEN", job)
         self.assertNotIn("C07_C03_BUNDLE_BASE64", job)
         self.assertNotIn("PGPASSWORD:", job)
-        self.assertEqual(flow.count("C07_PRIVATE_READ_TOKEN:"), 1)
-        self.assertEqual(flow.count("C07_C03_BUNDLE_BASE64:"), 1)
+        self.assertEqual(len(re.findall(r"(?m)^\s+C07_PRIVATE_READ_TOKEN: ", flow)), 1)
+        self.assertEqual(len(re.findall(r"(?m)^\s+C07_C03_BUNDLE_BASE64: ", flow)), 1)
         replay = flow.split("      - name: C08 actual Schneider RPC", 1)[1]
         self.assertNotIn("secrets.", replay)
         self.assertIn("PGHOST=127.0.0.1", replay)
