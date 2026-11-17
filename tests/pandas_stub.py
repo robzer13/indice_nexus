@@ -173,7 +173,7 @@ class Series:
         changes: List[float] = []
         for position, value in enumerate(self._data):
             reference_position = position - periods
-            if reference_position < 0:
+            if reference_position < 0 or reference_position >= len(self._data):
                 changes.append(math.nan)
                 continue
             previous = self._data[reference_position]
@@ -184,10 +184,6 @@ class Series:
                 changes.append((value - previous) / previous)
             except ZeroDivisionError:
                 changes.append(math.nan)
-        if periods > 0 and changes:
-            tail_start = max(0, len(changes) - periods)
-            for idx in range(tail_start, len(changes)):
-                changes[idx] = math.nan
         return Series(changes, self.index, self.dtype)
 
     def rolling(self, window: int, min_periods: int | None = None) -> "_RollingSeries":

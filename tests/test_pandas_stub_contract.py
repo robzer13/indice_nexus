@@ -25,3 +25,10 @@ def test_replace_infinities_and_label_lookup() -> None:
     assert math.isnan(replaced["price"].tolist()[0])
     series = replaced["price"]
     assert series.loc[[2]].tolist() == [2.0]
+
+def test_pct_change_looks_backward_and_never_erases_valid_tail() -> None:
+    series = pd.Series([float(x) for x in range(1, 31)])
+    change = series.pct_change(21)
+    assert all(math.isnan(x) for x in change.tolist()[:21])
+    assert not any(math.isnan(x) for x in change.tolist()[21:])
+    assert change.tolist()[-1] == (30 - 9) / 9
