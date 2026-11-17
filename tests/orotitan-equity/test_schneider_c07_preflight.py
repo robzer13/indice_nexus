@@ -282,7 +282,7 @@ class OfflineC07Contract(unittest.TestCase):
         text = SNAPSHOT_PATH.read_text(encoding="utf-8")
         self.assertIn("BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY;", text)
         self.assertIn("ROLLBACK;", text)
-        self.assertEqual(text.count("SELECT row_to_json(t)::text"), 5)
+        self.assertEqual(text.count("SELECT row_to_json(t)::text"), 9)
         self.assertEqual(text.count("SELECT * FROM"), 5)
         self.assertGreaterEqual(text.count(collector.RUN), 14)
         sql = "\n".join(x for x in text.splitlines() if not x.lstrip().startswith("--"))
