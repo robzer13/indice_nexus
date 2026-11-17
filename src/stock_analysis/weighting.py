@@ -29,7 +29,7 @@ def _normalise(weights: Dict[str, float]) -> Dict[str, float]:
 def compute_weights(regime: str) -> Dict[str, float]:
     """Return component weights for the provided macro ``regime``."""
 
-    profile = REGIME_PROFILES.get(regime.lower().strip(), DEFAULT_WEIGHTS)
+    profile = REGIME_PROFILES.get(regime.lower().strip(), REGIME_PROFILES["expansion"])
     merged = {**DEFAULT_WEIGHTS, **profile}
     return _normalise({key: merged.get(key, 0.0) for key in DEFAULT_WEIGHTS})
 

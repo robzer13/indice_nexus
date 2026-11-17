@@ -135,15 +135,6 @@ class Series:
         self.iloc = _SeriesILoc(self)
         self.loc = _SeriesLoc(self)
         self.name: str | None = None
-        self._data = list(data or [])
-        if isinstance(index, DatetimeIndex):
-            self.index: Sequence[Any] = index
-        elif index is None:
-            self.index = []
-        else:
-            self.index = list(index)
-        self.dtype = dtype
-        self.iloc = _SeriesILoc(self)
 
     def dropna(self) -> "Series":
         filtered_data = []
@@ -156,6 +147,13 @@ class Series:
             filtered_data.append(value)
             filtered_index.append(label)
         return Series(filtered_data, DatetimeIndex(filtered_index), self.dtype)
+
+    def reindex(self, index: Sequence[Any]) -> "Series":
+        """Align by existing labels; unobserved labels remain missing."""
+        wanted = list(index)
+        lookup = {key: value for key, value in zip(self.index, self._data)}
+        converted = DatetimeIndex(wanted) if isinstance(index, DatetimeIndex) else wanted
+        return Series([lookup.get(key, math.nan) for key in wanted], converted, self.dtype)
 
     def tolist(self) -> List[Any]:
         return list(self._data)
@@ -182,7 +180,7 @@ class Series:
         changes: List[float] = []
         for position, value in enumerate(self._data):
             reference_position = position - periods
-            if reference_position < 0:
+            if reference_position < 0 or reference_position >= len(self._data):
                 changes.append(math.nan)
                 continue
             previous = self._data[reference_position]
@@ -193,10 +191,6 @@ class Series:
                 changes.append((value - previous) / previous)
             except ZeroDivisionError:
                 changes.append(math.nan)
-        if periods > 0 and changes:
-            tail_start = max(0, len(changes) - periods)
-            for idx in range(tail_start, len(changes)):
-                changes[idx] = math.nan
         return Series(changes, self.index, self.dtype)
 
     def rolling(self, window: int, min_periods: int | None = None) -> "_RollingSeries":
@@ -385,24 +379,6 @@ class Series:
 
     def subtract(self, other: Any) -> "Series":
         return self._binary_op(other, lambda a, b: a - b)
-    def pct_change(self) -> "Series":
-        changes: List[float] = []
-        previous = None
-        for value in self._data:
-            if value is None or (isinstance(value, float) and math.isnan(value)) or previous is None:
-                changes.append(math.nan)
-            else:
-                try:
-                    changes.append((value - previous) / previous)
-                except ZeroDivisionError:
-                    changes.append(math.nan)
-            if value is not None and not (isinstance(value, float) and math.isnan(value)):
-                previous = value
-        return Series(changes, self.index, self.dtype)
-
-    def rolling(self, window: int) -> "_RollingSeries":
-        return _RollingSeries(self, window)
-
     def __len__(self) -> int:
         return len(self._data)
 
@@ -464,9 +440,9 @@ class _SeriesLoc:
             lookup = {label: bool(value) for label, value in zip(list(key.index), key._data)}
             return [bool(lookup.get(label, False)) for label in labels]
         if isinstance(key, list):
-            if len(key) != len(labels):
-                raise ValueError("Boolean index length mismatch in stub")
-            return [bool(value) for value in key]
+            if len(key) == len(labels) and all(isinstance(value, bool) for value in key):
+                return list(key)
+            return [label in key for label in labels]
         raise TypeError("Unsupported key type for Series.loc in stub")
 
     def __getitem__(self, key: Any):
@@ -534,7 +510,25 @@ class _LocAccessor:
     def __init__(self, frame: DataFrame) -> None:
         self._frame = frame
 
-    def __getitem__(self, label: Any) -> Series:
+    def __getitem__(self, label: Any) -> Series | DataFrame:
+        if isinstance(label, list):
+            if label and all(isinstance(item, bool) for item in label):
+                if len(label) != len(self._frame._index):
+                    raise ValueError("Boolean index must match row count")
+                positions = [i for i, included in enumerate(label) if included]
+            else:
+                positions = []
+                for item in label:
+                    try:
+                        positions.append(self._frame._index.index(item))
+                    except ValueError as exc:
+                        raise KeyError(item) from exc
+            return DataFrame(
+                {col: [self._frame._data[col][i] for i in positions]
+                 for col in self._frame._columns},
+                index=[self._frame._index[i] for i in positions],
+                columns=self._frame._columns,
+            )
         try:
             position = self._frame._index.index(label)
         except ValueError as exc:
@@ -572,6 +566,24 @@ class DataFrame:
         index_copy = DatetimeIndex(list(self._index)) if isinstance(self._index, DatetimeIndex) else list(self._index)
         return DataFrame(data_copy, index=index_copy, columns=self._columns)
 
+    def reset_index(self) -> "DataFrame":
+        """Expose the existing index as a named column for offline chart tests."""
+        values = {"index": list(self._index)}
+        values.update({column: list(self._data[column]) for column in self._columns})
+        return DataFrame(values)
+
+    def rename(
+        self, columns: Dict[str, str] | None = None, inplace: bool = False
+    ) -> "DataFrame" | None:
+        """Rename columns without touching values or the row order."""
+        mapping = columns or {}
+        renamed = {mapping.get(column, column): list(self._data[column]) for column in self._columns}
+        if inplace:
+            self._data = renamed
+            self._columns = list(renamed)
+            return None
+        return DataFrame(renamed, index=self._index)
+
     @property
     def index(self) -> DatetimeIndex:
         return self._index
@@ -595,7 +607,21 @@ class DataFrame:
         if isinstance(key, str):
             return Series(self._data.get(key, []), self._index)
         if isinstance(key, list):
-            filtered_data = {col: [value for value, flag in zip(values, key) if flag] for col, values in self._data.items()}
+            if all(isinstance(column, str) for column in key):
+                missing = [column for column in key if column not in self._columns]
+                if missing:
+                    raise KeyError(f"Unknown columns: {missing}")
+                return DataFrame(
+                    {column: list(self._data[column]) for column in key},
+                    index=self._index,
+                    columns=key,
+                )
+            if len(key) != len(self._index) or not all(isinstance(flag, bool) for flag in key):
+                raise ValueError("Boolean row mask must match DataFrame length")
+            filtered_data = {
+                column: [value for value, flag in zip(values, key) if flag]
+                for column, values in self._data.items()
+            }
             filtered_index = [label for label, flag in zip(self._index, key) if flag]
             return DataFrame(filtered_data, index=filtered_index, columns=self._columns)
         raise KeyError("Unsupported key type for DataFrame in stub")
@@ -623,6 +649,19 @@ class DataFrame:
         self._index = DatetimeIndex(sorted_index)
         self._data = sorted_data
 
+    def replace(self, to_replace: Sequence[Any], value: Any) -> "DataFrame":
+        """Minimal scalar replacement preserving columns and index, for offline ML tests."""
+        if not isinstance(to_replace, (list, tuple)):
+            raise TypeError("Stub supports sequence replacements only")
+        updated = {
+            column: [
+                value if any(cell == old for old in to_replace) else cell
+                for cell in values
+            ]
+            for column, values in self._data.items()
+        }
+        return DataFrame(updated, index=self._index, columns=self._columns)
+
     def dropna(self, axis: int = 0, how: str = "any", subset: Sequence[str] | None = None, inplace: bool = False):
         subset = list(subset or self._columns)
         keep_mask = []
@@ -630,7 +669,7 @@ class DataFrame:
             if how == "all":
                 keep = not all(value is None or (isinstance(value, float) and math.isnan(value)) for value in row_values)
             else:
-                keep = any(value is not None and not (isinstance(value, float) and math.isnan(value)) for value in row_values)
+                keep = all(value is not None and not (isinstance(value, float) and math.isnan(value)) for value in row_values)
             keep_mask.append(keep)
         filtered = self[keep_mask]
         if inplace:
@@ -716,7 +755,6 @@ NA = None
 
 class _RollingSeries:
     def __init__(self, series: Series, window: int, min_periods: int | None = None) -> None:
-    def __init__(self, series: Series, window: int) -> None:
         if window <= 0:
             raise ValueError("window must be positive")
         self._series = series
@@ -724,8 +762,6 @@ class _RollingSeries:
         self._min_periods = min_periods if min_periods is not None else window
 
     def mean(self) -> Series:
-
-    def std(self) -> Series:
         results: List[float] = []
         data = self._series._data
         for index in range(len(data)):
@@ -798,12 +834,3 @@ def read_parquet(path, engine: str = "pyarrow") -> DataFrame:
             data[column].append(None)
     index = DatetimeIndex(index_values) if index_values else []
     return DataFrame(data, index=index, columns=columns)
-                if value is not None and not (isinstance(value, float) and math.isnan(value))
-            ]
-            if len(window_values) < self._window or not window_values:
-                results.append(math.nan)
-                continue
-            mean = sum(window_values) / len(window_values)
-            variance = sum((value - mean) ** 2 for value in window_values) / len(window_values)
-            results.append(math.sqrt(variance))
-        return Series(results, self._series.index, self._series.dtype)
