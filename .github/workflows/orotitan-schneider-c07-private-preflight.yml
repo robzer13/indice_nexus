@@ -105,7 +105,7 @@ jobs:
         run: |
           set -euo pipefail
           cd c08-candidate-v31
-          npm ci --ignore-scripts --no-audit --no-fund >/dev/null 2>&1
+          npm install --package-lock=false --ignore-scripts --no-audit --no-fund >/dev/null 2>&1
           test -x node_modules/.bin/tsx
       - name: Verify all sealed historical objects and local-only candidate bytes
         shell: bash
