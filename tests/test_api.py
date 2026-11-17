@@ -83,7 +83,7 @@ def test_ml_endpoint(monkeypatch) -> None:
     client = TestClient(api_module.app)
     response = client.get("/ml/MC.PA?model=rf&horizon=5&threshold=0.0")
     payload = response.json()
-    assert response.status_code == 200
+    assert response.status_code == 200, payload
     assert payload["model"] == "rf"
     assert payload["ticker"] == "MC.PA"
     assert payload["auc_mean"] == 0.62

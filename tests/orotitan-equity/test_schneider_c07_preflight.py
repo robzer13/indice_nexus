@@ -204,6 +204,16 @@ class OfflineC07Contract(unittest.TestCase):
         self.assertIn("-----END CERTIFICATE-----", pem)
         self.assertTrue(ssl.PEM_cert_to_DER_cert(pem))
 
+    def test_checkout_never_rewrites_certificate_line_endings(self):
+        attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+        self.assertIn(
+            ".github/certificates/supabase-root-2021-ca.crt text eol=lf",
+            attributes.splitlines(),
+        )
+        raw = CERT_PATH.read_bytes()
+        self.assertNotIn(b"\\r\\n", raw)
+        self.assertEqual(sha256(raw).hexdigest(), CERT_SHA256)
+
     def test_modified_ca_cannot_satisfy_sha256_pin(self):
         raw = CERT_PATH.read_bytes()
         modified = raw.replace(b"Supabase", b"Supab4se")

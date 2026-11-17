@@ -1003,6 +1003,10 @@ def _prepare_output_subdir(base_dir: Path, raw_subdir: str) -> tuple[Path, str |
     else:
         relative = None
 
+    # Keep the lexical caller path: on Windows Path.resolve() may expand
+    # RUNNER~1 into runneradmin even though both denote the same directory.
+    if relative is not None:
+        return base_dir / relative, relative
     return target_path, relative
 
 
