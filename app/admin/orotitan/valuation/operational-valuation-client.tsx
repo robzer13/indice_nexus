@@ -57,7 +57,7 @@ export function OperationalValuationClient(){
     </header>
     <div role="note" className="rounded-xl border border-amber-700/60 bg-amber-950/25 p-4 text-sm text-amber-200">
       <strong>ANALYSE NON CERTIFIÉE.</strong> Cette vue ne crée ni VALUATION_LOCK, ni
-      score OroTitan, ni permission de publication. Les paramètres peuvent être des hypothèses d'analyste.
+      score OroTitan, ni permission de publication. Les paramètres peuvent être des hypothèses d&apos;analyste.
     </div>
     <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
       <label htmlFor="operational-json" className="block text-sm font-semibold text-white">
@@ -65,7 +65,7 @@ export function OperationalValuationClient(){
       </label>
       <p className="my-2 text-xs text-slate-400">
         Import local temporaire. Exemple : operational-valuation.json.
-        Le fichier financier n'est ni préchargé ni conservé.
+        Le fichier financier n&apos;est ni préchargé ni conservé.
       </p>
       <input id="operational-json" type="file" accept=".json,application/json" onChange={openFile}
         className="block max-w-full text-sm text-slate-200 file:mr-4 file:rounded-lg file:border-0 file:bg-cyan-400 file:px-3 file:py-2 file:font-semibold file:text-slate-950"/>
@@ -79,7 +79,7 @@ export function OperationalValuationClient(){
         </div>
         <label className="flex items-center gap-2 text-sm text-slate-200">
           <input type="checkbox" checked={ptc} onChange={e=>setPtc(e.target.checked)} className="accent-cyan-400"/>
-          Inclure l'effet PTC
+          Inclure l&apos;effet PTC
         </label>
       </div>
       <nav aria-label="Choisir le scénario" className="grid grid-cols-3 gap-2">
@@ -114,7 +114,7 @@ export function OperationalValuationClient(){
           })}</div>
         </section>
         <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-          <h2 className="mb-1 text-lg font-semibold text-white">Simuler un prix d'entrée</h2>
+          <h2 className="mb-1 text-lg font-semibold text-white">Simuler un prix d&apos;entrée</h2>
           <p className="mb-3 text-xs text-slate-400">Potentiel par rapport à la juste valeur du scénario, sans recalculer son TRI historique.</p>
           <label htmlFor="test-entry" className="block text-sm text-slate-300">Prix hypothétique (€/action)</label>
           <input id="test-entry" type="number" min="0.01" step="0.01" value={priceInput}
@@ -130,7 +130,7 @@ export function OperationalValuationClient(){
       </div>
       <div className="grid gap-4 lg:grid-cols-2">
         <section className="rounded-xl border border-slate-800 bg-slate-900/60 p-5">
-          <h2 className="text-lg font-semibold text-white">Prix d'entrée conditionnels avec PTC</h2>
+          <h2 className="text-lg font-semibold text-white">Prix d&apos;entrée conditionnels avec PTC</h2>
           <table className="mt-3 w-full text-sm">
             <thead className="text-slate-400"><tr><th className="py-2 text-left">TRI cible</th><th className="py-2 text-right">Prix maximal</th></tr></thead>
             <tbody className="divide-y divide-slate-800 text-slate-100">
