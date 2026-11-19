@@ -120,6 +120,11 @@ export function preflightPitEvidence(input: {
       need(validDate(claim.publishedAt), "PUBLICATION_DATE_INVALID");
       need(claim.publishedAt <= input.cutoff, "SOURCE_PUBLISHED_AFTER_CUTOFF");
     }
+    // A present date does not prove publication provenance when the claim
+    // explicitly classifies that publication as unverified.
+    if (claim.classification === "HISTORICAL_PUBLICATION_UNPROVEN") {
+      blockers.add("PUBLICATION_TIME_NOT_PROVEN");
+    }
     if (claim.classification === "ANNOUNCED_NOT_SETTLED") {
       need(typeof claim.scheduledSettlementDate === "string" &&
         validDate(claim.scheduledSettlementDate), "SETTLEMENT_DATE_MISSING");
@@ -192,6 +197,8 @@ export function computeDiagnosticWacc(input: WaccDiagnosticInput): WaccDiagnosti
   const costOfEquityPct = x.riskFreeRatePct + leveredBeta * x.equityRiskPremiumPct;
   const waccPct = x.equityWeight * costOfEquityPct +
     x.debtWeight * x.marginalDebtCostPct * (1 - x.taxRate);
+  need([leveredBeta, costOfEquityPct, waccPct].every(Number.isFinite),
+    "WACC_RESULT_NONFINITE");
   const blockers = ["BETA_DEBT_ASSUMED_ZERO", "CAPITAL_WEIGHTS_AND_COST_OF_DEBT_NOT_SOURCE_VERIFIED"];
   if (x.cashFlowCurrency !== x.riskFreeCurrency ||
       x.cashFlowCurrency !== x.equityRiskPremiumCurrency) {
