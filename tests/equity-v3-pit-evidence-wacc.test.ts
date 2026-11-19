@@ -69,6 +69,13 @@ test("explicit uncertainty is retained as a blocker", () => {
   x.trustedTranscriptSha256 = { [x.claims[0].id]: transcriptSha256(x.claims[0]) };
   assert.ok(preflightPitEvidence(x).blockers.includes("PUBLICATION_TIME_NOT_PROVEN"));
 });
+test("explicitly unproven publication stays blocked even with a pre-cutoff date", () => {
+  const x = baseEvidence(); x.claims[0].classification = "HISTORICAL_PUBLICATION_UNPROVEN";
+  x.trustedTranscriptSha256 = { [x.claims[0].id]: transcriptSha256(x.claims[0]) };
+  const out = preflightPitEvidence(x);
+  assert.equal(out.allPublicationDatesVerified, false);
+  assert.ok(out.blockers.includes("PUBLICATION_TIME_NOT_PROVEN"));
+});
 test("unsettled financing must have a future settlement date", () => {
   const x = baseEvidence(); x.claims[0].classification = "ANNOUNCED_NOT_SETTLED";
   x.claims[0].scheduledSettlementDate = "2026-10-29";
@@ -103,6 +110,10 @@ test("nonfinite, unbalanced or negative cost assumptions reject", () => {
   expectError(() => computeDiagnosticWacc(b), "WACC_INPUT_DOMAIN_INVALID");
   const c = baseWacc(); c.marginalDebtCostPct = -1;
   expectError(() => computeDiagnosticWacc(c), "WACC_INPUT_DOMAIN_INVALID");
+});
+test("WACC arithmetic overflow rejects even when every input is finite", () => {
+  const x = baseWacc(); x.equityRiskPremiumPct = Number.MAX_VALUE;
+  expectError(() => computeDiagnosticWacc(x), "WACC_RESULT_NONFINITE");
 });
 test("currency alignment cannot grant certification or source authority", () => {
   const x = baseWacc(); x.equityRiskPremiumCurrency = "EUR";
