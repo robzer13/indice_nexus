@@ -64,7 +64,7 @@ export function OperationalValuationClient(){
         Ouvrir un résultat JSON de valorisation opérationnelle
       </label>
       <p className="my-2 text-xs text-slate-400">
-        Import local temporaire. Exemple : OROTITAN_SCHNEIDER_OPERATIONAL_VALUATION_20261030.json.
+        Import local temporaire. Exemple : operational-valuation.json.
         Le fichier financier n'est ni préchargé ni conservé.
       </p>
       <input id="operational-json" type="file" accept=".json,application/json" onChange={openFile}
