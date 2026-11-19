@@ -64,7 +64,7 @@ export default async function OroTitanPilotagePage({
       </div>
       <Link href="/admin/orotitan/valuation"
         className="rounded-lg border border-cyan-500/70 px-4 py-2 text-sm font-semibold text-cyan-200 hover:bg-cyan-950/40">
-        Ouvrir l'analyse
+        Ouvrir l&apos;analyse
       </Link>
     </div>
     <section className="rounded-xl border border-amber-800/70 bg-amber-950/20 p-4 text-sm text-amber-100" aria-label="Limite de publication">
