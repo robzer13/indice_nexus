@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import {useState,type ChangeEvent} from "react";
+import {useRef,useState,type ChangeEvent} from "react";
 import {projectOperationalValuation,OperationalValuationInputError,SCENARIOS,
   upsideToFairValue,type OperationalView,type ScenarioName} from "@/lib/orotitan-equity/v3/operational-valuation-view";
 
@@ -19,19 +19,25 @@ export function OperationalValuationClient(){
   const [name,setName]=useState<ScenarioName>("BASE");
   const [ptc,setPtc]=useState(true);
   const [priceInput,setPriceInput]=useState("");
+  // Latest-selection wins even if File.text() resolves out of order.
+  const selectionGeneration=useRef(0);
 
   async function openFile(event:ChangeEvent<HTMLInputElement>){
     const file=event.target.files?.[0];event.target.value="";
     if(!file)return;
+    const generation=++selectionGeneration.current;
     setError("");setData(null);setFilename("");
     if(file.size===0||file.size>3_000_000){
       setError("Fichier vide ou trop volumineux (3 Mo maximum).");return;
     }
     try{
-      const parsed=projectOperationalValuation(JSON.parse(await file.text()) as unknown);
+      const fileContents=await file.text();
+      if(generation!==selectionGeneration.current)return;
+      const parsed=projectOperationalValuation(JSON.parse(fileContents) as unknown);
       setData(parsed);setFilename(file.name);setName("BASE");setPtc(true);
       setPriceInput(String(parsed.referencePrice));
     }catch(err){
+      if(generation!==selectionGeneration.current)return;
       setError(err instanceof OperationalValuationInputError?
         "Modèle non conforme : "+err.code:"JSON illisible ou mal formé.");
     }
