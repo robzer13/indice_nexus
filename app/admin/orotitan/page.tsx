@@ -58,6 +58,15 @@ export default async function OroTitanPilotagePage({
       </p>
     </header>
     <AdminNav />
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cyan-900/50 bg-slate-900/55 p-4">
+      <div><p className="text-sm font-semibold text-white">Valorisations de travail</p>
+        <p className="text-xs text-slate-400">Charger localement un scénario Bear / Base / Bull, sans créer de score ni publier de données.</p>
+      </div>
+      <Link href="/admin/orotitan/valuation"
+        className="rounded-lg border border-cyan-500/70 px-4 py-2 text-sm font-semibold text-cyan-200 hover:bg-cyan-950/40">
+        Ouvrir l&apos;analyse
+      </Link>
+    </div>
     <section className="rounded-xl border border-amber-800/70 bg-amber-950/20 p-4 text-sm text-amber-100" aria-label="Limite de publication">
       <strong>Publication V3.1 interdite.</strong> Le gel D8 est un gel technique de revue,
       pas une homologation du writer. Les contrôles I2/I3-B, l’attestation de publication
