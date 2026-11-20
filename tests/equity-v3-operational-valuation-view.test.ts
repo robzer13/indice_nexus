@@ -1,3 +1,4 @@
+import {readFileSync} from "node:fs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import {projectOperationalValuation,OperationalValuationInputError,upsideToFairValue} from "../lib/orotitan-equity/v3/operational-valuation-view";
@@ -59,4 +60,11 @@ test("allows hypothetical purchase-price upside but not invented IRR",()=>{
   assert.ok(Math.abs((upsideToFairValue(94,80)??0)-.175)<1e-12);
   assert.equal(upsideToFairValue(94,0),null);
   assert.equal(upsideToFairValue(Infinity,1),null);
+});
+
+test("client file chooser guards against stale asynchronous read completion",()=>{
+  const source=readFileSync(new URL("../app/admin/orotitan/valuation/operational-valuation-client.tsx",import.meta.url),"utf8");
+  assert.match(source,/const generation=\+\+selectionGeneration\.current/);
+  assert.match(source,/const fileContents=await file\.text\(\);\s*if\(generation!==selectionGeneration\.current\)return;/);
+  assert.match(source,/\}catch\(err\)\{\s*if\(generation!==selectionGeneration\.current\)return;/);
 });
